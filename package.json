@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Personal website for Johan Edlund.",
   "author": "Johan Edlund",
-  "license": "Uncopyright",
+  "license": "Unlicense",
   "type": "module",
   "engines": {
     "node": ">=20.x.x"
