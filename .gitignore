@@ -3,6 +3,7 @@ node_modules
 
 # generated files
 dist
+_site
 src/_includes/css
 src/_includes/scripts
 
@@ -11,3 +12,14 @@ src/_includes/scripts
 
 # secret data
 .env
+
+# Editor configs mm
+.nova
+.vscode
+.DS_Store
+__originals
+__resources
+__backup
+
+# Local Netlify folder
+.netlify
