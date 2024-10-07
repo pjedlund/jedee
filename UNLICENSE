@@ -23,11 +23,11 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 For more information, please refer to <https://unlicense.org>
 
-## Licenses
-
-This project is licensed under the ISC License. Additionally, it includes components that are licensed under the MIT License.
+This project is based on **Eleventy Excellent** that is using components that are licensed under the MIT License.
 
 ### ISC License
+
+The **Eleventy Excellent** starter is licensed under the ISC License:
 
 Copyright (c) 2024 Lene Saile
 
