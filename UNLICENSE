@@ -1,3 +1,11 @@
+No Copyright 2024 Johan Edlund
+
+I dedicate any and all copyright interest in this software to the
+public domain. I make this dedication for the benefit of the public at
+large and to the detriment of my heirs and successors. I intend this
+dedication to be an overt act of relinquishment in perpetuity of all
+present and future rights to this software under copyright law.
+
 This is free and unencumbered software released into the public domain.
 
 Anyone is free to copy, modify, publish, use, compile, sell, or
@@ -21,13 +29,15 @@ OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 
-For more information, please refer to <https://unlicense.org>
+For more information, please refer to <http://unlicense.org/>
 
-This project is based on **Eleventy Excellent** that is using components that are licensed under the MIT License.
+---
+
+This project is based on the **Eleventy Excellent** starter using an ISC license that in turn is using **Cube Boilerplate** that is licensed under the MIT License.
 
 ### ISC License
 
-The **Eleventy Excellent** starter is licensed under the ISC License:
+**Eleventy Excellent** is licensed under the ISC License:
 
 Copyright (c) 2024 Lene Saile
 
