@@ -1,11 +1,14 @@
-email: hola@eyourmail.lol
+email: me@johanedlund.se
 address: |-
-  Organization name
-  Your street
-  12345, city
-  Tel: +34 928231911
+  Johan Edlund
+  Västra Ryttmästaregatan 30D
+  21752 Malmö
+  Sweden
+  Tel: +46 706022495
 platforms:
-  github: 'https://github.com/madrilene/eleventy-excellent'
-  mastodon: 'https://front-end.social/@lene'
-  bluesky: 'https://bsky.app/profile/lenesaile.com'
-  kofi: 'https://ko-fi.com/lenesaile'
+  github: 'https://github.com/pjedlund/JEDEE'
+  mastodon: 'https://mastodon.social/@pjedlund'
+  twitter: 'https://twitter.com/pjedlund'
+  flickr: 'https://www.flickr.com/people/pjedlund'
+  dribbble: 'https://dribbble.com/pjedlund'
+

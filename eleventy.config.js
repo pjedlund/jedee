@@ -24,7 +24,14 @@ import filters from './src/_config/filters.js';
 import plugins from './src/_config/plugins.js';
 import shortcodes from './src/_config/shortcodes.js';
 
+///////////////
+import XRayPlugin from 'eleventy-plugin-xray';
+//////////////
+
 export default async function (eleventyConfig) {
+  ///////////////
+  eleventyConfig.addPlugin(XRayPlugin);
+  //////////////
   eleventyConfig.addWatchTarget('./src/assets/**/*.{css,js,svg,png,jpeg}');
   eleventyConfig.addWatchTarget('./src/_includes/**/*.{webc}');
 
