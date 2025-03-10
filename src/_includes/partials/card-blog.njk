@@ -1,5 +1,5 @@
 <custom-card clickable>
-  <h2 slot="headline">
+  <h2 slot="headline" class="text-step-2">
     <a href="{{ item.url | url }}">{{ item.data.title }}</a>
   </h2>
   <span slot="date"> {% include "partials/date.njk" %} </span>
@@ -10,7 +10,7 @@
     <div slot="tag" webc:nokeep>
       {% for tag in item.data.tags %}
         {% if tag != "posts" %}
-          <span class="button post-tag">{{ tag }}</span>
+          <span class="button" data-small-button>{{ tag }}</span>
         {% endif %}
       {% endfor %}
     </div>
@@ -18,6 +18,6 @@
   <div slot="content" webc:nokeep>{{ item.data.description | markdownFormat | safe }}</div>
 </custom-card>
 
-{% css "inline" %}
+{% css "local" %}
   {% include "css/custom-card.css" %}
 {% endcss %}

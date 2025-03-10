@@ -41,13 +41,19 @@
   </head>
 
   <body class="{{ layout }}">
+    {% set indicateActiveHome %}
+      {% if page.url == "/" %}
+        aria-current=page
+      {% endif %}
+    {% endset %}
     {% include "partials/header.njk" %}
 
     <main id="main" class="flow">{{ content | safe }}</main>
 
     {% include "partials/footer.njk" %}
-
-    <script type="module" src="/assets/scripts/components/custom-easteregg.js"></script>
-    <custom-easteregg></custom-easteregg>
+    {%- if meta.easteregg -%}
+      <script type="module" src="/assets/scripts/components/custom-easteregg.js"></script>
+      <custom-easteregg></custom-easteregg>
+    {%- endif -%}
   </body>
 </html>

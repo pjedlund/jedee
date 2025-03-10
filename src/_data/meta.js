@@ -1,6 +1,8 @@
 export const url = process.env.URL || 'http://localhost:8080';
 export const siteName = 'Johan Edlund';
 export const siteDescription = 'Personal site of Johan Edlund';
+// Extract domain from `url`
+export const domain = new URL(url).hostname;
 export const siteType = 'Person'; // schema
 export const locale = 'en_EN';
 export const lang = 'en';
@@ -10,6 +12,7 @@ export const author = {
   avatar: '/icon-512x512.png', // path to the author's avatar. In this case just using a favicon.
   email: 'me@johanedlund.se', // i.e. hola@lenesaile.com - email of the author
   website: 'https://www.johanedlund.se' // i.e. https.://www.lenesaile.com - the personal site of the author
+  fediverse: '@pjedlund@mastodon.social' // used for highlighting journalism on the fediverse. Can be Mastodon, Flipboard, Threads, WordPress (with the ActivityPub plugin installed), PeerTube, Pixelfed, etc. https://blog.joinmastodon.org/2024/07/highlighting-journalism-on-mastodon/
 };
 export const creator = {
   name: 'Johan Edlund', // i.e. Lene Saile - creator's (developer) name.
@@ -18,8 +21,9 @@ export const creator = {
   social: 'https://mastodon.social/@pjedlund'
 };
 export const pathToSvgLogo = 'src/assets/svg/misc/logo.svg'; // used for favicon generation
-export const themeColor = '#DD4462'; //  Manifest: defines the default theme color for the application
-export const themeBgColor = '#FBFBFB'; // Manifest: defines a placeholder background color for the application page to display before its stylesheet is loaded
+export const themeColor = '#dd4462'; // used in manifest, for example primary color value
+export const themeLight = '#f8f8f8'; // used for meta tag theme-color, if light colors are prefered. best use value set for light bg
+export const themeDark = '#2e2e2e'; // used for meta tag theme-color, if dark colors are prefered. best use value set for dark bg
 export const opengraph_default = '/assets/images/template/opengraph-default.jpg'; // fallback/default meta image
 export const opengraph_default_alt =
   "Visible content: An Eleventy starter with CUBE CSS, Cube CSS, Every Layout, Design Tokens and Tailwind for uitility classes. A workflow for building modern and resilient websites, introduced by Andy Bell's project buildexcellentwebsit.es"; // alt text for default meta image"
@@ -56,6 +60,9 @@ export const details = {
   expand: 'expand all',
   collapse: 'collapse all'
 };
+export const dialog = {
+  close: 'Close'
+};
 export const navigation = {
   navLabel: 'Menu',
   ariaTop: 'Main',
@@ -69,18 +76,15 @@ export const themeSwitch = {
   dark: 'dark'
 };
 export const greenweb = {
-  // this goes into src/common/greenweb.njk
-  providers: {
-    // if you want to add more than one, edit the array directly.
-    domain: 'netlify.com',
-    service: 'cdn'
-  },
-  credentials: {
-    // optional, eg: 	{ domain='my-org.com', doctype = 'webpage', url = 'https://my-org.com/our-climate-record'}
-    domain: '',
-    doctype: '',
-    url: ''
-  }
+  // https://carbontxt.org/
+  disclosures: [
+    {
+      docType: 'sustainability-page',
+      url: `${url}/sustainability/`,
+      domain: domain
+    }
+  ],
+  services: [{domain: 'netlify.com', serviceType: 'cdn'}]
 };
 export const viewRepo = {
   // this is for the view/edit on github link. The value in the package.json will be pulled in.

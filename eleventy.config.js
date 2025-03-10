@@ -18,7 +18,7 @@ dotenv.config();
 import yaml from 'js-yaml';
 
 //  config import
-import {getAllPosts, onlyMarkdown, tagList} from './src/_config/collections.js';
+import {getAllPosts, showInSitemap, tagList} from './src/_config/collections.js';
 import events from './src/_config/events.js';
 import filters from './src/_config/filters.js';
 import plugins from './src/_config/plugins.js';
@@ -43,7 +43,7 @@ export default async function (eleventyConfig) {
 
   //	---------------------  Collections
   eleventyConfig.addCollection('allPosts', getAllPosts);
-  eleventyConfig.addCollection('onlyMarkdown', onlyMarkdown);
+  eleventyConfig.addCollection('showInSitemap', showInSitemap);
   eleventyConfig.addCollection('tagList', tagList);
 
   // ---------------------  Plugins
@@ -59,6 +59,19 @@ export default async function (eleventyConfig) {
   eleventyConfig.addPlugin(plugins.webc, {
     components: ['./src/_includes/webc/*.webc'],
     useTransform: true
+  });
+
+  eleventyConfig.addPlugin(plugins.eleventyImageTransformPlugin, {
+    formats: ['webp', 'jpeg'],
+    widths: ['auto'],
+    htmlOptions: {
+      imgAttributes: {
+        loading: 'lazy',
+        decoding: 'async',
+        sizes: 'auto'
+      },
+      pictureAttributes: {}
+    }
   });
 
   // ---------------------  bundle

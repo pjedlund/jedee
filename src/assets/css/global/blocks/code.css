@@ -14,7 +14,7 @@ pre {
   font-size: var(--size-step-min-1);
   background-color: var(--color-code-bg);
 
-  border-radius: var(--border-radius);
+  border-radius: var(--border-radius-medium);
 }
 
 code[class*='language-'],
@@ -30,7 +30,7 @@ pre[class*='language-'] {
 pre {
   grid-column: popout !important;
   overflow-x: auto;
-  padding: var(--space-m-l);
+  padding: var(--space-s) var(--space-l);
 }
 
 /* Style Adjustments for <code> within different contexts */

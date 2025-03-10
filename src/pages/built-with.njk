@@ -38,8 +38,8 @@ widths: [400, 520]
       <!-- you find tha data for that in src/_data/builtwith.json -->
       {% for site in builtwith | shuffle %}
         <custom-card clickable img-square class="text-step-min-1" style="--card-bg: var(--color-bg)">
-          {% image "./src/assets/images/screenshots/" + site.filename + ".jpg", site.name, null, "lazy", null, sizes, widths %}
-          <h3 class="text-step-0" slot="headline">{{ site.name }}</h3>
+          {% image "./src/assets/images/screenshots/" + site.filename + ".jpg", site.name, null, "lazy", null, null, widths, sizes %}
+          <h3 slot="headline" class="text-step-min-1">{{ site.name }}</h3>
 
           <p slot="content">{{ site.description }}</p>
           <footer slot="footer" class="repel">
@@ -56,6 +56,6 @@ widths: [400, 520]
   {% svg "divider/soft-bottom", null, "seperator" %}
 </article>
 
-{% css "inline" %}
+{% css "local" %}
   {% include "css/custom-card.css" %}
 {% endcss %}

@@ -78,7 +78,7 @@
 }
 
 .mainnav span {
-  font-weight: var(--font-extra-bold);
+  font-weight: var(--font-bold);
   text-transform: uppercase;
   font-family: var(--font-display);
   font-size: var(--size-step-min-1);
@@ -105,7 +105,7 @@
   color: var(--nav-item-text-color);
   padding: var(--nav-item-padding);
   display: block;
-  border-radius: var(--border-radius);
+  border-radius: var(--border-radius-medium);
   text-decoration-line: underline;
   text-decoration-color: var(--nav-item-decoration-color);
   text-decoration-thickness: 3px;

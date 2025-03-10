@@ -11,7 +11,7 @@ blog:
 <div class="wrapper">
   <header class="full | section" style="--spot-color: var(--color-primary)">
     <div class="section__inner flow region">
-      <h1 class="text-center text-base-light">{{ title }}</h1>
+      <h1 class="text-center" style="color: var(--color-light);">{{ title }}</h1>
     </div>
 
     {% svg "divider/waves", null, "seperator" %}
@@ -27,11 +27,9 @@ blog:
         connection speeds, and usage contexts.
       </p>
       <p>
-        <strong>This is version 3.</strong> I keep a
-        <a href="https://github.com/madrilene/eleventy-excellent/tree/v1">branch of v1</a> and
-        <a href="https://github.com/madrilene/eleventy-excellent/tree/v2">v2</a> because I have changed a lot
-        of things. I have tried to <a href="/get-started/#docs-lol">document</a> most features and
-        methodologies.
+        <strong>This is <a href="https://github.com/madrilene/eleventy-excellent/">version 4</a>.</strong> I keep a
+        <a href="https://github.com/madrilene/eleventy-excellent/tree/v1">branch of v1</a>,
+        <a href="https://github.com/madrilene/eleventy-excellent/tree/v2">v2</a> and <a href="https://github.com/madrilene/eleventy-excellent/tree/v3">v3</a>. I  tried to <a href="/get-started/#docs-lol">document most features and methodologies</a>.
       </p>
       <p><strong>Have fun</strong> and let me know if you find any issues or have ideas for improvements!</p>
     </div>
@@ -46,7 +44,7 @@ blog:
         <p>{{ blog.intro }}</p>
       {% endif %}
 
-      <div class="feature |  region">
+      <div class="feature |  region region-space-l">
         <custom-masonry layout="50-50">
           <!-- loop posts -->
           {% set itemList = collections.allPosts %}
