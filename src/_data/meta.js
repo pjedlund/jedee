@@ -18,7 +18,8 @@ export const creator = {
   name: 'Johan Edlund', // i.e. Lene Saile - creator's (developer) name.
   email: 'me@johanedlund.se',
   website: 'https://www.johanedlund.se',
-  social: 'https://mastodon.social/@pjedlund'
+  mastodon: 'https://mastodon.social/@pjedlund',
+  twitter: 'https://twitter.com/pjedlund'
 };
 export const pathToSvgLogo = 'src/assets/svg/misc/logo.svg'; // used for favicon generation
 export const themeColor = '#dd4462'; // used in manifest, for example primary color value

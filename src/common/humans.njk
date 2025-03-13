@@ -4,9 +4,39 @@ eleventyExcludeFromCollections: true
 excludeFromSitemap: true
 ---
 
-/* TEAM */ Developer: {{ meta.creator.name }} Contact: {{ meta.creator.email }} Site:
-{{ meta.creator.website }}
-{% if meta.creator.social %}
-  Find me on: {{ meta.creator.social }}
-{% endif %}
-/* SITE */ Doctype: HTML5
+/* the humans responsible & colophon */
+
+/* TEAM */
+  Developer: {{ meta.creator.name }}
+  Contact: {{ meta.creator.email }}
+  Website: {{ meta.creator.website }}
+  {% if meta.creator.mastodon %}Mastodon: {{ meta.creator.mastodon }}{% endif %}
+  {% if meta.creator.twitter %}Twitter: {{ meta.creator.twitter }}{% endif %}
+
+/* SITE */
+  Doctype: HTML5
+  Language: English (US), Swedish
+  Standards: HTML, CSS, JavaScript
+  Components: 11ty (SSG), Eleventy Excellent (Eleventy Starter Kit), Git/Github, Netlify
+  Software: Warp, Nova
+
+
+/* THANKS */
+  Lene Saile for Eleventy Excellent (https://github.com/madrilene/eleventy-excellent)
+  Website: https://www.lenesaile.com/
+
+  Andy Bell for https://buildexcellentwebsit.es and Cube CSS (https://cube.fyi/)
+  Website: https://andy-bell.co.uk/
+
+  Zach Leatherman for 11ty (https://github.com/11ty/eleventy)
+  Website: https://zachleat.com/
+
+  /* RESOURCES */
+  Using UI System Fonts In Web Design: A Quick Practical Guide
+  https://www.smashingmagazine.com/2015/11/using-system-ui-fonts-practical-guide/
+
+  Removed role=banner from main header
+  https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/Banner_Role
+
+  The A11Y Project
+  https://www.a11yproject.com/
