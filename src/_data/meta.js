@@ -19,7 +19,7 @@ export const creator = {
   email: 'me@johanedlund.se',
   website: 'https://www.johanedlund.se',
   mastodon: 'https://mastodon.social/@pjedlund',
-  twitter: 'https://twitter.com/pjedlund'
+  x: 'https://x.com/pjedlund'
 };
 export const pathToSvgLogo = 'src/assets/svg/misc/logo.svg'; // used for favicon generation
 export const themeColor = '#dd4462'; // used in manifest, for example primary color value
