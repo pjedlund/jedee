@@ -17,9 +17,9 @@ src/_includes/scripts
 .nova
 .vscode
 .DS_Store
-__originals
-__resources
-__backup
+_originals
+_resources
+_backup
 
 # Local Netlify folder
 .netlify
