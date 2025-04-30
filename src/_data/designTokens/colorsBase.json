@@ -11,15 +11,15 @@
   "light_dark": [
     {
       "name": "Pink",
-      "value": "#dd4462"
+      "value": "#E38D81"
     },
     {
       "name": "Blue",
-      "value": "#4467dd"
+      "value": "#245375"
     },
     {
-      "name": "Gold",
-      "value": "#fbbe25"
+      "name": "GreenishYellow",
+      "value": "#CCE381"
     }
   ],
   "standalone": []
