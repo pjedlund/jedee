@@ -18,13 +18,13 @@ dotenv.config();
 import yaml from 'js-yaml';
 
 //  config import
-import {getAllPosts, showInSitemap, tagList} from './src/_config/collections.js';
+import { getAllPosts, showInSitemap, tagList } from './src/_config/collections.js';
 import events from './src/_config/events.js';
 import filters from './src/_config/filters.js';
 import plugins from './src/_config/plugins.js';
 import shortcodes from './src/_config/shortcodes.js';
 
-export default async function (eleventyConfig) {
+export default async function(eleventyConfig) {
   eleventyConfig.addWatchTarget('./src/assets/**/*.{css,js,svg,png,jpeg}');
   eleventyConfig.addWatchTarget('./src/_includes/**/*.{webc}');
 
@@ -55,6 +55,9 @@ export default async function (eleventyConfig) {
   });
 
   eleventyConfig.addPlugin(plugins.eleventyImageTransformPlugin, {
+    transform: (sharp) => {
+      sharp.keepMetadata();
+    },
     formats: ['webp', 'jpeg'],
     widths: ['auto'],
     htmlOptions: {
@@ -68,7 +71,7 @@ export default async function (eleventyConfig) {
   });
 
   // ---------------------  bundle
-  eleventyConfig.addBundle('css', {hoist: true});
+  eleventyConfig.addBundle('css', { hoist: true });
 
   // 	--------------------- Library and Data
   eleventyConfig.setLibrary('md', plugins.markdownLib);
