@@ -34,8 +34,7 @@ export const blog = {
   name: 'My Web Development Blog',
   description: 'Tell the word what you are writing about in your blog. It will show up on feed readers.',
   // feed links are looped over in the head. You may add more to the array.
-  feedLinks: [
-    {
+  feedLinks: [{
       title: 'Atom Feed',
       url: '/feed.xml',
       type: 'application/atom+xml'
@@ -73,7 +72,7 @@ export const navigation = {
   ariaBottom: 'Complementary',
   ariaPlatforms: 'Platforms',
   drawerNav: false,
-  subMenu: false
+  subMenu: true
 };
 export const themeSwitch = {
   title: 'Theme',
@@ -82,14 +81,12 @@ export const themeSwitch = {
 };
 export const greenweb = {
   // https://carbontxt.org/
-  disclosures: [
-    {
-      docType: 'sustainability-page',
-      url: `${url}/sustainability/`,
-      domain: domain
-    }
-  ],
-  services: [{domain: 'netlify.com', serviceType: 'cdn'}]
+  disclosures: [{
+    docType: 'sustainability-page',
+    url: `${url}/sustainability/`,
+    domain: domain
+  }],
+  services: [{ domain: 'netlify.com', serviceType: 'cdn' }]
 };
 export const viewRepo = {
   // this is for the view/edit on github link. The value in the package.json will be pulled in.
