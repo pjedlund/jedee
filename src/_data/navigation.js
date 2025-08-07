@@ -1,6 +1,5 @@
 export default {
-  top: [
-    {
+  top: [{
       text: 'About',
       url: '/about/'
     },
@@ -13,12 +12,15 @@ export default {
       url: '/built-with/'
     },
     {
+      text: 'Notes',
+      url: '/notes/'
+    },
+    {
       text: 'Blog',
       url: '/blog/'
     }
   ],
-  bottom: [
-    {
+  bottom: [{
       text: 'Style guide',
       url: '/styleguide/'
     },
