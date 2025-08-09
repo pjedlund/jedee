@@ -23,8 +23,8 @@ export const creator = {
 };
 export const pathToSvgLogo = 'src/assets/svg/misc/logo.svg'; // used for favicon generation
 //Color Hunt Palette f4f4f2e8e8e8bbbfca495464.png
-export const themeColor = '#495464'; // used in manifest, for example primary color value
-export const themeLight = '#f4f4f2'; // used for meta tag theme-color, if light colors are prefered. best use value set for light bg
+export const themeColor = '#F4F4F2'; // used in manifest, for example primary color value
+export const themeLight = '#495464'; // used for meta tag theme-color, if light colors are prefered. best use value set for light bg
 export const themeDark = '#bbbfca'; // used for meta tag theme-color, if dark colors are prefered. best use value set for dark bg
 export const opengraph_default = '/assets/images/template/opengraph-default.jpg'; // fallback/default meta image
 export const opengraph_default_alt =
