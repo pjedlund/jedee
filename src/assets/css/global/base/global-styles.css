@@ -31,7 +31,7 @@ h1,
 h2,
 h3 {
   font-family: var(--font-display);
-  font-weight: var(--font-extra-bold);
+  font-weight: var(--font-bold);
   line-height: var(--leading-fine);
   letter-spacing: var(--tracking-s);
 }
@@ -54,7 +54,7 @@ blockquote {
   font-size: var(--size-step-2);
 }
 
-blockquote > * + * {
+blockquote>*+* {
   margin-block-start: var(--space-m-l);
 }
 

@@ -1,29 +1,20 @@
 {
   "title": "Fonts",
-  "description": "Each array of fonts creates a priority-based order. The first font in the array should be the ideal font, followed by sensible, web-safe fallbacks",
-  "items": [
-    {
+  "description": "All fonts are system installed. https://systemfontstack.com",
+  "items": [{
       "name": "Display",
-      "description": "Display font stack for headings and large text. Redhat Display is made for headlines and big statements, are low contrast and spaced tightly, with a large x-height and open counters.",
-      "value": ["Figtree", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif"]
+      "description": "https://systemfontstack.com",
+      "value": ["Iowan Old Style", "Apple Garamond", "Baskerville", "Times New Roman", "Droid Serif", "Times", "Source Serif Pro", "serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"]
     },
     {
       "name": "Base",
-      "description": "Base font stack for body text. Atkinson Hyperlegible, named after the founder of the Braille Institute, has been developed specifically to increase legibility for readers with low vision, and to improve comprehension.",
-      "value": ["Figtree", "system-ui", "sans-serif"]
+      "description": "https://systemfontstack.com",
+      "value": ["-apple-system", "BlinkMacSystemFont", "avenir next", "avenir", "segoe ui", "helvetica neue", "Adwaita Sans", "Cantarell", "Ubuntu", "roboto", "noto", "helvetica", "arial", "sans-serif"]
     },
     {
       "name": "Mono",
-      "description": "Monospace font for code and preformatted text.",
-      "value": [
-        "ui-monospace",
-        "Cascadia Code",
-        "Source Code Pro",
-        "Menlo",
-        "Consolas",
-        "DejaVu Sans Mono",
-        "monospace"
-      ]
+      "description": "https://systemfontstack.com + 5 extra",
+      "value": ["Dank Mono", "Fira Code", "Victor Mono Regular", "Inconsolata", "Fira Mono", "Menlo", "Consolas", "Monaco", "Adwaita Mono", "Liberation Mono", "Lucida Console", "monospace"]
     }
   ]
 }
