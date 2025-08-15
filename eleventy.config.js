@@ -28,6 +28,13 @@ export default async function(eleventyConfig) {
     await events.buildAllJs();
   });
 
+  // eleventyConfig.addGlobalData('dadate', '20250815');
+
+  eleventyConfig.addGlobalData('buildTime', () => {
+    let now = new Date();
+    return now;
+  });
+
   // --------------------- custom watch targets
   eleventyConfig.addWatchTarget('./src/assets/**/*.{css,js,svg,png,jpeg}');
   eleventyConfig.addWatchTarget('./src/_includes/**/*.{webc}');
@@ -102,7 +109,6 @@ export default async function(eleventyConfig) {
   }
 
   // --------------------- Passthrough File Copy
-
   // -- same path
   ['src/assets/fonts/', 'src/assets/images/template', 'src/assets/og-images'].forEach(path =>
     eleventyConfig.addPassthroughCopy(path)

@@ -3,7 +3,7 @@ permalink: /serviceworker.js
 eleventyExcludeFromCollections: true
 ---
 //service worker by Max Böck https://github.com/maxboeck/eleventastic/blob/master/src/serviceworker.njk
-const CACHE_NAME = 'cache-{{ 20250814|toIsoString}}'
+const CACHE_NAME = 'cache-{{ buildTime|toIsoString}}'
 const OFFLINE_PAGE_URL = '/offline/'
 const PRECACHE_RESOURCES = []
 const IGNORED_HOSTS = ['localhost']
