@@ -28,12 +28,9 @@ export default async function(eleventyConfig) {
     await events.buildAllJs();
   });
 
-  // eleventyConfig.addGlobalData('dadate', '20250815');
-
-  eleventyConfig.addGlobalData('buildTime', () => {
-    let now = new Date();
-    return now;
-  });
+  // create a build time for serviceworker.njk
+  // TODO: is this the correct way?
+  eleventyConfig.addGlobalData('buildTime', () => new Date());
 
   // --------------------- custom watch targets
   eleventyConfig.addWatchTarget('./src/assets/**/*.{css,js,svg,png,jpeg}');
