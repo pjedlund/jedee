@@ -5,8 +5,18 @@ eleventyExcludeFromCollections: true
 //service worker by Max Böck https://github.com/maxboeck/eleventastic/blob/master/src/serviceworker.njk
 const CACHE_NAME = 'cache-{{ buildTime|toIsoString}}'
 const OFFLINE_PAGE_URL = '/offline/'
-const PRECACHE_RESOURCES = []
-const IGNORED_HOSTS = ['localhost']
+const PRECACHE_RESOURCES = [
+  '/assets/components/lite-yt-embed.css',
+  '/assets/components/lite-yt-embed.js',
+  '/assets/scripts/components/custom-easteregg.js',
+  '/assets/scripts/components/custom-masonry.js',
+  '/icon-192.png',
+  '/icon-512.png',
+  '/icon-mask.png',
+  '/icon.svg'
+]
+{# const IGNORED_HOSTS = ['localhost'] #}
+const IGNORED_HOSTS = []
 
 // On Install
 self.addEventListener('install', (event) => {

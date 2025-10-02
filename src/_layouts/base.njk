@@ -35,7 +35,6 @@
 
     <!-- 7 defer  -->
     {% include "head/js-defer.njk" %}
-    {% include "head/js-serviceworker.njk" %}
 
     <!-- 8 meta tags, icons, open graph etc.  -->
     {% include "head/meta-info.njk" %}
@@ -56,5 +55,10 @@
       <script type="module" src="/assets/scripts/components/custom-easteregg.js"></script>
       <custom-easteregg></custom-easteregg>
     {%- endif -%}
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/serviceworker.js')
+      }
+    </script>
   </body>
 </html>
