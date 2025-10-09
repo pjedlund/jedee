@@ -67,7 +67,7 @@ self.addEventListener('activate', (event) => {
 })
 
 // On Request
-self.addEventListener('fetch', (event) => {
+self.addEventListener('fetch', function(event) {
   const { hostname } = new URL(event.request.url)
   if (IGNORED_HOSTS.indexOf(hostname) >= 0) {
       return
