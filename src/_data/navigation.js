@@ -18,6 +18,10 @@ export default {
     {
       text: 'Blog',
       url: '/blog/'
+    },
+    {
+      text: 'Reading',
+      url: '/reading/'
     }
   ],
   bottom: [{

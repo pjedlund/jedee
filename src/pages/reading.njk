@@ -1,11 +1,11 @@
 ---
 layout: base
-title: Notes
-description: 'All notes can be found here'
+title: Reading
+description: 'All books can be found here'
 pagination:
-  data: collections.allNotes
-  size: 4
-permalink: 'notes/{% if pagination.pageNumber >=1 %}page-{{ pagination.pageNumber + 1 }}/{% endif %}index.html'
+  data: collections.allReading
+  size: 2
+permalink: 'reading/{% if pagination.pageNumber >=1 %}page-{{ pagination.pageNumber + 1 }}/{% endif %}index.html'
 ---
 
 <div class="wrapper">
@@ -18,20 +18,20 @@ permalink: 'notes/{% if pagination.pageNumber >=1 %}page-{{ pagination.pageNumbe
   </header>
 
   <div class="region flow prose" style="--region-space-top: var(--space-xl-2xl)">
-    <p>This blog has a pagination of <strong>{{ pagination.size }}</strong> posts per page.<br>
-      The pagination is only shown if there are more notes ({{ collections.notes.length }}) than items per
+    <p>This book page has a pagination of <strong>{{ pagination.size }}</strong> posts per page.<br>
+      The pagination is only shown if there are more books ({{ collections.notes.length }}) than items per
       page ({{ pagination.size }}).
     </p>
   </div>
 
   <custom-masonry layout="50-50">
 		{% asyncEach item in pagination.items %}
-			{% include "partials/card-notes.njk" %}
+			{% include "partials/card-reading.njk" %}
 		{% endeach %}
 	</custom-masonry>
 
   <!-- set collection to paginate -->
-  {% set collectionToPaginate = collections.allNotes %}
+  {% set collectionToPaginate = collections.allReading %}
   <!-- set target pagination settings in meta.js -->
   {% set metaKey = "blog" %}
   <!-- if the number of items in the collection is greater than the number of items shown on one page -->
