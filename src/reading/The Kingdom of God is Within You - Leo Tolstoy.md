@@ -16,5 +16,5 @@ previewLink: http://books.google.se/books?id=iNnsAgAAQBAJ&printsec=frontcover&dq
 isbn13: 9781625582324
 isbn10: 1625582323
 ---
-
+	
 content text

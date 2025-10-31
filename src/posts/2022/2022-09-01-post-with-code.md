@@ -1,8 +1,12 @@
 ---
-title: 'Post with some code'
-description: 'Syntax Highlighting is achieved by a pack of Eleventy plugins. No browser/client JavaScript, highlight transformations are all done at build-time.'
+title: Post with some code
+description: Syntax Highlighting is achieved by a pack of Eleventy plugins. No browser/client JavaScript, highlight transformations are all done at build-time.
 date: 2022-09-01
-tags: ['syntax highlighting', 'feature']
+tags:
+  - syntax highlighting
+  - feature
+updated: 2025-10-31T15:22:42+01:00
+created: 2025-04-30T13:59:31+02:00
 ---
 
 This theme uses 11ty's [Syntax Highlighting Plugin](https://www.11ty.dev/docs/plugins/syntaxhighlight/), a pack of Eleventy plugins for PrismJS syntax highlighting. No browser/client JavaScript, highlight transformations are all done at build-time.
