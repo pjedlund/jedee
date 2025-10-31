@@ -26,3 +26,9 @@ _backup
 
 # Obsidian
 .obsidian
+.vault-nickname
+src/_obsidian
+/src/notes/1 - Fleeting Notes
+/src/notes/2 - Source Notes
+/src/notes/3 - Permanent Notes
+/src/notes/4 - Unsorted
