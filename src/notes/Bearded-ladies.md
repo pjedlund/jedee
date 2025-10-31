@@ -5,8 +5,8 @@ date: 2025-10-31T14:10:24+01:00
 tags:
   - notes
   - beard
-updated: 2025-10-31T21:36:32+01:00
-draft: false
+updated: 2025-10-31T21:44:39+01:00
+draft: true
 ---
 ![A little text here](/assets/images/blog/beard.png)
 
