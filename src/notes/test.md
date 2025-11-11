@@ -8,7 +8,6 @@ tags:
 draft: false
 ---
 
-# test
 
 A new version is here! This includes a bunch of breaking changes.
 Again I am changing the body font for this update, this time it
