@@ -39,6 +39,42 @@
       "value": "#141619"
     },
     {
+      "name": "Orange 100",
+      "value": "#ffece1"
+    },
+    {
+      "name": "Orange 200",
+      "value": "#ffdec3"
+    },
+    {
+      "name": "Orange 300",
+      "value": "#ffb78a"
+    },
+    {
+      "name": "Orange 400",
+      "value": "#f68f5a"
+    },
+    {
+      "name": "Orange 500",
+      "value": "#d0621e"
+    },
+    {
+      "name": "Orange 600",
+      "value": "#a73c00"
+    },
+    {
+      "name": "Orange 700",
+      "value": "#8c2100"
+    },
+    {
+      "name": "Orange 800",
+      "value": "#711a00"
+    },
+    {
+      "name": "Orange 900",
+      "value": "#320100"
+    },
+    {
       "name": "Red",
       "value": "#644B49"
     },

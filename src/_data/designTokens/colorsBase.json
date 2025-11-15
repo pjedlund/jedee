@@ -5,7 +5,10 @@
     "name": "Gray",
     "value": "#495464"
   }],
-  "shades_vibrant": [],
+  "shades_vibrant": [{
+    "name": "Orange",
+    "value": "#EF7E40"
+  }],
   "light_dark": [{
       "name": "Red",
       "value": "#644B49"
