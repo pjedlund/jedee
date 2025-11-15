@@ -4,47 +4,47 @@
   "items": [
     {
       "name": "Gray 100",
-      "value": "#f8f8f8"
+      "value": "#f7f8fb"
     },
     {
       "name": "Gray 200",
-      "value": "#e4e4e4"
+      "value": "#e3e5e7"
     },
     {
       "name": "Gray 300",
-      "value": "#aeaeae"
+      "value": "#acaeb1"
     },
     {
       "name": "Gray 400",
-      "value": "#808080"
+      "value": "#7d8085"
     },
     {
       "name": "Gray 500",
-      "value": "#636363"
+      "value": "#606368"
     },
     {
       "name": "Gray 600",
-      "value": "#484848"
+      "value": "#44484d"
     },
     {
       "name": "Gray 700",
-      "value": "#3a3a3a"
+      "value": "#383b3f"
     },
     {
       "name": "Gray 800",
-      "value": "#2e2e2e"
+      "value": "#2b2e32"
     },
     {
       "name": "Gray 900",
-      "value": "#161616"
+      "value": "#141619"
     },
     {
-      "name": "Pink",
-      "value": "#E38D81"
+      "name": "Red",
+      "value": "#644B49"
     },
     {
-      "name": "Pink Subdued",
-      "value": "#d89389"
+      "name": "Red Subdued",
+      "value": "#614d4b"
     },
     {
       "name": "Blue",
@@ -55,12 +55,12 @@
       "value": "#2f536e"
     },
     {
-      "name": "GreenishYellow",
-      "value": "#CCE381"
+      "name": "Green",
+      "value": "#626449"
     },
     {
-      "name": "GreenishYellow Subdued",
-      "value": "#cee195"
+      "name": "Green Subdued",
+      "value": "#62644e"
     }
   ]
 }
