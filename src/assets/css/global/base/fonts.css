@@ -1,19 +1,19 @@
 @font-face {
-  font-family: Figtree;
+  font-family: 'Source Sans';
   font-style: normal;
   font-display: swap;
-  font-weight: 400;
+  font-weight: 100 1000;
   src:
     local(''),
-    url('/assets/fonts/figtree/Figtree-VariableFont_wght.ttf') format('ttf');
+    url('/assets/fonts/source-sans/SourceSans3VF-Upright.otf-subset.woff2') format('woff2');
 }
 
 @font-face {
-  font-family: 'Figtree Italic';
+  font-family: 'Source Sans';
   font-style: italic;
   font-display: swap;
-  font-weight: 400;
+  font-weight: 100 1000;
   src:
     local(''),
-    url('/assets/fonts/figtree/Figtree-Italic-VariableFont_wght.woff2') format('woff2');
+    url('/assets/fonts/source-sans/SourceSans3VF-Italic-BasicLatin-SVCHARS.woff2') format('woff2');
 }

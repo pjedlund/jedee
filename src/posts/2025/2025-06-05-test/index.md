@@ -38,10 +38,9 @@ More info: https://www.11ty.dev/docs/plugins/image/#html-transform
 
 ## Markdown syntax
 
-This also uses [Image HTML Transform ](https://www.11ty.dev/docs/plugins/image/#html-transform).
-The markdown sytnax for images creates the `<img>` element the plugin is looking for, and then transforms it to the `<picture>` element (if more than one format is set).
+This also uses [Image HTML Transform ](https://www.11ty.dev/docs/plugins/image/#html-transform).The markdown syntax for images creates the `<img>` element the plugin is looking for, _and then transforms_ it to the `<picture>` element (if more than one format is set).
 
-In `src/_config/plugins/markdown.js` I customized the Markdown rendering for images slightly. What normally would become a `title` attribute is used to create a caption. Note that I set a fixed `widths` value instead of `auto` as the default.
+In `src/_config/plugins/markdown.js` I **customized** the Markdown rendering for images slightly. What normally would become a `title` attribute is used to create a caption. Note that I set a fixed `widths` value instead of `auto` as the default.
 
 ```markdown
 ![alt text](/path/to/image 'caption text')

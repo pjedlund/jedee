@@ -8,8 +8,8 @@
     },
     {
       "name": "Base",
-      "description": "https://systemfontstack.com",
-      "value": ["-apple-system", "BlinkMacSystemFont", "avenir next", "avenir", "segoe ui", "helvetica neue", "Adwaita Sans", "Cantarell", "Ubuntu", "roboto", "noto", "helvetica", "arial", "sans-serif"]
+      "description": "Source Sans 3 with https://systemfontstack.com as backups",
+      "value": ["Source Sans", "-apple-system", "BlinkMacSystemFont", "avenir next", "avenir", "segoe ui", "helvetica neue", "Adwaita Sans", "Cantarell", "Ubuntu", "roboto", "noto", "helvetica", "arial", "sans-serif"]
     },
     {
       "name": "Mono",
