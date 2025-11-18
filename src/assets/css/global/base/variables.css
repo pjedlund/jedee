@@ -29,23 +29,26 @@
 /* Light theme */
 :root,
 :root[data-theme='light'] {
-  --color-text: var(--color-gray-800);
-  --color-bg: var(--color-gray-100);
+  --color-text: var(--color-themecolordarkest);
+  --color-bg: var(--color-themecolorlightest);
 
   --color-primary: var(--color-red);
   --color-secondary: var(--color-blue);
   --color-tertiary: var(--color-green);
 
   --color-text-accent: var(--color-gray-700);
-  --color-bg-accent: var(--color-gray-200);
+  --color-bg-accent: white;
   --color-bg-accent-2: var(--color-gray-300);
+  /* border top for body */
+  --color-border-top: var(--color-themecolorlight);
+  --color-border-height: 1rem;
 }
 
 /* Dark theme */
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-text: var(--color-gray-100);
-    --color-bg: var(--color-gray-800);
+    --color-text: var(--color-themecolorlightest);
+    --color-bg: var(--color-themecolordarkest);
 
     --color-primary: var(--color-red-subdued);
     --color-secondary: var(--color-blue-subdued);
@@ -54,12 +57,15 @@
     --color-text-accent: var(--color-gray-300);
     --color-bg-accent: var(--color-gray-700);
     --color-bg-accent-2: var(--color-gray-600);
+    /* border top for body */
+    --color-border-top: var(--color-themecolordark);
+    --color-border-height: 2rem;
   }
 }
 
 :root[data-theme='dark'] {
-  --color-text: var(--color-gray-100);
-  --color-bg: var(--color-gray-800);
+  --color-text: var(--color-themecolordark);
+  --color-bg: var(--color-themecolordarkest);
 
   --color-primary: var(--color-red-subdued);
   --color-secondary: var(--color-blue-subdued);
@@ -68,4 +74,7 @@
   --color-text-accent: var(--color-gray-300);
   --color-bg-accent: var(--color-gray-700);
   --color-bg-accent-2: var(--color-gray-600);
+  /* border top for body */
+  --color-border-top: var(--color-themecolordark);
+  --color-border-height: 2rem;
 }

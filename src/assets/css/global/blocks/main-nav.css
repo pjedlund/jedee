@@ -2,6 +2,7 @@
   --nav-list-timing-function: cubic-bezier(0.68, -0.55, 0.27, 1.55);
   position: var(--nav-position, absolute);
   inset-inline-end: 0;
+  letter-spacing: var(--tracking-wide);
 }
 
 .mainnav:has([data-drawer-toggle][aria-expanded='true']) {
@@ -87,9 +88,10 @@ body:has([data-drawer-toggle][aria-expanded='true']) {
 
 .mainnav span {
   font-weight: var(--font-bold);
+  font-family: var(--font-base);
+  font-size: var(--size-step-min-2);
   text-transform: uppercase;
-  font-family: var(--font-display);
-  font-size: var(--size-step-min-1);
+  letter-spacing: var(--tracking-wide);
 }
 
 .mainnav svg {

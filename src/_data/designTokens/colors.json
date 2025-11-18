@@ -97,6 +97,26 @@
     {
       "name": "Green Subdued",
       "value": "#62644e"
+    },
+    {
+      "name": "FULLRED",
+      "value": "#FF0000"
+    },
+    {
+      "name": "themeColorDarkest",
+      "value": "#495464"
+    },
+    {
+      "name": "themeColorDark",
+      "value": "#bbbfca"
+    },
+    {
+      "name": "themeColorLight",
+      "value": "#e8e8e8"
+    },
+    {
+      "name": "themeColorLightest",
+      "value": "#f4f4f2"
     }
   ]
 }

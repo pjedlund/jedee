@@ -1,6 +1,23 @@
 {
   "title": "Colors",
   "description": "Hex color codes that can be shared, cross-platform. They can be converted at point of usage, such as HSL for web or CMYK for print. neutral and vibrant colors are converted to color palettes, fixed colors are kept as they are",
+  "palette": [{
+      "name": "themeColorDarkest",
+      "value": "#495464"
+    },
+    {
+      "name": "themeColorDark",
+      "value": "#bbbfca"
+    },
+    {
+      "name": "themeColorLight",
+      "value": "#e8e8e8"
+    },
+    {
+      "name": "themeColorLightest",
+      "value": "#f4f4f2"
+    }
+  ],
   "shades_neutral": [{
     "name": "Gray",
     "value": "#495464"
@@ -22,5 +39,8 @@
       "value": "#626449"
     }
   ],
-  "standalone": []
+  "standalone": [{
+    "name": "FULLRED",
+    "value": "#FF0000"
+  }]
 }

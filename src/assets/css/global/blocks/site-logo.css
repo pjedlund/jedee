@@ -1,6 +1,17 @@
 .logo {
   --gutter: var(--space-xs);
-  padding: var(--space-s) 0;
-  font-size: var(--size-step-0);
+  padding: var(--space-m) 0;
+  font-size: var(--size-step-min-2);
+  font-weight: var(--font-bold);
+  /* letter-spacing: .1rem; */
+  letter-spacing: var(--tracking-wide);
   text-decoration: none;
+  text-transform: uppercase;
+}
+
+.logo svg {
+  width: 1.15em;
+  height: 1.15em;
+  /* fill: var(--color-themecolordarkest); */
+  fill: var(--color-themecolordark);
 }
