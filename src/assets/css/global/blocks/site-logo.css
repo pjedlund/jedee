@@ -1,7 +1,7 @@
 .logo {
   --gutter: var(--space-xs);
   /* hack var(--space-l) to get logo to line up with MENU */
-  padding: var(--space-l) 0 var(--space-m) 0;
+  padding: var(--space-m) 0;
   font-size: var(--size-step-min-2);
   font-weight: var(--font-bold);
   /* letter-spacing: .1rem; */
@@ -14,5 +14,5 @@
   width: 1.15em;
   height: 1.2em;
   /* fill: var(--color-themecolordarkest); */
-  fill: var(--color-themecolordark);
+  fill: var(--color-logo-icon);
 }
