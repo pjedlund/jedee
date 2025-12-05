@@ -16,6 +16,7 @@
       {% endfor %}
     </div>
   {% endif %}
+
   <div slot="content" webc:nokeep>{{ item.data.description | markdownFormat | safe }}</div>
 </custom-card>
 

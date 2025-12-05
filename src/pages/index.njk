@@ -1,49 +1,27 @@
 ---
-layout: base
+layout: page
 permalink: /index.html
-title: 'Pacific Northwest Made'
-description: 'Personal website for Johan Edlund.'
+title: "Hej! I'm Johan."
+description: 'Personal website of Johan Edlund.'
+sizes: '(max-width: 615px) 50vw, 100vw'
+widths: [400, 520]
 blog:
   title: 'Blog'
   intro: "I'm showing the last 4 blog posts, but there might be more!"
 ---
 
-<div class="wrapper">
-  <header class="full | section" style="--spot-color: var(--color-light)">
-    <div class="section__inner flow region" style="--region-space-top: var(--space-xl-2xl)">
-      <h1 class="text-center">{{ title }}</h1>
-    </div>
-    {% svg "divider/waves", null, "divider" %}
-  </header>
+<p>
+  Honestly, I made this starter for myself, based on how I want to start a project and how I like to organize everything. I am delighted that so many of you find it useful too! This is a list of sites based on / built with Eleventy Excellent. This uses Eleventy's <a href="https://www.11ty.dev/docs/services/screenshots/">screenshot API </a>. New screenshots are fetched in development only.
+</p>
 
-  <article class="full | region">
-    <div class="prose wrapper flow">
-      <h2 id="an-eleventy-starter">An Eleventy starter</h2>
-      <p>
-        Built around a CSS workflow that emphasizes guiding browser styling rather than micromanaging it. It
-        incorporates progressive enhancement, fluid type and spacing, and utilizes modern CSS features for
-        layout. The goal is to develop frontends that provide a great experience across all devices,
-        connection speeds, and usage contexts.
-      </p>
-      <p>
-        <strong>This is <a href="https://github.com/madrilene/eleventy-excellent/">version {{ pkg.version }}</a>.</strong> I keep a
-        <a href="https://github.com/madrilene/eleventy-excellent/tree/v1">branch of v1</a>,
-        <a href="https://github.com/madrilene/eleventy-excellent/tree/v2">v2</a> and <a href="https://github.com/madrilene/eleventy-excellent/tree/v3">v3</a>. I  tried to <a href="/get-started/#docs-lol">document most features and methodologies</a>.
-      </p>
-      <p><strong>Have fun</strong> and let me know if you find any issues or have ideas for improvements!</p>
-    </div>
-  </article>
+<article class="full section" style="--spot-color: var(--color-bg-accent)">
+  {% svg "divider/soft-top", null, "divider" %}
 
-  <section class="full | region">
-    <div class="prose wrapper flow">
-      <h2>{{ blog.title }}</h2>
-      {% if blog.intro %}
-        <p>{{ blog.intro }}</p>
-      {% endif %}
-      <div class="feature |  region region-space-l">
-        <custom-masonry layout="50-50">
+  <section class="feature section__inner wrapper">
+      <div class="feature | region region-space-l">
+        <custom-masonry>
           {% set itemList = collections.allPosts %}
-					{% asyncEach item in itemList.slice(0, 4) %}
+					{% asyncEach item in itemList.slice(0, 10) %}
             {% set headingLevel = "h3" %}
 						{% include "partials/card-blog.njk" %}
 					{% endeach %}
@@ -51,4 +29,5 @@ blog:
       </div>
     </div>
   </section>
-</div>
+</article>
+

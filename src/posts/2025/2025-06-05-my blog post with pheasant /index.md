@@ -29,7 +29,7 @@ Another thing to note is the  `widths: ['auto']` setting, which by default only 
 <img src="./co-located-image.jpg" alt="alt text" eleventy:widths="200,600" loading="eager" decoding="sync">
 ```
 
-<img src="./seal.jpg" alt="A picturesque ill">
+<img class="feature" src="./seal.jpg" alt="A picturesque ill">
 
 This makes this syntax equally powerfull as the [shortcode](/blog/post-with-an-image/#nunjucks-shortcode), and easier to read - with the extra benefit that we can use both relative and absolute image sources.
 Only "downside" ist, that it comes with a higher build cost due to the post-processing step.
@@ -123,7 +123,7 @@ As for the higher build cost of post-processing, the shortcode images are being 
 {% image image, alt or title, credit, "eager", "feature", "grayscale" %}
 
 <figure class="feature">
-  <img src="{{ image }}" alt="{{ alt or title }}" loading="eager" decoding="sync" class="grayscale">
+  <img src="./seal.jpg" alt="{{ alt or title }}" loading="eager" decoding="sync" class="grayscale">
   {% if credit %}
   <figcaption>{{ credit }}</figcaption>
   {% endif %}
