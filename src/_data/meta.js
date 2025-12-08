@@ -50,7 +50,7 @@ export const blog = {
   tagPlural: 'Tags',
   tagMore: 'More tags:',
   // pagination
-  paginationLabel: 'Blog',
+  paginationLabel: 'Articles',
   paginationPage: 'Page',
   paginationPrevious: 'Previous',
   paginationNext: 'Next',
@@ -91,7 +91,7 @@ export const greenweb = {
 export const tests = {
   pa11y: {
     // keep customPaths empty if you want to test all pages
-    customPaths: ['/', '/about/', '/blog/', '/styleguide/'],
+    customPaths: ['/', '/about/', '/articles/', '/styleguide/'],
     globalIgnore: []
   }
 };

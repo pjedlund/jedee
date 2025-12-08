@@ -1,11 +1,11 @@
 ---
 layout: base
-title: Blog
-description: 'All blog posts can be found here'
+title: Articles
+description: 'All articles can be found here'
 pagination:
-  data: collections.allPosts
+  data: collections.allArticles
   size: 8
-permalink: 'blog/{% if pagination.pageNumber >=1 %}page-{{ pagination.pageNumber + 1 }}/{% endif %}index.html'
+permalink: 'articles/{% if pagination.pageNumber >=1 %}page-{{ pagination.pageNumber + 1 }}/{% endif %}index.html'
 ---
 
 <div class="wrapper">
@@ -18,7 +18,7 @@ permalink: 'blog/{% if pagination.pageNumber >=1 %}page-{{ pagination.pageNumber
   </header>
 
   <div class="region flow prose" style="--region-space-top: var(--space-xl-2xl)">
-    <p>This blog has a pagination of <strong>{{ pagination.size }}</strong> posts per page.<br>
+    <p>This page has a pagination of <strong>{{ pagination.size }}</strong> posts per page.<br>
       The pagination is only shown if there are more posts ({{ collections.posts.length }}) than items per
       page ({{ pagination.size }}).
     </p>

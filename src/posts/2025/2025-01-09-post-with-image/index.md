@@ -2,6 +2,7 @@
 title: 'Post with an image'
 description: "We can use Markdown, Nunjucks shortcodes or pure HTML to add images to posts and pages."
 date: 2025-01-09
+image: '/assets/images/gallery/asturias-2.jpg'
 tags: ['image', 'feature']
 ---
 

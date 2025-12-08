@@ -16,8 +16,8 @@ export default {
       url: '/notes/'
     },
     {
-      text: 'Blog',
-      url: '/blog/'
+      text: 'Articles',
+      url: '/articles/'
     },
     {
       text: 'Reading',

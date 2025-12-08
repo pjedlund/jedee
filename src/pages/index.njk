@@ -20,7 +20,7 @@ blog:
   <section class="feature section__inner wrapper">
       <div class="feature | region region-space-l">
         <custom-masonry>
-          {% set itemList = collections.allPosts %}
+          {% set itemList = collections.allArticles %}
 					{% asyncEach item in itemList.slice(0, 10) %}
             {% set headingLevel = "h3" %}
 						{% include "partials/card-blog.njk" %}

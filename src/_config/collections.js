@@ -1,5 +1,5 @@
-/** All blog posts as a collection. */
-export const getAllPosts = collection => {
+/** All articles as a collection. */
+export const getAllArticles = collection => {
   return collection.getFilteredByGlob('./src/posts/**/*.md').reverse();
 };
 
@@ -8,7 +8,7 @@ export const getAllNotes = collection => {
   return collection.getFilteredByGlob('./src/notes/**/*.md').reverse();
 };
 
-/** All reasding as a collection. */
+/** All reading as a collection. */
 export const getAllReading = collection => {
   return collection.getFilteredByGlob('./src/reading/**/*.md').reverse();
 };
