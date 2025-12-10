@@ -4,7 +4,7 @@ description: Time for a new version with a lot of breaking changes! Have fun eve
 date: 2025-11-04
 updated: 2025-11-01T18:45:54+01:00
 tags:
-  - notes
+  - breaking
 draft: false
 ---
 

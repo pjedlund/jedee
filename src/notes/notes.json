@@ -1,5 +1,6 @@
 {
   "layout": "note",
-  "tags": "notes",
+  "tags": "posts",
+  "category": "note",
   "permalink": "/notes/{{ title | slugify }}/index.html"
 }

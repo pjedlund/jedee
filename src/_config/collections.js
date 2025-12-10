@@ -1,6 +1,11 @@
+/** All posts to show on index as a collection. */
+export const getAllPosts = collection => {
+  return collection.getFilteredByGlob('./src/articles/**/*.md').reverse();
+};
+
 /** All articles as a collection. */
 export const getAllArticles = collection => {
-  return collection.getFilteredByGlob('./src/posts/**/*.md').reverse();
+  return collection.getFilteredByGlob('./src/articles/**/*.md').reverse();
 };
 
 /** All notes as a collection. */

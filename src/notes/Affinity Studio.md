@@ -3,7 +3,6 @@ title: Affinity Studio
 description: Completely free version with both vector, bitmap and photo editing.
 date: 2025-03-04
 tags:
-  - notes
   - design
 draft: false
 ---

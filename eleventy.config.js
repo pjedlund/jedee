@@ -15,7 +15,7 @@ dotenv.config();
 import yaml from 'js-yaml';
 
 //  config import
-import { getAllArticles, getAllNotes, getAllReading, showInSitemap, tagList } from './src/_config/collections.js';
+import { getAllPosts, getAllArticles, getAllNotes, getAllReading, showInSitemap, tagList } from './src/_config/collections.js';
 import events from './src/_config/events.js';
 import filters from './src/_config/filters.js';
 import plugins from './src/_config/plugins.js';
@@ -45,6 +45,7 @@ export default async function(eleventyConfig) {
   eleventyConfig.addLayoutAlias('tags', 'tags.njk');
 
   //	---------------------  Collections
+  eleventyConfig.addCollection('allPosts', getAllPosts);
   eleventyConfig.addCollection('allArticles', getAllArticles);
   eleventyConfig.addCollection('allNotes', getAllNotes);
   eleventyConfig.addCollection('allReading', getAllReading);
@@ -90,6 +91,7 @@ export default async function(eleventyConfig) {
   eleventyConfig.addDataExtension('yaml', contents => yaml.load(contents));
 
   // --------------------- Filters
+  eleventyConfig.addFilter('categoryFilter', filters.categoryFilter);
   eleventyConfig.addFilter('toIsoString', filters.toISOString);
   eleventyConfig.addFilter('formatDate', filters.formatDate);
   eleventyConfig.addFilter('markdownFormat', filters.markdownFormat);

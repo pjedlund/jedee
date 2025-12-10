@@ -1,5 +1,6 @@
 {
   "layout": "post",
   "tags": "posts",
+  "category": "article",
   "permalink": "/articles/{{ title | slugify }}/index.html"
 }

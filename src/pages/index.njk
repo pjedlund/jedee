@@ -2,7 +2,7 @@
 layout: page
 permalink: /index.html
 title: "Hej! I'm Johan."
-description: 'Personal website of Johan Edlund.'
+description: 'Personal website.'
 sizes: '(max-width: 615px) 50vw, 100vw'
 widths: [400, 520]
 blog:
@@ -19,9 +19,10 @@ blog:
 
   <section class="feature section__inner wrapper">
       <div class="feature | region region-space-l">
-        <custom-masonry>
-          {% set itemList = collections.allArticles %}
-					{% asyncEach item in itemList.slice(0, 10) %}
+        <custom-masonry layout="thirds">
+          {# {% set itemList = collections.allArticles %} #}
+          {% set itemList = collections.posts | reverse %}
+					{% asyncEach item in itemList.slice(0, 40) %}
             {% set headingLevel = "h3" %}
 						{% include "partials/card-blog.njk" %}
 					{% endeach %}
