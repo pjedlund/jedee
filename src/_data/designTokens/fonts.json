@@ -3,8 +3,8 @@
   "description": "Source sans + https://systemfontstack.com",
   "items": [{
       "name": "Display",
-      "description": "https://systemfontstack.com",
-      "value": ["Iowan Old Style", "Apple Garamond", "Baskerville", "Times New Roman", "Droid Serif", "Times", "Source Serif Pro", "serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"]
+      "description": "Source serif 700 + https://systemfontstack.com",
+      "value": ["Source Serif", "Iowan Old Style", "Apple Garamond", "Baskerville", "Times New Roman", "Droid Serif", "Times", "Source Serif Pro", "serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"]
     },
     {
       "name": "Base",
