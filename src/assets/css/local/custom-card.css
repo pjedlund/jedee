@@ -11,7 +11,7 @@ custom-card {
 }
 
 /* avoid flow space being added to unused elements with nested slots */
-custom-card > :empty {
+custom-card> :empty {
   display: none;
 }
 
@@ -29,7 +29,7 @@ custom-card :is(h2, h3) a {
   text-decoration: none;
 }
 
-custom-card > :is(picture, figure) {
+custom-card> :is(picture, figure) {
   grid-row: image;
   --flow-space: 0;
 }
@@ -42,16 +42,16 @@ custom-card img {
   object-position: center;
 }
 
-custom-card > .meta {
+custom-card>.meta {
   grid-row: meta;
   font-size: var(--size-step-min-1);
 }
 
-custom-card > p {
+custom-card>p {
   grid-row: desc;
 }
 
-custom-card > footer {
+custom-card>footer {
   grid-row: footer;
   font-size: var(--size-step-min-2);
 }
@@ -71,7 +71,8 @@ custom-card[no-padding] {
   background-color: transparent;
   border: 4px solid var(--color-bg-accent);
   padding: 0;
-  border-radius: none;
+  /* changed to 0 from none to validate */
+  border-radius: 0;
 }
 
 /* squared image */
@@ -90,9 +91,11 @@ custom-card[clickable]:focus-within {
 custom-card[clickable]:focus-within a:focus {
   outline: none;
 }
+
 custom-card[clickable] {
   position: relative;
 }
+
 custom-card[clickable] a:after {
   bottom: 0;
   content: '';
