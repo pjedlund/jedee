@@ -17,6 +17,9 @@
     </div>
   {% endif %}
   <div slot="content" webc:nokeep>{{ item.data.description | markdownFormat | safe }}</div>
+  <footer slot="footer" class="repel">
+    {{ item.data.category }}
+  </footer>
 </custom-card>
 
 {% css "local" %}

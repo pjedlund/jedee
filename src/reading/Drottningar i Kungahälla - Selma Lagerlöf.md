@@ -2,10 +2,7 @@
 title: Drottningar i Kungahälla
 subtitle:
 author: Selma Lagerlöf
-authors: Selma Lagerlöf
-category: Swedish literature
-categories: Swedish literature
-publisher:
+publisher: Someone
 publishDate: 1923
 totalPage: 402
 coverUrl: http://books.google.com/books/content?id=W8lOAQAAMAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api

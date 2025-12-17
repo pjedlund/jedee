@@ -3,8 +3,6 @@ title: The Kingdom of God is Within You
 subtitle:
 author: Leo Tolstoy
 authors: Leo Tolstoy
-category: Religion
-categories: Religion
 publisher: Simon and Schuster
 publishDate: 2012-12-10
 totalPage: 416
@@ -16,5 +14,5 @@ previewLink: http://books.google.se/books?id=iNnsAgAAQBAJ&printsec=frontcover&dq
 isbn13: 9781625582324
 isbn10: 1625582323
 ---
-	
+
 content text

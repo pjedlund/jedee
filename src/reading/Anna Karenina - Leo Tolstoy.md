@@ -3,8 +3,6 @@ title: Anna Karenina
 subtitle:
 author: Leo Tolstoy
 authors: Leo Tolstoy
-category: Literary Criticism
-categories: Literary Criticism
 publisher: OUP Oxford
 publishDate: 2014-08-28
 totalPage: 898
