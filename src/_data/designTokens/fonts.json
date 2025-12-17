@@ -14,7 +14,7 @@
     {
       "name": "Mono",
       "description": "https://systemfontstack.com + 5 extra",
-      "value": ["Dank Mono", "Fira Code", "Victor Mono Regular", "Inconsolata", "Fira Mono", "Menlo", "Consolas", "Monaco", "Adwaita Mono", "Liberation Mono", "Lucida Console", "monospace"]
+      "value": ["Source Code Pro", "Dank Mono", "Fira Code", "Victor Mono Regular", "Inconsolata", "Fira Mono", "Menlo", "Consolas", "Monaco", "Adwaita Mono", "Liberation Mono", "Lucida Console", "monospace"]
     }
   ]
 }
