@@ -2,6 +2,7 @@
 title: 'My blog post with pheasant'
 description: "You can use Markdown, a Nunjucks shortcode or pure HTML to add images to your posts and pages."
 date: 2025-06-05
+updated: git Created
 tags: ['image', 'feature']
 image: '/assets/images/gallery/asturias-1.jpg'
 alt: 'Pheasant, fasan på svenska'

@@ -18,6 +18,11 @@ export const getAllReading = collection => {
   return collection.getFilteredByGlob('./src/reading/**/*.md').reverse();
 };
 
+/** All listening as a collection. */
+export const getAllListening = collection => {
+  return collection.getFilteredByGlob('./src/listening/**/*.md').reverse();
+};
+
 /** All relevant pages as a collection for sitemap.xml */
 export const showInSitemap = collection => {
   return collection.getFilteredByGlob('./src/**/*.{md,njk}');

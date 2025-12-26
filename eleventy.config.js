@@ -15,7 +15,7 @@ dotenv.config();
 import yaml from 'js-yaml';
 
 //  config import
-import { getAllPosts, getAllArticles, getAllNotes, getAllReading, showInSitemap, tagList } from './src/_config/collections.js';
+import { getAllPosts, getAllArticles, getAllNotes, getAllReading, getAllListening, showInSitemap, tagList } from './src/_config/collections.js';
 import events from './src/_config/events.js';
 import filters from './src/_config/filters.js';
 import plugins from './src/_config/plugins.js';
@@ -41,6 +41,7 @@ export default async function(eleventyConfig) {
   eleventyConfig.addLayoutAlias('page', 'page.njk');
   eleventyConfig.addLayoutAlias('note', 'note.njk');
   eleventyConfig.addLayoutAlias('reading', 'reading.njk');
+  eleventyConfig.addLayoutAlias('listening', 'listening.njk');
   eleventyConfig.addLayoutAlias('post', 'post.njk');
   eleventyConfig.addLayoutAlias('tags', 'tags.njk');
 
@@ -49,6 +50,7 @@ export default async function(eleventyConfig) {
   eleventyConfig.addCollection('allArticles', getAllArticles);
   eleventyConfig.addCollection('allNotes', getAllNotes);
   eleventyConfig.addCollection('allReading', getAllReading);
+  eleventyConfig.addCollection('allListening', getAllListening);
   eleventyConfig.addCollection('showInSitemap', showInSitemap);
   eleventyConfig.addCollection('tagList', tagList);
 

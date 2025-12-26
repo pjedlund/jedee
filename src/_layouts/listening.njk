@@ -18,19 +18,20 @@ schema: BlogPosting
         <span class="button" data-small-button data-button-variant="tertiary">draft</span>
       {%- endif %}
       <!-- date -->
-      {% if updated %}
-        {{ updated }}
-      {% endif %}
       {% set definedDate = date %} {% include "partials/date.njk" %}
-      {% if tags.length > 1 %}
+      {%
+        if tags.length >
+        1
+      %}
         <!-- tags -->
-        {% for tag in tags %}{% if tag != "posts" %}
+        {% for tag in tags %}{% if tag != "reading" %}
           <a class="button" href="/tags/{{ tag | slugify }}/" data-small-button> {{ tag }} </a>
         {% endif %}{% endfor %}
       {% endif %}
     </p>
 
     {{ content | safe }}
+    {% include 'partials/backlinks.njk' %}
     {% include 'partials/edit-on.njk' %}
   </div>
 
