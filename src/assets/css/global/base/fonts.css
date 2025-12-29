@@ -60,6 +60,7 @@
 /* Source code pro with no fallback */
 @font-face {
   font-family: 'Source Code Pro';
+  font-display: swap;
   src:
     local('Source Code Pro'),
     url('/assets/fonts/source-code-pro/source-code-pro.woff2') format('woff2');
