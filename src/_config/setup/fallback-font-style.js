@@ -7,12 +7,12 @@
 // console.log(fontFaces);
 
 // Source serif
-import { createFontStack } from '@capsizecss/core';
-import sourceSerif4 from '@capsizecss/metrics/sourceSerif4/700';
-import georgia from '@capsizecss/metrics/georgia';
-
-const { fontFaces } = createFontStack([sourceSerif4, georgia]);
-console.log(fontFaces);
+// import { createFontStack } from '@capsizecss/core';
+// import sourceSerif4 from '@capsizecss/metrics/sourceSerif4/700';
+// import georgia from '@capsizecss/metrics/georgia';
+//
+// const { fontFaces } = createFontStack([sourceSerif4, georgia]);
+// console.log(fontFaces);
 
 // @font-face {
 // font-family: "Source Serif 4 Fallback";
@@ -37,4 +37,21 @@ console.log(fontFaces);
 // descent-override: 42.6604%;
 // line-gap-override: 0%;
 // size-adjust: 93.7639%;
+// }
+
+
+// Source code pro
+import { createFontStack } from '@capsizecss/core';
+import sourceCodePro from '@capsizecss/metrics/sourceCodePro';
+import courierNew from '@capsizecss/metrics/courierNew';
+
+const { fontFaces } = createFontStack([sourceCodePro, courierNew]);
+console.log(fontFaces);
+
+// @font-face {
+// font-family: "Source Serif 4 Fallback";
+// src: local('Georgia');
+// ascent-override: 93.4918%;
+// descent-override: 30.2314%;
+// size-adjust: 110.8118%;
 // }

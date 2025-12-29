@@ -15,6 +15,11 @@
   ascent-override: 93.4918%;
   descent-override: 30.2314%;
   size-adjust: 110.8118%;
+  /* https://screenspan.net/fallback */
+  /* size-adjust: 118%;
+  ascent-override: 103%;
+  descent-override: 30%; */
+
 }
 
 /* Source sans with Arial as fallback for body text */
@@ -34,7 +39,12 @@
   ascent-override: 109.2105%;
   descent-override: 42.6604%;
   line-gap-override: 0%;
-  size-adjust: 93.7639%;
+  /* https://screenspan.net/fallback */
+  /* size-adjust: 93.7639%;
+  size-adjust: 93%;
+  ascent-override: 106%;
+  descent-override: 32%; */
+
 }
 
 @font-face {
@@ -50,10 +60,15 @@
 /* Source code pro with no fallback */
 @font-face {
   font-family: 'Source Code Pro';
-  font-style: normal;
-  font-display: auto;
-  font-weight: normal;
   src:
     local('Source Code Pro'),
     url('/assets/fonts/source-code-pro/source-code-pro.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Source Code Pro Fallback';
+  src: local('Courier New'), local('CourierNewPSMT');
+  ascent-override: 98.416%;
+  descent-override: 27.3044%;
+  size-adjust: 99.9837%;
 }

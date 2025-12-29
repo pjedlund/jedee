@@ -13,8 +13,8 @@
     },
     {
       "name": "Mono",
-      "description": "Source Code Pro for codeblocks/pre etc",
-      "value": ["Source Code Pro", "Dank Mono", "Fira Code", "Victor Mono Regular", "Inconsolata", "Fira Mono", "Menlo", "Consolas", "Monaco", "Adwaita Mono", "Liberation Mono", "Lucida Console", "monospace"]
+      "description": "Source Code Pro with Courier New as fallback",
+      "value": ["Source Code Pro", "Source Code Pro Fallback", "Dank Mono", "Fira Code", "Fira Mono", "Menlo", "Consolas", "Monaco", "monospace"]
     }
   ]
 }
