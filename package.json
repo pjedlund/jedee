@@ -1,5 +1,4 @@
 {
-
   "name": "jedee",
   "version": "0.5.2",
   "description": "Personal website for Johan Edlund.",
@@ -12,6 +11,7 @@
   "scripts": {
     "clean": "rimraf dist src/_includes/css src/_includes/scripts",
     "clean:og": "rimraf src/assets/og-images",
+    "fallback-font-style": "node ./src/_config/setup/fallback-font-style.js",
     "favicons": "node ./src/_config/setup/generate-favicons.js",
     "colors": "node ./src/_config/setup/create-colors.js",
     "screenshots": "node ./src/_config/setup/generate-screenshots.js",
@@ -42,7 +42,10 @@
     "markdown-it-wikilinks-plus": "github:actuallysomecat/markdown-it-wikilinks-plus",
     "tailwindcss": "^3.4.17"
   },
+
   "devDependencies": {
+    "@capsizecss/core": "^4.1.3",
+    "@capsizecss/metrics": "^3.6.2",
     "@toycode/markdown-it-class": "^1.2.4",
     "autoprefixer": "^10.4.21",
     "colorjs.io": "^0.5.2",

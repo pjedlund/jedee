@@ -1,3 +1,4 @@
+/* Source serif 700 with Georgia Bold as fallback for headlines*/
 @font-face {
   font-family: 'Source Serif';
   font-style: normal;
@@ -5,9 +6,18 @@
   font-weight: 700;
   src:
     local('Source Serif'),
-    url('/assets/fonts/source-serif/SourceSerif4-Bold-BasicLatin0020-007F-SVCHARS.woff2') format('woff2');
+    url('/assets/fonts/source-serif/source-serif.woff2') format('woff2');
 }
 
+@font-face {
+  font-family: 'Source Serif Fallback';
+  src: local('Georgia');
+  ascent-override: 93.4918%;
+  descent-override: 30.2314%;
+  size-adjust: 110.8118%;
+}
+
+/* Source sans with Arial as fallback for body text */
 @font-face {
   font-family: 'Source Sans';
   font-style: normal;
@@ -15,7 +25,16 @@
   font-weight: 100 1000;
   src:
     local('Source Sans'),
-    url('/assets/fonts/source-sans/SourceSans3VF-Upright.otf-subset.woff2') format('woff2');
+    url('/assets/fonts/source-sans/source-sans.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Source Sans Fallback';
+  src: local('Arial'), local('ArialMT');
+  ascent-override: 109.2105%;
+  descent-override: 42.6604%;
+  line-gap-override: 0%;
+  size-adjust: 93.7639%;
 }
 
 @font-face {
@@ -25,15 +44,16 @@
   font-weight: 100 1000;
   src:
     local('Source Sans'),
-    url('/assets/fonts/source-sans/SourceSans3VF-Italic-BasicLatin-SVCHARS.woff2') format('woff2');
+    url('/assets/fonts/source-sans/source-sans-italic.woff2') format('woff2');
 }
 
+/* Source code pro with no fallback */
 @font-face {
   font-family: 'Source Code Pro';
   font-style: normal;
-  font-display: swap;
+  font-display: auto;
   font-weight: normal;
   src:
     local('Source Code Pro'),
-    url('/assets/fonts/source-code-pro/sourcecode-latin-roman-variable.woff2') format('woff2');
+    url('/assets/fonts/source-code-pro/source-code-pro.woff2') format('woff2');
 }
