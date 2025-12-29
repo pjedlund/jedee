@@ -50,6 +50,7 @@
 /* Source code pro with no fallback */
 @font-face {
   font-family: 'Source Code Pro';
+  font-display: swap;
   font-style: normal;
   font-display: auto;
   font-weight: normal;
