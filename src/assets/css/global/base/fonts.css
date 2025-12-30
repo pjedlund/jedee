@@ -44,7 +44,6 @@
   size-adjust: 93%;
   ascent-override: 106%;
   descent-override: 32%; */
-
 }
 
 @font-face {
@@ -53,7 +52,6 @@
   font-display: swap;
   font-weight: 100 1000;
   src:
-    local('Source Sans'),
     url('/assets/fonts/source-sans/source-sans-italic.woff2') format('woff2');
 }
 
