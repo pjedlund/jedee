@@ -13,6 +13,7 @@ package = "netlify-plugin-cache"
       Referrer-Policy = "strict-origin-when-cross-origin"
       Permissions-Policy = "autoplay=(), camera=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), publickey-credentials-get=()"
 
+[[headers]]
     for = "*.woff2"
       [headers.values]
       Cache-Control = "max-age=31536000,public,must-revalidate"
