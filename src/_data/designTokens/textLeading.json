@@ -1,10 +1,13 @@
 {
   "title": "Leading",
   "description": "Ratio-based leading/line-height values",
-  "items": [
-    {
+  "items": [{
       "name": "Flat",
       "value": 1
+    },
+    {
+      "name": "ExtraFine",
+      "value": 1.1
     },
     {
       "name": "Fine",
@@ -13,6 +16,10 @@
     {
       "name": "Standard",
       "value": 1.4
+    },
+    {
+      "name": "Fibonacci",
+      "value": 1.612
     }
   ]
 }
