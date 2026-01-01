@@ -31,8 +31,8 @@ export const opengraph_default_alt =
   "Visible content: An Eleventy starter with CUBE CSS, Cube CSS, Every Layout, Design Tokens and Tailwind for uitility classes. A workflow for building modern and resilient websites, introduced by Andy Bell's project buildexcellentwebsit.es"; // alt text for default meta image"
 export const blog = {
   // RSS feed
-  name: 'My Web Development Blog',
-  description: 'Tell the word what you are writing about in your blog. It will show up on feed readers.',
+  name: 'Johan Edlund',
+  description: 'Jesus Christ is the truth and the way.',
   // feed links are looped over in the head. You may add more to the array.
   feedLinks: [{
       title: 'Atom Feed',

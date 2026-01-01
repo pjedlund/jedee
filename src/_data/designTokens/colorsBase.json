@@ -38,9 +38,5 @@
       "name": "Green",
       "value": "#626449"
     }
-  ],
-  "standalone": [{
-    "name": "FULLRED",
-    "value": "#FF0000"
-  }]
+  ]
 }

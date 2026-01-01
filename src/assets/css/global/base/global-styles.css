@@ -33,7 +33,7 @@ h2,
 h3 {
   font-family: var(--font-display);
   font-weight: var(--font-bold);
-  line-height: var(--leading-flat);
+  line-height: var(--leading-fine);
   letter-spacing: var(--tracking);
 }
 
