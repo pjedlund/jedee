@@ -4,7 +4,7 @@ discover:
   title: Privacy Policy
 permalink: /privacy/index.html
 description: I respect the EU General Data Protection Regulation (GDPR). This policy document explains how I collect and handle any information you provide to me.
-date: "Last Modified"
+dateLastModified: "Last Modified"
 layout: page
 ---
 
@@ -39,4 +39,4 @@ If you have any reason to complain about the way I handle your privacy, please c
 
 ---
 
-*Last updated: {{ page.date | formatDate('MMMM D, YYYY') }}*
+*Last updated: {{ page.dateLastModified | formatDate('MMMM D, YYYY') }}*

@@ -18,10 +18,12 @@ schema: BlogPosting
         <span class="button" data-small-button data-button-variant="tertiary">draft</span>
       {%- endif %}
       <!-- date -->
-      {% if updated %}
-        {{ updated }}
-      {% endif %}
+      {% if date %}
       {% set definedDate = date %} {% include "partials/date.njk" %}
+      {% endif %}
+      {% if updatedDate %}
+       | Updated: {{ updatedDate | formatDate('MMMM D, YYYY') }}
+      {% endif %}
       {% if tags.length > 1 %}
         <!-- tags -->
         {% for tag in tags %}{% if tag != "posts" %}

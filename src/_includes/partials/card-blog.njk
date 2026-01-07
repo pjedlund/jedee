@@ -8,7 +8,7 @@
   <div slot="image" webc:nokeep>{% image item.data.image, site.name, null, "lazy", null, null, widths, sizes %}
   </div>
 {% endif %}
-  <{{ headingLevel }} slot="headline" class="text-step-2">
+  <{{ headingLevel }} slot="headline" class="text-step-1">
     <a href="{{ item.url | url }}">{{ item.data.title }}</a>
   </{{ headingLevel }}>
   <span slot="date">{%- if item.data.draft -%}<span class="button" data-small-button data-button-variant='tertiary'>draft</span>{%- endif %} {% include "partials/date.njk" %}</span>

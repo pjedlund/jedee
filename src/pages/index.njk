@@ -23,7 +23,6 @@ blog:
           {# {% set itemList = collections.allArticles %} #}
           {% set itemList = collections.posts | reverse %}
 					{% asyncEach item in itemList.slice(0, 40) %}
-            {% set headingLevel = "h3" %}
 						{% include "partials/card-blog.njk" %}
 					{% endeach %}
         </custom-masonry>

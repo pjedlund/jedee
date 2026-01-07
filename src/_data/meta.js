@@ -98,6 +98,7 @@ export const tests = {
 export const viewRepo = {
   // this is for the view/edit on github link. The value in the package.json will be pulled in.
   allow: true,
-  infoText: 'View this page on GitHub'
+  infoText: 'View this page on GitHub',
+  issuesPage: 'Report accessibility issues'
 };
 export const easteregg = false;
