@@ -14,7 +14,7 @@ I am very committed to this principle and I continually try to improve the user 
 
 The [Web Content Accessibility Guidelines (WCAG)](https://www.w3.org/WAI/standards-guidelines/wcag/) define requirements for designers and developers to improve accessibility for people with disabilities. It defines three levels of conformance: Level A, Level AA, and Level AAA.
 
-The aim is to be conformant with [ WCAG 2.1 Level AA.](https://www.w3.org/WAI/standards-guidelines/wcag/)
+My aim is to be conformant with [ WCAG 2.1 Level AA.](https://www.w3.org/WAI/standards-guidelines/wcag/)
 
 Compliance depends on how users implement and customize the starter for their specific content and use cases.
 
