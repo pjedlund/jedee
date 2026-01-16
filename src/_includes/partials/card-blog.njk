@@ -3,6 +3,7 @@
 {% set showTags = showTags | default(true) %}
 {% set category = item.data.tags[1] %}
 
+
 <custom-card clickable img-square>
 {% if item.data.image.length > 1 %}
   <div slot="image" webc:nokeep>{% image item.data.image, site.name, null, "lazy", null, null, widths, sizes %}
