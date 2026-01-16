@@ -5,6 +5,7 @@ author: Leo Tolstoy
 authors: Leo Tolstoy
 publisher: Simon and Schuster
 publishDate: 2012-12-10
+date: 2025-12-10
 totalPage: 416
 coverUrl: assets/images/reading/leo-tolstoy_the-kingdom-of-god-is-within-you_leo-wiener-4656b372-cover.jpg
 coverSmallUrl: assets/images/reading/leo-tolstoy_the-kingdom-of-god-is-within-you_leo-wiener-4656b372-cover.jpg
