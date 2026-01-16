@@ -12,10 +12,10 @@ description: Love... it means too much to me, far more than you can understand. 
 link: https://play.google.com/store/books/details?id=ChINBAAAQBAJ
 previewLink: http://books.google.se/books?id=ChINBAAAQBAJ&printsec=frontcover&dq=anna+karenina&hl=&as_pt=BOOKS&cd=1&source=gbs_api
 isbn13: 9780191662232
-isbn10: 0191662232
+isbn10: 191662232
 ---
 
-Love... it means too much to me, far more than you can understand. At its simplest, Anna Karenina is a love story. It is a portrait of a beautiful and intelligent woman whose passionate love for a handsome officer sweeps aside all other ties - to her marriage and to the network of relationships and moral values that bind the society around her.
+Love... it means too much to me, far more than you can understand. At its simplest, Anna Karenina is a love story. It is a portrait of a beautiful and intelligent woman whose passionate love for a handsome officer sweeps aside all other ties - to her marriage and to the network of relationships and moral values that bind the society around her..
 
 The love affair of Anna and Vronsky is played out alongside the developing romance of Kitty and Levin, and in the character of Levin, closely based on Tolstoy himself, the search for happiness takes on a deeper philosophical significance.
 
