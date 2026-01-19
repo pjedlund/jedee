@@ -1,6 +1,0 @@
-{
-  "layout": "reading",
-  "tags": "posts",
-  "category": "watching",
-  "permalink": "/watching/{{ title | slugify }}/index.html"
-}
