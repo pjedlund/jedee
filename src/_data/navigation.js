@@ -22,6 +22,10 @@ export default {
     {
       text: 'Reading',
       url: '/reading/'
+    },
+    {
+      text: 'Listening',
+      url: '/listening/'
     }
   ],
   bottom: [{
