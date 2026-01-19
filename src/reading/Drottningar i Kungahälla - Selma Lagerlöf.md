@@ -1,6 +1,7 @@
 ---
 title: Drottningar i Kungahälla
 subtitle:
+date: 2025-12-01
 author: Selma Lagerlöf
 publisher: Someone
 publishDate: 1923
