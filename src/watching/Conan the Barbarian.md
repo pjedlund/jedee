@@ -1,6 +1,7 @@
 ---
 title: Conan the Barbarian
 description: desc
+date: 2025-02-01
 categories:
   - "[[Movies]]"
 genre:

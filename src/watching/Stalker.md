@@ -1,4 +1,6 @@
 ---
+title: Stalker
+date: 2025-01-01
 categories:
   - "[[Movies]]"
 genre:
