@@ -1,26 +1,26 @@
 /** All posts to show on index as a collection. */
 export const getAllPosts = collection => {
-  return collection.getFilteredByGlob('./src/articles/**/*.md').reverse();
+  return collection.getFilteredByGlob('./src/posts/articles/**/*.md').reverse();
 };
 
 /** All articles as a collection. */
 export const getAllArticles = collection => {
-  return collection.getFilteredByGlob('./src/articles/**/*.md').reverse();
+  return collection.getFilteredByGlob('./src/posts/articles/**/*.md').reverse();
 };
 
 /** All notes as a collection. */
 export const getAllNotes = collection => {
-  return collection.getFilteredByGlob('./src/notes/**/*.md').reverse();
+  return collection.getFilteredByGlob('./src/posts/notes/**/*.md').reverse();
 };
 
 /** All reading as a collection. */
 export const getAllReading = collection => {
-  return collection.getFilteredByGlob('./src/reading/**/*.md').reverse();
+  return collection.getFilteredByGlob('./src/posts/reading/**/*.md').reverse();
 };
 
 /** All listening as a collection. */
 export const getAllListening = collection => {
-  return collection.getFilteredByGlob('./src/listening/**/*.md').reverse();
+  return collection.getFilteredByGlob('./src/posts/listening/**/*.md').reverse();
 };
 
 /** All relevant pages as a collection for sitemap.xml */

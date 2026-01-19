@@ -28,6 +28,6 @@ _backup
 .obsidian
 .vault-nickname
 src/_obsidian
-/src/notes/_fleeting
-/src/notes/_sources
+/src/posts/notes/_fleeting
+/src/posts/notes/_sources
 

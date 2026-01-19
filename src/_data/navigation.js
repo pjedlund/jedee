@@ -12,21 +12,27 @@ export default {
       url: '/built-with/'
     },
     {
-      text: 'Notes',
-      url: '/notes/'
+      text: 'Posts',
+      url: '/posts/',
+      submenu: [{
+          text: 'Notes',
+          url: '/notes/'
+        },
+        {
+          text: 'Articles',
+          url: '/articles/'
+        },
+        {
+          text: 'Reading',
+          url: '/reading/'
+        },
+        {
+          text: 'Listening',
+          url: '/listening/'
+        }
+      ]
     },
-    {
-      text: 'Articles',
-      url: '/articles/'
-    },
-    {
-      text: 'Reading',
-      url: '/reading/'
-    },
-    {
-      text: 'Listening',
-      url: '/listening/'
-    }
+
   ],
   bottom: [{
       text: 'Style guide',
