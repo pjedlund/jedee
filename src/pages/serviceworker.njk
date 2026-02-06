@@ -18,7 +18,6 @@ const PRECACHE_RESOURCES = [
   '/icon-512x512.png',
   '/maskable-icon.png',
   '/apple-touch-icon.png',
-  '/icon.svg',
   // fonts
   '/assets/fonts/source-sans/source-sans.woff2',
   '/assets/fonts/source-serif/source-serif.woff2',
@@ -37,6 +36,7 @@ self.addEventListener('install', (event) => {
       // add all resources we want to precache first
       if (PRECACHE_RESOURCES.length) {
         cache.addAll(PRECACHE_RESOURCES)
+        console.log('cache addAll')
       }
 
       // then add the offline page.
