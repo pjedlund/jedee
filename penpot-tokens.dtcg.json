@@ -190,33 +190,21 @@
       "family": {
         "display": {
           "$value": [
-            "Source Serif",
-            "Source Serif Fallback",
-            "serif"
+            "Source Serif 4"
           ],
           "$type": "fontFamilies",
           "$description": "Source serif 700 with Georgia Bold as fallback"
         },
         "base": {
           "$value": [
-            "Source Sans",
-            "Source Sans Fallback",
-            "sans-serif"
+            "Source Sans 3"
           ],
           "$type": "fontFamilies",
           "$description": "Source Sans 3 VF with Arial as fallback"
         },
         "mono": {
           "$value": [
-            "Source Code Pro",
-            "Source Code Pro Fallback",
-            "Dank Mono",
-            "Fira Code",
-            "Fira Mono",
-            "Menlo",
-            "Consolas",
-            "Monaco",
-            "monospace"
+            "Source Code Pro"
           ],
           "$type": "fontFamilies",
           "$description": "Source Code Pro with Courier New as fallback"
@@ -295,6 +283,73 @@
           "$value": "1.612",
           "$type": "number"
         }
+      }
+    },
+    "type": {
+      "body": {
+        "$value": {
+          "fontFamily": "{font.family.base}",
+          "fontWeight": "{font.weight.regular}",
+          "fontSize": "{font.size.step-0}",
+          "lineHeight": "{font.lineHeight.standard}"
+        },
+        "$type": "typography"
+      },
+      "heading": {
+        "1": {
+          "$value": {
+            "fontFamily": "{font.family.display}",
+            "fontWeight": "{font.weight.bold}",
+            "fontSize": "{font.size.step-6}",
+            "lineHeight": "{font.lineHeight.extrafine}"
+          },
+          "$type": "typography"
+        },
+        "2": {
+          "$value": {
+            "fontFamily": "{font.family.display}",
+            "fontWeight": "{font.weight.bold}",
+            "fontSize": "{font.size.step-4}",
+            "lineHeight": "{font.lineHeight.fine}"
+          },
+          "$type": "typography"
+        },
+        "3": {
+          "$value": {
+            "fontFamily": "{font.family.display}",
+            "fontWeight": "{font.weight.bold}",
+            "fontSize": "{font.size.step-2}",
+            "lineHeight": "{font.lineHeight.fine}"
+          },
+          "$type": "typography"
+        }
+      },
+      "blockquote": {
+        "$value": {
+          "fontFamily": "{font.family.base}",
+          "fontWeight": "{font.weight.regular}",
+          "fontSize": "{font.size.step-2}",
+          "lineHeight": "{font.lineHeight.standard}"
+        },
+        "$type": "typography"
+      },
+      "citation": {
+        "$value": {
+          "fontFamily": "{font.family.base}",
+          "fontWeight": "{font.weight.regular}",
+          "fontSize": "{font.size.step-1}",
+          "lineHeight": "{font.lineHeight.standard}"
+        },
+        "$type": "typography"
+      },
+      "caption": {
+        "$value": {
+          "fontFamily": "{font.family.base}",
+          "fontWeight": "{font.weight.regular}",
+          "fontSize": "{font.size.step-min-1}",
+          "lineHeight": "{font.lineHeight.standard}"
+        },
+        "$type": "typography"
       }
     }
   },

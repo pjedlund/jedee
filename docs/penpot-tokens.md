@@ -16,14 +16,16 @@ JEDEE - design tokens file → **Tokens panel** → import that file.
 
 | File | Becomes |
 | --- | --- |
-| `src/_data/designTokens/colors.json` | `core/colors` set + `theme/light` + `theme/dark` |
+| `src/_data/designTokens/colors.json` | `core/colors` set + `color.semantic.*` in `theme/light` + `theme/dark` |
 | `src/_data/designTokens/fonts.json` | `font.family.*` in `core/typography` |
 | `src/_data/designTokens/textWeights.json` | `font.weight.*` in `core/typography` |
 | `src/_data/designTokens/textSizes.json` | `font.size.*` in `core/typography` |
 | `src/_data/designTokens/textLeading.json` | `font.lineHeight.*` in `core/typography` |
+| `src/_data/designTokens/typography.json` | `type.*` composite styles in `core/typography` |
 | `src/_data/designTokens/spacing.json` | `space.*` in `core/spacing` |
 | `src/_data/designTokens/borderRadius.json` | `radius.*` in `core/layout` |
 | `src/_data/designTokens/viewports.json` | `breakpoint.*` in `core/layout` |
+| `src/_data/designTokens/semanticColors.json` | `color.bg/text/headline/...` in `theme/light` + `theme/dark` |
 
 The JSON files are themselves the source of truth for the website. The
 DTCG file is a derived artifact you regenerate any time the JSON changes.
@@ -49,7 +51,21 @@ transformations:
   primary values land in `theme/light`; the subdued values land in
   `theme/dark`. They share the same token names (e.g. `color.semantic.red`)
   so a shape bound to `color.semantic.red` automatically follows whichever
-  theme is active.
+  theme is active. The same theme-swap pattern is used for the semantic
+  background/text/headline tokens defined in `semanticColors.json`, which
+  mirror the `--color-*` CSS variables in `variables.css`.
+- **Font families use the Penpot-recognized name.** Penpot's font registry
+  uses canonical names like `Source Serif 4` and `Source Sans 3`, not the
+  CSS-side family + fallback stack. Each entry in `fonts.json` carries an
+  optional `penpot` field (e.g. `"penpot": "Source Serif 4"`); the build
+  script prefers it and emits a single-element `fontFamilies` value. The
+  full CSS fallback stack stays untouched in `$value` for the website.
+- **Typography composites bundle several atomic tokens.** Each entry in
+  `typography.json` becomes a `type.*` token of Penpot's `typography`
+  type, with inner keys (`fontFamily`, `fontWeight`, `fontSize`,
+  `lineHeight`) referencing the atomic tokens via the `{token.path}`
+  syntax. Editing a font size in `textSizes.json` cascades through every
+  type style automatically.
 
 ## Sets and themes
 
@@ -57,11 +73,14 @@ Six sets are emitted, in this order (order matters — Penpot resolves
 conflicts in favor of later sets):
 
 1. `core/colors` (~23 tokens) — the gray, orange, and base palettes
-2. `core/typography` (~20 tokens) — families, weights, sizes, line heights
+2. `core/typography` (~27 tokens) — families, weights, sizes, line heights,
+   and `type.*` composite styles (body, heading.1–3, blockquote, citation,
+   caption)
 3. `core/spacing` (~16 tokens) — fixed and fluid spacing steps
 4. `core/layout` (~7 tokens) — border radii and viewport breakpoints
-5. `theme/light` (3 tokens) — semantic colors for light mode
-6. `theme/dark` (3 tokens) — semantic colors for dark mode
+5. `theme/light` (~9 tokens) — semantic colors for light mode (accent
+   reds/blues/greens plus bg/text/headline)
+6. `theme/dark` (~9 tokens) — same names with dark-mode values
 
 Two themes are declared in the `$themes` block of the DTCG file:
 

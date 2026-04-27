@@ -75,7 +75,7 @@ function fluidMaxToPx(v) {
 }
 
 async function build() {
-	const [colors, fonts, spacing, textSizes, textLeading, textWeights, borderRadius, viewports, semanticColors] = await Promise.all([
+	const [colors, fonts, spacing, textSizes, textLeading, textWeights, borderRadius, viewports, semanticColors, typography] = await Promise.all([
 		readJSON('colors.json'),
 		readJSON('fonts.json'),
 		readJSON('spacing.json'),
@@ -85,6 +85,7 @@ async function build() {
 		readJSON('borderRadius.json'),
 		readJSON('viewports.json'),
 		readJSON('semanticColors.json'),
+		readJSON('typography.json'),
 	]);
 
 	const out = {};
@@ -141,7 +142,11 @@ async function build() {
 	const coreTypo = {};
 	for (const [k, v] of Object.entries(fonts)) {
 		if (k.startsWith('$')) continue;
-		setLeaf(coreTypo, `font.family.${k}`, token(v.$value, 'fontFamilies', v.$description));
+		// Penpot only knows specific font names from its registry (e.g. "Source Serif 4"),
+		// not the full CSS fallback stack. Use the explicit `penpot` field if present;
+		// otherwise fall back to the first family in the $value array.
+		const family = v.penpot ?? (Array.isArray(v.$value) ? v.$value[0] : v.$value);
+		setLeaf(coreTypo, `font.family.${k}`, token([family], 'fontFamilies', v.$description));
 	}
 	for (const [k, v] of Object.entries(textWeights)) {
 		if (k.startsWith('$')) continue;
@@ -154,6 +159,12 @@ async function build() {
 	for (const [k, v] of Object.entries(textLeading)) {
 		if (k.startsWith('$')) continue;
 		setLeaf(coreTypo, `font.lineHeight.${k}`, token(String(v.$value), 'number'));
+	}
+	// Typography composite tokens — bundled type styles (family + weight + size +
+	// lineHeight). Inner keys are singular per Penpot's `typography` token shape.
+	const typographyType = typography.$type ?? 'typography';
+	for (const [styleName, parts] of Object.entries(typography.styles ?? {})) {
+		setLeaf(coreTypo, `type.${styleName}`, token(parts, typographyType));
 	}
 	out['core/typography'] = coreTypo;
 
