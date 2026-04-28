@@ -17,13 +17,14 @@ export const dtcgToTailwind = (dtcgObject, prefix = '') => {
 
     const path = prefix ? `${prefix}-${key}` : key;
 
+    if (node === null || typeof node !== 'object') continue;
+
     if (node.$value !== undefined) {
       result[path] = node.$value;
-      // A node can be both a leaf ($value) and a group — e.g. "red" with a "subdued" child
-      Object.assign(result, dtcgToTailwind(node, path));
-    } else {
-      Object.assign(result, dtcgToTailwind(node, path));
     }
+    // A node can be both a leaf ($value) and a group — e.g. "red" with a "subdued" child.
+    // Recurse either way; non-object/non-$ children are skipped by the guard above.
+    Object.assign(result, dtcgToTailwind(node, path));
   }
 
   return result;
