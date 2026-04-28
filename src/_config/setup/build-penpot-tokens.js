@@ -9,7 +9,7 @@
  *      regenerate colors.json)
  *   2. Run `npm run penpot:tokens`
  *   3. In Penpot, open the design file → Tokens panel → import the
- *      generated `penpot-tokens.dtcg.json` at the repo root.
+ *      generated `tokens/penpot-tokens.dtcg.json`.
  *
  * Mapping rules:
  *   - JSON nesting becomes dot-separated token names (e.g. gray.100 → color.gray.100).
@@ -37,7 +37,7 @@ import {fileURLToPath} from 'node:url';
 
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../../..');
 const TOKENS_DIR = resolve(REPO_ROOT, 'src/_data/designTokens');
-const OUTPUT_PATH = resolve(REPO_ROOT, 'penpot-tokens.dtcg.json');
+const OUTPUT_PATH = resolve(REPO_ROOT, 'tokens/penpot-tokens.dtcg.json');
 
 // Top-level keys in colors.json that have a .subdued sibling and represent
 // the light/dark semantic colors.
