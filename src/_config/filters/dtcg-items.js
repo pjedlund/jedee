@@ -11,6 +11,7 @@ export const dtcgItems = dtcgObject => {
   const traverse = (obj, prefix) => {
     for (const [key, node] of Object.entries(obj)) {
       if (key.startsWith('$')) continue;
+      if (node === null || typeof node !== 'object') continue;
 
       const name = prefix ? `${prefix} ${key}` : key;
 
@@ -26,10 +27,10 @@ export const dtcgItems = dtcgObject => {
         }
 
         items.push(item);
-        traverse(node, name); // handle composite tokens (e.g. "red" + "red subdued")
-      } else {
-        traverse(node, name);
       }
+      // A node can be both a leaf ($value) and a group — recurse either way;
+      // non-object children are skipped by the guard above.
+      traverse(node, name);
     }
   };
 

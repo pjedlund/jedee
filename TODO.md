@@ -1,6 +1,6 @@
 # johanedlund.se — Backlog
 
-Last updated: 2026-04-25
+Last updated: 2026-04-27
 
 ---
 
@@ -38,6 +38,10 @@ One-paragraph description of what's being done and why. Reference files or skill
 - Consider adding a `/now` page (nownownow.com convention)
 - Review and publish the two 2026-04-24 drafts (design token naming, Elena.js evaluation) once they've had a few days to settle.
 - If/when an interactive feature is added (search, live reading widget, small wiki viewer), try building it on Elena.js as a first component — see the Elena.js draft for the adoption path.
+- Verify whether Penpot's importer honors the `$themes` block in `penpot-tokens.dtcg.json` on next re-import — if it does, the manual Light/Dark theme recipe in `docs/penpot-tokens.md` becomes unnecessary.
+- Add `font.tracking.*` letter-spacing tokens once a Penpot-compatible unit is figured out (current CSS uses `ch` which doesn't map cleanly).
+- Add a `type.code` composite for monospace styles if designs ever need code blocks (Source Code Pro at body size + standard line height).
+- Consider gitignoring `penpot-tokens.dtcg.json` if its diff noise becomes annoying in PRs — it's a derivable artifact.
 
 ---
 
@@ -50,6 +54,7 @@ One-paragraph description of what's being done and why. Reference files or skill
 - ~~Resolved `--color-primary` theme-dependent identity~~ — done 2026-04-25. Stabilized on a single hue: dropped the forced-dark swap to `red-subdued`, so `--color-accent-orange` now points at `orange-500` across all three themes. Same commit also renamed `--color-primary/secondary/tertiary` to `--color-accent-orange/blue/green` to stop overstating their importance — the actual brand tone is the slate, not the accents.
 - ~~Replaced dead `--gradient-rainbow`~~ — done 2026-04-25. The variable was referenced by the site-footer creator-link hover and the styleguide gradients list but never defined. Replaced with `--gradient-slate`, a left-to-right linear-gradient through the four `base-*` tones. The footer hover effect now actually renders.
 - ~~Grouped styleguide colors by primitive type~~ — done 2026-04-25. The Colors section was a single flat list of every generated palette key. Split into four labeled groups (Base palette, Neutral shades, Vibrant shades, Accent colors) driven by a `colorGroups` frontmatter list.
+- ~~Wire Penpot MCP and build JSON → DTCG token sync~~ — done 2026-04-27. [PR #2](https://github.com/pjedlund/JEDEE/pull/2). Six sets / 91 tokens pushed to the JEDEE - design tokens Penpot file (palette, typography atomics + 7 composite type styles, spacing, layout, light/dark semantic colors). `npm run penpot:tokens` generates `penpot-tokens.dtcg.json`; manual import in Penpot's Tokens panel. Added `semanticColors.json` mirroring the `--color-*` CSS vars and `typography.json` mirroring the type styles in `global-styles.css`. Workflow + caveats in `docs/penpot-tokens.md`. Penpot uses canonical font names (Source Serif 4 / Source Sans 3 / Source Code Pro), so `fonts.json` carries an optional `penpot` field for the registry-recognized name.
 
 ---
 

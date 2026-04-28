@@ -1,0 +1,48 @@
+{
+  "$type": "typography",
+  "$description": "Typography composite tokens — bundled type styles that apply font family, weight, size, and line height in one token. Mirrors the type styles defined in src/assets/css/global/base/global-styles.css. Inner values reference atomic tokens from fonts.json / textWeights.json / textSizes.json / textLeading.json so any change cascades.",
+  "styles": {
+    "body": {
+      "fontFamily": "{font.family.base}",
+      "fontWeight": "{font.weight.regular}",
+      "fontSize": "{font.size.step-0}",
+      "lineHeight": "{font.lineHeight.standard}"
+    },
+    "heading.1": {
+      "fontFamily": "{font.family.display}",
+      "fontWeight": "{font.weight.bold}",
+      "fontSize": "{font.size.step-6}",
+      "lineHeight": "{font.lineHeight.extrafine}"
+    },
+    "heading.2": {
+      "fontFamily": "{font.family.display}",
+      "fontWeight": "{font.weight.bold}",
+      "fontSize": "{font.size.step-4}",
+      "lineHeight": "{font.lineHeight.fine}"
+    },
+    "heading.3": {
+      "fontFamily": "{font.family.display}",
+      "fontWeight": "{font.weight.bold}",
+      "fontSize": "{font.size.step-2}",
+      "lineHeight": "{font.lineHeight.fine}"
+    },
+    "blockquote": {
+      "fontFamily": "{font.family.base}",
+      "fontWeight": "{font.weight.regular}",
+      "fontSize": "{font.size.step-2}",
+      "lineHeight": "{font.lineHeight.standard}"
+    },
+    "citation": {
+      "fontFamily": "{font.family.base}",
+      "fontWeight": "{font.weight.regular}",
+      "fontSize": "{font.size.step-1}",
+      "lineHeight": "{font.lineHeight.standard}"
+    },
+    "caption": {
+      "fontFamily": "{font.family.base}",
+      "fontWeight": "{font.weight.regular}",
+      "fontSize": "{font.size.step-min-1}",
+      "lineHeight": "{font.lineHeight.standard}"
+    }
+  }
+}

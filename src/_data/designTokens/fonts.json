@@ -2,14 +2,17 @@
   "$type": "fontFamily",
   "display": {
     "$value": ["Source Serif", "Source Serif Fallback", "serif"],
-    "$description": "Source serif 700 with Georgia Bold as fallback"
+    "$description": "Source serif 700 with Georgia Bold as fallback",
+    "penpot": "Source Serif 4"
   },
   "base": {
     "$value": ["Source Sans", "Source Sans Fallback", "sans-serif"],
-    "$description": "Source Sans 3 VF with Arial as fallback"
+    "$description": "Source Sans 3 VF with Arial as fallback",
+    "penpot": "Source Sans 3"
   },
   "mono": {
     "$value": ["Source Code Pro", "Source Code Pro Fallback", "Dank Mono", "Fira Code", "Fira Mono", "Menlo", "Consolas", "Monaco", "monospace"],
-    "$description": "Source Code Pro with Courier New as fallback"
+    "$description": "Source Code Pro with Courier New as fallback",
+    "penpot": "Source Code Pro"
   }
 }

@@ -43,6 +43,7 @@ npm run build              # Production build → dist/
 npm run clean              # Remove dist and compiled CSS/JS
 npm run clean:og           # Remove pre-generated OG images
 npm run colors             # Generate colors.json from colorsBase.json
+npm run penpot:tokens      # Generate penpot-tokens.dtcg.json for Penpot import
 npm run screenshots        # Generate OG images / built-with screenshots
 npm run favicons           # Generate favicons
 npm run fallback-font-style  # Generate fallback font CSS
@@ -69,6 +70,7 @@ src/
     watching/      # Watching log
     docs/          # Documentation / reference pages
 dist/              # Build output (git-ignored)
+docs/              # Project documentation (penpot-tokens.md, ...)
 ```
 
 ## Content Types & Frontmatter
@@ -157,6 +159,7 @@ Site metadata is split across two files: `src/_data/meta.js` (site-wide config, 
 - **backlinks.njk** is part of the `@photogabble/eleventy-plugin-interlinker` integration, not core Eleventy Excellent — freer to modify than core EE templates.
 - **OG images** are pre-generated; run `npm run screenshots` if needed
 - **Accessibility** is a priority — run `npm run test:a11y` before major changes
+- **Design tokens sync to Penpot** via `npm run penpot:tokens` → writes `penpot-tokens.dtcg.json` at the repo root → manually import in Penpot's Tokens panel. See [docs/penpot-tokens.md](docs/penpot-tokens.md) for mapping rules, the `penpot` font-name field convention in `fonts.json`, and the typography composite styles in `typography.json`.
 
 ## Netlify Configuration
 
