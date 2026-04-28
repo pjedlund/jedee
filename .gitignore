@@ -36,3 +36,13 @@ src/_obsidian
 .claude
 .omc
 _raw/
+
+# Project notes (kept locally, not in repo)
+CLAUDE.md
+LOG.md
+TODO.md
+docs/
+
+# Downloaded plugin bundle
+eleventy-excellent.plugin
+
