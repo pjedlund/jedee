@@ -28,7 +28,7 @@
  * so we emit a Tokens Studio-style `$themes` block in the DTCG file and trust
  * the importer to wire it up. If themes still come in empty after import, set
  * their members manually in Penpot's Themes tab — the active sets are
- * documented in docs/penpot-tokens.md.
+ * documented in tokens/penpot-tokens.md.
  */
 
 import {readFile, writeFile} from 'node:fs/promises';

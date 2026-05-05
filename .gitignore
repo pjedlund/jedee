@@ -37,7 +37,11 @@ src/_obsidian
 .omc
 _raw/
 
+# Github
+.github
+
 # Project notes (kept locally, not in repo)
+AGENTS.md
 CLAUDE.md
 LOG.md
 TODO.md

@@ -1,11 +1,11 @@
 /**
- * Regenerate the YAML front matter in `docs/DESIGN.md` from the design
+ * Regenerate the YAML front matter in `DESIGN.md` from the design
  * tokens in `src/_data/designTokens/*.json`. The markdown body below the
  * front matter is preserved verbatim — humans own the prose; this script
  * owns the tokens.
  *
  * The generated front matter conforms to the alpha DESIGN.md spec:
- *   https://github.com/anthropic-ai (see docs/DESIGN.md and spec.md)
+ *   https://github.com/anthropic-ai (see DESIGN.md and spec.md)
  *
  * Workflow:
  *   1. Edit any file in src/_data/designTokens/
@@ -35,7 +35,7 @@ import yaml from 'js-yaml';
 
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../../..');
 const TOKENS_DIR = resolve(REPO_ROOT, 'src/_data/designTokens');
-const OUTPUT_PATH = resolve(REPO_ROOT, 'docs/DESIGN.md');
+const OUTPUT_PATH = resolve(REPO_ROOT, 'DESIGN.md');
 
 // =============================================================================
 // Configuration — edit when the design system's semantic mapping changes.

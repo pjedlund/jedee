@@ -451,4 +451,4 @@ Firefox to match its rendering. Never replaced by a shadow.
 - `src/_config/setup/build-penpot-tokens.js` — the JSON → DTCG build
 - `src/assets/css/global/base/variables.css` — CSS custom property layer
 - `src/assets/css/global/base/global-styles.css` — global element styles
-- `docs/penpot-tokens.md` — Penpot import workflow and mapping rules
+- `tokens/penpot-tokens.md` — Penpot import workflow and mapping rules

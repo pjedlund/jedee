@@ -13,7 +13,7 @@ That writes two files from the same JSON sources:
 
 - `tokens/penpot-tokens.dtcg.json` — import in Penpot
   (JEDEE - design tokens file → **Tokens panel** → import)
-- `docs/DESIGN.md` — Anthropic-style design-system spec for AI agents
+- `../DESIGN.md` — Anthropic-style design-system spec for AI agents
   and humans (front matter is regenerated; the markdown body is
   preserved verbatim — humans own the prose, the script owns the tokens)
 
