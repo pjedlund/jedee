@@ -28,16 +28,13 @@ _backup
 .obsidian
 .vault-nickname
 src/_obsidian
-/src/posts/notes/_fleeting
-/src/posts/notes/_sources
 
 /src/posts/articles/-drafts
 
 .claude
 .omc
 _raw/
-
-# Github
+_generated/
 .github
 
 # Project notes (kept locally, not in repo)
@@ -46,7 +43,4 @@ CLAUDE.md
 DESIGN.md
 LOG.md
 TODO.md
-
-# Downloaded plugin bundle
-eleventy-excellent.plugin
 
