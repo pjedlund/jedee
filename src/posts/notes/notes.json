@@ -1,8 +1,0 @@
-{
-  "layout": "note",
-  "tags": ["posts", "note"],
-  "category": "note",
-  "permalink": "/notes/{{ title | slugify }}/index.html",
-  "eleventyExcludeFromCollections": false,
-  "excludeFromSitemap": false
-}
