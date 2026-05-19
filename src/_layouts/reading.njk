@@ -7,7 +7,11 @@ schema: BlogPosting
   <div class="wrapper flow prose">
     {% include 'partials/entry-header.njk' %}
 
-    {{ content | safe }}
+    {% if link %}<data hidden class="u-read-of" value="{{ link }}"></data>{% endif %}
+
+    <div class="e-content">
+      {{ content | safe }}
+    </div>
 
     {% include 'partials/backlinks.njk' %}
     {% include 'partials/entry-footer.njk' %}

@@ -13,6 +13,15 @@
   </p>
 {% endif %}
 
+{% if syndication %}
+  <p class="text-step-min-1 cluster gutter-xs-s">
+    Also on:
+    {% for url in syndication %}
+      <a class="u-syndication" rel="syndication" href="{{ url }}">{{ url }}</a>
+    {% endfor %}
+  </p>
+{% endif %}
+
 <p class="text-step-min-1">
   Have you written a response to this on your own site?
   <a href="https://indieweb.org/Webmention">Let me know the URL.</a>
