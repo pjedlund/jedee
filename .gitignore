@@ -33,7 +33,7 @@ src/_obsidian
 
 .claude
 .omc
-_raw/
+__raw/
 _generated/
 .github
 
