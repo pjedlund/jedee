@@ -1,0 +1,21 @@
+---
+layout: base
+title: Watching
+description: Films and shows I've watched recently.
+pagination:
+  data: collections.watching
+  size: 3
+permalink: 'watching/{% if pagination.pageNumber >=1 %}page-{{ pagination.pageNumber + 1 }}/{% endif %}index.html'
+---
+
+{% set archiveDescription %}
+  This page has a pagination of <strong>{{ pagination.size }}</strong> entries per page.<br>
+  The pagination is only shown if there are more entries ({{ collections.watching.length }}) than items per page ({{ pagination.size }}).
+{% endset %}
+
+{% set cardPartial = "card-blog.njk" %}
+{% set masonryLayout = "50-50" %}
+{% set collectionToPaginate = collections.watching %}
+{% set paginationMetaKey = "blog" %}
+
+{% include "partials/archive-listing.njk" %}

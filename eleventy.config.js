@@ -41,6 +41,7 @@ export default async function(eleventyConfig) {
   eleventyConfig.addLayoutAlias('page', 'page.njk');
   eleventyConfig.addLayoutAlias('note', 'note.njk');
   eleventyConfig.addLayoutAlias('reading', 'reading.njk');
+  eleventyConfig.addLayoutAlias('watching', 'watching.njk');
   eleventyConfig.addLayoutAlias('jam', 'jam.njk');
   eleventyConfig.addLayoutAlias('post', 'post.njk');
   eleventyConfig.addLayoutAlias('tags', 'tags.njk');

@@ -25,6 +25,10 @@ export default {
         {
           text: 'Jams',
           url: '/jams/'
+        },
+        {
+          text: 'Watching',
+          url: '/watching/'
         }
       ]
     },

@@ -1,5 +1,5 @@
 {
-  "layout": "reading",
+  "layout": "watching",
   "tags": "posts",
   "category": "watching",
   "permalink": "/watching/{{ page.fileSlug }}/index.html"
