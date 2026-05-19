@@ -1,0 +1,31 @@
+{# Shared chrome header for post-type layouts (post, note, reading, listening, watching, ...).
+   The per-type layout wraps this inside <div class="region"><div class="wrapper flow prose">,
+   so this partial only renders the title/image/meta block. Tags moved to entry-footer.njk. #}
+
+{% if title %}
+  <h1>{{ title }}</h1>
+{% endif %}
+
+{% if image %}
+  {%
+    imageKeys {
+      "src": image,
+      "alt": alt or "",
+      "credit": credit,
+      "loading": "eager",
+      "containerClass": "feature"
+    }
+  %}
+{% endif %}
+
+<p class="meta | cluster gutter-xs-s">
+  {%- if draft -%}
+    <span class="button" data-small-button data-button-variant="tertiary">draft</span>
+  {%- endif %}
+  {% if date %}
+    {% set definedDate = date %}{% include "partials/date.njk" %}
+  {% endif %}
+  {% if updatedDate %}
+     | Updated: {{ updatedDate | formatDate('MMMM D, YYYY') }}
+  {% endif %}
+</p>

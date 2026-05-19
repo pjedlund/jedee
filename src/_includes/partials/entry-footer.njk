@@ -1,0 +1,22 @@
+{# Shared chrome footer for post-type layouts. Renders below the per-type body content. #}
+
+{% set hasVisibleTags = false %}
+{% if tags %}
+  {% for tag in tags %}{% if tag != "posts" and tag != category %}{% set hasVisibleTags = true %}{% endif %}{% endfor %}
+{% endif %}
+
+{% if hasVisibleTags %}
+  <p class="cluster gutter-xs-s">
+    {% for tag in tags %}{% if tag != "posts" and tag != category %}
+      <a class="button" href="/tags/{{ tag | slugify }}/" data-small-button>{{ tag }}</a>
+    {% endif %}{% endfor %}
+  </p>
+{% endif %}
+
+<p class="text-step-min-1">
+  Have you written a response to this on your own site?
+  <a href="https://indieweb.org/Webmention">Let me know the URL.</a>
+</p>
+
+{% include 'partials/webmentions.njk' %}
+{% include 'partials/edit-on.njk' %}
