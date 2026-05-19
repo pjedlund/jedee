@@ -1,0 +1,10 @@
+---
+permalink: /notes/feed.xml
+eleventyExcludeFromCollections: true
+excludeFromSitemap: true
+---
+{%- set feedCollection = collections.note -%}
+{%- set feedTitle = "Notes" -%}
+{%- set feedDescription = "Short thoughts and observations." -%}
+{%- set feedSelfUrl = "/notes/feed.xml" -%}
+{%- include "feeds/atom-body.njk" -%}

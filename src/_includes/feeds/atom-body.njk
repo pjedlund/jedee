@@ -1,4 +1,4 @@
-{#
+{#-
   Reusable Atom feed body. Set vars before including:
     feedCollection  – array (e.g. collections.posts, collections.article)
     feedTitle       – string shown as <title>
@@ -15,7 +15,7 @@
     {% set feedDescription = meta.blog.description %}
     {% set feedSelfUrl = "/feed.xml" %}
     {% include "feeds/atom-body.njk" %}
-#}
+-#}
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="{{ meta.lang or page.lang }}" xml:base="{{ meta.url }}/">
   <title>{{ feedTitle }}</title>

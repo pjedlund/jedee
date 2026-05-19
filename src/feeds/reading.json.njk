@@ -1,0 +1,10 @@
+---
+permalink: /reading/feed.json
+eleventyExcludeFromCollections: true
+excludeFromSitemap: true
+---
+{%- set feedCollection = collections.reading -%}
+{%- set feedTitle = "Reading" -%}
+{%- set feedDescription = "Books I'm reading." -%}
+{%- set feedSelfUrl = "/reading/feed.json" -%}
+{%- include "feeds/json-body.njk" -%}

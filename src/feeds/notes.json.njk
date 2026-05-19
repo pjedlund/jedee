@@ -1,0 +1,10 @@
+---
+permalink: /notes/feed.json
+eleventyExcludeFromCollections: true
+excludeFromSitemap: true
+---
+{%- set feedCollection = collections.note -%}
+{%- set feedTitle = "Notes" -%}
+{%- set feedDescription = "Short thoughts and observations." -%}
+{%- set feedSelfUrl = "/notes/feed.json" -%}
+{%- include "feeds/json-body.njk" -%}
