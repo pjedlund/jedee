@@ -3,7 +3,7 @@ layout: base
 title: Reading
 description: 'All books can be found here'
 pagination:
-  data: collections.allReading
+  data: collections.reading
   size: 2
 permalink: 'reading/{% if pagination.pageNumber >=1 %}page-{{ pagination.pageNumber + 1 }}/{% endif %}index.html'
 ---
@@ -31,7 +31,7 @@ permalink: 'reading/{% if pagination.pageNumber >=1 %}page-{{ pagination.pageNum
 	</custom-masonry>
 
   <!-- set collection to paginate -->
-  {% set collectionToPaginate = collections.allReading %}
+  {% set collectionToPaginate = collections.reading %}
   <!-- set target pagination settings in meta.js -->
   {% set metaKey = "blog" %}
   <!-- if the number of items in the collection is greater than the number of items shown on one page -->

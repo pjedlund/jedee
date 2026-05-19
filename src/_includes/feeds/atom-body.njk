@@ -1,0 +1,42 @@
+{#
+  Reusable Atom feed body. Set vars before including:
+    feedCollection  – array (e.g. collections.posts, collections.article)
+    feedTitle       – string shown as <title>
+    feedDescription – string shown as <subtitle>
+    feedSelfUrl     – path of the feed itself, e.g. "/feed.xml" or "/articles/feed.xml"
+
+  Usage (firehose):
+    ---
+    permalink: /feed.xml
+    eleventyExcludeFromCollections: true
+    ---
+    {% set feedCollection = collections.posts %}
+    {% set feedTitle = meta.blog.name %}
+    {% set feedDescription = meta.blog.description %}
+    {% set feedSelfUrl = "/feed.xml" %}
+    {% include "feeds/atom-body.njk" %}
+#}
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="{{ meta.lang or page.lang }}" xml:base="{{ meta.url }}/">
+  <title>{{ feedTitle }}</title>
+  <subtitle>{{ feedDescription }}</subtitle>
+  <link href="{{ feedSelfUrl | htmlBaseUrl(meta.url) }}" rel="self" />
+  <link href="{{ meta.url | addPathPrefixToFullUrl }}" />
+  <updated>{{ feedCollection | getNewestCollectionItemDate | dateToRfc3339 }}</updated>
+  <id>{{ meta.url | addPathPrefixToFullUrl }}</id>
+  <author>
+    <name>{{ meta.author.name }}</name>
+  </author>
+  {%- for post in feedCollection | reverse -%}
+  {%- set absolutePostUrl = post.url | absoluteUrl(meta.url) -%}
+    <entry>
+      <title>{{ post.data.title }}</title>
+      <link href="{{ absolutePostUrl }}" />
+      <updated>{{ post.date | dateToRfc3339 }}</updated>
+      <id>{{ absolutePostUrl }}</id>
+      <content type="html">
+        {{ post.content | renderTransforms(post.data.page, meta.url) }}
+      </content>
+    </entry>
+  {%- endfor -%}
+</feed>

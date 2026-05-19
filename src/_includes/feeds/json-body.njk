@@ -1,0 +1,33 @@
+{#
+  Reusable JSON Feed body (jsonfeed.org/version/1.1). Set vars before including:
+    feedCollection  – array (e.g. collections.posts, collections.article)
+    feedTitle       – string
+    feedDescription – string
+    feedSelfUrl     – path of the feed itself, e.g. "/feed.json" or "/articles/feed.json"
+#}
+{
+  "version": "https://jsonfeed.org/version/1.1",
+  "title": "{{ feedTitle }}",
+  "language": "{{ meta.lang or page.lang }}",
+  "home_page_url": "{{ meta.url | addPathPrefixToFullUrl }}",
+  "feed_url": "{{ feedSelfUrl | htmlBaseUrl(meta.url) }}",
+  "description": "{{ feedDescription }}",
+  "authors": [
+    {
+      "name": "{{ meta.author.name }}"
+    }
+  ],
+  "items": [
+    {%- for post in feedCollection | reverse -%}
+    {%- set absolutePostUrl = post.url | absoluteUrl(meta.url) -%}
+    {
+      "id": "{{ absolutePostUrl }}",
+      "url": "{{ absolutePostUrl }}",
+      "title": "{{ post.data.title }}",
+      "content_html": {% if post.content %}{{ post.content | renderTransforms(post.data.page, meta.url) | dump | safe }}{% else %}""{% endif %},
+      "date_published": "{{ post.date | dateToRfc3339 }}"
+    }
+    {% if not loop.last %},{% endif %}
+    {%- endfor %}
+  ]
+}

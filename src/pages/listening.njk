@@ -3,7 +3,7 @@ layout: base
 title: Listening
 description: The music, and other sounds, I'm listening to right now.
 pagination:
-  data: collections.allListening
+  data: collections.listening
   size: 3
 permalink: 'listening/{% if pagination.pageNumber >=1 %}page-{{ pagination.pageNumber + 1 }}/{% endif %}index.html'
 ---
@@ -31,7 +31,7 @@ permalink: 'listening/{% if pagination.pageNumber >=1 %}page-{{ pagination.pageN
 	</custom-masonry>
 
   <!-- set collection to paginate -->
-  {% set collectionToPaginate = collections.allListening %}
+  {% set collectionToPaginate = collections.listening %}
   <!-- set target pagination settings in meta.js -->
   {% set metaKey = "blog" %}
   <!-- if the number of items in the collection is greater than the number of items shown on one page -->

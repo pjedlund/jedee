@@ -1,39 +1,17 @@
-/** All posts to show on index as a collection. */
-export const getAllPosts = collection => {
-  return collection.getFilteredByGlob('./src/posts/articles/**/*.md').reverse();
-};
-
-/** All articles as a collection. */
-export const getAllArticles = collection => {
-  return collection.getFilteredByGlob('./src/posts/articles/**/*.md').reverse();
-};
-
-/** All notes as a collection. */
-export const getAllNotes = collection => {
-  return collection.getFilteredByGlob('./src/posts/notes/**/*.md').reverse();
-};
-
-/** All reading as a collection. */
-export const getAllReading = collection => {
-  return collection.getFilteredByGlob('./src/posts/reading/**/*.md').reverse();
-};
-
-/** All listening as a collection. */
-export const getAllListening = collection => {
-  return collection.getFilteredByGlob('./src/posts/listening/**/*.md').reverse();
-};
-
 /** All relevant pages as a collection for sitemap.xml */
 export const showInSitemap = collection => {
   return collection.getFilteredByGlob('./src/**/*.{md,njk}');
 };
 
-/** All tags from all posts as a collection - excluding custom collections */
+/** All user-facing tags across all posts, excluding system tags (the firehose tag,
+ *  per-type tags, and other framework-internal groupings). */
+const SYSTEM_TAGS = ['notes', 'posts', 'reading', 'docs', 'all', 'article', 'note', 'listening', 'watching'];
+
 export const tagList = collection => {
   const tagsSet = new Set();
   collection.getAll().forEach(item => {
     if (!item.data.tags) return;
-    item.data.tags.filter(tag => !['notes', 'posts', 'reading', 'docs', 'all'].includes(tag)).forEach(tag => tagsSet.add(tag));
+    item.data.tags.filter(tag => !SYSTEM_TAGS.includes(tag)).forEach(tag => tagsSet.add(tag));
   });
   return Array.from(tagsSet).sort();
 };
