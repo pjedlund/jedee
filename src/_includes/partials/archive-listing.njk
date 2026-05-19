@@ -1,0 +1,35 @@
+{# Shared archive page template. Called from per-type wrappers in src/pages/.
+   The wrapper sets the following variables before including this partial:
+     - archiveTitle      (string)   page heading
+     - archiveDescription(string)   intro paragraph copy
+     - cardPartial       (string)   filename in partials/, e.g. "card-blog.njk"
+     - masonryLayout     (string)   "thirds" | "50-50"
+     - collectionToPaginate (array) the source collection, used for the count + pagination gate
+     - paginationMetaKey (string)   meta.js pagination key, e.g. "blog"
+   `pagination.size`, `pagination.items`, and `pagination.pageNumber` come from
+   the wrapper's `pagination:` frontmatter, which Eleventy resolves per page. #}
+
+<div class="wrapper">
+  <header class="full | section" style="--spot-color: var(--color-accent-blue)">
+    <div class="section__inner flow region" style="--region-space-top: var(--space-xl-2xl)">
+      <h1 class="text-center" style="color: var(--color-light);">{{ archiveTitle or title }}</h1>
+    </div>
+
+    {% svg "divider/edgy", null, "divider" %}
+  </header>
+
+  <div class="region flow prose" style="--region-space-top: var(--space-xl-2xl)">
+    <p>{{ archiveDescription | safe }}</p>
+  </div>
+
+  <custom-masonry layout="{{ masonryLayout }}">
+    {% asyncEach item in pagination.items %}
+      {% include "partials/" + cardPartial %}
+    {% endeach %}
+  </custom-masonry>
+
+  {% set metaKey = paginationMetaKey or "blog" %}
+  {% if collectionToPaginate.length > pagination.size %}
+    {% include 'partials/pagination.njk' %}
+  {% endif %}
+</div>
