@@ -15,7 +15,7 @@ dotenv.config();
 import yaml from 'js-yaml';
 
 //  config import
-import { showInSitemap, tagList } from './src/_config/collections.js';
+import { showInSitemap, tagList, article, note, reading, listening, watching } from './src/_config/collections.js';
 import events from './src/_config/events.js';
 import filters from './src/_config/filters.js';
 import plugins from './src/_config/plugins.js';
@@ -46,9 +46,14 @@ export default async function(eleventyConfig) {
   eleventyConfig.addLayoutAlias('tags', 'tags.njk');
 
   //	---------------------  Collections
-  // Per-type collections (collections.article, .note, .reading, .listening, .watching)
-  // are auto-created by Eleventy from the `tags: ["posts", "<type>"]` array in each
-  // src/posts/<type>/<type>.json. collections.posts is the firehose (all 5 types).
+  // Per-type collections are registered explicitly; each filters on `data.category`
+  // (set in src/posts/<type>/<type>.json). collections.posts (firehose) is still
+  // auto-created by Eleventy from the `tags: "posts"` string in each folder JSON.
+  eleventyConfig.addCollection('article', article);
+  eleventyConfig.addCollection('note', note);
+  eleventyConfig.addCollection('reading', reading);
+  eleventyConfig.addCollection('listening', listening);
+  eleventyConfig.addCollection('watching', watching);
   eleventyConfig.addCollection('showInSitemap', showInSitemap);
   eleventyConfig.addCollection('tagList', tagList);
 
