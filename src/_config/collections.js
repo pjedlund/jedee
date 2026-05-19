@@ -16,7 +16,7 @@ const byCategory = cat => collection =>
 export const article = byCategory('article');
 export const note = byCategory('note');
 export const reading = byCategory('reading');
-export const listening = byCategory('listening');
+export const jam = byCategory('jam');
 export const watching = byCategory('watching');
 
 /** All user-facing tags across all posts, excluding system tags. Per-type

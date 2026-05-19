@@ -23,8 +23,8 @@ export default {
           url: '/reading/'
         },
         {
-          text: 'Listening',
-          url: '/listening/'
+          text: 'Jams',
+          url: '/jams/'
         }
       ]
     },

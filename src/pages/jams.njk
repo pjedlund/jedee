@@ -1,21 +1,21 @@
 ---
 layout: base
-title: Listening
+title: Jams
 description: The music, and other sounds, I'm listening to right now.
 pagination:
-  data: collections.listening
+  data: collections.jam
   size: 3
-permalink: 'listening/{% if pagination.pageNumber >=1 %}page-{{ pagination.pageNumber + 1 }}/{% endif %}index.html'
+permalink: 'jams/{% if pagination.pageNumber >=1 %}page-{{ pagination.pageNumber + 1 }}/{% endif %}index.html'
 ---
 
 {% set archiveDescription %}
   This page has a pagination of <strong>{{ pagination.size }}</strong> entries per page.<br>
-  The pagination is only shown if there are more entries ({{ collections.listening.length }}) than items per page ({{ pagination.size }}).
+  The pagination is only shown if there are more entries ({{ collections.jam.length }}) than items per page ({{ pagination.size }}).
 {% endset %}
 
 {% set cardPartial = "card-blog.njk" %}
 {% set masonryLayout = "50-50" %}
-{% set collectionToPaginate = collections.listening %}
+{% set collectionToPaginate = collections.jam %}
 {% set paginationMetaKey = "blog" %}
 
 {% include "partials/archive-listing.njk" %}
