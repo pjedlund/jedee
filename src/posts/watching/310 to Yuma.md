@@ -1,5 +1,6 @@
 ---
 title: 3:10 to Yuma
+description: "1957 western by Delmer Daves — a small-time farmer escorts a captured outlaw to the 3:10 train to Yuma."
 date: "2026-03-09T19:47:08+01:00"
 draft: true
 genre:
