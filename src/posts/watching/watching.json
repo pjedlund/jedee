@@ -2,5 +2,5 @@
   "layout": "watching",
   "tags": "posts",
   "category": "watching",
-  "permalink": "/watching/{{ page.fileSlug }}/index.html"
+  "permalink": "/watching/{{ page.fileSlug | slugify }}/index.html"
 }
