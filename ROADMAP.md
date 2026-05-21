@@ -2,14 +2,15 @@
 
 Rollout of JEDEE's 15-type IndieWeb post taxonomy.
 
-- **Canonical spec:** `_generated/Implementing 14 post types - revised.md`
+- **Authoritative plan:** `_generated/Plan - Phase 3 (10 new post types).md` — single source of truth for the rollout.
+- **Legacy design reference:** `_generated/Implementing 14 post types - revised.md` (superseded on collection mechanism + field naming; kept for design rationale — don't follow its snippets verbatim).
 - **Clipper layer design:** `_generated/Step 4 - Clipper layer design.md`
 
 (Both live in `_generated/`, which is gitignored — the working artifacts, not tracked.)
 
 ## Two workstreams
 
-- **The rollout (Phases 1–4)** — building the 14 post types into the site.
+- **The rollout (Phases 1–4)** — building the 15 post types into the site.
 - **The Clipper layer** — how content is captured into the Obsidian vault (Web Clipper
   templates + co-located cover images). Design-complete on paper; implementation is
   deliberately gated *behind* the rollout's Phase 3.
@@ -34,7 +35,7 @@ Rollout of JEDEE's 15-type IndieWeb post taxonomy.
    Open decision: fold per-type into Phase 3, or batch after.
 3. **Clipper layer implementation** — Web Clipper templates + cover-image setup script.
    Waits until the types exist.
-4. **Spec sync** — fold the Clipper design decisions back into the canonical spec. Trivial.
+4. **Spec sync (optional)** — the spec is now a *legacy design reference*; the Phase 3 plan is authoritative. Fold Clipper decisions / the 15-types + camelCase + `byCategory()` reality into it only if you want the reference current.
 
 ## The 5 live types
 
