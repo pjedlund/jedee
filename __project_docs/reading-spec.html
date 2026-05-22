@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reading — post-type spec — JEDEE</title>
+<link rel="stylesheet" href="spec.css">
+</head>
+<body data-doc-key="reading-spec">
+
+<div class="site-header">
+  <a class="home" href="index.html">JEDEE / Project documentation</a>
+  <span class="breadcrumb">post-type specs › Reading</span>
+</div>
+
+<header class="doc-header" id="top">
+  <p class="eyebrow">post-type spec</p>
+  <h1>Reading</h1>
+  <p class="meta">Shipped · Phase 2 · uniform singular <code>reading</code> · extracted from live code 22 May 2026</p>
+</header>
+
+<nav id="toc" class="toc" aria-label="Sections"></nav>
+
+<main>
+
+<p>A <em>Reading</em> is a post sharing a book the author is reading or has read — title, author, cover art, and a brief description or response. An IndieWeb "read" post.</p>
+
+<h2>1. Singular / plural identity</h2>
+<p>Reading is <strong>symmetric singular</strong>: every aspect — the type, the folder, the URL, the archive, the collection, the feed — uses the same word <code>reading</code>. This is a deliberate contrast with Jam, which is <em>asymmetric</em> (singular type, plural URL namespace). Reading has no such mismatch: the folder is <code>reading/</code>, the URL is <code>/reading/</code>, and the collection is <code>collections.reading</code> — all singular, all the same.</p>
+
+<table>
+<tr><th>Aspect</th><th>Form</th><th>Value</th><th>Defined in</th></tr>
+<tr><td>Type / category value</td><td>singular</td><td><code>category: "reading"</code></td><td><code>src/posts/reading/reading.json</code></td></tr>
+<tr><td>Layout name + alias</td><td>singular</td><td><code>reading</code> → <code>reading.njk</code></td><td><code>eleventy.config.js</code></td></tr>
+<tr><td>Collection</td><td>singular</td><td><code>collections.reading</code></td><td><code>src/_config/collections.js</code></td></tr>
+<tr><td>Content folder</td><td>singular</td><td><code>src/posts/reading/</code></td><td>—</td></tr>
+<tr><td>Folder data file</td><td>singular</td><td><code>reading.json</code></td><td><code>src/posts/reading/</code></td></tr>
+<tr><td>Per-post URL</td><td>singular</td><td><code>/reading/&lt;slug&gt;/</code></td><td><code>reading.json</code> permalink</td></tr>
+<tr><td>Archive URL + page</td><td>singular</td><td><code>/reading/</code></td><td><code>src/pages/reading.njk</code></td></tr>
+<tr><td>Feed</td><td>singular</td><td><code>/reading/feed.xml</code>, <code>/reading/feed.json</code></td><td><code>src/feeds/reading.{xml,json}.njk</code></td></tr>
+<tr><td>Nav label</td><td>singular</td><td>"Reading" → <code>/reading/</code></td><td><code>src/_data/navigation.js</code></td></tr>
+</table>
+<p class="note"><strong>Contrast with Jam:</strong> Jam uses a plural folder (<code>src/posts/jams/</code>), plural URL (<code>/jams/</code>), and plural archive (<code>jams.njk</code>) while the type, layout, and collection are singular (<code>jam</code>). Reading has no such split — every token is <code>reading</code> (singular). Don't "fix" either: both are intentional.</p>
+
+<h2>2. Naming &amp; aliases</h2>
+<p>The type is named <strong>Reading</strong> — a gerund form that describes an ongoing or completed act of reading, not a list of titles. It maps cleanly to IndieWeb's <em>read</em> post type.</p>
+<table>
+<tr><th>Term</th><th>Status</th><th>Where it appears / why</th></tr>
+<tr><td><code>reading</code></td><td>chosen name</td><td>Type, layout, collection, folder, URL, archive, feed, nav (see §1). Uniform singular.</td></tr>
+<tr><td><code>read</code></td><td>IndieWeb verb — kept in µf2</td><td>There is no "reading" microformat: the property is <code>u-read-of</code>. The layout emits it from the <code>link</code> field (see §5).</td></tr>
+</table>
+
+<h2>3. URLs &amp; permalinks</h2>
+<table>
+<tr><th>Page</th><th>URL</th><th>Source</th></tr>
+<tr><td>Per-post</td><td><code>/reading/&lt;slug&gt;/</code></td><td><code>"/reading/{{ page.fileSlug | slugify }}/index.html"</code></td></tr>
+<tr><td>Archive (page 1)</td><td><code>/reading/</code></td><td><code>reading.njk</code> pagination, size 2</td></tr>
+<tr><td>Archive (page N)</td><td><code>/reading/page-N/</code></td><td>same</td></tr>
+<tr><td>Atom feed</td><td><code>/reading/feed.xml</code></td><td><code>reading.xml.njk</code></td></tr>
+<tr><td>JSON feed</td><td><code>/reading/feed.json</code></td><td><code>reading.json.njk</code></td></tr>
+</table>
+<p>Slug derives from the <code>.md</code> filename via <code>page.fileSlug | slugify</code> — the folder data file sets <code>permalink: "/reading/{{ page.fileSlug | slugify }}/index.html"</code>. Filename <code>Anna Karenina - Leo Tolstoy.md</code> → <code>/reading/anna-karenina-leo-tolstoy/</code>. For a page-bundle post the slug <em>still</em> comes from the <code>.md</code> filename (not the folder name) — and here the two diverge (folder <code>Drottningar i Kungahalla/</code> vs file <code>Drottningar i Kungahälla - Selma Lagerlöf.md</code>), so the URL is derived from the file (see §12).</p>
+<p class="note">The archive pagination size is <strong>2</strong> per page (not 3 like Jam). Pagination is only rendered when the collection has more items than the page size.</p>
+
+<h2>4. Frontmatter</h2>
+<p>The shape below is the <strong>live sample</strong> (<code>src/posts/reading/Anna Karenina - Leo Tolstoy.md</code>) — the authoritative authoring surface today.</p>
+<pre><code>---
+title: Anna Karenina
+subtitle:                                           # present but empty
+author: Leo Tolstoy
+authors: Leo Tolstoy                                # redundant with author; importer artifact
+publisher: OUP Oxford
+publishDate: 2014-08-28                             # publisher's edition date
+date: 2026-01-11T13:50:58+01:00                     # post date
+totalPage: 898
+coverUrl: http://books.google.com/books/content?id=ChINBAAAQBAJ&amp;…   # remote cover
+coverSmallUrl: http://books.google.com/books/content?id=ChINBAAAQBAJ&amp;…
+description: Love... it means too much to me, far more than you can understand.
+link: https://play.google.com/store/books/details?id=ChINBAAAQBAJ   # → u-read-of target
+previewLink: http://books.google.se/books?id=ChINBAAAQBAJ&amp;…
+isbn13: 9780191662232
+isbn10: 191662232
+---</code></pre>
+
+<table>
+<tr><th>Field</th><th>Req?</th><th>Role</th></tr>
+<tr><td><code>title</code></td><td>recommended</td><td>Book title; displayed as the post headline.</td></tr>
+<tr><td><code>subtitle</code></td><td>optional</td><td>Book subtitle; present in importer output, not rendered by the current layout.</td></tr>
+<tr><td><code>author</code></td><td>recommended</td><td>Book author; display metadata.</td></tr>
+<tr><td><code>authors</code></td><td>optional</td><td>Duplicate of <code>author</code>; importer artifact. Not currently rendered separately.</td></tr>
+<tr><td><code>publisher</code></td><td>optional</td><td>Publisher name; display metadata.</td></tr>
+<tr><td><code>publishDate</code></td><td>optional</td><td>Publication date of this edition.</td></tr>
+<tr><td><code>date</code></td><td>required</td><td>Post timestamp (sort + <code>dt-published</code>).</td></tr>
+<tr><td><code>totalPage</code></td><td>optional</td><td>Page count; display metadata, not currently rendered by the layout.</td></tr>
+<tr><td><code>coverUrl</code></td><td>optional</td><td>Remote cover image URL (full size). Used by the card for the cover art.</td></tr>
+<tr><td><code>coverSmallUrl</code></td><td>optional</td><td>Remote cover image URL (thumbnail). Alternative lower-resolution version.</td></tr>
+<tr><td><code>description</code></td><td>recommended</td><td>Card excerpt + feed summary.</td></tr>
+<tr><td><code>link</code></td><td>required for µf2</td><td>The read-of URL (e.g. Google Play Books, Standard Ebooks) → emitted as <code>u-read-of</code>.</td></tr>
+<tr><td><code>previewLink</code></td><td>optional</td><td>Alternate preview/search URL; importer artifact, not currently rendered.</td></tr>
+<tr><td><code>isbn13</code></td><td>optional</td><td>ISBN-13; display metadata, not currently rendered by the layout.</td></tr>
+<tr><td><code>isbn10</code></td><td>optional</td><td>ISBN-10; display metadata, not currently rendered by the layout.</td></tr>
+<tr><td><code>draft</code></td><td>optional</td><td>When <code>true</code>, shows a "draft" badge in entry-header. Seen in the Drottningar bundle post.</td></tr>
+<tr><td><code>tags</code></td><td>optional</td><td>Topic tags. <strong>Not</strong> the category. The folder data file sets <code>tags: "posts"</code>.</td></tr>
+</table>
+<p class="note"><strong>Importer field sprawl:</strong> the Google Books importer emits <code>author</code>, <code>authors</code>, <code>subtitle</code>, <code>previewLink</code>, <code>isbn13</code>, <code>isbn10</code>, and <code>totalPage</code> — several of which are redundant or unrendered. These are accepted as-is; no migration planned. The canonical forward shape will be tightened when a Goodreads/StoryGraph web clipper template is authored (see §15).</p>
+<p class="note"><strong>Cover field:</strong> the current flat posts use remote <code>coverUrl</code> / <code>coverSmallUrl</code> paths. The page-bundle pattern (already in use — see §12) enables co-located covers in the future.</p>
+
+<h2>5. Microformats (µf2)</h2>
+<p>Emitted by <code>src/_layouts/reading.njk</code>. The read target is a <em>hidden</em> <code>&lt;data&gt;</code> element:</p>
+<pre><code>{% if link %}&lt;data hidden class="u-read-of" value="{{ link }}"&gt;&lt;/data&gt;{% endif %}
+
+&lt;div class="e-content"&gt;{{ content | safe }}&lt;/div&gt;</code></pre>
+<table>
+<tr><th>Property</th><th>Class</th><th>From</th></tr>
+<tr><td>Read target</td><td><code>u-read-of</code></td><td><code>link</code></td></tr>
+<tr><td>Body</td><td><code>e-content</code></td><td>post content</td></tr>
+<tr><td>Published</td><td><code>dt-published</code></td><td><code>date</code> (via entry-header → date.njk)</td></tr>
+<tr><td>Authorship</td><td><code>h-entry</code> / <code>h-card</code> / <code>u-author</code></td><td>hidden block, <code>meta.author</code></td></tr>
+</table>
+<p class="note"><strong>h-entry nesting caveat:</strong> the only <code>h-entry</code> in the layout is the hidden authorship block; the visible <code>u-read-of</code> + <code>.e-content</code> sit outside it, so a strict parser won't tie them to the entry. Accepted for v1 (webmention sending isn't wired up). Slated for the webmention milestone.</p>
+
+<h2>6. Card</h2>
+<p>Reading has a <strong>bespoke card</strong>: <code>src/_includes/partials/card-reading.njk</code>. It is set in <code>reading.njk</code> via <code>cardPartial = "card-reading.njk"</code>. Unlike the shared <code>card-blog.njk</code> used by Jams, this card is book-cover-led: it omits the post date and draft badge from the card face, and filters out the <code>reading</code> tag from the tag list.</p>
+<table>
+<tr><th>Slot</th><th>Content</th></tr>
+<tr><td>headline</td><td><code>title</code>, linked to the post; sized <code>text-step-2</code></td></tr>
+<tr><td>tag</td><td>each tag except <code>"reading"</code>; shown only when <code>showTags</code> is true and there is more than one tag</td></tr>
+<tr><td>content</td><td><code>description</code> passed through <code>markdownFormat</code></td></tr>
+<tr><td>footer</td><td><code>category</code> ("reading")</td></tr>
+</table>
+<p>Renders a <code>&lt;custom-card clickable&gt;</code> WebC component (no <code>img-square</code> or <code>no-padding</code> modifiers). The date/draft badge slot is commented out in the current source. Styles via <code>css/custom-card.css</code>.</p>
+<p class="note"><strong>No cover rendered on the card:</strong> the bespoke card does not currently display <code>coverUrl</code> or <code>coverSmallUrl</code> as an image. The card is headline- and description-led. A future iteration could add cover art as the primary visual (as the Jam spec notes card-reading.njk as the model for a potential album-art-led card-jams.njk).</p>
+
+<h2>7. Archive page config</h2>
+<p><code>src/pages/reading.njk</code> drives the listing through the shared <code>archive-listing.njk</code> partial:</p>
+<pre><code>pagination: { data: collections.reading, size: 2 }
+permalink:  reading/[page-N/]index.html
+cardPartial = "card-reading.njk"
+masonryLayout = "50-50"
+collectionToPaginate = collections.reading
+paginationMetaKey = "blog"</code></pre>
+<p>The archive description is set inline in <code>reading.njk</code> and mentions the pagination size and current collection length dynamically.</p>
+
+<h2>8. Feed</h2>
+<p>A pair of templates set the <em>same</em> feed variables, then each includes its own format-specific body partial — Atom (<code>reading.xml.njk</code> → <code>feeds/atom-body.njk</code>) and JSON Feed (<code>reading.json.njk</code> → <code>feeds/json-body.njk</code>):</p>
+<pre><code># reading.xml.njk
+permalink: /reading/feed.xml
+feedCollection = collections.reading
+feedTitle = "Reading"
+feedDescription = "Books I'm reading."
+feedSelfUrl = "/reading/feed.xml"
+→ includes feeds/atom-body.njk
+
+# reading.json.njk — same vars, with:
+permalink: /reading/feed.json
+feedSelfUrl = "/reading/feed.json"
+→ includes feeds/json-body.njk</code></pre>
+<p class="note">Both feed files also set <code>eleventyExcludeFromCollections: true</code> and <code>excludeFromSitemap: true</code>. The <code>permalink:</code> frontmatter (not the filename) controls the output path.</p>
+
+<h2>9. Navigation</h2>
+<p>Listed in the <strong>Posts</strong> submenu in <code>src/_data/navigation.js</code>:</p>
+<pre><code>{ text: 'Reading', url: '/reading/' }</code></pre>
+
+<h2>10. JSON-LD / Schema.org</h2>
+<table>
+<tr><th>Stage</th><th>Value</th></tr>
+<tr><td>Current</td><td><code>schema: BlogPosting</code> (set in <code>reading.njk</code> front matter) → <code>src/_includes/schemas/BlogPosting.njk</code></td></tr>
+<tr><td>Planned (Phase 4)</td><td>A <code>ReadAction</code> template — BlogPosting envelope embedding a <code>ReadAction</code> (<code>Action › ConsumeAction › ReadAction</code>) whose <code>object</code> is a <code>Book</code> with <code>author</code>, <code>isbn</code>, and <code>publisher</code> properties sourced from frontmatter</td></tr>
+</table>
+
+<h2>11. Where it lives — file tree (Eleventy Excellent)</h2>
+<pre><code>src/
+├── _config/
+│   └── collections.js          # export const reading = byCategory('reading')
+├── _data/
+│   └── navigation.js           # Posts submenu → { text: 'Reading', url: '/reading/' }
+├── _includes/
+│   └── partials/
+│       └── card-reading.njk    # bespoke book-cover-led card (Reading-specific)
+├── _layouts/
+│   └── reading.njk             # per-post layout (singular)
+├── feeds/
+│   ├── reading.xml.njk         # → /reading/feed.xml  (Atom)
+│   └── reading.json.njk        # → /reading/feed.json (JSON Feed)
+├── pages/
+│   └── reading.njk             # archive page → /reading/  (singular)
+└── posts/
+    └── reading/                # content folder (singular)
+        ├── reading.json        # folder data: layout=reading, category=reading, tags=posts, permalink
+        ├── Anna Karenina - Leo Tolstoy.md            # flat post
+        ├── The Kingdom of God is Within You - Leo Tolstoy.md   # flat post
+        └── Drottningar i Kungahalla/                 # page-bundle folder (SHIPPED)
+            └── Drottningar i Kungahälla - Selma Lagerlöf.md
+
+eleventy.config.js              # addLayoutAlias('reading','reading.njk') + addCollection('reading', reading)</code></pre>
+
+<p>Built output:</p>
+<pre><code>dist/
+└── reading/
+    ├── index.html              # archive, page 1
+    ├── page-2/index.html       # pagination
+    ├── feed.xml
+    ├── feed.json
+    └── &lt;slug&gt;/index.html       # one per Reading post</code></pre>
+
+<h3>Shared dependencies (not reading-specific)</h3>
+<p>The reading type also pulls in these shared files referenced elsewhere in this spec; the section documenting each is noted.</p>
+<pre><code>src/
+├── _layouts/
+│   └── base.njk                 # parent layout (reading.njk sets `layout: base`)
+└── _includes/
+    ├── partials/
+    │   ├── entry-header.njk      # title + date; emits dt-published via date.njk (§5)
+    │   ├── date.njk              # &lt;time class="dt-published"&gt; (§5)
+    │   ├── backlinks.njk         # included by reading.njk layout
+    │   ├── entry-footer.njk      # included by reading.njk layout
+    │   ├── archive-listing.njk   # drives the /reading/ listing (§7)
+    │   └── card-reading.njk      # bespoke reading card (§6; also in the tree above)
+    ├── feeds/
+    │   ├── atom-body.njk         # Atom feed body (§8)
+    │   └── json-body.njk         # JSON Feed body (§8)
+    └── css/
+        ├── post.css              # bundled by reading.njk layout
+        ├── footnotes.css         # bundled by reading.njk layout
+        └── custom-card.css       # bundled by card-reading.njk (§6)</code></pre>
+
+<h2>12. Page bundle / co-located assets</h2>
+<p>Unlike Jam — where page bundles are <em>planned</em> — Reading <strong>already uses the bundle pattern</strong> in production. The post <em>Drottningar i Kungahälla</em> is a page-bundle folder, not a flat <code>.md</code>:</p>
+<pre><code>src/posts/reading/
+└── Drottningar i Kungahalla/                    # folder named for the post
+    └── Drottningar i Kungahälla - Selma Lagerlöf.md   # the post file, same name</code></pre>
+<p>Eleventy Excellent's convention is a directory named for the post containing a single <code>.md</code> — ideally with the same name as the folder (a tidy convention; the slug itself always comes from the filename via <code>page.fileSlug</code>, which only <em>coincides</em> with the folder name when they match). This post deviates: the folder is <code>Drottningar i Kungahalla</code> but the file is <code>Drottningar i Kungahälla - Selma Lagerlöf.md</code>, so the slug is taken from the filename. The data file, layout, and permalink are inherited from <code>reading.json</code> either way. Any co-located assets — images, attachments — placed alongside the <code>.md</code> are passthrough-copied by Eleventy and served relative to the post's URL.</p>
+<table>
+<tr><th>Aspect</th><th>Flat post (current majority)</th><th>Bundle post (Drottningar — shipped)</th></tr>
+<tr><td>Post file</td><td><code>src/posts/reading/&lt;title&gt;.md</code></td><td><code>src/posts/reading/&lt;folder&gt;/&lt;title&gt;.md</code></td></tr>
+<tr><td>Co-located assets</td><td>none (covers stored remotely or in <code>/assets/images/reading/</code>)</td><td>any file placed next to the <code>.md</code> in the bundle folder</td></tr>
+<tr><td>Slug source</td><td><code>page.fileSlug</code> (filename) via <code>| slugify</code></td><td><code>page.fileSlug</code> (the <code>.md</code> filename) via <code>| slugify</code> — <em>not</em> the folder, since this bundle's folder and file names differ</td></tr>
+<tr><td>Inherited data</td><td><code>reading.json</code></td><td><code>reading.json</code> (unchanged)</td></tr>
+</table>
+<p class="note">The Drottningar bundle currently contains only the <code>.md</code> file — no co-located image yet. But the structure is live and correct; adding a <code>cover.jpg</code> alongside the <code>.md</code> would make it available relative to the post's URL (the exact slug being filename-derived, as above). The <code>coverUrl</code> field in this post still points to a remote Google Books URL, same as the flat posts.</p>
+
+<h2>13. Collection registration (wiring)</h2>
+<pre><code>// src/_config/collections.js
+const byCategory = cat =&gt; collection =&gt;
+  collection.getFilteredByGlob('./src/posts/**/*.md')
+    .filter(item =&gt; item.data.category === cat)
+    .reverse();
+export const reading = byCategory('reading');
+
+// eleventy.config.js
+import { ... reading ... } from './src/_config/collections.js';
+eleventyConfig.addLayoutAlias('reading', 'reading.njk');
+eleventyConfig.addCollection('reading', reading);</code></pre>
+<p class="note">Category names never enter <code>tags</code>, so "reading" does not pollute <code>/tags/</code>. The folder data file sets <code>tags: "posts"</code> (the system tag that puts items in the global posts collection), not <code>category</code>.</p>
+
+<h2>14. Webmentions</h2>
+<p>Webmention is the IndieWeb's federated response protocol: likes, replies, and reposts from other sites arrive as cross-site comments. Nothing here is Reading-specific — the plumbing is shared by every post type and Reading inherits it through the <code>base</code> layout and <code>entry-footer.njk</code>. <strong>Discovery is shipped; receiving and sending are deferred</strong> to the webmention milestone.</p>
+<table>
+<tr><th>Piece</th><th>State</th><th>Where</th></tr>
+<tr><td>Endpoint discovery</td><td><strong>shipped</strong> (Phase 1)</td><td><code>&lt;link rel="webmention" href="https://webmention.io/johanedlund.se/webmention"&gt;</code> in <code>&lt;head&gt;</code> via <code>src/_includes/head/meta-info.njk</code> (reading uses <code>layout: base</code>).</td></tr>
+<tr><td>Authorship h-card</td><td><strong>shipped</strong></td><td>The hidden <code>h-entry</code> block in <code>reading.njk</code> carries <code>u-url</code>, <code>p-name u-url rel="author"</code>, and a <code>u-author h-card</code> avatar so a receiver can attribute the post (§5).</td></tr>
+<tr><td>Render slot</td><td><strong>wired, no-op</strong></td><td><code>reading.njk</code> → <code>entry-footer.njk</code> → <code>partials/webmentions.njk</code>, currently an empty stub — safe to call while the renderer is empty.</td></tr>
+<tr><td>Receiving / rendering</td><td><strong>deferred</strong></td><td>The webmention milestone wires a <code>webmention.io</code> fetch (via <code>@11ty/eleventy-fetch</code>, ~24 h cache); <code>webmentions.njk</code> then groups received mentions by type (likes / replies / reposts / mentions).</td></tr>
+<tr><td>Sending</td><td><strong>deferred</strong></td><td>Outgoing webmentions aren't wired, so a Reading post that responds to another post doesn't notify it yet.</td></tr>
+</table>
+<p class="note"><strong>h-entry nesting (§5).</strong> The only <code>h-entry</code> in the layout is the hidden authorship block; the visible <code>u-read-of</code> + <code>.e-content</code> sit outside it, so a strict parser won't tie the read target to the entry. Harmless while sending is off; fix it when the sending side of the milestone lands.</p>
+
+<h2>15. Status &amp; open items</h2>
+<ul>
+<li><strong>Shipped</strong> — layout, archive, feed, nav, and sample posts all live. Page bundles in use (§12).</li>
+<li><strong>Bespoke card</strong> — <code>card-reading.njk</code> is shipped; the cover image (<code>coverUrl</code>) is not rendered on the card face. Adding cover-art display is a candidate enhancement. <em>(open)</em></li>
+<li><strong>Field sprawl</strong> — the Google Books importer emits many fields (<code>authors</code>, <code>subtitle</code>, <code>previewLink</code>, <code>isbn13</code>, <code>isbn10</code>, <code>totalPage</code>) that are not currently rendered. No cleanup planned until a web clipper template is built. <em>(open)</em></li>
+<li><strong>Cover fields</strong> — current posts use remote <code>coverUrl</code> / <code>coverSmallUrl</code> URLs, not co-located assets. The bundle pattern (§12) is already in use structurally; co-locating covers is the next step. <em>(open)</em></li>
+<li><strong>Authoring (Web Clipper)</strong> — no Goodreads / StoryGraph web clipper template exists yet. Authoring is currently manual or via a Google Books importer script. <em>(open)</em></li>
+<li><strong>Micropub</strong> — no endpoint today; the Reading type is shaped as an IndieWeb read post (<code>u-read-of</code>), which is the canonical Micropub property for read posts. Forward-compat only; endpoint is a separate milestone after Phase 4.</li>
+<li><strong>Webmentions</strong> — discovery + the no-op render slot are shipped; receiving/rendering, sending, and the h-entry nesting fix (§5) are deferred to the webmention milestone. See §14.</li>
+<li><strong>Schema upgrade</strong> — BlogPosting → ReadAction (embedding a <code>Book</code> object) is planned for Phase 4. Fields like <code>isbn13</code>, <code>author</code>, and <code>publisher</code> are already in frontmatter and ready to map.</li>
+<li><strong>Unrendered metadata</strong> — <code>publisher</code>, <code>publishDate</code>, <code>totalPage</code>, <code>isbn13</code>, <code>isbn10</code>, <code>previewLink</code> are authored but not surfaced in any template. Candidate for a book-metadata aside or schema enrichment. <em>(open)</em></li>
+</ul>
+
+</main>
+
+<footer>JEDEE · __project_docs · git-tracked working docs</footer>
+
+<!-- Annotation UI (ported from tolstoy.life serve.py) -->
+<div id="ann-popover">
+  <div class="ann-quote" id="ann-quote"></div>
+  <textarea id="ann-text" placeholder="Your comment…" autocomplete="off"></textarea>
+  <div class="ann-actions">
+    <button id="ann-cancel">Cancel</button>
+    <button class="primary" id="ann-save">Save</button>
+  </div>
+</div>
+<div id="ann-tooltip"></div>
+<div id="ann-bar">
+  <button id="ann-export">Copy annotations</button>
+  <button class="danger" id="ann-clear">Clear all</button>
+</div>
+
+<script src="spec.js"></script>
+</body>
+</html>
