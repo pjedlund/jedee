@@ -289,7 +289,7 @@ eleventyConfig.addCollection('jam', jam);</code></pre>
 <tr><td><code>tags</code></td><td><code>"music"</code> (static)</td><td><code>tags</code></td><td>Static default; merges with the folder data's <code>posts</code> tag (§13). Author can add more.</td></tr>
 <tr><td><code>cover</code></td><td><code>{{schema:@MusicAlbum:image}}</code></td><td><code>image</code></td><td>Holds the <em>remote</em> URL at clip time; the normalize step rewrites it to <code>cover: ./cover.&lt;ext&gt;</code> and preserves the origin as <code>coverSource:</code> (§12).</td></tr>
 <tr><td><code>genre</code></td><td><code>{{schema:@MusicAlbum:genre|wikilink}}</code></td><td>—</td><td>New (not in current samples); wikilinked.</td></tr>
-<tr><td><code>syndication</code></td><td><code>""</code> (empty)</td><td><code>odeslico</code></td><td>Left empty for the author to paste an album.link / Apple Music URL — replaces the ad-hoc <code>odeslico</code> field (§16).</td></tr>
+<tr><td><code>syndication</code></td><td><code>""</code> (empty)</td><td><code>odeslico</code></td><td>Left empty for the author to paste an album.link / Apple Music URL — replaces the ad-hoc <code>odeslico</code> field (§17).</td></tr>
 </table>
 <p class="note"><strong>Not emitted by the template.</strong> <code>category</code>, <code>layout</code>, and <code>permalink</code> come from the folder data file <code>src/posts/jams/jams.json</code> (§1, §13), not per-post, so the template omits them. <code>coverSource:</code> is written by the normalize step, not the Clipper template (§12). The <code>path</code> and <code>noteNameFormat</code> share the same <code>&lt;Album&gt;, by &lt;Artist&gt;</code> expression (the <code>path</code> field accepts the same template variables as the note name), so each clip is written as a bundle — <code>posts/jams/&lt;name&gt;/&lt;name&gt;.md</code> — at clip time. <code>safe_name</code> strips filesystem-illegal characters, and Eleventy slugifies the filename for the URL at build (§3).</p>
 
@@ -308,17 +308,29 @@ eleventyConfig.addCollection('jam', jam);</code></pre>
 <tr><th>Forward-compat move</th><th>How Jam already satisfies it</th><th>See</th></tr>
 <tr><td>Micropub-aware property</td><td>A <code>create</code> request carries <code>listen-of</code> (the listened-to URL) — the same canonical property the Clipper emits, rendered as <code>u-listen-of</code>. The endpoint writes the same fields the Clipper does, so the layout never branches by source.</td><td>§5, §14</td></tr>
 <tr><td>Shared cover-colocate contract</td><td>"Download a remote image URL and rewrite frontmatter to point at a local <code>cover: ./cover.&lt;ext&gt;</code>" is factored into one library — <code>src/_config/setup/lib/colocate-cover.js</code> — that the normalize step imports today and a Micropub endpoint can import (or copy) verbatim. One contract, one set of tests, both authoring paths.</td><td>§12</td></tr>
-<tr><td>Bundle-friendly write path</td><td>The page-bundle layout lets an endpoint that knows the slug at write time write <code>posts/jams/&lt;slug&gt;/&lt;slug&gt;.md</code> directly, and save multipart photo uploads alongside as <code>photo-N.&lt;ext&gt;</code>. No promote-to-bundle retrofit.</td><td>§12, §16</td></tr>
+<tr><td>Bundle-friendly write path</td><td>The page-bundle layout lets an endpoint that knows the slug at write time write <code>posts/jams/&lt;slug&gt;/&lt;slug&gt;.md</code> directly, and save multipart photo uploads alongside as <code>photo-N.&lt;ext&gt;</code>. No promote-to-bundle retrofit.</td><td>§12, §17</td></tr>
 </table>
-<p class="note"><strong>One shape, three producers.</strong> The frontmatter the Clipper writes, the payload a Micropub client sends, and the canonical shape the normalize step migrates existing samples to are <em>the same shape</em> — so adding the endpoint introduces no new field mapping. Settling the §16 "bundle creation" open item (does the Clipper write the bundle, or does <code>normalize-posts</code> promote it?) also settles the Micropub write path, since both share the bundle contract.</p>
+<p class="note"><strong>One shape, three producers.</strong> The frontmatter the Clipper writes, the payload a Micropub client sends, and the canonical shape the normalize step migrates existing samples to are <em>the same shape</em> — so adding the endpoint introduces no new field mapping. Settling the §17 "bundle creation" open item (does the Clipper write the bundle, or does <code>normalize-posts</code> promote it?) also settles the Micropub write path, since both share the bundle contract.</p>
 <p class="note"><strong>Status: planned, no code</strong> — like page bundles (§12) and the Web Clipper template (§14). The endpoint is a separate milestone after Phase 4; this section exists so the forward-compat story is discoverable from the spec.</p>
 
-<h2>16. Status &amp; open items</h2>
+<h2>16. Webmentions</h2>
+<p>Webmention is the IndieWeb's federated response protocol: likes, replies, and reposts from other sites arrive as cross-site comments. Nothing here is Jam-specific — the plumbing is shared by every post type and Jam inherits it through the <code>base</code> layout and <code>entry-footer.njk</code>. <strong>Discovery is shipped; receiving and sending are deferred</strong> to the webmention milestone.</p>
+<table>
+<tr><th>Piece</th><th>State</th><th>Where</th></tr>
+<tr><td>Endpoint discovery</td><td><strong>shipped</strong> (Phase 1)</td><td><code>&lt;link rel="webmention" href="https://webmention.io/johanedlund.se/webmention"&gt;</code> in <code>&lt;head&gt;</code> via <code>src/_includes/head/meta-info.njk</code> (jam uses <code>layout: base</code>).</td></tr>
+<tr><td>Authorship h-card</td><td><strong>shipped</strong></td><td>The hidden <code>h-entry</code> block in <code>jam.njk</code> carries <code>u-url</code>, <code>p-name u-url rel="author"</code>, and a <code>u-author h-card</code> avatar so a receiver can attribute the post (§5).</td></tr>
+<tr><td>Render slot</td><td><strong>wired, no-op</strong></td><td><code>jam.njk</code> → <code>entry-footer.njk</code> → <code>partials/webmentions.njk</code>, currently an empty stub — safe to call while the renderer is empty.</td></tr>
+<tr><td>Receiving / rendering</td><td><strong>deferred</strong></td><td>The webmention milestone wires a <code>webmention.io</code> fetch (via <code>@11ty/eleventy-fetch</code>, ~24 h cache); <code>webmentions.njk</code> then groups received mentions by type (likes / replies / reposts / mentions).</td></tr>
+<tr><td>Sending</td><td><strong>deferred</strong></td><td>Outgoing webmentions aren't wired, so a Jam that responds to another post doesn't notify it yet.</td></tr>
+</table>
+<p class="note"><strong>h-entry nesting (§5).</strong> The only <code>h-entry</code> in the layout is the hidden authorship block; the visible <code>u-listen-of</code> + <code>.e-content</code> sit outside it, so a strict parser won't tie the listen target to the entry. Harmless while sending is off; fix it when the sending side of the milestone lands — see §5 and §17.</p>
+
+<h2>17. Status &amp; open items</h2>
 <ul>
 <li><strong>Shipped</strong> in Phase 2 — layout, archive, feed, nav, and 2 sample posts all live.</li>
 <li><strong>Field drift</strong> (canonical vs importer names) — normalization deferred to the Clipper layer, not a migration. The canonical forward shape is what the planned Bandcamp Clipper template emits (see §14).</li>
 <li><strong><code>odeslico</code></strong> — authored but unrendered. The Clipper layer plans to retire it in favor of <code>syndication[]</code> (see §14); existing samples keep <code>odeslico</code> until normalized. <em>(open)</em></li>
-<li><strong>Webmention sending</strong> + the h-entry nesting fix — deferred to the webmention milestone.</li>
+<li><strong>Webmentions</strong> — discovery + the no-op render slot are shipped; receiving/rendering, sending, and the h-entry nesting fix (§5) are deferred to the webmention milestone. See §16.</li>
 <li><strong>Schema upgrade</strong> BlogPosting → ListenAction — Phase 4.</li>
 <li><strong>Page bundles / co-located covers</strong> — planned (Clipper-era); see §12.</li>
 <li><strong>Dedicated card?</strong> Jam reuses the shared <code>card-blog.njk</code> (like Article/Watching); only Note and Reading have bespoke cards. A <code>card-jams.njk</code> (album-art-led, à la <code>card-reading.njk</code>) is a candidate but not built. <em>(open)</em></li>
