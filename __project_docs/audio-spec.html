@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Audio — post-type spec — JEDEE</title>
+<link rel="stylesheet" href="spec.css">
+</head>
+<body data-doc-key="audio-spec">
+
+<div class="site-header">
+  <a class="home" href="index.html">JEDEE / Project documentation</a>
+  <span class="breadcrumb">post-type specs › Audio</span>
+</div>
+
+<header class="doc-header" id="top">
+  <p class="eyebrow">post-type spec</p>
+  <h1>Audio</h1>
+  <p class="meta">Planned · Phase 3b · type and namespace <code>audio</code> · designed from the Phase 3 plan 22 May 2026</p>
+</header>
+
+<nav id="toc" class="toc" aria-label="Sections"></nav>
+
+<main>
+
+<p>An <em>Audio</em> post is a self-hosted audio publication — a podcast episode, a recording, a track the author hosts and wants to syndicate. Its primary content is an audio file the author owns, exposed both as an on-page <code>&lt;audio&gt;</code> player and as a podcast <code>&lt;enclosure&gt;</code> in a real RSS 2.0 feed. Audio is one of the two <strong>creator-side, hosted-media</strong> types (with Video); the two are designed together because they share the enclosure derivation, the RSS 2.0 media feed, and the bespoke media-led card.</p>
+
+<p class="note"><strong>Provenance.</strong> Audio + Video are the second heavy Phase 3b increment (after Photo), designed <strong>together</strong> in one pass. The Phase 3 plan only <em>outlines</em> Audio (podcast-shaped RSS 2.0 with <code>&lt;enclosure&gt;</code> byte/MIME derivation + iTunes namespace + transcript; schema <code>AudioPosting</code> embedding <code>AudioObject</code>). The field shapes, transcript handling, feed structure, and the build-vs-defer calls below are decisions of the <strong>22 May 2026 design increment</strong> (<code>_generated/Plan - Audio + Video post types (Phase 3b design).md</code>), built on the plan — not invented to fill the page. "The plan specifies …" means the Phase 3 plan; "the design increment decides …" means the 22 May pass. Several mechanisms here <strong>do not exist in the codebase yet</strong> (the enclosure filter, the RSS 2.0 podcast body, the <code>AudioObject</code> schema); each is marked <em>to-build</em> rather than asserted as wired.</p>
+
+<h2>1. Identity</h2>
+<p>Unlike the shipped types and Photo — which are <em>asymmetric</em> (singular type, plural URL) — <strong>Audio is symmetric</strong>: "audio" is a mass noun with no natural plural ("audios" reads wrong), so the type, category, folder, URL namespace, archive, and feed all use the same word, <code>audio</code> (design increment decision; confirmed with the author).</p>
+<table>
+<tr><th>Aspect</th><th>Value</th><th>Defined in</th></tr>
+<tr><td>Type / category value</td><td><code>category: "audio"</code></td><td><code>src/posts/audio/audio.json</code></td></tr>
+<tr><td>Layout name + alias</td><td><code>audio</code> → <code>audio.njk</code></td><td><code>eleventy.config.js</code></td></tr>
+<tr><td>Collection</td><td><code>collections.audio</code></td><td><code>src/_config/collections.js</code></td></tr>
+<tr><td>Content folder</td><td><code>src/posts/audio/</code></td><td>—</td></tr>
+<tr><td>Folder data file</td><td><code>audio.json</code></td><td><code>src/posts/audio/</code></td></tr>
+<tr><td>Per-post URL</td><td><code>/audio/&lt;slug&gt;/</code></td><td><code>audio.json</code> permalink</td></tr>
+<tr><td>Archive URL + page</td><td><code>/audio/</code></td><td><code>src/pages/audio.njk</code></td></tr>
+<tr><td>Feed</td><td><code>/audio/feed.xml</code> (RSS 2.0 podcast)</td><td><code>src/feeds/audio.xml.njk</code></td></tr>
+<tr><td>Nav label</td><td>"Audio" → <code>/audio/</code></td><td><code>src/_data/navigation.js</code></td></tr>
+</table>
+<p class="note"><strong>Jam precedent for asymmetry; Audio is the symmetric case.</strong> Jam is the singular type at a plural URL (<code>/jams/</code>); Photo is <code>photo</code>/<code>photos</code>. Audio simply has no useful plural, so every facet is <code>audio</code>. The collection, layout alias, and category are all <code>audio</code> — there is nothing to "fix" here.</p>
+
+<h2>2. Naming &amp; aliases</h2>
+<table>
+<tr><th>Term</th><th>Status</th><th>Where it appears / why</th></tr>
+<tr><td><code>audio</code></td><td>chosen name</td><td>Type, layout, collection, folder, URL, archive, feed, nav (see §1).</td></tr>
+<tr><td><code>u-audio</code></td><td>IndieWeb µf2 property</td><td>The microformat for an audio file embedded in an <code>h-entry</code>. Emitted as a class on the rendered <code>&lt;audio&gt;</code> (§5), not a frontmatter key.</td></tr>
+<tr><td><code>enclosure</code></td><td>RSS 2.0 element, to-build</td><td>The podcast media link: <code>&lt;enclosure url length type&gt;</code>. Its <code>length</code> (bytes) and <code>type</code> (MIME) are derived from the source file at build by a new filter (§9).</td></tr>
+<tr><td><code>itunes:</code> / <code>podcast:</code></td><td>feed namespaces, to-build</td><td>Apple Podcasts (<code>itunes:</code>) and the Podcast Namespace (<code>podcast:</code>) XML namespaces carried by the RSS 2.0 body (§8). Not present in any existing feed.</td></tr>
+<tr><td><code>AudioPosting</code> / <code>AudioObject</code></td><td>schema target, to-build</td><td>The planned JSON-LD shape (a <code>BlogPosting</code> envelope embedding an <code>AudioObject</code>). Documented in §10; the template does not exist yet.</td></tr>
+</table>
+
+<h2>3. URLs &amp; permalinks</h2>
+<table>
+<tr><th>Page</th><th>URL</th><th>Source</th></tr>
+<tr><td>Per-post</td><td><code>/audio/&lt;slug&gt;/</code></td><td><code>"/audio/{{ page.fileSlug | slugify }}/index.html"</code></td></tr>
+<tr><td>Archive (page 1)</td><td><code>/audio/</code></td><td><code>audio.njk</code> pagination, size ~10</td></tr>
+<tr><td>Archive (page N)</td><td><code>/audio/page-N/</code></td><td>same</td></tr>
+<tr><td>RSS 2.0 podcast feed</td><td><code>/audio/feed.xml</code></td><td><code>audio.xml.njk</code></td></tr>
+</table>
+<p>Slug derives from the filename via <code>| slugify</code>. Audio is <strong>title-optional</strong> (design increment decision — the plan marks only Recipe and Event title-required), following the shipped and light types. In practice a podcast episode almost always has a title, and the feed <em>needs</em> a non-empty <code>&lt;title&gt;</code> per item, so a title-less episode falls back to a computed title (§8).</p>
+<p class="note"><strong>JSON feed?</strong> The shipped feed-bearing types ship an Atom + JSON Feed pair. Audio ships <strong>only</strong> an RSS 2.0 feed (<code>/audio/feed.xml</code>): podcast clients (Apple Podcasts, Overcast, Pocket Casts) consume RSS 2.0 with enclosures, and JSON Feed has no equivalent podcast enclosure convention. A parallel JSON or Atom feed is a possible later add, not specified here. <em>(open)</em></p>
+
+<h2>4. Frontmatter (planned)</h2>
+<p>The shape below is the <strong>planned authoring surface</strong> decided by the 22 May design increment. No sample file exists yet. <code>category</code>, <code>layout</code>, and <code>permalink</code> are not authored per-post — they come from the folder data file <code>src/posts/audio/audio.json</code> (see §1, §12). Audio uses a <strong>page bundle</strong> (post folder named after the post; media co-located) so the audio file and transcript live next to the <code>.md</code>.</p>
+<pre><code>---
+audio:
+  src: ./episode-12.mp3        # required — co-located audio file (page bundle)
+  duration: PT41M12S           # recommended — ISO-8601; surfaces as itunes:duration
+  episode: 12                  # optional — itunes:episode
+  season: 1                    # optional — itunes:season
+transcript: ./episode-12.vtt   # optional — co-located transcript (WebVTT)
+poster: ./episode-12-art.jpg   # optional — episode artwork (via image shortcode)
+title: "Designing in the open"     # optional (title-optional type — §3)
+date: 2026-06-01T09:00:00+02:00    # required — publish timestamp
+description: "A short summary for the feed and the card."   # recommended
+draft: true                    # optional
+tags:
+  - podcasting                 # optional — topic tags, NOT the category
+---</code></pre>
+<table>
+<tr><th>Field</th><th>Req?</th><th>Role</th></tr>
+<tr><td><code>audio</code></td><td>required</td><td>Nested object holding the media (mirrors Photo's <code>photo:</code> object so the two siblings author alike).</td></tr>
+<tr><td><code>audio.src</code></td><td>required</td><td>Bundle-relative path to the source audio file. Drives the on-page <code>&lt;audio&gt;</code> and the feed <code>&lt;enclosure&gt;</code>. Must be a <strong>local</strong> file — the enclosure <code>length</code>/<code>type</code> are <code>stat</code>-ed from disk (§9).</td></tr>
+<tr><td><code>audio.duration</code></td><td>recommended</td><td>ISO-8601 duration (e.g. <code>PT41M12S</code>); rendered as <code>itunes:duration</code> in the feed and a duration badge on the card. <em>(An ISO-8601 → <code>HH:MM:SS</code> formatter is to-build — see §8.)</em></td></tr>
+<tr><td><code>audio.episode</code> / <code>audio.season</code></td><td>optional</td><td>Episode/season numbers → <code>itunes:episode</code> / <code>itunes:season</code>.</td></tr>
+<tr><td><code>transcript</code></td><td>optional</td><td>Bundle-relative path to a co-located transcript (WebVTT recommended). Surfaced on-page in a <code>&lt;details&gt;</code> and in the feed as <code>&lt;podcast:transcript&gt;</code> (§10-transcript handling, below).</td></tr>
+<tr><td><code>poster</code></td><td>optional</td><td>Episode artwork; rendered via the <code>image</code> shortcode (the Photo poster pattern) for the page and card.</td></tr>
+<tr><td><code>title</code></td><td>optional</td><td>Headline; falls back to slug, and to a computed feed title when absent (§8). Title-optional type (§3).</td></tr>
+<tr><td><code>date</code></td><td>required</td><td>Publish timestamp (sort + <code>dt-published</code> + RSS <code>pubDate</code>).</td></tr>
+<tr><td><code>description</code></td><td>recommended</td><td>Card excerpt and feed <code>&lt;description&gt;</code>.</td></tr>
+<tr><td><code>draft</code></td><td>optional</td><td>When <code>true</code>, the card shows a "draft" badge; the post is still built in dev.</td></tr>
+<tr><td><code>tags</code></td><td>optional</td><td>Topic tags. <strong>Not</strong> the category.</td></tr>
+</table>
+<p class="note"><strong>Co-located media needs passthrough wiring — a real build detail.</strong> Eleventy Image (the <code>image</code> shortcode) handles <em>images</em>; it does nothing for <code>.mp3</code>/<code>.m4a</code>/<code>.vtt</code>. For the on-page <code>&lt;audio src&gt;</code> and the feed enclosure URL to resolve, the co-located audio + transcript must be <strong>passthrough-copied</strong> to <code>dist/</code> (an <code>addPassthroughCopy</code> rule for the audio/transcript extensions, or per-bundle copy). This is not wired today and is flagged as a build prerequisite, not asserted as solved. <em>(to-build)</em></p>
+
+<h2>5. Microformats (µf2)</h2>
+<p>The layout will be <code>src/_layouts/audio.njk</code> (planned), modeled on <code>watching.njk</code>. A Note/light type renders a visible outbound <code>&lt;a&gt;</code>; an Audio post's content <em>is</em> the recording, so <code>u-audio</code> goes on a visible <code>&lt;audio&gt;</code> rendered above the body:</p>
+<pre><code>{# planned — audio.njk #}
+{% if poster %}{% image poster, title, "", "eager" %}{% endif %}
+
+&lt;audio class="u-audio" controls preload="metadata" src="{{ audio.src }}"&gt;&lt;/audio&gt;
+
+&lt;div class="e-content"&gt;{{ content | safe }}&lt;/div&gt;
+
+{% if transcript %}
+&lt;details class="transcript"&gt;
+  &lt;summary&gt;Transcript&lt;/summary&gt;
+  {# transcript file rendered/linked here — see Transcript handling #}
+&lt;/details&gt;
+{% endif %}</code></pre>
+<table>
+<tr><th>Property</th><th>Class</th><th>From</th></tr>
+<tr><td>Audio</td><td><code>u-audio</code> (on the <code>&lt;audio&gt;</code>)</td><td><code>audio.src</code></td></tr>
+<tr><td>Body</td><td><code>e-content</code></td><td>post content (may be empty)</td></tr>
+<tr><td>Published</td><td><code>dt-published</code></td><td><code>date</code> (via entry-header → date.njk)</td></tr>
+<tr><td>Authorship</td><td><code>h-entry</code> / <code>h-card</code> / <code>u-author</code></td><td>hidden block, <code>meta.author</code></td></tr>
+</table>
+<p class="note"><strong>h-entry nesting caveat — DEFERRED.</strong> Modeling on <code>watching.njk</code> puts the visible <code>u-audio</code> and <code>.e-content</code> outside the only <code>h-entry</code> in the layout (the hidden authorship block), so a strict mf2 parser won't tie the audio to the entry. Accepted for v1 because webmention sending isn't wired yet. Fix in the webmention milestone — either give the audio layout a self-contained <code>h-entry</code>, or restructure the shared chrome (which also fixes the existing types). Same caveat as the shipped, light, and Photo types.</p>
+
+<h2>6. Card</h2>
+<p>Audio will use a <strong>bespoke <code>src/_includes/partials/card-audio.njk</code></strong> (planned) — <em>not</em> the shared <code>card-response.njk</code>. The card is media-led: episode artwork in the image slot, with the title, date, a duration badge, and the description below.</p>
+<table>
+<tr><th>Slot</th><th>Content</th></tr>
+<tr><td>image</td><td><code>poster</code> via the <code>image</code> shortcode → <code>&lt;picture slot="image"&gt;</code> (falls back to a default podcast artwork when absent)</td></tr>
+<tr><td>headline</td><td><code>title</code> if present, linked to the post (omitted / computed for title-less episodes)</td></tr>
+<tr><td>date</td><td><code>date</code> via <code>date.njk</code>; "draft" badge when <code>draft: true</code></td></tr>
+<tr><td>content</td><td><code>item.data.description</code>; a duration badge from <code>audio.duration</code></td></tr>
+<tr><td>footer</td><td><code>category</code> ("audio")</td></tr>
+</table>
+<p class="note"><strong>Planned — not yet built.</strong> <code>card-audio.njk</code> does not exist. It bundles <code>css/custom-card.css</code> like the other cards. Whether the card embeds a mini <code>&lt;audio&gt;</code> player or only links through to the post page is an open detail — a player per archive card is heavier and is <em>not</em> the v1 default. <em>(open)</em></p>
+
+<h2>7. Archive page config</h2>
+<p><code>src/pages/audio.njk</code> (planned) drives the listing through the shared <code>archive-listing.njk</code> partial, modeled on the <code>watching.njk</code> page. Unlike Photo (which the plan wraps in a <code>&lt;custom-masonry&gt;</code> grid), Audio is a <strong>uniform episode list</strong> — artwork-and-text cards in date order, newest first:</p>
+<pre><code>pagination: { data: collections.audio, size: 10 }
+permalink:  audio/[page-N/]index.html
+cardPartial = "card-audio.njk"
+collectionToPaginate = collections.audio
+paginationMetaKey = "blog"</code></pre>
+<p class="note">No masonry: episodes are a chronological feed, not an image wall. The exact <code>archive-listing.njk</code> variables match the shipped <code>watching.njk</code> page; confirm at build time.</p>
+
+<h2>8. Feed — RSS 2.0 podcast</h2>
+<p>This is the section that makes Audio a heavy type. <strong>The whole site's feed layer is Atom + JSON Feed</strong> — every <code>src/feeds/*.xml.njk</code> includes <code>feeds/atom-body.njk</code> (verified: <code>jams.xml.njk</code>), and both shared bodies emit <strong>only</strong> <code>post.content</code> via <code>renderTransforms</code>, no frontmatter fields (<code>src/_includes/feeds/atom-body.njk:37-39</code>, <code>src/_includes/feeds/json-body.njk:27</code>). A podcast feed is a <strong>fundamentally different template</strong> — RSS 2.0, not Atom — so it is built fresh, not cloned (design increment decision; confirmed with the author):</p>
+<pre><code>{# planned — src/feeds/audio.xml.njk #}
+---
+permalink: /audio/feed.xml
+eleventyExcludeFromCollections: true
+excludeFromSitemap: true
+---
+{%- set feedCollection = collections.audio -%}
+{%- set feedTitle = "Audio" -%}
+{%- set feedDescription = "..." -%}
+{%- set feedSelfUrl = "/audio/feed.xml" -%}
+{%- include "feeds/podcast-body.njk" -%}   {# NEW shared body — to-build #}</code></pre>
+<p>The new <code>src/_includes/feeds/podcast-body.njk</code> emits RSS 2.0 with the iTunes + Podcast namespaces:</p>
+<pre><code>&lt;rss version="2.0"
+     xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"
+     xmlns:podcast="https://podcastindex.org/namespace/1.0"&gt;
+  &lt;channel&gt;
+    &lt;title&gt;{{ feedTitle }}&lt;/title&gt;
+    &lt;link&gt;{{ meta.url }}/audio/&lt;/link&gt;
+    &lt;description&gt;{{ feedDescription }}&lt;/description&gt;
+    &lt;language&gt;{{ meta.lang }}&lt;/language&gt;
+    &lt;itunes:author&gt;{{ meta.author.name }}&lt;/itunes:author&gt;
+    &lt;itunes:image href="{{ channelArtwork }}"/&gt;   {# REQUIRED by Apple #}
+    &lt;itunes:category text="..."/&gt;
+    &lt;itunes:explicit&gt;false&lt;/itunes:explicit&gt;
+    &lt;itunes:owner&gt;
+      &lt;itunes:name&gt;{{ meta.author.name }}&lt;/itunes:name&gt;
+      &lt;itunes:email&gt;...&lt;/itunes:email&gt;
+    &lt;/itunes:owner&gt;
+    {%- for post in feedCollection | reverse -%}
+    &lt;item&gt;
+      &lt;title&gt;{{ post.data.title or computedTitle }}&lt;/title&gt;
+      &lt;description&gt;{{ post.data.description }}&lt;/description&gt;
+      &lt;enclosure url="{{ enclosureUrl }}" length="{{ bytes }}" type="{{ mime }}"/&gt;
+      &lt;guid isPermaLink="true"&gt;{{ absolutePostUrl }}&lt;/guid&gt;
+      &lt;pubDate&gt;{{ post.date | dateToRfc822 }}&lt;/pubDate&gt;   {# RFC-822 (RSS), not RFC-3339 (Atom) #}
+      &lt;itunes:duration&gt;{{ post.data.audio.duration | itunesDuration }}&lt;/itunes:duration&gt;
+      {%- if post.data.audio.episode %}&lt;itunes:episode&gt;{{ post.data.audio.episode }}&lt;/itunes:episode&gt;{% endif -%}
+      {%- if post.data.transcript %}&lt;podcast:transcript url="{{ transcriptUrl }}" type="text/vtt"/&gt;{% endif -%}
+    &lt;/item&gt;
+    {%- endfor -%}
+  &lt;/channel&gt;
+&lt;/rss&gt;</code></pre>
+<p class="note"><strong>Date format — already covered; duration formatter — to-build.</strong> RSS 2.0 dates are <strong>RFC-822</strong> (e.g. <code>Mon, 01 Jun 2026 09:00:00 +0200</code>), <em>not</em> the RFC-3339 that Atom uses. The registered <code>@11ty/eleventy-plugin-rss</code> (<code>eleventy.config.js:68</code>) <strong>already provides</strong> a <code>dateToRfc822</code> Nunjucks filter (<code>rssPlugin.js:21</code>), so <code>pubDate</code> is <em>not</em> new work — the body just uses <code>dateToRfc822</code> where the Atom body uses <code>dateToRfc3339</code>. The same plugin also ships <code>absoluteUrl</code> (used for the enclosure URL) and <code>getNewestCollectionItemDate</code>. The one formatter that <strong>is</strong> to-build is <code>itunes:duration</code>: it wants <code>HH:MM:SS</code> (or whole seconds), so an ISO-8601 → <code>HH:MM:SS</code> filter must be added.</p>
+<p class="note"><strong>Channel artwork is required.</strong> Apple rejects a podcast feed without channel-level <code>itunes:image</code>. Where that artwork URL lives — site <code>meta</code>, a dedicated podcast data file, or a fixed asset — is a build detail to settle when wiring the feed. <em>(open)</em></p>
+<p class="note"><strong>Title-less episodes.</strong> RSS items need a non-empty <code>&lt;title&gt;</code>; a title-optional episode gets a computed fallback (e.g. "Episode {{ audio.episode }}" or a date-based title). Exact rule deferred. <em>(open)</em></p>
+
+<h2>9. Enclosure derivation (the to-build filter)</h2>
+<p>The <code>&lt;enclosure&gt;</code> element needs three things: a <code>url</code> (the public, absolute URL of the audio file), a <code>length</code> (the file size in bytes), and a <code>type</code> (the MIME type). The plan calls for <code>stat</code>-ing the file at build. <strong>No such filter exists</strong> — <code>src/_config/filters/</code> holds only category, dates, dtcg, markdown-format, slugify, sort-alphabetic, sort-random, splitlines, striptags (verified). So this is real, small build work:</p>
+<pre><code>// planned — src/_config/filters/enclosure.js
+import { statSync } from "node:fs";
+// resolve the bundle-relative audio.src to its source path on disk,
+// stat it for byte length, and map the extension to a MIME type.
+export const enclosureBytes = (srcPath) =&gt; statSync(resolve(srcPath)).size;
+export const enclosureType  = (srcPath) =&gt; mimeFromExtension(srcPath); // .mp3→audio/mpeg, .m4a→audio/mp4, ...</code></pre>
+<table>
+<tr><th>Piece</th><th>Source</th><th>State</th></tr>
+<tr><td><code>url</code></td><td>Absolute URL of the passthrough-copied file (§4 note)</td><td>depends on passthrough wiring — to-build</td></tr>
+<tr><td><code>length</code></td><td><code>fs.stat(...).size</code> on the source file</td><td>filter — to-build</td></tr>
+<tr><td><code>type</code></td><td>Extension → MIME (small lookup, or a <code>mime</code> dependency)</td><td>filter — to-build</td></tr>
+</table>
+<p class="note"><strong>Resolving the source path is the fiddly part.</strong> The filter receives a bundle-relative <code>./episode.mp3</code>; it must resolve that to an on-disk path (relative to the post's input file) to <code>stat</code> it, while the <code>url</code> attribute needs the <em>output</em> URL. The exact resolution (using <code>page.inputPath</code>, or a precomputed absolute path in the data cascade) is a build detail flagged here, not a finished solution. <em>(to-build)</em></p>
+
+<h2>10. JSON-LD / Schema.org</h2>
+<table>
+<tr><th>Stage</th><th>Value</th></tr>
+<tr><td>Phase 3b (planned, v1)</td><td><code>schema: BlogPosting</code> (set in <code>audio.njk</code> front matter) → <code>src/_includes/schemas/BlogPosting.njk</code></td></tr>
+<tr><td>Target (to-build)</td><td><code>AudioPosting</code> — a <code>BlogPosting</code> envelope embedding an <code>AudioObject</code> (<code>contentUrl</code>, <code>encodingFormat</code>, <code>duration</code>)</td></tr>
+</table>
+<p class="note"><strong>Why v1 keeps <code>BlogPosting</code>.</strong> The schema include is <code>{%- include "schemas/" + schema + ".njk" -%}</code> (<code>src/_includes/head/schema.njk:4</code>), which <strong>throws if the template is missing</strong>. Only <code>BlogPosting.njk</code> and <code>WebSite.njk</code> exist (verified) — there is no <code>AudioPosting.njk</code> or <code>AudioObject.njk</code>. So asserting <code>schema: AudioPosting</code> before the template is created would break the build. v1 keeps <code>BlogPosting</code> (consistent with Photo and the light types); the <code>AudioObject</code> embed is documented as the target and listed in §14, not wired here. This matches the plan's own Phase 3a note ("the include glue throws on a missing template").</p>
+
+<h3>Transcript handling</h3>
+<p>The transcript (design increment decision, confirmed with the author) lives as a <strong>co-located bundle file</strong> referenced by <code>transcript:</code> frontmatter (§4), and surfaces in three places:</p>
+<table>
+<tr><th>Surface</th><th>How</th></tr>
+<tr><td>On the post page</td><td>Inside a native <code>&lt;details&gt;&lt;summary&gt;Transcript&lt;/summary&gt;…&lt;/details&gt;</code> disclosure (EE favours native <code>&lt;details&gt;</code> over JS accordions). Renders the transcript text, or links the <code>.vtt</code>.</td></tr>
+<tr><td>In the feed</td><td><code>&lt;podcast:transcript url="…" type="text/vtt"/&gt;</code> — the Podcast Namespace tag podcast apps read (§8).</td></tr>
+<tr><td>Machine-readable</td><td>The same <code>.vtt</code> URL serves both the page and the feed; passthrough-copied like the audio file (§4 note).</td></tr>
+</table>
+<p class="note"><strong>Open:</strong> whether the transcript is rendered <em>inline</em> in the <code>&lt;details&gt;</code> (parsing WebVTT to readable HTML at build) or simply <em>linked</em> for download. v1 can link-only; inline rendering is a nicer follow-up. The on-page surfacing always uses native <code>&lt;details&gt;</code>; <code>&lt;custom-details&gt;</code> is reserved for the docs collection. <em>(open)</em></p>
+
+<h2>11. Navigation</h2>
+<p>Audio gets a nav entry (it has a feed and is followable). Per the plan's convention, feed-bearing types are added to the <strong>Posts</strong> submenu in <code>src/_data/navigation.js</code>:</p>
+<pre><code>{ text: 'Audio', url: '/audio/' }</code></pre>
+<p class="note"><strong>Planned — not yet added.</strong></p>
+
+<h2>12. Collection registration (wiring)</h2>
+<p>Audio registers through the same <code>POST_TYPES</code> mechanism the light types use (introduced by the Phase 3a Step 0 refactor):</p>
+<pre><code>// src/_config/collections.js
+export const POST_TYPES = ['article','note','reading','jam','watching', ... ,'audio'];
+
+// eleventy.config.js
+POST_TYPES.forEach(t =&gt; eleventyConfig.addCollection(t, byCategory(t)));
+
+// Layout alias — added explicitly, NOT looped over POST_TYPES:
+eleventyConfig.addLayoutAlias('audio', 'audio.njk');</code></pre>
+<p class="note"><strong>Layout aliases stay explicit.</strong> Do NOT fold layout aliases into the <code>POST_TYPES.forEach</code> loop — <code>POST_TYPES</code> includes <code>article</code>, which has no <code>article.njk</code> (it uses <code>layout: post</code>), so a generic alias loop would emit a bogus alias. Each new type's alias is added explicitly.</p>
+<p class="note">Category names never enter <code>tags</code>, so "audio" does not pollute <code>/tags/</code>.</p>
+
+<h2>13. Where it lives — file tree (planned)</h2>
+<pre><code>src/
+├── _config/
+│   ├── collections.js          # audio added to POST_TYPES array
+│   └── filters/
+│       └── enclosure.js        # &lt;enclosure&gt; bytes + MIME — PLANNED (§9)
+├── _data/
+│   └── navigation.js           # Posts submenu → { text: 'Audio', url: '/audio/' }
+├── _includes/
+│   ├── feeds/
+│   │   └── podcast-body.njk     # RSS 2.0 + iTunes + transcript — PLANNED (§8), shared with Video
+│   ├── partials/
+│   │   └── card-audio.njk      # bespoke media-led card — PLANNED (§6)
+│   └── schemas/
+│       └── AudioObject.njk     # target schema embed — PLANNED, NOT v1 (§10)
+├── _layouts/
+│   └── audio.njk               # per-post layout — modeled on watching.njk
+├── feeds/
+│   └── audio.xml.njk           # → /audio/feed.xml (RSS 2.0 podcast)
+├── pages/
+│   └── audio.njk               # archive page → /audio/  (episode list)
+└── posts/
+    └── audio/                  # content folder
+        ├── audio.json          # folder data: layout=audio, category=audio, permalink
+        └── &lt;episode&gt;/          # page bundle per episode
+            ├── &lt;episode&gt;.md     # the post
+            ├── &lt;episode&gt;.mp3    # co-located audio (passthrough-copied — §4)
+            └── &lt;episode&gt;.vtt    # co-located transcript (optional)
+
+eleventy.config.js              # addLayoutAlias('audio','audio.njk'); passthrough for audio/vtt (§4)</code></pre>
+
+<h3>Shared dependencies (not audio-specific)</h3>
+<pre><code>src/
+├── _layouts/
+│   └── base.njk                  # parent layout (audio.njk sets `layout: base`)
+├── _config/shortcodes/
+│   └── image.js                  # the image shortcode — episode artwork (§5, §6)
+└── _includes/
+    ├── partials/
+    │   ├── entry-header.njk      # title + date; emits dt-published via date.njk (§5)
+    │   ├── date.njk              # &lt;time class="dt-published"&gt; (§5)
+    │   ├── backlinks.njk         # included by audio.njk layout (harmless if empty)
+    │   ├── entry-footer.njk      # included by audio.njk layout
+    │   └── archive-listing.njk   # drives the /audio/ listing (§7)
+    └── css/
+        ├── post.css              # bundled by audio.njk layout
+        ├── footnotes.css         # bundled by audio.njk layout
+        └── custom-card.css       # bundled by card-audio.njk (§6)</code></pre>
+
+<h2>14. Webmentions</h2>
+<p>Nothing here is Audio-specific — the plumbing is shared by every post type and Audio inherits it through the <code>base</code> layout and <code>entry-footer.njk</code>. <strong>Discovery is shipped; receiving and sending are deferred</strong> to the webmention milestone.</p>
+<table>
+<tr><th>Piece</th><th>State</th><th>Where</th></tr>
+<tr><td>Endpoint discovery</td><td><strong>shipped</strong> (Phase 1)</td><td><code>&lt;link rel="webmention" …&gt;</code> in <code>&lt;head&gt;</code> via <code>head/meta-info.njk</code> (audio uses <code>layout: base</code>).</td></tr>
+<tr><td>Authorship h-card</td><td><strong>planned</strong></td><td>The hidden <code>h-entry</code> block carried into <code>audio.njk</code> provides <code>u-url</code>, <code>p-name u-url rel="author"</code>, and a <code>u-author h-card</code> avatar (§5).</td></tr>
+<tr><td>Render slot</td><td><strong>planned, no-op</strong></td><td><code>audio.njk</code> → <code>entry-footer.njk</code> → <code>partials/webmentions.njk</code> (empty stub — safe to call).</td></tr>
+<tr><td>Receiving / sending</td><td><strong>deferred</strong></td><td>The webmention milestone wires a <code>webmention.io</code> fetch; outgoing webmentions aren't wired.</td></tr>
+</table>
+
+<h2>15. Status &amp; open items</h2>
+<p><strong>Planned — not built; design detailed in the 22 May 2026 increment</strong> (Audio + Video designed together). See <code>_generated/Plan - Phase 3 (10 new post types) - final.md</code> §Phase 3b and <code>_generated/Plan - Audio + Video post types (Phase 3b design).md</code>.</p>
+<ul>
+<li><strong>Phase 3b</strong> — no files for this type exist yet. The <code>POST_TYPES</code> refactor (Phase 3a Step 0) is a prerequisite for the wiring in §12.</li>
+<li><strong>Media model — DECIDED: self-hosted only.</strong> A podcast <code>&lt;enclosure&gt;</code> needs a real local file to <code>stat</code>; embedded audio (Spotify/SoundCloud) can't produce one. Field shape <code>audio: { src, duration, episode, season }</code>. See §4.</li>
+<li><strong>RSS 2.0 podcast feed — DECIDED, body to-build.</strong> A fresh <code>feeds/podcast-body.njk</code> (RSS 2.0 + iTunes + Podcast namespaces), not a clone of the Atom/JSON bodies. See §8.</li>
+<li><strong>Enclosure filter — to-build.</strong> <code>fs.stat</code> byte length + extension→MIME; source-path resolution is the fiddly part. See §9.</li>
+<li><strong>One feed filter — to-build: <code>itunes:duration</code></strong> (ISO-8601 → <code>HH:MM:SS</code>). RFC-822 <code>pubDate</code> is <em>not</em> new work — the registered RSS plugin already ships <code>dateToRfc822</code> (and <code>absoluteUrl</code>, <code>getNewestCollectionItemDate</code>). See §8.</li>
+<li><strong>Passthrough copy for media — to-build prerequisite.</strong> Eleventy Image doesn't move <code>.mp3</code>/<code>.vtt</code>; the co-located media must be passthrough-copied for the player + enclosure URLs to resolve. See §4.</li>
+<li><strong>Transcript — DECIDED: co-located file + <code>&lt;details&gt;</code> + <code>&lt;podcast:transcript&gt;</code>.</strong> Inline rendering vs link-only is open. See §10 (Transcript handling).</li>
+<li><strong>Channel artwork source — OPEN.</strong> <code>itunes:image</code> is required; where its URL lives is a build detail. See §8.</li>
+<li><strong>Title-less episode fallback — OPEN.</strong> Computed feed title for title-optional episodes. See §3, §8.</li>
+<li><strong>Schema — <code>BlogPosting</code> v1; <code>AudioPosting</code>/<code>AudioObject</code> to-build.</strong> The include throws on a missing template. See §10.</li>
+<li><strong>Bespoke card — <code>card-audio.njk</code>.</strong> Mini-player vs link-through is open. See §6.</li>
+<li><strong>µf2 h-entry nesting — DEFERRED + documented (v1).</strong> Same caveat as every type; fix in the webmention milestone. See §5, §14.</li>
+</ul>
+
+</main>
+
+<footer>JEDEE · __project_docs · git-tracked working docs</footer>
+
+<!-- Annotation UI (ported from tolstoy.life serve.py) -->
+<div id="ann-popover">
+  <div class="ann-quote" id="ann-quote"></div>
+  <textarea id="ann-text" placeholder="Your comment…" autocomplete="off"></textarea>
+  <div class="ann-actions">
+    <button id="ann-cancel">Cancel</button>
+    <button class="primary" id="ann-save">Save</button>
+  </div>
+</div>
+<div id="ann-tooltip"></div>
+<div id="ann-bar">
+  <button id="ann-export">Copy annotations</button>
+  <button class="danger" id="ann-clear">Clear all</button>
+</div>
+
+<script src="spec.js"></script>
+</body>
+</html>
