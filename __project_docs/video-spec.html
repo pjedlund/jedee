@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video — post-type spec — JEDEE</title>
+<link rel="stylesheet" href="spec.css">
+</head>
+<body data-doc-key="video-spec">
+
+<div class="site-header">
+  <a class="home" href="index.html">JEDEE / Project documentation</a>
+  <span class="breadcrumb">post-type specs › Video</span>
+</div>
+
+<header class="doc-header" id="top">
+  <p class="eyebrow">post-type spec</p>
+  <h1>Video</h1>
+  <p class="meta">Planned · Phase 3b · singular <code>video</code> / plural <code>videos</code> · designed from the Phase 3 plan 22 May 2026</p>
+</header>
+
+<nav id="toc" class="toc" aria-label="Sections"></nav>
+
+<main>
+
+<p>A <em>Video</em> post is a video publication — a self-hosted clip the author owns, or a hosted embed (YouTube, PeerTube). Its primary content is the moving image. Video is the second of the two <strong>creator-side, hosted-media</strong> types (with Audio) and the 15th type overall (the locked "accept 15 types" decision). The two are designed together because they share the enclosure derivation, the RSS 2.0 media feed, and the bespoke media-led card; Video adds a provider discriminator so a single type covers both self-hosted files and hosted embeds.</p>
+
+<p class="note"><strong>Provenance.</strong> Audio + Video are the second heavy Phase 3b increment (after Photo), designed <strong>together</strong> in one pass. The Phase 3 plan only <em>outlines</em> Video (self-hosted / embedded video; <code>u-video</code> µf2 + <code>&lt;video&gt;</code>/embed in the layout; enclosure-shaped feed mirroring Audio; schema <code>VideoPosting</code> embedding <code>VideoObject</code>). The discriminator shape, the embed-vs-enclosure feed rule, and the build-vs-defer calls below are decisions of the <strong>22 May 2026 design increment</strong> (<code>_generated/Plan - Audio + Video post types (Phase 3b design).md</code>), built on the plan — not invented to fill the page. "The plan specifies …" means the Phase 3 plan; "the design increment decides …" means the 22 May pass. Mechanisms that <strong>do not exist yet</strong> (the enclosure filter, the RSS 2.0 podcast/vodcast body, the <code>VideoObject</code> schema) are marked <em>to-build</em>; the YouTube/PeerTube embed components, by contrast, <strong>already ship</strong> and are reused as-is.</p>
+
+<h2>1. Identity</h2>
+<p>Video is <strong>asymmetric</strong> like the shipped types and Photo: the <em>type</em> is singular, the <em>URL namespace</em> is plural. (Its sibling Audio is the symmetric exception — "audio" has no plural.) The collection is named with the <strong>singular</strong> (<code>collections.video</code>); the folder, URL, archive, and feed use the <strong>plural</strong> <code>videos</code>.</p>
+<table>
+<tr><th>Aspect</th><th>Form</th><th>Value</th><th>Defined in</th></tr>
+<tr><td>Type / category value</td><td>singular</td><td><code>category: "video"</code></td><td><code>src/posts/videos/videos.json</code></td></tr>
+<tr><td>Layout name + alias</td><td>singular</td><td><code>video</code> → <code>video.njk</code></td><td><code>eleventy.config.js</code></td></tr>
+<tr><td>Collection</td><td>singular</td><td><code>collections.video</code></td><td><code>src/_config/collections.js</code></td></tr>
+<tr><td>Content folder</td><td>plural</td><td><code>src/posts/videos/</code></td><td>—</td></tr>
+<tr><td>Folder data file</td><td>plural</td><td><code>videos.json</code></td><td><code>src/posts/videos/</code></td></tr>
+<tr><td>Per-post URL</td><td>plural</td><td><code>/videos/&lt;slug&gt;/</code></td><td><code>videos.json</code> permalink</td></tr>
+<tr><td>Archive URL + page</td><td>plural</td><td><code>/videos/</code></td><td><code>src/pages/videos.njk</code></td></tr>
+<tr><td>Feed</td><td>plural</td><td><code>/videos/feed.xml</code> (RSS 2.0)</td><td><code>src/feeds/videos.xml.njk</code></td></tr>
+<tr><td>Nav label</td><td>singular</td><td>"Video" → <code>/videos/</code></td><td><code>src/_data/navigation.js</code></td></tr>
+</table>
+<p class="note">As with Jam and Photo: the folder is <code>videos/</code> but its data file sets <code>category: "video"</code>, and the registered collection is <code>video</code> (singular). The layout alias, collection, and category are all singular by design — don't "fix" it.</p>
+
+<h2>2. Naming &amp; aliases</h2>
+<table>
+<tr><th>Term</th><th>Status</th><th>Where it appears / why</th></tr>
+<tr><td><code>video</code> / <code>videos</code></td><td>chosen name</td><td>Type/collection (singular); folder, URL, archive, feed (plural). See §1.</td></tr>
+<tr><td><code>u-video</code></td><td>IndieWeb µf2 property</td><td>The microformat for a video file embedded in an <code>h-entry</code>. Emitted on the self-hosted <code>&lt;video&gt;</code> (§5). Embeds carry no file URL, so they do not get <code>u-video</code> — see the µf2 note in §5.</td></tr>
+<tr><td><code>provider</code></td><td>discriminator key (design increment)</td><td>Selects the rendering path: <code>file</code> | <code>youtube</code> | <code>peertube</code> (§4, §6).</td></tr>
+<tr><td><code>&lt;custom-youtube&gt;</code> / <code>&lt;custom-peertube&gt;</code></td><td>shipped WebC components</td><td><strong>Already exist</strong> (<code>src/_includes/webc/custom-youtube.webc</code>, <code>custom-peertube.webc</code>). Reused for the embed paths (§6) — not new work.</td></tr>
+<tr><td><code>enclosure</code></td><td>RSS 2.0 element, to-build</td><td>The media link for self-hosted entries; <code>length</code>/<code>type</code> derived from the file (§10). Embed entries carry no enclosure (§9).</td></tr>
+<tr><td><code>VideoPosting</code> / <code>VideoObject</code></td><td>schema target, to-build</td><td>The planned JSON-LD shape (a <code>BlogPosting</code> envelope embedding a <code>VideoObject</code>). Documented in §12; the template does not exist yet.</td></tr>
+</table>
+
+<h2>3. URLs &amp; permalinks</h2>
+<table>
+<tr><th>Page</th><th>URL</th><th>Source</th></tr>
+<tr><td>Per-post</td><td><code>/videos/&lt;slug&gt;/</code></td><td><code>"/videos/{{ page.fileSlug | slugify }}/index.html"</code></td></tr>
+<tr><td>Archive (page 1)</td><td><code>/videos/</code></td><td><code>videos.njk</code> pagination, size ~10</td></tr>
+<tr><td>Archive (page N)</td><td><code>/videos/page-N/</code></td><td>same</td></tr>
+<tr><td>RSS 2.0 feed</td><td><code>/videos/feed.xml</code></td><td><code>videos.xml.njk</code></td></tr>
+</table>
+<p>Slug derives from the filename via <code>| slugify</code>. Video is <strong>title-optional</strong> (design increment decision; the plan marks only Recipe and Event title-required), following the shipped and light types. In practice a video usually has a title, and the feed needs a non-empty <code>&lt;title&gt;</code> per item, so a title-less video falls back to a computed title (§9).</p>
+
+<h2>4. Frontmatter (planned)</h2>
+<p>The shape below is the <strong>planned authoring surface</strong> decided by the 22 May design increment. No sample file exists yet. <code>category</code>, <code>layout</code>, and <code>permalink</code> come from the folder data file <code>src/posts/videos/videos.json</code> (see §1, §14). The <code>video</code> object carries a <code>provider</code> discriminator; the other fields depend on which provider is set.</p>
+<pre><code># self-hosted file (page bundle)
+---
+video:
+  provider: file               # file | youtube | peertube
+  src: ./clip.mp4              # file only — co-located video, enclosure-able
+  poster: ./clip-poster.jpg   # recommended — still frame / thumbnail
+  duration: PT3M20S           # recommended — ISO-8601 (itunes:duration / card badge)
+title: "Throwing pots, start to finish"
+date: 2026-06-02T18:00:00+02:00
+description: "A short summary for the feed and the card."
+draft: true
+tags: [pottery]
+---
+
+# YouTube embed
+---
+video:
+  provider: youtube
+  slug: Ah6je_bBSH8           # the YouTube video id
+  poster: ./custom-poster.jpg # optional — else auto-derived (§6)
+  duration: PT3M20S
+title: "…"
+date: …
+---
+
+# PeerTube embed
+---
+video:
+  provider: peertube
+  instance: fair.tube
+  slug: 8opkviMc2iDUYMwJzG1FQ4               # for the watch-link fallback
+  embedSlug: 3bd0b70e-7890-4216-a123-2052363645ff  # for the iframe embed
+  poster: ./custom-poster.jpg
+title: "…"
+date: …
+---</code></pre>
+<table>
+<tr><th>Field</th><th>Provider</th><th>Role</th></tr>
+<tr><td><code>video.provider</code></td><td>all</td><td><strong>Discriminator</strong> — <code>file</code> | <code>youtube</code> | <code>peertube</code>. Drives the layout switch (§6) and the feed rule (§9).</td></tr>
+<tr><td><code>video.src</code></td><td>file</td><td>Bundle-relative path to the source video. Drives the <code>&lt;video&gt;</code> element and the feed <code>&lt;enclosure&gt;</code>. Must be local (enclosure <code>length</code>/<code>type</code> are <code>stat</code>-ed — §10).</td></tr>
+<tr><td><code>video.slug</code></td><td>youtube, peertube</td><td>YouTube video id, or the PeerTube short id (used for the <code>&lt;custom-*-link&gt;</code> fallback). Maps to the components' <code>@slug</code>.</td></tr>
+<tr><td><code>video.instance</code> / <code>video.embedSlug</code></td><td>peertube</td><td>The PeerTube host and embed id → the component's <code>@instance</code> / <code>@embed-slug</code> (§6).</td></tr>
+<tr><td><code>video.poster</code></td><td>all (optional)</td><td>Still frame / thumbnail; via the <code>image</code> shortcode for the page and card. YouTube auto-derives one when omitted (§6).</td></tr>
+<tr><td><code>video.duration</code></td><td>all (recommended)</td><td>ISO-8601 duration; <code>itunes:duration</code> in the feed (file entries) and a duration badge on the card. <em>(ISO-8601 → <code>HH:MM:SS</code> formatter is to-build — §9.)</em></td></tr>
+<tr><td><code>title</code> / <code>date</code> / <code>description</code> / <code>draft</code> / <code>tags</code></td><td>all</td><td>As for every type. <code>date</code> required; <code>title</code> optional (§3); <code>tags</code> are topic tags, not the category.</td></tr>
+</table>
+<p class="note"><strong>Co-located media needs passthrough wiring (file provider).</strong> Like Audio's audio file, a self-hosted <code>video.src</code> is <strong>not</strong> processed by Eleventy Image; for the <code>&lt;video src&gt;</code> and the enclosure URL to resolve, the co-located file must be <strong>passthrough-copied</strong> to <code>dist/</code>. Not wired today — flagged as a build prerequisite. (The <code>poster</code> image <em>is</em> handled by the <code>image</code> shortcode.) <em>(to-build)</em></p>
+
+<h2>5. Microformats (µf2)</h2>
+<p>The layout will be <code>src/_layouts/video.njk</code> (planned), modeled on <code>watching.njk</code>. For a <strong>self-hosted</strong> video, <code>u-video</code> goes on the visible <code>&lt;video&gt;</code> element:</p>
+<pre><code>{# planned — file provider #}
+&lt;video class="u-video" controls preload="metadata"
+       poster="{{ video.poster }}" src="{{ video.src }}"&gt;&lt;/video&gt;</code></pre>
+<table>
+<tr><th>Property</th><th>Class</th><th>From</th></tr>
+<tr><td>Video (file only)</td><td><code>u-video</code> (on the <code>&lt;video&gt;</code>)</td><td><code>video.src</code></td></tr>
+<tr><td>Body</td><td><code>e-content</code></td><td>post content (may be empty)</td></tr>
+<tr><td>Published</td><td><code>dt-published</code></td><td><code>date</code> (via entry-header → date.njk)</td></tr>
+<tr><td>Authorship</td><td><code>h-entry</code> / <code>h-card</code> / <code>u-author</code></td><td>hidden block, <code>meta.author</code></td></tr>
+</table>
+<p class="note"><strong>Embeds carry no <code>u-video</code> — an honest µf2 limitation.</strong> <code>u-video</code> is meant to point at a video <em>file</em> URL. A YouTube/PeerTube embed exposes no such file — only a watch page and an iframe. So embed entries do <strong>not</strong> emit <code>u-video</code>; they render the player plus the component's built-in <code>&lt;custom-youtube-link&gt;</code> / <code>&lt;custom-peertube-link&gt;</code> watch-link fallback. A consumer reads the embed as a linked video, not a <code>u-video</code> property. This is a known gap of the embed path, not a defect to paper over. <em>(documented limitation)</em></p>
+<p class="note"><strong>h-entry nesting caveat — DEFERRED.</strong> Modeling on <code>watching.njk</code> puts the visible video and <code>.e-content</code> outside the only <code>h-entry</code> (the hidden authorship block), so a strict mf2 parser won't tie the video to the entry. Accepted for v1 (webmention sending not wired). Fix in the webmention milestone. Same caveat as every other type.</p>
+
+<h2>6. Media providers — the layout switch</h2>
+<p>One type, three rendering paths, selected by <code>video.provider</code>. The two embed paths reuse <strong>existing</strong> WebC components — no new embed code. This works inside a Nunjucks layout because EE registers the WebC plugin with <code>useTransform: true</code> (<code>eleventy.config.js:71-74</code>), so custom elements are processed in <em>all</em> output HTML, not only <code>.webc</code> files. (Proof in the wild: <code>src/posts/articles/2022/2022-10-31-post-with-video.md</code> uses <code>&lt;custom-youtube&gt;</code> directly in a markdown body; attributes are documented in <code>src/posts/docs/video.md</code>.)</p>
+<pre><code>{# planned — video.njk #}
+{% if video.provider == "file" %}
+  &lt;video class="u-video" controls preload="metadata"
+         poster="{{ video.poster }}" src="{{ video.src }}"&gt;&lt;/video&gt;
+
+{% elif video.provider == "youtube" %}
+  &lt;custom-youtube @slug="{{ video.slug }}" @label="{{ title }}"
+    {% if video.poster %}@poster="{{ video.poster }}"{% endif %}&gt;&lt;/custom-youtube&gt;
+
+{% elif video.provider == "peertube" %}
+  &lt;custom-peertube @instance="{{ video.instance }}"
+    @embed-slug="{{ video.embedSlug }}" @slug="{{ video.slug }}"
+    @label="{{ title }}"&gt;&lt;/custom-peertube&gt;
+{% endif %}</code></pre>
+<table>
+<tr><th>Provider</th><th>Renders</th><th>Component / element</th><th>Poster</th></tr>
+<tr><td><code>file</code></td><td>Native player</td><td><code>&lt;video class="u-video"&gt;</code></td><td><code>video.poster</code> via <code>poster</code> attribute</td></tr>
+<tr><td><code>youtube</code></td><td>Lite YouTube embed</td><td><code>&lt;custom-youtube&gt;</code> (lite-youtube + <code>&lt;is-land on:visible&gt;</code>)</td><td><code>@poster</code> if set; else auto-derived from <code>v1.opengraph.11ty.dev</code> (<code>custom-youtube.webc:4-7</code>)</td></tr>
+<tr><td><code>peertube</code></td><td>Sandboxed iframe embed</td><td><code>&lt;custom-peertube&gt;</code> (<code>&lt;is-land on:visible&gt;</code> + sandboxed <code>&lt;iframe&gt;</code>)</td><td>no auto-poster; supply <code>video.poster</code> if a thumbnail is wanted on the page/card</td></tr>
+</table>
+<p class="note"><strong>Both embed components degrade gracefully.</strong> Each wraps its player in <code>&lt;is-land on:visible&gt;</code> (lazy-hydrated) and emits a plain <code>&lt;custom-youtube-link&gt;</code> / <code>&lt;custom-peertube-link&gt;</code> anchor as the no-JS fallback (<code>custom-youtube.webc:59</code>, <code>custom-peertube.webc:50-54</code>). The Video layout inherits this behavior for free; it is not re-implemented here.</p>
+<p class="note"><strong>Available embed attributes (from the components, not re-specified):</strong> <code>custom-youtube</code> — <code>@slug</code>, <code>@start</code>, <code>@label</code>, <code>@poster</code>, <code>@posterSize</code>, <code>@jsapi</code>. <code>custom-peertube</code> — <code>@instance</code>, <code>@embed-slug</code>, <code>@slug</code>, <code>@start</code>, <code>@label</code>. The frontmatter (§4) maps onto these. A <code>video.start</code> field could be added later to expose <code>@start</code>; not in v1. <em>(open)</em></p>
+
+<h2>7. Card</h2>
+<p>Video will use a <strong>bespoke <code>src/_includes/partials/card-video.njk</code></strong> (planned) — <em>not</em> the shared <code>card-response.njk</code>. The card is media-led: a poster thumbnail in the image slot, a play affordance, the title, date, and a duration badge.</p>
+<table>
+<tr><th>Slot</th><th>Content</th></tr>
+<tr><td>image</td><td><code>video.poster</code> via the <code>image</code> shortcode → <code>&lt;picture slot="image"&gt;</code>; for <code>youtube</code> without a poster, the auto-derived thumbnail. A play-icon overlay marks it as video.</td></tr>
+<tr><td>headline</td><td><code>title</code> if present, linked to the post (omitted / computed for title-less videos)</td></tr>
+<tr><td>date</td><td><code>date</code> via <code>date.njk</code>; "draft" badge when <code>draft: true</code></td></tr>
+<tr><td>content</td><td><code>item.data.description</code>; a duration badge from <code>video.duration</code></td></tr>
+<tr><td>footer</td><td><code>category</code> ("video")</td></tr>
+</table>
+<p class="note"><strong>Planned — not yet built.</strong> <code>card-video.njk</code> does not exist. It bundles <code>css/custom-card.css</code> like the other cards. The card links through to the post page (it does <strong>not</strong> embed a player per card — a wall of lazy iframes/players is heavy). The play-overlay styling is a small CSS detail to settle at build. <em>(open)</em></p>
+
+<h2>8. Archive page config</h2>
+<p><code>src/pages/videos.njk</code> (planned) drives the listing through <code>archive-listing.njk</code>, modeled on the <code>watching.njk</code> page — a uniform poster-and-text card list in date order:</p>
+<pre><code>pagination: { data: collections.video, size: 10 }
+permalink:  videos/[page-N/]index.html
+cardPartial = "card-video.njk"
+collectionToPaginate = collections.video
+paginationMetaKey = "blog"</code></pre>
+<p class="note">A masonry grid (as the plan gives Photo) is <em>not</em> specified for Video — posters are uniform 16:9 thumbnails, so a regular card grid reads better. Confirm <code>archive-listing.njk</code> variables at build time.</p>
+
+<h2>9. Feed — RSS 2.0 (mirrors Audio, with an enclosure-or-link rule)</h2>
+<p>Video shares Audio's RSS 2.0 body — <code>src/_includes/feeds/podcast-body.njk</code> (to-build; see the Audio spec §8 for the full structure and namespaces). The whole site's other feeds are Atom + JSON Feed whose shared bodies emit only <code>post.content</code> (<code>atom-body.njk:37-39</code>), so this is a new template, not a clone.</p>
+<pre><code>{# planned — src/feeds/videos.xml.njk #}
+---
+permalink: /videos/feed.xml
+eleventyExcludeFromCollections: true
+excludeFromSitemap: true
+---
+{%- set feedCollection = collections.video -%}
+{%- set feedTitle = "Videos" -%}
+{%- set feedDescription = "..." -%}
+{%- set feedSelfUrl = "/videos/feed.xml" -%}
+{%- include "feeds/podcast-body.njk" -%}</code></pre>
+<p class="note"><strong>The enclosure-or-link asymmetry (design increment decision).</strong> A self-hosted (<code>file</code>) entry has a real local file → it gets a true <code>&lt;enclosure url length type&gt;</code>, exactly like an audio episode (a "vodcast"). An <strong>embed</strong> entry (<code>youtube</code>/<code>peertube</code>) has <em>no</em> local file to <code>stat</code> and enclose → it carries <strong>no enclosure</strong>; the item links to the post page (and to the watch URL), and the post page hosts the embed. So <code>podcast-body.njk</code> emits <code>&lt;enclosure&gt;</code> only when <code>video.provider == "file"</code>. The exact per-entry conditional is a build detail flagged here. <em>(to-build)</em></p>
+<p class="note"><strong>Reused, not rebuilt:</strong> <code>pubDate</code> uses the RSS plugin's <code>dateToRfc822</code> filter (already registered — <code>eleventy.config.js:68</code>, <code>rssPlugin.js:21</code>); <code>absoluteUrl</code> (same plugin) absolutizes URLs. The one to-build formatter shared with Audio is <code>itunes:duration</code> (ISO-8601 → <code>HH:MM:SS</code>).</p>
+
+<h2>10. Enclosure derivation (file provider only)</h2>
+<p>Identical to Audio's mechanism (see the Audio spec §9) and the <strong>same shared filter</strong> — it applies to Video only when <code>video.provider == "file"</code>. The <code>&lt;enclosure&gt;</code> needs <code>url</code> (absolute URL of the passthrough-copied file), <code>length</code> (<code>fs.stat(...).size</code>), and <code>type</code> (extension → MIME, e.g. <code>.mp4</code>→<code>video/mp4</code>, <code>.webm</code>→<code>video/webm</code>). No such filter exists in <code>src/_config/filters/</code> (verified) — it is <strong>to-build</strong>, written once and shared by both media types. Embed entries skip it entirely (no local file).</p>
+
+<h2>11. Navigation</h2>
+<p>Video gets a nav entry (it has a feed and is followable). Per the plan's convention, feed-bearing types are added to the <strong>Posts</strong> submenu in <code>src/_data/navigation.js</code>:</p>
+<pre><code>{ text: 'Video', url: '/videos/' }</code></pre>
+<p class="note"><strong>Planned — not yet added.</strong></p>
+
+<h2>12. JSON-LD / Schema.org</h2>
+<table>
+<tr><th>Stage</th><th>Value</th></tr>
+<tr><td>Phase 3b (planned, v1)</td><td><code>schema: BlogPosting</code> (set in <code>video.njk</code> front matter) → <code>src/_includes/schemas/BlogPosting.njk</code></td></tr>
+<tr><td>Target (to-build)</td><td><code>VideoPosting</code> — a <code>BlogPosting</code> envelope embedding a <code>VideoObject</code> (<code>contentUrl</code> for file, <code>embedUrl</code> for embeds, <code>thumbnailUrl</code>, <code>duration</code>)</td></tr>
+</table>
+<p class="note"><strong>Why v1 keeps <code>BlogPosting</code>.</strong> The schema include is <code>{%- include "schemas/" + schema + ".njk" -%}</code> (<code>src/_includes/head/schema.njk:4</code>), which <strong>throws if the template is missing</strong>. Only <code>BlogPosting.njk</code> and <code>WebSite.njk</code> exist (verified) — there is no <code>VideoPosting.njk</code> or <code>VideoObject.njk</code>. Asserting <code>schema: VideoPosting</code> before the template exists would break the build. v1 keeps <code>BlogPosting</code> (consistent with Audio, Photo, and the light types); the <code>VideoObject</code> embed is documented as the target and listed in §16, not wired here. <code>VideoObject</code> is the type Google reads for video rich results, so it is a worthwhile Phase-4 follow-up.</p>
+
+<h2>13. Where it lives — file tree (planned)</h2>
+<pre><code>src/
+├── _config/
+│   ├── collections.js          # video added to POST_TYPES array
+│   └── filters/
+│       └── enclosure.js        # shared with Audio — file provider only (§10)
+├── _data/
+│   └── navigation.js           # Posts submenu → { text: 'Video', url: '/videos/' }
+├── _includes/
+│   ├── feeds/
+│   │   └── podcast-body.njk     # shared RSS 2.0 body (with Audio) — PLANNED (§9)
+│   ├── partials/
+│   │   └── card-video.njk      # bespoke media-led card — PLANNED (§7)
+│   ├── schemas/
+│   │   └── VideoObject.njk     # target schema embed — PLANNED, NOT v1 (§12)
+│   └── webc/
+│       ├── custom-youtube.webc  # SHIPPED — reused for the youtube path (§6)
+│       └── custom-peertube.webc # SHIPPED — reused for the peertube path (§6)
+├── _layouts/
+│   └── video.njk               # per-post layout (singular) — modeled on watching.njk; provider switch (§6)
+├── feeds/
+│   └── videos.xml.njk          # → /videos/feed.xml (RSS 2.0)
+├── pages/
+│   └── videos.njk              # archive page → /videos/  (poster card list)
+└── posts/
+    └── videos/                 # content folder (plural)
+        ├── videos.json         # folder data: layout=video, category=video, permalink
+        └── &lt;slug&gt;/             # page bundle (file provider colocates the video + poster)
+            ├── &lt;slug&gt;.md
+            ├── &lt;slug&gt;.mp4       # co-located video (file provider; passthrough-copied — §4)
+            └── &lt;slug&gt;-poster.jpg
+
+eleventy.config.js              # addLayoutAlias('video','video.njk'); passthrough for video ext (§4)</code></pre>
+
+<h3>Shared dependencies (not video-specific)</h3>
+<pre><code>src/
+├── _layouts/
+│   └── base.njk                  # parent layout (video.njk sets `layout: base`)
+├── _config/shortcodes/
+│   └── image.js                  # the image shortcode — poster (§6, §7)
+└── _includes/
+    ├── partials/
+    │   ├── entry-header.njk      # title + date; dt-published via date.njk (§5)
+    │   ├── date.njk              # &lt;time class="dt-published"&gt; (§5)
+    │   ├── backlinks.njk         # included by video.njk layout (harmless if empty)
+    │   ├── entry-footer.njk      # included by video.njk layout
+    │   └── archive-listing.njk   # drives the /videos/ listing (§8)
+    └── css/
+        ├── post.css              # bundled by video.njk layout
+        ├── footnotes.css         # bundled by video.njk layout
+        └── custom-card.css       # bundled by card-video.njk (§7)</code></pre>
+
+<h2>14. Collection registration (wiring)</h2>
+<p>Video registers through the same <code>POST_TYPES</code> mechanism the light types use (Phase 3a Step 0 refactor):</p>
+<pre><code>// src/_config/collections.js
+export const POST_TYPES = ['article','note','reading','jam','watching', ... ,'video'];
+
+// eleventy.config.js
+POST_TYPES.forEach(t =&gt; eleventyConfig.addCollection(t, byCategory(t)));
+
+// Layout alias — added explicitly, NOT looped over POST_TYPES:
+eleventyConfig.addLayoutAlias('video', 'video.njk');</code></pre>
+<p class="note"><strong>Layout aliases stay explicit.</strong> Do NOT fold layout aliases into the <code>POST_TYPES.forEach</code> loop — <code>POST_TYPES</code> includes <code>article</code>, which has no <code>article.njk</code> (it uses <code>layout: post</code>), so a generic alias loop would emit a bogus alias.</p>
+<p class="note">Category names never enter <code>tags</code>, so "video" does not pollute <code>/tags/</code>.</p>
+
+<h2>15. Webmentions</h2>
+<p>Nothing here is Video-specific — the plumbing is shared by every post type and Video inherits it through the <code>base</code> layout and <code>entry-footer.njk</code>. <strong>Discovery is shipped; receiving and sending are deferred</strong> to the webmention milestone.</p>
+<table>
+<tr><th>Piece</th><th>State</th><th>Where</th></tr>
+<tr><td>Endpoint discovery</td><td><strong>shipped</strong> (Phase 1)</td><td><code>&lt;link rel="webmention" …&gt;</code> in <code>&lt;head&gt;</code> via <code>head/meta-info.njk</code> (video uses <code>layout: base</code>).</td></tr>
+<tr><td>Authorship h-card</td><td><strong>planned</strong></td><td>The hidden <code>h-entry</code> block carried into <code>video.njk</code> provides <code>u-url</code>, <code>p-name u-url rel="author"</code>, and a <code>u-author h-card</code> avatar (§5).</td></tr>
+<tr><td>Render slot</td><td><strong>planned, no-op</strong></td><td><code>video.njk</code> → <code>entry-footer.njk</code> → <code>partials/webmentions.njk</code> (empty stub — safe to call).</td></tr>
+<tr><td>Receiving / sending</td><td><strong>deferred</strong></td><td>The webmention milestone wires a <code>webmention.io</code> fetch; outgoing webmentions aren't wired.</td></tr>
+</table>
+
+<h2>16. Status &amp; open items</h2>
+<p><strong>Planned — not built; design detailed in the 22 May 2026 increment</strong> (Audio + Video designed together). See <code>_generated/Plan - Phase 3 (10 new post types) - final.md</code> §Phase 3b and <code>_generated/Plan - Audio + Video post types (Phase 3b design).md</code>.</p>
+<ul>
+<li><strong>Phase 3b</strong> — no files for this type exist yet. The <code>POST_TYPES</code> refactor (Phase 3a Step 0) is a prerequisite for the wiring in §14.</li>
+<li><strong>Media model — DECIDED: both self-hosted and embed.</strong> A <code>provider</code> discriminator (<code>file</code> | <code>youtube</code> | <code>peertube</code>) selects the path; the two embed paths reuse the shipped <code>custom-youtube</code>/<code>custom-peertube</code> components. See §4, §6.</li>
+<li><strong>Embed components — SHIPPED, reused as-is.</strong> Verified to render in a <code>.njk</code> layout via WebC <code>useTransform: true</code> (and already used in a markdown body). Not new work. See §6.</li>
+<li><strong>RSS 2.0 feed — DECIDED, shared body to-build.</strong> Shares Audio's <code>podcast-body.njk</code>, with an enclosure-only-for-<code>file</code> rule; embeds link instead. See §9.</li>
+<li><strong>Enclosure filter — to-build (shared with Audio), file provider only.</strong> See §10.</li>
+<li><strong>itunes:duration formatter — to-build (shared with Audio).</strong> <code>pubDate</code> (<code>dateToRfc822</code>) and <code>absoluteUrl</code> already ship with the registered RSS plugin. See §9.</li>
+<li><strong>Passthrough copy for self-hosted video — to-build prerequisite.</strong> Eleventy Image doesn't move <code>.mp4</code>/<code>.webm</code>; the poster image is handled, the video file is not. See §4.</li>
+<li><strong>µf2 on embeds — DOCUMENTED LIMITATION.</strong> Self-hosted gets <code>u-video</code>; embeds carry no file URL, so no <code>u-video</code> — only the watch-link fallback. See §5.</li>
+<li><strong>Schema — <code>BlogPosting</code> v1; <code>VideoPosting</code>/<code>VideoObject</code> to-build.</strong> The include throws on a missing template; <code>VideoObject</code> is a worthwhile Phase-4 follow-up (video rich results). See §12.</li>
+<li><strong>Bespoke card — <code>card-video.njk</code>.</strong> Poster + play overlay + duration badge; links through (no per-card player). Play-overlay CSS is a build detail. See §7.</li>
+<li><strong>Title-less video fallback — OPEN.</strong> Computed feed title for title-optional videos. See §3, §9.</li>
+<li><strong><code>video.start</code> — OPEN, deferred.</strong> Exposing the components' <code>@start</code> (deep-link to a timestamp) via frontmatter is a possible later add. See §6.</li>
+<li><strong>µf2 h-entry nesting — DEFERRED + documented (v1).</strong> Same caveat as every type; fix in the webmention milestone. See §5, §15.</li>
+</ul>
+
+</main>
+
+<footer>JEDEE · __project_docs · git-tracked working docs</footer>
+
+<!-- Annotation UI (ported from tolstoy.life serve.py) -->
+<div id="ann-popover">
+  <div class="ann-quote" id="ann-quote"></div>
+  <textarea id="ann-text" placeholder="Your comment…" autocomplete="off"></textarea>
+  <div class="ann-actions">
+    <button id="ann-cancel">Cancel</button>
+    <button class="primary" id="ann-save">Save</button>
+  </div>
+</div>
+<div id="ann-tooltip"></div>
+<div id="ann-bar">
+  <button id="ann-export">Copy annotations</button>
+  <button class="danger" id="ann-clear">Clear all</button>
+</div>
+
+<script src="spec.js"></script>
+</body>
+</html>
