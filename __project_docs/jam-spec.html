@@ -245,15 +245,73 @@ eleventyConfig.addLayoutAlias('jam', 'jam.njk');
 eleventyConfig.addCollection('jam', jam);</code></pre>
 <p class="note">Category names never enter <code>tags</code>, so "jam" does not pollute <code>/tags/</code>.</p>
 
-<h2>14. Status &amp; open items</h2>
+<h2>14. Authoring — Web Clipper + plugin setup</h2>
+<p>The intended authoring path for a Jam is "right-click a Bandcamp album page → save to the vault." The <strong>Obsidian Web Clipper</strong> (browser extension) reads the page's <code>MusicAlbum</code> JSON-LD through a per-source template and writes a shape-correct <code>.md</code> into a per-post <strong>bundle folder</strong> under <code>src/posts/jams/</code> (the <code>path</code> field is templated — see below); the cover is localized afterwards by the normalize step (see §12 and the plugin note). No per-post manual frontmatter typing.</p>
+<p class="note"><strong>Planned.</strong> The Bandcamp template (<code>_resources/bandcamp-clipper.json</code>) is <em>not authored yet</em> — like the page-bundle work in §12 it is design-locked but unshipped. Below is the structure-first scaffold: every relevant Jam field is present and mapped to a Clipper source, but the selectors have <em>not</em> been verified against live Bandcamp markup (that verification is a follow-up). It is modeled on the one working precedent, <code>_resources/letterboxd-clipper.json</code> (Watching).</p>
+
+<h3>Bandcamp Clipper template — scaffold</h3>
+<pre><code>{
+  "schemaVersion": "0.1.0",
+  "name": "Bandcamp",
+  "behavior": "create",
+  "noteContentFormat": "",
+  "properties": [
+    { "name": "title",       "value": "{{schema:@MusicAlbum:name}}",                        "type": "text" },
+    { "name": "draft",       "value": "true",                                               "type": "checkbox" },
+    { "name": "album",       "value": "{{schema:@MusicAlbum:name}}",                        "type": "text" },
+    { "name": "artist",      "value": "{{schema:@MusicAlbum:byArtist.name|wikilink}}",      "type": "text" },
+    { "name": "listen-of",   "value": "{{url}}",                                            "type": "text" },
+    { "name": "year",        "value": "{{schema:@MusicAlbum:datePublished|date:\"YYYY\"}}", "type": "number" },
+    { "name": "date",        "value": "{{date}}",                                           "type": "text" },
+    { "name": "description", "value": "{{schema:@MusicAlbum:description}}",                  "type": "text" },
+    { "name": "tags",        "value": "music",                                              "type": "multitext" },
+    { "name": "cover",       "value": "{{schema:@MusicAlbum:image}}",                       "type": "text" },
+    { "name": "genre",       "value": "{{schema:@MusicAlbum:genre|wikilink}}",              "type": "multitext" },
+    { "name": "syndication", "value": "",                                                   "type": "multitext" }
+  ],
+  "triggers": ["https?://[^/]+\\.bandcamp\\.com/album/"],
+  "noteNameFormat": "{{schema:@MusicAlbum:name|safe_name}}, by {{schema:@MusicAlbum:byArtist.name|safe_name}}",
+  "path": "posts/jams/{{schema:@MusicAlbum:name|safe_name}}, by {{schema:@MusicAlbum:byArtist.name|safe_name}}/"
+}</code></pre>
+
+<h3>Field → source mapping</h3>
+<p>The template emits the <strong>canonical forward shape</strong> (per §4's "Canonical vs. live drift" note and decision D2): <code>listen-of</code>, <code>year</code>, and <code>cover</code> rather than the live samples' <code>source</code>, <code>released</code>, and <code>image</code>. Existing samples are <em>not</em> migrated — the Clipper layer emits the canonical names going forward, and the normalize step reconciles the rest (§12).</p>
+<table>
+<tr><th>Field (canonical)</th><th>Clipper source</th><th>Live §4 field</th><th>Notes</th></tr>
+<tr><td><code>title</code></td><td><code>{{schema:@MusicAlbum:name}}</code></td><td><code>title</code></td><td>Album name.</td></tr>
+<tr><td><code>draft</code></td><td><code>"true"</code> (static)</td><td><code>draft</code></td><td>Clips land as drafts; publish after review.</td></tr>
+<tr><td><code>album</code></td><td><code>{{schema:@MusicAlbum:name}}</code></td><td><code>album</code></td><td>Same value as <code>title</code> for an album clip.</td></tr>
+<tr><td><code>artist</code></td><td><code>{{schema:@MusicAlbum:byArtist.name|wikilink}}</code></td><td><code>artist</code></td><td>Wikilinked for the Obsidian graph; renders as plain text.</td></tr>
+<tr><td><code>listen-of</code></td><td><code>{{url}}</code></td><td><code>source</code></td><td>Canonical µf2 name (the clipped Bandcamp URL → <code>u-listen-of</code>, §5).</td></tr>
+<tr><td><code>year</code></td><td><code>{{schema:@MusicAlbum:datePublished|date:"YYYY"}}</code></td><td><code>released</code></td><td>Release date collapses to the year.</td></tr>
+<tr><td><code>date</code></td><td><code>{{date}}</code></td><td><code>date</code></td><td>Clip timestamp (post date).</td></tr>
+<tr><td><code>description</code></td><td><code>{{schema:@MusicAlbum:description}}</code></td><td><code>description</code></td><td>Selector unverified; live samples carry an authored one-line summary, so this may instead be hand-written.</td></tr>
+<tr><td><code>tags</code></td><td><code>"music"</code> (static)</td><td><code>tags</code></td><td>Static default; merges with the folder data's <code>posts</code> tag (§13). Author can add more.</td></tr>
+<tr><td><code>cover</code></td><td><code>{{schema:@MusicAlbum:image}}</code></td><td><code>image</code></td><td>Holds the <em>remote</em> URL at clip time; the normalize step rewrites it to <code>cover: ./cover.&lt;ext&gt;</code> and preserves the origin as <code>coverSource:</code> (§12).</td></tr>
+<tr><td><code>genre</code></td><td><code>{{schema:@MusicAlbum:genre|wikilink}}</code></td><td>—</td><td>New (not in current samples); wikilinked.</td></tr>
+<tr><td><code>syndication</code></td><td><code>""</code> (empty)</td><td><code>odeslico</code></td><td>Left empty for the author to paste an album.link / Apple Music URL — replaces the ad-hoc <code>odeslico</code> field (§15).</td></tr>
+</table>
+<p class="note"><strong>Not emitted by the template.</strong> <code>category</code>, <code>layout</code>, and <code>permalink</code> come from the folder data file <code>src/posts/jams/jams.json</code> (§1, §13), not per-post, so the template omits them. <code>coverSource:</code> is written by the normalize step, not the Clipper template (§12). The <code>path</code> and <code>noteNameFormat</code> share the same <code>&lt;Album&gt;, by &lt;Artist&gt;</code> expression (the <code>path</code> field accepts the same template variables as the note name), so each clip is written as a bundle — <code>posts/jams/&lt;name&gt;/&lt;name&gt;.md</code> — at clip time. <code>safe_name</code> strips filesystem-illegal characters, and Eleventy slugifies the filename for the URL at build (§3).</p>
+
+<h3>Obsidian plugin setup</h3>
+<p>One vault-side community plugin completes the authoring flow:</p>
+<table>
+<tr><th>Plugin</th><th>Role</th><th>Required settings</th></tr>
+<tr><td><code>obsidian-local-images-plus</code> (installed)</td><td>Downloads <strong>body</strong> images — markdown <code>![](URL)</code>, <code>&lt;img src&gt;</code>, base64 — into a folder named after the note. Automatic, MD5-named, idempotent. Does <strong>not</strong> touch YAML frontmatter.</td><td>Automatic mode <strong>on</strong>; placement <strong>"next to note in a folder named after the note."</strong></td></tr>
+</table>
+<p class="note"><strong>Division of labor.</strong> The Clipper does two of the three jobs itself: it writes the <strong>bundle folder</strong> (templated <code>path</code>, above) and the markdown. It does <strong>not</strong> download images — clipped images stay as <strong>remote URLs</strong> (the Clipper's maintainer confirms native download is "not yet"), and <code>local-images-plus</code> only rewrites <em>body</em> images, never a frontmatter <code>cover:</code> URL. So the <strong>cover download</strong> is the one piece left to the normalize step — which resolves §12's open "how the cover lands" question in favor of the script, not native Clipper download. With the templated <code>path</code> creating bundles at clip time, <code>normalize-posts</code> is reduced to the cover download plus a one-shot backfill of the existing flat samples; it no longer needs to promote new clips. Demoting the cover into the body to let the plugin grab it was rejected — covers are data for cards / OG / JSON-LD, not body content. (<code>local-images-plus</code> still handles a genuine body image, e.g. an inline album-art <code>&lt;img&gt;</code> inside a clip, but is a no-op for the typical Jam clip.)</p>
+
+<h2>15. Status &amp; open items</h2>
 <ul>
 <li><strong>Shipped</strong> in Phase 2 — layout, archive, feed, nav, and 2 sample posts all live.</li>
-<li><strong>Field drift</strong> (canonical vs importer names) — normalization deferred to the Clipper layer, not a migration.</li>
-<li><strong><code>odeslico</code></strong> — authored but unrendered; formalize as a cross-platform link field or fold into <code>syndication[]</code> (open).</li>
+<li><strong>Field drift</strong> (canonical vs importer names) — normalization deferred to the Clipper layer, not a migration. The canonical forward shape is what the planned Bandcamp Clipper template emits (see §14).</li>
+<li><strong><code>odeslico</code></strong> — authored but unrendered. The Clipper layer plans to retire it in favor of <code>syndication[]</code> (see §14); existing samples keep <code>odeslico</code> until normalized. <em>(open)</em></li>
 <li><strong>Webmention sending</strong> + the h-entry nesting fix — deferred to the webmention milestone.</li>
 <li><strong>Schema upgrade</strong> BlogPosting → ListenAction — Phase 4.</li>
 <li><strong>Page bundles / co-located covers</strong> — planned (Clipper-era); see §12.</li>
 <li><strong>Dedicated card?</strong> Jam reuses the shared <code>card-blog.njk</code> (like Article/Watching); only Note and Reading have bespoke cards. A <code>card-jams.njk</code> (album-art-led, à la <code>card-reading.njk</code>) is a candidate but not built. <em>(open)</em></li>
+<li><strong>Authoring (Web Clipper)</strong> — the Bandcamp Clipper template and <code>local-images-plus</code> setup are documented in §14; the template JSON itself (<code>_resources/bandcamp-clipper.json</code>) is planned, not yet authored. <em>(open)</em></li>
+<li><strong>Bundle creation — §14 diverges from §12 and the design doc</strong> — §14 has the Web Clipper write the bundle folder directly via a templated <code>path</code>, whereas §12 and <code>_generated/Step 4 - Clipper layer design.md</code> still describe the Clipper writing a flat <code>.md</code> that <code>normalize-posts</code> promotes to a bundle. Reconcile in the Clipper-layer design pass; if §14's approach holds, the script's bundle-promotion applies only to backfilling the existing flat samples. <em>(open)</em></li>
 </ul>
 
 </main>
