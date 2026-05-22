@@ -2,7 +2,7 @@
 
 Rollout of JEDEE's 15-type IndieWeb post taxonomy.
 
-- **Authoritative plan:** `_generated/Plan - Phase 3 (10 new post types).md` — single source of truth for the rollout.
+- **Authoritative plan:** `_generated/Plan - Phase 3 (10 new post types) - final.md` — single source of truth for the rollout.
 - **Legacy design reference:** `_generated/Implementing 14 post types - revised.md` (superseded on collection mechanism + field naming; kept for design rationale — don't follow its snippets verbatim).
 - **Clipper layer design:** `_generated/Step 4 - Clipper layer design.md`
 
