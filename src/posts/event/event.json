@@ -1,0 +1,6 @@
+{
+  "layout": "event",
+  "tags": "posts",
+  "category": "event",
+  "permalink": "/events/{{ page.fileSlug | slugify }}/index.html"
+}

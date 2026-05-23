@@ -49,6 +49,10 @@ export default {
         {
           text: 'Recipe',
           url: '/recipes/'
+        },
+        {
+          text: 'Event',
+          url: '/events/'
         }
       ]
     },

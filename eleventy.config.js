@@ -50,6 +50,7 @@ export default async function(eleventyConfig) {
   eleventyConfig.addLayoutAlias('repost', 'repost.njk');
   eleventyConfig.addLayoutAlias('photo', 'photo.njk');
   eleventyConfig.addLayoutAlias('recipe', 'recipe.njk');
+  eleventyConfig.addLayoutAlias('event', 'event.njk');
   eleventyConfig.addLayoutAlias('post', 'post.njk');
   eleventyConfig.addLayoutAlias('tags', 'tags.njk');
 
@@ -114,6 +115,11 @@ export default async function(eleventyConfig) {
   // Recipe durations (§9): integer minutes OR PT…M → normalized PT…M + human-readable.
   eleventyConfig.addFilter('toISODuration', filters.toISODuration);
   eleventyConfig.addFilter('formatDuration', filters.formatDuration);
+  // Event archive partition (§9): build-time upcoming/past split + event-date sorts.
+  eleventyConfig.addFilter('filterUpcoming', filters.filterUpcoming);
+  eleventyConfig.addFilter('filterPast', filters.filterPast);
+  eleventyConfig.addFilter('sortByStartAsc', filters.sortByStartAsc);
+  eleventyConfig.addFilter('sortByStartDesc', filters.sortByStartDesc);
 
   // --------------------- Shortcodes
   eleventyConfig.addShortcode('svg', shortcodes.svgShortcode);
