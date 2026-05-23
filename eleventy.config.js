@@ -15,7 +15,7 @@ dotenv.config();
 import yaml from 'js-yaml';
 
 //  config import
-import { showInSitemap, tagList, article, note, reading, jam, watching } from './src/_config/collections.js';
+import { POST_TYPES, byCategory, showInSitemap, tagList } from './src/_config/collections.js';
 import events from './src/_config/events.js';
 import filters from './src/_config/filters.js';
 import plugins from './src/_config/plugins.js';
@@ -43,18 +43,21 @@ export default async function(eleventyConfig) {
   eleventyConfig.addLayoutAlias('reading', 'reading.njk');
   eleventyConfig.addLayoutAlias('watching', 'watching.njk');
   eleventyConfig.addLayoutAlias('jam', 'jam.njk');
+  eleventyConfig.addLayoutAlias('bookmark', 'bookmark.njk');
+  eleventyConfig.addLayoutAlias('reply', 'reply.njk');
+  eleventyConfig.addLayoutAlias('rsvp', 'rsvp.njk');
+  eleventyConfig.addLayoutAlias('like', 'like.njk');
+  eleventyConfig.addLayoutAlias('repost', 'repost.njk');
   eleventyConfig.addLayoutAlias('post', 'post.njk');
   eleventyConfig.addLayoutAlias('tags', 'tags.njk');
 
   //	---------------------  Collections
-  // Per-type collections are registered explicitly; each filters on `data.category`
-  // (set in src/posts/<type>/<type>.json). collections.posts (firehose) is still
-  // auto-created by Eleventy from the `tags: "posts"` string in each folder JSON.
-  eleventyConfig.addCollection('article', article);
-  eleventyConfig.addCollection('note', note);
-  eleventyConfig.addCollection('reading', reading);
-  eleventyConfig.addCollection('jam', jam);
-  eleventyConfig.addCollection('watching', watching);
+  // Per-type collections each filter on `data.category` (set in
+  // src/posts/<type>/<type>.json). POST_TYPES drives registration — add a new
+  // type's category to that array in collections.js. collections.posts (firehose)
+  // is still auto-created by Eleventy from the `tags: "posts"` string in each
+  // folder JSON.
+  POST_TYPES.forEach(type => eleventyConfig.addCollection(type, byCategory(type)));
   eleventyConfig.addCollection('showInSitemap', showInSitemap);
   eleventyConfig.addCollection('tagList', tagList);
 
