@@ -1,0 +1,10 @@
+---
+permalink: /recipes/feed.xml
+eleventyExcludeFromCollections: true
+excludeFromSitemap: true
+---
+{%- set feedCollection = collections.recipe -%}
+{%- set feedTitle = "Recipes" -%}
+{%- set feedDescription = "Recipes I've written." -%}
+{%- set feedSelfUrl = "/recipes/feed.xml" -%}
+{%- include "feeds/recipe-atom-body.njk" -%}

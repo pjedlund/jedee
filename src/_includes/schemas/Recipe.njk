@@ -1,0 +1,28 @@
+{#- Real schema.org/Recipe JSON-LD (spec §10) — breaks the BlogPosting v1
+    pattern Photo/Audio/Video keep, like Event. Ships WITH `schema: Recipe`
+    (head/schema.njk throws on a missing template). String values are emitted
+    via `| dump` so quotes/apostrophes in recipe text can't break the JSON —
+    more robust than BlogPosting.njk's bare interpolation. The image is the
+    passthrough-copied source made absolute (recipe images are passthrough'd in
+    eleventy.config.js so this URL resolves). -#}
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Recipe",
+    "name": {{ title | dump | safe }},
+    {% if description %}"description": {{ description | dump | safe }},{% endif %}
+    "datePublished": {{ date | toIsoString | dump | safe }},
+    "author": {
+      "@type": "Person",
+      "name": {{ meta.author.name | dump | safe }},
+      "url": {{ meta.url | dump | safe }}
+    },
+    {% if recipe.image %}"image": {{ (recipe.image | replace('./src', '') | absoluteUrl(meta.url)) | dump | safe }},{% endif %}
+    {% if recipe.yield %}"recipeYield": {{ recipe.yield | dump | safe }},{% endif %}
+    {% if recipe.prepTime %}"prepTime": {{ recipe.prepTime | toISODuration | dump | safe }},{% endif %}
+    {% if recipe.cookTime %}"cookTime": {{ recipe.cookTime | toISODuration | dump | safe }},{% endif %}
+    {% if recipe.totalTime %}"totalTime": {{ recipe.totalTime | toISODuration | dump | safe }},{% endif %}
+    "recipeIngredient": [{% for i in recipe.ingredients %}{{ i | dump | safe }}{% if not loop.last %}, {% endif %}{% endfor %}],
+    "recipeInstructions": [{% for s in recipe.instructions %}{{ s | dump | safe }}{% if not loop.last %}, {% endif %}{% endfor %}]
+  }
+</script>

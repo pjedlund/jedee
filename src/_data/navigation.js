@@ -45,6 +45,10 @@ export default {
         {
           text: 'Photos',
           url: '/photos/'
+        },
+        {
+          text: 'Recipe',
+          url: '/recipes/'
         }
       ]
     },

@@ -49,6 +49,7 @@ export default async function(eleventyConfig) {
   eleventyConfig.addLayoutAlias('like', 'like.njk');
   eleventyConfig.addLayoutAlias('repost', 'repost.njk');
   eleventyConfig.addLayoutAlias('photo', 'photo.njk');
+  eleventyConfig.addLayoutAlias('recipe', 'recipe.njk');
   eleventyConfig.addLayoutAlias('post', 'post.njk');
   eleventyConfig.addLayoutAlias('tags', 'tags.njk');
 
@@ -110,6 +111,9 @@ export default async function(eleventyConfig) {
   eleventyConfig.addFilter('alphabetic', filters.sortAlphabetically);
   eleventyConfig.addFilter('slugify', filters.slugifyString);
   eleventyConfig.addFilter('dtcgItems', filters.dtcgItems);
+  // Recipe durations (§9): integer minutes OR PT…M → normalized PT…M + human-readable.
+  eleventyConfig.addFilter('toISODuration', filters.toISODuration);
+  eleventyConfig.addFilter('formatDuration', filters.formatDuration);
 
   // --------------------- Shortcodes
   eleventyConfig.addShortcode('svg', shortcodes.svgShortcode);
@@ -124,7 +128,7 @@ export default async function(eleventyConfig) {
 
   // --------------------- Passthrough File Copy
   // -- same path
-  ['src/assets/fonts/', 'src/assets/images/template', 'src/assets/og-images'].forEach(path =>
+  ['src/assets/fonts/', 'src/assets/images/template', 'src/assets/images/recipes', 'src/assets/og-images'].forEach(path =>
     eleventyConfig.addPassthroughCopy(path)
   );
 
