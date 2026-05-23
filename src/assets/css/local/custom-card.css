@@ -81,6 +81,12 @@ custom-card[img-square] img {
   aspect-ratio: 1;
 }
 
+/* portrait poster (films, shows) */
+
+custom-card[data-poster] img {
+  aspect-ratio: 2 / 3;
+}
+
 /* clickable */
 
 custom-card[clickable]:hover,

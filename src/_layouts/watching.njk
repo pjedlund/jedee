@@ -7,6 +7,11 @@ schema: BlogPosting
   <div class="wrapper flow prose">
     {% include 'partials/entry-header.njk' %}
 
+    {# Poster is a remote Letterboxd URL — plain <img>, not the local-only {% image %} shortcode. #}
+    {% if cover %}
+      <img src="{{ cover }}" alt="Poster for {{ title }}" loading="lazy" style="max-inline-size: 14rem; height: auto; border-radius: var(--border-radius-medium)">
+    {% endif %}
+
     {% if url %}<data hidden class="u-watch-of" value="{{ url }}"></data>{% endif %}
 
     <div class="e-content">
