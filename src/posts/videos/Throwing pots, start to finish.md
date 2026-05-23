@@ -6,6 +6,7 @@ video:
   duration: PT3M20S
 title: "Throwing pots, start to finish"
 date: 2026-05-23T10:00:00+02:00
+draft: true
 description: "A self-hosted clip — wheel-throwing a bowl from a fresh ball of clay."
 tags:
   - pottery

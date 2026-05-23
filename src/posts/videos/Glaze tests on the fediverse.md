@@ -6,6 +6,7 @@ video:
   embedSlug: 3bd0b70e-7890-4216-a123-2052363645ff
 title: "Glaze tests on the fediverse"
 date: 2026-05-23T12:00:00+02:00
+draft: true
 description: "A PeerTube embed — comparing three glaze recipes on a sandboxed iframe player."
 tags:
   - studio

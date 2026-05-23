@@ -5,6 +5,7 @@ description: 'Events I have responded to.'
 pagination:
   data: collections.rsvp
   size: 10
+  generatePageOnEmptyData: true
 permalink: 'rsvps/{% if pagination.pageNumber >=1 %}page-{{ pagination.pageNumber + 1 }}/{% endif %}index.html'
 ---
 

@@ -1,6 +1,7 @@
 ---
 title: "IndieWebCamp Düsseldorf"
 date: 2026-05-20
+draft: true
 event:
   start: 2026-06-14T10:00:00+02:00
   end: 2026-06-15T17:00:00+02:00

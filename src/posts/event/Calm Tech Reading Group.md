@@ -1,6 +1,7 @@
 ---
 title: "Calm Tech Reading Group"
 date: 2026-03-28
+draft: true
 event:
   start: 2026-04-10T19:00:00+02:00
   url: https://meet.example.com/calm-tech

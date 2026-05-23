@@ -1,6 +1,7 @@
 ---
 title: "Sourdough focaccia"
 date: 2026-05-22T18:30:00+02:00
+draft: true
 description: "Olive-oil rich, dimpled flatbread with a slow overnight proof."
 recipe:
   yield: "8 servings"
