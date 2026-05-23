@@ -7,8 +7,7 @@ publisher: OUP Oxford
 publishDate: 2014-08-28
 date: 2026-01-11T13:50:58+01:00
 totalPage: 898
-coverUrl: http://books.google.com/books/content?id=ChINBAAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api
-coverSmallUrl: http://books.google.com/books/content?id=ChINBAAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api
+cover: http://books.google.com/books/content?id=ChINBAAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api
 description: Love... it means too much to me, far more than you can understand. At its simplest, Anna Karenina is a love story.
 link: https://play.google.com/store/books/details?id=ChINBAAAQBAJ
 previewLink: http://books.google.se/books?id=ChINBAAAQBAJ&printsec=frontcover&dq=anna+karenina&hl=&as_pt=BOOKS&cd=1&source=gbs_api

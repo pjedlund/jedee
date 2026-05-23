@@ -3,7 +3,7 @@ artist: "Town Portal"
 album: "Of Violence"
 title: "Of Violence, by Town Portal"
 source: "https://townportal.bandcamp.com/album/of-violence"
-image: "/assets/images/listening/Of-Violence_Town-Portal.jpg"
+cover: "/assets/images/listening/Of-Violence_Town-Portal.jpg"
 released: 2019-04-05
 date: 2026-01-17T12:24:53+01:00
 description: Of Violence by Town Portal released 05 April 2019.

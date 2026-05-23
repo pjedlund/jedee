@@ -10,7 +10,7 @@
 <custom-card clickable data-poster>
   {% if item.data.cover %}
     <div slot="image" webc:nokeep>
-      <img src="{{ item.data.cover }}" alt="Poster for {{ item.data.title }}" loading="lazy">
+      <img eleventy:optional="placeholder" src="{{ item.data.cover | safe }}" alt="Poster for {{ item.data.title }}" loading="lazy">
     </div>
   {% endif %}
   <{{ headingLevel }} slot="headline" class="text-step-1">

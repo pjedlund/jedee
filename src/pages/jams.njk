@@ -13,7 +13,7 @@ permalink: 'jams/{% if pagination.pageNumber >=1 %}page-{{ pagination.pageNumber
   The pagination is only shown if there are more entries ({{ collections.jam.length }}) than items per page ({{ pagination.size }}).
 {% endset %}
 
-{% set cardPartial = "card-blog.njk" %}
+{% set cardPartial = "card-jam.njk" %}
 {% set masonryLayout = "50-50" %}
 {% set collectionToPaginate = collections.jam %}
 {% set paginationMetaKey = "blog" %}

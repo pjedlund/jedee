@@ -9,7 +9,7 @@ date: 2026-01-16T13:50:58+01:00
 description: EP1 by The Supervoid Choral Ensemble, released 13 January 2026
 tags:
   - music
-image: /assets/images/listening/EP1_The-Supervoid-Choral-Ensemble.jpg
+cover: /assets/images/listening/EP1_The-Supervoid-Choral-Ensemble.jpg
 odeslico: https://album.link/i/1868469820
 ---
 
