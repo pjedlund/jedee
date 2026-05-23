@@ -1,21 +1,26 @@
+{# Archive card for the Jam type. Mirrors card-watching.njk: the album art is a
+   plain <img> from `cover` (local file or remote URL), rendered via the Image
+   transform — never the {% image %} shortcode (local-only, errors on a remote URL).
+   `| safe` stops multi-param remote URLs being &amp;-mangled before the fetch. #}
+
 {% set headingLevel = headingLevel | default("h2") %}
 {% set definedDate = definedDate | default(item.date) %}
 {% set showTags = showTags | default(true) %}
 
-<custom-card clickable data-poster>
+<custom-card clickable img-square>
   {% if item.data.cover %}
     <div slot="image" webc:nokeep>
       <img eleventy:optional="placeholder" src="{{ item.data.cover | safe }}" alt="Cover for {{ item.data.title }}" loading="lazy">
     </div>
   {% endif %}
-  <{{ headingLevel }} slot="headline" class="text-step-2">
+  <{{ headingLevel }} slot="headline" class="text-step-1">
     <a href="{{ item.url | url }}">{{ item.data.title }}</a>
   </{{ headingLevel }}>
-  {# <span slot="date">{%- if item.data.draft -%}<span class="button" data-small-button data-button-variant='tertiary'>draft</span>{%- endif %} {% include "partials/date.njk" %}</span> #}
+  <span slot="date">{%- if item.data.draft -%}<span class="button" data-small-button data-button-variant='tertiary'>draft</span>{%- endif %} {% include "partials/date.njk" %}</span>
   {% if showTags and item.data.tags.length > 1 %}
     <div slot="tag" webc:nokeep>
       {% for tag in item.data.tags %}
-        {% if tag != "reading" %}
+        {% if tag != "posts" %}
           <span class="button" data-small-button>{{ tag }}</span>
         {% endif %}
       {% endfor %}

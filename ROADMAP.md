@@ -25,7 +25,7 @@ Rollout of JEDEE's 15-type IndieWeb post taxonomy.
 | Spec audits + Clipper layer design (legacy "Steps 1–4") | Clipper | ✅ design-complete (paper only) |
 | Phase 3 — add the 10 new post types | Rollout | ⬜ **next** |
 | Phase 4 — add the 10 JSON-LD schema templates | Rollout | ⬜ pending |
-| Clipper layer implementation | Clipper | ⬜ pending — gated behind Phase 3 |
+| Clipper layer implementation | Clipper | ⬜ pending — gated behind Phase 3; **lighter now** — cover-colocate machinery dropped (see Locked decisions) |
 | Spec sync (legacy "Stage A") — fold Clipper decisions into the spec | Housekeeping | ⬜ trivial, do anytime |
 
 ## Roadmap (remaining, in order)
@@ -33,8 +33,8 @@ Rollout of JEDEE's 15-type IndieWeb post taxonomy.
 1. **Phase 3 — 10 new post types.** Largest remaining chunk. ← we are here
 2. **Phase 4 — 10 JSON-LD schema templates** (covers both new and existing types).
    Open decision: fold per-type into Phase 3, or batch after.
-3. **Clipper layer implementation** — Web Clipper templates + cover-image setup script.
-   Waits until the types exist.
+3. **Clipper layer implementation** — Web Clipper templates (+ local-images-plus for body images;
+   the cover-image setup script is dropped per the lean cover decision). Waits until the types exist.
 4. **Spec sync (optional)** — the spec is now a *legacy design reference*; the Phase 3 plan is authoritative. Fold Clipper decisions / the 15-types + camelCase + `byCategory()` reality into it only if you want the reference current.
 
 ## The 5 live types
@@ -68,6 +68,14 @@ Retired: **"Steps 1–4"** (a paper-only design/audit track, now complete) and
 
 ## Locked decisions
 
+- **Cover images — build-time fetch only (lean), 2026-05-23.** Store the remote cover/poster
+  URL in `cover:`; render a plain `<img src="{{ cover }}">` and let the Eleventy Image HTML
+  Transform fetch + optimize + self-host it at build time (proven for Watching, `ae78277`). The
+  Step 4 `normalize-posts.js` / `colocate-cover.js` colocate-and-commit apparatus is **dropped**
+  (never built); reading/watching/jams stay **flat** (bundles opt-in, only for co-located body
+  images). Accepted trade: builds need network on a fetch-cache miss; mitigate with a long
+  `cacheOptions.duration`. Field-name normalization survives as a separate, smaller concern. See
+  the AMENDMENT block atop `_generated/Step 4 - Clipper layer design.md`.
 - **15 types — accept Video.** Audio is creator-side ("podcasts I host"); Video is its
   symmetric creator-side sibling ("videos I host/embed"). The two are built together in
   Phase 3b. (The "merge into a generic Media type" and "stage Video for v1.1" paths are dropped.)

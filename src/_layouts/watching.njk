@@ -9,7 +9,7 @@ schema: BlogPosting
 
     {# Poster is a remote Letterboxd URL — plain <img>, not the local-only {% image %} shortcode. #}
     {% if cover %}
-      <img src="{{ cover }}" alt="Poster for {{ title }}" loading="lazy" style="max-inline-size: 14rem; height: auto; border-radius: var(--border-radius-medium)">
+      <img eleventy:optional="placeholder" src="{{ cover | safe }}" alt="Poster for {{ title }}" loading="lazy" style="max-inline-size: 14rem; height: auto; border-radius: var(--border-radius-medium)">
     {% endif %}
 
     {% if url %}<data hidden class="u-watch-of" value="{{ url }}"></data>{% endif %}
