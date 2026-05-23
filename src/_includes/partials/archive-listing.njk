@@ -22,11 +22,17 @@
     <p>{{ archiveDescription | safe }}</p>
   </div>
 
-  <custom-masonry layout="{{ masonryLayout }}">
-    {% asyncEach item in pagination.items %}
-      {% include "partials/" + cardPartial %}
-    {% endeach %}
-  </custom-masonry>
+  {% if pagination.items.length %}
+    <custom-masonry layout="{{ masonryLayout }}">
+      {% asyncEach item in pagination.items %}
+        {% include "partials/" + cardPartial %}
+      {% endeach %}
+    </custom-masonry>
+  {% else %}
+    <div class="region flow prose">
+      <p>{{ emptyMessage or "Nothing here yet." }}</p>
+    </div>
+  {% endif %}
 
   {% set metaKey = paginationMetaKey or "blog" %}
   {% if collectionToPaginate.length > pagination.size %}

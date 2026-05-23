@@ -5,6 +5,7 @@ description: Audio I've published.
 pagination:
   data: collections.audio
   size: 10
+  generatePageOnEmptyData: true
 permalink: 'audio/{% if pagination.pageNumber >=1 %}page-{{ pagination.pageNumber + 1 }}/{% endif %}index.html'
 ---
 

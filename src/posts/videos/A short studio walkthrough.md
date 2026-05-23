@@ -5,6 +5,7 @@ video:
   duration: PT3M20S
 title: "A short studio walkthrough"
 date: 2026-05-23T11:00:00+02:00
+draft: true
 description: "A YouTube embed — a quick tour of the workspace, lazy-loaded with a no-JS watch-link fallback."
 tags:
   - studio

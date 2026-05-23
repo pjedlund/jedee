@@ -8,6 +8,7 @@ transcript: ./src/assets/audio/sample-episode.vtt
 poster: ./src/assets/audio/sample-episode-art.jpg
 title: "Designing in the open"
 date: 2026-05-23T09:00:00+02:00
+draft: true
 description: "The first episode — building a personal site in public, and why build-time beats client-side for a mostly-content site."
 tags:
   - podcasting
