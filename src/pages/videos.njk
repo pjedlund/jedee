@@ -1,0 +1,21 @@
+---
+layout: base
+title: Videos
+description: Videos I've published.
+pagination:
+  data: collections.video
+  size: 10
+permalink: 'videos/{% if pagination.pageNumber >=1 %}page-{{ pagination.pageNumber + 1 }}/{% endif %}index.html'
+---
+
+{% set archiveDescription %}
+  Videos I've published, newest first.<br>
+  Pagination kicks in once there are more than {{ pagination.size }} entries ({{ collections.video.length }} so far).
+{% endset %}
+
+{% set cardPartial = "card-video.njk" %}
+{% set masonryLayout = "50-50" %}
+{% set collectionToPaginate = collections.video %}
+{% set paginationMetaKey = "blog" %}
+
+{% include "partials/archive-listing.njk" %}

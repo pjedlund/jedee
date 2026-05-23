@@ -53,6 +53,14 @@ export default {
         {
           text: 'Event',
           url: '/events/'
+        },
+        {
+          text: 'Audio',
+          url: '/audio/'
+        },
+        {
+          text: 'Video',
+          url: '/videos/'
         }
       ]
     },
