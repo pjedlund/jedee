@@ -74,8 +74,12 @@ Retired: **"Steps 1–4"** (a paper-only design/audit track, now complete) and
   Step 4 `normalize-posts.js` / `colocate-cover.js` colocate-and-commit apparatus is **dropped**
   (never built); reading/watching/jams stay **flat** (bundles opt-in, only for co-located body
   images). Accepted trade: builds need network on a fetch-cache miss; mitigate with a long
-  `cacheOptions.duration`. Field-name normalization survives as a separate, smaller concern. See
-  the AMENDMENT block atop `_generated/Step 4 - Clipper layer design.md`.
+  `cacheOptions.duration`. Field-name normalization survives as a separate, smaller concern. This is
+  the **standard hero/cover mechanism for every image-led type**, including the Phase 3b heavy types
+  (Photo, Recipe, Event, Audio cover art, Video poster/thumbnail) — the only per-type variation is the
+  µf2 class on the `<img>` (decorative for reading/watching/jam; `u-photo` for Photo/Recipe). Full
+  pattern + gotchas: `_generated/Reference - cover image pattern.md`. See the AMENDMENT block atop
+  `_generated/Step 4 - Clipper layer design.md`.
 - **15 types — accept Video.** Audio is creator-side ("podcasts I host"); Video is its
   symmetric creator-side sibling ("videos I host/embed"). The two are built together in
   Phase 3b. (The "merge into a generic Media type" and "stage Video for v1.1" paths are dropped.)
@@ -91,3 +95,8 @@ Retired: **"Steps 1–4"** (a paper-only design/audit track, now complete) and
   the feed-bump-on-transition decision.
 - **Per-type feed pruning** — measure build cost before dropping firehose-y feeds.
 - **µf2 verification** — manual spot-check vs CI fetch via indiewebify.me.
+- **Option C — remote-aware `{% image %}` shortcode** — **deferred until after Phase 3b (2026-05-23).**
+  Would let `article`/`note` heroes (the `image:` field via `entry-header.njk`) accept remote URLs, but it
+  touches Lene's **upstream EE** `src/_config/shortcodes/image.js` (fork-maintenance cost); the heavy types
+  ship fine on the plain-`<img>` cover pattern meanwhile. Full comparison + the upstream-clean approach
+  (wrapper shortcode vs. patching in place): `_generated/Reference - cover image pattern.md`.
