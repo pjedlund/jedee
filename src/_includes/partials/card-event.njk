@@ -1,0 +1,48 @@
+{# Archive card for the Event type (spec §6). Date-led, NOT image-led (an event
+   has no media) and NOT the shared card-response.njk: a stacked day/month/year
+   badge derived from event.start fills the card's lead (image) row in place of a
+   photo, then the title (always present — title-required), location, a
+   description excerpt, and a status badge when the event isn't `scheduled`.
+   The date badge styling lives in custom-card.css (it needs the card's grid);
+   the status badge is a site-wide block (shared with the post page). #}
+
+{% set headingLevel = headingLevel | default("h2") %}
+{% set definedDate = definedDate | default(item.date) %}
+{% set showTags = showTags | default(true) %}
+
+<custom-card clickable>
+  <p slot="image" class="event-date-badge">
+    <span class="day">{{ item.data.event.start | formatDate('D') }}</span>
+    <span class="month">{{ item.data.event.start | formatDate('MMM') }}</span>
+    <span class="year">{{ item.data.event.start | formatDate('YYYY') }}</span>
+  </p>
+  <{{ headingLevel }} slot="headline" class="text-step-1">
+    <a href="{{ item.url | url }}">{{ item.data.title }}</a>
+  </{{ headingLevel }}>
+  <span slot="date">{%- if item.data.draft -%}<span class="button" data-small-button data-button-variant='tertiary'>draft</span>{%- endif %} {% include "partials/date.njk" %}</span>
+  {% if showTags and item.data.tags.length > 1 %}
+    <div slot="tag" webc:nokeep>
+      {% for tag in item.data.tags %}
+        {% if tag != "posts" %}
+          <span class="button" data-small-button>{{ tag }}</span>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+  <div slot="content" webc:nokeep>
+    {{ item.data.description | markdownFormat | safe }}
+    {% if item.data.event.location or (item.data.event.status and item.data.event.status != "scheduled") %}
+      <p class="event-card-meta cluster">
+        {% if item.data.event.location %}<span class="event-card-location">{{ item.data.event.location }}</span>{% endif %}
+        {% if item.data.event.status and item.data.event.status != "scheduled" %}<span class="event-status" data-status="{{ item.data.event.status }}">{{ item.data.event.status | replace("-", " ") | capitalize }}</span>{% endif %}
+      </p>
+    {% endif %}
+  </div>
+  <footer slot="footer" class="repel">
+    {{ item.data.category }}
+  </footer>
+</custom-card>
+
+{% css "local" %}
+  {% include "css/custom-card.css" %}
+{% endcss %}

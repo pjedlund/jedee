@@ -8,6 +8,7 @@ import { splitlines } from './filters/splitlines.js';
 import { striptags } from './filters/striptags.js';
 import { slugifyString } from './filters/slugify.js';
 import { toISODuration, formatDuration } from './filters/duration.js';
+import { filterUpcoming, filterPast, sortByStartAsc, sortByStartDesc } from './filters/events.js';
 
 export default {
   categoryFilter,
@@ -21,5 +22,9 @@ export default {
   sortAlphabetically,
   slugifyString,
   toISODuration,
-  formatDuration
+  formatDuration,
+  filterUpcoming,
+  filterPast,
+  sortByStartAsc,
+  sortByStartDesc
 };

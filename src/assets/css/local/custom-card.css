@@ -136,3 +136,55 @@ custom-card[clickable] a:after {
   background-color: var(--color-bg);
   color: var(--color-text);
 }
+
+/* -------------------- event date badge --------------------  */
+
+/* Date-led lead for the event card (card-event.njk, spec §6): a stacked
+   day/month/year block that occupies the card's `image` grid row in place of a
+   photo. `grid-row: image` overrides the default `custom-card > p` → `desc`
+   placement so the badge leads the card. Semantic tokens keep it theme-aware. */
+
+.event-date-badge {
+  grid-row: image;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 0;
+  padding-block: var(--space-s);
+  border-radius: var(--border-radius-medium);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.1;
+  text-align: center;
+}
+
+.event-date-badge .day {
+  font-size: var(--size-step-3);
+  font-weight: 700;
+}
+
+.event-date-badge .month {
+  font-size: var(--size-step-0);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.event-date-badge .year {
+  font-size: var(--size-step-min-1);
+}
+
+/* Event card meta line (card-event.njk): location + status sit together on one
+   wrapping line below the description — the same shape as .recipe-badge, so the
+   status pill is a content-sized flex item (not a stretched grid child) and the
+   card keeps to two content columns like the recipe card. The status pill's
+   colours live in the global event-status block; this only spaces the line. */
+
+.event-card-meta {
+  --gutter: var(--space-xs);
+  margin-block-start: var(--space-xs);
+  font-size: var(--size-step-min-1);
+}
+
+.event-card-location {
+  font-weight: 600;
+}

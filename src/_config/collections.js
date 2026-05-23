@@ -18,7 +18,7 @@ export const byCategory = cat => collection =>
  *  eleventy.config.js. Add a new type's category here to register its collection.
  *  NB: layout aliases stay explicit in eleventy.config.js — `article` has no
  *  article.njk (it uses layout: post), so a generic alias loop would break. */
-export const POST_TYPES = ['article', 'note', 'reading', 'jam', 'watching', 'bookmark', 'reply', 'rsvp', 'like', 'repost', 'photo', 'recipe'];
+export const POST_TYPES = ['article', 'note', 'reading', 'jam', 'watching', 'bookmark', 'reply', 'rsvp', 'like', 'repost', 'photo', 'recipe', 'event'];
 
 /** All user-facing tags across all posts, excluding system tags. Per-type
  *  category names (article, note, …) never enter `tags`; they live in
