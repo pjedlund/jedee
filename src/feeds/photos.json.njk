@@ -1,0 +1,10 @@
+---
+permalink: /photos/feed.json
+eleventyExcludeFromCollections: true
+excludeFromSitemap: true
+---
+{%- set feedCollection = collections.photo -%}
+{%- set feedTitle = "Photos" -%}
+{%- set feedDescription = "Photographs I've published." -%}
+{%- set feedSelfUrl = "/photos/feed.json" -%}
+{%- include "feeds/photo-json-body.njk" -%}

@@ -48,6 +48,7 @@ export default async function(eleventyConfig) {
   eleventyConfig.addLayoutAlias('rsvp', 'rsvp.njk');
   eleventyConfig.addLayoutAlias('like', 'like.njk');
   eleventyConfig.addLayoutAlias('repost', 'repost.njk');
+  eleventyConfig.addLayoutAlias('photo', 'photo.njk');
   eleventyConfig.addLayoutAlias('post', 'post.njk');
   eleventyConfig.addLayoutAlias('tags', 'tags.njk');
 

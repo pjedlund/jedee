@@ -1,0 +1,34 @@
+{#-
+  Photo-aware JSON Feed body (jsonfeed.org/version/1.1). Identical to
+  json-body.njk except it prepends the frontmatter photo as an absolute-URL
+  <img> to content_html (see photo-atom-body.njk for the why). Set the same
+  vars as json-body.njk before including.
+-#}
+{
+  "version": "https://jsonfeed.org/version/1.1",
+  "title": "{{ feedTitle }}",
+  "language": "{{ meta.lang or page.lang }}",
+  "home_page_url": "{{ meta.url | addPathPrefixToFullUrl }}",
+  "feed_url": "{{ feedSelfUrl | htmlBaseUrl(meta.url) }}",
+  "description": "{{ feedDescription }}",
+  "authors": [
+    {
+      "name": "{{ meta.author.name }}"
+    }
+  ],
+  "items": [
+    {%- for post in feedCollection | reverse -%}
+    {%- set absolutePostUrl = post.url | absoluteUrl(meta.url) -%}
+    {# Plain <img> (sync) — see photo-atom-body.njk for why not the shortcode. #}
+    {%- set photoImg %}<img src="{{ post.data.photo.src | replace('./src', '') }}" alt="{{ post.data.photo.alt }}">{% endset -%}
+    {
+      "id": "{{ absolutePostUrl }}",
+      "url": "{{ absolutePostUrl }}",
+      "title": "{{ post.data.title or 'Photo' }}",
+      "content_html": {{ (photoImg ~ post.content) | renderTransforms(post.data.page, meta.url) | dump | safe }},
+      "date_published": "{{ post.date | dateToRfc3339 }}"
+    }
+    {% if not loop.last %},{% endif %}
+    {%- endfor %}
+  ]
+}

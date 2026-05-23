@@ -41,6 +41,10 @@ export default {
         {
           text: 'RSVPs',
           url: '/rsvps/'
+        },
+        {
+          text: 'Photos',
+          url: '/photos/'
         }
       ]
     },
