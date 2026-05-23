@@ -1,0 +1,86 @@
+{#-
+  Shared RSS 2.0 podcast/vodcast feed body for the Audio + Video types
+  (audio spec §8, video spec §9). UNLIKE atom-body.njk / json-body.njk — which
+  emit only post.content — this carries the media <enclosure> plus the iTunes
+  and Podcast namespaces that podcast clients (Apple Podcasts, Overcast, Pocket
+  Casts) read. RSS 2.0 dates are RFC-822 (dateToRfc822), NOT the RFC-3339 Atom
+  uses; dateToRfc822 + absoluteUrl + getNewestCollectionItemDate ship with the
+  registered @11ty/eleventy-plugin-rss. The only to-build formatters are
+  itunesDuration (ISO-8601 → clock) and the enclosure byte/MIME stat filters.
+
+  Set before including:
+    feedCollection  – array (collections.audio | collections.video)
+    feedTitle       – channel <title>
+    feedDescription – channel <description>
+    feedSelfUrl     – path of this feed, e.g. "/audio/feed.xml"
+  Optional overrides:
+    feedCategory    – itunes:category text (default "Technology")
+    feedExplicit    – "true" | "false" (default "false")
+
+  Audio episodes always carry a file (audio.src) → always an <enclosure>. Video
+  is asymmetric: provider "file" gets an <enclosure>; "youtube"/"peertube"
+  embeds have no local file → no enclosure (the item links to the post page,
+  which hosts the embed). The per-item `media`/`mediaSrc` switch handles both
+  types from one body — audio posts expose post.data.audio, video posts
+  post.data.video, and only a file-backed entry has a `.src`.
+-#}
+{%- set feedCategory = feedCategory or "Technology" -%}
+{%- set feedExplicit = feedExplicit or "false" -%}
+{# v1 channel artwork: the site OpenGraph default, absolutized. Apple wants
+   square 1400–3000px artwork — replace with real podcast art before launch. #}
+{%- set channelArtwork = meta.opengraph_default | absoluteUrl(meta.url) -%}
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0"
+     xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"
+     xmlns:podcast="https://podcastindex.org/namespace/1.0"
+     xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>{{ feedTitle }}</title>
+    <link>{{ meta.url | addPathPrefixToFullUrl }}</link>
+    <atom:link href="{{ feedSelfUrl | htmlBaseUrl(meta.url) }}" rel="self" type="application/rss+xml" />
+    <description>{{ feedDescription }}</description>
+    <language>{{ meta.lang or page.lang }}</language>
+    <lastBuildDate>{{ feedCollection | getNewestCollectionItemDate | dateToRfc822 }}</lastBuildDate>
+    <itunes:author>{{ meta.author.name }}</itunes:author>
+    <itunes:summary>{{ feedDescription }}</itunes:summary>
+    <itunes:image href="{{ channelArtwork }}" />
+    <itunes:category text="{{ feedCategory }}" />
+    <itunes:explicit>{{ feedExplicit }}</itunes:explicit>
+    <itunes:owner>
+      <itunes:name>{{ meta.author.name }}</itunes:name>
+      <itunes:email>{{ meta.author.email }}</itunes:email>
+    </itunes:owner>
+    {%- for post in feedCollection | reverse -%}
+    {%- set media = post.data.audio or post.data.video -%}
+    {%- set mediaSrc = media.src -%}
+    {%- set absolutePostUrl = post.url | absoluteUrl(meta.url) -%}
+    {%- set itemTitle = post.data.title -%}
+    {%- if not itemTitle and media.episode -%}{%- set itemTitle = "Episode " + (media.episode | string) -%}{%- endif -%}
+    {%- if not itemTitle -%}{%- set itemTitle = post.fileSlug -%}{%- endif -%}
+    <item>
+      <title>{{ itemTitle }}</title>
+      <link>{{ absolutePostUrl }}</link>
+      <guid isPermaLink="true">{{ absolutePostUrl }}</guid>
+      <pubDate>{{ post.date | dateToRfc822 }}</pubDate>
+      {%- if post.data.description %}
+      <description>{{ post.data.description }}</description>
+      {%- endif %}
+      {%- if mediaSrc %}
+      <enclosure url="{{ mediaSrc | replace('./src', '') | absoluteUrl(meta.url) }}" length="{{ mediaSrc | enclosureBytes }}" type="{{ mediaSrc | enclosureType }}" />
+      {%- endif %}
+      {%- if media.duration %}
+      <itunes:duration>{{ media.duration | itunesDuration }}</itunes:duration>
+      {%- endif %}
+      {%- if media.episode %}
+      <itunes:episode>{{ media.episode }}</itunes:episode>
+      {%- endif %}
+      {%- if media.season %}
+      <itunes:season>{{ media.season }}</itunes:season>
+      {%- endif %}
+      {%- if post.data.transcript %}
+      <podcast:transcript url="{{ post.data.transcript | replace('./src', '') | absoluteUrl(meta.url) }}" type="text/vtt" />
+      {%- endif %}
+    </item>
+    {%- endfor -%}
+  </channel>
+</rss>

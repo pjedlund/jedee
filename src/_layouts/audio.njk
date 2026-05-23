@@ -1,0 +1,57 @@
+---
+layout: base
+schema: BlogPosting
+---
+
+<div class="region" style="--region-space-top: var(--space-xl-2xl)">
+  <div class="wrapper flow prose">
+    {% include 'partials/entry-header.njk' %}
+
+    {# Episode artwork is a LOCAL asset → {% image %} (the Photo poster pattern,
+       not the remote-cover plain <img> of reading/watching). Square-ish podcast
+       art renders at its natural ratio on the post page. #}
+    {% if poster %}
+      {% image poster, title, "", "eager" %}
+    {% endif %}
+
+    {# The recording IS the content, so u-audio rides the visible <audio>.
+       audio.src is "./src/assets/audio/…"; strip "./src" for the public URL
+       (the file is passthrough-copied — Eleventy Image doesn't move .mp3). #}
+    {% if audio.src %}
+      <audio class="u-audio" controls preload="metadata" src="{{ audio.src | replace('./src', '') }}"></audio>
+    {% endif %}
+
+    <div class="e-content">
+      {{ content | safe }}
+    </div>
+
+    {# Transcript: native <details> (EE favours it over a JS accordion); v1
+       links the WebVTT for download, inline rendering is a later add (spec §10). #}
+    {% if transcript %}
+      <details class="transcript">
+        <summary>Transcript</summary>
+        <p><a href="{{ transcript | replace('./src', '') }}">Download transcript (WebVTT)</a></p>
+      </details>
+    {% endif %}
+
+    {% include 'partials/backlinks.njk' %}
+    {% include 'partials/entry-footer.njk' %}
+  </div>
+
+  {# h-card authorship for Webmention discovery — https://indieweb.org/authorship #}
+  <div hidden class="h-entry">
+    <a class="u-url" href="{{ page.url | url | absoluteUrl(meta.url) }}">{{ title }}</a>
+    <a class="p-name u-url" rel="author" href="{{ meta.url }}">{{ meta.author.name }}</a>
+    <img
+      eleventy:ignore
+      class="u-author h-card"
+      src="{{ meta.author.avatar | url | absoluteUrl(meta.url) }}"
+      alt="{{ meta.author.name }}"
+    />
+  </div>
+</div>
+
+{%- css "local" -%}
+  {%- include 'css/post.css' -%}
+  {%- include 'css/footnotes.css' -%}
+{%- endcss -%}

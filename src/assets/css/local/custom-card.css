@@ -188,3 +188,56 @@ custom-card[clickable] a:after {
 .event-card-location {
   font-weight: 600;
 }
+
+/* -------------------- audio/video duration badge --------------------  */
+
+/* Pills in the media cards' content slot (card-audio.njk / card-video.njk,
+   audio spec §6 / video spec §7): a duration (+ episode) pill. Same treatment
+   as .recipe-badge so the heavy types read consistently; kept as its own class
+   for semantics. Wrap + gap ride the .cluster composition via --gutter. */
+
+.media-badge {
+  --gutter: var(--space-xs);
+  margin-block-start: var(--space-xs);
+  font-size: var(--size-step-min-2);
+}
+
+.media-badge [data-badge] {
+  padding-inline: var(--space-xs);
+  padding-block: 0.2em;
+  border-radius: var(--border-radius-medium);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+/* -------------------- video play overlay --------------------  */
+
+/* A play affordance over the poster on video cards (card-video.njk, video
+   spec §7). Implemented as a grid pseudo-element placed in the `image` row so
+   it overlaps the poster WITHOUT adding a hoisted child element (which
+   webc:nokeep would stretch into its own grid cell — the Event lesson). Scoped
+   with :has(picture) so it only appears when a poster is present (a posterless
+   embed card stays clean). Decorative + non-interactive, so the card's
+   clickable link still receives the click. */
+
+custom-card[data-video]:has(picture) {
+  position: relative;
+}
+
+custom-card[data-video]:has(picture)::before {
+  content: "";
+  grid-row: image;
+  grid-column: 1 / -1;
+  z-index: 1;
+  align-self: center;
+  justify-self: center;
+  inline-size: 3rem;
+  block-size: 3rem;
+  border-radius: 50%;
+  background-color: color-mix(in oklab, var(--color-dark) 55%, transparent);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23fff'%3E%3Cpath d='M8 5v14l11-7z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 56% center;
+  background-size: 38%;
+  pointer-events: none;
+}

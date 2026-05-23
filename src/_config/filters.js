@@ -7,8 +7,9 @@ import { sortAlphabetically } from './filters/sort-alphabetic.js';
 import { splitlines } from './filters/splitlines.js';
 import { striptags } from './filters/striptags.js';
 import { slugifyString } from './filters/slugify.js';
-import { toISODuration, formatDuration } from './filters/duration.js';
+import { toISODuration, formatDuration, itunesDuration } from './filters/duration.js';
 import { filterUpcoming, filterPast, sortByStartAsc, sortByStartDesc } from './filters/events.js';
+import { enclosureBytes, enclosureType } from './filters/enclosure.js';
 
 export default {
   categoryFilter,
@@ -23,8 +24,11 @@ export default {
   slugifyString,
   toISODuration,
   formatDuration,
+  itunesDuration,
   filterUpcoming,
   filterPast,
   sortByStartAsc,
-  sortByStartDesc
+  sortByStartDesc,
+  enclosureBytes,
+  enclosureType
 };

@@ -1,0 +1,49 @@
+{# Archive card for the Audio type (audio spec §6). Media-led: episode artwork
+   fills <custom-card>'s image slot via the {% image %} shortcode (poster is a
+   local asset). img-square suits square podcast art. Degrades to a text-led
+   card when no artwork is set. A duration (+ episode) badge sits in the content
+   slot — wrapped in a single <p class="media-badge cluster"> so webc:nokeep
+   doesn't hoist a styled child straight into the card grid (the Event lesson).
+   The card links through to the post; no per-card player (heavy). #}
+
+{% set headingLevel = headingLevel | default("h2") %}
+{% set definedDate = definedDate | default(item.date) %}
+{% set showTags = showTags | default(true) %}
+
+<custom-card clickable img-square>
+  {% if item.data.poster %}
+    <div slot="image" webc:nokeep>{% image item.data.poster, item.data.title, null, "lazy" %}
+    </div>
+  {% endif %}
+  {% if item.data.title %}
+    <{{ headingLevel }} slot="headline" class="text-step-1">
+      <a href="{{ item.url | url }}">{{ item.data.title }}</a>
+    </{{ headingLevel }}>
+  {% endif %}
+  <span slot="date">{%- if item.data.draft -%}<span class="button" data-small-button data-button-variant='tertiary'>draft</span>{%- endif %} {% include "partials/date.njk" %}</span>
+  {% if showTags and item.data.tags.length > 1 %}
+    <div slot="tag" webc:nokeep>
+      {% for tag in item.data.tags %}
+        {% if tag != "posts" %}
+          <span class="button" data-small-button>{{ tag }}</span>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+  <div slot="content" webc:nokeep>
+    {{ item.data.description | markdownFormat | safe }}
+    {% if item.data.audio.duration or item.data.audio.episode %}
+      <p class="media-badge cluster" role="list">
+        {% if item.data.audio.duration %}<span data-badge role="listitem">{{ item.data.audio.duration | itunesDuration }}</span>{% endif %}
+        {% if item.data.audio.episode %}<span data-badge role="listitem">Episode {{ item.data.audio.episode }}</span>{% endif %}
+      </p>
+    {% endif %}
+  </div>
+  <footer slot="footer" class="repel">
+    {{ item.data.category }}
+  </footer>
+</custom-card>
+
+{% css "local" %}
+  {% include "css/custom-card.css" %}
+{% endcss %}

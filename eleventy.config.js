@@ -51,6 +51,8 @@ export default async function(eleventyConfig) {
   eleventyConfig.addLayoutAlias('photo', 'photo.njk');
   eleventyConfig.addLayoutAlias('recipe', 'recipe.njk');
   eleventyConfig.addLayoutAlias('event', 'event.njk');
+  eleventyConfig.addLayoutAlias('audio', 'audio.njk');
+  eleventyConfig.addLayoutAlias('video', 'video.njk');
   eleventyConfig.addLayoutAlias('post', 'post.njk');
   eleventyConfig.addLayoutAlias('tags', 'tags.njk');
 
@@ -120,6 +122,11 @@ export default async function(eleventyConfig) {
   eleventyConfig.addFilter('filterPast', filters.filterPast);
   eleventyConfig.addFilter('sortByStartAsc', filters.sortByStartAsc);
   eleventyConfig.addFilter('sortByStartDesc', filters.sortByStartDesc);
+  // Audio/Video podcast feed (spec §8–§10): itunes:duration clock + <enclosure>
+  // byte-length/MIME stat'd from the source media file at build.
+  eleventyConfig.addFilter('itunesDuration', filters.itunesDuration);
+  eleventyConfig.addFilter('enclosureBytes', filters.enclosureBytes);
+  eleventyConfig.addFilter('enclosureType', filters.enclosureType);
 
   // --------------------- Shortcodes
   eleventyConfig.addShortcode('svg', shortcodes.svgShortcode);
@@ -134,7 +141,10 @@ export default async function(eleventyConfig) {
 
   // --------------------- Passthrough File Copy
   // -- same path
-  ['src/assets/fonts/', 'src/assets/images/template', 'src/assets/images/recipes', 'src/assets/og-images'].forEach(path =>
+  // Audio/Video self-hosted media: Eleventy Image only moves images, so the
+  // co-located .mp3/.mp4/.vtt files need an explicit passthrough for the
+  // on-page <audio>/<video> src and the feed <enclosure> URL to resolve.
+  ['src/assets/fonts/', 'src/assets/images/template', 'src/assets/images/recipes', 'src/assets/og-images', 'src/assets/audio', 'src/assets/video'].forEach(path =>
     eleventyConfig.addPassthroughCopy(path)
   );
 
