@@ -87,6 +87,12 @@ custom-card[data-poster] img {
   aspect-ratio: 2 / 3;
 }
 
+/* natural ratio (photos — varied-height masonry) */
+
+custom-card[data-photo] img {
+  aspect-ratio: auto;
+}
+
 /* clickable */
 
 custom-card[clickable]:hover,

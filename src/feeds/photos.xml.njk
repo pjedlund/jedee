@@ -1,0 +1,10 @@
+---
+permalink: /photos/feed.xml
+eleventyExcludeFromCollections: true
+excludeFromSitemap: true
+---
+{%- set feedCollection = collections.photo -%}
+{%- set feedTitle = "Photos" -%}
+{%- set feedDescription = "Photographs I've published." -%}
+{%- set feedSelfUrl = "/photos/feed.xml" -%}
+{%- include "feeds/photo-atom-body.njk" -%}
