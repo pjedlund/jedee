@@ -1,0 +1,10 @@
+---
+permalink: /bookmarks/feed.xml
+eleventyExcludeFromCollections: true
+excludeFromSitemap: true
+---
+{%- set feedCollection = collections.bookmark -%}
+{%- set feedTitle = "Bookmarks" -%}
+{%- set feedDescription = "Links worth keeping." -%}
+{%- set feedSelfUrl = "/bookmarks/feed.xml" -%}
+{%- include "feeds/atom-body.njk" -%}

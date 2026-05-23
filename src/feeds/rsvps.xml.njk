@@ -1,0 +1,10 @@
+---
+permalink: /rsvps/feed.xml
+eleventyExcludeFromCollections: true
+excludeFromSitemap: true
+---
+{%- set feedCollection = collections.rsvp -%}
+{%- set feedTitle = "RSVPs" -%}
+{%- set feedDescription = "Events I have responded to." -%}
+{%- set feedSelfUrl = "/rsvps/feed.xml" -%}
+{%- include "feeds/atom-body.njk" -%}

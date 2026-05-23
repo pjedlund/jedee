@@ -29,6 +29,18 @@ export default {
         {
           text: 'Watching',
           url: '/watching/'
+        },
+        {
+          text: 'Bookmarks',
+          url: '/bookmarks/'
+        },
+        {
+          text: 'Replies',
+          url: '/replies/'
+        },
+        {
+          text: 'RSVPs',
+          url: '/rsvps/'
         }
       ]
     },

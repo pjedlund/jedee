@@ -1,0 +1,10 @@
+---
+permalink: /replies/feed.xml
+eleventyExcludeFromCollections: true
+excludeFromSitemap: true
+---
+{%- set feedCollection = collections.reply -%}
+{%- set feedTitle = "Replies" -%}
+{%- set feedDescription = "Replies to other people on the web." -%}
+{%- set feedSelfUrl = "/replies/feed.xml" -%}
+{%- include "feeds/atom-body.njk" -%}
