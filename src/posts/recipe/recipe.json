@@ -1,0 +1,6 @@
+{
+  "layout": "recipe",
+  "tags": "posts",
+  "category": "recipe",
+  "permalink": "/recipes/{{ page.fileSlug | slugify }}/index.html"
+}

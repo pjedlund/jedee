@@ -1,0 +1,21 @@
+---
+layout: base
+title: Recipes
+description: Recipes I've written.
+pagination:
+  data: collections.recipe
+  size: 10
+permalink: 'recipes/{% if pagination.pageNumber >=1 %}page-{{ pagination.pageNumber + 1 }}/{% endif %}index.html'
+---
+
+{% set archiveDescription %}
+  Recipes I've written, newest first.<br>
+  Pagination kicks in once there are more than {{ pagination.size }} entries ({{ collections.recipe.length }} so far).
+{% endset %}
+
+{% set cardPartial = "card-recipe.njk" %}
+{% set masonryLayout = "50-50" %}
+{% set collectionToPaginate = collections.recipe %}
+{% set paginationMetaKey = "blog" %}
+
+{% include "partials/archive-listing.njk" %}

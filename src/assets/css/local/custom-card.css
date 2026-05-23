@@ -116,3 +116,23 @@ custom-card[clickable] a:after {
   right: 0;
   top: 0;
 }
+
+/* -------------------- recipe duration/yield badge --------------------  */
+
+/* Small pills in the recipe card's content slot (card-recipe.njk, spec §6).
+   Wrap + gap ride the .cluster composition via --gutter; this adds only the
+   pills' visual treatment. Semantic tokens keep it theme-aware (dark mode). */
+
+.recipe-badge {
+  --gutter: var(--space-xs);
+  margin-block-start: var(--space-xs);
+  font-size: var(--size-step-min-2);
+}
+
+.recipe-badge [data-badge] {
+  padding-inline: var(--space-xs);
+  padding-block: 0.2em;
+  border-radius: var(--border-radius-medium);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
