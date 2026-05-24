@@ -101,7 +101,7 @@ the entire way unfortunately. Made me want to check out more films by Jonathan G
 <tr><td><code>scoreLB</code></td><td>optional</td><td>Letterboxd aggregate rating. Clipped from <code>{{schema:aggregateRating.ratingValue}}</code>. (Also appears as <code>rating</code> in the 3:10 to Yuma sample — drift between clips; see note.)</td></tr>
 <tr><td><code>scoreMy</code></td><td>optional</td><td>Author's personal rating. Not yet rendered in any template. (Also appears as <code>myRating</code> in the 3:10 to Yuma sample — same drift.)</td></tr>
 <tr><td><code>cast</code></td><td>optional</td><td>Array of up to 5 cast names. Clipped from <code>{{schema:actors[*].name|slice:0,5}}</code>. Not rendered in templates.</td></tr>
-<tr><td><code>cover</code></td><td>optional</td><td>Poster image URL. Clipped from <code>{{schema:image}}</code>. Holds the remote Letterboxd CDN URL at clip time; not yet co-located.</td></tr>
+<tr><td><code>cover</code></td><td>optional</td><td>Poster image URL. Clipped from <code>{{schema:image}}</code>. Holds the remote Letterboxd CDN URL at clip time; the Eleventy Image HTML Transform fetches and self-hosts it at build — no co-location step. See <a href="cover-image-pattern.html">build-time cover images</a>.</td></tr>
 <tr><td><code>plot</code></td><td>optional</td><td>Film synopsis. Clipped from the page's <code>description</code> meta tag. Not rendered in templates (contrast with <code>description</code>, which is rendered in the card).</td></tr>
 <tr><td><code>description</code></td><td>recommended</td><td>Short hand-written summary. Rendered in the card and feed. Distinct from <code>plot</code>.</td></tr>
 <tr><td><code>date</code></td><td>required</td><td>Post timestamp (sort + <code>dt-published</code>).</td></tr>
@@ -126,24 +126,23 @@ the entire way unfortunately. Made me want to check out more films by Jonathan G
 <p class="note"><strong>The <code>url</code> field, not <code>page.url</code>.</strong> The layout guards on <code>{% if url %}</code> — this refers to the frontmatter <code>url</code> field (the Letterboxd film-page link), not Eleventy's <code>page.url</code>. In Nunjucks within a layout, bare <code>url</code> resolves to the frontmatter value; <code>page.url</code> is always the post's own URL.</p>
 
 <h2>6. Card</h2>
-<p>The Watching archive does <strong>not</strong> have a dedicated card. It reuses the shared <code>card-blog.njk</code> (set in <code>watching.njk</code>: <code>cardPartial = "card-blog.njk"</code>), the same card used by Article and Jam.</p>
+<p>Watching has a <strong>bespoke poster-led card</strong>: <code>src/_includes/partials/card-watching.njk</code> (set in <code>watching.njk</code>: <code>cardPartial = "card-watching.njk"</code>). Built in commit <code>d9dd086</code>, it replaced the shared <code>card-blog.njk</code> precisely so the poster could render: the cover is a plain <code>&lt;img&gt;</code> from <code>cover</code>, which the Eleventy Image transform self-hosts — the shared card reads <code>item.data.image</code>, which Watching posts don't set.</p>
 <table>
 <tr><th>Slot</th><th>Content</th></tr>
-<tr><td>image</td><td><code>item.data.image</code> (album/poster art), rendered <code>img-square</code>; only if set</td></tr>
-<tr><td>headline</td><td><code>title</code>, linked to the post</td></tr>
+<tr><td>image</td><td><code>item.data.cover</code> (poster), only if set, rendered as <code>&lt;img eleventy:optional="placeholder" src="{{ item.data.cover | safe }}"&gt;</code> in a <code>slot="image"</code> wrapper — the <a href="cover-image-pattern.html">build-time cover pattern</a>, never the <code>{% image %}</code> shortcode</td></tr>
+<tr><td>headline</td><td><code>title</code>, linked to the post; sized <code>text-step-1</code></td></tr>
 <tr><td>date</td><td><code>date</code> + a "draft" badge when <code>draft: true</code></td></tr>
-<tr><td>tag</td><td>each tag except <code>posts</code></td></tr>
-<tr><td>content</td><td><code>description</code></td></tr>
+<tr><td>tag</td><td>each tag except <code>posts</code>; shown only when <code>showTags</code> and more than one tag</td></tr>
+<tr><td>content</td><td><code>description</code> via <code>markdownFormat</code></td></tr>
 <tr><td>footer</td><td><code>category</code> ("watching")</td></tr>
 </table>
-<p>Renders a <code>&lt;custom-card clickable img-square&gt;</code> WebC component; styles via <code>css/custom-card.css</code>.</p>
-<p class="note"><strong>The <code>cover</code> field is not the card's image slot.</strong> The card reads <code>item.data.image</code>, but Watching posts use <code>cover</code> for the poster. The card's image slot will be empty for current Watching posts unless a template or transform maps <code>cover</code> → <code>image</code>. This is a known open item (see §15).</p>
+<p>Renders a <code>&lt;custom-card clickable data-poster&gt;</code> WebC component; the <code>data-poster</code> variant holds a 2/3 poster aspect ratio (<code>custom-card[data-poster] img</code> in <code>css/custom-card.css</code>).</p>
 
 <h2>7. Archive page config</h2>
 <p><code>src/pages/watching.njk</code> drives the listing through the shared <code>archive-listing.njk</code> partial:</p>
 <pre><code>pagination: { data: collections.watching, size: 3 }
 permalink:  watching/[page-N/]index.html
-cardPartial = "card-blog.njk"
+cardPartial = "card-watching.njk"
 masonryLayout = "50-50"
 collectionToPaginate = collections.watching
 paginationMetaKey = "blog"</code></pre>
@@ -184,7 +183,7 @@ feedSelfUrl = "/watching/feed.json"
 │   └── navigation.js           # Posts submenu → { text: 'Watching', url: '/watching/' }
 ├── _includes/
 │   └── partials/
-│       └── card-blog.njk       # shared card used by the Watching archive (NOT watching-specific)
+│       └── card-watching.njk   # bespoke poster-led card (Watching-specific)
 ├── _layouts/
 │   └── watching.njk            # per-post layout
 ├── feeds/
@@ -223,15 +222,14 @@ eleventy.config.js              # addLayoutAlias('watching','watching.njk') + ad
     │   ├── date.njk              # &lt;time class="dt-published"&gt; (§5)
     │   ├── backlinks.njk         # included by watching.njk layout
     │   ├── entry-footer.njk      # included by watching.njk layout
-    │   ├── archive-listing.njk   # drives the /watching/ listing (§7)
-    │   └── card-blog.njk         # shared archive card (§6; also in the tree above)
+    │   └── archive-listing.njk   # drives the /watching/ listing (§7), includes card-watching.njk
     ├── feeds/
     │   ├── atom-body.njk         # Atom feed body (§8)
     │   └── json-body.njk         # JSON Feed body (§8)
     └── css/
         ├── post.css              # bundled by watching.njk layout
         ├── footnotes.css         # bundled by watching.njk layout
-        └── custom-card.css       # bundled by card-blog.njk (§6)</code></pre>
+        └── custom-card.css       # bundled by card-watching.njk (§6)</code></pre>
 
 <h2>12. Collection registration (wiring)</h2>
 <pre><code>// src/_config/collections.js
@@ -304,12 +302,12 @@ eleventyConfig.addCollection('watching', watching);</code></pre>
 <tr><td><code>scoreLB</code></td><td><code>{{schema:aggregateRating.ratingValue}}</code></td><td>JSON-LD <code>Movie.aggregateRating</code></td><td>Letterboxd community rating (e.g. <code>3.71</code>).</td></tr>
 <tr><td><code>scoreMy</code></td><td><code>""</code> (empty)</td><td>—</td><td>Author's personal rating — left blank at clip time, filled in manually. Not yet rendered in templates.</td></tr>
 <tr><td><code>cast</code></td><td><code>{{schema:actors[*].name|slice:0,5}}</code></td><td>JSON-LD <code>Movie.actors[]</code></td><td>Up to 5 cast members by name. Not yet rendered in templates.</td></tr>
-<tr><td><code>cover</code></td><td><code>{{schema:image}}</code></td><td>JSON-LD <code>Movie.image</code></td><td>Poster image URL on the Letterboxd CDN. Holds the remote URL at clip time; not yet co-located or consumed by the card (see §15).</td></tr>
+<tr><td><code>cover</code></td><td><code>{{schema:image}}</code></td><td>JSON-LD <code>Movie.image</code></td><td>Poster image URL on the Letterboxd CDN. Holds the remote URL at clip time; the build-time HTML Transform self-hosts it and the card renders it (§6; <a href="cover-image-pattern.html">cover convention</a>).</td></tr>
 <tr><td><code>plot</code></td><td><code>{{description}}</code></td><td>Page <code>&lt;meta name="description"&gt;</code></td><td>Film synopsis from the Letterboxd page description meta tag. Not rendered in templates — distinct from the hand-written <code>description</code> field.</td></tr>
 <tr><td><code>year</code></td><td><code>{{schema:releasedEvent[*].startDate|date:"YYYY"}}</code></td><td>JSON-LD <code>Movie.releasedEvent[].startDate</code></td><td>Release year (four-digit number).</td></tr>
 </table>
 <p class="note"><strong>Fields not emitted by the template.</strong> <code>category</code>, <code>layout</code>, and <code>permalink</code> come from the folder data file <code>src/posts/watching/watching.json</code> (§1, §12), not per-post, so the template omits them. The <code>description</code> field (the short hand-written summary that appears in the card) is <strong>not</strong> emitted by the clipper — it is written by the author after clipping. The <code>noteContentFormat</code> is empty, so the note body is also blank at clip time.</p>
-<p class="note"><strong>Flat path, not a bundle.</strong> Unlike the planned Jam Clipper template (which uses a templated <code>path</code> to create a per-post bundle folder at clip time), the Letterboxd clipper writes flat <code>.md</code> files directly into <code>posts/watching/</code>. The <code>cover</code> field therefore holds a remote URL indefinitely — there is no bundle folder to co-locate a downloaded image into. A future co-location step (analogous to the Jam §12 normalize approach) would be needed to bring the poster local.</p>
+<p class="note"><strong>Flat path — and that's the design.</strong> The Letterboxd clipper writes flat <code>.md</code> files directly into <code>posts/watching/</code>, and the <code>cover</code> field holds a remote URL. That is now the <strong>intended end state</strong>, not a stopgap: the Eleventy Image HTML Transform fetches and self-hosts the remote poster at build (<a href="cover-image-pattern.html">cover convention</a>), so no co-location step is needed. The earlier idea of a normalize/download script to bring the poster local was <strong>dropped</strong> (23 May 2026) as redundant. Covers stay flat across reading / watching / jam.</p>
 <p class="note"><strong>The <code>url</code> field is the Letterboxd film-page URL — not the film's own website.</strong> Letterboxd pages do not expose the film's canonical URL (IMDB, official site, etc.) in the JSON-LD; the clipper captures the page URL itself. This Letterboxd URL is what becomes <code>u-watch-of</code>, which is semantically appropriate: the IndieWeb watch-of property points to where you watched/logged the content, not the film's canonical home.</p>
 
 <h2>14. Webmentions</h2>
@@ -327,13 +325,13 @@ eleventyConfig.addCollection('watching', watching);</code></pre>
 <h2>15. Status &amp; open items</h2>
 <ul>
 <li><strong>Shipped</strong> in Phase 2 — layout, archive, feed, nav, and 2 sample posts all live. The Letterboxd Web Clipper template is the one shipped clipper in the project.</li>
-<li><strong><code>cover</code> vs. <code>image</code> mismatch</strong> — The shared <code>card-blog.njk</code> reads <code>item.data.image</code> for its image slot, but Watching posts use <code>cover</code> for the poster. The card image slot is currently empty for all Watching posts. Resolution options: (a) alias <code>cover</code> as <code>image</code> in a computed data file, (b) patch the card to check <code>cover</code> as a fallback, or (c) add a per-type card. <em>(open)</em></li>
+<li><strong><code>cover</code> vs. <code>image</code> mismatch — RESOLVED</strong> (option c, commit <code>d9dd086</code>). The bespoke <code>card-watching.njk</code> reads <code>cover</code> directly and renders it as a plain <code>&lt;img&gt;</code> the build-time transform self-hosts (§6) — no aliasing or fallback needed.</li>
 <li><strong><code>myUrl</code>, <code>scoreMy</code>, <code>cast</code>, <code>plot</code></strong> — authored but not rendered in any template. Surfaces for a richer per-post layout. <em>(open)</em></li>
 <li><strong>Field drift between samples</strong> — <code>scoreLB</code>/<code>rating</code> and <code>scoreMy</code>/<code>myRating</code> inconsistency between the two live samples (see §4 note). The clipper template emits the canonical names (<code>scoreLB</code>, <code>scoreMy</code>); existing samples are not migrated. <em>(open)</em></li>
 <li><strong>Webmentions</strong> — discovery + the no-op render slot are shipped; receiving/rendering, sending, and the h-entry nesting fix (§5) are deferred to the webmention milestone. See §14.</li>
 <li><strong>Schema upgrade</strong> BlogPosting → WatchAction — Phase 4.</li>
-<li><strong>Cover co-location</strong> — The clipper writes a flat <code>.md</code> with a remote <code>cover:</code> URL. A normalize step analogous to Jam §12 would download and co-locate the poster. Not yet built. <em>(open)</em></li>
-<li><strong>Dedicated card?</strong> Watching reuses the shared <code>card-blog.njk</code> (like Article and Jam). A poster-led <code>card-watching.njk</code> — showing the film poster prominently alongside title, year, director, and rating — is a natural candidate once the <code>cover</code> field is rendered, but not built. <em>(open)</em></li>
+<li><strong>Cover co-location — NOT planned (dropped).</strong> The clipper writes a flat <code>.md</code> with a remote <code>cover:</code> URL, and that is the locked design: the build-time HTML Transform self-hosts the poster (<a href="cover-image-pattern.html">cover convention</a>). The earlier normalize/download step was dropped 23 May 2026 as redundant. Covers stay flat.</li>
+<li><strong>Dedicated card — DONE</strong> (commit <code>d9dd086</code>). <code>card-watching.njk</code> is the poster-led card (§6). Surfacing more fields on it — year, director, rating — remains a candidate enhancement. <em>(open: richer card face)</em></li>
 <li><strong>Micropub endpoint</strong> — forward-compat only; nothing Watching-specific to add beyond the shared plumbing. Sequenced after Phase 4. <em>(open)</em></li>
 </ul>
 
