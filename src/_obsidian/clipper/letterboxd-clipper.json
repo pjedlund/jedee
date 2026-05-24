@@ -1,0 +1,78 @@
+{
+	"schemaVersion": "0.1.0",
+	"name": "Letterboxd",
+	"behavior": "create",
+	"noteContentFormat": "",
+	"properties": [
+		{
+			"name": "title",
+			"value": "{{schema:@Movie:name}}",
+			"type": "text"
+		},
+		{
+			"name": "draft",
+			"value": "true",
+			"type": "checkbox"
+		},
+		{
+			"name": "date",
+			"value": "{{date}}",
+			"type": "text"
+		},
+		{
+			"name": "genre",
+			"value": "{{schema:genre}}",
+			"type": "multitext"
+		},
+		{
+			"name": "url",
+			"value": "{{url}}",
+			"type": "text"
+		},
+		{
+			"name": "myUrl",
+			"value": "",
+			"type": "text"
+		},
+		{
+			"name": "director",
+			"value": "{{meta:name:twitter:data1}}",
+			"type": "multitext"
+		},
+		{
+			"name": "scoreLB",
+			"value": "{{schema:aggregateRating.ratingValue}}",
+			"type": "number"
+		},
+		{
+			"name": "scoreMy",
+			"value": "",
+			"type": "number"
+		},
+		{
+			"name": "cast",
+			"value": "{{schema:actors[*].name|slice:0,5}}",
+			"type": "multitext"
+		},
+		{
+			"name": "cover",
+			"value": "{{schema:image}}",
+			"type": "text"
+		},
+		{
+			"name": "plot",
+			"value": "{{description}}",
+			"type": "text"
+		},
+		{
+			"name": "year",
+			"value": "{{schema:releasedEvent[*].startDate|date:\\\"YYYY\\\"}}",
+			"type": "number"
+		}
+	],
+	"triggers": [
+		"https://letterboxd.com/film/"
+	],
+	"noteNameFormat": "{{schema:@Movie:name}}",
+	"path": "posts/watching/"
+}

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Web Clipper templates — convention — JEDEE</title>
+<link rel="stylesheet" href="spec.css">
+</head>
+<body data-doc-key="web-clipper-pattern">
+
+<div class="site-header">
+  <a class="home" href="index.html">JEDEE / Project documentation</a>
+  <span class="breadcrumb">conventions › web clipper templates</span>
+</div>
+
+<header class="doc-header" id="top">
+  <p class="eyebrow">cross-cutting convention</p>
+  <h1>Web Clipper templates</h1>
+  <p class="meta">Drafted 24 May 2026 · 3 templates live (reading, watching, notes) · ~9 in the v1 plan · the ingestion layer for every browser-authored post type</p>
+</header>
+
+<nav id="toc" class="toc" aria-label="Sections"></nav>
+
+<main>
+
+<p>Most JEDEE posts about <em>someone else's</em> thing — a book, a film, an album, a bookmarked page — are authored not by hand but by <strong>clipping</strong>: right-click a source page in the browser, pick a template, and a shape-correct <code>.md</code> lands in the right <code>src/posts/&lt;type&gt;/</code> folder. The tool is the <strong>Obsidian Web Clipper</strong> (a browser extension), and each post type that can be clipped has one or more per-source JSON templates. This page is the canonical write-up of that layer: how a template is shaped, the type-discipline rules that keep frontmatter valid, the live-vs-export drift trap, and the per-type inventory of what exists versus what's planned.</p>
+
+<p class="note"><strong>Scope.</strong> This documents the <em>convention and current state</em>, and tracks the work of building/fixing the templates. It is <strong>not</strong> the per-template field design — that lives in <code>_generated/Step 4 - Clipper layer design.md</code> (the structural source) and must be reconciled against the current canonical spec <code>_generated/Plan - Phase 3 (10 new post types) - final.md</code> before any template is authored (see §9). Where this doc and Step 4 disagree, this doc reflects what's <em>true on disk today</em>.</p>
+
+<h2>1. The clipper layer — what it is</h2>
+<p>The Obsidian Web Clipper is JEDEE's primary CMS for browser-shaped post types. A template <em>triggers</em> on a URL (or on a schema.org <code>@type</code>), reads the source page's JSON-LD / meta tags / DOM selectors, and writes a frontmatter-complete <code>.md</code> into a target folder — no per-post hand-editing. Three components collaborate; knowing which owns what makes the rest fall out:</p>
+<table>
+<tr><th>Actor</th><th>Owns</th><th>State</th></tr>
+<tr><td><strong>Obsidian Web Clipper</strong> (browser extension)</td><td>Reading the source page and writing a shape-correct <code>.md</code> with <code>cover: &lt;remote-URL&gt;</code> in frontmatter</td><td>Per-source JSON templates in <code>src/_obsidian/clipper/&lt;source&gt;-clipper.json</code></td></tr>
+<tr><td><strong>obsidian-local-images-plus</strong> (vault plugin)</td><td>Downloading <em>body</em> images (not frontmatter) next to the note, MD5-named, idempotent</td><td>Installed; automatic mode, "in folder named after note"</td></tr>
+<tr><td><s>normalize-posts.js</s> (setup script)</td><td><s>Cover colocation + bundle promotion + drift renames</s></td><td><strong>Dropped, never built</strong> — superseded by build-time cover fetch (§6)</td></tr>
+</table>
+<p class="note"><strong>Division of labor:</strong> local-images-plus only touches <em>body</em> content, never YAML. Covers are data (cards, OG meta, JSON-LD), so they stay in frontmatter and are self-hosted at build (§6) — they are never pushed into the body just to let the plugin handle them.</p>
+
+<h2>2. Where templates live — and the drift gotcha</h2>
+<p>Each template has <strong>two copies</strong>, and they can silently diverge:</p>
+<table>
+<tr><th>Copy</th><th>Where</th><th>Role</th></tr>
+<tr><td>Exported JSON</td><td><code>src/_obsidian/clipper/&lt;source&gt;-clipper.json</code> (<strong>git-tracked</strong>)</td><td><strong>The source of truth.</strong> Re-importable, reviewable, and version-controlled — <code>git diff</code> surfaces a changed export.</td></tr>
+<tr><td>Live template</td><td>Inside the browser extension's own storage</td><td>What actually runs at clip time. Editable in the extension UI.</td></tr>
+</table>
+<p><strong>The trap:</strong> editing the live template in the extension does <em>not</em> update the exported JSON, and vice-versa. The two drift. A clip then behaves according to the <em>live</em> copy, which may no longer match the repo export you're reading.</p>
+<p class="note"><strong>Cautionary tale (24 May 2026).</strong> A <code>Reading</code> clip of <em>A Confession</em> came in with its <code>description</code> shattered into a YAML list at every comma, and its filename carrying the author (<code>… - Leo Tolstoy</code>). The repo export <code>standard-ebooks-clipper.json</code> was <em>correct</em> on both counts (<code>description</code> = <code>text</code>, <code>noteNameFormat</code> = title-only) — the <strong>live extension had drifted</strong>. Fix: re-import the export to overwrite the live copy. <strong>Rule: after editing any template in the extension, re-export it over the repo copy; after editing the repo copy, re-import it.</strong> Treat a mismatch as a bug. The exports are now <strong>git-tracked</strong> (<code>src/_obsidian/clipper/</code>), so re-exporting after an extension edit makes drift visible in <code>git diff</code>.</p>
+
+<h2>3. Anatomy of a template</h2>
+<p>A template is a small JSON object. The shape (from <code>src/_obsidian/clipper/letterboxd-clipper.json</code>):</p>
+<pre><code>{
+  "schemaVersion": "0.1.0",
+  "name": "Letterboxd",            // shown in the extension's template menu
+  "behavior": "create",            // create a new note
+  "noteContentFormat": "",         // the note BODY (often empty; "{{content}}" to capture page text)
+  "properties": [                  // → YAML frontmatter, one object per field
+    { "name": "title", "value": "{{schema:@Movie:name}}", "type": "text" },
+    …
+  ],
+  "triggers": ["https://letterboxd.com/film/"],   // URL prefix, regex, or "schema:@Type"
+  "noteNameFormat": "{{schema:@Movie:name}}",      // the FILENAME (→ slug + wikilink target, §5)
+  "path": "posts/watching/"        // destination folder under src/
+}</code></pre>
+<table>
+<tr><th>Key</th><th>Controls</th></tr>
+<tr><td><code>properties[]</code></td><td>The frontmatter. Each has a <code>name</code>, a <code>value</code> (template expression), and a <code>type</code> — and <code>type</code> is load-bearing (§4).</td></tr>
+<tr><td><code>value</code> sources</td><td><code>{{schema:…}}</code> (JSON-LD), <code>{{selector:…}}</code> (DOM/CSS), <code>{{meta:…}}</code> (meta tags), <code>{{url}}</code>/<code>{{title}}</code>/<code>{{date}}</code>/<code>{{description}}</code> (page variables). Pipe through filters: <code>|wikilink</code>, <code>|split:", "</code>, <code>|join</code>, <code>|safe_name</code>, <code>|date:"YYYY"</code>, <code>|first</code>, <code>|slice:0,5</code>.</td></tr>
+<tr><td><code>triggers[]</code></td><td>When the template auto-selects. URL prefix, regex, or a schema.org type (<code>schema:@Event</code>, <code>schema:@Recipe</code>). Empty <code>[]</code> = manual pick from the menu.</td></tr>
+<tr><td><code>noteNameFormat</code></td><td>The filename → the slug and the Obsidian wikilink target (§5).</td></tr>
+<tr><td><code>path</code></td><td>Destination folder. Inherited <code>category</code>/<code>layout</code>/<code>permalink</code> come from that folder's <code>&lt;type&gt;.json</code>, so the template need not emit them.</td></tr>
+</table>
+
+<h2>4. Type discipline — <code>type</code> decides the YAML</h2>
+<p>Each property's <code>type</code> determines how its value is serialized into YAML. <strong>This is the single biggest source of clipper bugs.</strong></p>
+<table>
+<tr><th><code>type</code></th><th>YAML output</th><th>Use for</th></tr>
+<tr><td><code>text</code></td><td>A scalar string</td><td>title, description, a single URL, a single name</td></tr>
+<tr><td><code>multitext</code></td><td>A YAML list — <strong>and the captured value is split on commas into items</strong></td><td>genuinely multi-value fields: genre, cast, multiple authors, tags</td></tr>
+<tr><td><code>number</code></td><td>A bare number</td><td>year, page count, score</td></tr>
+<tr><td><code>date</code></td><td>An ISO date</td><td>publication / event dates</td></tr>
+<tr><td><code>checkbox</code></td><td><code>true</code>/<code>false</code></td><td><code>draft</code></td></tr>
+</table>
+<pre><code>{ "name": "plot",  "value": "{{description}}",  "type": "text" }       // → plot: A scalar sentence, commas and all.
+{ "name": "genre", "value": "{{schema:genre}}", "type": "multitext" }  // → genre:
+                                                                       //     - Drama
+                                                                       //     - Romance</code></pre>
+<p><strong>The two failure modes</strong> — both stem from putting a single-value field on <code>multitext</code>:</p>
+<ul>
+<li><strong>Comma shatter.</strong> A description like <code>"A meditation on depression, philosophy, religion, and life."</code> on a <code>multitext</code> field becomes a <em>four-item list</em>, split at every comma. (This is exactly what hit <em>A Confession</em>.)</li>
+<li><strong>Type mismatch.</strong> Even with no commas, a single value on <code>multitext</code> becomes a one-item list. Once the property is registered as <code>text</code> vault-wide, Obsidian flags it: <em>"Type mismatch, expected text."</em></li>
+</ul>
+<p class="note"><strong>Obsidian's side of the contract:</strong> <code>src/.obsidian/types.json</code> registers each property's type vault-wide. Switching a property to "List" in Obsidian's UI splits its value on commas (and switching back does <em>not</em> rejoin). <strong>Pin shared scalar properties there</strong> — <code>description</code> is now pinned to <code>text</code> — so a stray toggle can't shatter them. Keep the clipper <code>type</code> and the <code>types.json</code> type in agreement.</p>
+
+<h2>5. Naming — title-only, for wikilinks</h2>
+<p><code>noteNameFormat</code> sets the filename. <strong>Keep it the title alone</strong> — do not append the author, year, or director. The reasons:</p>
+<ul>
+<li><strong>Wikilinks resolve on the title.</strong> A file named <code>What Is Art - Leo Tolstoy.md</code> means <code>[[What Is Art]]</code> won't resolve; <code>What Is Art.md</code> does.</li>
+<li><strong>The slug is the filename.</strong> JEDEE permalinks derive from <code>{{ page.fileSlug | slugify }}</code>, so <code>What Is Art.md</code> → <code>/reading/what-is-art/</code>. The author suffix just produced an uglier URL.</li>
+</ul>
+<p>Always pass the name through <code>|safe_name</code> — it strips filesystem-illegal characters (<code>:</code>, <code>/</code>, <code>?</code>) that JSON-LD titles sometimes carry (<code>3:10 to Yuma</code> → <code>310 to Yuma</code>; <code>What Is Art?</code> → <code>What Is Art</code>). It is OS-safety, <em>not</em> kebab-casing — spaces and title-case are preserved, and Eleventy slugifies for the URL at build.</p>
+<p class="note"><strong>Exception — Jam.</strong> The Bandcamp design uses <code>"{{…name|safe_name}}, by {{…byArtist.name|safe_name}}"</code> deliberately, because album titles collide across artists. That's a considered trade against the wikilink-cleanliness rule, not a violation of it. Every other type stays title-only.</p>
+
+<h2>6. Covers — emit a URL, the build self-hosts it</h2>
+<p>An image-led clip (book cover, film poster, album art) writes a single remote URL into a <code>cover:</code> field, as plain <code>text</code>:</p>
+<pre><code>{ "name": "cover", "value": "{{schema:image}}", "type": "text" }</code></pre>
+<p>The layout renders it as a plain <code>&lt;img&gt;</code>, and Eleventy's always-on Image <strong>HTML Transform</strong> fetches, optimizes, and self-hosts it at build. The clipper's job ends at "write the URL." See <a href="cover-image-pattern.html">build-time cover images</a> for the full mechanism.</p>
+<p class="note"><strong>Dropped apparatus — don't resurrect.</strong> An earlier design (Step 4, before its 23 May amendment) had a <code>normalize-posts.js</code> / <code>colocate-cover.js</code> script download covers into per-post page bundles, plus a <code>coverSource:</code> field. That was <strong>never built</strong> — the build self-hosts remote URLs already, so the script was redundant. If you find a clipper template or spec describing co-located covers or <code>coverSource:</code>, it predates the decision. Clips write flat <code>.md</code> files with a remote <code>cover:</code> URL; bundles are opt-in only when a post has genuine co-located <em>body</em> images.</p>
+
+<h2>7. Wikilinks</h2>
+<p>The <code>|wikilink</code> filter wraps values in <code>[[…]]</code> so they join the Obsidian graph; it works on single values and arrays. Compose it with <code>split</code>/<code>join</code> for delimited source strings:</p>
+<pre><code>{ "name": "author", "value": "{{author|split:\", \"|wikilink|join}}", "type": "multitext" }</code></pre>
+<p>It's the right tool for <code>author</code> / <code>authors</code> (Reading), <code>cast</code> / <code>genre</code> / <code>director</code> (Watching), and <code>artist</code> / <code>genre</code> (Jam). Layouts render the wikilink as plain text — the graph value lives in the source, it needn't leak to HTML.</p>
+
+<h2>8. The template matrix — per type</h2>
+<p>15 post types; not all are clip targets. The matrix below is the boundary. <strong>Status reflects disk today</strong>; the <em>plan</em> column is Step 4's tiering. (Field shapes per type live in Step 4, pending the §9 reconciliation.)</p>
+<table>
+<tr><th>Type</th><th>Template(s)</th><th>Source / trigger</th><th>Status</th><th>Notes / issues</th></tr>
+<tr><td><strong>Reading</strong></td><td><code>standard-ebooks-clipper.json</code></td><td>Standard Ebooks · URL prefix</td><td><strong>live</strong></td><td>SE uses RDFa, not JSON-LD → selectors + meta, not <code>{{schema:}}</code>. Also fed by a Google Books importer script. Live-vs-export drift fixed 24 May (§2).</td></tr>
+<tr><td><strong>Watching</strong></td><td><code>letterboxd-clipper.json</code></td><td>Letterboxd · URL prefix</td><td><strong>live</strong></td><td>Clean: title-only name, <code>plot</code> is <code>text</code>. Planned edits: wikilink <code>cast</code>/<code>genre</code>, rename <code>myUrl</code>→<code>personalUrl</code>. IMDB ×3 (Movie / TVEpisode / TVSeries, schema-triggered) planned.</td></tr>
+<tr><td><strong>Note</strong></td><td><code>notes-clipper.json</code></td><td>Any page · manual → <code>posts/notes/</code></td><td><strong>reworked</strong></td><td>"Note about a page": prefills title + page meta description; body is yours. Replaced the stale <code>note-to-_sources</code> test (24 May). Import pending.</td></tr>
+<tr><td><strong>Jam</strong></td><td><code>bandcamp-clipper.json</code></td><td>Bandcamp · URL regex</td><td>planned (v1)</td><td>Designed in Step 4, not yet authored. Apple Music fallback deferred.</td></tr>
+<tr><td><strong>Bookmark</strong></td><td><code>bookmark-clipper.json</code></td><td>Any URL · manual</td><td>planned (v1)</td><td>The most universal template. No body captured by default.</td></tr>
+<tr><td><strong>RSVP</strong></td><td><code>rsvp-clipper.json</code></td><td><code>schema:@Event</code></td><td>planned (v1)</td><td>Source-agnostic. <code>rsvp:</code> value prompted/placeholder at clip time.</td></tr>
+<tr><td><strong>Recipe</strong></td><td><code>recipe-clipper.json</code></td><td><code>schema:@Recipe</code></td><td>planned (v1)</td><td>Source-agnostic (JSON-LD <code>Recipe</code> is widely deployed). ISO-8601 durations handled build-side.</td></tr>
+<tr><td><strong>Reply</strong></td><td><code>reply-clipper.json</code></td><td>Any URL · manual</td><td>planned (v2)</td><td>Bookmark shape, different intent. ~5 fields.</td></tr>
+<tr><td><strong>Like</strong></td><td><code>like-clipper.json</code></td><td>Any URL · manual</td><td>planned (v2)</td><td>Minimal; ~5 fields.</td></tr>
+<tr><td><strong>Repost</strong></td><td>—</td><td>—</td><td>deferred</td><td>Most reposts happen within the host platform.</td></tr>
+<tr><td>Article</td><td>—</td><td>—</td><td>none</td><td>Self-authored long-form, not a clip target. (Archiving third-party articles as clippings isn't a wired path — the old <code>note-to-_sources</code> test was retired 24 May; see §9.)</td></tr>
+<tr><td>Photo</td><td>—</td><td>—</td><td>none</td><td>Phone-first → Micropub later.</td></tr>
+<tr><td>Audio</td><td>—</td><td>—</td><td>none</td><td>Self-hosted podcasts; not a browser-clip path.</td></tr>
+<tr><td>Video</td><td>—</td><td>—</td><td>none</td><td>Open question in the spec; deferred.</td></tr>
+<tr><td>Event</td><td>—</td><td>—</td><td>none</td><td>Authored locally for events you host (clipping someone else's event is an RSVP).</td></tr>
+</table>
+
+<h2>9. Known issues &amp; fix queue</h2>
+<ul>
+<li><strong>Standard Ebooks — live drift (fix: re-import).</strong> The live extension copy splits <code>description</code> on commas and appends the author to the filename; the repo export is correct. Re-import <code>standard-ebooks-clipper.json</code> into the extension to overwrite the live copy, then re-clip one book to confirm. <em>(open — needs doing in the browser)</em></li>
+<li><strong>Notes clipper reworked.</strong> The stale <code>note-to-_sources</code> test file was replaced by <code>notes-clipper.json</code> ("note about a page" → <code>posts/notes/</code>, 24 May). <strong>Import the new template</strong> into the extension and delete the old "Note to _sources" entry there. <em>(open: import)</em></li>
+<li><strong>Field-name reconciliation before authoring planned templates.</strong> Step 4 (2026-05-20) specifies kebab-case µf2 targets (<code>read-of</code>, <code>watch-of</code>, <code>bookmark-of</code>, <code>in-reply-to</code>). Project memory records the canonical decision as <strong>camelCase</strong> URL-target fields, and the authoritative spec is now <code>Plan - Phase 3 (10 new post types) - final.md</code>. <strong>Verify each field name against the Phase 3 final plan</strong> — do not copy Step 4's field names verbatim. <em>(blocking for v1 authoring)</em></li>
+<li><strong>Reading source diverged from the design.</strong> Step 4 proposed Open Library as Reading's v1 source; in reality Standard Ebooks was built and shipped. Treat SE as the live Reading clipper; Open Library / Google Books are alternates.</li>
+<li><strong>types.json coverage.</strong> Only <code>description</code> is pinned so far. As clippers add shared scalar properties, pin them in <code>src/.obsidian/types.json</code> to match the clipper <code>type</code> (§4).</li>
+</ul>
+
+<h2>10. Authoring the JSON at scale</h2>
+<p>v1 is ~9 hand-edited JSON files — manageable, and templates rarely change once written. If escaped-string editing becomes painful, the planned escalation (Step 4 § "Templates as code") is a generator: write typed sources at <code>src/_config/setup/clipper-templates/&lt;name&gt;.ts</code> with shared fragments (the common <code>draft</code>/<code>date</code> lines, the wikilink rule), and a setup script emits the JSON into <code>src/_obsidian/clipper/</code>. Forking the extension itself is explicitly rejected until a concrete distribution need exists.</p>
+
+<h2>11. Reference files</h2>
+<ul>
+<li>Templates (git-tracked) — <code>src/_obsidian/clipper/standard-ebooks-clipper.json</code>, <code>…/letterboxd-clipper.json</code>, <code>…/notes-clipper.json</code></li>
+<li>Vault property registry — <code>src/.obsidian/types.json</code> (§4)</li>
+<li>Cover handling — <a href="cover-image-pattern.html">build-time cover images</a> (§6)</li>
+<li>Design source — <code>_generated/Step 4 - Clipper layer design.md</code> (the 9-template matrix, per-template field shapes, phasing) and its amendment</li>
+<li>Canonical spec — <code>_generated/Plan - Phase 3 (10 new post types) - final.md</code> (field names, type count — authoritative over Step 4; see §9)</li>
+<li>SE specifics — <code>_generated/Step 4b - Standard Ebooks Clipper template (RDFa finding).md</code> (why SE needs selectors, not <code>{{schema:}}</code>)</li>
+<li>Per-type specs that link here — Reading §4/§15, Watching, Jam (authoring sections)</li>
+</ul>
+
+</main>
+
+<footer>JEDEE · __project_docs · git-tracked working docs</footer>
+
+<!-- Annotation UI (ported from tolstoy.life serve.py) -->
+<div id="ann-popover">
+  <div class="ann-quote" id="ann-quote"></div>
+  <textarea id="ann-text" placeholder="Your comment…" autocomplete="off"></textarea>
+  <div class="ann-actions">
+    <button id="ann-cancel">Cancel</button>
+    <button class="primary" id="ann-save">Save</button>
+  </div>
+</div>
+<div id="ann-tooltip"></div>
+<div id="ann-bar">
+  <button id="ann-export">Copy annotations</button>
+  <button class="danger" id="ann-clear">Clear all</button>
+</div>
+
+<script src="spec.js"></script>
+</body>
+</html>

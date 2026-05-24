@@ -1,0 +1,36 @@
+{
+	"schemaVersion": "0.1.0",
+	"name": "Note",
+	"behavior": "create",
+	"noteContentFormat": "",
+	"properties": [
+		{
+			"name": "title",
+			"value": "{{title}}",
+			"type": "text"
+		},
+		{
+			"name": "description",
+			"value": "{{description}}",
+			"type": "text"
+		},
+		{
+			"name": "date",
+			"value": "{{date}}",
+			"type": "text"
+		},
+		{
+			"name": "tags",
+			"value": "",
+			"type": "multitext"
+		},
+		{
+			"name": "draft",
+			"value": "true",
+			"type": "checkbox"
+		}
+	],
+	"triggers": [],
+	"noteNameFormat": "{{title|safe_name}}",
+	"path": "posts/notes/"
+}

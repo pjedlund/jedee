@@ -1,0 +1,4 @@
+# Obsidian vault tooling — never part of the built site.
+# (.gitignore already hides most of it, but the clipper/ subfolder is
+# git-tracked, so this keeps Eleventy from ever discovering it regardless.)
+src/_obsidian/
