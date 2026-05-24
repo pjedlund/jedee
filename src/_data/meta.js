@@ -7,6 +7,7 @@ export const siteType = 'Person'; // schema
 export const locale = 'en_EN';
 export const lang = 'en';
 export const skipContent = 'Skip to content';
+// for the site content author, used in <head> meta and post h-card microformat
 export const author = {
   name: 'Johan Edlund', // i.e. Lene Saile - page / blog author's name. Must be set.
   avatar: '/avatar.webp', // path to the author's avatar.
@@ -14,6 +15,7 @@ export const author = {
   website: 'https://www.johanedlund.se', // i.e. https.://www.lenesaile.com - the personal site of the author
   fediverse: '@pjedlund@mastodon.social' // used for highlighting journalism on the fediverse. Can be Mastodon, Flipboard, Threads, WordPress (with the ActivityPub plugin installed), PeerTube, Pixelfed, etc. https://blog.joinmastodon.org/2024/07/highlighting-journalism-on-mastodon/
 };
+// for the site developer, used for footer credits and humans.txt info
 export const creator = {
   name: 'Johan Edlund', // i.e. Lene Saile - creator's (developer) name.
   email: 'me@johanedlund.se',
