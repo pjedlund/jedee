@@ -1,0 +1,10 @@
+---
+permalink: /recipes/feed.json
+eleventyExcludeFromCollections: true
+excludeFromSitemap: true
+---
+{%- set feedCollection = collections.recipe -%}
+{%- set feedTitle = "Recipes" -%}
+{%- set feedDescription = "Recipes I've written." -%}
+{%- set feedSelfUrl = "/recipes/feed.json" -%}
+{%- include "feeds/recipe-json-body.njk" -%}

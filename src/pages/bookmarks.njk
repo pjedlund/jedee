@@ -1,0 +1,22 @@
+---
+layout: base
+title: Bookmarks
+description: 'Links worth keeping.'
+pagination:
+  data: collections.bookmark
+  size: 10
+  generatePageOnEmptyData: true
+permalink: 'bookmarks/{% if pagination.pageNumber >=1 %}page-{{ pagination.pageNumber + 1 }}/{% endif %}index.html'
+---
+
+{% set archiveDescription %}
+  This page has a pagination of <strong>{{ pagination.size }}</strong> bookmarks per page.<br>
+  The pagination is only shown if there are more bookmarks ({{ collections.bookmark.length }}) than items per page ({{ pagination.size }}).
+{% endset %}
+
+{% set cardPartial = "card-response.njk" %}
+{% set masonryLayout = "50-50" %}
+{% set collectionToPaginate = collections.bookmark %}
+{% set paginationMetaKey = "blog" %}
+
+{% include "partials/archive-listing.njk" %}

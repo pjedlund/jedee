@@ -1,0 +1,39 @@
+/*
+EVENT STATUS
+A small badge marking an event's schema.org EventStatusType when it isn't simply
+`scheduled`. Shared by the event post page (event.njk) and the archive card
+(card-event.njk), so it lives as a site-wide block rather than a card-local rule.
+Status drives the badge only — never the archive partition: a cancelled event
+stays visible in its date-determined section (spec §7). The `data-status`
+attribute carries the value; the colour is a CUBE exception per status. Spacing
+is left to the surrounding composition (.flow on the post page, a card-local
+rule in custom-card.css) — this block only owns the pill's visual treatment.
+*/
+
+.event-status {
+  --event-status-bg: var(--color-bg);
+  --event-status-color: var(--color-text);
+
+  display: inline-block;
+  padding-inline: var(--space-xs);
+  padding-block: 0.2em;
+  border-radius: var(--border-radius-medium);
+  font-size: var(--size-step-min-1);
+  font-weight: 600;
+  background-color: var(--event-status-bg);
+  color: var(--event-status-color);
+}
+
+/* exceptions — colour per status (cancelled reads as a warning; the rest as a
+   neutral notice). Both accents pair with --color-dark for contrast. */
+
+.event-status[data-status='cancelled'] {
+  --event-status-bg: var(--color-accent-orange);
+  --event-status-color: var(--color-dark);
+}
+
+.event-status[data-status='postponed'],
+.event-status[data-status='moved-online'] {
+  --event-status-bg: var(--color-accent-blue);
+  --event-status-color: var(--color-dark);
+}

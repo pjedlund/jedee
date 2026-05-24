@@ -81,6 +81,18 @@ custom-card[img-square] img {
   aspect-ratio: 1;
 }
 
+/* portrait poster (films, shows) */
+
+custom-card[data-poster] img {
+  aspect-ratio: 2 / 3;
+}
+
+/* natural ratio (photos — varied-height masonry) */
+
+custom-card[data-photo] img {
+  aspect-ratio: auto;
+}
+
 /* clickable */
 
 custom-card[clickable]:hover,
@@ -104,4 +116,129 @@ custom-card[clickable] a:after {
   position: absolute;
   right: 0;
   top: 0;
+}
+
+/* -------------------- recipe duration/yield badge --------------------  */
+
+/* Small pills in the recipe card's content slot (card-recipe.njk, spec §6).
+   Wrap + gap ride the .cluster composition via --gutter; this adds only the
+   pills' visual treatment. Semantic tokens keep it theme-aware (dark mode). */
+
+.recipe-badge {
+  --gutter: var(--space-xs);
+  margin-block-start: var(--space-xs);
+  font-size: var(--size-step-min-2);
+}
+
+.recipe-badge [data-badge] {
+  padding-inline: var(--space-xs);
+  padding-block: 0.2em;
+  border-radius: var(--border-radius-medium);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+/* -------------------- event date badge --------------------  */
+
+/* Date-led lead for the event card (card-event.njk, spec §6): a stacked
+   day/month/year block that occupies the card's `image` grid row in place of a
+   photo. `grid-row: image` overrides the default `custom-card > p` → `desc`
+   placement so the badge leads the card. Semantic tokens keep it theme-aware. */
+
+.event-date-badge {
+  grid-row: image;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 0;
+  padding-block: var(--space-s);
+  border-radius: var(--border-radius-medium);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.1;
+  text-align: center;
+}
+
+.event-date-badge .day {
+  font-size: var(--size-step-3);
+  font-weight: 700;
+}
+
+.event-date-badge .month {
+  font-size: var(--size-step-0);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.event-date-badge .year {
+  font-size: var(--size-step-min-1);
+}
+
+/* Event card meta line (card-event.njk): location + status sit together on one
+   wrapping line below the description — the same shape as .recipe-badge, so the
+   status pill is a content-sized flex item (not a stretched grid child) and the
+   card keeps to two content columns like the recipe card. The status pill's
+   colours live in the global event-status block; this only spaces the line. */
+
+.event-card-meta {
+  --gutter: var(--space-xs);
+  margin-block-start: var(--space-xs);
+  font-size: var(--size-step-min-1);
+}
+
+.event-card-location {
+  font-weight: 600;
+}
+
+/* -------------------- audio/video duration badge --------------------  */
+
+/* Pills in the media cards' content slot (card-audio.njk / card-video.njk,
+   audio spec §6 / video spec §7): a duration (+ episode) pill. Same treatment
+   as .recipe-badge so the heavy types read consistently; kept as its own class
+   for semantics. Wrap + gap ride the .cluster composition via --gutter. */
+
+.media-badge {
+  --gutter: var(--space-xs);
+  margin-block-start: var(--space-xs);
+  font-size: var(--size-step-min-2);
+}
+
+.media-badge [data-badge] {
+  padding-inline: var(--space-xs);
+  padding-block: 0.2em;
+  border-radius: var(--border-radius-medium);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+/* -------------------- video play overlay --------------------  */
+
+/* A play affordance over the poster on video cards (card-video.njk, video
+   spec §7). Implemented as a grid pseudo-element placed in the `image` row so
+   it overlaps the poster WITHOUT adding a hoisted child element (which
+   webc:nokeep would stretch into its own grid cell — the Event lesson). Scoped
+   with :has(picture) so it only appears when a poster is present (a posterless
+   embed card stays clean). Decorative + non-interactive, so the card's
+   clickable link still receives the click. */
+
+custom-card[data-video]:has(picture) {
+  position: relative;
+}
+
+custom-card[data-video]:has(picture)::before {
+  content: "";
+  grid-row: image;
+  grid-column: 1 / -1;
+  z-index: 1;
+  align-self: center;
+  justify-self: center;
+  inline-size: 3rem;
+  block-size: 3rem;
+  border-radius: 50%;
+  background-color: color-mix(in oklab, var(--color-dark) 55%, transparent);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23fff'%3E%3Cpath d='M8 5v14l11-7z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 56% center;
+  background-size: 38%;
+  pointer-events: none;
 }

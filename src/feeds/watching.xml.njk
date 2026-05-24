@@ -1,0 +1,10 @@
+---
+permalink: /watching/feed.xml
+eleventyExcludeFromCollections: true
+excludeFromSitemap: true
+---
+{%- set feedCollection = collections.watching -%}
+{%- set feedTitle = "Watching" -%}
+{%- set feedDescription = "Films and shows I've watched." -%}
+{%- set feedSelfUrl = "/watching/feed.xml" -%}
+{%- include "feeds/atom-body.njk" -%}

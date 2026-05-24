@@ -1,39 +1,35 @@
-/** All posts to show on index as a collection. */
-export const getAllPosts = collection => {
-  return collection.getFilteredByGlob('./src/posts/articles/**/*.md').reverse();
-};
-
-/** All articles as a collection. */
-export const getAllArticles = collection => {
-  return collection.getFilteredByGlob('./src/posts/articles/**/*.md').reverse();
-};
-
-/** All notes as a collection. */
-export const getAllNotes = collection => {
-  return collection.getFilteredByGlob('./src/posts/notes/**/*.md').reverse();
-};
-
-/** All reading as a collection. */
-export const getAllReading = collection => {
-  return collection.getFilteredByGlob('./src/posts/reading/**/*.md').reverse();
-};
-
-/** All listening as a collection. */
-export const getAllListening = collection => {
-  return collection.getFilteredByGlob('./src/posts/listening/**/*.md').reverse();
-};
-
 /** All relevant pages as a collection for sitemap.xml */
 export const showInSitemap = collection => {
   return collection.getFilteredByGlob('./src/**/*.{md,njk}');
 };
 
-/** All tags from all posts as a collection - excluding custom collections */
+/** Per-type collections — filter posts by their `category` field, set in each
+ *  src/posts/<type>/<type>.json. eleventy.config.js loops over POST_TYPES to
+ *  register each collection. Avoids dragging `category` into the `tags` field
+ *  (which would pollute the user-facing /tags/ index and force `.11tydata.js`
+ *  for the data file). */
+export const byCategory = cat => collection =>
+  collection
+    .getFilteredByGlob('./src/posts/**/*.md')
+    .filter(item => item.data.category === cat)
+    .reverse();
+
+/** Every per-type collection name. Drives `addCollection` registration in
+ *  eleventy.config.js. Add a new type's category here to register its collection.
+ *  NB: layout aliases stay explicit in eleventy.config.js — `article` has no
+ *  article.njk (it uses layout: post), so a generic alias loop would break. */
+export const POST_TYPES = ['article', 'note', 'reading', 'jam', 'watching', 'bookmark', 'reply', 'rsvp', 'like', 'repost', 'photo', 'recipe', 'event', 'audio', 'video'];
+
+/** All user-facing tags across all posts, excluding system tags. Per-type
+ *  category names (article, note, …) never enter `tags`; they live in
+ *  `category` only. Keep this list minimal — only the firehose + EE built-ins. */
+const SYSTEM_TAGS = ['posts', 'docs', 'all'];
+
 export const tagList = collection => {
   const tagsSet = new Set();
   collection.getAll().forEach(item => {
     if (!item.data.tags) return;
-    item.data.tags.filter(tag => !['notes', 'posts', 'reading', 'docs', 'all'].includes(tag)).forEach(tag => tagsSet.add(tag));
+    item.data.tags.filter(tag => !SYSTEM_TAGS.includes(tag)).forEach(tag => tagsSet.add(tag));
   });
   return Array.from(tagsSet).sort();
 };

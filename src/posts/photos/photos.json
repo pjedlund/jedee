@@ -1,0 +1,6 @@
+{
+  "layout": "photo",
+  "tags": "posts",
+  "category": "photo",
+  "permalink": "/photos/{{ page.fileSlug | slugify }}/index.html"
+}

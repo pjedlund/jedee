@@ -1,0 +1,50 @@
+---
+layout: base
+schema: BlogPosting
+---
+
+<div class="region" style="--region-space-top: var(--space-xl-2xl)">
+  <div class="wrapper flow prose">
+    {% include 'partials/entry-header.njk' %}
+
+    {# One type, three rendering paths, selected by video.provider (spec §6).
+       The two embed paths reuse the SHIPPED custom-youtube / custom-peertube
+       WebC components — they render here because the WebC plugin runs with
+       useTransform:true (so custom elements process in .njk, not only .webc).
+       Self-hosted video carries u-video; embeds carry no file URL, so no
+       u-video (documented µf2 limitation, spec §5). #}
+    {% if video.provider == "file" and video.src %}
+      <video class="u-video" controls preload="metadata"{% if video.poster %} poster="{{ video.poster | replace('./src', '') }}"{% endif %} src="{{ video.src | replace('./src', '') }}"></video>
+
+    {% elif video.provider == "youtube" %}
+      <custom-youtube @slug="{{ video.slug }}" @label="{{ title }}"></custom-youtube>
+
+    {% elif video.provider == "peertube" %}
+      <custom-peertube @instance="{{ video.instance }}" @embed-slug="{{ video.embedSlug }}" @slug="{{ video.slug }}" @label="{{ title }}"></custom-peertube>
+    {% endif %}
+
+    <div class="e-content">
+      {{ content | safe }}
+    </div>
+
+    {% include 'partials/backlinks.njk' %}
+    {% include 'partials/entry-footer.njk' %}
+  </div>
+
+  {# h-card authorship for Webmention discovery — https://indieweb.org/authorship #}
+  <div hidden class="h-entry">
+    <a class="u-url" href="{{ page.url | url | absoluteUrl(meta.url) }}">{{ title }}</a>
+    <a class="p-name u-url" rel="author" href="{{ meta.url }}">{{ meta.author.name }}</a>
+    <img
+      eleventy:ignore
+      class="u-author h-card"
+      src="{{ meta.author.avatar | url | absoluteUrl(meta.url) }}"
+      alt="{{ meta.author.name }}"
+    />
+  </div>
+</div>
+
+{%- css "local" -%}
+  {%- include 'css/post.css' -%}
+  {%- include 'css/footnotes.css' -%}
+{%- endcss -%}

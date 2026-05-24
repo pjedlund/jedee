@@ -3,6 +3,7 @@ permalink: /_redirects
 eleventyExcludeFromCollections: true
 excludeFromSitemap: true
 ---
+{# Bulk path-prefix redirects (from URL-shape changes). Per-post `redirectFrom:` loop below. #}
 {%- for page in collections.all -%}
 {%- if page.url and page.data.redirectFrom -%}
 {%- for oldUrl in page.data.redirectFrom %}

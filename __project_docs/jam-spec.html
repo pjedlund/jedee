@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jam — post-type spec — JEDEE</title>
+<link rel="stylesheet" href="spec.css">
+</head>
+<body data-doc-key="jam-spec">
+
+<div class="site-header">
+  <a class="home" href="index.html">JEDEE / Project documentation</a>
+  <span class="breadcrumb">post-type specs › Jam</span>
+</div>
+
+<header class="doc-header" id="top">
+  <p class="eyebrow">post-type spec</p>
+  <h1>Jam</h1>
+  <p class="meta">Shipped · Phase 2 · singular <code>jam</code> / plural <code>jams</code> · extracted from live code 22 May 2026</p>
+</header>
+
+<nav id="toc" class="toc" aria-label="Sections"></nav>
+
+<main>
+
+<p>A <em>Jam</em> is a short post sharing music (or other audio) the author is listening to — an album, track, or release, usually linking out to Bandcamp or a streaming service. An IndieWeb "listen" post.</p>
+
+<h2>1. Singular / plural identity</h2>
+<p>Jam is <strong>asymmetric</strong>: the <em>type</em> is singular, the <em>URL namespace</em> is plural. The Eleventy collection is named with the <strong>singular</strong> (<code>collections.jam</code>), but the folder, URL, archive, and feed all use the <strong>plural</strong>.</p>
+
+<table>
+<tr><th>Aspect</th><th>Form</th><th>Value</th><th>Defined in</th></tr>
+<tr><td>Type / category value</td><td>singular</td><td><code>category: "jam"</code></td><td><code>src/posts/jams/jams.json</code></td></tr>
+<tr><td>Layout name + alias</td><td>singular</td><td><code>jam</code> → <code>jam.njk</code></td><td><code>eleventy.config.js</code></td></tr>
+<tr><td>Collection</td><td>singular</td><td><code>collections.jam</code></td><td><code>src/_config/collections.js</code></td></tr>
+<tr><td>Content folder</td><td>plural</td><td><code>src/posts/jams/</code></td><td>—</td></tr>
+<tr><td>Folder data file</td><td>plural</td><td><code>jams.json</code></td><td><code>src/posts/jams/</code></td></tr>
+<tr><td>Per-post URL</td><td>plural</td><td><code>/jams/&lt;slug&gt;/</code></td><td><code>jams.json</code> permalink</td></tr>
+<tr><td>Archive URL + page</td><td>plural</td><td><code>/jams/</code></td><td><code>src/pages/jams.njk</code></td></tr>
+<tr><td>Feed</td><td>plural</td><td><code>/jams/feed.xml</code>, <code>/jams/feed.json</code></td><td><code>src/feeds/jams.{xml,json}.njk</code></td></tr>
+<tr><td>Nav label</td><td>plural</td><td>"Jams" → <code>/jams/</code></td><td><code>src/_data/navigation.js</code></td></tr>
+</table>
+<p class="note">Note the mismatch: the folder is <code>jams/</code> but its data file sets <code>category: "jam"</code>, and the collection registered from that category is <code>jam</code> (singular). Don't "fix" this — the layout alias, collection, and category are all singular by design.</p>
+
+<h2>2. Naming &amp; aliases</h2>
+<p>JEDEE's music type is named <strong>Jam</strong> (singular) / <strong>Jams</strong> (plural), after <em>This Is My Jam</em> — a curated <em>endorsement</em>, not a passive scrobble of whatever happened to be playing. Chosen deliberately over symmetry with <code>reading</code> / <code>watching</code> because the word carries the endorsement.</p>
+<table>
+<tr><th>Term</th><th>Status</th><th>Where it appears / why</th></tr>
+<tr><td><code>jam</code> / <code>jams</code></td><td>chosen name</td><td>Type, layout, collection, URL, archive, feed, nav (see §1).</td></tr>
+<tr><td><code>listen</code></td><td>IndieWeb verb — kept in µf2 + schema</td><td>There is no "jam" microformat: the property is <code>u-listen-of</code> and the planned schema is <code>ListenAction</code>. Jam reuses IndieWeb's <em>listen</em> vocabulary.</td></tr>
+<tr><td><code>listening</code></td><td>previous name + asset path</td><td>The folder was <code>src/posts/listening/</code> until Phase 2 renamed it to <code>jams/</code>. The earlier <code>/listening/* /jams/:splat 301</code> redirect has been removed, freeing the <code>/listening/</code> namespace for a possible future <code>Listen</code> type (see note). Album art still lives under <code>/assets/images/listening/</code>.</td></tr>
+<tr><td><code>music</code></td><td>topic tag</td><td>Every sample carries <code>tags: [music]</code> — a user-facing tag, not the category.</td></tr>
+</table>
+<p class="note"><strong>Listen vs. Jam:</strong> IndieWeb splits <em>Listen</em> (passive scrobbles — whatever's playing) from <em>Jam</em> (curated picks). If a scrobble feed ever lands it would be a separate <code>Listen</code> type at <code>/listening/</code>, not a rename of Jam.</p>
+
+<h2>3. URLs &amp; permalinks</h2>
+<table>
+<tr><th>Page</th><th>URL</th><th>Source</th></tr>
+<tr><td>Per-post</td><td><code>/jams/&lt;slug&gt;/</code></td><td><code>"/jams/{{ page.fileSlug | slugify }}/index.html"</code></td></tr>
+<tr><td>Archive (page 1)</td><td><code>/jams/</code></td><td><code>jams.njk</code> pagination, size 3</td></tr>
+<tr><td>Archive (page N)</td><td><code>/jams/page-N/</code></td><td>same</td></tr>
+<tr><td>Atom feed</td><td><code>/jams/feed.xml</code></td><td><code>jams.xml.njk</code></td></tr>
+<tr><td>JSON feed</td><td><code>/jams/feed.json</code></td><td><code>jams.json.njk</code></td></tr>
+</table>
+<p>Slug derives from the filename via <code>| slugify</code> (title-optional type). Filename <code>EP1, by The Supervoid Choral Ensemble.md</code> → <code>/jams/ep1-by-the-supervoid-choral-ensemble/</code>.</p>
+
+<h2>4. Frontmatter</h2>
+<p>The shape below is the <strong>live sample</strong> (<code>src/posts/jams/EP1, by The Supervoid Choral Ensemble.md</code>) — the authoritative authoring surface today.</p>
+<pre><code>---
+title: EP1 - The Supervoid Choral Ensemble        # optional
+draft: false
+album: EP1
+artist: The Supervoid Choral Ensemble
+source: https://ssupervvoid.bandcamp.com/album/ep1   # → u-listen-of target
+released: 2026-01-13                                  # release date
+date: 2026-01-16T13:50:58+01:00                       # post date
+description: EP1 by The Supervoid Choral Ensemble, released 13 January 2026
+tags:
+  - music
+cover: /assets/images/listening/EP1_The-Supervoid-Choral-Ensemble.jpg   # album art (local; build-time optimized)
+odeslico: https://album.link/i/1868469820            # cross-platform link (not yet rendered)
+---</code></pre>
+
+<table>
+<tr><th>Field</th><th>Req?</th><th>Role</th></tr>
+<tr><td><code>title</code></td><td>optional</td><td>Headline; falls back to slug. Title-optional type.</td></tr>
+<tr><td><code>source</code></td><td>required for µf2</td><td>The listened-to URL → emitted as <code>u-listen-of</code>.</td></tr>
+<tr><td><code>artist</code>, <code>album</code></td><td>recommended</td><td>Display metadata.</td></tr>
+<tr><td><code>released</code></td><td>optional</td><td>Release date of the music.</td></tr>
+<tr><td><code>date</code></td><td>required</td><td>Post timestamp (sort + <code>dt-published</code>).</td></tr>
+<tr><td><code>description</code></td><td>recommended</td><td>Card excerpt + feed summary.</td></tr>
+<tr><td><code>cover</code></td><td>optional</td><td>Album art (local path or remote URL); rendered as a plain <code>&lt;img&gt;</code> by the card and the layout, self-hosted at build (§6, §12; <a href="cover-image-pattern.html">cover convention</a>). Renamed from <code>image</code> in commit <code>d9dd086</code>.</td></tr>
+<tr><td><code>tags</code></td><td>optional</td><td>Topic tags (e.g. <code>music</code>). <strong>Not</strong> the category.</td></tr>
+<tr><td><code>odeslico</code></td><td>optional</td><td>album.link / odesli.co cross-platform URL. Authored but not yet surfaced in any template.</td></tr>
+</table>
+<p class="note"><strong>Cover field:</strong> the <code>image:</code> field was renamed to <code>cover:</code> (commit <code>d9dd086</code>). It can hold a local path (as in the sample) or a remote URL; either way the Eleventy Image HTML Transform optimizes/fetches and self-hosts it at build. Covers stay <strong>flat</strong> — the earlier plan to co-locate <code>cover: ./cover.&lt;ext&gt;</code> in a page bundle with a <code>coverSource:</code> field was <strong>dropped</strong> (23 May 2026). See §12 and <a href="cover-image-pattern.html">build-time cover images</a>.</p>
+
+<h3>Canonical vs. live drift</h3>
+<p class="note">The original spec's canonical names (<code>listen-of</code>, <code>albumArt</code>, <code>year</code>, <code>favoriteTrack</code>, <code>genre[]</code>, <code>dateListened</code>) differ from what the live importer emits (<code>source</code> ≈ <code>listen-of</code>, <code>cover</code> [was <code>image</code>] ≈ <code>albumArt</code>, <code>released</code> ≈ <code>year</code>). Resolution decision (D2): tighten the canonical names but let the Clipper layer emit them; existing samples stay as-is, not migrated.</p>
+
+<h2>5. Microformats (µf2)</h2>
+<p>Emitted by <code>src/_layouts/jam.njk</code>. The listen target is a <em>hidden</em> <code>&lt;data&gt;</code> element (Jams have a visible body, so the target need not be visible):</p>
+<pre><code>{% if source %}&lt;data hidden class="u-listen-of" value="{{ source }}"&gt;&lt;/data&gt;{% endif %}
+
+&lt;div class="e-content"&gt;{{ content | safe }}&lt;/div&gt;</code></pre>
+<table>
+<tr><th>Property</th><th>Class</th><th>From</th></tr>
+<tr><td>Listen target</td><td><code>u-listen-of</code></td><td><code>source</code></td></tr>
+<tr><td>Body</td><td><code>e-content</code></td><td>post content</td></tr>
+<tr><td>Published</td><td><code>dt-published</code></td><td><code>date</code> (via entry-header)</td></tr>
+<tr><td>Authorship</td><td><code>h-entry</code> / <code>h-card</code> / <code>u-author</code></td><td>hidden block, <code>meta.author</code></td></tr>
+</table>
+<p class="note"><strong>h-entry nesting caveat:</strong> the only <code>h-entry</code> in the layout is the hidden authorship block; the visible <code>u-listen-of</code> + <code>.e-content</code> sit outside it, so a strict parser won't tie them to the entry. Accepted for v1 (webmention sending isn't wired up). Slated for the webmention milestone.</p>
+
+<h2>6. Card</h2>
+<p>Jam has a <strong>bespoke album-art-led card</strong>: <code>src/_includes/partials/card-jam.njk</code> (set in <code>jams.njk</code>: <code>cardPartial = "card-jam.njk"</code>). Built in commit <code>d9dd086</code>, it replaced the shared <code>card-blog.njk</code> so the album art could render from <code>cover</code> (the shared card reads <code>item.data.image</code>, which Jam no longer sets). It mirrors <code>card-watching.njk</code>.</p>
+<table>
+<tr><th>Slot</th><th>Content</th></tr>
+<tr><td>image</td><td><code>item.data.cover</code> (album art), only if set, rendered as <code>&lt;img eleventy:optional="placeholder" src="{{ item.data.cover | safe }}"&gt;</code> in a <code>slot="image"</code> wrapper — the <a href="cover-image-pattern.html">build-time cover pattern</a>, never the <code>{% image %}</code> shortcode</td></tr>
+<tr><td>headline</td><td><code>title</code>, linked to the post; sized <code>text-step-1</code></td></tr>
+<tr><td>date</td><td><code>date</code> + a "draft" badge when <code>draft: true</code></td></tr>
+<tr><td>tag</td><td>each tag except <code>posts</code>; shown only when <code>showTags</code> and more than one tag</td></tr>
+<tr><td>content</td><td><code>description</code> via <code>markdownFormat</code></td></tr>
+<tr><td>footer</td><td><code>category</code> ("jam")</td></tr>
+</table>
+<p>Renders a <code>&lt;custom-card clickable img-square&gt;</code> WebC component (album art is square); styles via <code>css/custom-card.css</code>.</p>
+
+<h2>7. Archive page config</h2>
+<p><code>src/pages/jams.njk</code> drives the listing through the shared <code>archive-listing.njk</code> partial:</p>
+<pre><code>pagination: { data: collections.jam, size: 3 }
+permalink:  jams/[page-N/]index.html
+cardPartial = "card-jam.njk"
+masonryLayout = "50-50"
+collectionToPaginate = collections.jam
+paginationMetaKey = "blog"</code></pre>
+
+<h2>8. Feed</h2>
+<p>A pair of templates set the <em>same</em> feed variables, then each includes its own format-specific body partial — Atom (<code>jams.xml.njk</code> → <code>feeds/atom-body.njk</code>) and JSON Feed (<code>jams.json.njk</code> → <code>feeds/json-body.njk</code>):</p>
+<pre><code># jams.xml.njk
+permalink: /jams/feed.xml
+feedCollection = collections.jam
+feedTitle = "Jams"
+feedDescription = "Music I'm listening to."
+feedSelfUrl = "/jams/feed.xml"
+→ includes feeds/atom-body.njk
+
+# jams.json.njk — same vars, with:
+permalink: /jams/feed.json
+feedSelfUrl = "/jams/feed.json"
+→ includes feeds/json-body.njk</code></pre>
+<p class="note">The <code>permalink:</code> frontmatter (not the filename) controls the output path.</p>
+
+<h2>9. Navigation</h2>
+<p>Listed in the <strong>Posts</strong> submenu in <code>src/_data/navigation.js</code>:</p>
+<pre><code>{ text: 'Jams', url: '/jams/' }</code></pre>
+
+<h2>10. JSON-LD / Schema.org</h2>
+<table>
+<tr><th>Stage</th><th>Value</th></tr>
+<tr><td>Current</td><td><code>schema: BlogPosting</code> (set in <code>jam.njk</code> front matter) → <code>src/_includes/schemas/BlogPosting.njk</code></td></tr>
+<tr><td>Planned (Phase 4)</td><td><code>ListenAction</code> template — BlogPosting envelope embedding a <code>ListenAction</code> (<code>Action › ConsumeAction › ListenAction</code>) whose <code>object</code> is a <code>MusicRecording</code> (track) or <code>MusicAlbum</code> (album)</td></tr>
+</table>
+
+<h2>11. Where it lives — file tree (Eleventy Excellent)</h2>
+<pre><code>src/
+├── _config/
+│   └── collections.js          # export const jam = byCategory('jam')
+├── _data/
+│   └── navigation.js           # Posts submenu → { text: 'Jams', url: '/jams/' }
+├── _includes/
+│   └── partials/
+│       └── card-jam.njk        # bespoke album-art-led card (Jam-specific)
+├── _layouts/
+│   └── jam.njk                 # per-post layout (singular)
+├── feeds/
+│   ├── jams.xml.njk            # → /jams/feed.xml  (Atom)
+│   └── jams.json.njk           # → /jams/feed.json (JSON Feed)
+├── pages/
+│   └── jams.njk                # archive page → /jams/  (plural)
+└── posts/
+    └── jams/                   # content folder (plural)
+        ├── jams.json           # folder data: layout=jam, category=jam, permalink
+        ├── EP1, by The Supervoid Choral Ensemble.md
+        └── Of Violence, by Town Portal.md
+
+eleventy.config.js              # addLayoutAlias('jam','jam.njk') + addCollection('jam', jam)</code></pre>
+
+<p>Built output:</p>
+<pre><code>dist/
+└── jams/
+    ├── index.html              # archive, page 1
+    ├── page-2/index.html       # pagination
+    ├── feed.xml
+    ├── feed.json
+    └── &lt;slug&gt;/index.html        # one per Jam post</code></pre>
+
+<h3>Shared dependencies (not jam-specific)</h3>
+<p>The jam type also pulls in these shared files referenced elsewhere in this spec; the section documenting each is noted.</p>
+<pre><code>src/
+├── _layouts/
+│   └── base.njk                 # parent layout (jam.njk sets `layout: base`)
+└── _includes/
+    ├── partials/
+    │   ├── entry-header.njk      # title + date; emits dt-published via date.njk (§5)
+    │   ├── date.njk              # &lt;time class="dt-published"&gt; (§5)
+    │   ├── backlinks.njk         # included by jam.njk layout
+    │   ├── entry-footer.njk      # included by jam.njk layout
+    │   └── archive-listing.njk   # drives the /jams/ listing (§7), includes card-jam.njk
+    ├── feeds/
+    │   ├── atom-body.njk         # Atom feed body (§8)
+    │   └── json-body.njk         # JSON Feed body (§8)
+    └── css/
+        ├── post.css              # bundled by jam.njk layout
+        ├── footnotes.css         # bundled by jam.njk layout
+        └── custom-card.css       # bundled by card-jam.njk (§6)</code></pre>
+
+<h2>12. Cover image &amp; page bundles</h2>
+<p>The album art is handled by the project-wide <a href="cover-image-pattern.html">build-time cover pattern</a>: the <code>cover:</code> field holds a local path or a remote URL, the layout and card render it as a plain <code>&lt;img eleventy:optional="placeholder" src="{{ cover | safe }}"&gt;</code>, and the Eleventy Image HTML Transform optimizes (local) or fetches + optimizes (remote) and self-hosts it at build. Jams stay <strong>flat</strong> <code>.md</code> files with the cover under <code>/assets/images/listening/</code> (or a remote URL) — no page bundle is needed for the cover.</p>
+<p class="note"><strong>The page-bundle / co-located-cover plan was dropped (23 May 2026).</strong> An earlier Clipper-era plan made each Jam a page bundle holding <code>cover: ./cover.&lt;ext&gt;</code> plus a <code>coverSource:</code> origin field, with a <code>colocate-covers.js</code> / <code>normalize-posts.js</code> script to download remote art into the bundle. That apparatus was <strong>never built</strong>: the build-time transform already self-hosts the remote cover, so the download-and-commit step was redundant. The <code>coverSource:</code> field and the colocate script do not exist.</p>
+<table>
+<tr><th>Aspect</th><th>Was planned (Clipper-era — dropped)</th><th>Locked (shipped)</th></tr>
+<tr><td>Post file</td><td>page bundle <code>src/posts/jams/&lt;slug&gt;/&lt;slug&gt;.md</code></td><td>flat <code>src/posts/jams/&lt;slug&gt;.md</code></td></tr>
+<tr><td>Cover storage</td><td>co-located <code>cover.&lt;ext&gt;</code> downloaded into the bundle</td><td>remote URL, or <code>/assets/images/listening/&lt;file&gt;</code>; self-hosted at build</td></tr>
+<tr><td>Frontmatter</td><td><code>cover: ./cover.&lt;ext&gt;</code> + <code>coverSource:</code></td><td>single <code>cover:</code> (URL or path)</td></tr>
+<tr><td>How it lands</td><td>a colocate / normalize script downloads + commits the file</td><td>the HTML Transform fetches/optimizes at build; nothing committed (<code>dist/</code> is gitignored)</td></tr>
+</table>
+<p class="note">Page bundles themselves remain available (Eleventy Excellent's <code>&lt;folder&gt;/&lt;folder-name&gt;.md</code> convention) for any genuine co-located <em>body</em> assets a Jam might gain — they're just no longer the mechanism for the cover.</p>
+
+<h2>13. Collection registration (wiring)</h2>
+<pre><code>// src/_config/collections.js
+const byCategory = cat =&gt; collection =&gt;
+  collection.getFilteredByGlob('./src/posts/**/*.md')
+    .filter(item =&gt; item.data.category === cat)
+    .reverse();
+export const jam = byCategory('jam');
+
+// eleventy.config.js
+import { ... jam ... } from './src/_config/collections.js';
+eleventyConfig.addLayoutAlias('jam', 'jam.njk');
+eleventyConfig.addCollection('jam', jam);</code></pre>
+<p class="note">Category names never enter <code>tags</code>, so "jam" does not pollute <code>/tags/</code>.</p>
+
+<h2>14. Authoring — Web Clipper + plugin setup</h2>
+<p>The intended authoring path for a Jam is "right-click a Bandcamp album page → save to the vault." The <strong>Obsidian Web Clipper</strong> (browser extension) reads the page's <code>MusicAlbum</code> JSON-LD through a per-source template and writes a shape-correct <code>.md</code> <strong>flat</strong> into <code>src/posts/jams/</code> (like the shipped Letterboxd clipper — Watching §13). The <code>cover</code> property holds the remote album-art URL, which the build-time HTML Transform self-hosts; nothing is downloaded into the vault (§12). No per-post manual frontmatter typing.</p>
+<p class="note"><strong>Planned.</strong> The Bandcamp template (<code>_resources/bandcamp-clipper.json</code>) is <em>not authored yet</em>. Below is the structure-first scaffold: every relevant Jam field is present and mapped to a Clipper source, but the selectors have <em>not</em> been verified against live Bandcamp markup (that verification is a follow-up). It is modeled on the one working precedent, <code>_resources/letterboxd-clipper.json</code> (Watching).</p>
+
+<h3>Bandcamp Clipper template — scaffold</h3>
+<pre><code>{
+  "schemaVersion": "0.1.0",
+  "name": "Bandcamp",
+  "behavior": "create",
+  "noteContentFormat": "",
+  "properties": [
+    { "name": "title",       "value": "{{schema:@MusicAlbum:name}}",                        "type": "text" },
+    { "name": "draft",       "value": "true",                                               "type": "checkbox" },
+    { "name": "album",       "value": "{{schema:@MusicAlbum:name}}",                        "type": "text" },
+    { "name": "artist",      "value": "{{schema:@MusicAlbum:byArtist.name|wikilink}}",      "type": "text" },
+    { "name": "listen-of",   "value": "{{url}}",                                            "type": "text" },
+    { "name": "year",        "value": "{{schema:@MusicAlbum:datePublished|date:\"YYYY\"}}", "type": "number" },
+    { "name": "date",        "value": "{{date}}",                                           "type": "text" },
+    { "name": "description", "value": "{{schema:@MusicAlbum:description}}",                  "type": "text" },
+    { "name": "tags",        "value": "music",                                              "type": "multitext" },
+    { "name": "cover",       "value": "{{schema:@MusicAlbum:image}}",                       "type": "text" },
+    { "name": "genre",       "value": "{{schema:@MusicAlbum:genre|wikilink}}",              "type": "multitext" },
+    { "name": "syndication", "value": "",                                                   "type": "multitext" }
+  ],
+  "triggers": ["https?://[^/]+\\.bandcamp\\.com/album/"],
+  "noteNameFormat": "{{schema:@MusicAlbum:name|safe_name}}, by {{schema:@MusicAlbum:byArtist.name|safe_name}}",
+  "path": "posts/jams/"
+}</code></pre>
+
+<h3>Field → source mapping</h3>
+<p>The template emits the <strong>canonical forward shape</strong> (per §4's "Canonical vs. live drift" note and decision D2): <code>listen-of</code>, <code>year</code>, and <code>cover</code> rather than the live samples' <code>source</code>, <code>released</code>, and <code>image</code>. Existing samples are <em>not</em> migrated — the Clipper layer emits the canonical names going forward, and the normalize step reconciles the rest (§12).</p>
+<table>
+<tr><th>Field (canonical)</th><th>Clipper source</th><th>Live §4 field</th><th>Notes</th></tr>
+<tr><td><code>title</code></td><td><code>{{schema:@MusicAlbum:name}}</code></td><td><code>title</code></td><td>Album name.</td></tr>
+<tr><td><code>draft</code></td><td><code>"true"</code> (static)</td><td><code>draft</code></td><td>Clips land as drafts; publish after review.</td></tr>
+<tr><td><code>album</code></td><td><code>{{schema:@MusicAlbum:name}}</code></td><td><code>album</code></td><td>Same value as <code>title</code> for an album clip.</td></tr>
+<tr><td><code>artist</code></td><td><code>{{schema:@MusicAlbum:byArtist.name|wikilink}}</code></td><td><code>artist</code></td><td>Wikilinked for the Obsidian graph; renders as plain text.</td></tr>
+<tr><td><code>listen-of</code></td><td><code>{{url}}</code></td><td><code>source</code></td><td>Canonical µf2 name (the clipped Bandcamp URL → <code>u-listen-of</code>, §5).</td></tr>
+<tr><td><code>year</code></td><td><code>{{schema:@MusicAlbum:datePublished|date:"YYYY"}}</code></td><td><code>released</code></td><td>Release date collapses to the year.</td></tr>
+<tr><td><code>date</code></td><td><code>{{date}}</code></td><td><code>date</code></td><td>Clip timestamp (post date).</td></tr>
+<tr><td><code>description</code></td><td><code>{{schema:@MusicAlbum:description}}</code></td><td><code>description</code></td><td>Selector unverified; live samples carry an authored one-line summary, so this may instead be hand-written.</td></tr>
+<tr><td><code>tags</code></td><td><code>"music"</code> (static)</td><td><code>tags</code></td><td>Static default; merges with the folder data's <code>posts</code> tag (§13). Author can add more.</td></tr>
+<tr><td><code>cover</code></td><td><code>{{schema:@MusicAlbum:image}}</code></td><td><code>cover</code></td><td>Holds the <em>remote</em> album-art URL at clip time and keeps it — the build-time HTML Transform self-hosts it (§12). No rewrite, no <code>coverSource:</code>. Canonical and live names now match (both <code>cover</code>, since <code>image</code> → <code>cover</code> in <code>d9dd086</code>).</td></tr>
+<tr><td><code>genre</code></td><td><code>{{schema:@MusicAlbum:genre|wikilink}}</code></td><td>—</td><td>New (not in current samples); wikilinked.</td></tr>
+<tr><td><code>syndication</code></td><td><code>""</code> (empty)</td><td><code>odeslico</code></td><td>Left empty for the author to paste an album.link / Apple Music URL — replaces the ad-hoc <code>odeslico</code> field (§17).</td></tr>
+</table>
+<p class="note"><strong>Not emitted by the template.</strong> <code>category</code>, <code>layout</code>, and <code>permalink</code> come from the folder data file <code>src/posts/jams/jams.json</code> (§1, §13), not per-post, so the template omits them. The <code>path</code> is the flat <code>posts/jams/</code> (no bundle), and <code>noteNameFormat</code> sets the filename to <code>&lt;Album&gt;, by &lt;Artist&gt;</code>; <code>safe_name</code> strips filesystem-illegal characters, and Eleventy slugifies the filename for the URL at build (§3).</p>
+
+<h3>Obsidian plugin setup</h3>
+<p>One vault-side community plugin completes the authoring flow:</p>
+<table>
+<tr><th>Plugin</th><th>Role</th><th>Required settings</th></tr>
+<tr><td><code>obsidian-local-images-plus</code> (installed)</td><td>Downloads <strong>body</strong> images — markdown <code>![](URL)</code>, <code>&lt;img src&gt;</code>, base64 — into a folder named after the note. Automatic, MD5-named, idempotent. Does <strong>not</strong> touch YAML frontmatter.</td><td>Automatic mode <strong>on</strong>; placement <strong>"next to note in a folder named after the note."</strong></td></tr>
+</table>
+<p class="note"><strong>Division of labor.</strong> The Clipper writes the flat <code>.md</code> (frontmatter plus an empty body). It does <strong>not</strong> download images — and it no longer needs to: the <code>cover</code> stays a <strong>remote URL</strong> and the build-time HTML Transform self-hosts it at build (§12). The dropped normalize / colocate step is therefore unnecessary — there is no per-clip cover download and no backfill. Demoting the cover into the body to let a plugin grab it was rejected — covers are data for cards / OG / JSON-LD, not body content. <code>obsidian-local-images-plus</code> still handles a genuine <em>body</em> image (e.g. an inline album-art <code>&lt;img&gt;</code> inside a clip), but is a no-op for the typical Jam clip.</p>
+
+<h2>15. Micropub (forward-compat — endpoint deferred)</h2>
+<p>JEDEE has no Micropub endpoint today, and building one is its own milestone — sequenced <strong>after Phase 4</strong> (see <code>ROADMAP.md</code> and <code>_generated/Plan - Phase 3 (10 new post types) - final.md</code>). This section is <strong>forward-compat documentation only</strong>: it records why the Jam type is already shaped so a future endpoint drops in without a retrofit. No code; nothing to build here.</p>
+<p>A Micropub <code>create</code> request for a Jam is a <em>listen</em> post. Three properties of the existing design — none added for Micropub — make the endpoint a thin write path rather than a new data model:</p>
+<table>
+<tr><th>Forward-compat move</th><th>How Jam already satisfies it</th><th>See</th></tr>
+<tr><td>Micropub-aware property</td><td>A <code>create</code> request carries <code>listen-of</code> (the listened-to URL) — the same canonical property the Clipper emits, rendered as <code>u-listen-of</code>. The endpoint writes the same fields the Clipper does, so the layout never branches by source.</td><td>§5, §14</td></tr>
+<tr><td>No cover-download contract needed</td><td>Because covers are self-hosted at build (§12), neither the Clipper nor a future Micropub endpoint downloads images — both just write a <code>cover:</code> URL. The earlier shared <code>colocate-cover.js</code> library was dropped (23 May 2026); there is no per-path image-download code to share.</td><td>§12</td></tr>
+<tr><td>Flat write path (bundle only for body media)</td><td>A future endpoint writes a Jam as a flat <code>posts/jams/&lt;slug&gt;.md</code> with a <code>cover:</code> URL — the same shape the Clipper produces. Only a clip carrying genuine co-located body media would use a page bundle (saving uploads alongside as <code>photo-N.&lt;ext&gt;</code>); the cover never drives bundling.</td><td>§12</td></tr>
+</table>
+<p class="note"><strong>One shape, two producers.</strong> The frontmatter the Clipper writes and the payload a future Micropub client would send are <em>the same shape</em>, so adding the endpoint introduces no new field mapping. With covers self-hosted at build and Jams written flat (§12), there is no bundle-creation or normalize step to reconcile — the old §17 divergence over "who creates the bundle" is moot.</p>
+<p class="note"><strong>Status: planned, no code</strong> — like page bundles (§12) and the Web Clipper template (§14). The endpoint is a separate milestone after Phase 4; this section exists so the forward-compat story is discoverable from the spec.</p>
+
+<h2>16. Webmentions</h2>
+<p>Webmention is the IndieWeb's federated response protocol: likes, replies, and reposts from other sites arrive as cross-site comments. Nothing here is Jam-specific — the plumbing is shared by every post type and Jam inherits it through the <code>base</code> layout and <code>entry-footer.njk</code>. <strong>Discovery is shipped; receiving and sending are deferred</strong> to the webmention milestone.</p>
+<table>
+<tr><th>Piece</th><th>State</th><th>Where</th></tr>
+<tr><td>Endpoint discovery</td><td><strong>shipped</strong> (Phase 1)</td><td><code>&lt;link rel="webmention" href="https://webmention.io/johanedlund.se/webmention"&gt;</code> in <code>&lt;head&gt;</code> via <code>src/_includes/head/meta-info.njk</code> (jam uses <code>layout: base</code>).</td></tr>
+<tr><td>Authorship h-card</td><td><strong>shipped</strong></td><td>The hidden <code>h-entry</code> block in <code>jam.njk</code> carries <code>u-url</code>, <code>p-name u-url rel="author"</code>, and a <code>u-author h-card</code> avatar so a receiver can attribute the post (§5).</td></tr>
+<tr><td>Render slot</td><td><strong>wired, no-op</strong></td><td><code>jam.njk</code> → <code>entry-footer.njk</code> → <code>partials/webmentions.njk</code>, currently an empty stub — safe to call while the renderer is empty.</td></tr>
+<tr><td>Receiving / rendering</td><td><strong>deferred</strong></td><td>The webmention milestone wires a <code>webmention.io</code> fetch (via <code>@11ty/eleventy-fetch</code>, ~24 h cache); <code>webmentions.njk</code> then groups received mentions by type (likes / replies / reposts / mentions).</td></tr>
+<tr><td>Sending</td><td><strong>deferred</strong></td><td>Outgoing webmentions aren't wired, so a Jam that responds to another post doesn't notify it yet.</td></tr>
+</table>
+<p class="note"><strong>h-entry nesting (§5).</strong> The only <code>h-entry</code> in the layout is the hidden authorship block; the visible <code>u-listen-of</code> + <code>.e-content</code> sit outside it, so a strict parser won't tie the listen target to the entry. Harmless while sending is off; fix it when the sending side of the milestone lands — see §5 and §17.</p>
+
+<h2>17. Status &amp; open items</h2>
+<ul>
+<li><strong>Shipped</strong> in Phase 2 — layout, archive, feed, nav, and 2 sample posts all live.</li>
+<li><strong>Field drift</strong> (canonical vs importer names) — normalization deferred to the Clipper layer, not a migration. The canonical forward shape is what the planned Bandcamp Clipper template emits (see §14).</li>
+<li><strong><code>odeslico</code></strong> — authored but unrendered. The Clipper layer plans to retire it in favor of <code>syndication[]</code> (see §14); existing samples keep <code>odeslico</code> until normalized. <em>(open)</em></li>
+<li><strong>Webmentions</strong> — discovery + the no-op render slot are shipped; receiving/rendering, sending, and the h-entry nesting fix (§5) are deferred to the webmention milestone. See §16.</li>
+<li><strong>Schema upgrade</strong> BlogPosting → ListenAction — Phase 4.</li>
+<li><strong>Page bundles / co-located covers — dropped (23 May 2026).</strong> Covers are self-hosted at build via the plain-<code>&lt;img&gt;</code> transform (<a href="cover-image-pattern.html">cover convention</a>); Jams stay flat. Page bundles remain available for genuine body assets only. See §12.</li>
+<li><strong>Dedicated card — DONE</strong> (commit <code>d9dd086</code>). <code>card-jam.njk</code> is the album-art-led card (§6), modeled on <code>card-watching.njk</code>. Reading and Watching also have bespoke cards now; <code>card-blog.njk</code> stays the Article/Note-style shared card.</li>
+<li><strong>Authoring (Web Clipper)</strong> — the Bandcamp Clipper template and <code>local-images-plus</code> setup are documented in §14; the template JSON itself (<code>_resources/bandcamp-clipper.json</code>) is planned, not yet authored. <em>(open)</em></li>
+<li><strong>Micropub endpoint</strong> — forward-compat only; the Jam shape is already endpoint-ready (§15). The endpoint itself is a separate milestone after Phase 4, not yet built. <em>(open)</em></li>
+<li><strong>Bundle creation — RESOLVED: flat, no bundle.</strong> Dropping cover co-location (§12) settles the old §12-vs-§14 divergence: the Clipper writes a flat <code>.md</code> (matching the Letterboxd precedent), there is no <code>normalize-posts</code> promotion step, and the cover is self-hosted at build. Bundles are opt-in for genuine body assets only.</li>
+</ul>
+
+</main>
+
+<footer>JEDEE · __project_docs · git-tracked working docs</footer>
+
+<!-- Annotation UI (ported from tolstoy.life serve.py) -->
+<div id="ann-popover">
+  <div class="ann-quote" id="ann-quote"></div>
+  <textarea id="ann-text" placeholder="Your comment…" autocomplete="off"></textarea>
+  <div class="ann-actions">
+    <button id="ann-cancel">Cancel</button>
+    <button class="primary" id="ann-save">Save</button>
+  </div>
+</div>
+<div id="ann-tooltip"></div>
+<div id="ann-bar">
+  <button id="ann-export">Copy annotations</button>
+  <button class="danger" id="ann-clear">Clear all</button>
+</div>
+
+<script src="spec.js"></script>
+</body>
+</html>

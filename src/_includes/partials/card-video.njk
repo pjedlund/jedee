@@ -1,0 +1,48 @@
+{# Archive card for the Video type (video spec §7). Media-led: the poster fills
+   <custom-card>'s image slot via the {% image %} shortcode (default 16/9 suits
+   video thumbnails). data-video adds a CSS play-icon overlay over the poster
+   (a grid pseudo-element — no extra hoisted child, so it sidesteps the
+   webc:nokeep grid trap). Degrades to a text-led card when no poster is set
+   (e.g. a YouTube embed left to auto-derive its thumbnail). A duration badge
+   sits in the content slot. The card links through; no per-card player. #}
+
+{% set headingLevel = headingLevel | default("h2") %}
+{% set definedDate = definedDate | default(item.date) %}
+{% set showTags = showTags | default(true) %}
+
+<custom-card clickable data-video>
+  {% if item.data.video.poster %}
+    <div slot="image" webc:nokeep>{% image item.data.video.poster, item.data.title, null, "lazy" %}
+    </div>
+  {% endif %}
+  {% if item.data.title %}
+    <{{ headingLevel }} slot="headline" class="text-step-1">
+      <a href="{{ item.url | url }}">{{ item.data.title }}</a>
+    </{{ headingLevel }}>
+  {% endif %}
+  <span slot="date">{%- if item.data.draft -%}<span class="button" data-small-button data-button-variant='tertiary'>draft</span>{%- endif %} {% include "partials/date.njk" %}</span>
+  {% if showTags and item.data.tags.length > 1 %}
+    <div slot="tag" webc:nokeep>
+      {% for tag in item.data.tags %}
+        {% if tag != "posts" %}
+          <span class="button" data-small-button>{{ tag }}</span>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+  <div slot="content" webc:nokeep>
+    {{ item.data.description | markdownFormat | safe }}
+    {% if item.data.video.duration %}
+      <p class="media-badge cluster" role="list">
+        <span data-badge role="listitem">{{ item.data.video.duration | itunesDuration }}</span>
+      </p>
+    {% endif %}
+  </div>
+  <footer slot="footer" class="repel">
+    {{ item.data.category }}
+  </footer>
+</custom-card>
+
+{% css "local" %}
+  {% include "css/custom-card.css" %}
+{% endcss %}

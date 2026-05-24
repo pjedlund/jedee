@@ -1,0 +1,39 @@
+{#- Real schema.org/Event JSON-LD (spec §10). Event is the strongest
+    rich-results candidate (startDate/endDate/location/eventStatus), so it
+    commits to a real schema now — breaking the BlogPosting v1 pattern
+    Photo/Audio/Video keep. Ships WITH `schema: Event` in event.njk, because
+    head/schema.njk includes "schemas/" + schema + ".njk" and THROWS on a
+    missing template. String values go through `| dump` so quotes/apostrophes
+    in event text can't break the JSON — more robust than BlogPosting.njk's bare
+    interpolation. Location is v1-simple: a url with no location → VirtualLocation;
+    otherwise Place { name } (spec §10, finer Place/hybrid modeling deferred). -#}
+{%- set eventStatusMap = {
+  "scheduled": "EventScheduled",
+  "cancelled": "EventCancelled",
+  "postponed": "EventPostponed",
+  "moved-online": "EventMovedOnline"
+} -%}
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    "name": {{ title | dump | safe }},
+    {% if description %}"description": {{ description | dump | safe }},{% endif %}
+    "startDate": {{ event.start | toIsoString | dump | safe }},
+    {% if event.end %}"endDate": {{ event.end | toIsoString | dump | safe }},{% endif %}
+    "eventStatus": {{ ("https://schema.org/" + eventStatusMap[event.status or "scheduled"]) | dump | safe }},
+    {% if event.status == "moved-online" %}"eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",{% endif %}
+    {% if event.url and not event.location %}
+    "location": { "@type": "VirtualLocation", "url": {{ event.url | dump | safe }} },
+    {% else %}
+    "location": { "@type": "Place", "name": {{ event.location | dump | safe }} },
+    {% endif %}
+    "organizer": {
+      "@type": "Person",
+      "name": {{ meta.author.name | dump | safe }},
+      "url": {{ meta.url | dump | safe }}
+    },
+    {% if event.url %}"url": {{ event.url | dump | safe }},{% endif %}
+    "datePublished": {{ date | toIsoString | dump | safe }}
+  }
+</script>

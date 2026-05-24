@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Note — post-type spec — JEDEE</title>
+<link rel="stylesheet" href="spec.css">
+</head>
+<body data-doc-key="note-spec">
+
+<div class="site-header">
+  <a class="home" href="index.html">JEDEE / Project documentation</a>
+  <span class="breadcrumb">post-type specs › Note</span>
+</div>
+
+<header class="doc-header" id="top">
+  <p class="eyebrow">post-type spec</p>
+  <h1>Note</h1>
+  <p class="meta">Shipped · Phase 2 · singular <code>note</code> / plural <code>notes</code> · extracted from live code 22 May 2026</p>
+</header>
+
+<nav id="toc" class="toc" aria-label="Sections"></nav>
+
+<main>
+
+<p>A <em>Note</em> is a short, title-optional post — a thought, observation, or brief reaction, often linking out to something worth reading. The IndieWeb's canonical short-form post type: no headline required, no article-length commitment.</p>
+
+<h2>1. Singular / plural identity</h2>
+<p>Note is <strong>asymmetric</strong>: the <em>type</em> is singular, the <em>URL namespace</em> is plural. The Eleventy collection is named with the <strong>singular</strong> (<code>collections.note</code>), but the folder, URL, archive, and feed all use the <strong>plural</strong>.</p>
+
+<table>
+<tr><th>Aspect</th><th>Form</th><th>Value</th><th>Defined in</th></tr>
+<tr><td>Type / category value</td><td>singular</td><td><code>category: "note"</code></td><td><code>src/posts/notes/notes.json</code></td></tr>
+<tr><td>Layout name + alias</td><td>singular</td><td><code>note</code> → <code>note.njk</code></td><td><code>eleventy.config.js</code></td></tr>
+<tr><td>Collection</td><td>singular</td><td><code>collections.note</code></td><td><code>src/_config/collections.js</code></td></tr>
+<tr><td>Content folder</td><td>plural</td><td><code>src/posts/notes/</code></td><td>—</td></tr>
+<tr><td>Folder data file</td><td>plural</td><td><code>notes.json</code></td><td><code>src/posts/notes/</code></td></tr>
+<tr><td>Per-post URL</td><td>plural</td><td><code>/notes/&lt;slug&gt;/</code></td><td><code>notes.json</code> permalink</td></tr>
+<tr><td>Archive URL + page</td><td>plural</td><td><code>/notes/</code></td><td><code>src/pages/notes.njk</code></td></tr>
+<tr><td>Feed</td><td>plural</td><td><code>/notes/feed.xml</code>, <code>/notes/feed.json</code></td><td><code>src/feeds/notes.{xml,json}.njk</code></td></tr>
+<tr><td>Nav label</td><td>plural</td><td>"Notes" → <code>/notes/</code></td><td><code>src/_data/navigation.js</code></td></tr>
+</table>
+<p class="note">Note the mismatch: the folder is <code>notes/</code> but its data file sets <code>category: "note"</code>, and the collection registered from that category is <code>note</code> (singular). Don't "fix" this — the layout alias, collection, and category are all singular by design.</p>
+
+<h2>2. Naming &amp; aliases</h2>
+<p>JEDEE's short-form type is named <strong>Note</strong> (singular) / <strong>Notes</strong> (plural), following IndieWeb convention for a title-optional, freeform short post. The name is generic by intent: a Note can be an observation, a link reaction, a brief aside — anything that doesn't warrant an Article.</p>
+<table>
+<tr><th>Term</th><th>Status</th><th>Where it appears / why</th></tr>
+<tr><td><code>note</code> / <code>notes</code></td><td>chosen name</td><td>Type, layout, collection, URL, archive, feed, nav (see §1).</td></tr>
+<tr><td><code>p-name</code> (absent)</td><td>IndieWeb implication</td><td>A Note omits a visible <code>p-name</code>; the <code>h-entry</code> root has no headline property. This is correct IndieWeb behavior for a title-optional short note.</td></tr>
+</table>
+
+<h2>3. URLs &amp; permalinks</h2>
+<table>
+<tr><th>Page</th><th>URL</th><th>Source</th></tr>
+<tr><td>Per-post</td><td><code>/notes/&lt;slug&gt;/</code></td><td><code>"/notes/{{ page.fileSlug | slugify }}/index.html"</code></td></tr>
+<tr><td>Archive (page 1)</td><td><code>/notes/</code></td><td><code>notes.njk</code> pagination, size 10</td></tr>
+<tr><td>Archive (page N)</td><td><code>/notes/page-N/</code></td><td>same</td></tr>
+<tr><td>Atom feed</td><td><code>/notes/feed.xml</code></td><td><code>notes.xml.njk</code></td></tr>
+<tr><td>JSON feed</td><td><code>/notes/feed.json</code></td><td><code>notes.json.njk</code></td></tr>
+</table>
+<p>Slug derives from the filename via <code>| slugify</code>. Filename <code>Affinity Studio.md</code> → <code>/notes/affinity-studio/</code>.</p>
+
+<h2>4. Frontmatter</h2>
+<p>The shape below is the <strong>live sample</strong> (<code>src/posts/notes/Affinity Studio.md</code>) — the authoritative authoring surface today. A second sample (<code>test.md</code>) adds an <code>updated</code> field, documented in the table.</p>
+<pre><code>---
+title: Affinity Studio                                          # optional
+description: Completely free version with both vector, bitmap and photo editing.
+date: 2025-03-04
+tags:
+  - design
+draft: false
+---</code></pre>
+
+<table>
+<tr><th>Field</th><th>Req?</th><th>Role</th></tr>
+<tr><td><code>title</code></td><td>optional</td><td>Headline; falls back to slug. Title-optional type — a Note without a title is valid IndieWeb practice.</td></tr>
+<tr><td><code>date</code></td><td>required</td><td>Post timestamp (sort + <code>dt-published</code>).</td></tr>
+<tr><td><code>description</code></td><td>recommended</td><td>Card excerpt (<code>card-notes.njk</code> renders it via <code>markdownFormat</code>) and feed summary.</td></tr>
+<tr><td><code>tags</code></td><td>optional</td><td>Topic tags (e.g. <code>design</code>). <strong>Not</strong> the category.</td></tr>
+<tr><td><code>draft</code></td><td>optional</td><td>When <code>true</code>, the card shows a "draft" badge; post is still built.</td></tr>
+<tr><td><code>updated</code></td><td>optional</td><td>Last-modified timestamp; rendered by <code>entry-header.njk</code> as "Updated: &lt;date&gt;".</td></tr>
+</table>
+<p class="note"><code>category</code>, <code>layout</code>, and <code>permalink</code> are not authored per-post — they come from the folder data file <code>src/posts/notes/notes.json</code> (see §1 and §12). The folder data file also sets <code>tags: "posts"</code> (the system tag) so notes appear in the global posts collection; this is separate from per-post topic tags.</p>
+
+<h2>5. Microformats (µf2)</h2>
+<p>Emitted by <code>src/_layouts/note.njk</code>. A Note is a short-form <code>h-entry</code> with body content only — no syndication-target property like <code>u-listen-of</code> or <code>u-like-of</code>:</p>
+<pre><code>&lt;div class="e-content"&gt;
+  {{ content | safe }}
+&lt;/div&gt;</code></pre>
+<table>
+<tr><th>Property</th><th>Class</th><th>From</th></tr>
+<tr><td>Body</td><td><code>e-content</code></td><td>post content</td></tr>
+<tr><td>Published</td><td><code>dt-published</code></td><td><code>date</code> (via entry-header → date.njk)</td></tr>
+<tr><td>Authorship</td><td><code>h-entry</code> / <code>h-card</code> / <code>u-author</code></td><td>hidden block, <code>meta.author</code></td></tr>
+</table>
+<p class="note"><strong>h-entry nesting caveat:</strong> the only visible <code>h-entry</code> in the layout is the hidden authorship block; the <code>.e-content</code> sits outside it, so a strict parser won't tie the body to the entry. Accepted for v1 (webmention sending isn't wired up). Slated for the webmention milestone.</p>
+<p class="note"><strong>No <code>p-name</code>:</strong> <code>entry-header.njk</code> only renders an <code>&lt;h1&gt;</code> when <code>title</code> is set. A Note without a title correctly emits no <code>p-name</code>, which is valid IndieWeb behavior for a short note post.</p>
+
+<h2>6. Card — bespoke <code>card-notes.njk</code></h2>
+<p>Note has a <strong>dedicated card partial</strong> (<code>src/_includes/partials/card-notes.njk</code>). It is one of only two post types with a bespoke card (the other is Reading). The card renders a <code>&lt;custom-card clickable&gt;</code> WebC component — no <code>img-square</code>, no image slot — styled via <code>css/custom-card.css</code>.</p>
+<table>
+<tr><th>Slot</th><th>Content</th></tr>
+<tr><td>headline</td><td><code>item.data.title</code>, linked to the post URL; level controlled by <code>headingLevel</code> (defaults to <code>h2</code>)</td></tr>
+<tr><td>date</td><td><code>date</code> via <code>date.njk</code>; prepended with a "draft" badge (<code>data-button-variant="tertiary"</code>) when <code>draft: true</code></td></tr>
+<tr><td>tag</td><td>each tag except <code>"notes"</code> (the filter literal in the card), rendered as <code>&lt;span class="button" data-small-button&gt;</code>; hidden if <code>showTags</code> is false or there is only one tag</td></tr>
+<tr><td>content</td><td><code>item.data.description</code> piped through <code>| markdownFormat | safe</code> — supports inline markdown in the description</td></tr>
+</table>
+<p class="note"><strong>No image slot.</strong> Unlike <code>card-blog.njk</code>, the Notes card carries no image or album-art column. This is intentional: Notes are text-first.</p>
+<p class="note"><strong>Tag filter literal.</strong> The card excludes the tag <code>"notes"</code> (hardcoded in the partial), while the folder data file injects <code>tags: "posts"</code> as the system tag. The two strings are different; a Note with neither tag showing up is a no-op: only <em>topic</em> tags the author adds (e.g. <code>design</code>) are rendered.</p>
+
+<h2>7. Archive page config</h2>
+<p><code>src/pages/notes.njk</code> drives the listing through the shared <code>archive-listing.njk</code> partial:</p>
+<pre><code>pagination: { data: collections.note, size: 10 }
+permalink:  notes/[page-N/]index.html
+cardPartial = "card-notes.njk"
+masonryLayout = "50-50"
+collectionToPaginate = collections.note
+paginationMetaKey = "blog"</code></pre>
+<p class="note">Pagination size is 10 — larger than the default 3 used by Jams and Reading — reflecting that Notes are short and many fit per page comfortably.</p>
+
+<h2>8. Feed</h2>
+<p>A pair of templates set the <em>same</em> feed variables, then each includes its own format-specific body partial — Atom (<code>notes.xml.njk</code> → <code>feeds/atom-body.njk</code>) and JSON Feed (<code>notes.json.njk</code> → <code>feeds/json-body.njk</code>):</p>
+<pre><code># notes.xml.njk
+permalink: /notes/feed.xml
+feedCollection = collections.note
+feedTitle = "Notes"
+feedDescription = "Short thoughts and observations."
+feedSelfUrl = "/notes/feed.xml"
+→ includes feeds/atom-body.njk
+
+# notes.json.njk — same vars, with:
+permalink: /notes/feed.json
+feedSelfUrl = "/notes/feed.json"
+→ includes feeds/json-body.njk</code></pre>
+<p class="note">The <code>permalink:</code> frontmatter (not the filename) controls the output path.</p>
+
+<h2>9. Navigation</h2>
+<p>Listed <strong>first</strong> in the <strong>Posts</strong> submenu in <code>src/_data/navigation.js</code>:</p>
+<pre><code>{ text: 'Notes', url: '/notes/' }</code></pre>
+
+<h2>10. JSON-LD / Schema.org</h2>
+<table>
+<tr><th>Stage</th><th>Value</th></tr>
+<tr><td>Current</td><td><code>schema: BlogPosting</code> (set in <code>note.njk</code> front matter) → <code>src/_includes/schemas/BlogPosting.njk</code></td></tr>
+<tr><td>Planned</td><td>No alternate schema is planned for Note specifically; <code>BlogPosting</code> is a reasonable permanent fit for a short text post.</td></tr>
+</table>
+
+<h2>11. Where it lives — file tree (Eleventy Excellent)</h2>
+<pre><code>src/
+├── _config/
+│   └── collections.js          # export const note = byCategory('note')
+├── _data/
+│   └── navigation.js           # Posts submenu → { text: 'Notes', url: '/notes/' }
+├── _includes/
+│   └── partials/
+│       └── card-notes.njk      # bespoke card (Note-specific)
+├── _layouts/
+│   └── note.njk                # per-post layout (singular)
+├── feeds/
+│   ├── notes.xml.njk           # → /notes/feed.xml  (Atom)
+│   └── notes.json.njk          # → /notes/feed.json (JSON Feed)
+├── pages/
+│   └── notes.njk               # archive page → /notes/  (plural)
+└── posts/
+    └── notes/                  # content folder (plural)
+        ├── notes.json          # folder data: layout=note, category=note, permalink
+        ├── Affinity Studio.md
+        └── test.md
+
+eleventy.config.js              # addLayoutAlias('note','note.njk') + addCollection('note', note)</code></pre>
+
+<p>Built output:</p>
+<pre><code>dist/
+└── notes/
+    ├── index.html              # archive, page 1
+    ├── page-2/index.html       # pagination
+    ├── feed.xml
+    ├── feed.json
+    └── &lt;slug&gt;/index.html        # one per Note post</code></pre>
+
+<h3>Shared dependencies (not note-specific)</h3>
+<p>The note type also pulls in these shared files referenced elsewhere in this spec; the section documenting each is noted.</p>
+<pre><code>src/
+├── _layouts/
+│   └── base.njk                 # parent layout (note.njk sets `layout: base`)
+└── _includes/
+    ├── partials/
+    │   ├── entry-header.njk      # title + date; emits dt-published via date.njk (§5)
+    │   ├── date.njk              # &lt;time class="dt-published"&gt; (§5)
+    │   ├── backlinks.njk         # included by note.njk layout
+    │   ├── entry-footer.njk      # included by note.njk layout (tags, syndication, webmentions)
+    │   └── archive-listing.njk   # drives the /notes/ listing (§7)
+    ├── feeds/
+    │   ├── atom-body.njk         # Atom feed body (§8)
+    │   └── json-body.njk         # JSON Feed body (§8)
+    └── css/
+        ├── post.css              # bundled by note.njk layout
+        ├── footnotes.css         # bundled by note.njk layout
+        └── custom-card.css       # bundled by card-notes.njk (§6)</code></pre>
+
+<h2>12. Collection registration (wiring)</h2>
+<pre><code>// src/_config/collections.js
+const byCategory = cat =&gt; collection =&gt;
+  collection.getFilteredByGlob('./src/posts/**/*.md')
+    .filter(item =&gt; item.data.category === cat)
+    .reverse();
+export const note = byCategory('note');
+
+// eleventy.config.js
+import { ... note ... } from './src/_config/collections.js';
+eleventyConfig.addLayoutAlias('note', 'note.njk');
+eleventyConfig.addCollection('note', note);</code></pre>
+<p class="note">Category names never enter <code>tags</code>, so "note" does not pollute <code>/tags/</code>.</p>
+
+<h2>13. Authoring — Web Clipper &amp; source archiving</h2>
+<p>Notes are typically authored by hand in the vault — short posts that don't require a structured clip. However, a Clipper template does exist, and it serves a <strong>different flow</strong> than direct Note publishing:</p>
+
+<h3><code>_resources/note-to-_sources-clipper.json</code> — source-archiving template</h3>
+<p>This template clips web pages into a <strong>reference-sources holding folder</strong> (<code>posts/notes/_sources/</code>), not directly into the publishable Notes collection. Its name makes this explicit: "note to _sources" — it saves a clipped web page as a research note inside <code>_sources/</code>, which is an Obsidian convention for raw-capture material that may later be drafted into a published Note.</p>
+<pre><code>{
+  "schemaVersion": "0.1.0",
+  "name": "Note to _sources",
+  "behavior": "create",
+  "noteContentFormat": "{{content}}",
+  "properties": [
+    { "name": "title",       "value": "{{title}}",                                    "type": "text" },
+    { "name": "date",        "value": "{{date}}",                                     "type": "text" },
+    { "name": "description", "value": "{{description}}",                              "type": "multitext" },
+    { "name": "source",      "value": "{{url}}",                                      "type": "text" },
+    { "name": "author",      "value": "{{author|split:\", \"|wikilink|join}}",        "type": "multitext" },
+    { "name": "published",   "value": "{{published}}",                                "type": "date" },
+    { "name": "tags",        "value": "clippings",                                    "type": "multitext" }
+  ],
+  "triggers": [],
+  "noteNameFormat": "{{title}}",
+  "path": "posts/notes/_sources/"
+}</code></pre>
+
+<table>
+<tr><th>Property</th><th>Clipper source</th><th>Notes</th></tr>
+<tr><td><code>title</code></td><td><code>{{title}}</code></td><td>Page title.</td></tr>
+<tr><td><code>date</code></td><td><code>{{date}}</code></td><td>Clip timestamp.</td></tr>
+<tr><td><code>description</code></td><td><code>{{description}}</code></td><td>Page meta description.</td></tr>
+<tr><td><code>source</code></td><td><code>{{url}}</code></td><td>Origin URL of the clipped page.</td></tr>
+<tr><td><code>author</code></td><td><code>{{author|split:", "|wikilink|join}}</code></td><td>Author name(s), wikilinked for the Obsidian graph.</td></tr>
+<tr><td><code>published</code></td><td><code>{{published}}</code></td><td>Publish date of the original article.</td></tr>
+<tr><td><code>tags</code></td><td><code>"clippings"</code> (static)</td><td>Marks the note as a raw clip, not a published post.</td></tr>
+</table>
+
+<p class="note"><strong>This is not the Note publishing path.</strong> The template targets <code>posts/notes/_sources/</code>, not <code>posts/notes/</code>. Files written here are <em>not</em> in the published collection — <code>collections.note</code> picks up <code>src/posts/**/*.md</code> with <code>category: "note"</code>, and <code>_sources/</code> files carry no <code>category</code> or <code>layout</code> (they'd inherit the Notes folder data file if they sat at <code>posts/notes/</code>, but they're one level deeper and presumably have no <code>notes.json</code>). The flow is: clip → <code>_sources/</code> → author revises → moves/writes a publishable <code>.md</code> in <code>posts/notes/</code> with the correct frontmatter by hand.</p>
+<p class="note"><strong>No triggers.</strong> The <code>triggers</code> array is empty — this template is invoked manually, not by URL pattern matching. It is a general-purpose web-page archiver.</p>
+<p class="note"><code>_resources/types.json</code> is the Obsidian vault-level property type registry, not a JEDEE template or clipper registry. It defines field types (text, multitext, date, number, checkbox) used across all notes in the vault, and is maintained by Obsidian itself.</p>
+
+<h2>14. Webmentions</h2>
+<p>Webmention is the IndieWeb's federated response protocol: likes, replies, and reposts from other sites arrive as cross-site comments. Nothing here is Note-specific — the plumbing is shared by every post type and Note inherits it through the <code>base</code> layout and <code>entry-footer.njk</code>. <strong>Discovery is shipped; receiving and sending are deferred</strong> to the webmention milestone.</p>
+<table>
+<tr><th>Piece</th><th>State</th><th>Where</th></tr>
+<tr><td>Endpoint discovery</td><td><strong>shipped</strong> (Phase 1)</td><td><code>&lt;link rel="webmention" href="https://webmention.io/johanedlund.se/webmention"&gt;</code> in <code>&lt;head&gt;</code> via <code>src/_includes/head/meta-info.njk</code> (note uses <code>layout: base</code>).</td></tr>
+<tr><td>Authorship h-card</td><td><strong>shipped</strong></td><td>The hidden <code>h-entry</code> block in <code>note.njk</code> carries <code>u-url</code>, <code>p-name u-url rel="author"</code>, and a <code>u-author h-card</code> avatar so a receiver can attribute the post (§5).</td></tr>
+<tr><td>Render slot</td><td><strong>wired, no-op</strong></td><td><code>note.njk</code> → <code>entry-footer.njk</code> → <code>partials/webmentions.njk</code>, currently an empty stub — safe to call while the renderer is empty.</td></tr>
+<tr><td>Receiving / rendering</td><td><strong>deferred</strong></td><td>The webmention milestone wires a <code>webmention.io</code> fetch (via <code>@11ty/eleventy-fetch</code>, ~24 h cache); <code>webmentions.njk</code> then groups received mentions by type (likes / replies / reposts / mentions).</td></tr>
+<tr><td>Sending</td><td><strong>deferred</strong></td><td>Outgoing webmentions aren't wired, so a Note that responds to another post doesn't notify it yet.</td></tr>
+</table>
+<p class="note"><strong>h-entry nesting (§5).</strong> The only <code>h-entry</code> in the layout is the hidden authorship block; the visible <code>.e-content</code> sits outside it, so a strict parser won't tie the body to the entry. Harmless while sending is off; fix it when the sending side of the milestone lands.</p>
+
+<h2>15. Status &amp; open items</h2>
+<ul>
+<li><strong>Shipped</strong> in Phase 2 (the "align the 5 existing types" pass; Note is an original Eleventy Excellent type) — layout, bespoke card, archive, feed, nav, and sample posts all live.</li>
+<li><strong>Source archiving clipper</strong> (<code>_resources/note-to-_sources-clipper.json</code>) ships a general-purpose web-page archiver to <code>posts/notes/_sources/</code>. The authoring path for <em>publishing</em> a Note remains manual (hand-authored frontmatter). No dedicated Note publishing clipper exists. <em>(open)</em></li>
+<li><strong>Webmentions</strong> — discovery + the no-op render slot are shipped; receiving/rendering, sending, and the h-entry nesting fix (§5) are deferred to the webmention milestone. See §14.</li>
+<li><strong>Micropub</strong> — no endpoint today; a future endpoint would write <code>posts/notes/&lt;slug&gt;.md</code> with a <code>category: "note"</code> payload. Sequenced after Phase 4.</li>
+<li><strong>Schema</strong> — <code>BlogPosting</code> is a stable fit for Note; no upgrade planned.</li>
+<li><strong><code>_sources/</code> convention</strong> — files clipped into <code>posts/notes/_sources/</code> sit beneath the <code>notes/</code> folder and would inherit the <code>notes.json</code> data cascade. Confirm that <code>_sources/</code> either has its own data file overriding <code>eleventyExcludeFromCollections: true</code>, or that its files don't accidentally appear in <code>collections.note</code>. <em>(open — verify)</em></li>
+</ul>
+
+</main>
+
+<footer>JEDEE · __project_docs · git-tracked working docs</footer>
+
+<!-- Annotation UI (ported from tolstoy.life serve.py) -->
+<div id="ann-popover">
+  <div class="ann-quote" id="ann-quote"></div>
+  <textarea id="ann-text" placeholder="Your comment…" autocomplete="off"></textarea>
+  <div class="ann-actions">
+    <button id="ann-cancel">Cancel</button>
+    <button class="primary" id="ann-save">Save</button>
+  </div>
+</div>
+<div id="ann-tooltip"></div>
+<div id="ann-bar">
+  <button id="ann-export">Copy annotations</button>
+  <button class="danger" id="ann-clear">Clear all</button>
+</div>
+
+<script src="spec.js"></script>
+</body>
+</html>

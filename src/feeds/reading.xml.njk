@@ -1,0 +1,10 @@
+---
+permalink: /reading/feed.xml
+eleventyExcludeFromCollections: true
+excludeFromSitemap: true
+---
+{%- set feedCollection = collections.reading -%}
+{%- set feedTitle = "Reading" -%}
+{%- set feedDescription = "Books I'm reading." -%}
+{%- set feedSelfUrl = "/reading/feed.xml" -%}
+{%- include "feeds/atom-body.njk" -%}

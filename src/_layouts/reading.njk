@@ -5,37 +5,25 @@ schema: BlogPosting
 
 <div class="region" style="--region-space-top: var(--space-xl-2xl)">
   <div class="wrapper flow prose">
-    <h1>{{ title }}</h1>
+    {% include 'partials/entry-header.njk' %}
 
-    {% if image %}
-      <!-- image -->
-      {% image image, alt or "", credit, "eager", "feature" %}
+    {# Cover renders as a plain <img> (the Image transform self-hosts remote URLs and resolves
+       local paths); never the {% image %} shortcode, which is local-only and errors on a remote URL. #}
+    {% if cover %}
+      <img class="cover" eleventy:optional="placeholder" src="{{ cover | safe }}" alt="Cover for {{ title }}" loading="lazy" eleventy:widths="160,224,448" sizes="auto">
     {% endif %}
 
-    <p class="meta | cluster gutter-xs-s">
-      <!-- draft status -->
-      {%- if draft -%}
-        <span class="button" data-small-button data-button-variant="tertiary">draft</span>
-      {%- endif %}
-      <!-- date -->
-      {% set definedDate = date %} {% include "partials/date.njk" %}
-      {%
-        if tags.length >
-        1
-      %}
-        <!-- tags -->
-        {% for tag in tags %}{% if tag != "reading" %}
-          <a class="button" href="/tags/{{ tag | slugify }}/" data-small-button> {{ tag }} </a>
-        {% endif %}{% endfor %}
-      {% endif %}
-    </p>
+    {% if link %}<data hidden class="u-read-of" value="{{ link }}"></data>{% endif %}
 
-    {{ content | safe }}
+    <div class="e-content">
+      {{ content | safe }}
+    </div>
+
     {% include 'partials/backlinks.njk' %}
-    {% include 'partials/edit-on.njk' %}
+    {% include 'partials/entry-footer.njk' %}
   </div>
 
-  <!--  h-card infos: https://indieweb.org/authorship -->
+  {# h-card authorship for Webmention discovery — https://indieweb.org/authorship #}
   <div hidden class="h-entry">
     <a class="u-url" href="{{ page.url | url | absoluteUrl(meta.url) }}">{{ title }}</a>
     <a class="p-name u-url" rel="author" href="{{ meta.url }}">{{ meta.author.name }}</a>

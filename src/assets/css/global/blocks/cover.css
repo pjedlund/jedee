@@ -1,0 +1,14 @@
+/*
+COVER
+Book / film / album cover image on the reading, watching, and jam detail pages.
+Sized small and shown at a fixed max width; the archive-card covers are sized by
+the card grid instead, so they don't use this block.
+*/
+.cover {
+  --cover-max-inline-size: 14rem;
+  --cover-radius: var(--border-radius-medium);
+
+  max-inline-size: var(--cover-max-inline-size);
+  block-size: auto;
+  border-radius: var(--cover-radius);
+}
