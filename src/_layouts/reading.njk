@@ -10,7 +10,7 @@ schema: BlogPosting
     {# Cover renders as a plain <img> (the Image transform self-hosts remote URLs and resolves
        local paths); never the {% image %} shortcode, which is local-only and errors on a remote URL. #}
     {% if cover %}
-      <img eleventy:optional="placeholder" src="{{ cover | safe }}" alt="Cover for {{ title }}" loading="lazy" style="max-inline-size: 14rem; height: auto; border-radius: var(--border-radius-medium)">
+      <img class="cover" eleventy:optional="placeholder" src="{{ cover | safe }}" alt="Cover for {{ title }}" loading="lazy" eleventy:widths="160,224,448" sizes="auto">
     {% endif %}
 
     {% if link %}<data hidden class="u-read-of" value="{{ link }}"></data>{% endif %}
