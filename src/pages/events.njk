@@ -1,0 +1,60 @@
+---
+layout: base
+title: Events
+description: Events I'm hosting — upcoming and past.
+permalink: '/events/index.html'
+---
+
+{# Two-section archive (spec §7). Unlike the other types this does NOT reuse the
+   single-list archive-listing.njk: the collection is partitioned at build time
+   into Upcoming (soonest event first) and Past (most-recent event first) via the
+   events.js date filters. "Now" is frozen at build (static site). Cancelled
+   events are NOT filtered out — status drives the badge, date drives the
+   section. No pagination for v1 (if Past grows long, paginate it, not Upcoming).
+   No feed (spec §8). Section headings are <h2>, so cards render <h3>. #}
+
+{%- set upcoming = collections.event | filterUpcoming | sortByStartAsc -%}
+{%- set past = collections.event | filterPast | sortByStartDesc -%}
+{%- set headingLevel = "h3" -%}
+
+<div class="wrapper">
+  <header class="full | section" style="--spot-color: var(--color-accent-blue)">
+    <div class="section__inner flow region" style="--region-space-top: var(--space-xl-2xl)">
+      <h1 class="text-center" style="color: var(--color-light);">Events</h1>
+    </div>
+
+    {% svg "divider/edgy", null, "divider" %}
+  </header>
+
+  <div class="region flow prose" style="--region-space-top: var(--space-xl-2xl)">
+    <p>Events I'm hosting — upcoming first, then past. Cancelled events stay listed in their date's section.</p>
+  </div>
+
+  <div class="region flow" style="--region-space-top: var(--space-l); --flow-space: var(--space-xl-2xl)">
+    <section class="flow" aria-labelledby="events-upcoming">
+      <h2 id="events-upcoming">Upcoming</h2>
+      {%- if upcoming.length -%}
+        <custom-masonry layout="50-50">
+          {%- for item in upcoming -%}
+            {% include "partials/card-event.njk" %}
+          {%- endfor -%}
+        </custom-masonry>
+      {%- else -%}
+        <p>Nothing on the calendar right now.</p>
+      {%- endif -%}
+    </section>
+
+    <section class="flow" aria-labelledby="events-past">
+      <h2 id="events-past">Past</h2>
+      {%- if past.length -%}
+        <custom-masonry layout="50-50">
+          {%- for item in past -%}
+            {% include "partials/card-event.njk" %}
+          {%- endfor -%}
+        </custom-masonry>
+      {%- else -%}
+        <p>No past events yet.</p>
+      {%- endif -%}
+    </section>
+  </div>
+</div>

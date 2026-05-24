@@ -1,0 +1,10 @@
+---
+permalink: /jams/feed.xml
+eleventyExcludeFromCollections: true
+excludeFromSitemap: true
+---
+{%- set feedCollection = collections.jam -%}
+{%- set feedTitle = "Jams" -%}
+{%- set feedDescription = "Music I'm listening to." -%}
+{%- set feedSelfUrl = "/jams/feed.xml" -%}
+{%- include "feeds/atom-body.njk" -%}

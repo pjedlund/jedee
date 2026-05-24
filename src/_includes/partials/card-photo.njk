@@ -1,0 +1,39 @@
+{# Archive card for the Photo type. Image-led: the photo fills <custom-card>'s
+   image slot via the {% image %} shortcode (photo.src is a local asset, so the
+   shortcode — not the remote-cover plain <img> of card-watching — is correct).
+   data-photo keeps the image's natural aspect ratio so the masonry varies in
+   height. u-photo is left to the post page only for v1 (spec §6, open). #}
+
+{% set headingLevel = headingLevel | default("h2") %}
+{% set definedDate = definedDate | default(item.date) %}
+{% set showTags = showTags | default(true) %}
+
+<custom-card clickable data-photo>
+  {% if item.data.photo.src %}
+    <div slot="image" webc:nokeep>{% image item.data.photo.src, item.data.photo.alt, null, "lazy" %}
+    </div>
+  {% endif %}
+  {% if item.data.title %}
+    <{{ headingLevel }} slot="headline" class="text-step-1">
+      <a href="{{ item.url | url }}">{{ item.data.title }}</a>
+    </{{ headingLevel }}>
+  {% endif %}
+  <span slot="date">{%- if item.data.draft -%}<span class="button" data-small-button data-button-variant='tertiary'>draft</span>{%- endif %} {% include "partials/date.njk" %}</span>
+  {% if showTags and item.data.tags.length > 1 %}
+    <div slot="tag" webc:nokeep>
+      {% for tag in item.data.tags %}
+        {% if tag != "posts" %}
+          <span class="button" data-small-button>{{ tag }}</span>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+  <div slot="content" webc:nokeep>{{ item.data.description | markdownFormat | safe }}</div>
+  <footer slot="footer" class="repel">
+    {{ item.data.category }}
+  </footer>
+</custom-card>
+
+{% css "local" %}
+  {% include "css/custom-card.css" %}
+{% endcss %}

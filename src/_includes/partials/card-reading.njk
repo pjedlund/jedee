@@ -2,7 +2,12 @@
 {% set definedDate = definedDate | default(item.date) %}
 {% set showTags = showTags | default(true) %}
 
-<custom-card clickable>
+<custom-card clickable data-poster>
+  {% if item.data.cover %}
+    <div slot="image" webc:nokeep>
+      <img eleventy:optional="placeholder" src="{{ item.data.cover | safe }}" alt="Cover for {{ item.data.title }}" loading="lazy" eleventy:widths="224,320,448,640" sizes="auto">
+    </div>
+  {% endif %}
   <{{ headingLevel }} slot="headline" class="text-step-2">
     <a href="{{ item.url | url }}">{{ item.data.title }}</a>
   </{{ headingLevel }}>

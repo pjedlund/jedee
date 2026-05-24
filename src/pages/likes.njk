@@ -1,0 +1,22 @@
+---
+layout: base
+title: Likes
+description: 'Posts I have liked around the web.'
+pagination:
+  data: collections.like
+  size: 10
+  generatePageOnEmptyData: true
+permalink: 'likes/{% if pagination.pageNumber >=1 %}page-{{ pagination.pageNumber + 1 }}/{% endif %}index.html'
+---
+
+{% set archiveDescription %}
+  This page has a pagination of <strong>{{ pagination.size }}</strong> likes per page.<br>
+  The pagination is only shown if there are more likes ({{ collections.like.length }}) than items per page ({{ pagination.size }}).
+{% endset %}
+
+{% set cardPartial = "card-response.njk" %}
+{% set masonryLayout = "50-50" %}
+{% set collectionToPaginate = collections.like %}
+{% set paginationMetaKey = "blog" %}
+
+{% include "partials/archive-listing.njk" %}

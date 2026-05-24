@@ -1,0 +1,6 @@
+{
+  "layout": "jam",
+  "tags": "posts",
+  "category": "jam",
+  "permalink": "/jams/{{ page.fileSlug | slugify }}/index.html"
+}

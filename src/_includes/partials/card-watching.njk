@@ -1,0 +1,37 @@
+{# Archive card for the Watching type. Like card-blog.njk but the poster is a
+   plain remote <img> from `cover` (a Letterboxd URL). The {% image %} shortcode
+   is local-only — it prepends ./src and runs eleventy-img against the
+   filesystem, so it can't process a remote poster URL. #}
+
+{% set headingLevel = headingLevel | default("h2") %}
+{% set definedDate = definedDate | default(item.date) %}
+{% set showTags = showTags | default(true) %}
+
+<custom-card clickable data-poster>
+  {% if item.data.cover %}
+    <div slot="image" webc:nokeep>
+      <img eleventy:optional="placeholder" src="{{ item.data.cover | safe }}" alt="Poster for {{ item.data.title }}" loading="lazy" eleventy:widths="224,320,448,640" sizes="auto">
+    </div>
+  {% endif %}
+  <{{ headingLevel }} slot="headline" class="text-step-1">
+    <a href="{{ item.url | url }}">{{ item.data.title }}</a>
+  </{{ headingLevel }}>
+  <span slot="date">{%- if item.data.draft -%}<span class="button" data-small-button data-button-variant='tertiary'>draft</span>{%- endif %} {% include "partials/date.njk" %}</span>
+  {% if showTags and item.data.tags.length > 1 %}
+    <div slot="tag" webc:nokeep>
+      {% for tag in item.data.tags %}
+        {% if tag != "posts" %}
+          <span class="button" data-small-button>{{ tag }}</span>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+  <div slot="content" webc:nokeep>{{ item.data.description | markdownFormat | safe }}</div>
+  <footer slot="footer" class="repel">
+    {{ item.data.category }}
+  </footer>
+</custom-card>
+
+{% css "local" %}
+  {% include "css/custom-card.css" %}
+{% endcss %}

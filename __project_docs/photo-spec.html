@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Photo — post-type spec — JEDEE</title>
+<link rel="stylesheet" href="spec.css">
+</head>
+<body data-doc-key="photo-spec">
+
+<div class="site-header">
+  <a class="home" href="index.html">JEDEE / Project documentation</a>
+  <span class="breadcrumb">post-type specs › Photo</span>
+</div>
+
+<header class="doc-header" id="top">
+  <p class="eyebrow">post-type spec</p>
+  <h1>Photo</h1>
+  <p class="meta">Planned · Phase 3b · singular <code>photo</code> / plural <code>photos</code> · designed from the Phase 3 plan 22 May 2026</p>
+</header>
+
+<nav id="toc" class="toc" aria-label="Sections"></nav>
+
+<main>
+
+<p>A <em>Photo</em> is a post whose primary content is an image — a single photograph the author wants to publish, optionally with a caption and a short note. The IndieWeb "photo" post type. Unlike the Phase 3a light types (Bookmark, Like, …) whose content is an outbound link, a Photo's content is the image itself, so the type carries a real <code>u-photo</code> and a bespoke image-led card.</p>
+
+<p class="note"><strong>Provenance.</strong> Photo is the first of the five heavy Phase 3b types to get a design pass. The Phase 3 plan only <em>outlines</em> it (<code>u-photo</code> + <code>alt</code>; single-photo default + opt-in gallery; masonry archive; new <code>card-photo.njk</code>). The field shapes, feed handling, and schema choices below are decisions of the <strong>22 May 2026 design increment</strong> (<code>_generated/Plan - Photo post type (Phase 3b design).md</code>), built on top of the plan — not invented to fill the page. Where something is still undecided, this spec says so rather than guessing. Throughout, "the plan specifies …" means the Phase 3 plan; "the design increment decides …" means the 22 May pass.</p>
+
+<h2>1. Singular / plural identity</h2>
+<p>Photo is <strong>asymmetric</strong>, like the shipped and light types: the <em>type</em> is singular, the <em>URL namespace</em> is plural. The Eleventy collection will be named with the <strong>singular</strong> (<code>collections.photo</code>), but the folder, URL, archive, and feed will all use the <strong>plural</strong>.</p>
+
+<table>
+<tr><th>Aspect</th><th>Form</th><th>Value</th><th>Defined in</th></tr>
+<tr><td>Type / category value</td><td>singular</td><td><code>category: "photo"</code></td><td><code>src/posts/photos/photos.json</code></td></tr>
+<tr><td>Layout name + alias</td><td>singular</td><td><code>photo</code> → <code>photo.njk</code></td><td><code>eleventy.config.js</code></td></tr>
+<tr><td>Collection</td><td>singular</td><td><code>collections.photo</code></td><td><code>src/_config/collections.js</code></td></tr>
+<tr><td>Content folder</td><td>plural</td><td><code>src/posts/photos/</code></td><td>—</td></tr>
+<tr><td>Folder data file</td><td>plural</td><td><code>photos.json</code></td><td><code>src/posts/photos/</code></td></tr>
+<tr><td>Per-post URL</td><td>plural</td><td><code>/photos/&lt;slug&gt;/</code></td><td><code>photos.json</code> permalink</td></tr>
+<tr><td>Archive URL + page</td><td>plural</td><td><code>/photos/</code></td><td><code>src/pages/photos.njk</code></td></tr>
+<tr><td>Feed</td><td>plural</td><td><code>/photos/feed.xml</code>, <code>/photos/feed.json</code></td><td><code>src/feeds/photos.{xml,json}.njk</code></td></tr>
+<tr><td>Nav label</td><td>plural</td><td>"Photos" → <code>/photos/</code></td><td><code>src/_data/navigation.js</code></td></tr>
+</table>
+<p class="note">As with Jam and the light types: the folder will be <code>photos/</code> but its data file will set <code>category: "photo"</code>, and the collection registered from that category will be <code>photo</code> (singular). Don't "fix" this — the layout alias, collection, and category are all singular by design.</p>
+
+<h2>2. Naming &amp; aliases</h2>
+<p>JEDEE's image type is named <strong>Photo</strong> (singular) / <strong>Photos</strong> (plural), following the IndieWeb's established "photo" post type. The type name and the microformat property share the same word.</p>
+<table>
+<tr><th>Term</th><th>Status</th><th>Where it appears / why</th></tr>
+<tr><td><code>photo</code> / <code>photos</code></td><td>chosen name</td><td>Type, layout, collection, URL, archive, feed, nav (see §1).</td></tr>
+<tr><td><code>u-photo</code></td><td>IndieWeb µf2 property</td><td>The microformat for an image embedded in an <code>h-entry</code>. Emitted as a class on the rendered <code>&lt;img&gt;</code> (§5), not a frontmatter key.</td></tr>
+<tr><td><code>gallery</code></td><td>related, deferred</td><td>EE already ships a <code>gallery:</code> frontmatter convention + <code>gallery.njk</code> partial for multi-image posts. The single-photo default is the Photo type's v1; the gallery is a documented future opt-in (§13), not a separate type.</td></tr>
+</table>
+
+<h2>3. URLs &amp; permalinks</h2>
+<table>
+<tr><th>Page</th><th>URL</th><th>Source</th></tr>
+<tr><td>Per-post</td><td><code>/photos/&lt;slug&gt;/</code></td><td><code>"/photos/{{ page.fileSlug | slugify }}/index.html"</code></td></tr>
+<tr><td>Archive (page 1)</td><td><code>/photos/</code></td><td><code>photos.njk</code> pagination, size ~10</td></tr>
+<tr><td>Archive (page N)</td><td><code>/photos/page-N/</code></td><td>same</td></tr>
+<tr><td>Atom feed</td><td><code>/photos/feed.xml</code></td><td><code>photos.xml.njk</code></td></tr>
+<tr><td>JSON feed</td><td><code>/photos/feed.json</code></td><td><code>photos.json.njk</code></td></tr>
+</table>
+<p>Slug derives from the filename via <code>| slugify</code>. Photo is a <strong>title-optional</strong> type: a post without a title is valid — the image is the primary content. The plan marks only Recipe and Event as title-<em>required</em>; Photo follows the title-optional pattern of the shipped and light types (design increment decision).</p>
+
+<h2>4. Frontmatter (planned)</h2>
+<p>The shape below is the <strong>planned authoring surface</strong> decided by the 22 May design increment. No sample file exists yet. <code>category</code>, <code>layout</code>, and <code>permalink</code> are not authored per-post — they will come from the folder data file <code>src/posts/photos/photos.json</code> (see §1 and §12).</p>
+<pre><code>---
+photo:
+  src: ./src/assets/images/photos/sunset-over-the-fjord.jpg  # required
+  alt: A low orange sun setting behind a still fjord         # required (convention — see note)
+  caption: Sognefjord, an hour before midnight               # optional
+title: Sunset over the fjord       # optional
+date: 2026-06-01T21:30:00+02:00    # required — post timestamp
+description: A short note about the shot.   # recommended
+draft: true                        # optional
+tags:
+  - photography                    # optional — topic tags, NOT the category
+---</code></pre>
+
+<table>
+<tr><th>Field</th><th>Req?</th><th>Role</th></tr>
+<tr><td><code>photo</code></td><td>required</td><td>Nested object holding the image. The design increment chose a nested object (over flat top-level keys) so the image's data stays grouped and maps 1:1 to the <code>image</code> shortcode's positional <code>(src, alt, caption)</code> arguments.</td></tr>
+<tr><td><code>photo.src</code></td><td>required</td><td>Path to the source image. The <code>image</code> shortcode prepends <code>./src</code> if absent (<code>src/_config/shortcodes/image.js:37</code>), and throws if <code>src</code> is missing (<code>image.js:93</code>).</td></tr>
+<tr><td><code>photo.alt</code></td><td>required (convention)</td><td>Alt text → carried onto the <code>&lt;img&gt;</code> and used for <code>u-photo</code> accessibility. See the note below.</td></tr>
+<tr><td><code>photo.caption</code></td><td>optional</td><td>When present, the <code>image</code> shortcode wraps the picture in a <code>&lt;figure&gt;</code> with a <code>&lt;figcaption&gt;</code> (<code>image.js:76-78</code>).</td></tr>
+<tr><td><code>title</code></td><td>optional</td><td>Headline; falls back to slug. Title-optional type (§3).</td></tr>
+<tr><td><code>date</code></td><td>required</td><td>Post timestamp (sort + <code>dt-published</code>).</td></tr>
+<tr><td><code>description</code></td><td>recommended</td><td>Card excerpt and feed summary; a short note about the photo.</td></tr>
+<tr><td><code>draft</code></td><td>optional</td><td>When <code>true</code>, the card shows a "draft" badge; post is still built.</td></tr>
+<tr><td><code>tags</code></td><td>optional</td><td>Topic tags. <strong>Not</strong> the category.</td></tr>
+</table>
+<p class="note"><strong>Alt is required by convention, not by EE.</strong> Eleventy Excellent's <code>image</code> shortcode does <em>not</em> enforce alt — it defaults <code>alt = ''</code> (<code>image.js:21</code>) and only throws on a missing <code>src</code> (<code>image.js:93</code>). The Photo type requires <code>alt</code> as its own authoring rule: the photo <em>is</em> the content, so a photo post without alt text is incomplete and fails accessibility. This is a design-increment decision; the build will not stop you, so the requirement lives in the spec and in review, not in tooling (a lint could enforce it later).</p>
+<p class="note"><strong>Asset path.</strong> The illustrative <code>./src/assets/images/photos/&lt;file&gt;</code> path mirrors EE's existing <code>/assets/images/gallery/</code> and JEDEE's <code>/assets/images/listening/</code> conventions. Co-locating the image in a per-post <strong>page bundle</strong> is a likely future direction for Photo, but is <strong>not</strong> settled here. (Note this is the co-located <em>body</em>-image case, distinct from the fetched-cover pattern the rich-media types use — see <a href="cover-image-pattern.html">build-time cover images</a> §4. A <em>remote</em> <code>u-photo</code> would instead take the plain-<code>&lt;img&gt;</code> path.) <em>(open)</em></p>
+
+<h2>5. Microformats (µf2)</h2>
+<p>The layout will be <code>src/_layouts/photo.njk</code> (planned), modeled on the existing per-post layouts (e.g. <code>watching.njk</code>). Unlike the light types — whose target is a visible outbound <code>&lt;a&gt;</code> — a Photo's content <em>is</em> the image, so <code>u-photo</code> goes on a visible <code>&lt;img&gt;</code> rendered above the body:</p>
+<pre><code>{# planned — renders the photo with u-photo via the image shortcode's imageClass param #}
+{% image photo.src, photo.alt, photo.caption, "eager", "", "u-photo" %}
+
+&lt;div class="e-content"&gt;{{ content | safe }}&lt;/div&gt;</code></pre>
+<table>
+<tr><th>Property</th><th>Class</th><th>From</th></tr>
+<tr><td>Photo</td><td><code>u-photo</code> (on the <code>&lt;img&gt;</code>)</td><td><code>photo.src</code> + <code>photo.alt</code></td></tr>
+<tr><td>Body</td><td><code>e-content</code></td><td>post content (may be empty)</td></tr>
+<tr><td>Published</td><td><code>dt-published</code></td><td><code>date</code> (via entry-header → date.njk)</td></tr>
+<tr><td>Authorship</td><td><code>h-entry</code> / <code>h-card</code> / <code>u-author</code></td><td>hidden block, <code>meta.author</code></td></tr>
+</table>
+<p class="note"><strong>How <code>u-photo</code> lands on the <code>&lt;img&gt;</code>.</strong> EE's <code>image</code> shortcode accepts an <code>imageClass</code> parameter (6th positional arg, or <code>imageClass</code> via the named <code>imageKeys</code> shortcode) that it writes onto the <code>&lt;img&gt;</code> (<code>image.js:70</code>). Passing <code>"u-photo"</code> there is the planned mechanism — it works whether the shortcode emits a bare <code>&lt;picture&gt;</code> or wraps it in a <code>&lt;figure&gt;</code> for a captioned photo, because the class is on the inner <code>&lt;img&gt;</code> either way.</p>
+<p class="note"><strong>Stray <code>slot="image"</code> — minor wrinkle.</strong> The <code>image</code> shortcode hardcodes <code>slot="image"</code> on its <code>&lt;picture&gt;</code>/<code>&lt;figure&gt;</code> (<code>image.js:74,77-78</code>) because it was written to feed <code>&lt;custom-card&gt;</code> (§6). Used in the post layout (outside a custom element) that attribute is inert — harmless, just semantically idle. If it grates, a slot-less image variant is the alternative. <em>(open — accept the inert attribute, or add a slot-less variant.)</em></p>
+<p class="note"><strong>h-entry nesting caveat — DEFERRED.</strong> Modeling on <code>watching.njk</code> puts the visible <code>u-photo</code> and <code>.e-content</code> outside the only <code>h-entry</code> in the layout (the hidden authorship block), so a strict mf2 parser won't tie the photo to the entry. Accepted for v1 because webmention sending isn't wired up yet. Fix in the webmention milestone — either give the photo layout a self-contained <code>h-entry</code>, or restructure the shared chrome (which also fixes the existing types). Same caveat as the shipped and light types.</p>
+
+<h2>6. Card</h2>
+<p>Photo will use a <strong>bespoke <code>src/_includes/partials/card-photo.njk</code></strong> (planned) — <em>not</em> the shared <code>card-response.njk</code> of the light types, which has no image slot. The card is image-led: the photo fills the card's image slot, with minimal text below.</p>
+<p>This is exactly what EE's <code>image</code> shortcode is built for: it emits <code>&lt;picture slot="image"&gt;</code> (or <code>&lt;figure slot="image"&gt;</code> when captioned), which slots directly into the <code>&lt;custom-card&gt;</code> WebC component's image slot.</p>
+<table>
+<tr><th>Slot</th><th>Content</th></tr>
+<tr><td>image</td><td><code>photo.src</code> + <code>photo.alt</code> via the <code>image</code> shortcode → <code>&lt;picture slot="image"&gt;</code></td></tr>
+<tr><td>headline</td><td><code>title</code> if present, linked to the post (omitted for title-less photos)</td></tr>
+<tr><td>date</td><td><code>date</code> via <code>date.njk</code>; prepended with a "draft" badge when <code>draft: true</code></td></tr>
+<tr><td>content</td><td><code>item.data.description</code> if present</td></tr>
+<tr><td>footer</td><td><code>category</code> ("photo")</td></tr>
+</table>
+<p class="note"><strong>Planned — not yet built.</strong> <code>card-photo.njk</code> does not exist yet. It bundles <code>css/custom-card.css</code> like the other cards. Whether the card carries <code>u-photo</code> on its image (so archive thumbnails are themselves valid µf2) or leaves <code>u-photo</code> to the post page only is an open detail. <em>(open)</em></p>
+
+<h2>7. Archive page config</h2>
+<p><code>src/pages/photos.njk</code> (planned) will drive the listing through the shared <code>archive-listing.njk</code> partial, modeled on the <code>watching.njk</code> page. The plan specifies the archive wraps its cards in a <code>&lt;custom-masonry&gt;</code> grid — an image-led masonry layout rather than the uniform card rows of the text types:</p>
+<pre><code>pagination: { data: collections.photo, size: 10 }
+permalink:  photos/[page-N/]index.html
+cardPartial = "card-photo.njk"
+masonryLayout = "50-50"
+collectionToPaginate = collections.photo
+paginationMetaKey = "blog"</code></pre>
+<p class="note"><strong><code>custom-masonry</code> is shipped.</strong> The <code>&lt;custom-masonry&gt;</code> web component (<code>src/assets/scripts/components/custom-masonry.js</code>) already exists — it positions grid children by computed column count on load and resize. The Photo archive consumes it; it is not new work. How <code>archive-listing.njk</code> wraps cards in <code>&lt;custom-masonry&gt;</code> for the image grid (vs. the existing <code>masonryLayout</code> handling) is the one archive detail to confirm at build time. <em>(open)</em></p>
+
+<h2>8. Feed</h2>
+<p>Photo gets a feed (design increment decision): photo posts are followable content — a photoblog. A pair of templates will be cloned from <code>src/feeds/notes.json.njk</code> and <code>notes.xml.njk</code> to <code>src/feeds/photos.json.njk</code> and <code>photos.xml.njk</code>, setting the <code>permalink:</code> frontmatter (this, not the filename, controls the output path) and the feed variables:</p>
+<pre><code># photos.xml.njk
+permalink: /photos/feed.xml
+feedCollection = collections.photo
+feedTitle = "Photos"
+feedDescription = "Photographs I've published."
+feedSelfUrl = "/photos/feed.xml"
+→ includes a photo-aware body (see wrinkle)
+
+# photos.json.njk — same vars, with:
+permalink: /photos/feed.json
+feedSelfUrl = "/photos/feed.json"</code></pre>
+<p class="note"><strong>The feed wrinkle — a real implementation detail, not a copy-paste.</strong> The shared feed bodies emit <strong>only</strong> <code>post.content</code> — the rendered markdown body via <code>renderTransforms</code> — and render <em>no</em> frontmatter fields (<code>src/_includes/feeds/atom-body.njk:37-39</code>, <code>src/_includes/feeds/json-body.njk:27</code>). Because a Photo's image lives in <code>photo:</code> frontmatter (not the body), a naive clone of the Notes feed would emit Photo entries <strong>with the image missing</strong>. The Photo feed therefore needs a <strong>photo-aware body</strong> that renders the photo as an <strong>absolute-URL <code>&lt;img&gt;</code></strong> (with alt) ahead of <code>post.content</code>.</p>
+<p class="note"><strong>Recommended approach (mechanism deferred to build).</strong> Add a small photo-specific feed body rather than editing the shared <code>atom-body.njk</code>/<code>json-body.njk</code> that five shipped feeds depend on. The exact wiring — a new partial vs. a parameter on the shared body, and how the relative image URL is absolutized for the feed — is a Phase-3b implementation detail flagged here, not a finished solution. <em>(open)</em></p>
+
+<h2>9. Navigation</h2>
+<p>Photo gets a nav entry (it has a feed and is followable). The plan's convention is to add feed-bearing types to the <strong>Posts</strong> submenu in <code>src/_data/navigation.js</code>:</p>
+<pre><code>{ text: 'Photos', url: '/photos/' }</code></pre>
+<p class="note"><strong>Planned — not yet added.</strong></p>
+
+<h2>10. JSON-LD / Schema.org</h2>
+<table>
+<tr><th>Stage</th><th>Value</th></tr>
+<tr><td>Phase 3b (planned)</td><td><code>schema: BlogPosting</code> (set in <code>photo.njk</code> front matter) → <code>src/_includes/schemas/BlogPosting.njk</code></td></tr>
+<tr><td>Phase 4 (possible future)</td><td>A <code>BlogPosting</code> envelope embedding an <code>ImageObject</code> (mirroring the planned <code>AudioPosting</code>/<code>VideoPosting</code> treatment for Audio/Video) — more precise, but not specified now.</td></tr>
+</table>
+<p class="note">The Phase 3 plan gives <em>only</em> Audio and Video the embedded-object schema treatment (<code>AudioObject</code>/<code>VideoObject</code>); Photo is not called out, so it keeps plain <code>BlogPosting</code> for v1. An <code>ImageObject</code> embed is a reasonable Phase 4 follow-up, listed in §15, not designed here.</p>
+
+<h2>11. Where it lives — file tree (planned)</h2>
+<pre><code>src/
+├── _config/
+│   └── collections.js          # photo added to POST_TYPES array; byCategory exported
+├── _data/
+│   └── navigation.js           # Posts submenu → { text: 'Photos', url: '/photos/' }
+├── _includes/
+│   └── partials/
+│       └── card-photo.njk      # bespoke image-led card — PLANNED (§6)
+├── _layouts/
+│   └── photo.njk               # per-post layout (singular) — modeled on watching.njk
+├── feeds/
+│   ├── photos.xml.njk          # → /photos/feed.xml  (Atom, photo-aware body)
+│   └── photos.json.njk         # → /photos/feed.json (JSON Feed, photo-aware body)
+├── pages/
+│   └── photos.njk              # archive page → /photos/  (plural, masonry)
+└── posts/
+    └── photos/                 # content folder (plural)
+        ├── photos.json         # folder data: layout=photo, category=photo, permalink
+        └── &lt;sample&gt;.md         # one draft: true sample post
+
+eleventy.config.js              # addLayoutAlias('photo','photo.njk') + POST_TYPES loop wires addCollection</code></pre>
+
+<p>Planned built output:</p>
+<pre><code>dist/
+└── photos/
+    ├── index.html              # archive, page 1 (masonry)
+    ├── page-2/index.html       # pagination (once enough posts exist)
+    ├── feed.xml
+    ├── feed.json
+    └── &lt;slug&gt;/index.html        # one per Photo post</code></pre>
+
+<h3>Shared dependencies (not photo-specific)</h3>
+<p>The photo type will also pull in these shared files; the section documenting each is noted.</p>
+<pre><code>src/
+├── _layouts/
+│   └── base.njk                  # parent layout (photo.njk will set `layout: base`)
+├── _config/shortcodes/
+│   └── image.js                  # the image shortcode — u-photo via imageClass (§5), slot="image" (§6)
+├── assets/scripts/components/
+│   └── custom-masonry.js         # archive masonry web component (§7)
+└── _includes/
+    ├── partials/
+    │   ├── entry-header.njk      # title + date; emits dt-published via date.njk (§5)
+    │   ├── date.njk              # &lt;time class="dt-published"&gt; (§5)
+    │   ├── backlinks.njk         # included by photo.njk layout (harmless if empty)
+    │   ├── entry-footer.njk      # included by photo.njk layout
+    │   ├── archive-listing.njk   # drives the /photos/ listing (§7)
+    │   └── gallery.njk           # multi-image gallery — deferred opt-in (§13)
+    ├── feeds/
+    │   ├── atom-body.njk         # shared Atom body — emits only post.content (§8 wrinkle)
+    │   └── json-body.njk         # shared JSON Feed body — emits only post.content (§8 wrinkle)
+    └── css/
+        ├── post.css              # bundled by photo.njk layout
+        ├── footnotes.css         # bundled by photo.njk layout
+        ├── custom-card.css       # bundled by card-photo.njk (§6)
+        └── gallery.css           # bundled by gallery.njk (§13, deferred)</code></pre>
+
+<h2>12. Collection registration (wiring)</h2>
+<p>Photo registers through the same <code>POST_TYPES</code> mechanism the light types use (introduced by the Phase 3a Step 0 refactor):</p>
+<pre><code>// src/_config/collections.js
+export const POST_TYPES = ['article','note','reading','jam','watching', ... ,'photo'];
+
+// eleventy.config.js
+POST_TYPES.forEach(t =&gt; eleventyConfig.addCollection(t, byCategory(t)));
+
+// Layout alias — added explicitly, NOT looped over POST_TYPES:
+eleventyConfig.addLayoutAlias('photo', 'photo.njk');</code></pre>
+<p class="note"><strong>Layout aliases stay explicit.</strong> As the plan stresses, do NOT fold layout aliases into the <code>POST_TYPES.forEach</code> loop — <code>POST_TYPES</code> includes <code>article</code>, which has no <code>article.njk</code> (it uses <code>layout: post</code>), so a generic alias loop would emit a bogus alias. Each new type's alias is added explicitly.</p>
+<p class="note">Category names never enter <code>tags</code>, so "photo" does not pollute <code>/tags/</code>.</p>
+
+<h2>13. Gallery (multi-image) — deferred opt-in</h2>
+<p>The Phase 3 plan pairs the single-photo default with an "opt-in gallery." The 22 May design increment scoped <strong>v1 to single-photo only</strong> and defers the gallery so the spec doesn't invent a multi-image field shape. The gallery is a documented future opt-in, <strong>not</strong> a separate post type.</p>
+<p>EE already ships the machinery: a <code>gallery: [{ image, alt, caption }, …]</code> frontmatter array and <code>src/_includes/partials/gallery.njk</code>, which renders a thumbnail grid of <code>&lt;button&gt;</code>s inside an <code>&lt;is-land on:idle&gt;</code>, each opening an image in a <code>&lt;dialog&gt;</code> lightbox (styled by <code>gallery.css</code>, behaviour in <code>dialog.js</code>). A multi-image Photo would set <code>gallery:</code> and the layout would include <code>gallery.njk</code>.</p>
+<p class="note"><strong>Open gaps for the gallery opt-in (not designed yet):</strong></p>
+<ul>
+<li><strong>µf2 on gallery images.</strong> The current <code>gallery.njk</code> calls <code>{% image item.image, item.alt %}</code> with <em>no</em> <code>imageClass</code>, so gallery images do <strong>not</strong> carry <code>u-photo</code>. A Photo-gallery variant would need to pass <code>imageClass: "u-photo"</code> per image (each photo a <code>u-photo</code> in the <code>h-entry</code>). Deferred.</li>
+<li><strong>Field reconciliation.</strong> Whether the single-photo <code>photo:</code> object and the gallery's <code>gallery:</code> array coexist as two fields, or are later unified, is not decided. v1 ships <code>photo:</code> only; the gallery reuses EE's existing <code>gallery:</code> shape verbatim if/when adopted.</li>
+<li><strong>Card &amp; feed for galleries.</strong> How a multi-image post renders in <code>card-photo.njk</code> (first image? collage?) and in the feed is unspecified.</li>
+</ul>
+
+<h2>14. Webmentions</h2>
+<p>Webmention is the IndieWeb's federated response protocol. Nothing here is Photo-specific — the plumbing is shared by every post type and Photo will inherit it through the <code>base</code> layout and <code>entry-footer.njk</code>. <strong>Discovery is shipped; receiving and sending are deferred</strong> to the webmention milestone.</p>
+<table>
+<tr><th>Piece</th><th>State</th><th>Where</th></tr>
+<tr><td>Endpoint discovery</td><td><strong>shipped</strong> (Phase 1)</td><td><code>&lt;link rel="webmention" …&gt;</code> in <code>&lt;head&gt;</code> via <code>src/_includes/head/meta-info.njk</code> (photo will use <code>layout: base</code>).</td></tr>
+<tr><td>Authorship h-card</td><td><strong>planned</strong></td><td>The hidden <code>h-entry</code> block carried into <code>photo.njk</code> will provide <code>u-url</code>, <code>p-name u-url rel="author"</code>, and a <code>u-author h-card</code> avatar so a receiver can attribute the post (§5).</td></tr>
+<tr><td>Render slot</td><td><strong>planned, will be no-op</strong></td><td><code>photo.njk</code> → <code>entry-footer.njk</code> → <code>partials/webmentions.njk</code>, currently an empty stub — safe to call while the renderer is empty.</td></tr>
+<tr><td>Receiving / rendering</td><td><strong>deferred</strong></td><td>The webmention milestone wires a <code>webmention.io</code> fetch (via <code>@11ty/eleventy-fetch</code>, ~24 h cache); <code>webmentions.njk</code> then groups received mentions by type.</td></tr>
+<tr><td>Sending</td><td><strong>deferred</strong></td><td>Outgoing webmentions aren't wired.</td></tr>
+</table>
+<p class="note"><strong>h-entry nesting (§5).</strong> The only <code>h-entry</code> in the layout will be the hidden authorship block; the visible <code>u-photo</code> and <code>.e-content</code> will sit outside it. Harmless while sending is off; fix it when the sending side of the webmention milestone lands.</p>
+
+<h2>15. Status &amp; open items</h2>
+<p><strong>Planned — not built; design detailed in the 22 May 2026 increment</strong> (Photo is the first heavy type to get its design pass). See <code>_generated/Plan - Phase 3 (10 new post types) - final.md</code> §Phase 3b and <code>_generated/Plan - Photo post type (Phase 3b design).md</code>.</p>
+<ul>
+<li><strong>Phase 3b</strong> — no files for this type exist yet. The <code>POST_TYPES</code> refactor (Phase 3a Step 0) is a prerequisite for the wiring in §12.</li>
+<li><strong>Image model — v1 is single-photo only.</strong> The multi-image gallery is a deferred opt-in reusing EE's existing <code>gallery:</code> + <code>gallery.njk</code>; its µf2, field reconciliation, card, and feed handling are not designed yet. See §13.</li>
+<li><strong>Single-photo field shape — DECIDED (design increment).</strong> Nested <code>photo: { src, alt, caption }</code>; maps to the <code>image</code> shortcode's positional args. See §4.</li>
+<li><strong>Alt required by convention — DECIDED.</strong> EE's <code>image</code> shortcode does not enforce alt; the Photo type requires it. A lint could enforce it later. See §4.</li>
+<li><strong>Bespoke card — <code>card-photo.njk</code>.</strong> Image-led, not the shared <code>card-response.njk</code>. Whether the card image carries <code>u-photo</code> is open. See §6.</li>
+<li><strong>Feed photo-aware body — OPEN mechanism.</strong> The shared feed bodies emit only <code>post.content</code>, so the frontmatter photo must be rendered into a photo-aware body as an absolute-URL <code>&lt;img&gt;</code>. Recommended approach named; exact wiring deferred to build. See §8.</li>
+<li><strong>Stray <code>slot="image"</code> in the layout — OPEN.</strong> Accept the inert attribute, or add a slot-less image variant. See §5.</li>
+<li><strong>Masonry archive wrapping — OPEN detail.</strong> How <code>archive-listing.njk</code> wraps <code>card-photo</code> cards in <code>&lt;custom-masonry&gt;</code> for the image grid, to confirm at build time. See §7.</li>
+<li><strong>µf2 h-entry nesting — DEFERRED + documented (v1).</strong> Same caveat as the shipped/light types; fix in the webmention milestone. See §5, §14.</li>
+<li><strong>Schema upgrade — possible Phase 4.</strong> <code>BlogPosting</code> for v1; an <code>ImageObject</code> embed is a candidate later. See §10.</li>
+<li><strong>Page-bundle co-location — future direction.</strong> Co-locating a <em>local</em> lead photo in a per-post bundle is likely but not settled for Photo (the body-image case, distinct from the fetched-cover pattern — see <a href="cover-image-pattern.html">build-time cover images</a>). See §4.</li>
+<li><strong>Webmentions</strong> — discovery shipped; authorship h-card + render slot land when <code>photo.njk</code> is created; receiving/sending deferred to the milestone. See §14.</li>
+</ul>
+
+</main>
+
+<footer>JEDEE · __project_docs · git-tracked working docs</footer>
+
+<!-- Annotation UI (ported from tolstoy.life serve.py) -->
+<div id="ann-popover">
+  <div class="ann-quote" id="ann-quote"></div>
+  <textarea id="ann-text" placeholder="Your comment…" autocomplete="off"></textarea>
+  <div class="ann-actions">
+    <button id="ann-cancel">Cancel</button>
+    <button class="primary" id="ann-save">Save</button>
+  </div>
+</div>
+<div id="ann-tooltip"></div>
+<div id="ann-bar">
+  <button id="ann-export">Copy annotations</button>
+  <button class="danger" id="ann-clear">Clear all</button>
+</div>
+
+<script src="spec.js"></script>
+</body>
+</html>

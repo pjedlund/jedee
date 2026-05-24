@@ -1,0 +1,41 @@
+---
+layout: base
+schema: BlogPosting
+---
+
+<div class="region" style="--region-space-top: var(--space-xl-2xl)">
+  <div class="wrapper flow prose">
+    {% include 'partials/entry-header.njk' %}
+
+    {# Poster is a remote Letterboxd URL — plain <img>, not the local-only {% image %} shortcode. #}
+    {% if cover %}
+      <img class="cover" eleventy:optional="placeholder" src="{{ cover | safe }}" alt="Poster for {{ title }}" loading="lazy" eleventy:widths="160,224,448" sizes="auto">
+    {% endif %}
+
+    {% if url %}<data hidden class="u-watch-of" value="{{ url }}"></data>{% endif %}
+
+    <div class="e-content">
+      {{ content | safe }}
+    </div>
+
+    {% include 'partials/backlinks.njk' %}
+    {% include 'partials/entry-footer.njk' %}
+  </div>
+
+  {# h-card authorship for Webmention discovery — https://indieweb.org/authorship #}
+  <div hidden class="h-entry">
+    <a class="u-url" href="{{ page.url | url | absoluteUrl(meta.url) }}">{{ title }}</a>
+    <a class="p-name u-url" rel="author" href="{{ meta.url }}">{{ meta.author.name }}</a>
+    <img
+      eleventy:ignore
+      class="u-author h-card"
+      src="{{ meta.author.avatar | url | absoluteUrl(meta.url) }}"
+      alt="{{ meta.author.name }}"
+    />
+  </div>
+</div>
+
+{%- css "local" -%}
+  {%- include 'css/post.css' -%}
+  {%- include 'css/footnotes.css' -%}
+{%- endcss -%}

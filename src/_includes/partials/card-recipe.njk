@@ -1,0 +1,47 @@
+{# Archive card for the Recipe type (spec §6). Image-led: the dish photo fills
+   <custom-card>'s image slot via the {% image %} shortcode (recipe.image is a
+   local asset). Degrades to a text-led card when no dish photo is set — the
+   headline is always present (title-required type). A small duration/yield
+   badge sits in the content slot. The default 16/9 image ratio suits dish
+   photos, so — unlike card-photo's data-photo — no custom-card aspect override
+   is needed. #}
+
+{% set headingLevel = headingLevel | default("h2") %}
+{% set definedDate = definedDate | default(item.date) %}
+{% set showTags = showTags | default(true) %}
+
+<custom-card clickable>
+  {% if item.data.recipe.image %}
+    <div slot="image" webc:nokeep>{% image item.data.recipe.image, item.data.title, null, "lazy" %}
+    </div>
+  {% endif %}
+  <{{ headingLevel }} slot="headline" class="text-step-1">
+    <a href="{{ item.url | url }}">{{ item.data.title }}</a>
+  </{{ headingLevel }}>
+  <span slot="date">{%- if item.data.draft -%}<span class="button" data-small-button data-button-variant='tertiary'>draft</span>{%- endif %} {% include "partials/date.njk" %}</span>
+  {% if showTags and item.data.tags.length > 1 %}
+    <div slot="tag" webc:nokeep>
+      {% for tag in item.data.tags %}
+        {% if tag != "posts" %}
+          <span class="button" data-small-button>{{ tag }}</span>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+  <div slot="content" webc:nokeep>
+    {{ item.data.description | markdownFormat | safe }}
+    {% if item.data.recipe.totalTime or item.data.recipe.yield %}
+      <p class="recipe-badge cluster" role="list">
+        {% if item.data.recipe.totalTime %}<span data-badge role="listitem">{{ item.data.recipe.totalTime | formatDuration }}</span>{% endif %}
+        {% if item.data.recipe.yield %}<span data-badge role="listitem">{{ item.data.recipe.yield }}</span>{% endif %}
+      </p>
+    {% endif %}
+  </div>
+  <footer slot="footer" class="repel">
+    {{ item.data.category }}
+  </footer>
+</custom-card>
+
+{% css "local" %}
+  {% include "css/custom-card.css" %}
+{% endcss %}
