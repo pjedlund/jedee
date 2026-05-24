@@ -43,15 +43,23 @@ export default {
           url: '/rsvps/'
         },
         {
+          text: 'Likes',
+          url: '/likes/'
+        },
+        {
+          text: 'Reposts',
+          url: '/reposts/'
+        },
+        {
           text: 'Photos',
           url: '/photos/'
         },
         {
-          text: 'Recipe',
+          text: 'Recipes',
           url: '/recipes/'
         },
         {
-          text: 'Event',
+          text: 'Events',
           url: '/events/'
         },
         {
@@ -59,7 +67,7 @@ export default {
           url: '/audio/'
         },
         {
-          text: 'Video',
+          text: 'Videos',
           url: '/videos/'
         }
       ]
