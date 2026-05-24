@@ -250,7 +250,7 @@ eleventyConfig.addLayoutAlias('reply', 'reply.njk');</code></pre>
 <p class="note"><strong>h-entry nesting (§5).</strong> The only <code>h-entry</code> in the planned layout is the hidden authorship block; the visible <code>u-in-reply-to</code> anchor and <code>.e-content</code> will sit outside it, so a strict mf2 parser won't tie the reply target to the entry. Harmless while sending is deferred; fix it when the webmention sending milestone lands — see §5 and §14.</p>
 
 <h2>14. Status &amp; open items</h2>
-<p><strong>Planned — not built. See <code>_generated/Plan - Phase 3 (10 new post types) - final.md</code>.</strong></p>
+<p><strong>Planned — not built. See <code>__design/Plan - Phase 3 (10 new post types) - final.md</code>.</strong></p>
 <ul>
 <li><strong>Not shipped.</strong> No code exists for this type yet. The layout, data file, archive page, feeds, nav entry, and sample post are all planned for Phase 3a.</li>
 <li><strong>Field naming — LOCKED: camelCase.</strong> <code>inReplyTo</code> is the frontmatter key. This is locked across all Phase 3a types; the IndieWeb semantic lives in the µf2 class on the visible anchor, not in the key name.</li>

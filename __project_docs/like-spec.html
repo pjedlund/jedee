@@ -207,7 +207,7 @@ eleventyConfig.addLayoutAlias('like', 'like.njk');   // explicit — not looped<
 <p class="note"><strong>h-entry nesting (§5).</strong> The only <code>h-entry</code> in the layout will be the hidden authorship block; the visible <code>u-like-of</code> anchor and <code>.e-content</code> will sit outside it, so a strict parser won't tie the like property to the entry. Harmless while sending is off; fix it when the sending side of the milestone lands — see §5 and §14.</p>
 
 <h2>14. Status &amp; open items</h2>
-<p><strong>Planned — not built. See <code>_generated/Plan - Phase 3 (10 new post types) - final.md</code>.</strong></p>
+<p><strong>Planned — not built. See <code>__design/Plan - Phase 3 (10 new post types) - final.md</code>.</strong></p>
 <ul>
 <li><strong>Phase 3a — not yet started.</strong> No code exists for this type. The implementation order is: Step 0 (POST_TYPES refactor) → Step 1 (card-response.njk) → Bookmark → Reply → RSVP → Like → Repost.</li>
 <li><strong>camelCase URL field — LOCKED.</strong> <code>likeOf</code> (not <code>like-of</code>). Nunjucks can't read hyphenated top-level keys; IndieWeb semantics live in the µf2 class. Applies to all five Phase 3a types.</li>

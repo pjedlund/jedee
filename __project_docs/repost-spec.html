@@ -212,7 +212,7 @@ eleventyConfig.addLayoutAlias('repost', 'repost.njk');</code></pre>
 <p class="note"><strong>h-entry nesting (§5).</strong> The only <code>h-entry</code> in the layout will be the hidden authorship block; the visible <code>u-repost-of</code> anchor and <code>.e-content</code> will sit outside it, so a strict parser won't tie the repost property to the h-entry. Harmless while sending is off; fix it when the sending side of the webmention milestone lands — see §5.</p>
 
 <h2>14. Status &amp; open items</h2>
-<p><strong>Planned — not built. See <code>_generated/Plan - Phase 3 (10 new post types) - final.md</code>.</strong></p>
+<p><strong>Planned — not built. See <code>__design/Plan - Phase 3 (10 new post types) - final.md</code>.</strong></p>
 <ul>
 <li><strong>Not yet built.</strong> No layout, no folder data file, no archive page, no sample posts, and no collection registration exist. All five Phase 3a light types (Bookmark, Like, Reply, Repost, RSVP) are built together in one increment.</li>
 <li><strong>Step 0 refactor prerequisite.</strong> The <code>POST_TYPES</code> array refactor in <code>collections.js</code> + <code>eleventy.config.js</code> must land and be verified green before Repost (or any Phase 3a type) is added. See §12.</li>

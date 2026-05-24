@@ -25,7 +25,7 @@
 
 <p>One hero image per post — a book cover, a film poster, album art, a photo, an episode artwork — is handled the <strong>same way across every image-led post type</strong>: store its URL or path in a <code>cover:</code> frontmatter field, render it as a <strong>plain <code>&lt;img&gt;</code></strong>, and let the always-on Eleventy Image <strong>HTML Transform</strong> fetch (if it's remote), optimize, and self-host it at build time. This page is the canonical write-up; the per-type specs (Reading §6/§12, Watching §6/§13, Jam §6/§12) link here instead of repeating the mechanism.</p>
 
-<p class="note"><strong>Locked decision, not a proposal.</strong> This convention was settled 23 May 2026 (recorded in <code>ROADMAP.md</code> "Locked decisions" and <code>_generated/Reference - cover image pattern.md</code>). It <strong>replaced</strong> an earlier plan to download covers into per-post page bundles via a <code>normalize-posts.js</code> / <code>colocate-cover.js</code> script — that apparatus was <strong>dropped, never built</strong>, because the build already self-hosts remote images and the script was redundant. If you find a spec still describing co-located covers or a <code>coverSource:</code> field, it predates this decision.</p>
+<p class="note"><strong>Locked decision, not a proposal.</strong> This convention was settled 23 May 2026 (recorded in <code>ROADMAP.md</code> "Locked decisions" and <code>__design/Reference - cover image pattern.md</code>). It <strong>replaced</strong> an earlier plan to download covers into per-post page bundles via a <code>normalize-posts.js</code> / <code>colocate-cover.js</code> script — that apparatus was <strong>dropped, never built</strong>, because the build already self-hosts remote images and the script was redundant. If you find a spec still describing co-located covers or a <code>coverSource:</code> field, it predates this decision.</p>
 
 <h2>1. The discovery — two image paths, opposite on a remote URL</h2>
 <p>JEDEE has <strong>two</strong> ways to turn an image reference into optimized output, and they behave <strong>oppositely on a remote URL</strong>. The discovery (made while fixing the Watching/Letterboxd poster bug, commit <code>ae78277</code>) is that a plain <code>&lt;img src="https://…"&gt;</code> is the way to pull a remote image into the build.</p>
@@ -107,7 +107,7 @@
 <li><code>src/_includes/partials/card-{reading,watching,jam}.njk</code> — archive-card cover <code>&lt;img&gt;</code></li>
 <li><code>src/assets/css/local/custom-card.css</code> — <code>[data-poster]</code> / <code>img-square</code> aspect-ratio variants</li>
 <li>Commits <code>ae78277</code> (the discovery, Watching posters) and <code>d9dd086</code> (uniform rollout to reading/watching/jam)</li>
-<li>Working notes: <code>_generated/Reference - cover image pattern.md</code>, <code>_generated/Handoff - 11ty build-time image downloading.md</code>, <code>_generated/Handoff - Uniform build-time covers.md</code></li>
+<li>Working notes: <code>__design/Reference - cover image pattern.md</code></li>
 <li><code>eleventy-excellent</code> skill → "Three ways to render an image" + "Build Pipeline" sections</li>
 </ul>
 
