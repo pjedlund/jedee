@@ -27,7 +27,10 @@ _backup
 # Obsidian
 .obsidian
 .vault-nickname
-src/_obsidian
+# Vault tooling stays local (Bases, note templates), but the Web Clipper
+# templates are tracked — they're the source of truth (see __project_docs/web-clipper-pattern.html).
+src/_obsidian/*
+!src/_obsidian/clipper/
 
 /src/posts/articles/-drafts
 

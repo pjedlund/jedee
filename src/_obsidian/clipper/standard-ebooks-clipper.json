@@ -1,0 +1,63 @@
+{
+	"schemaVersion": "0.1.0",
+	"name": "Standard Ebooks",
+	"behavior": "create",
+	"noteContentFormat": "",
+	"properties": [
+		{
+			"name": "title",
+			"value": "{{selector:article.ebook h1}}",
+			"type": "text"
+		},
+		{
+			"name": "draft",
+			"value": "true",
+			"type": "checkbox"
+		},
+		{
+			"name": "date",
+			"value": "{{date}}",
+			"type": "text"
+		},
+		{
+			"name": "author",
+			"value": "{{selector:hgroup a span}}",
+			"type": "text"
+		},
+		{
+			"name": "translator",
+			"value": "{{selector:#reading-ease p a}}",
+			"type": "text"
+		},
+		{
+			"name": "cover",
+			"value": "{{meta:property:og:image}}",
+			"type": "text"
+		},
+		{
+			"name": "link",
+			"value": "{{url}}",
+			"type": "text"
+		},
+		{
+			"name": "description",
+			"value": "{{selector:article.ebook > meta[property=\"schema:description\"]?content}}",
+			"type": "text"
+		},
+		{
+			"name": "genre",
+			"value": "{{selector:#reading-ease ul.tags a|wikilink}}",
+			"type": "multitext"
+		},
+		{
+			"name": "wordCount",
+			"value": "{{selector:article.ebook meta[property=\"schema:wordCount\"]?content}}",
+			"type": "number"
+		}
+	],
+	"triggers": [
+		"https://standardebooks.org/ebooks/"
+	],
+	"noteNameFormat": "{{selector:article.ebook h1|safe_name}}",
+	"path": "posts/reading/"
+}
