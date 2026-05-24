@@ -73,8 +73,7 @@ publisher: OUP Oxford
 publishDate: 2014-08-28                             # publisher's edition date
 date: 2026-01-11T13:50:58+01:00                     # post date
 totalPage: 898
-coverUrl: http://books.google.com/books/content?id=ChINBAAAQBAJ&amp;…   # remote cover
-coverSmallUrl: http://books.google.com/books/content?id=ChINBAAAQBAJ&amp;…
+cover: http://books.google.com/books/content?id=ChINBAAAQBAJ&amp;…   # remote cover (build-time self-hosted)
 description: Love... it means too much to me, far more than you can understand.
 link: https://play.google.com/store/books/details?id=ChINBAAAQBAJ   # → u-read-of target
 previewLink: http://books.google.se/books?id=ChINBAAAQBAJ&amp;…
@@ -92,8 +91,7 @@ isbn10: 191662232
 <tr><td><code>publishDate</code></td><td>optional</td><td>Publication date of this edition.</td></tr>
 <tr><td><code>date</code></td><td>required</td><td>Post timestamp (sort + <code>dt-published</code>).</td></tr>
 <tr><td><code>totalPage</code></td><td>optional</td><td>Page count; display metadata, not currently rendered by the layout.</td></tr>
-<tr><td><code>coverUrl</code></td><td>optional</td><td>Remote cover image URL (full size). Used by the card for the cover art.</td></tr>
-<tr><td><code>coverSmallUrl</code></td><td>optional</td><td>Remote cover image URL (thumbnail). Alternative lower-resolution version.</td></tr>
+<tr><td><code>cover</code></td><td>optional</td><td>Cover image URL (the remote Google Books URL, or a local path). Rendered as a plain <code>&lt;img&gt;</code> the build-time transform self-hosts (§6, §12; <a href="cover-image-pattern.html">cover convention</a>). Renamed from <code>coverUrl</code>; <code>coverSmallUrl</code> was dropped (the transform derives its own responsive widths from one source) in commit <code>d9dd086</code>.</td></tr>
 <tr><td><code>description</code></td><td>recommended</td><td>Card excerpt + feed summary.</td></tr>
 <tr><td><code>link</code></td><td>required for µf2</td><td>The read-of URL (e.g. Google Play Books, Standard Ebooks) → emitted as <code>u-read-of</code>.</td></tr>
 <tr><td><code>previewLink</code></td><td>optional</td><td>Alternate preview/search URL; importer artifact, not currently rendered.</td></tr>
@@ -103,7 +101,7 @@ isbn10: 191662232
 <tr><td><code>tags</code></td><td>optional</td><td>Topic tags. <strong>Not</strong> the category. The folder data file sets <code>tags: "posts"</code>.</td></tr>
 </table>
 <p class="note"><strong>Importer field sprawl:</strong> the Google Books importer emits <code>author</code>, <code>authors</code>, <code>subtitle</code>, <code>previewLink</code>, <code>isbn13</code>, <code>isbn10</code>, and <code>totalPage</code> — several of which are redundant or unrendered. These are accepted as-is; no migration planned. The canonical forward shape will be tightened when a Goodreads/StoryGraph web clipper template is authored (see §15).</p>
-<p class="note"><strong>Cover field:</strong> the current flat posts use remote <code>coverUrl</code> / <code>coverSmallUrl</code> paths. The page-bundle pattern (already in use — see §12) enables co-located covers in the future.</p>
+<p class="note"><strong>Cover field:</strong> a single <code>cover:</code> URL (renamed from <code>coverUrl</code> in commit <code>d9dd086</code>; <code>coverSmallUrl</code> dropped). It can be remote (Google Books) or a local path; either way the Eleventy Image HTML Transform fetches/resolves, optimizes, and self-hosts it at build — so covers stay <strong>flat</strong>, not co-located. See <a href="cover-image-pattern.html">build-time cover images</a>.</p>
 
 <h2>5. Microformats (µf2)</h2>
 <p>Emitted by <code>src/_layouts/reading.njk</code>. The read target is a <em>hidden</em> <code>&lt;data&gt;</code> element:</p>
@@ -120,16 +118,16 @@ isbn10: 191662232
 <p class="note"><strong>h-entry nesting caveat:</strong> the only <code>h-entry</code> in the layout is the hidden authorship block; the visible <code>u-read-of</code> + <code>.e-content</code> sit outside it, so a strict parser won't tie them to the entry. Accepted for v1 (webmention sending isn't wired up). Slated for the webmention milestone.</p>
 
 <h2>6. Card</h2>
-<p>Reading has a <strong>bespoke card</strong>: <code>src/_includes/partials/card-reading.njk</code>. It is set in <code>reading.njk</code> via <code>cardPartial = "card-reading.njk"</code>. Unlike the shared <code>card-blog.njk</code> used by Jams, this card is book-cover-led: it omits the post date and draft badge from the card face, and filters out the <code>reading</code> tag from the tag list.</p>
+<p>Reading has a <strong>bespoke book-cover-led card</strong>: <code>src/_includes/partials/card-reading.njk</code>, set in <code>reading.njk</code> via <code>cardPartial = "card-reading.njk"</code>. It renders the book cover, omits the post date/draft badge from the card face (that slot is commented out in the source), and filters the <code>reading</code> tag from the tag list. (Jam and Watching now have their own bespoke cards too — <code>card-blog.njk</code> is no longer shared into these rich-media archives.)</p>
 <table>
 <tr><th>Slot</th><th>Content</th></tr>
+<tr><td>image</td><td><code>item.data.cover</code> (book cover), only if set, rendered as <code>&lt;img eleventy:optional="placeholder" src="{{ item.data.cover | safe }}"&gt;</code> in a <code>slot="image"</code> wrapper — the <a href="cover-image-pattern.html">build-time cover pattern</a>, never the <code>{% image %}</code> shortcode</td></tr>
 <tr><td>headline</td><td><code>title</code>, linked to the post; sized <code>text-step-2</code></td></tr>
 <tr><td>tag</td><td>each tag except <code>"reading"</code>; shown only when <code>showTags</code> is true and there is more than one tag</td></tr>
 <tr><td>content</td><td><code>description</code> passed through <code>markdownFormat</code></td></tr>
 <tr><td>footer</td><td><code>category</code> ("reading")</td></tr>
 </table>
-<p>Renders a <code>&lt;custom-card clickable&gt;</code> WebC component (no <code>img-square</code> or <code>no-padding</code> modifiers). The date/draft badge slot is commented out in the current source. Styles via <code>css/custom-card.css</code>.</p>
-<p class="note"><strong>No cover rendered on the card:</strong> the bespoke card does not currently display <code>coverUrl</code> or <code>coverSmallUrl</code> as an image. The card is headline- and description-led. A future iteration could add cover art as the primary visual (as the Jam spec notes card-reading.njk as the model for a potential album-art-led card-jams.njk).</p>
+<p>Renders a <code>&lt;custom-card clickable data-poster&gt;</code> WebC component; the <code>data-poster</code> variant holds the cover's aspect ratio (<code>css/custom-card.css</code>). The date/draft badge slot is commented out in the current source.</p>
 
 <h2>7. Archive page config</h2>
 <p><code>src/pages/reading.njk</code> drives the listing through the shared <code>archive-listing.njk</code> partial:</p>
@@ -225,7 +223,7 @@ eleventy.config.js              # addLayoutAlias('reading','reading.njk') + addC
         └── custom-card.css       # bundled by card-reading.njk (§6)</code></pre>
 
 <h2>12. Page bundle / co-located assets</h2>
-<p>Unlike Jam — where page bundles are <em>planned</em> — Reading <strong>already uses the bundle pattern</strong> in production. The post <em>Drottningar i Kungahälla</em> is a page-bundle folder, not a flat <code>.md</code>:</p>
+<p>Reading <strong>already uses the page-bundle pattern</strong> in production — the only shipped bundle among the rich-media types. The post <em>Drottningar i Kungahälla</em> is a page-bundle folder, not a flat <code>.md</code>. Note this is about co-locating genuine <em>body</em> assets, <strong>not</strong> the cover: the cover (§4, §6) is fetched and self-hosted at build, so it needs no bundle.</p>
 <pre><code>src/posts/reading/
 └── Drottningar i Kungahalla/                    # folder named for the post
     └── Drottningar i Kungahälla - Selma Lagerlöf.md   # the post file, same name</code></pre>
@@ -233,11 +231,11 @@ eleventy.config.js              # addLayoutAlias('reading','reading.njk') + addC
 <table>
 <tr><th>Aspect</th><th>Flat post (current majority)</th><th>Bundle post (Drottningar — shipped)</th></tr>
 <tr><td>Post file</td><td><code>src/posts/reading/&lt;title&gt;.md</code></td><td><code>src/posts/reading/&lt;folder&gt;/&lt;title&gt;.md</code></td></tr>
-<tr><td>Co-located assets</td><td>none (covers stored remotely or in <code>/assets/images/reading/</code>)</td><td>any file placed next to the <code>.md</code> in the bundle folder</td></tr>
+<tr><td>Co-located assets</td><td>none (the cover is a <code>cover:</code> URL, self-hosted at build — not a co-located file)</td><td>genuine body assets placed next to the <code>.md</code> in the bundle folder (still not the cover)</td></tr>
 <tr><td>Slug source</td><td><code>page.fileSlug</code> (filename) via <code>| slugify</code></td><td><code>page.fileSlug</code> (the <code>.md</code> filename) via <code>| slugify</code> — <em>not</em> the folder, since this bundle's folder and file names differ</td></tr>
 <tr><td>Inherited data</td><td><code>reading.json</code></td><td><code>reading.json</code> (unchanged)</td></tr>
 </table>
-<p class="note">The Drottningar bundle currently contains only the <code>.md</code> file — no co-located image yet. But the structure is live and correct; adding a <code>cover.jpg</code> alongside the <code>.md</code> would make it available relative to the post's URL (the exact slug being filename-derived, as above). The <code>coverUrl</code> field in this post still points to a remote Google Books URL, same as the flat posts.</p>
+<p class="note">The Drottningar bundle currently contains only the <code>.md</code> file. The structure is live and correct, and the bundle is the right home for any future <em>body</em> images (a scanned page, a margin note). Its <code>cover:</code> field still points at a remote Google Books URL, same as the flat posts — and that's fine: the build-time transform self-hosts it whether it's remote or local, so there is no need to drop a <code>cover.jpg</code> into the bundle.</p>
 
 <h2>13. Collection registration (wiring)</h2>
 <pre><code>// src/_config/collections.js
@@ -268,9 +266,9 @@ eleventyConfig.addCollection('reading', reading);</code></pre>
 <h2>15. Status &amp; open items</h2>
 <ul>
 <li><strong>Shipped</strong> — layout, archive, feed, nav, and sample posts all live. Page bundles in use (§12).</li>
-<li><strong>Bespoke card</strong> — <code>card-reading.njk</code> is shipped; the cover image (<code>coverUrl</code>) is not rendered on the card face. Adding cover-art display is a candidate enhancement. <em>(open)</em></li>
+<li><strong>Bespoke card — cover now rendered</strong> (commit <code>d9dd086</code>). <code>card-reading.njk</code> displays the <code>cover</code> as a plain <code>&lt;img&gt;</code> the build-time transform self-hosts (§6). Surfacing book metadata (author, year) on the card face remains a candidate enhancement. <em>(open: richer card face)</em></li>
 <li><strong>Field sprawl</strong> — the Google Books importer emits many fields (<code>authors</code>, <code>subtitle</code>, <code>previewLink</code>, <code>isbn13</code>, <code>isbn10</code>, <code>totalPage</code>) that are not currently rendered. No cleanup planned until a web clipper template is built. <em>(open)</em></li>
-<li><strong>Cover fields</strong> — current posts use remote <code>coverUrl</code> / <code>coverSmallUrl</code> URLs, not co-located assets. The bundle pattern (§12) is already in use structurally; co-locating covers is the next step. <em>(open)</em></li>
+<li><strong>Cover field — settled.</strong> One <code>cover:</code> field (renamed from <code>coverUrl</code>; <code>coverSmallUrl</code> dropped), remote or local, self-hosted at build via the HTML Transform (<a href="cover-image-pattern.html">cover convention</a>). Co-locating covers into bundles was considered and <strong>dropped</strong> (23 May 2026) as redundant. Covers stay flat.</li>
 <li><strong>Authoring (Web Clipper)</strong> — no Goodreads / StoryGraph web clipper template exists yet. Authoring is currently manual or via a Google Books importer script. <em>(open)</em></li>
 <li><strong>Micropub</strong> — no endpoint today; the Reading type is shaped as an IndieWeb read post (<code>u-read-of</code>), which is the canonical Micropub property for read posts. Forward-compat only; endpoint is a separate milestone after Phase 4.</li>
 <li><strong>Webmentions</strong> — discovery + the no-op render slot are shipped; receiving/rendering, sending, and the h-entry nesting fix (§5) are deferred to the webmention milestone. See §14.</li>
