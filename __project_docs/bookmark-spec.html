@@ -234,7 +234,7 @@ eleventyConfig.addLayoutAlias('bookmark', 'bookmark.njk');</code></pre>
 <p class="note"><strong>h-entry nesting (§5).</strong> The only <code>h-entry</code> in the layout will be the hidden authorship block; the visible <code>u-bookmark-of</code> anchor and <code>.e-content</code> will sit outside it, so a strict parser won't tie the bookmark target to the entry. Harmless while sending is off; fix it when the sending side of the webmention milestone lands — see §5 and §14.</p>
 
 <h2>14. Status &amp; open items</h2>
-<p><strong>Planned — not built.</strong> See <code>_generated/Plan - Phase 3 (10 new post types) - final.md</code>.</p>
+<p><strong>Planned — not built.</strong> See <code>__design/Plan - Phase 3 (10 new post types) - final.md</code>.</p>
 <ul>
 <li><strong>Phase 3a</strong> — Bookmark is the first of the five light types to be built (plan Step 2, order: Bookmark → Reply → RSVP → Like → Repost). No files for this type exist yet.</li>
 <li><strong>Step 0 prerequisite</strong> — the <code>POST_TYPES</code> refactor (<code>collections.js</code> + <code>eleventy.config.js</code>) must be done and verified (green build) before any new type is added.</li>

@@ -239,7 +239,7 @@ eleventyConfig.addLayoutAlias('rsvp', 'rsvp.njk');</code></pre>
 <p class="note"><strong>h-entry nesting (§5).</strong> The only <code>h-entry</code> in the layout will be the hidden authorship block; the visible <code>u-in-reply-to</code> anchor, the <code>p-rsvp</code> value, and <code>.e-content</code> will sit outside it, so a strict parser won't tie these properties to the entry. Harmless while sending is off; fix it when the sending side of the webmention milestone lands — see §5 and §14.</p>
 
 <h2>14. Status &amp; open items</h2>
-<p><strong>Planned — not built. See <code>_generated/Plan - Phase 3 (10 new post types) - final.md</code>.</strong></p>
+<p><strong>Planned — not built. See <code>__design/Plan - Phase 3 (10 new post types) - final.md</code>.</strong></p>
 <ul>
 <li><strong>Not built.</strong> No code exists for this type. All file paths, layout snippets, and wiring described in this spec are the planned shape, not live code.</li>
 <li><strong>Prerequisite — Step 0 refactor:</strong> the <code>POST_TYPES</code> array + <code>byCategory</code> export refactor in <code>collections.js</code> and <code>eleventy.config.js</code> must land and be verified before RSVP (or any Phase 3a type) is added. See §12.</li>
