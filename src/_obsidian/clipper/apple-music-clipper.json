@@ -1,0 +1,78 @@
+{
+	"schemaVersion": "0.1.0",
+	"name": "Apple Music",
+	"behavior": "create",
+	"noteContentFormat": "{{schema:@MusicAlbum:tracks|map:item => ({name: item.name, url: item.url})|template:\"- [${name}](${url})\\n\"}}",
+	"properties": [
+		{
+			"name": "title",
+			"value": "{{schema:@MusicAlbum:name}}",
+			"type": "text"
+		},
+		{
+			"name": "draft",
+			"value": "true",
+			"type": "checkbox"
+		},
+		{
+			"name": "date",
+			"value": "{{date}}",
+			"type": "text"
+		},
+		{
+			"name": "artist",
+			"value": "{{schema:@MusicAlbum:byArtist[0].name|wikilink}}",
+			"type": "text"
+		},
+		{
+			"name": "album",
+			"value": "{{schema:@MusicAlbum:name}}",
+			"type": "text"
+		},
+		{
+			"name": "source",
+			"value": "{{url}}",
+			"type": "text"
+		},
+		{
+			"name": "cover",
+			"value": "{{schema:@MusicAlbum:image}}",
+			"type": "text"
+		},
+		{
+			"name": "description",
+			"value": "{{description}}",
+			"type": "text"
+		},
+		{
+			"name": "genre",
+			"value": "{{schema:@MusicAlbum:genre|wikilink}}",
+			"type": "multitext"
+		},
+		{
+			"name": "year",
+			"value": "{{schema:@MusicAlbum:datePublished|date:\"YYYY\"}}",
+			"type": "number"
+		},
+		{
+			"name": "favoriteTrack",
+			"value": "",
+			"type": "text"
+		},
+		{
+			"name": "favoriteTrackUrl",
+			"value": "",
+			"type": "text"
+		},
+		{
+			"name": "odesliUrl",
+			"value": "",
+			"type": "text"
+		}
+	],
+	"triggers": [
+		"https://music\\.apple\\.com/[^/]+/album/"
+	],
+	"noteNameFormat": "{{schema:@MusicAlbum:name|safe_name}}",
+	"path": "posts/jams/"
+}
