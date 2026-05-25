@@ -1,0 +1,43 @@
+{
+	"schemaVersion": "0.1.0",
+	"name": "RSVP",
+	"behavior": "create",
+	"noteContentFormat": "",
+	"properties": [
+		{
+			"name": "title",
+			"value": "{{schema:@Event:name}}",
+			"type": "text"
+		},
+		{
+			"name": "draft",
+			"value": "true",
+			"type": "checkbox"
+		},
+		{
+			"name": "date",
+			"value": "{{date}}",
+			"type": "text"
+		},
+		{
+			"name": "rsvp",
+			"value": "",
+			"type": "text"
+		},
+		{
+			"name": "inReplyTo",
+			"value": "{{url}}",
+			"type": "text"
+		},
+		{
+			"name": "tags",
+			"value": "",
+			"type": "multitext"
+		}
+	],
+	"triggers": [
+		"schema:@Event"
+	],
+	"noteNameFormat": "{{schema:@Event:name|safe_name}}",
+	"path": "posts/rsvps/"
+}
