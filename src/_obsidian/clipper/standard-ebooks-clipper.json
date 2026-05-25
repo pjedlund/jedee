@@ -21,13 +21,13 @@
 		},
 		{
 			"name": "author",
-			"value": "{{selector:hgroup a span}}",
-			"type": "text"
+			"value": "{{selector:hgroup a span|wikilink}}",
+			"type": "multitext"
 		},
 		{
 			"name": "translator",
-			"value": "{{selector:#reading-ease p a}}",
-			"type": "text"
+			"value": "{{selector:[property=\"schema:translator\"] meta[property=\"schema:name\"]?content|wikilink}}",
+			"type": "multitext"
 		},
 		{
 			"name": "cover",
@@ -51,7 +51,7 @@
 		},
 		{
 			"name": "wordCount",
-			"value": "{{selector:article.ebook meta[property=\"schema:wordCount\"]?content}}",
+			"value": "{{meta:property:schema:wordCount}}",
 			"type": "number"
 		}
 	],
