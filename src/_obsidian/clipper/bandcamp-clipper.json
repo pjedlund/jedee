@@ -2,7 +2,7 @@
 	"schemaVersion": "0.1.0",
 	"name": "Bandcamp",
 	"behavior": "create",
-	"noteContentFormat": "",
+	"noteContentFormat": "{{schema:@MusicAlbum:track.itemListElement|map:item => ({name: item.item.name, url: item.item.mainEntityOfPage})|template:\"- [${name}](${url})\\n\"}}",
 	"properties": [
 		{
 			"name": "title",
@@ -55,14 +55,24 @@
 			"type": "number"
 		},
 		{
-			"name": "syndication",
+			"name": "favoriteTrack",
 			"value": "",
-			"type": "multitext"
+			"type": "text"
+		},
+		{
+			"name": "favoriteTrackUrl",
+			"value": "",
+			"type": "text"
+		},
+		{
+			"name": "odesliUrl",
+			"value": "",
+			"type": "text"
 		}
 	],
 	"triggers": [
 		"https?://[^/]+\\.bandcamp\\.com/album/"
 	],
-	"noteNameFormat": "{{schema:@MusicAlbum:name|safe_name}}, by {{schema:@MusicAlbum:byArtist.name|safe_name}}",
+	"noteNameFormat": "{{schema:@MusicAlbum:name|safe_name}}",
 	"path": "posts/jams/"
 }
