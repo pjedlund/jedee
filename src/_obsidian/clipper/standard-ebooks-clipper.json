@@ -26,7 +26,7 @@
 		},
 		{
 			"name": "translator",
-			"value": "{{selector:[property=\"schema:translator\"] meta[property=\"schema:name\"]?content|wikilink}}",
+			"value": "{{selector:[property=\"schema:translator\"] meta[property=\"schema:name\"]?content}}",
 			"type": "multitext"
 		},
 		{
@@ -41,7 +41,7 @@
 		},
 		{
 			"name": "description",
-			"value": "{{selector:article.ebook > meta[property=\"schema:description\"]?content}}",
+			"value": "{{description|replace:'/^.*?: /':''}}",
 			"type": "text"
 		},
 		{
