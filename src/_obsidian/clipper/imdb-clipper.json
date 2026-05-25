@@ -1,12 +1,12 @@
 {
 	"schemaVersion": "0.1.0",
-	"name": "Letterboxd",
+	"name": "IMDb",
 	"behavior": "create",
 	"noteContentFormat": "",
 	"properties": [
 		{
 			"name": "title",
-			"value": "{{schema:@Movie:name}}",
+			"value": "{{schema:name}}",
 			"type": "text"
 		},
 		{
@@ -36,11 +36,11 @@
 		},
 		{
 			"name": "director",
-			"value": "{{meta:name:twitter:data1|wikilink}}",
+			"value": "{{schema:director[*].name|wikilink}}",
 			"type": "multitext"
 		},
 		{
-			"name": "scoreLB",
+			"name": "scoreImdb",
 			"value": "{{schema:aggregateRating.ratingValue}}",
 			"type": "number"
 		},
@@ -51,7 +51,7 @@
 		},
 		{
 			"name": "cast",
-			"value": "{{schema:actors[*].name|slice:0,5|wikilink}}",
+			"value": "{{schema:actor[*].name|slice:0,5|wikilink}}",
 			"type": "multitext"
 		},
 		{
@@ -61,18 +61,18 @@
 		},
 		{
 			"name": "plot",
-			"value": "{{description}}",
+			"value": "{{schema:description}}",
 			"type": "text"
 		},
 		{
 			"name": "year",
-			"value": "{{schema:releasedEvent[*].startDate|date:\\\"YYYY\\\"}}",
+			"value": "{{schema:datePublished|date:\"YYYY\"}}",
 			"type": "number"
 		}
 	],
 	"triggers": [
-		"https://letterboxd.com/film/"
+		"https://www\\.imdb\\.com/title/tt\\d+"
 	],
-	"noteNameFormat": "{{schema:@Movie:name}}",
+	"noteNameFormat": "{{schema:name}}",
 	"path": "posts/watching/"
 }
