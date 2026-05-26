@@ -1,51 +1,37 @@
 ---
 layout: base
-schema: Recipe
+schema: BlogPosting
 ---
 
 <div class="region" style="--region-space-top: var(--space-xl-2xl)">
   <div class="wrapper flow prose">
     {% include 'partials/entry-header.njk' %}
 
-    {# The recipe IS structured content: a visible h-recipe carrying the µf2
-       properties (spec §5). p-name mirrors the entry-header <h1> as a hidden
-       <data> so the recipe name isn't rendered twice — the h1 is the visible
-       name. The h-recipe sits outside the hidden h-entry authorship block; that
-       root-nesting caveat is the shared, deferred webmention-milestone fix
-       (spec §5/§14), sharper here than the media types because it orphans a
-       microformat root rather than a u-* property. #}
-    <div class="h-recipe recipe flow">
-      <data class="p-name" value="{{ title }}"></data>
-      {% if description %}<p class="p-summary">{{ description }}</p>{% endif %}
+    {% if description %}<p>{{ description }}</p>{% endif %}
 
-      {% if recipe.yield or recipe.totalTime %}
-        <dl class="recipe-meta">
-          {% if recipe.yield %}<dt>Yields</dt><dd class="p-yield">{{ recipe.yield }}</dd>{% endif %}
-          {% if recipe.totalTime %}<dt>Total time</dt><dd><time class="dt-duration" datetime="{{ recipe.totalTime | toISODuration }}">{{ recipe.totalTime | formatDuration }}</time></dd>{% endif %}
-        </dl>
-      {% endif %}
+    {# Dish photo is cover-style: a remote URL (clipped) or a local passthrough
+       path (hand-authored). A plain <img> lets eleventy-img's HTML Transform
+       self-host a remote src and optimize a local one — the {% image %}
+       shortcode is local-only (it prepends ./src and breaks on a remote URL). #}
+    {% if cover %}
+      <img class="cover" eleventy:optional="placeholder" src="{{ cover | safe }}" alt="{{ title }}" loading="lazy" eleventy:widths="320,640,960" sizes="auto">
+    {% endif %}
 
-      {# Dish photo is a LOCAL asset → {% image %} (u-photo lands via the 6th
-         positional imageClass arg, image.js:70). Optional; the block, card,
-         feed, and schema all degrade gracefully when it's absent. #}
-      {% if recipe.image %}
-        {% image recipe.image, title, "", "eager", "", "u-photo" %}
-      {% endif %}
+    {% if yield or totalTime %}
+      <dl class="recipe-meta">
+        {% if yield %}<dt>Yields</dt><dd>{{ yield }}</dd>{% endif %}
+        {% if totalTime %}<dt>Total time</dt><dd><time datetime="{{ totalTime | toISODuration }}">{{ totalTime | formatDuration }}</time></dd>{% endif %}
+      </dl>
+    {% endif %}
 
-      <h2>Ingredients</h2>
-      <ul>
-        {% for item in recipe.ingredients %}<li class="p-ingredient">{{ item }}</li>{% endfor %}
-      </ul>
-
-      <h2>Instructions</h2>
-      <ol class="e-instructions">
-        {% for step in recipe.instructions %}<li>{{ step }}</li>{% endfor %}
-      </ol>
-    </div>
-
+    {# Ingredients + instructions live in the note body as markdown (kepano
+       shape) — the Obsidian Web Clipper can't emit a nested `recipe:` object,
+       so a recipe is a body-driven post like every other type. #}
     <div class="e-content">
       {{ content | safe }}
     </div>
+
+    {% if source %}<p class="recipe-source">Recipe from <a href="{{ source }}">{{ source }}</a></p>{% endif %}
 
     {% include 'partials/backlinks.njk' %}
     {% include 'partials/entry-footer.njk' %}

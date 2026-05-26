@@ -1,18 +1,20 @@
-{# Archive card for the Recipe type (spec §6). Image-led: the dish photo fills
-   <custom-card>'s image slot via the {% image %} shortcode (recipe.image is a
-   local asset). Degrades to a text-led card when no dish photo is set — the
-   headline is always present (title-required type). A small duration/yield
-   badge sits in the content slot. The default 16/9 image ratio suits dish
-   photos, so — unlike card-photo's data-photo — no custom-card aspect override
-   is needed. #}
+{# Archive card for the Recipe type. Image-led: the dish photo fills
+   <custom-card>'s image slot. `cover` is a remote URL (clipped) or a local
+   passthrough path (hand-authored), so — like card-watching — it's a plain
+   <img> (the {% image %} shortcode is local-only and breaks on a remote URL).
+   Degrades to a text-led card when no dish photo is set — the headline is
+   always present (title-required type). A small duration/yield badge sits in
+   the content slot. The default 16/9 image ratio suits dish photos, so — unlike
+   card-watching's data-poster — no aspect override is needed. #}
 
 {% set headingLevel = headingLevel | default("h2") %}
 {% set definedDate = definedDate | default(item.date) %}
 {% set showTags = showTags | default(true) %}
 
 <custom-card clickable>
-  {% if item.data.recipe.image %}
-    <div slot="image" webc:nokeep>{% image item.data.recipe.image, item.data.title, null, "lazy" %}
+  {% if item.data.cover %}
+    <div slot="image" webc:nokeep>
+      <img eleventy:optional="placeholder" src="{{ item.data.cover | safe }}" alt="{{ item.data.title }}" loading="lazy" eleventy:widths="320,480,640" sizes="auto">
     </div>
   {% endif %}
   <{{ headingLevel }} slot="headline" class="text-step-1">
@@ -30,10 +32,10 @@
   {% endif %}
   <div slot="content" webc:nokeep>
     {{ item.data.description | markdownFormat | safe }}
-    {% if item.data.recipe.totalTime or item.data.recipe.yield %}
+    {% if item.data.totalTime or item.data.yield %}
       <p class="recipe-badge cluster" role="list">
-        {% if item.data.recipe.totalTime %}<span data-badge role="listitem">{{ item.data.recipe.totalTime | formatDuration }}</span>{% endif %}
-        {% if item.data.recipe.yield %}<span data-badge role="listitem">{{ item.data.recipe.yield }}</span>{% endif %}
+        {% if item.data.totalTime %}<span data-badge role="listitem">{{ item.data.totalTime | formatDuration }}</span>{% endif %}
+        {% if item.data.yield %}<span data-badge role="listitem">{{ item.data.yield }}</span>{% endif %}
       </p>
     {% endif %}
   </div>
