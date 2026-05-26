@@ -56,7 +56,7 @@
 		},
 		{
 			"name": "cover",
-			"value": "{{schema:image|replace:\"/-0-\\d+-0-\\d+-crop/\":\"-0-1000-0-1500-crop\"}}",
+			"value": "{{schema:image|replace:\"-0-230-0-345-crop\":\"-0-1000-0-1500-crop\"}}",
 			"type": "text"
 		},
 		{
