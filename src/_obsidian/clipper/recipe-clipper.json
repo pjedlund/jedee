@@ -1,0 +1,58 @@
+{
+	"schemaVersion": "0.1.0",
+	"name": "Recipe",
+	"behavior": "create",
+	"noteContentFormat": "## Ingredients\n\n{{schema:recipeIngredient|list}}\n\n## Instructions\n\n{{schema:recipeInstructions[*].text|list:numbered}}",
+	"properties": [
+		{
+			"name": "title",
+			"value": "{{schema:@Recipe:name}}",
+			"type": "text"
+		},
+		{
+			"name": "draft",
+			"value": "true",
+			"type": "checkbox"
+		},
+		{
+			"name": "date",
+			"value": "{{date}}",
+			"type": "text"
+		},
+		{
+			"name": "description",
+			"value": "{{description}}",
+			"type": "text"
+		},
+		{
+			"name": "cover",
+			"value": "{{schema:image}}",
+			"type": "text"
+		},
+		{
+			"name": "yield",
+			"value": "{{schema:recipeYield}}",
+			"type": "text"
+		},
+		{
+			"name": "totalTime",
+			"value": "{{schema:totalTime}}",
+			"type": "text"
+		},
+		{
+			"name": "source",
+			"value": "{{url}}",
+			"type": "text"
+		},
+		{
+			"name": "tags",
+			"value": "",
+			"type": "multitext"
+		}
+	],
+	"triggers": [
+		"schema:@Recipe"
+	],
+	"noteNameFormat": "{{schema:@Recipe:name|safe_name}}",
+	"path": "posts/recipes/"
+}
