@@ -41,7 +41,7 @@
 		},
 		{
 			"name": "description",
-			"value": "{{description}}",
+			"value": "",
 			"type": "text"
 		},
 		{
