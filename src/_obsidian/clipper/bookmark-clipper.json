@@ -6,7 +6,7 @@
 	"properties": [
 		{
 			"name": "title",
-			"value": "{{title}}",
+			"value": "{{meta:property:og:title}}",
 			"type": "text"
 		},
 		{
@@ -36,6 +36,6 @@
 		}
 	],
 	"triggers": [],
-	"noteNameFormat": "{{title|safe_name}}",
+	"noteNameFormat": "{{meta:property:og:title|safe_name}}",
 	"path": "posts/bookmarks/"
 }
