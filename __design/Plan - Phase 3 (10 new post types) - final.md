@@ -183,5 +183,21 @@ the archive cards, and run a sample URL through indiewebify.me for µf2 sanity.
   parser won't tie the response property to the h-entry. Accepted for v1 because webmention *sending* isn't wired
   up yet. Fix in the webmention milestone — either give the response layouts a proper self-contained
   `h-entry`, or restructure `note.njk` + shared chrome (the latter also fixes the existing types).
+  - **Parse-verified 2026-05-29** (`microformats-parser` + `mf2py` on rebuilt `like.njk` markup): the visible
+    `u-like-of` / `dt-published` / `e-content` are **dropped entirely**, not merely "orphaned at top level" —
+    mf2 only collects properties that descend from a root, and `.region`/`.wrapper`/`base.njk` carry no `h-*`.
+    The parsed `h-entry` contains only author + url, so an outbound like/reply would be received as a generic
+    `mention-of`, never a typed like/reply. Three secondary warts in the hidden block: entry `p-name` resolves
+    to the *author's* name (not the post title); the entry carries two `u-url`s (permalink + home, from the
+    `p-name u-url` author anchor); and the author `h-card` has name + photo but no `url`. Inbound *attribution*
+    still works (webmention.io's authorship algorithm finds the nested `u-author h-card`), so this stays moot
+    while receiving is a stub (`partials/webmentions.njk`) and sending is unwired.
+  - **Recommendation (for the webmention milestone): take option b — promote the visible `.wrapper` to the
+    `h-entry` root in the shared chrome** (`<h1>` → `p-name`, one hidden `u-author h-card` *with* a `u-url`
+    inside the root, entry `u-url` = permalink only). One change fixes all 15 types and clears the three warts,
+    versus option a which re-solves it per-layout and leaves the existing types' warts. Bonus: this also lets the
+    event `h-event` nest inside `h-entry` as already specified above (Phase 3b Event). Sequence the work as
+    restructure-chrome → re-parse one built page per type (php.microformats.io / pin13 / indiewebify.me) →
+    then wire outbound sending. When chosen, flip this entry from DEFERRED to the resolution.
 - **Feed title fallback** for title-less Reply/RSVP entries — computed fallback vs accept empty. *(still open)*
 - **Nav inclusion** of Like/Repost — currently excluded; include if you want them discoverable. *(still open)*
