@@ -1,0 +1,26 @@
+{
+	"schemaVersion": "0.1.0",
+	"name": "Like",
+	"behavior": "create",
+	"noteContentFormat": "",
+	"properties": [
+		{
+			"name": "draft",
+			"value": "true",
+			"type": "checkbox"
+		},
+		{
+			"name": "date",
+			"value": "{{date}}",
+			"type": "text"
+		},
+		{
+			"name": "likeOf",
+			"value": "{{url}}",
+			"type": "text"
+		}
+	],
+	"triggers": [],
+	"noteNameFormat": "Liked {{meta:property:og:title|safe_name}}",
+	"path": "posts/likes/"
+}
