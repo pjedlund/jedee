@@ -1,0 +1,41 @@
+{
+	"schemaVersion": "0.1.0",
+	"name": "Reply",
+	"behavior": "create",
+	"noteContentFormat": "",
+	"properties": [
+		{
+			"name": "title",
+			"value": "Re: {{meta:property:og:title}}",
+			"type": "text"
+		},
+		{
+			"name": "draft",
+			"value": "true",
+			"type": "checkbox"
+		},
+		{
+			"name": "date",
+			"value": "{{date}}",
+			"type": "text"
+		},
+		{
+			"name": "inReplyTo",
+			"value": "{{url}}",
+			"type": "text"
+		},
+		{
+			"name": "description",
+			"value": "{{description}}",
+			"type": "text"
+		},
+		{
+			"name": "tags",
+			"value": "",
+			"type": "multitext"
+		}
+	],
+	"triggers": [],
+	"noteNameFormat": "{{meta:property:og:title|safe_name}}",
+	"path": "posts/replies/"
+}
