@@ -1,7 +1,7 @@
 ---
 title: 'Accessibility Statement'
 description: 'Commitment to digital accessibility and how to report accessibility issues.'
-date: "Last Modified"
+date: "git Last Modified"
 permalink: /accessibility/index.html
 layout: page
 ---
