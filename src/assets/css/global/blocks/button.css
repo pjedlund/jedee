@@ -103,6 +103,10 @@
 }
 
 .button[data-icon] {
+  /* Minimum tap target: the icon glyph stays small, but the hit area is
+     held at 48×48px to satisfy WCAG 2.5.5 / Lighthouse. Override per
+     context, e.g. --button-icon-min-size: 0 to opt out. */
+  --button-icon-min-size: 3rem;
   --button-padding: var(--space-2xs);
   --button-bg: var(--color-bg);
   --button-border-color: var(--color-bg);
@@ -110,6 +114,8 @@
   --button-hover-color: var(--color-accent-orange);
   --button-radius: 50%;
   aspect-ratio: 1;
+  min-block-size: var(--button-icon-min-size);
+  min-inline-size: var(--button-icon-min-size);
   display: inline-grid;
   place-items: center;
 }
