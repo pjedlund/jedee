@@ -1,4 +1,4 @@
-# jedee
+# johanedlund.se
 
 Personal website using [Eleventy](https://www.11ty.dev) and [Eleventy Excellent](https://github.com/madrilene/eleventy-excellent).
 
