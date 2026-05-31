@@ -9,17 +9,24 @@ export const lang = 'en';
 export const skipContent = 'Skip to content';
 // for the site content author, used in <head> meta and post h-card microformat
 export const author = {
-  name: 'Johan Edlund', // i.e. Lene Saile - page / blog author's name. Must be set.
+  name: 'Johan Edlund', // page / blog author's name. Must be set.
   avatar: '/avatar.webp', // path to the author's avatar.
-  email: 'me@johanedlund.se', // i.e. hola@lenesaile.com - email of the author
-  website: 'https://www.johanedlund.se', // i.e. https.://www.lenesaile.com - the personal site of the author
+  email: 'me@johanedlund.se', // email of the author
+  website: 'https://johanedlund.se', // the personal site of the author (apex is canonical)
+  // rel=me identities — looped into <link rel="me"> in head/meta-info.njk; the
+  // forward half of bidirectional rel=me that powers IndieAuth / RelMeAuth.
+  me: [
+    'https://github.com/pjedlund',
+    'https://mastodon.social/@pjedlund',
+    'https://bsky.app/profile/johanedlund.se'
+  ],
   fediverse: '@pjedlund@mastodon.social' // used for highlighting journalism on the fediverse. Can be Mastodon, Flipboard, Threads, WordPress (with the ActivityPub plugin installed), PeerTube, Pixelfed, etc. https://blog.joinmastodon.org/2024/07/highlighting-journalism-on-mastodon/
 };
 // for the site developer, used for footer credits and humans.txt info
 export const creator = {
-  name: 'Johan Edlund', // i.e. Lene Saile - creator's (developer) name.
+  name: 'Johan Edlund', // creator's (developer) name.
   email: 'me@johanedlund.se',
-  website: 'https://www.johanedlund.se',
+  website: 'https://johanedlund.se',
   mastodon: 'https://mastodon.social/@pjedlund',
   x: 'https://x.com/pjedlund'
 };
@@ -29,8 +36,7 @@ export const themeColor = '#495464'; // used in manifest, for example primary co
 export const themeLight = '#F4F4F2'; // used for meta tag theme-color, if light colors are prefered. best use value set for light bg
 export const themeDark = '#bbbfca'; // used for meta tag theme-color, if dark colors are prefered. best use value set for dark bg
 export const opengraph_default = '/assets/images/template/opengraph-default.jpg'; // fallback/default meta image
-export const opengraph_default_alt =
-  "Visible content: An Eleventy starter with CUBE CSS, Cube CSS, Every Layout, Design Tokens and Tailwind for uitility classes. A workflow for building modern and resilient websites, introduced by Andy Bell's project buildexcellentwebsit.es"; // alt text for default meta image"
+export const opengraph_default_alt = 'Johan Edlund — personal website'; // alt text for default meta image
 export const blog = {
   // RSS feed
   name: 'Johan Edlund',
@@ -74,7 +80,8 @@ export const navigation = {
   ariaBottom: 'Complementary',
   ariaPlatforms: 'Platforms',
   drawerNav: true,
-  subMenu: true
+  subMenu: true,
+  hideNav: true // soft-launch: suppress the main nav site-wide (header still has logo + skip-link). Flip to false to restore.
 };
 export const themeSwitch = {
   title: 'Theme',

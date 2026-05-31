@@ -7,6 +7,8 @@
 
       <span class="font-base">{{ meta.siteName }}</span>
     </a>
-    {% include "partials/main-nav.njk" %}
+    {% if not meta.navigation.hideNav %}
+      {% include "partials/main-nav.njk" %}
+    {% endif %}
   </div>
 </header>
