@@ -81,6 +81,16 @@ export const themeSwitch = {
   light: 'light',
   dark: 'dark'
 };
+// IndieWeb endpoints, discovered via <link rel> in the <head> (see
+// _includes/head/meta-info.njk). The Micropub server is this site's Netlify
+// Function at /api/micropub; auth is fully delegated to hosted IndieAuth
+// services — this site runs no auth server, it only verifies the bearer token.
+// micropub tracks `url` so the link points at whatever domain the deploy serves.
+export const indieweb = {
+  micropub: `${url}/api/micropub`,
+  authorizationEndpoint: 'https://indieauth.com/auth',
+  tokenEndpoint: 'https://tokens.indieauth.com/token'
+};
 export const greenweb = {
   // https://carbontxt.org/
   disclosures: [{

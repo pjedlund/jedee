@@ -26,3 +26,10 @@ for = "/assets/scripts/components/*.js"
 [build]
   command = "npm run build"
   publish = "dist"
+
+# Micropub server lives in netlify/functions/micropub.js and self-routes to
+# /api/micropub via its `export const config = { path }` (Functions v2). esbuild
+# bundles the function with its npm deps (@benjifs/micropub, github-store,
+# gray-matter). The Eleventy build ignores netlify/ (input dir is src/).
+[functions]
+  node_bundler = "esbuild"
