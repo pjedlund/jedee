@@ -2,7 +2,5 @@
   "layout": "rsvp",
   "tags": "posts",
   "category": "rsvp",
-  "permalink": "/rsvps/{{ page.fileSlug | slugify }}/index.html",
-  "eleventyExcludeFromCollections": false,
-  "excludeFromSitemap": false
+  "permalink": "/rsvps/{{ page.fileSlug | slugify }}/index.html"
 }
