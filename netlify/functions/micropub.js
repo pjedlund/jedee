@@ -88,9 +88,14 @@ export const slugify = (s = '') =>
     .replace(/-+/g, '-')
     .replace(/^-+|-+$/g, '')
 
+// Strip HTML tags + entities so markup in the body (e.g. an <a href>, which
+// some clients send) never leaks into the slug.
+export const stripHtml = (s = '') =>
+  String(s).replace(/<[^>]*>/g, ' ').replace(/&[a-z#0-9]+;/gi, ' ')
+
 // First ~10 words of the body, slugified and capped — for title-less notes.
 export const contentSlug = (body = '') => {
-  const s = slugify(body).split('-').filter(Boolean).slice(0, 10).join('-')
+  const s = slugify(stripHtml(body)).split('-').filter(Boolean).slice(0, 10).join('-')
   return s.slice(0, 70).replace(/-+$/, '')
 }
 
@@ -182,9 +187,12 @@ class JedeeStore {
     const m = filename.match(/^(.*)\/([^/]+)\/([^/]+)\.md$/)
     if (m) {
       const [, dir, folder, slug] = m
-      if (/^\d+$/.test(slug)) {
+      // Title-less posts (note/reply/like/…) — the engine slugged from the raw
+      // body (HTML and all) or a bare timestamp, so markup/length can leak into
+      // the URL. Re-derive a clean slug; titled posts keep the engine's title-slug.
+      if (!data.title) {
         const better = contentSlug(parsed.content) || targetSlug(data)
-        if (better) {
+        if (better && better !== slug) {
           finalName = `${dir}/${folder}/${better}.md`
           if (ME && this.onLocation) {
             this.onLocation(`${ME.replace(/\/$/, '')}/${folder}/${better}`)

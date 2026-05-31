@@ -14,6 +14,7 @@ import assert from 'node:assert/strict'
 
 import {
   slugify,
+  stripHtml,
   contentSlug,
   targetSlug,
   flatten,
@@ -116,6 +117,19 @@ test('contentSlug: first ~10 words of the body, slugified', () => {
     'just-saw-an-incredible-sunset-over-the-fjord-tonight-breathtaking'
   )
   assert.equal(contentSlug(''), '')
+})
+
+test('contentSlug: strips HTML in the body so markup never reaches the slug', () => {
+  // regression: a note whose body carries an <a href> must not slug the markup
+  assert.equal(
+    contentSlug('A new note from Sparkles via the <a href="https://indieweb.org/Micropub">micropub</a> standard.'),
+    'a-new-note-from-sparkles-via-the-micropub-standard'
+  )
+})
+
+test('stripHtml: removes tags and entities', () => {
+  assert.equal(stripHtml('Tom &amp; <em>Jerry</em>').replace(/\s+/g, ' ').trim(), 'Tom Jerry')
+  assert.equal(stripHtml('<a href="https://x">link</a>').trim(), 'link')
 })
 
 test('targetSlug: last path segment, hostname fallback', () => {
