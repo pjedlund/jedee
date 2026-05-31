@@ -14,9 +14,9 @@
 </div>
 
 <header class="doc-header" id="top">
-  <p class="eyebrow">endpoint design · planned (v1)</p>
+  <p class="eyebrow">endpoint design · built (v1) · 2026-05-31</p>
   <h1>Micropub endpoint</h1>
-  <p class="meta">Brainstormed 30 May 2026 · <strong>design only — not built</strong> · v1 = create-only, text posts · ports the <code>indiee</code> ROADMAP <strong>M11</strong> decision onto JEDEE-as-it-is · companion to the planned <code>micropub</code> skill</p>
+  <p class="meta">Brainstormed 30 May 2026 · <strong>built (v1) 2026-05-31</strong> · v1 = create-only, text posts · ports the <code>indiee</code> ROADMAP <strong>M11</strong> decision onto JEDEE-as-it-is · companion to the <code>micropub</code> skill</p>
 </header>
 
 <nav id="toc" class="toc" aria-label="Sections"></nav>
@@ -25,7 +25,7 @@
 
 <p><a href="https://micropub.spec.indieweb.org/">Micropub</a> is the W3C-recommended way to create posts on your own site over HTTP: any Micropub <em>client</em> can talk to any Micropub <em>server</em>. This page is the design for JEDEE's Micropub <strong>server</strong> — a single Netlify Function that turns an incoming <code>h-entry</code> into a shape-correct <code>.md</code> committed to the repo. The goal is <strong>post-from-anywhere</strong>: publish a note, reply, like, bookmark, RSVP — or a film/book/album via <a href="https://github.com/benjifs/sparkles">Sparkles</a>' editors — from a phone, with the laptop off.</p>
 
-<p class="note"><strong>Status: design, not a built feature.</strong> Nothing here is wired yet — no Netlify Function, no dependencies, no endpoint. JEDEE today advertises only <code>rel=webmention</code> (delegated to webmention.io) and <code>rel=me</code>; there is <strong>no <code>authorization_endpoint</code>, <code>token_endpoint</code>, or <code>micropub</code> link</strong>. This design was recovered, not invented: the archived <code>indiee-phase-1</code> template already settled the architecture in its ROADMAP milestone <strong>M11</strong> (<em>"Default Micropub endpoint → serverless"</em>). What's new here is reconciling M11 against the three places JEDEE diverged from that template (§5) and the 2026 IndieAuth landscape (§4). The build plan is <strong>both</strong>: capture this as the portable <code>micropub</code> skill, then build the endpoint.</p>
+<p class="note"><strong>Status: built (v1), 2026-05-31</strong> (branch <code>feat/micropub-endpoint</code>; not yet pushed). The Function (<code>netlify/functions/micropub.js</code>), its deps, the <code>[functions]</code> esbuild block, the <code>meta.indieweb</code> block, and the three discovery links (<code>micropub</code>/<code>authorization_endpoint</code>/<code>token_endpoint</code>) are all wired; before a real client can authenticate it still needs the Netlify env vars set + the domain move (§10). This design was recovered, not invented: the archived <code>indiee-phase-1</code> template already settled the architecture in its ROADMAP milestone <strong>M11</strong> (<em>"Default Micropub endpoint → serverless"</em>). What's new here is reconciling M11 against the three places JEDEE diverged from that template (§5) and the 2026 IndieAuth landscape (§4). The build plan is <strong>both</strong>: capture this as the portable <code>micropub</code> skill, then build the endpoint.</p>
 
 <h2>1. What it buys JEDEE — and how it sits next to the Web Clipper</h2>
 <p>JEDEE already has a CMS for browser-shaped posts: the <a href="web-clipper-pattern.html">Obsidian Web Clipper</a>. Micropub does <strong>not</strong> replace it — the two are complementary authoring paths over the same <code>.md</code> content layer:</p>
@@ -141,7 +141,20 @@ GITHUB_REPO    = jedee</code></pre>
 <h2>10. Sequencing — coupled to the domain move</h2>
 <p class="note"><strong>Buildable now, usable only after <code>johanedlund.se</code> is live.</strong> IndieAuth authenticates you by following <code>rel=me</code> links <em>from your <code>me</code> URL</em> and back (bidirectional). JEDEE is currently <code>noindex</code> on <code>jedee.netlify.app</code>, while <code>rel=me</code> and the webmention endpoint already point at <code>johanedlund.se</code>. So a Micropub client authenticating against <code>https://johanedlund.se/</code> needs that domain serving the real site with matching <code>rel=me</code> back-links. The endpoint can be written and unit-tested against the token endpoint before then, but real client auth presupposes the domain switch (an open question in <code>TODO.md</code>).</p>
 
-<h2>11. Reference files &amp; sources</h2>
+<h2>11. Host portability — not tied to Netlify</h2>
+<p>Netlify is only the function runtime + static host here; nothing proprietary is baked in. The three load-bearing pieces are all host-agnostic: the <strong>engine</strong> (<code>@benjifs/micropub</code>) is a plain Web <code>Request → Response</code> handler — the same shape Cloudflare Workers, Vercel, Deno, and Bun use; <strong>storage</strong> (<code>@benjifs/github-store</code>) only talks to the GitHub Contents API over <code>fetch</code> (the repo is the database — the host never sees the posts); and <strong>auth</strong> is fully hosted IndieAuth (§4), external to any host. The Function imports <strong>zero <code>@netlify/*</code> packages</strong> — only standard Web APIs (<code>Request</code>/<code>Response</code>/<code>Headers</code>/<code>URL</code>) plus <code>process.env</code>.</p>
+<table>
+<tr><th>Concern</th><th>Netlify-ism (as built)</th><th>On another host</th></tr>
+<tr><td>Routing</td><td><code>export const config = { path: '/api/micropub' }</code></td><td>Vercel routes by file path under <code>api/</code>; Cloudflare by Wrangler config; Deno by its own router</td></tr>
+<tr><td>Handler export</td><td><code>export default async (req) =&gt; Response</code></td><td>Web-standard; Cloudflare wants <code>export default { fetch(req, env) }</code></td></tr>
+<tr><td>Config</td><td><code>process.env.*</code></td><td>Node hosts (Vercel / Lambda) work as-is; Cloudflare Workers pass <code>env</code> as an arg; Deno uses <code>Deno.env</code></td></tr>
+<tr><td>Build config</td><td><code>netlify.toml</code> <code>[functions]</code> (esbuild)</td><td>the host's equivalent build/bundler config</td></tr>
+<tr><td>Discovery link</td><td><code>meta.url</code> reads Netlify's auto-set <code>URL</code> env</td><td>set that env (or the <code>me</code> base URL) yourself</td></tr>
+</table>
+<p class="note"><strong>Migration cost ≈ a 10–15-line glue rewrite</strong> — the wrapper, the routing, and env access. The logic that makes a posted entry shape-correct (the <code>formatSlug</code> folder-map, the <code>store</code> wrapper's frontmatter rewrite, the title-less slug) is plain JS and moves untouched; the posts still land in the same repo and render identically. Only <em>what rebuilds the static site on commit</em> changes — and Netlify, Cloudflare Pages, and Vercel all do build-on-push. To make a future move trivial, extract the engine config + the <code>store</code> wrapper into a host-neutral module and keep only the export/routing line per host.</p>
+<p class="note"><strong>One Node-runtime caveat.</strong> The deferred <em>media</em> path (<code>parseBody</code>'s multipart branch) uses Node streams (<code>node:stream</code> + <code>busboy</code>), so it assumes a Node runtime. The v1 create path (JSON / form-urlencoded) uses only <code>req.json()</code> / <code>req.formData()</code> — pure Web standard — so what's built is fully portable; only the not-yet-wired media upload would need a tweak on a non-Node edge runtime (e.g. Cloudflare Workers).</p>
+
+<h2>12. Reference files &amp; sources</h2>
 <ul>
 <li>Engine: <a href="https://github.com/benjifs/micropub"><code>@benjifs/micropub</code></a> · store: <a href="https://github.com/benjifs/github-store"><code>@benjifs/github-store</code></a> · wrapper: <a href="https://github.com/benjifs/serverless-micropub"><code>serverless-micropub</code></a></li>
 <li>Client: <a href="https://github.com/benjifs/sparkles">Sparkles</a> · spec: <a href="https://micropub.spec.indieweb.org/">micropub.spec.indieweb.org</a> · <a href="https://indieauth.spec.indieweb.org/">indieauth.spec.indieweb.org</a></li>
