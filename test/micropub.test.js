@@ -3,7 +3,9 @@
 // from a clipped one — folder routing, timestamp-prefix stripping, and the
 // kebab->camelCase frontmatter rewrite — plus the title-less slug strategy.
 //
-// Run: node --test netlify/functions/micropub.test.js
+// Run: npm run test:unit   (or: node --test test/micropub.test.js)
+// Lives OUTSIDE netlify/functions/ on purpose: Netlify treats every .js file in
+// that directory as a deployable function, so a test file there breaks the deploy.
 // (Real-client auth is exercised against the token endpoint after the domain
 // move — see the sequencing note in __project_docs/micropub-pattern.html.)
 
@@ -18,7 +20,7 @@ import {
   formatSlug,
   rewriteFrontmatter,
   TYPE_DIR
-} from './micropub.js'
+} from '../netlify/functions/micropub.js'
 
 test('formatSlug: maps engine post-type to the site folder', () => {
   assert.equal(formatSlug('note', 'hello'), 'notes/hello')
