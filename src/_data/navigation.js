@@ -4,10 +4,6 @@ export default {
       url: '/about/'
     },
     {
-      text: 'Docs',
-      url: '/get-started/'
-    },
-    {
       text: 'Posts',
       url: '/posts/',
       submenu: [{

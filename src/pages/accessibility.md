@@ -16,16 +16,13 @@ The [Web Content Accessibility Guidelines (WCAG)](https://www.w3.org/WAI/standar
 
 My aim is to be conformant with [ WCAG 2.1 Level AA.](https://www.w3.org/WAI/standards-guidelines/wcag/)
 
-
-Compliance depends on how users implement and customize the starter for their specific content and use cases.
-
 ## Testing
 
-[pa11y-ci](https://github.com/pa11y/pa11y-ci) is used to run automated accessibility tests, [see the Docs](/docs/tests/).
+[pa11y-ci](https://github.com/pa11y/pa11y-ci) is used to run automated accessibility tests.
 
 ## Feedback
 
-I very much welcome your feedback and suggestions on the accessibility of this starter project. Please let me know if you encounter any accessibility barriers:
+I very much welcome your feedback and suggestions on the accessibility of this site. Please let me know if you encounter any accessibility barriers:
 
 - **GitHub Issues**: [Report accessibility issues](https://github.com/pjedlund/jedee/issues)
 
