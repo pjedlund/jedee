@@ -15,7 +15,7 @@
   {% if showTags and item.data.tags.length > 1 %}
     <div slot="tag" webc:nokeep>
       {% for tag in item.data.tags %}
-        {% if tag != "reading" %}
+        {% if tag != "posts" %}
           <span class="button" data-small-button>{{ tag }}</span>
         {% endif %}
       {% endfor %}
