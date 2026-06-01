@@ -61,7 +61,7 @@
 />
 <meta
   property="og:image"
-  content="{%- if (layout == 'post') or (layout == 'note') -%}
+  content="{%- if layout == 'post' -%}
     {{- meta.url -}}/assets/og-images/{{ title | slugify }}-preview.jpeg
   {%- else -%}
     {{- meta.url -}}{{- meta.opengraph_default -}}
@@ -69,7 +69,7 @@
 />
 <meta
   property="og:image:alt"
-  content="{%- if (layout == 'post') or (layout == 'note') -%}
+  content="{%- if layout == 'post' -%}
     {{- title -}}
   {%- else -%}
     {{- meta.opengraph_default_alt -}}
