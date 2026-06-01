@@ -106,11 +106,15 @@ test('rewriteFrontmatter: visibility public / stray value -> dropped, never leak
   )
 })
 
-test('rewriteFrontmatter: tags merge keeps the firehose tag + user tags', () => {
-  assert.deepEqual(rewriteFrontmatter({ tags: ['css', 'webdev'] }).tags, ['posts', 'css', 'webdev'])
-  assert.deepEqual(rewriteFrontmatter({ tags: 'css' }).tags, ['posts', 'css'])
-  // no de-dup surprises if the client already sent "posts"
-  assert.deepEqual(rewriteFrontmatter({ tags: ['posts', 'css'] }).tags, ['posts', 'css'])
+test('rewriteFrontmatter: tags carry only the user tags; the folder JSON adds "posts"', () => {
+  // the folder JSON's tags:"posts" is concatenated by Eleventy's data cascade, so
+  // we must NOT re-add it here or the post double-tags ("posts" + "posts").
+  assert.deepEqual(rewriteFrontmatter({ tags: ['css', 'webdev'] }).tags, ['css', 'webdev'])
+  assert.deepEqual(rewriteFrontmatter({ tags: 'css' }).tags, ['css'])
+  // a client that sends "posts" itself must not reintroduce the duplicate
+  assert.deepEqual(rewriteFrontmatter({ tags: ['posts', 'css'] }).tags, ['css'])
+  // only "posts" -> drop the key entirely; the folder JSON re-adds it
+  assert.ok(!('tags' in rewriteFrontmatter({ tags: ['posts'] })))
   // empty -> drop the key so the folder JSON's tags:"posts" is inherited
   assert.ok(!('tags' in rewriteFrontmatter({ tags: [] })))
   assert.ok(!('tags' in rewriteFrontmatter({ tags: '' })))

@@ -1,6 +1,5 @@
 ---
 tags:
-  - posts
   - micropub
   - indieweb
 date: '2026-05-31T18:51:24.164Z'

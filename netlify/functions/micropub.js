@@ -162,11 +162,14 @@ export const rewriteFrontmatter = (data = {}) => {
     out[key] = value
   }
 
-  // tags: keep the firehose tag so the post stays in collections.posts and the
-  // feeds, and keep any user tags (engine mapped Micropub `category` -> `tags`).
+  // tags: the folder JSON's tags:"posts" is added by Eleventy's data cascade
+  // (deep merge concatenates `tags`), so front matter carries ONLY the user tags
+  // (engine mapped Micropub `category` -> `tags`). Re-adding the firehose tag here
+  // would double it — folder "posts" + this "posts" — so strip it out instead.
   if ('tags' in out) {
     const user = (Array.isArray(out.tags) ? out.tags : [out.tags]).filter(Boolean)
-    if (user.length) out.tags = [...new Set([FIREHOSE_TAG, ...user])]
+    const userTags = [...new Set(user)].filter((tag) => tag !== FIREHOSE_TAG)
+    if (userTags.length) out.tags = userTags
     else delete out.tags // inherit tags:"posts" from the folder JSON
   }
 
