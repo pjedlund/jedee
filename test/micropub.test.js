@@ -20,6 +20,7 @@ import {
   flatten,
   formatSlug,
   rewriteFrontmatter,
+  resolveFilename,
   TYPE_DIR
 } from '../netlify/functions/micropub.js'
 
@@ -86,6 +87,25 @@ test('rewriteFrontmatter: post-status draft -> draft:true, published omitted', (
   assert.deepEqual(rewriteFrontmatter({ 'post-status': 'published' }), {})
 })
 
+test('rewriteFrontmatter: visibility unlisted -> native key kept (build interprets it)', () => {
+  assert.deepEqual(rewriteFrontmatter({ visibility: 'unlisted' }), { visibility: 'unlisted' })
+})
+
+test('rewriteFrontmatter: visibility private -> draft:true (unpublished)', () => {
+  // no true "private" on a public static build — reuse the draft mechanism
+  assert.deepEqual(rewriteFrontmatter({ visibility: 'private' }), { draft: true })
+})
+
+test('rewriteFrontmatter: visibility public / stray value -> dropped, never leaks a key', () => {
+  assert.deepEqual(rewriteFrontmatter({ visibility: 'public' }), {})
+  assert.deepEqual(rewriteFrontmatter({ visibility: 'whatever' }), {})
+  // alongside a real key: only the real key survives — no stray `visibility:` line
+  assert.deepEqual(
+    rewriteFrontmatter({ 'like-of': 'https://x', visibility: 'public' }),
+    { likeOf: 'https://x' }
+  )
+})
+
 test('rewriteFrontmatter: tags merge keeps the firehose tag + user tags', () => {
   assert.deepEqual(rewriteFrontmatter({ tags: ['css', 'webdev'] }).tags, ['posts', 'css', 'webdev'])
   assert.deepEqual(rewriteFrontmatter({ tags: 'css' }).tags, ['posts', 'css'])
@@ -141,4 +161,62 @@ test('targetSlug: last path segment, hostname fallback', () => {
 test('slugify: lowercase, kebab, punctuation dropped', () => {
   assert.equal(slugify('Hello, World!'), 'hello-world')
   assert.equal(slugify('  spaced   out  '), 'spaced-out')
+})
+
+// resolveFilename — the title-less re-slug guard. Re-slugging fires ONLY when the
+// engine produced a bare timestamp (it had nothing to name from). A user mp-slug,
+// a cite-derived slug, and any titled post are all left untouched.
+
+test('resolveFilename: title-less + bare-timestamp slug -> re-slugged from content', () => {
+  const { finalName } = resolveFilename(
+    'src/posts/notes/1733436000.md',
+    {},
+    'Just saw an incredible sunset over the fjord tonight'
+  )
+  assert.equal(finalName, 'src/posts/notes/just-saw-an-incredible-sunset-over-the-fjord-tonight.md')
+})
+
+test('resolveFilename: title-less + bare-timestamp + no content -> target-URL slug', () => {
+  const { finalName } = resolveFilename(
+    'src/posts/replies/1733436000.md',
+    { inReplyTo: 'https://adactio.com/journal/21888' },
+    ''
+  )
+  assert.equal(finalName, 'src/posts/replies/21888.md')
+})
+
+test('resolveFilename: title-less + non-timestamp slug (mp-slug) -> preserved', () => {
+  // regression: a user-supplied mp-slug must NOT be clobbered by the re-slug
+  const { finalName } = resolveFilename(
+    'src/posts/notes/my-custom-slug.md',
+    {},
+    'A note body that would otherwise drive the slug'
+  )
+  assert.equal(finalName, 'src/posts/notes/my-custom-slug.md')
+})
+
+test('resolveFilename: cite-derived slug (star-wars-1977) -> preserved (not a bare timestamp)', () => {
+  const { finalName } = resolveFilename('src/posts/watching/star-wars-1977.md', {}, '')
+  assert.equal(finalName, 'src/posts/watching/star-wars-1977.md')
+})
+
+test('resolveFilename: titled post -> never re-slugged', () => {
+  const { finalName } = resolveFilename(
+    'src/posts/articles/anna-karenina.md',
+    { title: 'Anna Karenina' },
+    'Happy families are all alike'
+  )
+  assert.equal(finalName, 'src/posts/articles/anna-karenina.md')
+})
+
+test('resolveFilename: bare timestamp with neither content nor target -> keeps the timestamp', () => {
+  const { finalName } = resolveFilename('src/posts/notes/1733436000.md', {}, '')
+  assert.equal(finalName, 'src/posts/notes/1733436000.md')
+})
+
+test('resolveFilename: a filename that does not match dir/folder/slug -> returned unchanged', () => {
+  // the engine always emits CONTENT_DIR/<folder>/<slug>.md, but the helper must
+  // pass anything else straight through rather than throw
+  assert.deepEqual(resolveFilename('flat.md', {}, 'body'), { finalName: 'flat.md', location: null })
+  assert.deepEqual(resolveFilename('', {}, ''), { finalName: '', location: null })
 })

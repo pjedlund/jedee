@@ -140,6 +140,21 @@ export const rewriteFrontmatter = (data = {}) => {
       if (value === 'draft') out.draft = true // else published -> omit (publish on commit)
       continue
     }
+    if (key === 'visibility') {
+      // Micropub `visibility` -> JEDEE's native vocabulary, interpreted at build
+      // time (see src/_config/plugins/drafts.js):
+      //   unlisted -> keep the native key; the build drops it from every
+      //               collection/feed + the sitemap and emits `noindex`, while
+      //               its permalink still resolves.
+      //   private  -> there is no true "private" on a public static build, so
+      //               reuse the `draft` mechanism (unpublished). A documented
+      //               limitation — not encryption/auth-gating.
+      //   public / absent / anything else -> dropped, so the catch-all below
+      //               never leaks a stray `visibility:` line into frontmatter.
+      if (value === 'unlisted') out.visibility = 'unlisted'
+      else if (value === 'private') out.draft = true
+      continue
+    }
     if (KEY_MAP[key]) {
       out[KEY_MAP[key]] = flatten(value)
       continue
@@ -156,6 +171,30 @@ export const rewriteFrontmatter = (data = {}) => {
   }
 
   return out
+}
+
+// Decide the final committed filename for a post, upgrading a title-less post's
+// bare-timestamp slug to a content/target-derived one. Pure (no I/O); `data` is
+// the already-rewritten frontmatter. Returns the `${dir}/${folder}/<slug>.md`
+// path and the public URL it implies (null when the name is left unchanged, or
+// when ME is unset — e.g. in unit tests).
+//
+// The engine slugs a title-less post (note/reply/like/…) it had nothing to name
+// from as a *bare* unix timestamp (`^\d+$`). That, and only that, is what we
+// re-slug — so a user's `mp-slug` (honored by the engine) and a cite-derived
+// slug (e.g. `star-wars-1977`, neither matching `^\d+$`) are left alone.
+export const resolveFilename = (filename, data = {}, content = '') => {
+  const unchanged = { finalName: filename, location: null }
+  const m = filename.match(/^(.*)\/([^/]+)\/([^/]+)\.md$/)
+  if (!m) return unchanged
+  const [, dir, folder, slug] = m
+  if (data.title || !/^\d+$/.test(slug)) return unchanged // titled, or already named
+  const better = contentSlug(content) || targetSlug(data)
+  if (!better || better === slug) return unchanged
+  return {
+    finalName: `${dir}/${folder}/${better}.md`,
+    location: ME ? `${ME.replace(/\/$/, '')}/${folder}/${better}` : null
+  }
 }
 
 // --- store ----------------------------------------------------------------
@@ -179,27 +218,12 @@ class JedeeStore {
     const parsed = matter(content)
     const data = rewriteFrontmatter(parsed.data)
 
-    // filename arrives as `${CONTENT_DIR}/<folder>/<slug>.md`. A bare unix-
-    // timestamp slug means a title-less post (note/reply/…) the engine had
-    // nothing to name from — derive a nicer slug from the body, then the target
-    // URL, else keep the timestamp.
-    let finalName = filename
-    const m = filename.match(/^(.*)\/([^/]+)\/([^/]+)\.md$/)
-    if (m) {
-      const [, dir, folder, slug] = m
-      // Title-less posts (note/reply/like/…) — the engine slugged from the raw
-      // body (HTML and all) or a bare timestamp, so markup/length can leak into
-      // the URL. Re-derive a clean slug; titled posts keep the engine's title-slug.
-      if (!data.title) {
-        const better = contentSlug(parsed.content) || targetSlug(data)
-        if (better && better !== slug) {
-          finalName = `${dir}/${folder}/${better}.md`
-          if (ME && this.onLocation) {
-            this.onLocation(`${ME.replace(/\/$/, '')}/${folder}/${better}`)
-          }
-        }
-      }
-    }
+    // filename arrives as `${CONTENT_DIR}/<folder>/<slug>.md`. resolveFilename
+    // upgrades a title-less post's bare-timestamp slug to a content/target slug
+    // (and tells us the public URL it implies) so the Location header stays in
+    // sync; titled posts and user `mp-slug`s pass through untouched.
+    const { finalName, location } = resolveFilename(filename, data, parsed.content)
+    if (location && this.onLocation) this.onLocation(location)
 
     const fm = matter.stringify(parsed.content, data)
     return this.inner.createFile(finalName, fm)

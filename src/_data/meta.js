@@ -3,6 +3,11 @@ export const siteName = 'Johan Edlund';
 export const siteDescription = 'Personal site of Johan Edlund';
 // Extract domain from `url`
 export const domain = new URL(url).hostname;
+// Soft-launch: emit a site-wide noindex,nofollow (head/meta-info.njk). Flip to
+// false at 1.0.0 go-live (alongside navigation.hideNav). `visibility: unlisted`
+// posts carry their own per-post `noindex` regardless, so they stay out of the
+// index after launch (see _config/plugins/drafts.js).
+export const noindexSite = true;
 export const siteType = 'Person'; // schema
 export const locale = 'en_EN';
 export const lang = 'en';
