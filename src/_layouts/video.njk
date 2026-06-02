@@ -23,7 +23,7 @@ schema: BlogPosting
       <custom-peertube @instance="{{ video.instance }}" @embed-slug="{{ video.embedSlug }}" @slug="{{ video.slug }}" @label="{{ title }}"></custom-peertube>
     {% endif %}
 
-    <div class="e-content">
+    <div class="e-content | flow">
       {{ content | safe }}
     </div>
 

@@ -15,7 +15,7 @@ schema: BlogPosting
       {% image photo.src, photo.alt, photo.caption, "eager", "", "u-photo" %}
     {% endif %}
 
-    <div class="e-content">
+    <div class="e-content | flow">
       {{ content | safe }}
     </div>
 
