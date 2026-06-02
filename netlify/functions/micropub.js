@@ -196,6 +196,12 @@ export const rewriteFrontmatter = (data = {}) => {
   // `cover` fallback only inside a media post (never let it pollute other types).
   if (mediaSeen && data.featured && !out.cover) out.cover = flatten(data.featured)
 
+  // A custom `mp-slug` on a TITLED post becomes a `slug` URL field — the titled-type
+  // permalinks honor it (`(slug or page.fileSlug) | slugify`), so the file keeps its
+  // Obsidian Title-Case name while the slug drives the URL. On a title-less post the
+  // engine already used the mp-slug as the filename, so don't duplicate it here.
+  if (out.title && data['mp-slug']) out.slug = flatten(data['mp-slug'])
+
   // tags: the folder JSON's tags:"posts" is added by Eleventy's data cascade
   // (deep merge concatenates `tags`), so front matter carries ONLY the user tags
   // (engine mapped Micropub `category` -> `tags`). Re-adding the firehose tag here
@@ -220,29 +226,30 @@ export const titleToFilename = (title = '') =>
     .replace(/\s+/g, ' ')
     .trim()
 
-// Decide the final committed filename for a post. Three cases, in priority:
-//   1. a client `mp-slug` -> honor the engine's filename verbatim (never touch it)
-//   2. a titled post (film/book/jam/article) -> Obsidian Title-Case `<title>.md`
-//      (patch point #2) so wikilinks resolve; the permalink slugifies it, so the
-//      public URL stays clean (e.g. `Project Hail Mary.md` -> /watching/project-hail-mary/)
-//   3. a title-less post the engine named with a *bare* unix timestamp (`^\d+$`)
-//      -> upgrade to a content/target-derived slug so notes/replies get clean URLs
-// Pure (no I/O). `data` is the already-rewritten frontmatter; `mpSlug` is the raw
-// pre-rewrite `mp-slug` (the store sees it before rewriteFrontmatter strips it).
-// Returns the path and the public URL it implies (null when unchanged / ME unset).
-export const resolveFilename = (filename, data = {}, content = '', mpSlug = '') => {
+// Decide the final committed filename for a post. Two cases:
+//   1. a titled post (film/book/jam/article) -> an Obsidian Title-Case `<title>.md`
+//      filename (patch point #2) so `[[wikilinks]]` resolve. A custom URL slug
+//      (written to `data.slug` by rewriteFrontmatter when a client sends `mp-slug`)
+//      drives the URL via the titled-type permalink — it never hijacks the filename.
+//   2. a title-less post the engine named with a *bare* unix timestamp (`^\d+$`)
+//      -> upgrade to a content/target-derived slug so notes/replies get clean URLs.
+//      A title-less `mp-slug` already named the file (not a bare timestamp), so it
+//      passes straight through.
+// Pure (no I/O). `data` is the already-rewritten frontmatter. Returns the path and
+// the public URL it implies (null when unchanged / ME unset).
+export const resolveFilename = (filename, data = {}, content = '') => {
   const unchanged = { finalName: filename, location: null }
   const m = filename.match(/^(.*)\/([^/]+)\/([^/]+)\.md$/)
   if (!m) return unchanged
   const [, dir, folder, slug] = m
   const publicUrl = (name) => (ME ? `${ME.replace(/\/$/, '')}/${folder}/${name}` : null)
 
-  if (mpSlug) return unchanged // a client-set slug is authoritative — leave it
-
   if (data.title) {
     const name = titleToFilename(data.title)
-    if (!name || name === slug) return unchanged // already named from its title
-    return { finalName: `${dir}/${folder}/${name}.md`, location: publicUrl(slugify(name)) }
+    if (!name) return unchanged
+    // the URL uses a custom `slug` when present, else the slugified title
+    const urlSlug = slugify(data.slug || name)
+    return { finalName: `${dir}/${folder}/${name}.md`, location: publicUrl(urlSlug) }
   }
 
   if (!/^\d+$/.test(slug)) return unchanged // already named (not a bare timestamp)
@@ -272,14 +279,13 @@ class JedeeStore {
     const parsed = matter(content)
     const data = rewriteFrontmatter(parsed.data)
 
-    // filename arrives as `${CONTENT_DIR}/<folder>/<slug>.md`. resolveFilename
-    // gives a titled post an Obsidian Title-Case filename, upgrades a title-less
-    // post's bare-timestamp slug to a content/target slug, and reports the public
-    // URL it implies so the Location header stays in sync. The raw `mp-slug` (still
-    // present before rewriteFrontmatter strips it) is passed so a client-set slug
-    // wins over the title.
-    const mpSlug = parsed.data['mp-slug']
-    const { finalName, location } = resolveFilename(filename, data, parsed.content, mpSlug)
+    // filename arrives as `${CONTENT_DIR}/<folder>/<slug>.md`. resolveFilename gives
+    // a titled post an Obsidian Title-Case filename and upgrades a title-less post's
+    // bare-timestamp slug to a content/target slug, reporting the public URL it
+    // implies so the Location header stays in sync. (A custom `mp-slug` on a titled
+    // post was turned into `data.slug` by rewriteFrontmatter — it routes to the URL,
+    // not the filename.)
+    const { finalName, location } = resolveFilename(filename, data, parsed.content)
     if (location && this.onLocation) this.onLocation(location)
 
     const fm = matter.stringify(parsed.content, data)
