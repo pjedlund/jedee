@@ -38,6 +38,7 @@ src/_obsidian/*
 .omc
 __raw/
 _generated/
+_tests/
 .github
 
 # Project notes (kept locally, not in repo)
