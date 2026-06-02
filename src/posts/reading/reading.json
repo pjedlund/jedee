@@ -2,5 +2,5 @@
   "layout": "reading",
   "tags": "posts",
   "category": "reading",
-  "permalink": "/reading/{{ page.fileSlug | slugify }}/index.html"
+  "permalink": "/reading/{{ (slug or page.fileSlug) | slugify }}/index.html"
 }

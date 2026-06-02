@@ -2,5 +2,5 @@
   "layout": "jam",
   "tags": "posts",
   "category": "jam",
-  "permalink": "/jams/{{ page.fileSlug | slugify }}/index.html"
+  "permalink": "/jams/{{ (slug or page.fileSlug) | slugify }}/index.html"
 }
