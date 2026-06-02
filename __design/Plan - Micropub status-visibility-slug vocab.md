@@ -136,7 +136,7 @@ Add `noindexSite: true` to `src/_data/meta.js` (preserves today's soft-launch be
 > flag. **Update the go-live checklist (`TODO.md` / `project_jedee_go_live` memory) to reference the
 > flag** so the launch procedure stays accurate.
 
-### 4. Tests — `test/micropub.test.js`
+### 4. Tests — `_tests/micropub.test.js` (local-only, gitignored)
 
 Add cases (`npm run test:unit`, Node 22 via `.nvmrc`):
 - `rewriteFrontmatter({ visibility: 'unlisted' })` → `{ visibility: 'unlisted' }`
@@ -168,7 +168,7 @@ Add cases (`npm run test:unit`, Node 22 via `.nvmrc`):
 | `src/_config/plugins/drafts.js` | broaden `eleventyComputed` for `visibility: unlisted` (excludeFromCollections + excludeFromSitemap + new `noindex`) |
 | `src/_includes/head/meta-info.njk` | flag-driven robots meta (`meta.noindexSite or noindex`) |
 | `src/_data/meta.js` | add `noindexSite: true` |
-| `test/micropub.test.js` | visibility + re-slug-guard cases |
+| `_tests/micropub.test.js` (local-only) | visibility + re-slug-guard cases |
 | `__project_docs/micropub-pattern.html` | translation table + decisions |
 | Skills: `micropub` (primary), `indieweb`, `web-clipper`, `microformats` | doc updates per §5 |
 
