@@ -33,7 +33,7 @@
   <div slot="content" webc:nokeep>
     {{ item.data.description | markdownFormat | safe }}
     {% if item.data.video.duration %}
-      <p class="media-badge cluster" role="list">
+      <p class="media-badge | cluster" role="list">
         <span data-badge role="listitem">{{ item.data.video.duration | itunesDuration }}</span>
       </p>
     {% endif %}

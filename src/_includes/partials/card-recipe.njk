@@ -33,7 +33,7 @@
   <div slot="content" webc:nokeep>
     {{ item.data.description | markdownFormat | safe }}
     {% if item.data.totalTime or item.data.yield %}
-      <p class="recipe-badge cluster" role="list">
+      <p class="recipe-badge | cluster" role="list">
         {% if item.data.totalTime %}<span data-badge role="listitem">{{ item.data.totalTime | formatDuration }}</span>{% endif %}
         {% if item.data.yield %}<span data-badge role="listitem">{{ item.data.yield }}</span>{% endif %}
       </p>

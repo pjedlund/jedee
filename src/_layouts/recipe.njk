@@ -27,7 +27,7 @@ schema: BlogPosting
     {# Ingredients + instructions live in the note body as markdown (kepano
        shape) — the Obsidian Web Clipper can't emit a nested `recipe:` object,
        so a recipe is a body-driven post like every other type. #}
-    <div class="e-content">
+    <div class="e-content | flow">
       {{ content | safe }}
     </div>
 

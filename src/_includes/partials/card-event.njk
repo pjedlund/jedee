@@ -32,7 +32,7 @@
   <div slot="content" webc:nokeep>
     {{ item.data.description | markdownFormat | safe }}
     {% if item.data.event.location or (item.data.event.status and item.data.event.status != "scheduled") %}
-      <p class="event-card-meta cluster">
+      <p class="event-card-meta | cluster">
         {% if item.data.event.location %}<span class="event-card-location">{{ item.data.event.location }}</span>{% endif %}
         {% if item.data.event.status and item.data.event.status != "scheduled" %}<span class="event-status" data-status="{{ item.data.event.status }}">{{ item.data.event.status | replace("-", " ") | capitalize }}</span>{% endif %}
       </p>

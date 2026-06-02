@@ -10,7 +10,7 @@ schema: BlogPosting
     {# &nbsp; after </data>: the HTML minifier strips a normal space directly following a <data> tag, which would join "yes" and "to". #}
     <p><data class="p-rsvp" value="{{ rsvp }}">RSVP: {{ rsvp }}</data>&nbsp;to <a class="u-in-reply-to" href="{{ inReplyTo }}">{{ inReplyTo }}</a></p>
 
-    <div class="e-content">
+    <div class="e-content | flow">
       {{ content | safe }}
     </div>
 
