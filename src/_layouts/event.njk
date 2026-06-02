@@ -14,7 +14,7 @@ schema: Event
        root-nesting caveat is the shared, deferred webmention-milestone fix
        (spec §5/§14), sharper here than the media types because it orphans a
        microformat root rather than a u-* property. #}
-    <div class="h-event event flow">
+    <div class="h-event event | flow">
       <data class="p-name" value="{{ title }}"></data>
       {% if description %}<p class="p-summary">{{ description }}</p>{% endif %}
 
