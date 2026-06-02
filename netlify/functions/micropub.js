@@ -63,13 +63,20 @@ export const TYPE_DIR = {
 
 // Micropub kebab property -> this site's frontmatter key (what the layouts read).
 // name/category/published are already translated by the engine's translateProps;
-// these are the target-URL keys it leaves hyphenated. watch/read/listen map to
-// url/link/source — confirmed against src/_layouts/{watching,reading,jam}.njk.
+// these are the simple target-URL keys it leaves hyphenated (a string value).
 export const KEY_MAP = {
   'in-reply-to': 'inReplyTo',
   'like-of': 'likeOf',
   'bookmark-of': 'bookmarkOf',
-  'repost-of': 'repostOf',
+  'repost-of': 'repostOf'
+}
+
+// watch/read/listen are richer: Sparkles' Movie/Book/Listen editors nest the
+// media's identity in an h-cite (name/photo/url/published/author/content) and
+// resend the poster top-level as `featured`. The cite's url becomes the layout's
+// identity key (url/link/source, confirmed against src/_layouts/{watching,reading,
+// jam}.njk); the rest is destructured into title/cover/year/author/plot below.
+export const MEDIA_KEY = {
   'watch-of': 'url',
   'read-of': 'link',
   'listen-of': 'source'
@@ -131,10 +138,12 @@ export const formatSlug = (type = 'note', slug = '') =>
 // frontmatter object; the body is left untouched.
 export const rewriteFrontmatter = (data = {}) => {
   const out = {}
+  let mediaSeen = false
   for (const [key, value] of Object.entries(data)) {
     if (key === 'content' || key === 'access_token') continue // body, secret
     if (key === 'type' || key === 'client_id') continue // mf2/engine noise
     if (key.startsWith('mp-')) continue // client directives (mp-slug, mp-syndicate-to…)
+    if (key === 'featured') continue // poster — folded into `cover` from the media cite below
 
     if (key === 'post-status') {
       if (value === 'draft') out.draft = true // else published -> omit (publish on commit)
@@ -155,12 +164,37 @@ export const rewriteFrontmatter = (data = {}) => {
       else if (value === 'private') out.draft = true
       continue
     }
+    // A watch/read/listen h-cite: take its url as the identity key, then recover
+    // the title/cover/year/author/plot the layouts (and Obsidian filenames) need.
+    if (MEDIA_KEY[key]) {
+      mediaSeen = true
+      const url = flatten(value)
+      if (url) out[MEDIA_KEY[key]] = url
+      const cite =
+        value && typeof value === 'object' && !Array.isArray(value)
+          ? value
+          : Array.isArray(value) && value[0] && typeof value[0] === 'object'
+            ? value[0]
+            : null
+      if (cite) {
+        if (cite.name && !out.title) out.title = flatten(cite.name)
+        if (cite.photo && !out.cover) out.cover = flatten(cite.photo)
+        if (cite.published && !('year' in out)) out.year = flatten(cite.published)
+        if (cite.author && !('author' in out)) out.author = flatten(cite.author)
+        if (cite.content && !('plot' in out)) out.plot = flatten(cite.content)
+      }
+      continue
+    }
     if (KEY_MAP[key]) {
       out[KEY_MAP[key]] = flatten(value)
       continue
     }
     out[key] = value
   }
+
+  // The media editors also send the poster top-level as `featured`; use it as a
+  // `cover` fallback only inside a media post (never let it pollute other types).
+  if (mediaSeen && data.featured && !out.cover) out.cover = flatten(data.featured)
 
   // tags: the folder JSON's tags:"posts" is added by Eleventy's data cascade
   // (deep merge concatenates `tags`), so front matter carries ONLY the user tags
@@ -176,28 +210,45 @@ export const rewriteFrontmatter = (data = {}) => {
   return out
 }
 
-// Decide the final committed filename for a post, upgrading a title-less post's
-// bare-timestamp slug to a content/target-derived one. Pure (no I/O); `data` is
-// the already-rewritten frontmatter. Returns the `${dir}/${folder}/<slug>.md`
-// path and the public URL it implies (null when the name is left unchanged, or
-// when ME is unset — e.g. in unit tests).
-//
-// The engine slugs a title-less post (note/reply/like/…) it had nothing to name
-// from as a *bare* unix timestamp (`^\d+$`). That, and only that, is what we
-// re-slug — so a user's `mp-slug` (honored by the engine) and a cite-derived
-// slug (e.g. `star-wars-1977`, neither matching `^\d+$`) are left alone.
-export const resolveFilename = (filename, data = {}, content = '') => {
+// Turn a post title into an Obsidian-friendly filename: keep Title Case, spaces,
+// commas and apostrophes (so `[[wikilinks]]` read naturally and match the clipper's
+// `Paris, Texas.md`), stripping only the characters Obsidian / most filesystems
+// forbid in a name.
+export const titleToFilename = (title = '') =>
+  String(title)
+    .replace(/[\\/:*?"<>|]+/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+
+// Decide the final committed filename for a post. Three cases, in priority:
+//   1. a client `mp-slug` -> honor the engine's filename verbatim (never touch it)
+//   2. a titled post (film/book/jam/article) -> Obsidian Title-Case `<title>.md`
+//      (patch point #2) so wikilinks resolve; the permalink slugifies it, so the
+//      public URL stays clean (e.g. `Project Hail Mary.md` -> /watching/project-hail-mary/)
+//   3. a title-less post the engine named with a *bare* unix timestamp (`^\d+$`)
+//      -> upgrade to a content/target-derived slug so notes/replies get clean URLs
+// Pure (no I/O). `data` is the already-rewritten frontmatter; `mpSlug` is the raw
+// pre-rewrite `mp-slug` (the store sees it before rewriteFrontmatter strips it).
+// Returns the path and the public URL it implies (null when unchanged / ME unset).
+export const resolveFilename = (filename, data = {}, content = '', mpSlug = '') => {
   const unchanged = { finalName: filename, location: null }
   const m = filename.match(/^(.*)\/([^/]+)\/([^/]+)\.md$/)
   if (!m) return unchanged
   const [, dir, folder, slug] = m
-  if (data.title || !/^\d+$/.test(slug)) return unchanged // titled, or already named
+  const publicUrl = (name) => (ME ? `${ME.replace(/\/$/, '')}/${folder}/${name}` : null)
+
+  if (mpSlug) return unchanged // a client-set slug is authoritative — leave it
+
+  if (data.title) {
+    const name = titleToFilename(data.title)
+    if (!name || name === slug) return unchanged // already named from its title
+    return { finalName: `${dir}/${folder}/${name}.md`, location: publicUrl(slugify(name)) }
+  }
+
+  if (!/^\d+$/.test(slug)) return unchanged // already named (not a bare timestamp)
   const better = contentSlug(content) || targetSlug(data)
   if (!better || better === slug) return unchanged
-  return {
-    finalName: `${dir}/${folder}/${better}.md`,
-    location: ME ? `${ME.replace(/\/$/, '')}/${folder}/${better}` : null
-  }
+  return { finalName: `${dir}/${folder}/${better}.md`, location: publicUrl(better) }
 }
 
 // --- store ----------------------------------------------------------------
@@ -222,10 +273,13 @@ class JedeeStore {
     const data = rewriteFrontmatter(parsed.data)
 
     // filename arrives as `${CONTENT_DIR}/<folder>/<slug>.md`. resolveFilename
-    // upgrades a title-less post's bare-timestamp slug to a content/target slug
-    // (and tells us the public URL it implies) so the Location header stays in
-    // sync; titled posts and user `mp-slug`s pass through untouched.
-    const { finalName, location } = resolveFilename(filename, data, parsed.content)
+    // gives a titled post an Obsidian Title-Case filename, upgrades a title-less
+    // post's bare-timestamp slug to a content/target slug, and reports the public
+    // URL it implies so the Location header stays in sync. The raw `mp-slug` (still
+    // present before rewriteFrontmatter strips it) is passed so a client-set slug
+    // wins over the title.
+    const mpSlug = parsed.data['mp-slug']
+    const { finalName, location } = resolveFilename(filename, data, parsed.content, mpSlug)
     if (location && this.onLocation) this.onLocation(location)
 
     const fm = matter.stringify(parsed.content, data)
