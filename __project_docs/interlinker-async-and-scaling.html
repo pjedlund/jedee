@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Interlinker: the async-shortcode trap + scaling limits — JEDEE</title>
+<link rel="stylesheet" href="spec.css">
+</head>
+<body data-doc-key="interlinker-async-and-scaling">
+
+<div class="site-header">
+  <a class="home" href="index.html">JEDEE / Project documentation</a>
+  <span class="breadcrumb">engineering › interlinker async + scaling</span>
+</div>
+
+<header class="doc-header" id="top">
+  <p class="eyebrow">engineering finding · debugged + fixed · 2026-06-03 · benchmark included</p>
+  <h1>Interlinker: the async-shortcode trap &amp; its scaling ceiling</h1>
+  <p class="meta">Why the main nav rendered empty, the one-line fix, and a measured reason the same plugin can't scale to a Tolstoy-sized vault. Companion warning for the Tolstoy team: <code>docs/architecture/eleventy-interlinker-scaling-warning.md</code>.</p>
+</header>
+
+<nav id="toc" class="toc" aria-label="Sections"></nav>
+
+<main>
+
+<p class="note"><strong>TL;DR.</strong> The <code>@photogabble/eleventy-plugin-interlinker</code> wikilinks plugin resolves links by <em>re-entering Eleventy's render pipeline once per page</em> (a per-page <code>eleventyComputed</code> function that calls <code>page.template.read()</code> and depends on <code>collections.all</code>). That one design choice causes <strong>both</strong> problems on this page: (1) it silently drops the output of an <strong>async</strong> shortcode reached through an <code>{% if %}</code>-wrapped <code>{% include %}</code> — which blanked our whole nav with no error; and (2) its build cost and especially its <strong>memory</strong> grow steeply with page count — fine at hundreds of pages, fatal at tens of thousands.</p>
+
+<h2>1. The symptom</h2>
+<p>With the nav revealed, <code>{% include "partials/main-nav.njk" %}</code> rendered to <strong>zero bytes</strong> — no <code>&lt;nav&gt;</code>, no links, no error, exit code 0. The header logo (<code>{% svg "misc/logo" %}</code>) and footer icons rendered fine; only the nav vanished. It went unnoticed because the nav was hidden for the soft-launch.</p>
+
+<h2>2. Root cause — three ingredients</h2>
+<p>The blank requires <strong>all three</strong> at once; remove any one and it renders:</p>
+<ol>
+  <li>the <strong>interlinker</strong> plugin is active (it runs a whole-site link-resolution render pass);</li>
+  <li>an <strong>async</strong> shortcode is involved — our <code>{% svg %}</code> was needlessly <code>async</code> (a stray <code>await</code> around svgo's <code>optimize()</code>, which is synchronous: a vestige of svgo v1's Promise API);</li>
+  <li>that shortcode is reached through an <code>{% include %}</code> that is itself wrapped in an <code>{% if %}</code> / <code>{% for %}</code> block.</li>
+</ol>
+<p>A <strong>bare</strong> <code>{% include %}</code> of the identical partial renders the same async shortcode fine — which is the trap: wrapping an existing include in an ordinary conditional is what breaks it.</p>
+
+<h2>3. Why it was invisible</h2>
+<p>A <code>git bisect</code> (272 commits, dependencies pinned constant) landed on exactly one commit: the <strong>go-live / soft-launch commit</strong> (<code>3975491</code>). Its only nav-path change was wrapping the include to hide it:</p>
+<pre><code>-    {% include "partials/main-nav.njk" %}
++    {% if not meta.navigation.hideNav %}
++      {% include "partials/main-nav.njk" %}
++    {% endif %}</code></pre>
+<p>That same commit also set <code>hideNav: true</code>. So the nav <strong>broke and was hidden in the same atomic commit</strong> — it was structurally impossible to notice. The earlier belief that it "worked at launch" was correct: it worked right up to that commit, with a bare include.</p>
+
+<h2>4. The fix</h2>
+<p>One file, <code>src/_config/shortcodes/svg.js</code>: drop the gratuitous <code>async</code>/<code>await</code> so <code>{% svg %}</code> returns a plain string. With no Promise to drop, interlinker can't blank it, and the conditional is safe again. This also future-proofs every other <code>{% svg %}</code> call. Merged to <code>main</code> (<code>fix/nav-empty-render</code> → <code>87d9f99</code>).</p>
+<p class="note"><strong>Latent risk that remains.</strong> <code>{% image %}</code> / <code>{% imageKeys %}</code> (eleventy-img) are <em>genuinely</em> async and can't be made sync. If one is ever placed inside an <code>{% if %}</code>-wrapped nested <code>{% include %}</code> while interlinker is active, it will blank the same way. Keep async shortcodes out of conditionally-included partials, or move the conditional inside the partial.</p>
+
+<h2>5. How it was isolated</h2>
+<p>The decisive control was a vanilla <strong>Eleventy Excellent 4.6.1</strong> checkout with the <em>identical</em> nav markup: it rendered the chevron fine. Diffing the two repos ruled out the shortcode (byte-identical), the registration, the include depth, and the dependency versions (svgo 4.0.1 / nunjucks 3.2.4 / eleventy 3.1.5 — all equal). The one difference was interlinker, which vanilla EE doesn't ship. Disabling interlinker, or making the shortcode sync, each independently restored the nav.</p>
+
+<h2>6. The deeper issue — interlinker doesn't scale</h2>
+<p>The same render-reentry that ate the nav is also a scaling tax. Measured on a throwaway harness (N synthetic notes, 10 wikilinks each, Eleventy 3.1.5 / interlinker 1.1.2 / Node 22), <strong>interlinker OFF vs ON</strong>, build time + peak resident memory:</p>
+<table>
+<tr><th>Notes</th><th>Wikilinks</th><th>OFF time</th><th>ON time</th><th>OFF peak RAM</th><th>ON peak RAM</th></tr>
+<tr><td>100</td><td>1,000</td><td>0.26 s</td><td>0.39 s</td><td>170 MB</td><td>217 MB</td></tr>
+<tr><td>250</td><td>2,500</td><td>0.27 s</td><td>0.63 s</td><td>168 MB</td><td>313 MB</td></tr>
+<tr><td>500</td><td>5,000</td><td>0.34 s</td><td>1.04 s</td><td>172 MB</td><td>435 MB</td></tr>
+<tr><td>1,000</td><td>10,000</td><td>0.48 s</td><td>1.80 s</td><td>174 MB</td><td>742 MB</td></tr>
+<tr><td>2,000</td><td>20,000</td><td>0.77 s</td><td>3.75 s</td><td>190 MB</td><td>1,246 MB</td></tr>
+<tr><td>4,000</td><td>40,000</td><td>1.49 s</td><td>7.70 s</td><td>248 MB</td><td>2,140 MB</td></tr>
+<tr><td>8,000</td><td>80,000</td><td>3.16 s</td><td>20.84 s</td><td>368 MB</td><td>4,181 MB</td></tr>
+</table>
+<p>Two readings. <strong>Time</strong> grows roughly linearly until ~4k notes, then turns super-linear (the <code>collections.all</code>-per-page term, ≈O(N²), overtakes): 4k→8k is a 2.7× jump for 2× the notes. <strong>Memory</strong> is the binding constraint — the baseline stays flat (~370 MB at 8k) while interlinker's overhead roughly doubles every doubling, reaching <strong>4.2 GB at 8,000 notes</strong>. The plain-Eleventy (OFF) column is also a fair proxy for a parse-level wikilinks approach, which never re-enters the render pipeline.</p>
+
+<h2>7. Extrapolation to a large vault</h2>
+<p>Beyond the 8k measured ceiling these are extrapolations, but the memory wall is disqualifying long before time matters:</p>
+<table>
+<tr><th>Scale</th><th>interlinker peak RAM</th><th>interlinker build time</th><th>Verdict</th></tr>
+<tr><td>~8,000 files <em>(measured)</em></td><td>~4 GB</td><td>~21 s</td><td>already painful</td></tr>
+<tr><td>~26,500 files <em>(extrap.)</em></td><td>~12–14 GB</td><td>several minutes+</td><td>OOMs typical CI; stresses a 24 GB box</td></tr>
+<tr><td>100,000+ files <em>(extrap.)</em></td><td>~40–50 GB</td><td>tens of minutes</td><td>infeasible — dies before finishing</td></tr>
+</table>
+
+<h2>8. Recommendations</h2>
+<ul>
+  <li><strong>JEDEE: keep interlinker.</strong> Hundreds of pages is exactly where it's fine, and the sync-<code>{% svg %}</code> fix neutralizes the async fragility. No action beyond the fix already merged.</li>
+  <li><strong>Anything at thousands-of-pages scale: do not resolve wikilinks in the render pipeline.</strong> Pre-compute the link/backlink graph in a build step <em>before</em> Eleventy (a script, or a markdown-it parse-level rule for inline <code>[[ ]]</code> + a single post-render HTML scan for backlinks). That's O(content), single-pass, and never touches async rendering. See the Tolstoy warning doc for the concrete migration.</li>
+  <li><strong>Never put an async shortcode inside an <code>{% if %}</code>-wrapped <code>{% include %}</code></strong> while interlinker is active. Documented in the <code>eleventy-excellent</code> and <code>indieweb</code> skills.</li>
+</ul>
+
+<h2>9. Reproduce</h2>
+<p>The throwaway harness: a minimal Eleventy project, a generator (<code>gen.mjs N K</code>) that writes N interlinked notes, and a sweep runner that builds each size with interlinker on and off, capturing Eleventy's reported time and peak RSS via <code>/usr/bin/time -l</code>. Toggle is <code>INTERLINKER=1</code> in the config. The "OFF" build is the floor a parse-level approach would sit near.</p>
+
+</main>
+
+<footer>JEDEE · __project_docs · git-tracked working docs</footer>
+
+</body>
+</html>
