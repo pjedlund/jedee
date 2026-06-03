@@ -1,4 +1,5 @@
 ---
+title: A new note from Sparkles via the micropub standard
 tags:
   - micropub
   - indieweb

@@ -1,4 +1,5 @@
 ---
+title: Bethink Yourselves!
 date: '2026-06-01T21:08:20.943Z'
 ---
 På sin tid suckade Jesus i förväntan och sade: 
