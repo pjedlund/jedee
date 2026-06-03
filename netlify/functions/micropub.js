@@ -17,10 +17,11 @@
 //   • store       -> a wrapper that rewrites the committed frontmatter to this
 //                    site's conventions before the GitHub commit (patch point 3):
 //                    camelCase target keys, no `category` (inherited from the
-//                    folder JSON), merged `tags`, a content-derived slug for
-//                    title-less posts so notes/replies get clean URLs (not a
-//                    bare timestamp), and a derived `title` for every post so
-//                    none lands blank in <title>/OG/feeds/cards.
+//                    folder JSON), merged `tags`, full-res cover URLs, a derived
+//                    `title` for every post (so none lands blank in
+//                    <title>/OG/feeds/cards), and — for a title-less post — that
+//                    same title as a clean slug so its filename, URL, and <h1>
+//                    all match (not a bare timestamp).
 //
 // v1 is create-only, text post-types; the media/update/delete surface the engine
 // already supports is simply not wired. Real-client auth presupposes the public
@@ -128,6 +129,25 @@ export const flatten = (v) => {
   return v
 }
 
+// Sparkles' Movie/Book/Listen editors hand over a thumbnail-sized cover URL
+// (Apple Music's 100x100, OpenLibrary's -M, ~180px). The .cover block only caps
+// width — it never upscales — so a thumbnail renders tiny. Rewrite the known
+// providers to a full-resolution variant so the build self-hosts a sharp image
+// instead of a blurry one. Unknown hosts pass through unchanged.
+export const upgradeCoverUrl = (url = '') => {
+  if (!url || typeof url !== 'string') return url
+  // Apple Music / iTunes artwork (mzstatic): the trailing `{w}x{h}bb.<ext>`
+  // segment is the requested render size — ask for 1000x1000.
+  if (url.includes('mzstatic.com')) {
+    return url.replace(/\/\d+x\d+bb\.(jpe?g|png|webp)$/i, '/1000x1000bb.$1')
+  }
+  // OpenLibrary covers come in -S / -M / -L; -L (the largest) is the only upgrade.
+  if (url.includes('covers.openlibrary.org')) {
+    return url.replace(/-[SM](\.(?:jpe?g|png))$/i, '-L$1')
+  }
+  return url
+}
+
 // folder/slug for the engine; strips the leading unix-timestamp prefix it adds
 // to titled posts (e.g. `1733436000-anna-karenina` -> `anna-karenina`). A bare
 // timestamp (title-less post) has no trailing `-`, so it passes through here and
@@ -197,6 +217,10 @@ export const rewriteFrontmatter = (data = {}) => {
   // `cover` fallback only inside a media post (never let it pollute other types).
   if (mediaSeen && data.featured && !out.cover) out.cover = flatten(data.featured)
 
+  // Upgrade a thumbnail cover URL (Apple Music / OpenLibrary) to full-res so the
+  // build self-hosts a sharp image rather than a tiny upscale.
+  if (out.cover) out.cover = upgradeCoverUrl(out.cover)
+
   // A custom `mp-slug` on a TITLED post becomes a `slug` URL field — the titled-type
   // permalinks honor it (`(slug or page.fileSlug) | slugify`), so the file keeps its
   // Obsidian Title-Case name while the slug drives the URL. On a title-less post the
@@ -233,12 +257,14 @@ export const titleToFilename = (title = '') =>
 //      (written to `data.slug` by rewriteFrontmatter when a client sends `mp-slug`)
 //      drives the URL via the titled-type permalink — it never hijacks the filename.
 //   2. a title-less post the engine named with a *bare* unix timestamp (`^\d+$`)
-//      -> upgrade to a content/target-derived slug so notes/replies get clean URLs.
-//      A title-less `mp-slug` already named the file (not a bare timestamp), so it
-//      passes straight through.
-// Pure (no I/O). `data` is the already-rewritten frontmatter. Returns the path and
-// the public URL it implies (null when unchanged / ME unset).
-export const resolveFilename = (filename, data = {}, content = '') => {
+//      -> upgrade to a slug derived from `derivedTitle` (the post's own derived
+//      title, so the filename, URL, and <h1> all match), falling back to a
+//      content/target slug. A title-less `mp-slug` already named the file (not a
+//      bare timestamp), so it passes straight through untouched.
+// Pure (no I/O). `data` is the already-rewritten frontmatter; `derivedTitle` is the
+// guaranteed title (from ensureTitle). Returns the path and the public URL it
+// implies (null when unchanged / ME unset).
+export const resolveFilename = (filename, data = {}, content = '', derivedTitle = '') => {
   const unchanged = { finalName: filename, location: null }
   const m = filename.match(/^(.*)\/([^/]+)\/([^/]+)\.md$/)
   if (!m) return unchanged
@@ -254,7 +280,7 @@ export const resolveFilename = (filename, data = {}, content = '') => {
   }
 
   if (!/^\d+$/.test(slug)) return unchanged // already named (not a bare timestamp)
-  const better = contentSlug(content) || targetSlug(data)
+  const better = slugify(derivedTitle) || contentSlug(content) || targetSlug(data)
   if (!better || better === slug) return unchanged
   return { finalName: `${dir}/${folder}/${better}.md`, location: publicUrl(better) }
 }
@@ -268,7 +294,16 @@ export const resolveFilename = (filename, data = {}, content = '') => {
 // (note, reply, like, bookmark, repost, rsvp) — content-first, then the target.
 
 // A readable title from the body: the first non-empty line, then its first
-// sentence, normalized and capped on a word boundary, opening capitalized.
+// sentence, capped at TITLE_MAX_WORDS words on a word boundary. No ellipsis — the
+// title also becomes the filename/slug for title-less posts, so a clean cut beats
+// signalling truncation — and any stopword left dangling by the cut is trimmed.
+const TITLE_MAX_WORDS = 6
+const TRAILING_STOPWORDS = new Set([
+  'a', 'an', 'the', 'and', 'or', 'but', 'nor', 'of', 'to', 'in', 'into', 'on',
+  'onto', 'with', 'for', 'at', 'by', 'from', 'as', 'so', 'if', 'is', 'are', 'was',
+  'were', 'be', 'that', 'this', 'these', 'those', 'my', 'your', 'our', 'their',
+  'its', 'it', 'we', 'i', 'than', 'then', 'via', 'about', 'over', 'per'
+])
 export const titleFromContent = (body = '') => {
   const text = stripHtml(body).replace(/\r/g, '')
   let line = text.split('\n').map((s) => s.trim()).find(Boolean) || ''
@@ -276,9 +311,21 @@ export const titleFromContent = (body = '') => {
   if (!line) return ''
   const sentence = line.match(/^(.*?[.!?])(?:\s|$)/) // prefer the first sentence when a line packs several
   let title = sentence ? sentence[1] : line
-  const MAX = 70
-  if (title.length > MAX) title = title.slice(0, MAX).replace(/\s+\S*$/, '').trim() + '…'
-  else title = title.replace(/[.,;:\s]+$/, '') // tidy trailing punctuation (keep ? !)
+
+  let words = title.split(' ')
+  const truncated = words.length > TITLE_MAX_WORDS
+  if (truncated) words = words.slice(0, TITLE_MAX_WORDS)
+  title = words.join(' ').replace(/[.,;:]+$/, '') // tidy trailing punctuation (keep ? !)
+
+  // when we cut mid-thought, drop any stopword(s) left dangling at the end
+  if (truncated) {
+    let parts = title.split(' ')
+    while (parts.length > 1 && TRAILING_STOPWORDS.has(parts[parts.length - 1].toLowerCase().replace(/[^\w']+/g, ''))) {
+      parts.pop()
+    }
+    title = parts.join(' ')
+  }
+  if (!title) return ''
   return title.charAt(0).toUpperCase() + title.slice(1)
 }
 
@@ -340,20 +387,23 @@ class JedeeStore {
     const parsed = matter(content)
     const data = rewriteFrontmatter(parsed.data)
 
+    // Guarantee a `title` (additive) so the post isn't blank in <title>/OG/feeds/
+    // cards/p-name. The SAME derived title also drives the clean slug for a
+    // title-less post (note/reply/rsvp…), so its filename, URL, and <h1> all match;
+    // a titled media/article post keeps its Obsidian Title-Case filename instead
+    // (resolveFilename branches on the original `data.title`, set only for those).
+    const titled = ensureTitle(data, parsed.content)
+
     // filename arrives as `${CONTENT_DIR}/<folder>/<slug>.md`. resolveFilename gives
     // a titled post an Obsidian Title-Case filename and upgrades a title-less post's
-    // bare-timestamp slug to a content/target slug, reporting the public URL it
-    // implies so the Location header stays in sync. (A custom `mp-slug` on a titled
-    // post was turned into `data.slug` by rewriteFrontmatter — it routes to the URL,
-    // not the filename.)
-    const { finalName, location } = resolveFilename(filename, data, parsed.content)
+    // bare-timestamp slug to a title/content/target slug, reporting the public URL
+    // it implies so the Location header stays in sync. (A custom `mp-slug` on a
+    // titled post was turned into `data.slug` by rewriteFrontmatter — it routes to
+    // the URL, not the filename.)
+    const { finalName, location } = resolveFilename(filename, data, parsed.content, titled.title)
     if (location && this.onLocation) this.onLocation(location)
 
-    // Guarantee a `title` so the post isn't blank in <title>/OG/feeds/cards/p-name.
-    // Runs AFTER resolveFilename so a derived title is purely additive — it never
-    // changes the clean-slug filename or URL (only a real client/media title drives
-    // the Obsidian Title-Case filename, in resolveFilename above).
-    const fm = matter.stringify(parsed.content, ensureTitle(data, parsed.content))
+    const fm = matter.stringify(parsed.content, titled)
     return this.inner.createFile(finalName, fm)
   }
 }
