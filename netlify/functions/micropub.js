@@ -17,9 +17,10 @@
 //   • store       -> a wrapper that rewrites the committed frontmatter to this
 //                    site's conventions before the GitHub commit (patch point 3):
 //                    camelCase target keys, no `category` (inherited from the
-//                    folder JSON), merged `tags`, and a content-derived slug for
-//                    title-less posts so notes/replies get clean URLs, not a
-//                    bare timestamp.
+//                    folder JSON), merged `tags`, a content-derived slug for
+//                    title-less posts so notes/replies get clean URLs (not a
+//                    bare timestamp), and a derived `title` for every post so
+//                    none lands blank in <title>/OG/feeds/cards.
 //
 // v1 is create-only, text post-types; the media/update/delete surface the engine
 // already supports is simply not wired. Real-client auth presupposes the public
@@ -258,6 +259,66 @@ export const resolveFilename = (filename, data = {}, content = '') => {
   return { finalName: `${dir}/${folder}/${better}.md`, location: publicUrl(better) }
 }
 
+// --- title derivation ------------------------------------------------------
+// Every post should carry a `title`: a title-less post degrades in the page
+// <title> (falls back to the bare site name), og:title + the OG-image path,
+// the Atom/JSON feed entry <title>, the notes archive card headline, and the
+// hidden h-entry p-name. The media/article types already get a title (the cite
+// name / required `name`); these helpers derive one for the title-less types
+// (note, reply, like, bookmark, repost, rsvp) — content-first, then the target.
+
+// A readable title from the body: the first non-empty line, then its first
+// sentence, normalized and capped on a word boundary, opening capitalized.
+export const titleFromContent = (body = '') => {
+  const text = stripHtml(body).replace(/\r/g, '')
+  let line = text.split('\n').map((s) => s.trim()).find(Boolean) || ''
+  line = line.replace(/^\s*(?:[>#*-]+|\d+\.)\s*/, '').replace(/\s+/g, ' ').trim() // drop leading md markers
+  if (!line) return ''
+  const sentence = line.match(/^(.*?[.!?])(?:\s|$)/) // prefer the first sentence when a line packs several
+  let title = sentence ? sentence[1] : line
+  const MAX = 70
+  if (title.length > MAX) title = title.slice(0, MAX).replace(/\s+\S*$/, '').trim() + '…'
+  else title = title.replace(/[.,;:\s]+$/, '') // tidy trailing punctuation (keep ? !)
+  return title.charAt(0).toUpperCase() + title.slice(1)
+}
+
+// A target URL minus the scheme/www/trailing slash — for response-type titles.
+export const humanizeUrl = (url = '') => {
+  const raw = flatten(url)
+  if (!raw || typeof raw !== 'string') return ''
+  try {
+    const u = new URL(raw)
+    return u.hostname.replace(/^www\./, '') + u.pathname.replace(/\/+$/, '')
+  } catch {
+    return raw.replace(/^https?:\/\//i, '').replace(/^www\./, '').replace(/\/+$/, '')
+  }
+}
+
+// The verb-phrase title for a URL-only response (mirrors card-response.njk):
+// "Liked x.com/y", "In reply to …", "Bookmarked …", "Reposted …", "RSVP yes to …".
+const RESPONSE_VERB = {
+  inReplyTo: 'In reply to',
+  likeOf: 'Liked',
+  bookmarkOf: 'Bookmarked',
+  repostOf: 'Reposted'
+}
+export const titleFromTarget = (data = {}) => {
+  if (data.rsvp && data.inReplyTo) return `RSVP ${data.rsvp} to ${humanizeUrl(data.inReplyTo)}`.trim()
+  for (const key of ['inReplyTo', 'likeOf', 'bookmarkOf', 'repostOf']) {
+    if (data[key]) return `${RESPONSE_VERB[key]} ${humanizeUrl(data[key])}`.trim()
+  }
+  return ''
+}
+
+// Guarantee a title: keep an existing one (media/article/client `name`), else
+// derive content-first, else from the response target. Returns the data with
+// `title` first; leaves a truly empty post (no content, no target) title-less.
+export const ensureTitle = (data = {}, content = '') => {
+  if (data.title) return data
+  const derived = titleFromContent(content) || titleFromTarget(data)
+  return derived ? { title: derived, ...data } : data
+}
+
 // --- store ----------------------------------------------------------------
 
 // A GitHubStore that rewrites frontmatter to JEDEE conventions and upgrades a
@@ -288,7 +349,11 @@ class JedeeStore {
     const { finalName, location } = resolveFilename(filename, data, parsed.content)
     if (location && this.onLocation) this.onLocation(location)
 
-    const fm = matter.stringify(parsed.content, data)
+    // Guarantee a `title` so the post isn't blank in <title>/OG/feeds/cards/p-name.
+    // Runs AFTER resolveFilename so a derived title is purely additive — it never
+    // changes the clean-slug filename or URL (only a real client/media title drives
+    // the Obsidian Title-Case filename, in resolveFilename above).
+    const fm = matter.stringify(parsed.content, ensureTitle(data, parsed.content))
     return this.inner.createFile(finalName, fm)
   }
 }
