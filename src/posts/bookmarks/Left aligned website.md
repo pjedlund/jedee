@@ -1,7 +1,6 @@
 ---
 bookmarkOf: 'https://onepagelove.com/tag/left-align'
 title: Left aligned website
-visibility: unlisted
 tags:
   - design
 date: '2026-06-03T11:10:56.421Z'
