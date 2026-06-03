@@ -47,7 +47,8 @@ export const blog = {
   name: 'Johan Edlund',
   description: 'Jesus Christ is the truth and the way.',
   // feed links are looped over in the head. You may add more to the array.
-  feedLinks: [{
+  feedLinks: [
+    {
       title: 'Atom Feed',
       url: '/feed.xml',
       type: 'application/atom+xml'
@@ -86,7 +87,7 @@ export const navigation = {
   ariaPlatforms: 'Platforms',
   drawerNav: true,
   subMenu: true,
-  hideNav: true // soft-launch: suppress the main nav site-wide (header still has logo + skip-link). Flip to false to restore.
+  hideNav: true // soft-launch: hide the main nav in PRODUCTION (header keeps logo + skip-link); header.njk still reveals it in `eleventy --serve` for local dev. Flip to false at 1.0.0 to show everywhere.
 };
 export const themeSwitch = {
   title: 'Theme',
@@ -105,12 +106,14 @@ export const indieweb = {
 };
 export const greenweb = {
   // https://carbontxt.org/
-  disclosures: [{
-    docType: 'sustainability-page',
-    url: `${url}/sustainability/`,
-    domain: domain
-  }],
-  services: [{ domain: 'netlify.com', serviceType: 'cdn' }]
+  disclosures: [
+    {
+      docType: 'sustainability-page',
+      url: `${url}/sustainability/`,
+      domain: domain
+    }
+  ],
+  services: [{domain: 'netlify.com', serviceType: 'cdn'}]
 };
 export const tests = {
   pa11y: {
