@@ -14,7 +14,7 @@
 </div>
 
 <header class="doc-header" id="top">
-  <p class="eyebrow">endpoint design · built (v1) · 2026-05-31 · status/visibility/slug vocab · 2026-06-01 · per-type contract + extensions conformance · 2026-06-01</p>
+  <p class="eyebrow">endpoint design · built (v1) · 2026-05-31 · status/visibility/slug vocab · 2026-06-01 · per-type contract + extensions conformance · 2026-06-01 · title on every post · 2026-06-03</p>
   <h1>Micropub endpoint</h1>
   <p class="meta">Brainstormed 30 May 2026 · <strong>built (v1) 2026-05-31</strong> · v1 = create-only, text posts · ports the <code>indiee</code> ROADMAP <strong>M11</strong> decision onto JEDEE-as-it-is · companion to the <code>micropub</code> skill</p>
 </header>
@@ -131,12 +131,13 @@ GITHUB_REPO    = jedee</code></pre>
 <p><strong>The shared spine</strong> — identical across all 15 types, so it's stated once here, not per-row:</p>
 <table>
 <tr><th>Field</th><th>Source / rule</th></tr>
+<tr><td><code>title</code> <small>(added 2026-06-03)</small></td><td><strong>Every post carries one.</strong> The client <code>name</code> / media cite name when supplied (films/books/jams/articles), else <strong>derived at the endpoint</strong> (<code>ensureTitle</code>) — content-first (the body's first sentence, capped + capitalized), then the response target as a verb-phrase (<code>Liked x.com/y</code>, <code>In reply to …</code>, <code>RSVP yes to …</code>). A title-less post would otherwise go blank in the page <code>&lt;title&gt;</code>, <code>og:title</code> + the OG-image path, the Atom/JSON feed entry <code>&lt;title&gt;</code>, the notes card headline, and the hidden h-entry <code>p-name</code>. Derived <em>after</em> the filename is resolved, so it is purely additive — it never changes the clean-slug filename/URL (only a real client/media title drives the Obsidian Title-Case filename, §5 patch 2).</td></tr>
 <tr><td><code>date</code></td><td>Micropub <code>published</code> → <code>date</code> (engine <code>translateProps</code>); else the commit time. Rendered by <code>entry-header.njk</code>.</td></tr>
 <tr><td><code>tags</code></td><td>Micropub <code>category</code> → <code>tags</code> (engine) = the post's <em>user tags</em>. The firehose <code>posts</code> tag is <strong>stripped</strong> (the folder JSON re-adds it via the cascade), and the type-<code>category</code> is <strong>never</strong> written here. See §5/§6.</td></tr>
 <tr><td><code>category</code> (the post <em>type</em>)</td><td><strong>Never written per-post</strong> — inherited from <code>src/posts/&lt;type&gt;/&lt;type&gt;.json</code>. Routing = choosing the folder; the type falls out of the cascade (§5).</td></tr>
 <tr><td><code>draft</code> / <code>visibility</code> / slug</td><td>The status/visibility/slug vocabulary — <code>post-status</code>, <code>visibility</code>, <code>mp-slug</code> — translated identically for every type. See §5a.</td></tr>
 </table>
-<p><strong>The per-type variance</strong> — title, the identity/target key, and type-specific fields. The <em>Micropub path</em> column records which tier each type is in (see the note below the table). Keys confirmed against <code>src/_layouts/*.njk</code> (2026-06-01).</p>
+<p><strong>The per-type variance</strong> — title, the identity/target key, and type-specific fields. The <em>Micropub path</em> column records which tier each type is in (see the note below the table). Keys confirmed against <code>src/_layouts/*.njk</code> (2026-06-01). <strong>Note (2026-06-03):</strong> a <code>Title</code> of "optional" now means <em>optional from the client</em> — the endpoint always derives one if the client omits it (see the <code>title</code> spine row above), so a committed post is never title-less.</p>
 <table>
 <tr><th>Type (<code>category</code>)</th><th>Title</th><th>Identity key (← mf2 property)</th><th>Type-specific frontmatter</th><th>Micropub path</th></tr>
 <tr><td colspan="5"><strong>Tier A — text/URL posts, advertised in <code>q=config</code> <code>post-types[]</code></strong></td></tr>
