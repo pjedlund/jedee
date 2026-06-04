@@ -1,0 +1,73 @@
+{#
+  Photo metadata block: capture (visible) + scan/technical (collapsible <details>)
+  + download original + public-domain line.
+
+  - `photoExif`        build-time extracted, render-safe (src/_config/utils/exif.js)
+  - `photo.film` / `photo.development` / `photo.downloads`   authored front matter
+
+  Bare include from photo.njk (no async shortcodes here), so the interlinker
+  async-blank trap doesn't apply and internal {% if %} guards are safe.
+  Microformats: p-location (+ nested h-adr) on the place; h-geo on the coords.
+  These sit outside the hidden h-entry root, consistent with the site's existing
+  e-content/dt-published placement — see the `microformats` skill.
+#}
+{% set ex = photoExif %}
+{% if ex or photo.downloads %}
+<section class="photo-meta | flow" aria-label="Photograph details">
+
+  {% if ex %}
+  <dl>
+    {% if ex.camera %}<dt>Camera</dt><dd>{{ ex.camera }}</dd>{% endif %}
+    {% if ex.pinhole %}<dt>Pinhole</dt><dd>{{ ex.pinhole }}</dd>
+    {% elif ex.lens %}<dt>Lens</dt><dd>{{ ex.lens }}</dd>{% endif %}
+    {% if photo.film %}<dt>Film</dt><dd>{{ photo.film }}</dd>{% endif %}
+    {% if photo.development %}<dt>Development</dt><dd>{{ photo.development }}</dd>{% endif %}
+    {% if ex.place %}<dt>Place</dt>
+      <dd class="p-location h-adr">
+        {%- set parts = [] -%}
+        {%- if ex.place.city %}<span class="p-locality">{{ ex.place.city }}</span>{% endif -%}
+        {%- if ex.place.region %}{% if ex.place.city %}, {% endif %}<span class="p-region">{{ ex.place.region }}</span>{% endif -%}
+        {%- if ex.place.country %}{% if ex.place.city or ex.place.region %}, {% endif %}<span class="p-country-name">{{ ex.place.country }}</span>{% endif -%}
+      </dd>
+    {% endif %}
+    {% if ex.dateTaken %}<dt>Taken</dt><dd>{{ ex.dateTaken }}</dd>{% endif %}
+  </dl>
+  {% endif %}
+
+  {% if photo.downloads.original %}
+  <p>
+    <a class="button" href="{{ photo.downloads.original }}" rel="enclosure" download>
+      Download original{% if photo.downloads.width and photo.downloads.height %} — JPEG, {{ photo.downloads.width }}&times;{{ photo.downloads.height }}{% if photo.downloads.bytes %} ({{ (photo.downloads.bytes / 1048576) | round }}&nbsp;MB){% endif %}{% endif %}
+    </a>
+  </p>
+  {% endif %}
+
+  <p class="text-step-min-1 photo-license">
+    <a rel="license" href="https://creativecommons.org/publicdomain/zero/1.0/">Public domain (CC0)</a> &mdash; download and reuse freely.
+  </p>
+
+  {% if ex and (ex.aperture or ex.exposure or ex.iso or ex.focalLength or ex.scanLens or ex.software or ex.gps or ex.dateDigitized or (photo.downloads.width and photo.downloads.height)) %}
+  <details class="photo-tech">
+    <summary>Scan &amp; technical data</summary>
+    <dl>
+      {% if photo.downloads.width and photo.downloads.height %}<dt>Resolution</dt><dd>{{ photo.downloads.width }}&times;{{ photo.downloads.height }} ({{ (photo.downloads.width * photo.downloads.height / 1000000) | round(1) }} MP)</dd>{% endif %}
+      {% if ex.aperture %}<dt>Scan aperture</dt><dd>{{ ex.aperture }}</dd>{% endif %}
+      {% if ex.exposure %}<dt>Scan shutter</dt><dd>{{ ex.exposure }}</dd>{% endif %}
+      {% if ex.iso %}<dt>ISO</dt><dd>{{ ex.iso }}</dd>{% endif %}
+      {% if ex.focalLength %}<dt>Scan focal length</dt><dd>{{ ex.focalLength }}{% if ex.focalLength35 %} ({{ ex.focalLength35 }} eq.){% endif %}</dd>{% endif %}
+      {% if ex.scanLens %}<dt>Scan lens</dt><dd>{{ ex.scanLens }}</dd>{% endif %}
+      {% if ex.software %}<dt>Software</dt><dd>{{ ex.software }}</dd>{% endif %}
+      {% if ex.gps %}<dt>Coordinates</dt>
+        <dd class="h-geo"><data class="p-latitude" value="{{ ex.gps.lat }}">{{ ex.gps.lat | round(5) }}</data>, <data class="p-longitude" value="{{ ex.gps.lon }}">{{ ex.gps.lon | round(5) }}</data></dd>
+      {% endif %}
+      {% if ex.dateDigitized %}<dt>Digitized</dt><dd>{{ ex.dateDigitized }}</dd>{% endif %}
+    </dl>
+  </details>
+  {% endif %}
+
+</section>
+{% endif %}
+
+{% css "local" %}
+  {% include "css/photo-meta.css" %}
+{% endcss %}
