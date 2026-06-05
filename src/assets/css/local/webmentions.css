@@ -1,0 +1,82 @@
+/*
+WEBMENTIONS
+Build-time static render of received webmentions on article, note, and photo
+pages (partials/webmentions.njk). A facepile of overlapping circular avatars for
+pure reactions (likes / reposts / bookmarks), then reply cards below for
+text-bearing mentions. Per-page `local` bundle — included only by the three
+layouts that render it, never global. Ported from Lene Saile's pattern with this
+project's tokens (`--stroke`, semantic `--color-*`, `--size-step-*`).
+*/
+.webmentions {
+  --webmention-avatar-size: var(--size-step-2);
+  --webmention-avatar-overlap: calc(var(--space-s) * -1);
+  --webmention-avatar-border: var(--stroke);
+  --webmention-avatar-bg: var(--color-bg);
+}
+
+.webmentions h3 {
+  font-size: var(--size-step-0);
+}
+
+.webmentions__kinds {
+  font-size: var(--size-step-min-1);
+  font-weight: 400;
+  color: var(--color-text-accent);
+}
+
+/* Strip the default list marker/padding — these lists carry a class, so the
+   prose block (which only styles unclassed lists) leaves UA bullets in place. */
+.webmentions ul[role='list'] {
+  list-style: none;
+  padding-inline-start: 0;
+}
+
+/* FACEPILE — overlapping circular avatars */
+.webmentions .avatars {
+  max-inline-size: 40ch;
+}
+
+.webmentions .avatars li {
+  margin-inline-end: var(--webmention-avatar-overlap);
+  padding: 0;
+}
+
+.webmentions .avatars img {
+  aspect-ratio: 1;
+  inline-size: var(--webmention-avatar-size);
+  block-size: var(--webmention-avatar-size);
+  overflow: clip;
+  border-radius: 50%;
+  border: var(--webmention-avatar-border);
+  background: var(--webmention-avatar-bg);
+}
+
+/* REPLY CARDS */
+.webmention {
+  --flow-space: var(--space-2xs);
+}
+
+.webmention__meta {
+  --gutter: var(--space-2xs);
+}
+
+.webmention__author {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.webmention__author img {
+  aspect-ratio: 1;
+  inline-size: var(--size-step-1);
+  block-size: var(--size-step-1);
+  overflow: clip;
+  border-radius: 50%;
+  border: var(--webmention-avatar-border);
+  background: var(--webmention-avatar-bg);
+}
+
+.webmention__date {
+  font-size: var(--size-step-min-1);
+  color: var(--color-text-accent);
+}

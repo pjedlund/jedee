@@ -27,5 +27,7 @@
   <a href="https://indieweb.org/Webmention">Let me know the URL.</a>
 </p>
 
-{% include 'partials/webmentions.njk' %}
+{# Received webmentions are rendered PER-LAYOUT (article/note/photo only), not
+   here — see partials/webmentions.njk + each layout's bare include. The text CTA
+   above stays on all post types. #}
 {% include 'partials/edit-on.njk' %}
