@@ -19,6 +19,10 @@ schema: BlogPosting
       {{ content | safe }}
     </div>
 
+    {# Capture/scan metadata + download original + public-domain line.
+       Bare include (no async shortcodes inside) — see the interlinker trap note. #}
+    {% include 'partials/photo-meta.njk' %}
+
     {% include 'partials/backlinks.njk' %}
     {% include 'partials/entry-footer.njk' %}
   </div>
