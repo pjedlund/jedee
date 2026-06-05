@@ -1,11 +1,27 @@
 import Image from '@11ty/eleventy-img';
 import path from 'node:path';
 
+// HTML-escape a value for safe interpolation into the markup we build by hand.
+// This shortcode returns raw HTML, so it bypasses Nunjucks' auto-escaping: a
+// straight `"` in a frontmatter `alt`/`caption` would otherwise close the
+// attribute and make the html-minify transform throw a Parse Error, failing the
+// production build. The set covers both attribute and text-node contexts.
+const HTML_ESCAPES = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;'
+};
+
+export const escapeHtml = value =>
+  value == null ? '' : String(value).replace(/[&<>"']/g, char => HTML_ESCAPES[char]);
+
 const stringifyAttributes = attributeMap => {
   return Object.entries(attributeMap)
     .map(([attribute, value]) => {
       if (typeof value === 'undefined') return '';
-      return `${attribute}="${value}"`;
+      return `${attribute}="${escapeHtml(value)}"`;
     })
     .join(' ');
 };
@@ -56,7 +72,7 @@ const processImage = async options => {
     .map(imageFormat => {
       return `  <source type="${imageFormat[0].sourceType}" srcset="${imageFormat
         .map(entry => entry.srcset)
-        .join(', ')}" sizes="${sizes}">`;
+        .join(', ')}" sizes="${escapeHtml(sizes)}">`;
     })
     .join('\n');
 
@@ -74,8 +90,8 @@ const processImage = async options => {
   const pictureElement = `<picture> ${imageSources}<img ${imageAttributes}></picture>`;
 
   return caption ?
-    `<figure slot="image"${containerClass ? ` class="${containerClass}"` : ''}>${pictureElement}<figcaption>${caption}</figcaption></figure>` :
-    `<picture slot="image"${containerClass ? ` class="${containerClass}"` : ''}>${imageSources}<img ${imageAttributes}></picture>`;
+    `<figure slot="image"${containerClass ? ` class="${escapeHtml(containerClass)}"` : ''}>${pictureElement}<figcaption>${escapeHtml(caption)}</figcaption></figure>` :
+    `<picture slot="image"${containerClass ? ` class="${escapeHtml(containerClass)}"` : ''}>${imageSources}<img ${imageAttributes}></picture>`;
 };
 
 // Positional parameters (legacy)
