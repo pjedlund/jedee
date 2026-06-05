@@ -1,8 +1,10 @@
 /*
 EVENT STATUS
 A small badge marking an event's schema.org EventStatusType when it isn't simply
-`scheduled`. Shared by the event post page (event.njk) and the archive card
-(card-event.njk), so it lives as a site-wide block rather than a card-local rule.
+`scheduled`. Used by the event post page (event.njk) and the archive card
+(card-event.njk). Loaded as a per-page `local` bundle included by just those two
+partials (the same way custom-card.css travels with the card partials), so it
+stays off the global path and never ships on event-less pages.
 Status drives the badge only — never the archive partition: a cancelled event
 stays visible in its date-determined section (spec §7). The `data-status`
 attribute carries the value; the colour is a CUBE exception per status. Spacing

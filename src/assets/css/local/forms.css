@@ -1,5 +1,15 @@
 /* © https://piccalil.li/complete-css */
 
+/*
+FORMS — reserved / intentionally unwired (as of 2026-06-05).
+Inherited from Eleventy Excellent. Nothing currently includes this bundle and the
+site has no <form>, so it ships to no page. Kept as ready scaffolding: when a
+contact / search / newsletter form lands, wrap its CSS in the page's
+{% css "local" %} block with {%- include 'css/forms.css' -%} — do NOT promote
+this to global/blocks/ (form styling is page-specific). Delete this file instead
+if the form idea is dropped.
+*/
+
 form > * + * {
   margin-top: var(--flow-space, 1rem);
 }
