@@ -20,4 +20,4 @@ syndication:
   - https://www.flickr.com/photos/pjedlund/53236844443/
 ---
 
-Ribersborg at the blue hour, the open-air baths gone quiet and the already very calm Öresund is flat as poured glass because of the 60 second exposure. On a clear evening Copenhagen sits as a low band of light across the water and the bridge dissolves into the haze off to the right. The film rebate is left in on purpose; the Ektar edge markings are part of the picture now.
+Ribersborg at the blue hour, the open-air baths gone quiet and the already very calm Öresund is flat as poured glass because of the 60 second exposure. On a clear evening Copenhagen sits as a low band of light across the water. The film rebate is left in on purpose; the Ektar edge markings are part of the picture now.
