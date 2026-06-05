@@ -1,3 +1,89 @@
-{# Webmention render slot — no-op stub. Phase 2+ will fetch and render received
-   webmentions here. Include with `{% include "partials/webmentions.njk" %}` from
-   post layouts; the include stays safe to call even while the renderer is empty. #}
+{# Webmention render slot — build-time static render of received webmentions
+   (replies, likes, reposts, mentions) fetched into _data/webmentions.js.
+
+   Wired PER-LAYOUT (article/note/photo only) via a BARE include — the layout sets
+   `webmentionUrl` first (its absolute URL, matching the hidden h-entry's u-url so
+   it equals each mention's `wm-target`). A bare include keeps it clear of the
+   interlinker async-shortcode trap; this partial (and the webmention.njk card it
+   pulls in) call ZERO shortcodes — only filters + plain <img> — so the inner
+   {% if %}/{% for %} blocks are safe.
+
+   Empty state renders NOTHING (the whole <aside> is gated). Partition: mentions
+   with `content.text` render as reply CARDS; pure reactions (likes/reposts/
+   bookmarks, no text) render as a facepile of overlapping avatars. Own mentions
+   are excluded via the `webmentionisOwn` filter.
+
+   Avatars are hotlinked plain <img eleventy:ignore> (webmention.io proxies them):
+   the {% image %} shortcode is avoided on purpose — it breaks on remote URLs and
+   is async (interlinker trap), and `eleventy:ignore` keeps the eleventy-img HTML
+   Transform from trying to fetch/optimize them, so they stay zero-build-cost. #}
+
+{% set allMentions = webmentions | webmentionGetForUrl(webmentionUrl) %}
+
+{% set reactionsPhoto = [] %}
+{% set reactionsNoPhoto = [] %}
+{% set replies = [] %}
+{% for webmention in allMentions %}
+  {% if not (webmention | webmentionisOwn) %}
+    {% if webmention.content and webmention.content.text %}
+      {% set replies = replies.concat([webmention]) %}
+    {% elif webmention.url %}
+      {% if webmention.author.photo %}
+        {% set reactionsPhoto = reactionsPhoto.concat([webmention]) %}
+      {% else %}
+        {% set reactionsNoPhoto = reactionsNoPhoto.concat([webmention]) %}
+      {% endif %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+{% set reactions = reactionsPhoto.concat(reactionsNoPhoto) %}
+
+{% if reactions | length or replies | length %}
+  <aside class="webmentions | flow region prose">
+    <h2 id="webmentions">Webmentions</h2>
+    <p class="text-step-min-1">
+      Responses to this page from around the web, collected via
+      <a href="https://webmention.io" rel="noreferrer">webmention.io</a>.
+    </p>
+
+    {% if reactions | length %}
+      <div class="flow">
+        <h3>
+          {{ reactions | length }} Reaction{% if reactions | length != 1 %}s{% endif %}
+          <span class="webmentions__kinds">(likes, reposts and bookmarks)</span>
+        </h3>
+        <ul class="avatars | cluster gutter-3xs" role="list">
+          {% for webmention in reactions %}
+            <li>
+              <a class="h-card u-url no-indicator" href="{{ webmention.url }}" rel="noreferrer">
+                <img
+                  eleventy:ignore
+                  class="u-photo"
+                  src="{{ webmention.author.photo or (meta.webmentions.fallbackAvatar | url) }}"
+                  alt=""
+                  width="40"
+                  height="40"
+                  loading="lazy"
+                />
+                <span class="visually-hidden p-name">{{ webmention.author.name or 'A reaction' }}</span>
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    {% if replies | length %}
+      <div class="flow">
+        <h3>
+          {{ replies | length }} {% if replies | length == 1 %}Reply{% else %}Replies{% endif %}
+        </h3>
+        <ul class="webmention-list | flow" role="list">
+          {% for webmention in (replies | webmentionSort) %}
+            <li>{% include "partials/webmention.njk" %}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+  </aside>
+{% endif %}

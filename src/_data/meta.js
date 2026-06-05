@@ -104,6 +104,15 @@ export const indieweb = {
   authorizationEndpoint: 'https://indieauth.com/auth',
   tokenEndpoint: 'https://tokens.indieauth.com/token'
 };
+// Received webmentions (Phase 2). Fetched build-time by _data/webmentions.js and
+// rendered statically by partials/webmentions.njk on article/note/photo pages.
+// The webmention.io account domain is `domain` (apex, derived from `url` above) —
+// reused, not duplicated. `fallbackAvatar` is shown for a mention whose author
+// has no photo. Activate live fetching by setting WEBMENTION_IO_TOKEN (see
+// .env-sample); until then the section renders empty everywhere.
+export const webmentions = {
+  fallbackAvatar: '/assets/images/template/webmention-avatar.svg'
+};
 export const greenweb = {
   // https://carbontxt.org/
   disclosures: [

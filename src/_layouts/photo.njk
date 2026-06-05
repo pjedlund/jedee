@@ -25,6 +25,11 @@ schema: BlogPosting
 
     {% include 'partials/backlinks.njk' %}
     {% include 'partials/entry-footer.njk' %}
+
+    {# Received webmentions — BARE include (interlinker-safe). webmentionUrl must
+       match the hidden h-entry's u-url below so it equals each mention's wm-target. #}
+    {% set webmentionUrl = page.url | url | absoluteUrl(meta.url) %}
+    {% include "partials/webmentions.njk" %}
   </div>
 
   {# h-card authorship for Webmention discovery — https://indieweb.org/authorship #}
@@ -43,4 +48,5 @@ schema: BlogPosting
 {%- css "local" -%}
   {%- include 'css/post.css' -%}
   {%- include 'css/footnotes.css' -%}
+  {%- include 'css/webmentions.css' -%}
 {%- endcss -%}
