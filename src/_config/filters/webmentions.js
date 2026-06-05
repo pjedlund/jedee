@@ -18,9 +18,22 @@ export const webmentionByType = (mentions, mentionType) => {
   return mentions.filter(entry => !!entry[mentionType]);
 };
 
-/** True if the mention is from one of Johan's own identities — so the template
- *  can exclude self-mentions (e.g. POSSE copies bouncing back via Bridgy). */
+/** True if the mention is one of Johan's own / a self-echo — so the template can
+ *  exclude it. Two cases:
+ *  (1) Bridgy backfeeds the silo POST itself: its `wm-source` is a brid.gy
+ *      `/post/` URL (vs `/comment/`, `/like/`, `/repost/`). This happens when the
+ *      syndicated copy links back to the original — e.g. a Flickr photo whose
+ *      description links here surfaces as a `mention-of` carrying the photo's own
+ *      caption. It is never a genuine third-party response, so always drop it.
+ *  (2) the author is one of Johan's own identities (POSSE copies bouncing back).
+ *      NB: this does NOT include his silo profiles (e.g. Flickr), so his own
+ *      genuine comments — `/comment/` — still render. */
 export const webmentionisOwn = webmention => {
+  // (1) Self-syndication echo: the silo post mentioning itself.
+  const source = webmention['wm-source'] || '';
+  if (/^https?:\/\/brid\.gy\/post\//.test(source)) return true;
+
+  // (2) Author is one of Johan's own identities.
   const urls = [
     'https://johanedlund.se',
     'https://bsky.app/profile/johanedlund.se',
