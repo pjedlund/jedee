@@ -1,0 +1,16 @@
+{# Hidden authorship for Webmention discovery — https://indieweb.org/authorship
+   Lives INSIDE the post's h-entry root. Provides the entry's single u-url (the
+   permalink) and a nested p-author h-card (name + url + photo). Bare include,
+   zero shortcodes (plain <img eleventy:ignore>) — interlinker-safe. #}
+<div hidden>
+  <a class="u-url" href="{{ page.url | url | absoluteUrl(meta.url) }}">{{ title }}</a>
+  <p class="p-author h-card">
+    <a class="p-name u-url" rel="author" href="{{ meta.url }}">{{ meta.author.name }}</a>
+    <img
+      eleventy:ignore
+      class="u-photo"
+      src="{{ meta.author.avatar | url | absoluteUrl(meta.url) }}"
+      alt="{{ meta.author.name }}"
+    />
+  </p>
+</div>

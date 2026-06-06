@@ -4,7 +4,7 @@ schema: BlogPosting
 ---
 
 <div class="region" style="--region-space-top: var(--space-xl-2xl)">
-  <div class="wrapper flow prose">
+  <article class="wrapper flow prose h-entry">
     {% include 'partials/entry-header.njk' %}
 
     <div class="e-content | flow">
@@ -13,24 +13,13 @@ schema: BlogPosting
 
     {% include 'partials/backlinks.njk' %}
     {% include 'partials/entry-footer.njk' %}
+    {% include 'partials/hidden-author.njk' %}
+  </article>
 
-    {# Received webmentions — BARE include (interlinker-safe). webmentionUrl must
-       match the hidden h-entry's u-url below so it equals each mention's wm-target. #}
-    {% set webmentionUrl = page.url | url | absoluteUrl(meta.url) %}
-    {% include "partials/webmentions.njk" %}
-  </div>
-
-  {# h-card authorship for Webmention discovery — https://indieweb.org/authorship #}
-  <div hidden class="h-entry">
-    <a class="u-url" href="{{ page.url | url | absoluteUrl(meta.url) }}">{{ title }}</a>
-    <a class="p-name u-url" rel="author" href="{{ meta.url }}">{{ meta.author.name }}</a>
-    <img
-      eleventy:ignore
-      class="u-author h-card"
-      src="{{ meta.author.avatar | url | absoluteUrl(meta.url) }}"
-      alt="{{ meta.author.name }}"
-    />
-  </div>
+  {# Received webmentions — OUTSIDE the h-entry root (Lene/Max pattern). Bare
+     include, interlinker-safe. webmentionUrl = the entry's u-url = each mention's wm-target. #}
+  {% set webmentionUrl = page.url | url | absoluteUrl(meta.url) %}
+  {% include "partials/webmentions.njk" %}
 </div>
 
 {%- css "local" -%}
