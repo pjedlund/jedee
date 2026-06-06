@@ -12,7 +12,13 @@ schema: BlogPosting
        photo.src is a LOCAL asset, so {% image %} is correct here; the remote-cover
        plain-<img> pattern (reading/watching/jam) does not apply. #}
     {% if photo.src %}
-      {% image photo.src, photo.alt, photo.caption, "eager", "", "u-photo" %}
+      {%- if photo.downloads.original and photo.downloads.width and photo.downloads.height -%}
+        <photo-lightbox @href="{{ photo.downloads.original }}" @width="{{ photo.downloads.width }}" @height="{{ photo.downloads.height }}">
+          {% image photo.src, photo.alt, photo.caption, "eager", "", "u-photo" %}
+        </photo-lightbox>
+      {%- else -%}
+        {% image photo.src, photo.alt, photo.caption, "eager", "", "u-photo" %}
+      {%- endif -%}
     {% endif %}
 
     <div class="e-content | flow">
@@ -36,6 +42,7 @@ schema: BlogPosting
 
 {%- css "local" -%}
   {%- include 'css/post.css' -%}
+  {%- include 'css/photo-lightbox.css' -%}
   {%- include 'css/footnotes.css' -%}
   {%- include 'css/webmentions.css' -%}
 {%- endcss -%}

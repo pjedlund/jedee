@@ -9,7 +9,7 @@ photo:
     original: https://files.johanedlund.se/photos/pier-4-ribersborg-original.jpg
     width: 9437
     height: 3375
-    bytes: 11456504
+    bytes: 11456471
 title: Pier 4, Ribersborg
 date: 2026-06-04T20:00:00+02:00
 description: A 6×17 pinhole panorama across the Øresund at dusk, made on the lower pinhole of a RealitySoSubtle and home-developed on Kodak Ektar 100.
