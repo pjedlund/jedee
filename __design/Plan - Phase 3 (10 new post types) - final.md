@@ -178,26 +178,16 @@ the archive cards, and run a sample URL through indiewebify.me for µf2 sanity.
 - **Field naming — LOCKED: camelCase** (`bookmarkOf`, `likeOf`, `inReplyTo`, `repostOf`, `rsvp`).
   Data files stay plain `.json`; no `eleventyComputed` aliasing.
 - **Video — LOCKED: accept 15 types.** Audio + Video are creator-side siblings, built together in Phase 3b.
-- **µf2 h-entry nesting — DEFERRED + documented (v1).** Response layouts clone `note.njk`, whose only `h-entry`
-  is the hidden authorship div; the visible `u-*` target (and `.e-content`) sit *outside* it, so a strict mf2
-  parser won't tie the response property to the h-entry. Accepted for v1 because webmention *sending* isn't wired
-  up yet. Fix in the webmention milestone — either give the response layouts a proper self-contained
-  `h-entry`, or restructure `note.njk` + shared chrome (the latter also fixes the existing types).
-  - **Parse-verified 2026-05-29** (`microformats-parser` + `mf2py` on rebuilt `like.njk` markup): the visible
-    `u-like-of` / `dt-published` / `e-content` are **dropped entirely**, not merely "orphaned at top level" —
-    mf2 only collects properties that descend from a root, and `.region`/`.wrapper`/`base.njk` carry no `h-*`.
-    The parsed `h-entry` contains only author + url, so an outbound like/reply would be received as a generic
-    `mention-of`, never a typed like/reply. Three secondary warts in the hidden block: entry `p-name` resolves
-    to the *author's* name (not the post title); the entry carries two `u-url`s (permalink + home, from the
-    `p-name u-url` author anchor); and the author `h-card` has name + photo but no `url`. Inbound *attribution*
-    still works (webmention.io's authorship algorithm finds the nested `u-author h-card`), so this stays moot
-    while receiving is a stub (`partials/webmentions.njk`) and sending is unwired.
-  - **Recommendation (for the webmention milestone): take option b — promote the visible `.wrapper` to the
-    `h-entry` root in the shared chrome** (`<h1>` → `p-name`, one hidden `u-author h-card` *with* a `u-url`
-    inside the root, entry `u-url` = permalink only). One change fixes all 15 types and clears the three warts,
-    versus option a which re-solves it per-layout and leaves the existing types' warts. Bonus: this also lets the
-    event `h-event` nest inside `h-entry` as already specified above (Phase 3b Event). Sequence the work as
-    restructure-chrome → re-parse one built page per type (php.microformats.io / pin13 / indiewebify.me) →
-    then wire outbound sending. When chosen, flip this entry from DEFERRED to the resolution.
+- **µf2 h-entry nesting — RESOLVED (2026-06-06, branch `feat/webmention-entry-root`).** Option b was taken:
+  the visible `.wrapper` is now the `h-entry` root on all 15 post-type layouts. `<article class="wrapper flow
+  prose h-entry">` replaces the old `<div class="wrapper flow prose">`; the old hidden sibling `<div hidden
+  class="h-entry">` is removed. Three warts cleared: (1) entry `p-name` now comes from the visible `<h1
+  class="p-name">` in `entry-header.njk`; (2) the entry has exactly one `u-url` (the permalink); (3) the author
+  identity lives in a `p-author h-card` with `p-name`, `u-url` (home), and `u-photo`, via a new shared
+  `partials/hidden-author.njk`. Received webmentions (`partials/webmentions.njk`) are rendered **outside**
+  `</article>` on the three webmention-bearing layouts (post/note/photo) — the Lene/Max pattern. Commits:
+  `c357845` (partial + p-name) · `36f139c` (devDep) · `6f48f88` (12 layouts) · `1ccda55` (post/note/photo +
+  webmention relocation). Parser-verified (15/15 types green, photo received mentions confirmed outside the
+  entry). **Next: wire outbound sending (Bridgy publish / webmention.app).**
 - **Feed title fallback** for title-less Reply/RSVP entries — computed fallback vs accept empty. *(still open)*
 - **Nav inclusion** of Like/Repost — currently excluded; include if you want them discoverable. *(still open)*
