@@ -1,0 +1,19 @@
+/*
+PHOTO-LIGHTBOX
+Affordance styles for the <photo-lightbox> WebC component (the PhotoSwipe
+wrapper in src/_includes/webc/photo-lightbox.webc). Lives in a local bundle
+(loaded by photo.njk) so it's minified and ships only on photo pages, not
+site-wide — same pattern as custom-card.css.
+*/
+photo-lightbox a {
+  /* The wrapper is a link first (no-JS / pre-hydration: opens the original).
+     Block so the slotted <figure> flows normally inside it. */
+  display: block;
+}
+
+/* Only advertise zoom once is-land has hydrated PhotoSwipe (is-land sets
+   [ready] — same idiom as custom-youtube's `is-land[ready] lite-youtube`).
+   Before then the cursor stays the honest link pointer. */
+is-land[ready] photo-lightbox a {
+  cursor: zoom-in;
+}

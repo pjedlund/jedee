@@ -1,0 +1,18 @@
+<is-land on:idle>
+  <photo-lightbox webc:root webc:keep>
+    <a
+      :href="href"
+      :data-pswp-width="width"
+      :data-pswp-height="height"
+      target="_blank"
+      rel="noopener"
+    >
+      <slot name="image"></slot>
+    </a>
+
+    <template data-island="once" webc:raw>
+      <link rel="stylesheet" href="/assets/components/photoswipe.css" />
+      <script type="module" src="/assets/scripts/components/photo-lightbox.js"></script>
+    </template>
+  </photo-lightbox>
+</is-land>
