@@ -4,7 +4,7 @@ schema: BlogPosting
 ---
 
 <div class="region" style="--region-space-top: var(--space-xl-2xl)">
-  <div class="wrapper flow prose">
+  <article class="wrapper flow prose h-entry">
     {% include 'partials/entry-header.njk' %}
 
     {% if description %}<p>{{ description }}</p>{% endif %}
@@ -35,19 +35,8 @@ schema: BlogPosting
 
     {% include 'partials/backlinks.njk' %}
     {% include 'partials/entry-footer.njk' %}
-  </div>
-
-  {# h-card authorship for Webmention discovery — https://indieweb.org/authorship #}
-  <div hidden class="h-entry">
-    <a class="u-url" href="{{ page.url | url | absoluteUrl(meta.url) }}">{{ title }}</a>
-    <a class="p-name u-url" rel="author" href="{{ meta.url }}">{{ meta.author.name }}</a>
-    <img
-      eleventy:ignore
-      class="u-author h-card"
-      src="{{ meta.author.avatar | url | absoluteUrl(meta.url) }}"
-      alt="{{ meta.author.name }}"
-    />
-  </div>
+    {% include 'partials/hidden-author.njk' %}
+  </article>
 </div>
 
 {%- css "local" -%}

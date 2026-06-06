@@ -4,16 +4,14 @@ schema: Event
 ---
 
 <div class="region" style="--region-space-top: var(--space-xl-2xl)">
-  <div class="wrapper flow prose">
+  <article class="wrapper flow prose h-entry">
     {% include 'partials/entry-header.njk' %}
 
     {# The event IS the structured content: a visible h-event carrying the µf2
        properties (spec §5). p-name mirrors the entry-header <h1> as a hidden
        <data> so the event name isn't rendered twice — the h1 is the visible
-       name. The h-event sits outside the hidden h-entry authorship block; that
-       root-nesting caveat is the shared, deferred webmention-milestone fix
-       (spec §5/§14), sharper here than the media types because it orphans a
-       microformat root rather than a u-* property. #}
+       name. The h-event nests INSIDE the article's h-entry root (the §6
+       entry-root promotion), so it parses as a child h-event of the entry. #}
     <div class="h-event event | flow">
       <data class="p-name" value="{{ title }}"></data>
       {% if description %}<p class="p-summary">{{ description }}</p>{% endif %}
@@ -39,19 +37,8 @@ schema: Event
 
     {% include 'partials/backlinks.njk' %}
     {% include 'partials/entry-footer.njk' %}
-  </div>
-
-  {# h-card authorship for Webmention discovery — https://indieweb.org/authorship #}
-  <div hidden class="h-entry">
-    <a class="u-url" href="{{ page.url | url | absoluteUrl(meta.url) }}">{{ title }}</a>
-    <a class="p-name u-url" rel="author" href="{{ meta.url }}">{{ meta.author.name }}</a>
-    <img
-      eleventy:ignore
-      class="u-author h-card"
-      src="{{ meta.author.avatar | url | absoluteUrl(meta.url) }}"
-      alt="{{ meta.author.name }}"
-    />
-  </div>
+    {% include 'partials/hidden-author.njk' %}
+  </article>
 </div>
 
 {%- css "local" -%}
