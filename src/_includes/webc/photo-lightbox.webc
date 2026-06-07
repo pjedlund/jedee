@@ -1,14 +1,18 @@
 <is-land on:idle>
   <photo-lightbox webc:root webc:keep>
-    <a
-      :href="href"
-      :data-pswp-width="width"
-      :data-pswp-height="height"
-      target="_blank"
-      rel="noopener"
-    >
-      <slot name="image"></slot>
-    </a>
+    <figure>
+      <a
+        class="no-indicator"
+        :href="href"
+        :data-pswp-width="width"
+        :data-pswp-height="height"
+        target="_blank"
+        rel="noopener"
+      >
+        <slot name="image"></slot>
+      </a>
+      <figcaption webc:if="caption" @text="caption"></figcaption>
+    </figure>
 
     <template data-island="once" webc:raw>
       <link rel="stylesheet" href="/assets/components/photoswipe.css" />

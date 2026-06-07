@@ -39,7 +39,7 @@
 {% set reactions = reactionsPhoto.concat(reactionsNoPhoto) %}
 
 {% if reactions | length or replies | length %}
-  <aside class="webmentions | flow region prose">
+  <aside class="webmentions | wrapper flow region prose">
     <h2 id="webmentions">Webmentions</h2>
     <p class="text-step-min-1">
       Responses to this page from around the web, collected via

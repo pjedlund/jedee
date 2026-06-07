@@ -3,11 +3,23 @@ PHOTO-LIGHTBOX
 Affordance styles for the <photo-lightbox> WebC component (the PhotoSwipe
 wrapper in src/_includes/webc/photo-lightbox.webc). Lives in a local bundle
 (loaded by photo.njk) so it's minified and ships only on photo pages, not
-site-wide — same pattern as custom-card.css.
+site-wide — same pattern as custom-card.css. (cssnano strips this comment from
+the output, so component docs live here rather than in the .webc — WebC keeps
+HTML comments, which would otherwise ship to every page.)
+
+Component usage (reusable on any page):
+  <photo-lightbox @href="<original-url>" @width="<px>" @height="<px>"
+                  @caption="<optional caption>">
+    {% image src, alt, "", "lazy", "", "u-photo" %}   {# render WITHOUT a caption #}
+  </photo-lightbox>
+@href/@width/@height (the full-res original) are required; @caption is optional
+and renders a <figcaption> OUTSIDE the link, so the caption is never part of the
+clickable/zoomable area. The slotted {% image %} must omit its own caption.
 */
 photo-lightbox a {
   /* The wrapper is a link first (no-JS / pre-hydration: opens the original).
-     Block so the slotted <figure> flows normally inside it. */
+     Block so the slotted <picture> flows normally inside it; the <figcaption>
+     lives outside this link, as a sibling in the enclosing <figure>. */
   display: block;
 }
 

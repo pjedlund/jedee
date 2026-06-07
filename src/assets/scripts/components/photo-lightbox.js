@@ -14,7 +14,9 @@ class PhotoLightbox extends HTMLElement {
       // PhotoSwipe's defaults cap the second step below native on wide panoramas.
       initialZoomLevel: 'fit',
       secondaryZoomLevel: 1,
-      maxZoomLevel: 1
+      maxZoomLevel: 1,
+      // Zoom with the scroll wheel alone (no Ctrl/Cmd), between fit and 1:1.
+      wheelToZoom: true
     });
     this.lightbox.init();
   }
