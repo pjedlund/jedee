@@ -71,7 +71,7 @@
 		}
 	],
 	"triggers": [
-		"https://www\\.imdb\\.com/title/tt\\d+"
+		"https://www.imdb.com/title/"
 	],
 	"noteNameFormat": "{{schema:name}}",
 	"path": "posts/watching/"
