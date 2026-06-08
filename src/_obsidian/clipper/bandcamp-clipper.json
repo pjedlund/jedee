@@ -71,7 +71,7 @@
 		}
 	],
 	"triggers": [
-		"https?://[^/]+\\.bandcamp\\.com/album/"
+		"/bandcamp\\.com/album/"
 	],
 	"noteNameFormat": "{{schema:@MusicAlbum:name|safe_name}}",
 	"path": "posts/jams/"

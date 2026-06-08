@@ -71,7 +71,7 @@
 		}
 	],
 	"triggers": [
-		"https://music\\.apple\\.com/[^/]+/album/"
+		"/music\\.apple\\.com/[^/]+/album/"
 	],
 	"noteNameFormat": "{{schema:@MusicAlbum:name|safe_name}}",
 	"path": "posts/jams/"
