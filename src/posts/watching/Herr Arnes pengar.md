@@ -20,3 +20,5 @@ plot: In 16th century Sweden, the lives of three Scottish mercenaries and a vica
 year: 1921
 ---
 It's odd that the best movie I've seen in a long time is a silent era film made more than a hundred years ago.  Every shot is [wonderfully framed](https://www.acinemahistory.com/2014/07/herr-arnes-pengar-1919-sir-arnes.html) and Selma Lagerström's story is handled with care. Since I grow up in this area of Sweden where the novel takes place I was hoping for local landmarks, but the movie seems to be shot all in Stockholm , so no sights of [Carlstens fästning](https://carlsten.se/en/) in Marstrand for instance. The English title is "Sir Arne's Treasure".
+
+<div><custom-youtube @slug="VFsdsE4sP2M" @label="Herr Arnes pengar © SF Studios"> </custom-youtube></div>
