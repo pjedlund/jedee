@@ -27,6 +27,16 @@ for = "/assets/scripts/components/*.js"
   command = "npm run build"
   publish = "dist"
 
+# Secrets scanning: the photo static-map fetch (Geoapify) puts MAP_API_KEY in the
+# request URL, and eleventy-fetch caches that URL verbatim under .cache/ (persisted
+# across builds by netlify-plugin-cache above). The deployed output never contains
+# the key, but Netlify scans build-generated files — so exclude the non-deployed
+# cache, else the key trips Smart Detection / a secret-marked var fails the deploy.
+# MAP_API_KEY itself stays in the Netlify UI (Builds scope), NOT here — this file is
+# committed to git.
+[build.environment]
+  SECRETS_SCAN_OMIT_PATHS = ".cache/**"
+
 # Micropub server lives in netlify/functions/micropub.js and self-routes to
 # /api/micropub via its `export const config = { path }` (Functions v2). esbuild
 # bundles the function with its npm deps (@benjifs/micropub, github-store,
