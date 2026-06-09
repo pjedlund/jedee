@@ -19,7 +19,8 @@
 #}
 {%- set mz = photo.mapZoom or 12 -%}
 {%- set center = ex.gps.lon ~ "," ~ ex.gps.lat -%}
-{%- set mapSrc = "https://maps.geoapify.com/v1/staticmap?style=osm-bright-smooth&width=640&height=400&center=lonlat:" ~ center ~ "&zoom=" ~ mz ~ "&marker=lonlat:" ~ center ~ ";type:material;color:%23495464;size:large&apiKey=" ~ meta.mapApiKey -%}
+{# style=positron (minimal light-grey, theme-agnostic); marker = --color-accent-orange (#d0621e). #}
+{%- set mapSrc = "https://maps.geoapify.com/v1/staticmap?style=positron&width=640&height=400&center=lonlat:" ~ center ~ "&zoom=" ~ mz ~ "&marker=lonlat:" ~ center ~ ";type:material;color:%23d0621e;size:large&apiKey=" ~ meta.mapApiKey -%}
 {%- set mapOsm = "https://www.openstreetmap.org/?mlat=" ~ ex.gps.lat ~ "&mlon=" ~ ex.gps.lon ~ "#map=" ~ mz ~ "/" ~ ex.gps.lat ~ "/" ~ ex.gps.lon -%}
 <a class="photo-map no-indicator" href="{{ mapOsm }}" target="_blank" rel="noopener">
   <img eleventy:optional="placeholder" src="{{ mapSrc | safe }}" alt="Map showing where this photograph was taken{% if ex.place and ex.place.city %}, near {{ ex.place.city }}{% endif %}" loading="lazy" eleventy:widths="320,640" sizes="(min-width: 64rem) 18rem, 100vw">
