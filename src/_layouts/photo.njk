@@ -7,10 +7,6 @@ schema: BlogPosting
   <article class="wrapper flow prose h-entry">
     {% include 'partials/entry-header.njk' %}
 
-    {%- if description %}
-      <p class="intro | text-step-1">{{ description }}</p>
-    {%- endif %}
-
     {# The photo IS the content, so u-photo goes on the visible <img> — set via
        the image shortcode's imageClass param (6th positional arg, image.js:70).
        photo.src is a LOCAL asset, so {% image %} is correct here; the remote-cover
@@ -35,7 +31,8 @@ schema: BlogPosting
       </div>
     {% endif %}
 
-    <div class="e-content | flow">
+    {# The body sits under the photo as the larger lede (intro + text-step-1). #}
+    <div class="e-content intro | flow text-step-1">
       {{ content | safe }}
     </div>
 
