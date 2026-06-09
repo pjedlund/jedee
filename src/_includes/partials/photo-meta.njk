@@ -67,7 +67,7 @@
     <a rel="license" href="https://creativecommons.org/publicdomain/zero/1.0/">Public domain (CC0)</a> &mdash; download and reuse freely.
   </p>
 
-  {% if ex and (ex.aperture or ex.exposure or ex.iso or ex.focalLength or ex.scanLens or ex.software or ex.gps or ex.dateDigitized or (raster and raster.width and raster.height)) %}
+  {% if ex and (ex.aperture or ex.exposure or ex.iso or ex.focalLength or ex.scanLens or ex.software or ex.gps or ex.dateDigitized or photo.scanner or (raster and raster.width and raster.height)) %}
   <details class="photo-tech">
     <summary>Scan &amp; technical data</summary>
     <dl>
@@ -76,6 +76,7 @@
       {% if ex.exposure %}<dt>Scan shutter</dt><dd>{{ ex.exposure }}</dd>{% endif %}
       {% if ex.iso %}<dt>ISO</dt><dd>{{ ex.iso }}</dd>{% endif %}
       {% if ex.focalLength %}<dt>Scan focal length</dt><dd>{{ ex.focalLength }}{% if ex.focalLength35 %} ({{ ex.focalLength35 }} eq.){% endif %}</dd>{% endif %}
+      {% if photo.scanner %}<dt>Scanner</dt><dd>{{ photo.scanner }}</dd>{% endif %}
       {% if ex.scanLens %}<dt>Scan lens</dt><dd>{{ ex.scanLens }}</dd>{% endif %}
       {% if ex.software %}<dt>Software</dt><dd>{{ ex.software }}</dd>{% endif %}
       {% if ex.gps %}<dt>Coordinates</dt>

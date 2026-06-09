@@ -2,6 +2,13 @@
   font-size: var(--size-step-6);
 }
 
+/* Lede / intro — a slightly larger, gently de-emphasised summary under the title. */
+.intro {
+  color: var(--color-text-accent);
+  max-inline-size: 60ch;
+  text-wrap: balance;
+}
+
 .post article h2 {
   font-size: var(--size-step-3);
 }

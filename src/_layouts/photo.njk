@@ -7,26 +7,32 @@ schema: BlogPosting
   <article class="wrapper flow prose h-entry">
     {% include 'partials/entry-header.njk' %}
 
+    {%- if description %}
+      <p class="intro | text-step-1">{{ description }}</p>
+    {%- endif %}
+
     {# The photo IS the content, so u-photo goes on the visible <img> — set via
        the image shortcode's imageClass param (6th positional arg, image.js:70).
        photo.src is a LOCAL asset, so {% image %} is correct here; the remote-cover
        plain-<img> pattern (reading/watching/jam) does not apply. #}
     {# No figcaption here: the photo IS the content and the body paragraph below
        describes it. The <photo-lightbox> component still supports an optional
-       @caption (outside the link) for reuse on other pages. Widths + sizes are
-       explicit so retina screens get a 2000w candidate at the 64rem prose column
-       (the default 1400w max was flagged low-res by Lighthouse). #}
+       @caption (outside the link) for reuse on other pages. The photo breaks out
+       wider than the prose column via .feature; widths + sizes are explicit so
+       retina screens get the 2000w candidate at that wider width. #}
     {% if photo.src %}
       {# The full-size raster is the first download entry (carries width/height). #}
       {%- set lbox = false -%}
       {%- if photo.downloads %}{% set lbox = photo.downloads[0] %}{% endif -%}
-      {%- if lbox and lbox.url and lbox.width and lbox.height -%}
-        <photo-lightbox @href="{{ lbox.url }}" @width="{{ lbox.width }}" @height="{{ lbox.height }}">
-          {% image photo.src, photo.alt, "", "eager", "", "u-photo", [650, 960, 1400, 2000], "(min-width: 64rem) 64rem, 100vw" %}
-        </photo-lightbox>
-      {%- else -%}
-        {% image photo.src, photo.alt, "", "eager", "", "u-photo", [650, 960, 1400, 2000], "(min-width: 64rem) 64rem, 100vw" %}
-      {%- endif -%}
+      <div class="feature">
+        {%- if lbox and lbox.url and lbox.width and lbox.height -%}
+          <photo-lightbox @href="{{ lbox.url }}" @width="{{ lbox.width }}" @height="{{ lbox.height }}">
+            {% image photo.src, photo.alt, "", "eager", "", "u-photo", [650, 960, 1400, 2000], "(min-width: 82rem) 78rem, 100vw" %}
+          </photo-lightbox>
+        {%- else -%}
+          {% image photo.src, photo.alt, "", "eager", "", "u-photo", [650, 960, 1400, 2000], "(min-width: 82rem) 78rem, 100vw" %}
+        {%- endif -%}
+      </div>
     {% endif %}
 
     <div class="e-content | flow">

@@ -109,6 +109,15 @@ placeholder with **no key leak**; the place name links to OSM whenever the map i
    then replaced). Self-hosted remote images in this stack must be a plain `<img … | safe>` in a
    template, never inside a WebC component.
 
+**Follow-up refinements (same day):** the frontmatter `description` now renders as a visible lede
+(`<p class="intro | text-step-1">`, new `.intro` block in `post.css`); the photo breaks out wider
+than the prose column via `.feature` (a `<div class="feature">` wrapper around the lightbox; `sizes`
+bumped to `(min-width: 82rem) 78rem, 100vw` so retina still gets the 2000w candidate); and an
+authored `photo.scanner` (e.g. "Sony a7") shows in the technical block — the scanner *body* isn't in
+clean EXIF because `Make`/`Model` were overwritten to the film camera (only the scan *lens* survives).
+The `format` value stays bare `6×17` — centimetres (120 medium format); inch marks would misread as
+large-format.
+
 **Still open:** sign up for a Geoapify free key + set `MAP_API_KEY` (.env + Netlify) to activate
 the map. Optional later: authored `photo.angleOfView`; panorama/keywords (pending an export
 change); slug-align the TIFF filename.

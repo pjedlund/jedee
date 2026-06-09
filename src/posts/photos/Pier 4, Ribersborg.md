@@ -7,6 +7,7 @@ photo:
   exposure: 60 seconds
   film: Kodak Ektar 100
   development: Tetenal Colortec C-41 — 3:30 @ 38 °C
+  scanner: Sony a7
   downloads:
     - label: Full-size JPEG
       url: https://files.johanedlund.se/photos/pier-4-ribersborg-original.jpg
