@@ -113,6 +113,12 @@ export const indieweb = {
 export const webmentions = {
   fallbackAvatar: '/assets/images/template/webmention-avatar.svg'
 };
+// Static maps for photo posts. A build-time Geoapify static-map image is fetched
+// from the photo's GPS and self-hosted by the eleventy-img HTML transform (the
+// remote-cover pattern), so the key is build-time only and never reaches the page.
+// Set MAP_API_KEY (.env + Netlify) to activate; until then the map renders
+// nothing and the place name links to OpenStreetMap instead. Free tier: geoapify.com.
+export const mapApiKey = process.env.MAP_API_KEY || '';
 export const greenweb = {
   // https://carbontxt.org/
   disclosures: [

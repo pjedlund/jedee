@@ -1,60 +1,82 @@
 {#
-  Photo metadata block: capture (visible) + scan/technical (collapsible <details>)
-  + download original + public-domain line.
+  Photo metadata block: capture facts (visible, left) + a static map (right,
+  stacks on mobile) + downloads + the public-domain line + a collapsible
+  scan/technical block.
 
   - `photoExif`        build-time extracted, render-safe (src/_config/utils/exif.js)
-  - `photo.film` / `photo.development` / `photo.downloads`   authored front matter
+  - `photo.format` / `photo.exposure` / `photo.film` / `photo.development`   authored capture facts
+  - `photo.downloads`  authored list; the FIRST entry is the full-size raster
+    (carries width/height) and drives both the lightbox (photo.njk) and the
+    Resolution row below.
 
   Bare include from photo.njk (no async shortcodes here), so the interlinker
-  async-blank trap doesn't apply and internal {% if %} guards are safe.
+  async-blank trap doesn't apply and internal {% if %} guards are safe. The
+  <photo-map> custom element is expanded by the WebC transform, then its remote
+  <img> is fetched + self-hosted by the eleventy-img transform — no async shortcode.
   Microformats: p-location (+ nested h-adr) on the place; h-geo on the coords.
-  These sit outside the hidden h-entry root, consistent with the site's existing
-  e-content/dt-published placement — see the `microformats` skill.
 #}
 {% set ex = photoExif %}
+
+{# First download is the full-size raster (JPEG) — drives Resolution + the lightbox. #}
+{% set raster = false %}
+{% if photo.downloads %}{% set raster = photo.downloads[0] %}{% endif %}
+
+{# Show the build-time map only with GPS + a configured key + no per-post opt-out. #}
+{% set showMap = ex and ex.gps and meta.mapApiKey and not photo.hideMap %}
+
 {% if ex or photo.downloads %}
 <section class="photo-meta | flow" aria-label="Photograph details">
 
   {% if ex %}
-  <dl>
-    {% if ex.camera %}<dt>Camera</dt><dd>{{ ex.camera }}</dd>{% endif %}
-    {% if ex.pinhole %}<dt>Pinhole</dt><dd>{{ ex.pinhole }}</dd>
-    {% elif ex.lens %}<dt>Lens</dt><dd>{{ ex.lens }}</dd>{% endif %}
-    {% if photo.film %}<dt>Film</dt><dd>{{ photo.film }}</dd>{% endif %}
-    {% if photo.development %}<dt>Development</dt><dd>{{ photo.development }}</dd>{% endif %}
-    {% if ex.place %}<dt>Place</dt>
-      <dd class="p-location h-adr">
-        {%- set parts = [] -%}
-        {%- if ex.place.city %}<span class="p-locality">{{ ex.place.city }}</span>{% endif -%}
-        {%- if ex.place.region %}{% if ex.place.city %}, {% endif %}<span class="p-region">{{ ex.place.region }}</span>{% endif -%}
-        {%- if ex.place.country %}{% if ex.place.city or ex.place.region %}, {% endif %}<span class="p-country-name">{{ ex.place.country }}</span>{% endif -%}
-      </dd>
-    {% endif %}
-    {% if ex.dateTaken %}<dt>Taken</dt><dd>{{ ex.dateTaken }}</dd>{% endif %}
-  </dl>
+  <div class="sidebar" data-direction="rtl" style="--sidebar-target-width: 18rem; --sidebar-content-min-width: 60%; --gutter: var(--space-m)">
+    <dl>
+      {% if ex.camera %}<dt>Camera</dt><dd>{{ ex.camera }}</dd>{% endif %}
+      {% if photo.format %}<dt>Format</dt><dd>{{ photo.format }}</dd>{% endif %}
+      {% if photo.exposure %}<dt>Exposure</dt><dd>{{ photo.exposure }}</dd>{% endif %}
+      {% if photo.film %}<dt>Film</dt><dd>{{ photo.film }}</dd>{% endif %}
+      {% if photo.development %}<dt>Development</dt><dd>{{ photo.development }}</dd>{% endif %}
+      {% if ex.dateTaken %}<dt>Taken</dt><dd>{{ ex.dateTaken }}</dd>{% endif %}
+      {% if ex.place %}<dt>Place</dt>
+        <dd class="p-location h-adr">
+          {%- if ex.gps and not showMap %}<a href="https://www.openstreetmap.org/?mlat={{ ex.gps.lat }}&mlon={{ ex.gps.lon }}#map={{ photo.mapZoom or 12 }}/{{ ex.gps.lat }}/{{ ex.gps.lon }}" target="_blank" rel="noopener">{% endif -%}
+          {%- if ex.place.city %}<span class="p-locality">{{ ex.place.city }}</span>{% endif -%}
+          {%- if ex.place.region %}{% if ex.place.city %}, {% endif %}<span class="p-region">{{ ex.place.region }}</span>{% endif -%}
+          {%- if ex.place.country %}{% if ex.place.city or ex.place.region %}, {% endif %}<span class="p-country-name">{{ ex.place.country }}</span>{% endif -%}
+          {%- if ex.gps and not showMap %}</a>{% endif -%}
+        </dd>
+      {% endif %}
+    </dl>
+
+    {% if showMap %}{% include "partials/photo-map.njk" %}{% endif %}
+  </div>
   {% endif %}
 
-  {% if photo.downloads.original %}
-  <p>
-    <a class="button" href="{{ photo.downloads.original }}" rel="enclosure" download>
-      Download original{% if photo.downloads.width and photo.downloads.height %} — JPEG, {{ photo.downloads.width }}&times;{{ photo.downloads.height }}{% if photo.downloads.bytes %} ({{ (photo.downloads.bytes / 1048576) | round }}&nbsp;MB){% endif %}{% endif %}
-    </a>
-  </p>
+  {% if photo.downloads %}
+  <ul class="photo-downloads | cluster" role="list">
+    {% for dl in photo.downloads %}
+    <li>
+      <a class="button" href="{{ dl.url }}" rel="enclosure" download>
+        {{ dl.label }}{% if dl.format %} &mdash; {{ dl.format }}{% endif %}{% if dl.width and dl.height %}, {{ dl.width }}&times;{{ dl.height }}{% endif %}{% if dl.bytes %} ({{ (dl.bytes / 1000000) | round }}&nbsp;MB){% endif %}
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
   {% endif %}
 
   <p class="text-step-min-1 photo-license">
     <a rel="license" href="https://creativecommons.org/publicdomain/zero/1.0/">Public domain (CC0)</a> &mdash; download and reuse freely.
   </p>
 
-  {% if ex and (ex.aperture or ex.exposure or ex.iso or ex.focalLength or ex.scanLens or ex.software or ex.gps or ex.dateDigitized or (photo.downloads.width and photo.downloads.height)) %}
+  {% if ex and (ex.aperture or ex.exposure or ex.iso or ex.focalLength or ex.scanLens or ex.software or ex.gps or ex.dateDigitized or photo.scanner or (raster and raster.width and raster.height)) %}
   <details class="photo-tech">
     <summary>Scan &amp; technical data</summary>
     <dl>
-      {% if photo.downloads.width and photo.downloads.height %}<dt>Resolution</dt><dd>{{ photo.downloads.width }}&times;{{ photo.downloads.height }} ({{ (photo.downloads.width * photo.downloads.height / 1000000) | round(1) }} MP)</dd>{% endif %}
+      {% if raster and raster.width and raster.height %}<dt>Resolution</dt><dd>{{ raster.width }}&times;{{ raster.height }} ({{ (raster.width * raster.height / 1000000) | round(1) }} MP)</dd>{% endif %}
       {% if ex.aperture %}<dt>Scan aperture</dt><dd>{{ ex.aperture }}</dd>{% endif %}
       {% if ex.exposure %}<dt>Scan shutter</dt><dd>{{ ex.exposure }}</dd>{% endif %}
       {% if ex.iso %}<dt>ISO</dt><dd>{{ ex.iso }}</dd>{% endif %}
       {% if ex.focalLength %}<dt>Scan focal length</dt><dd>{{ ex.focalLength }}{% if ex.focalLength35 %} ({{ ex.focalLength35 }} eq.){% endif %}</dd>{% endif %}
+      {% if photo.scanner %}<dt>Scanner</dt><dd>{{ photo.scanner }}</dd>{% endif %}
       {% if ex.scanLens %}<dt>Scan lens</dt><dd>{{ ex.scanLens }}</dd>{% endif %}
       {% if ex.software %}<dt>Software</dt><dd>{{ ex.software }}</dd>{% endif %}
       {% if ex.gps %}<dt>Coordinates</dt>

@@ -69,3 +69,55 @@ finished solution.
 - **Photo-feed body mechanism** — recommended approach named; exact wiring deferred to build.
 - **h-entry nesting fix** — deferred to the webmention milestone.
 - **`ImageObject` schema embed** — possible Phase-4 follow-up; not specified now.
+
+---
+
+## Enrichment increment (2026-06-09)
+
+Enriched after reviewing the master file for **Pier 4, Ribersborg** against the rendered
+page. Built + verified in-browser; the map is dormant until a key is set.
+
+**Added (authored capture facts):** `photo.format` (e.g. "6×17") and `photo.exposure`
+(e.g. "60 seconds") — the *real* pinhole exposure, distinct from the scanner's shutter
+(which the page already labels "scan"). Both surfaced under Capture.
+
+**Removed:** the "Pinhole: Lower" display row (redundant with the camera model); `exif.js`
+no longer returns `pinhole`/`lens`.
+
+**Downloads reshaped** from a single object to a **labeled list** `[{label, url, format,
+width?, height?, bytes}]`. Convention: the **first** entry is the full-size raster (carries
+width/height) and drives both the lightbox (`photo.njk`) and the Resolution row — Nunjucks
+has no `selectattr`. Pier 4 now offers two self-hosted tiers: Full-size JPEG (11 MB) + the
+true Original scan TIFF (146 MB), fixing the "original" misnomer. Sizes shown in decimal MB.
+
+**Static map** — `partials/photo-map.njk`: a build-time Geoapify static-map image self-hosted
+by the eleventy-img transform (the remote-cover pattern), placed right of the capture details
+via `.sidebar[data-direction="rtl"]` (stacks on mobile). Gated on `MAP_API_KEY` →
+`meta.mapApiKey`. `eleventy:optional="placeholder"` ⇒ a failed/absent key degrades to a
+placeholder with **no key leak**; the place name links to OSM whenever the map is absent.
+
+**Two constraints discovered during build (recorded so they aren't re-litigated):**
+
+1. **The committed web asset is a stripped export.** It keeps IPTC `Keywords` +
+   camera/place/GPS/dates, but Lightroom dropped XMP `aux:IsMergedPanorama` and `dc:subject`.
+   So the planned **panorama row + clean keyword line were dropped** — they can't be read from
+   the build's source image (only the original on the drive has them). Revisit only by changing
+   the export to preserve XMP, or by authoring the fields.
+2. **The eleventy-img HTML transform runs BEFORE the WebC transform.** A WebC-emitted remote
+   `<img>` is therefore never seen by it and ships the **raw keyed URL** unprocessed (verified
+   with a dummy key). The map must be **Nunjucks-emitted** (a `<photo-map>` WebC was built first,
+   then replaced). Self-hosted remote images in this stack must be a plain `<img … | safe>` in a
+   template, never inside a WebC component.
+
+**Follow-up refinements (same day):** the post **body** renders as the larger lede under the photo
+(`intro` + `text-step-1` on `.e-content`, new `.intro` block in `post.css`); the photo breaks out wider
+than the prose column via `.feature` (a `<div class="feature">` wrapper around the lightbox; `sizes`
+bumped to `(min-width: 82rem) 78rem, 100vw` so retina still gets the 2000w candidate); and an
+authored `photo.scanner` (e.g. "Sony a7") shows in the technical block — the scanner *body* isn't in
+clean EXIF because `Make`/`Model` were overwritten to the film camera (only the scan *lens* survives).
+The `format` value stays bare `6×17` — centimetres (120 medium format); inch marks would misread as
+large-format.
+
+**Map verified live** — Geoapify key in `.env`, the map fetched + self-hosted (no key leak),
+confirmed in-browser. **Still open:** add `MAP_API_KEY` to the Netlify env for production. Optional later: authored `photo.angleOfView`; panorama/keywords (pending an export
+change); slug-align the TIFF filename.

@@ -1,0 +1,26 @@
+{#
+  Static map for a photo's GPS, linked to OpenStreetMap. A plain <img> (NOT the
+  local-only {% image %} shortcode, and NOT a WebC component): the eleventy-img
+  HTML transform runs BEFORE the WebC transform, so only a Nunjucks-emitted <img>
+  gets fetched + self-hosted — a WebC-emitted one would ship the raw keyed URL.
+  Same remote-cover pattern as reading/watching/jam.
+
+  - `src | safe`                       keeps the multi-param URL's literal '&' (an
+                                       escaped '&amp;' makes eleventy-img fetch a
+                                       404 → fatal build — see the eleventy-excellent
+                                       remote-image note).
+  - `eleventy:optional="placeholder"`  a failed fetch (bad key, quota, outage) becomes
+                                       a placeholder, so the keyed URL is never left
+                                       in the HTML.
+
+  Bare-include-friendly: no async shortcode, so the interlinker {% if %}-blank trap
+  doesn't apply even though photo-meta.njk wraps this include in {% if showMap %}.
+  Expects in context: ex.gps {lat, lon}, ex.place, photo.mapZoom?, meta.mapApiKey.
+#}
+{%- set mz = photo.mapZoom or 12 -%}
+{%- set center = ex.gps.lon ~ "," ~ ex.gps.lat -%}
+{%- set mapSrc = "https://maps.geoapify.com/v1/staticmap?style=osm-bright-smooth&width=640&height=400&center=lonlat:" ~ center ~ "&zoom=" ~ mz ~ "&marker=lonlat:" ~ center ~ ";type:material;color:%23495464;size:large&apiKey=" ~ meta.mapApiKey -%}
+{%- set mapOsm = "https://www.openstreetmap.org/?mlat=" ~ ex.gps.lat ~ "&mlon=" ~ ex.gps.lon ~ "#map=" ~ mz ~ "/" ~ ex.gps.lat ~ "/" ~ ex.gps.lon -%}
+<a class="photo-map no-indicator" href="{{ mapOsm }}" target="_blank" rel="noopener">
+  <img eleventy:optional="placeholder" src="{{ mapSrc | safe }}" alt="Map showing where this photograph was taken{% if ex.place and ex.place.city %}, near {{ ex.place.city }}{% endif %}" loading="lazy" eleventy:widths="320,640" sizes="(min-width: 64rem) 18rem, 100vw">
+</a>
