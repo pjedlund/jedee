@@ -17,8 +17,11 @@ schema: BlogPosting
        explicit so retina screens get a 2000w candidate at the 64rem prose column
        (the default 1400w max was flagged low-res by Lighthouse). #}
     {% if photo.src %}
-      {%- if photo.downloads.original and photo.downloads.width and photo.downloads.height -%}
-        <photo-lightbox @href="{{ photo.downloads.original }}" @width="{{ photo.downloads.width }}" @height="{{ photo.downloads.height }}">
+      {# The full-size raster is the first download entry (carries width/height). #}
+      {%- set lbox = false -%}
+      {%- if photo.downloads %}{% set lbox = photo.downloads[0] %}{% endif -%}
+      {%- if lbox and lbox.url and lbox.width and lbox.height -%}
+        <photo-lightbox @href="{{ lbox.url }}" @width="{{ lbox.width }}" @height="{{ lbox.height }}">
           {% image photo.src, photo.alt, "", "eager", "", "u-photo", [650, 960, 1400, 2000], "(min-width: 64rem) 64rem, 100vw" %}
         </photo-lightbox>
       {%- else -%}

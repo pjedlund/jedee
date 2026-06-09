@@ -2,7 +2,9 @@
 //
 // Reads an allowlisted, render-safe set of fields from a local image and splits
 // them into two groups:
-//   - capture:  what made the photograph (camera, pinhole/lens, film date, place)
+//   - capture:  what made the photograph (camera, film date, place, GPS).
+//               The pinhole/lens line is intentionally NOT surfaced — the camera
+//               model already conveys the pinhole, so it read as redundant.
 //   - scan:     the digitization rig (the scanner's aperture/shutter/focal/lens,
 //               software, scan date) — labelled separately so f/8 · 1/60 is never
 //               mistaken for the pinhole's exposure.
@@ -71,8 +73,6 @@ export async function extractPhotoExif(src) {
   if (!d) return null;
 
   const camera = [d.Make, d.Model].filter(Boolean).join(' ').trim() || undefined;
-  const lensRaw = d.LensModel || d.Lens || undefined;
-  const isPinhole = Boolean(lensRaw && /pinhole/i.test(lensRaw));
 
   const place = (d.City || d.State || d.Country)
     ? { city: d.City || undefined, region: d.State || undefined, country: d.Country || undefined }
@@ -85,8 +85,6 @@ export async function extractPhotoExif(src) {
   return {
     // --- capture: what made the photograph ---
     camera,
-    pinhole: isPinhole ? lensRaw.replace(/\s*pinhole/i, '').trim() : undefined,
-    lens: isPinhole ? undefined : lensRaw,
     dateTaken: formatExifDate(raw && raw.DateTimeOriginal),
     place,
     gps,

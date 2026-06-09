@@ -3,13 +3,21 @@ photo:
   src: ./src/assets/images/photos/pier-4-ribersborg.jpg
   alt: A panoramic film frame at dusk — a calm, glassy sea under a soft pastel sky, the sun a small point low on the horizon at centre, a sandy beach in the foreground crossed by a curving band of dark seaweed, and a long low pier with railings reaching out into the water on the right. The black film rebate with “Kodak Ektar 100” edge markings frames the image.
   caption: View across the Sound towards Copenhagen at sunset — Ribersborg, Malmö.
+  format: "6×17"
+  exposure: 60 seconds
   film: Kodak Ektar 100
   development: Tetenal Colortec C-41 — 3:30 @ 38 °C
   downloads:
-    original: https://files.johanedlund.se/photos/pier-4-ribersborg-original.jpg
-    width: 9437
-    height: 3375
-    bytes: 11456471
+    - label: Full-size JPEG
+      url: https://files.johanedlund.se/photos/pier-4-ribersborg-original.jpg
+      format: JPEG
+      width: 9437
+      height: 3375
+      bytes: 11456471
+    - label: Original scan (TIFF)
+      url: https://files.johanedlund.se/photos/120-R012-F01-S01-E01-positive.tif
+      format: TIFF
+      bytes: 146448308
 title: Pier 4, Ribersborg
 date: 2026-06-04T20:00:00+02:00
 description: A 6×17 pinhole panorama across the Øresund at dusk, made on the lower pinhole of a RealitySoSubtle and home-developed on Kodak Ektar 100.
