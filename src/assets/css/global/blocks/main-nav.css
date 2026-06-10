@@ -2,13 +2,15 @@
   /* --nav-list-timing-function: cubic-bezier(0.68, -0.55, 0.27, 1.55); */
   /* easeOutQuad https://www.cssportal.com/css-cubic-bezier-generator/ */
   --nav-list-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  position: var(--nav-position, absolute);
-  inset-inline-end: 0;
-}
 
-.mainnav:has([data-drawer-toggle][aria-expanded='true']) {
-  --nav-position: fixed;
-  inset-inline-end: var(--gap);
+  /* The nav flows inline within the header cluster, to the right of the theme
+     toggle. On narrow viewports the nav box only holds the burger button — the
+     drawer itself is the fixed, off-canvas <ul> below — so keeping the nav in
+     normal flow (rather than absolute) lets the cluster place the toggle just to
+     its left, with no overlap, at every width and whether the drawer is open or
+     closed. The burger stays clickable above the open panel via its own
+     z-index (see [data-drawer-toggle] below). */
+  position: var(--nav-position, relative);
 }
 
 .mainnav ul {
