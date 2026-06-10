@@ -89,11 +89,9 @@ export const navigation = {
   subMenu: true,
   hideNav: true // soft-launch: hide the main nav in PRODUCTION (header keeps logo + skip-link); header.njk still reveals it in `eleventy --serve` for local dev. Flip to false at 1.0.0 to show everywhere.
 };
-export const themeSwitch = {
-  title: 'Theme',
-  light: 'light',
-  dark: 'dark'
-};
+// Accessible name for the single header light/dark toggle (aria-pressed conveys
+// the on/off state; this is the static label).
+export const themeToggleLabel = 'Toggle dark mode';
 // IndieWeb endpoints, discovered via <link rel> in the <head> (see
 // _includes/head/meta-info.njk). The Micropub server is this site's Netlify
 // Function at /api/micropub; auth is fully delegated to hosted IndieAuth

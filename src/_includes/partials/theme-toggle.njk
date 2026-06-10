@@ -1,0 +1,12 @@
+{# Single light/dark toggle for the header (top-right). One button that flips the
+   theme; the moon shows in light mode, the sun in dark mode (see theme-toggle.css).
+   Wrapped in <is-land> so it only appears once JS upgrades it — a toggle that can't
+   run shouldn't show (the no-flash theme itself is set by the inline theme-toggle.js,
+   independent of this button). #}
+<is-land on:idle>
+  <button type="button" id="theme-toggle" class="theme-toggle" data-theme-toggle aria-pressed="false">
+    <span class="theme-toggle-icon" data-icon="moon" aria-hidden="true">{% svg "misc/moon" %}</span>
+    <span class="theme-toggle-icon" data-icon="sun" aria-hidden="true">{% svg "misc/sun" %}</span>
+    <span class="visually-hidden">{{ meta.themeToggleLabel }}</span>
+  </button>
+</is-land>
