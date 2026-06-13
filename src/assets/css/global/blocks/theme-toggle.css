@@ -1,13 +1,24 @@
 /*
-THEME TOGGLE
-Single icon button (header, top-right) that flips light/dark.
-Moon shows in light mode (→ go dark); sun shows in dark mode (→ go light).
+THEME TOGGLE — animated sun ↔ moon
+Single icon button (header) that flips light/dark. Shows the CURRENT theme:
+sun in light mode, moon in dark mode. Switching to dark grows the sun's disc,
+fades and rotates its beams, and slides a masked circle in to carve the crescent.
+Adapted from Adam Argyle's "Building a theme switch component" (web.dev, MIT):
+rewritten flat (no @nest), with the easings inlined (no remote @import) and
+motion gated on prefers-reduced-motion.
 Progressive enhancement: hidden until <is-land> upgrades — a toggle that can't
 run shouldn't show. The actual no-flash theme is set by the inline theme-toggle.js.
 */
 .theme-toggle {
-  --theme-toggle-size: var(--size-step-1);
+  /* Sized to sit alongside the wordmark logo in the header. */
+  --theme-toggle-size: var(--size-step-min-1);
   --theme-toggle-color: var(--color-text);
+
+  /* Open Props elastic/standard easings, inlined to avoid a runtime @import. */
+  --ease-3: cubic-bezier(0.25, 0, 0.3, 1);
+  --ease-out-5: cubic-bezier(0, 0, 0, 1);
+  --ease-elastic-3: cubic-bezier(0.5, 1.25, 0.75, 1.25);
+  --ease-elastic-4: cubic-bezier(0.5, 1.5, 0.75, 1.25);
 
   display: inline-flex;
   align-items: center;
@@ -18,30 +29,97 @@ run shouldn't show. The actual no-flash theme is set by the inline theme-toggle.
   border: none;
   border-radius: var(--border-radius-small);
   cursor: pointer;
-  transition: color var(--transition-duration) var(--transition-timing);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.theme-toggle:hover {
+.theme-toggle:is(:hover, :focus-visible) {
   --theme-toggle-color: var(--color-accent-orange);
 }
 
 .theme-toggle svg {
   block-size: var(--theme-toggle-size);
   inline-size: var(--theme-toggle-size);
+  stroke-linecap: round;
 }
 
-/* Icon visibility follows the active theme. Default (light / no explicit theme):
-   moon visible, sun hidden. Dark: swap. */
-.theme-toggle [data-icon='sun'] {
-  display: none;
+/* Keep the icon wordmark-sized, but guarantee a comfortable tap target on
+   touch / coarse pointers (WCAG 2.5.5) by growing the hit area, not the glyph. */
+@media (hover: none) {
+  .theme-toggle {
+    min-block-size: 44px;
+    min-inline-size: 44px;
+  }
 }
 
-[data-theme='dark'] .theme-toggle [data-icon='sun'] {
-  display: inline-flex;
+/* Sun, moon-mask and beams share a centre pivot. */
+.sun-and-moon > :is(.moon, .sun, .sun-beams) {
+  transform-origin: center center;
 }
 
-[data-theme='dark'] .theme-toggle [data-icon='moon'] {
-  display: none;
+.sun-and-moon > .sun-beams {
+  stroke: currentColor;
+  stroke-width: 2px;
+}
+
+/* DARK = moon: the disc grows, the beams fade, and the mask circle slides in
+   to bite the crescent (cx where supported, translateX as a fallback). */
+[data-theme='dark'] .sun-and-moon > .sun {
+  transform: scale(1.75);
+}
+
+[data-theme='dark'] .sun-and-moon > .sun-beams {
+  opacity: 0;
+}
+
+[data-theme='dark'] .sun-and-moon > .moon > circle {
+  transform: translateX(-7px);
+}
+
+@supports (cx: 1px) {
+  [data-theme='dark'] .sun-and-moon > .moon > circle {
+    transform: translateX(0);
+    cx: 17px;
+  }
+}
+
+/* Motion only when the user is OK with it; reduced-motion users get an instant
+   swap (the dark-state rules above still apply, just without transitions). */
+@media (prefers-reduced-motion: no-preference) {
+  .sun-and-moon > .sun {
+    transition: transform 0.5s var(--ease-elastic-3);
+  }
+
+  .sun-and-moon > .sun-beams {
+    transition:
+      transform 0.5s var(--ease-elastic-4),
+      opacity 0.5s var(--ease-3);
+  }
+
+  .sun-and-moon > .moon > circle {
+    transition: transform 0.25s var(--ease-out-5);
+  }
+
+  @supports (cx: 1px) {
+    .sun-and-moon > .moon > circle {
+      transition: cx 0.25s var(--ease-out-5);
+    }
+  }
+
+  [data-theme='dark'] .sun-and-moon > .sun {
+    transition-timing-function: var(--ease-3);
+    transition-duration: 0.25s;
+  }
+
+  [data-theme='dark'] .sun-and-moon > .sun-beams {
+    transform: rotateZ(-25deg);
+    transition-duration: 0.15s;
+  }
+
+  [data-theme='dark'] .sun-and-moon > .moon > circle {
+    transition-delay: 0.25s;
+    transition-duration: 0.5s;
+  }
 }
 
 /* No JS / before hydration: hide the control entirely. */
