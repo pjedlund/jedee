@@ -1,0 +1,31 @@
+{# Single light/dark toggle for the header. One button that flips the theme.
+   Shows the CURRENT theme: sun in light mode, moon in dark mode — the sun's disc
+   grows, its beams retract, and a masked circle slides in to carve the crescent
+   (animated sun↔moon, adapted from Adam Argyle's web.dev theme switch, MIT —
+   see theme-toggle.css). Wrapped in <is-land> so it only appears once JS upgrades
+   it — a toggle that can't run shouldn't show (the no-flash theme itself is set by
+   the inline theme-toggle.js, independent of this button).
+   A11y: the SVG is decorative (aria-hidden); the accessible name is the
+   visually-hidden label, and the on/off state is carried by aria-pressed. #}
+<is-land on:idle>
+  <button type="button" id="theme-toggle" class="theme-toggle" data-theme-toggle aria-pressed="false" title="{{ meta.themeToggleLabel }}">
+    <svg class="sun-and-moon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
+      <mask class="moon" id="theme-toggle-moon-mask">
+        <rect x="0" y="0" width="100%" height="100%" fill="white" />
+        <circle cx="24" cy="10" r="6" fill="black" />
+      </mask>
+      <circle class="sun" cx="12" cy="12" r="6" mask="url(#theme-toggle-moon-mask)" fill="currentColor" />
+      <g class="sun-beams" stroke="currentColor">
+        <line x1="12" y1="1" x2="12" y2="3" />
+        <line x1="12" y1="21" x2="12" y2="23" />
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+        <line x1="1" y1="12" x2="3" y2="12" />
+        <line x1="21" y1="12" x2="23" y2="12" />
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+      </g>
+    </svg>
+    <span class="visually-hidden">{{ meta.themeToggleLabel }}</span>
+  </button>
+</is-land>

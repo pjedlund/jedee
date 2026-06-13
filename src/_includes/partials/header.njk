@@ -7,11 +7,17 @@
 
       <span class="font-base">{{ meta.siteName }}</span>
     </a>
-    {# Soft-launch: nav hidden in production (meta.navigation.hideNav) but
-       always revealed in local dev (`eleventy --serve`) so it stays testable.
-       Parenthesised because Nunjucks parses `not A or B` as `not (A or B)`. #}
-    {% if (not meta.navigation.hideNav) or (eleventy.env.runMode === "serve") %}
-      {% include "partials/main-nav.njk" %}
-    {% endif %}
+    <div class="cluster">
+      {# Theme toggle sits to the LEFT of the nav (and, on narrow viewports, to
+         the left of the burger). It's outside the hideNav gate so it still shows
+         in production while the nav is soft-launch-hidden. #}
+      {% include "partials/theme-toggle.njk" %}
+      {# Soft-launch: nav hidden in production (meta.navigation.hideNav) but
+         always revealed in local dev (`eleventy --serve`) so it stays testable.
+         Parenthesised because Nunjucks parses `not A or B` as `not (A or B)`. #}
+      {% if (not meta.navigation.hideNav) or (eleventy.env.runMode === "serve") %}
+        {% include "partials/main-nav.njk" %}
+      {% endif %}
+    </div>
   </div>
 </header>

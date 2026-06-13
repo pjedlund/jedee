@@ -9,37 +9,36 @@ const theme = {
 };
 
 window.addEventListener('load', () => {
-  const lightThemeToggle = document.querySelector('#light-theme-toggle');
-  const darkThemeToggle = document.querySelector('#dark-theme-toggle');
-  const switcher = document.querySelector('[data-theme-switcher]');
+  const toggle = document.querySelector('[data-theme-toggle]');
 
-  if (!switcher) {
+  if (!toggle) {
     return;
   }
 
   reflectPreference();
   updateMetaThemeColor();
+  reflectToggleState(toggle);
 
-  lightThemeToggle.addEventListener('click', () => onClick('light'));
-  darkThemeToggle.addEventListener('click', () => onClick('dark'));
-
-  lightThemeToggle.setAttribute('aria-pressed', theme.value === 'light');
-  darkThemeToggle.setAttribute('aria-pressed', theme.value === 'dark');
+  toggle.addEventListener('click', () => {
+    theme.value = theme.value === 'dark' ? 'light' : 'dark';
+    setPreference();
+    reflectToggleState(toggle);
+  });
 });
 
 // sync with system changes
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', ({matches: isDark}) => {
   theme.value = isDark ? 'dark' : 'light';
   setPreference();
-  updateMetaThemeColor();
+  const toggle = document.querySelector('[data-theme-toggle]');
+  if (toggle) {
+    reflectToggleState(toggle);
+  }
 });
 
-function onClick(themeValue) {
-  theme.value = themeValue;
-  document.querySelector('#light-theme-toggle').setAttribute('aria-pressed', themeValue === 'light');
-  document.querySelector('#dark-theme-toggle').setAttribute('aria-pressed', themeValue === 'dark');
-  setPreference();
-  updateMetaThemeColor();
+// aria-pressed === "dark is active" (the button toggles dark mode on/off)
+function reflectToggleState(toggle) {
+  toggle.setAttribute('aria-pressed', theme.value === 'dark');
 }
 
 function getColorPreference() {
@@ -62,6 +61,9 @@ function reflectPreference() {
 
 function updateMetaThemeColor() {
   const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+  if (!metaThemeColor) {
+    return;
+  }
   const newColor = theme.value === 'dark' ? themeColors.dark : themeColors.light;
   metaThemeColor.setAttribute('content', newColor);
 }
