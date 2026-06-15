@@ -3,7 +3,14 @@ title: "Regression"
 draft: false
 date: 2014-04-17
 artist: "[[Ruine]]"
-cover: /assets/images/listening/2014-04-17-regression.jpg
+album: "Winter 2014 Demo 7\""
+source: https://ruinenyc.bandcamp.com/track/regression-3
+cover: https://f4.bcbits.com/img/a0504522935_5.jpg
+genre:
+  - "[[Metal]]"
+  - "[[Doom]]"
+  - "[[Filth]]"
+year: 2014
 tags:
   - posts
   - thisismyjam
