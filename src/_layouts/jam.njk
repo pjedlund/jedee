@@ -13,6 +13,13 @@ schema: BlogPosting
       <img class="cover" eleventy:optional="placeholder" src="{{ cover | safe }}" alt="Cover for {{ title }}" loading="lazy" eleventy:widths="160,224,448" sizes="auto">
     {% endif %}
 
+    {# Optional embedded performance (e.g. an archived This Is My Jam YouTube link).
+       Reuses the shipped custom-youtube WebC component, which renders here because
+       the WebC plugin runs with useTransform:true (same pattern as video.njk). #}
+    {% if youtube %}
+      <custom-youtube @slug="{{ youtube }}" @label="{{ title }}"></custom-youtube>
+    {% endif %}
+
     {% if source %}<data hidden class="u-listen-of" value="{{ source }}"></data>{% endif %}
 
     <div class="e-content | flow">

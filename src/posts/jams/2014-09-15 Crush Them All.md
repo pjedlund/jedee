@@ -1,0 +1,12 @@
+---
+title: "Crush Them All"
+draft: false
+date: 2014-09-15
+artist: "[[Harvey Milk]]"
+source: https://www.youtube.com/watch?v=VaDv0poNZHU
+cover: /assets/images/listening/2014-09-15-crush-them-all.jpg
+youtube: "VaDv0poNZHU"
+tags:
+  - posts
+  - thisismyjam
+---

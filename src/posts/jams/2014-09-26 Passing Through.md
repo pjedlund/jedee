@@ -1,0 +1,17 @@
+---
+title: "Passing Through"
+draft: false
+date: 2014-09-26
+artist: "[[Cult of Luna]]"
+album: "Vertikal"
+source: https://music.apple.com/us/album/passing-through/1716088402
+cover: https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/52/54/98/5254983e-618f-8d10-0794-47716a0cd50a/0601091078758.jpg/1000x1000bb.jpg
+genre:
+  - "[[Metal]]"
+year: 2012
+odesliUrl: https://song.link/i/1716088411
+youtube: "rjESX_MWpdY"
+tags:
+  - posts
+  - thisismyjam
+---
