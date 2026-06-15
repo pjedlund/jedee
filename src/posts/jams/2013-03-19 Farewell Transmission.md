@@ -15,3 +15,4 @@ tags:
   - posts
   - thisismyjam
 ---
+RIP Jason Molina. http://www.spin.com/articles/jason-molina-songs-ohia-magnolia-electric-co-died

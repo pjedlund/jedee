@@ -1,0 +1,97 @@
+{# This Is My Jam social recovery — the original likes + comments each jam received
+   on thisismyjam.com (2012–2015), recovered from the Internet Archive Wayback
+   Machine. These are NOT live webmentions: a dedicated, honestly-framed render
+   that REUSES the webmentions facepile + h-cite card styling (webmentions.css).
+
+   Placed OUTSIDE the post's h-entry root (same as received webmentions on
+   note/photo/post) so the h-cite cards don't nest as children of the entry.
+
+   Data: src/_data/jamSocial.json keyed by `page.fileSlug` (the exact import
+   filename — see _generated/timj-import/build_jam_social.py). Avatars are
+   self-hosted under /assets/images/jams-social/; unrecoverable ones fall back to
+   meta.webmentions.fallbackAvatar.
+
+   Bare include from jam.njk, ZERO shortcodes (plain <img eleventy:ignore> only) —
+   interlinker-safe, so the inner {% if %}/{% for %} blocks render fine. #}
+
+{% set social = jamSocial[page.fileSlug] %}
+
+{% if social and (social.likes | length or social.comments | length) %}
+  <aside class="webmentions | wrapper flow region prose">
+    <h2 id="thisismyjam">From This Is My Jam</h2>
+    <p class="text-step-min-1">
+      The likes and comments this jam received on This Is My Jam (2012–2015),
+      recovered from the
+      <a href="https://web.archive.org/" rel="noreferrer">Internet Archive</a>.
+    </p>
+
+    {% if social.likes | length %}
+      <div class="flow">
+        <h3>{{ social.likes | length }} Like{% if social.likes | length != 1 %}s{% endif %}</h3>
+        <ul class="avatars | cluster gutter-3xs" role="list">
+          {% for like in social.likes %}
+            <li>
+              <a class="h-card u-url no-indicator" href="{{ like.url }}" rel="noreferrer">
+                <img
+                  eleventy:ignore
+                  class="u-photo"
+                  src="{{ like.photo or (meta.webmentions.fallbackAvatar | url) }}"
+                  alt=""
+                  width="40"
+                  height="40"
+                  loading="lazy"
+                />
+                <span class="visually-hidden p-name">{{ like.name }}</span>
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    {% if social.comments | length %}
+      <div class="flow">
+        <h3>{{ social.comments | length }} Comment{% if social.comments | length != 1 %}s{% endif %}</h3>
+        <ul class="webmention-list | flow" role="list">
+          {% for comment in social.comments %}
+            <li>
+              <article class="webmention h-cite | flow">
+                <div class="webmention__meta | cluster">
+                  <a
+                    class="webmention__author p-author h-card u-url no-indicator"
+                    href="{{ comment.url }}"
+                    rel="noreferrer"
+                  >
+                    <img
+                      eleventy:ignore
+                      class="u-photo"
+                      src="{{ comment.photo or (meta.webmentions.fallbackAvatar | url) }}"
+                      alt=""
+                      width="48"
+                      height="48"
+                      loading="lazy"
+                    />
+                    <strong class="p-name">{{ comment.name }}</strong>
+                  </a>
+
+                  {% if comment.date %}
+                    <time class="webmention__date" datetime="{{ comment.date }}" title="Approximate date">
+                      {{ comment.date | formatDate('MMM YYYY') }}
+                    </time>
+                  {% endif %}
+                </div>
+
+                <div class="webmention__text p-content | flow">
+                  <p>{{ comment.text }}</p>
+                  {% for link in comment.links %}
+                    <p class="text-step-min-1"><a href="{{ link }}" rel="noopener noreferrer">{{ link }}</a></p>
+                  {% endfor %}
+                </div>
+              </article>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+  </aside>
+{% endif %}

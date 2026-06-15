@@ -30,10 +30,17 @@ schema: BlogPosting
     {% include 'partials/entry-footer.njk' %}
     {% include 'partials/hidden-author.njk' %}
   </article>
+
+  {# This Is My Jam likes + comments (recovered from the Internet Archive) — OUTSIDE
+     the h-entry root, like received webmentions, so the h-cite cards don't nest as
+     children of the entry. Bare include, interlinker-safe. Renders nothing when the
+     jam has no recovered social data. #}
+  {% include 'partials/jam-social.njk' %}
 </div>
 
 {%- css "local" -%}
   {%- include 'css/post.css' -%}
   {%- include 'css/footnotes.css' -%}
   {%- include 'css/cover.css' -%}
+  {%- include 'css/webmentions.css' -%}
 {%- endcss -%}

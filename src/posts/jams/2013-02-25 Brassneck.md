@@ -14,3 +14,4 @@ tags:
   - posts
   - thisismyjam
 ---
+The Wedding Present playing Bizarro @bottomofthehill a week ago. I feel at home.

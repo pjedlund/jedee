@@ -14,3 +14,4 @@ tags:
   - posts
   - thisismyjam
 ---
+http://bit.ly/R3xavX + if you like hard music, listen to the Gaza's new "No Absolutes In Human Suffering".

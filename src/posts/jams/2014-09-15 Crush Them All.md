@@ -10,3 +10,4 @@ tags:
   - posts
   - thisismyjam
 ---
+More blues from the abyss. The fascists got 13% in Sweden yesterday. This will not stand. ¡No Pasarán!

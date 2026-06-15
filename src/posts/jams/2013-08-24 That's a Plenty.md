@@ -14,3 +14,4 @@ tags:
   - posts
   - thisismyjam
 ---
+Saw The Great Gatsby yesterday and was mightily dissapointed, mostly by the music, but also by the dumbed down adaptation of a great novel.
