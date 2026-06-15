@@ -15,3 +15,4 @@ tags:
   - posts
   - thisismyjam
 ---
+Umeå (pop. 118,349): Refused, Meshuggah and Cult of Luna, among others. The comrades up north are leading the way.

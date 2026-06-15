@@ -150,7 +150,10 @@ export default async function(eleventyConfig) {
   // Audio/Video self-hosted media: Eleventy Image only moves images, so the
   // co-located .mp3/.mp4/.vtt files need an explicit passthrough for the
   // on-page <audio>/<video> src and the feed <enclosure> URL to resolve.
-  ['src/assets/fonts/', 'src/assets/images/template', 'src/assets/images/recipes', 'src/assets/og-images', 'src/assets/audio', 'src/assets/video'].forEach(path =>
+  // `jams-social` holds the This Is My Jam liker/commenter avatars, recovered from
+  // the Wayback Machine and self-hosted; rendered with `eleventy:ignore` (like the
+  // template fallback avatar), so they need an explicit passthrough to reach dist.
+  ['src/assets/fonts/', 'src/assets/images/template', 'src/assets/images/recipes', 'src/assets/images/jams-social', 'src/assets/og-images', 'src/assets/audio', 'src/assets/video'].forEach(path =>
     eleventyConfig.addPassthroughCopy(path)
   );
 

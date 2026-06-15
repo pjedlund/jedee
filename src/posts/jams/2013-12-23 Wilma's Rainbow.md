@@ -14,3 +14,4 @@ tags:
   - posts
   - thisismyjam
 ---
+Helmet was denounced by hardcore punks as fascist math metal and by metal heads as sloppy alternative rock. Nevertheless awesome.

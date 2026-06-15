@@ -14,3 +14,4 @@ tags:
   - posts
   - thisismyjam
 ---
+Looking forward to Wedding Present playing Seamonsters tonight in Malmö. http://www.debaser.se/kalender/8317/
