@@ -10,7 +10,7 @@ genre:
   - "[[Alternative]]"
 year: 2003
 odesliUrl: https://song.link/i/789773388
-youtube: "malJUMz2A9Y"
+youtubeSlug: "malJUMz2A9Y"
 tags:
   - posts
   - thisismyjam

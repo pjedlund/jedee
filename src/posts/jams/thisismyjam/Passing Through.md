@@ -10,7 +10,7 @@ genre:
   - "[[Metal]]"
 year: 2012
 odesliUrl: https://song.link/i/1716088411
-youtube: "rjESX_MWpdY"
+youtubeSlug: "rjESX_MWpdY"
 tags:
   - posts
   - thisismyjam

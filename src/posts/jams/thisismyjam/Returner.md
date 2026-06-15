@@ -10,7 +10,7 @@ genre:
   - "[[Alternative]]"
 year: 2011
 odesliUrl: https://song.link/i/429040982
-youtube: "D2iwAAaEZvE"
+youtubeSlug: "D2iwAAaEZvE"
 tags:
   - posts
   - thisismyjam

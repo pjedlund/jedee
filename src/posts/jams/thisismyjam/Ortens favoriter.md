@@ -10,7 +10,7 @@ genre:
   - "[[Hip-Hop]]"
 year: 2011
 odesliUrl: https://song.link/i/1442818736
-youtube: "g1-oU_oRpZ8"
+youtubeSlug: "g1-oU_oRpZ8"
 tags:
   - posts
   - thisismyjam

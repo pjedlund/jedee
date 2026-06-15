@@ -10,7 +10,7 @@ genre:
   - "[[Metal]]"
 year: 2013
 odesliUrl: https://song.link/i/616886790
-youtube: "Ocq2sWK6CzM"
+youtubeSlug: "Ocq2sWK6CzM"
 tags:
   - posts
   - thisismyjam

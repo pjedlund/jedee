@@ -10,7 +10,7 @@ genre:
   - "[[Country]]"
 year: 1993
 odesliUrl: https://song.link/i/302161530
-youtube: "Hy3WkIfgkSQ"
+youtubeSlug: "Hy3WkIfgkSQ"
 tags:
   - posts
   - thisismyjam

@@ -10,7 +10,7 @@ genre:
   - "[[Alternative]]"
 year: 1977
 odesliUrl: https://song.link/i/1049069476
-youtube: "jlbunmCbTBA"
+youtubeSlug: "jlbunmCbTBA"
 tags:
   - posts
   - thisismyjam

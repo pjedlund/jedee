@@ -10,7 +10,7 @@ genre:
   - "[[Rock]]"
 year: 2016
 odesliUrl: https://song.link/i/1162212971
-youtube: "LcXqI2VVHaE"
+youtubeSlug: "LcXqI2VVHaE"
 tags:
   - posts
   - thisismyjam

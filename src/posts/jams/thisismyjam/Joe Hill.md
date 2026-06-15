@@ -10,7 +10,7 @@ genre:
   - "[[Rock]]"
 year: 2006
 odesliUrl: https://song.link/i/1852665447
-youtube: "pdSbKSQYXgo"
+youtubeSlug: "pdSbKSQYXgo"
 tags:
   - posts
   - thisismyjam

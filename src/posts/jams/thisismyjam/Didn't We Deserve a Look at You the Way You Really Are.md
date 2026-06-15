@@ -10,7 +10,7 @@ genre:
   - "[[Alternative]]"
   - "[[Alternative Rock]]"
 year: 1998
-youtube: "bn2IjYXVmuw"
+youtubeSlug: "bn2IjYXVmuw"
 tags:
   - posts
   - thisismyjam

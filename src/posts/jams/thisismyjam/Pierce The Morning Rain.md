@@ -10,7 +10,7 @@ genre:
   - "[[Alternative]]"
 year: 2012
 odesliUrl: https://song.link/i/543995489
-youtube: "jeUoLheDiqw"
+youtubeSlug: "jeUoLheDiqw"
 tags:
   - posts
   - thisismyjam

@@ -10,7 +10,7 @@ genre:
   - "[[Rock]]"
 year: 2012
 odesliUrl: https://song.link/i/1485056583
-youtube: "CrcY9I-BbjM"
+youtubeSlug: "CrcY9I-BbjM"
 tags:
   - posts
   - thisismyjam

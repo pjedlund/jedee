@@ -10,7 +10,7 @@ genre:
   - "[[Rock]]"
 year: 2003
 odesliUrl: https://song.link/i/189886829
-youtube: "wRJ4ytkjvrk"
+youtubeSlug: "wRJ4ytkjvrk"
 tags:
   - posts
   - thisismyjam

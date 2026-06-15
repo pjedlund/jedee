@@ -10,7 +10,7 @@ genre:
   - "[[Rock]]"
 year: 2014
 odesliUrl: https://song.link/i/794867038
-youtube: "YUFKEfwBaK4"
+youtubeSlug: "YUFKEfwBaK4"
 tags:
   - posts
   - thisismyjam

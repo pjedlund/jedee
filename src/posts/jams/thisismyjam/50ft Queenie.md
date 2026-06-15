@@ -10,7 +10,7 @@ genre:
   - "[[Rock]]"
 year: 1993
 odesliUrl: https://song.link/i/1440923579
-youtube: "6-rWAs7gQpc"
+youtubeSlug: "6-rWAs7gQpc"
 tags:
   - posts
   - thisismyjam

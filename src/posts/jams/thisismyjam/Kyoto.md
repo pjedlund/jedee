@@ -10,7 +10,7 @@ genre:
   - "[[Punk]]"
 year: 2005
 odesliUrl: https://song.link/i/1625691042
-youtube: "LSGYdIls6ro"
+youtubeSlug: "LSGYdIls6ro"
 tags:
   - posts
   - thisismyjam

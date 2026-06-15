@@ -77,7 +77,9 @@ export const KEY_MAP = {
 // media's identity in an h-cite (name/photo/url/published/author/content) and
 // resend the poster top-level as `featured`. The cite's url becomes the layout's
 // identity key (url/link/source, confirmed against src/_layouts/{watching,reading,
-// jam}.njk); the rest is destructured into title/cover/year/author/plot below.
+// jam}.njk); the rest is destructured into title/cover/year/(artist|author)/plot
+// below. A jam diverges: the cite name also fills `album`, and the cite author is
+// the `artist` (film/book keep `author`) — matching the jam clippers + layout.
 export const MEDIA_KEY = {
   'watch-of': 'url',
   'read-of': 'link',
@@ -186,9 +188,12 @@ export const rewriteFrontmatter = (data = {}) => {
       continue
     }
     // A watch/read/listen h-cite: take its url as the identity key, then recover
-    // the title/cover/year/author/plot the layouts (and Obsidian filenames) need.
+    // the title/cover/year/(artist|author)/plot the layouts (and Obsidian filenames)
+    // need. A jam diverges from film/book in two cite fields (see below), so the
+    // listen case is split out.
     if (MEDIA_KEY[key]) {
       mediaSeen = true
+      const isListen = key === 'listen-of'
       const url = flatten(value)
       if (url) out[MEDIA_KEY[key]] = url
       const cite =
@@ -199,9 +204,15 @@ export const rewriteFrontmatter = (data = {}) => {
             : null
       if (cite) {
         if (cite.name && !out.title) out.title = flatten(cite.name)
+        // A jam's cite name is also its release: the Listen editor only knows the
+        // album, so mirror it into `album` (film/book have no album concept).
+        if (isListen && cite.name && !('album' in out)) out.album = flatten(cite.name)
         if (cite.photo && !out.cover) out.cover = flatten(cite.photo)
         if (cite.published && !('year' in out)) out.year = flatten(cite.published)
-        if (cite.author && !('author' in out)) out.author = flatten(cite.author)
+        // The cite's creator is the performer on a jam -> `artist` (matching the
+        // clippers + the jam layout), but the director/author on a film/book -> `author`.
+        const creatorKey = isListen ? 'artist' : 'author'
+        if (cite.author && !(creatorKey in out)) out[creatorKey] = flatten(cite.author)
         if (cite.content && !('plot' in out)) out.plot = flatten(cite.content)
       }
       continue

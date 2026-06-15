@@ -10,7 +10,7 @@ genre:
   - "[[Rock]]"
 year: 1998
 odesliUrl: https://song.link/i/1589229094
-youtube: "P3kM58n2ceE"
+youtubeSlug: "P3kM58n2ceE"
 tags:
   - posts
   - thisismyjam

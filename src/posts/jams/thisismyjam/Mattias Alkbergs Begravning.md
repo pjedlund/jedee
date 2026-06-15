@@ -9,7 +9,7 @@ cover: https://f4.bcbits.com/img/a2743205010_5.jpg
 genre:
   - "[[Rock]]"
 year: 2013
-youtube: "VHbglUiob8w"
+youtubeSlug: "VHbglUiob8w"
 tags:
   - posts
   - thisismyjam

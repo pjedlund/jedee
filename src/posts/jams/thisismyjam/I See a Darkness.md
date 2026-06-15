@@ -10,7 +10,7 @@ genre:
   - "[[Alternative]]"
 year: 1999
 odesliUrl: https://song.link/i/280377296
-youtube: "LAriDxTeed8"
+youtubeSlug: "LAriDxTeed8"
 tags:
   - posts
   - thisismyjam

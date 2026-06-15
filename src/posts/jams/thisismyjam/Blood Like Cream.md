@@ -10,7 +10,7 @@ genre:
   - "[[Rock]]"
 year: 2013
 odesliUrl: https://song.link/i/689373292
-youtube: "pfmGAfYW1Yg"
+youtubeSlug: "pfmGAfYW1Yg"
 tags:
   - posts
   - thisismyjam

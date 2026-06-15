@@ -10,7 +10,7 @@ genre:
   - "[[Elektroniskt]]"
 year: 2017
 odesliUrl: https://song.link/i/1503835596
-youtube: "DoH6k6eIUS4"
+youtubeSlug: "DoH6k6eIUS4"
 tags:
   - posts
   - thisismyjam

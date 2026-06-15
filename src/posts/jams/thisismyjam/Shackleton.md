@@ -10,7 +10,7 @@ genre:
   - "[[Rock]]"
 year: 2003
 odesliUrl: https://song.link/i/1602765686
-youtube: "TyN2t-s-jf0"
+youtubeSlug: "TyN2t-s-jf0"
 tags:
   - posts
   - thisismyjam

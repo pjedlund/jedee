@@ -10,7 +10,7 @@ genre:
   - "[[Rock]]"
 year: 2012
 odesliUrl: https://song.link/i/543942283
-youtube: "JIJGLijn5QY"
+youtubeSlug: "JIJGLijn5QY"
 tags:
   - posts
   - thisismyjam
