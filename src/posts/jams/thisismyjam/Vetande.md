@@ -10,7 +10,7 @@ genre:
   - "[[Reggae]]"
 year: 2004
 odesliUrl: https://song.link/i/420512631
-youtube: "TYEBeQIMjO8"
+youtubeSlug: "TYEBeQIMjO8"
 tags:
   - posts
   - thisismyjam

@@ -10,7 +10,7 @@ genre:
   - "[[Alternative]]"
 year: 1989
 odesliUrl: https://song.link/i/49249816
-youtube: "cMOAXm94VWo"
+youtubeSlug: "cMOAXm94VWo"
 tags:
   - posts
   - thisismyjam

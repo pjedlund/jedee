@@ -10,7 +10,7 @@ genre:
   - "[[Alternative]]"
 year: 1997
 odesliUrl: https://song.link/i/308227952
-youtube: "VMRnxtGYk1E"
+youtubeSlug: "VMRnxtGYk1E"
 tags:
   - posts
   - thisismyjam

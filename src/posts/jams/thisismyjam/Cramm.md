@@ -10,7 +10,7 @@ genre:
   - "[[Rock]]"
 year: 2011
 odesliUrl: https://song.link/i/432420363
-youtube: "z5xSa27GI3w"
+youtubeSlug: "z5xSa27GI3w"
 tags:
   - posts
   - thisismyjam

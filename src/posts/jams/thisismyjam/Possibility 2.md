@@ -10,7 +10,7 @@ genre:
   - "[[Soundtrack]]"
 year: 2009
 odesliUrl: https://song.link/i/334818022
-youtube: "DjBwVBPlhDw"
+youtubeSlug: "DjBwVBPlhDw"
 tags:
   - posts
   - thisismyjam

@@ -10,7 +10,7 @@ genre:
   - "[[Worldwide]]"
 year: 2005
 odesliUrl: https://song.link/i/1833147681
-youtube: "q6-tlCvVgLw"
+youtubeSlug: "q6-tlCvVgLw"
 tags:
   - posts
   - thisismyjam

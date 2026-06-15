@@ -10,7 +10,7 @@ genre:
   - "[[Pop]]"
 year: 2013
 odesliUrl: https://song.link/i/692822716
-youtube: "o8FD1gdyxa0"
+youtubeSlug: "o8FD1gdyxa0"
 tags:
   - posts
   - thisismyjam

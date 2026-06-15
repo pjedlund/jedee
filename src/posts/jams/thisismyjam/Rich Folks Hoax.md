@@ -10,7 +10,7 @@ genre:
   - "[[Rock]]"
 year: 1970
 odesliUrl: https://song.link/i/1423937223
-youtube: "1WKCPLoDwe8"
+youtubeSlug: "1WKCPLoDwe8"
 tags:
   - posts
   - thisismyjam

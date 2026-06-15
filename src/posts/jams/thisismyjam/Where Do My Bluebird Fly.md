@@ -10,7 +10,7 @@ genre:
   - "[[Singer]]"
 year: 2008
 odesliUrl: https://song.link/i/385331076
-youtube: "zG2ccH8jlCA"
+youtubeSlug: "zG2ccH8jlCA"
 tags:
   - posts
   - thisismyjam

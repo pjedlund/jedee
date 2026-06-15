@@ -10,7 +10,7 @@ genre:
   - "[[Alternative]]"
 year: 1983
 odesliUrl: https://song.link/i/799995891
-youtube: "wRa3jIzZ1EY"
+youtubeSlug: "wRa3jIzZ1EY"
 tags:
   - posts
   - thisismyjam

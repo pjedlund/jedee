@@ -10,7 +10,7 @@ genre:
   - "[[Punk]]"
 year: 2003
 odesliUrl: https://song.link/i/1462800878
-youtube: "v7BDZ7KyNRE"
+youtubeSlug: "v7BDZ7KyNRE"
 tags:
   - posts
   - thisismyjam

@@ -10,7 +10,7 @@ genre:
   - "[[Alternative]]"
 year: 2013
 odesliUrl: https://song.link/i/1556924266
-youtube: "rBKjhgHGVZs"
+youtubeSlug: "rBKjhgHGVZs"
 tags:
   - posts
   - thisismyjam

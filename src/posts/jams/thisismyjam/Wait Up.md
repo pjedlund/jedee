@@ -10,7 +10,7 @@ genre:
   - "[[Rock]]"
 year: 1992
 odesliUrl: https://song.link/i/287520852
-youtube: "7ALPgQBuipo"
+youtubeSlug: "7ALPgQBuipo"
 tags:
   - posts
   - thisismyjam

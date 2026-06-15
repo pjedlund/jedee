@@ -10,7 +10,7 @@ genre:
   - "[[Alternative]]"
 year: 1998
 odesliUrl: https://song.link/i/1485033130
-youtube: "m3AoiVMQqX4"
+youtubeSlug: "m3AoiVMQqX4"
 tags:
   - posts
   - thisismyjam

@@ -10,7 +10,7 @@ genre:
   - "[[Electronic]]"
 year: 2012
 odesliUrl: https://song.link/i/551371852
-youtube: "bEEBnL7OvIg"
+youtubeSlug: "bEEBnL7OvIg"
 tags:
   - posts
   - thisismyjam

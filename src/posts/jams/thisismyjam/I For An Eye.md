@@ -10,7 +10,7 @@ genre:
   - "[[Death Metal]]"
 year: 2001
 odesliUrl: https://song.link/i/1633484698
-youtube: "vkpZ1tPCSJ4"
+youtubeSlug: "vkpZ1tPCSJ4"
 tags:
   - posts
   - thisismyjam

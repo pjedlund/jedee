@@ -10,7 +10,7 @@ genre:
   - "[[Dance]]"
 year: 2010
 odesliUrl: https://song.link/i/1438950707
-youtube: "aChNySMPpoI"
+youtubeSlug: "aChNySMPpoI"
 tags:
   - posts
   - thisismyjam

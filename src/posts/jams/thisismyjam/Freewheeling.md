@@ -10,7 +10,7 @@ genre:
   - "[[Indie Rock]]"
 year: 1993
 odesliUrl: https://song.link/i/1876882845
-youtube: "jn_0OtayS9A"
+youtubeSlug: "jn_0OtayS9A"
 tags:
   - posts
   - thisismyjam

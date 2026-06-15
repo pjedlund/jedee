@@ -6,7 +6,7 @@ artist: "[[Teddybears Sthlm]]"
 album: "You Are Teddybears"
 source: https://www.youtube.com/watch?v=dLgGRYD7Jxk
 cover: /assets/images/listening/2014-09-04-step-on-it-mb.jpg
-youtube: "dLgGRYD7Jxk"
+youtubeSlug: "dLgGRYD7Jxk"
 tags:
   - posts
   - thisismyjam

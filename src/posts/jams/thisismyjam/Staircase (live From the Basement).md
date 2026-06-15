@@ -5,7 +5,7 @@ date: 2013-10-18
 artist: "[[Radiohead]]"
 source: https://www.youtube.com/watch?v=BhzQzyJUJTQ
 cover: /assets/images/listening/2013-10-18-staircase-live-from-the-basement.jpg
-youtube: "BhzQzyJUJTQ"
+youtubeSlug: "BhzQzyJUJTQ"
 tags:
   - posts
   - thisismyjam

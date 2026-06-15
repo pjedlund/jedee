@@ -10,7 +10,7 @@ genre:
   - "[[Rock]]"
 year: 1992
 odesliUrl: https://song.link/i/287520850
-youtube: "kzC8ZTLX6cc"
+youtubeSlug: "kzC8ZTLX6cc"
 tags:
   - posts
   - thisismyjam

@@ -10,7 +10,7 @@ genre:
   - "[[Rock]]"
 year: 2004
 odesliUrl: https://song.link/i/421239892
-youtube: "WQPfQvLIseA"
+youtubeSlug: "WQPfQvLIseA"
 tags:
   - posts
   - thisismyjam
