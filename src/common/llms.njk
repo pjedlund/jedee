@@ -6,9 +6,26 @@ eleventyExcludeFromCollections: true
 # Johan Edlund
 
 > Johan Edlund is a web designer living in Malmö, Sweden. He believes that Jesus Christ is the truth and the way.
+{% set sections = [
+  { collection: collections.article, title: "Articles" },
+  { collection: collections.note, title: "Notes" },
+  { collection: collections.reading, title: "Reading" },
+  { collection: collections.watching, title: "Watching" },
+  { collection: collections.jam, title: "Music" },
+  { collection: collections.photo, title: "Photos" },
+  { collection: collections.recipe, title: "Recipes" },
+  { collection: collections.bookmark, title: "Bookmarks" },
+  { collection: collections.reply, title: "Replies" },
+  { collection: collections.event, title: "Events" },
+  { collection: collections.audio, title: "Audio" },
+  { collection: collections.video, title: "Video" }
+] %}
+{%- for section in sections %}
+{%- if section.collection.length %}
+## {{ section.title }}
 
-## Docs
-
-{%- for page in collections.posts | reverse %}
+{% for page in section.collection -%}
 - [{{ page.data.title | safe }}]({{ meta.url }}{{ page.url }}){% if page.data.llms %}: {{ page.data.llms | safe }}{% endif %}
+{% endfor -%}
+{%- endif %}
 {%- endfor %}
