@@ -1,0 +1,14 @@
+---
+permalink: llms.txt
+eleventyExcludeFromCollections: true
+---
+
+# Johan Edlund
+
+> Johan Edlund is a web designer living in Malmö, Sweden. He believes that Jesus Christ is the truth and the way.
+
+## Docs
+
+{%- for page in collections.posts | reverse %}
+- [{{ page.data.title | safe }}]({{ meta.url }}{{ page.url }}){% if page.data.llms %}: {{ page.data.llms | safe }}{% endif %}
+{%- endfor %}
