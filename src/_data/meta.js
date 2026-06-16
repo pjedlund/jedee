@@ -32,6 +32,7 @@ export const creator = {
   name: 'Johan Edlund', // creator's (developer) name.
   email: 'me@johanedlund.se',
   website: 'https://johanedlund.se',
+  bluesky: 'https://bsky.app/profile/johanedlund.se',
   mastodon: 'https://mastodon.social/@pjedlund',
   x: 'https://x.com/pjedlund'
 };
