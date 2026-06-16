@@ -16,7 +16,7 @@ I have added [Umami](https://umami.is) stats. You can [read the Umami FAQ here](
 Note that cookies are not used at all on this site.
 
 **How do I use the data you provide?**
-This website does not collect any data.
+This website does not collect any personal data.
 
 **How secure is your data?**
 Very secure, as this website does not collect any information.
