@@ -1,6 +1,9 @@
 // © Manuel Matuzović: https://web.dev/website-navigation/ / Web Accessibility Cookbook
 
-const nav = document.querySelector('nav');
+// Target the main nav by id, not the first <nav> on the page: the breadcrumb
+// (partials/breadcrumb.njk) is a <nav> that precedes this one in the DOM. (Its
+// list is an <ol>, so `nav.querySelector('ul')` below would otherwise be null.)
+const nav = document.querySelector('#mainnav');
 const list = nav.querySelector('ul');
 const burgerClone = document.querySelector('#burger-template').content.cloneNode(true);
 const buttonDrawer = burgerClone.querySelector('button[data-drawer-toggle]');

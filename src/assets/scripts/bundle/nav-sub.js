@@ -1,4 +1,6 @@
-const nav = document.querySelector('nav');
+// Target the main nav by id, not the first <nav> on the page: the breadcrumb
+// (partials/breadcrumb.njk) is a <nav> that precedes this one in the DOM.
+const nav = document.querySelector('#mainnav');
 const navBreakpoint = '{{ designTokens.viewports.navigation }}';
 
 // toggle submenu and aria-expanded on button click
