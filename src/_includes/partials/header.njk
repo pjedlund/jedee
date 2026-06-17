@@ -4,16 +4,17 @@
   <div class="repel ontop gutter-s breadcrumb-bar">
     {% include "partials/breadcrumb.njk" %}
     <div class="cluster">
-      {# Theme toggle sits to the LEFT of the nav (and, on narrow viewports, to
-         the left of the burger). It's outside the hideNav gate so it still shows
-         in production while the nav is soft-launch-hidden. #}
-      {% include "partials/theme-toggle.njk" %}
       {# Soft-launch: nav hidden in production (meta.navigation.hideNav) but
          always revealed in local dev (`eleventy --serve`) so it stays testable.
          Parenthesised because Nunjucks parses `not A or B` as `not (A or B)`. #}
       {% if (not meta.navigation.hideNav) or (eleventy.env.runMode === "serve") %}
         {% include "partials/main-nav.njk" %}
       {% endif %}
+      {# Theme toggle is the LAST item so the moon stays pinned to the right edge
+         (mirroring the logomark on the left) in every state: alone in production,
+         and to the right of the nav / burger once the nav is revealed. It's
+         outside the hideNav gate so it still shows while the nav is soft-hidden. #}
+      {% include "partials/theme-toggle.njk" %}
     </div>
   </div>
 </header>
