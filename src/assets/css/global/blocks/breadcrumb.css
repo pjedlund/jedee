@@ -74,6 +74,11 @@ inert to assistive tech. Reduced motion / focus rings come from the global style
   overflow: hidden;
   min-inline-size: 0;
   color: var(--breadcrumb-color-current);
+  /* The trail sets `line-height: 1`, which is fine for the uppercase ancestor
+     crumbs (no descenders) but clips the descender of a lowercase leaf — most
+     visibly the italic "y" in a Jam's "by". Give the clamped line box room for
+     descenders; `align-items: center` on the <li> keeps it aligned. */
+  line-height: 1.35;
 }
 
 /* Links: muted, underline only on hover/keyboard focus (focus ring is global). */
@@ -125,9 +130,14 @@ inert to assistive tech. Reduced motion / focus rings come from the global style
   translate: 0 -0.05em;
 }
 
-/* The "by" in a Jam leaf: a quiet serif italic against the uppercase sans. */
+/* The "by" in a Jam leaf: a quiet italic against the uppercase trail. Uses the
+   body face (Source Sans) on purpose — it's the only family with a real italic
+   loaded. The display serif ships upright-only, so `font-style: italic` there
+   would be a faux (browser-synthesized) slant of the bold roman, not true
+   italic glyphs. Source Sans is a variable face (weight 100–1000), so 400
+   renders as a genuine italic. */
 .breadcrumb-by {
-  font-family: var(--font-display);
+  font-family: var(--font-base);
   font-style: italic;
   font-weight: var(--font-normal, 400);
   text-transform: none;
