@@ -16,7 +16,7 @@ year: 2018
 favoriteTrack: Walking Along The Rainbow
 favoriteTrackUrl: https://music.apple.com/se/song/walk-along-the-rainbow/1716473667
 odesliUrl: https://album.link/i/1716473287
-youtubeSlug: C-X9UQwxThw
+youtubeSlug: "C-X9UQwxThw"
 ---
 Soft rolling beats with lots of texture.
 
