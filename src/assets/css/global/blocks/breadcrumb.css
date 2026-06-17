@@ -1,0 +1,136 @@
+/*
+BREADCRUMB
+Top-left wayfinding that replaces the old site logo. The home crumb is the logomark;
+the final crumb carries the page title (see partials/breadcrumb.njk + breadcrumb-leaf.njk).
+Site-wide header chrome, so it belongs in global/blocks (not a local bundle).
+Separators are CSS-drawn chevrons (the "›" glyph isn't in the font subset) and are
+inert to assistive tech. Reduced motion / focus rings come from the global styles.
+*/
+
+.breadcrumb {
+  --breadcrumb-size: var(--size-step-min-2);
+  --breadcrumb-gap: var(--space-2xs, var(--space-xs));
+  /* 85% keeps the muted ancestor links + "by" above WCAG AA 4.5:1 (~5:1 in light
+     mode) — 60% rendered at only 2.92:1. */
+  --breadcrumb-color-ancestor: color-mix(in oklab, var(--color-text) 85%, var(--color-bg));
+  --breadcrumb-color-current: var(--color-text);
+  --breadcrumb-color-separator: color-mix(in oklab, var(--color-text) 38%, var(--color-bg));
+
+  /* Let the trail shrink inside the header's repel so the leaf can truncate. */
+  min-inline-size: 0;
+  padding-block: var(--space-m);
+  font-family: var(--font-base);
+  font-size: var(--breadcrumb-size);
+  font-weight: var(--font-bold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+/* The breadcrumb shares the header row with the theme toggle / nav. Keep that row
+   on one line: the trail shrinks (its leaf truncating) while the controls stay
+   pinned to the end. The hook is on the header's repel (header.njk). */
+.breadcrumb-bar {
+  flex-wrap: nowrap;
+}
+
+.breadcrumb-bar > .breadcrumb {
+  flex: 0 1 auto;
+}
+
+.breadcrumb-bar > .cluster {
+  flex: none;
+}
+
+.breadcrumb ol {
+  /* Reuse the cluster composition for the gap + vertical centering, but never wrap —
+     a long leaf truncates instead (see .breadcrumb-current). */
+  --gutter: var(--breadcrumb-gap);
+  --cluster-wrap: nowrap;
+  min-inline-size: 0;
+}
+
+.breadcrumb li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--breadcrumb-gap);
+  flex: none;
+}
+
+/* The current page (last crumb) is the only one allowed to shrink + truncate. */
+.breadcrumb li:last-child {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+}
+
+.breadcrumb-current {
+  /* Single-line clamp + ellipsis. We use -webkit-line-clamp rather than
+     `white-space: nowrap`, because the global `* { text-wrap: pretty }` reset
+     re-enables wrapping even against an explicit nowrap. `min-inline-size: 0`
+     lets this (nested) flex item shrink below its content so the clamp bites. */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+  min-inline-size: 0;
+  color: var(--breadcrumb-color-current);
+}
+
+/* Links: muted, underline only on hover/keyboard focus (focus ring is global). */
+.breadcrumb a {
+  color: var(--breadcrumb-color-ancestor);
+  text-decoration: none;
+  /* No `transition: color` here on purpose: transitioning a color that resolves
+     from color-mix(var(--color-text)…) gets stuck on the pre-toggle value when the
+     theme flips (Chromium), leaving the link at a failing contrast. Instant is fine. */
+}
+
+.breadcrumb a:hover,
+.breadcrumb a:focus-visible {
+  color: var(--breadcrumb-color-current);
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+/* Home crumb = the logomark. */
+.breadcrumb-home {
+  display: inline-flex;
+  align-items: center;
+}
+
+.breadcrumb-home svg {
+  inline-size: 1.15em;
+  block-size: 1.2em;
+  fill: var(--color-logo-icon);
+  /* No fill transition — see the note on `.breadcrumb a` (theme-toggle stuck-color). */
+}
+
+.breadcrumb-home:hover svg,
+.breadcrumb-home:focus-visible svg,
+.breadcrumb-home[aria-current="page"] svg {
+  fill: var(--color-orange-500);
+}
+
+/* CSS-drawn chevron separator before every crumb except the first. Empty content
+   keeps it out of the accessibility tree; a rotated open border is the "›" shape. */
+.breadcrumb li + li::before {
+  content: "";
+  flex: none;
+  inline-size: 0.32em;
+  block-size: 0.32em;
+  border: solid var(--breadcrumb-color-separator);
+  border-width: 0.1em 0.1em 0 0;
+  rotate: 45deg;
+  /* nudge the rotated box onto the optical centre of the cap height */
+  translate: 0 -0.05em;
+}
+
+/* The "by" in a Jam leaf: a quiet serif italic against the uppercase sans. */
+.breadcrumb-by {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: var(--font-normal, 400);
+  text-transform: none;
+  letter-spacing: normal;
+  color: var(--breadcrumb-color-ancestor);
+}
