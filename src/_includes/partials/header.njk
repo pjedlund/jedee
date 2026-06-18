@@ -1,20 +1,34 @@
 <header class="wrapper">
   <a href="#main" class="skip-link">{{ meta.skipContent }}</a>
 
-  <div class="repel ontop gutter-s breadcrumb-bar">
-    {% include "partials/breadcrumb.njk" %}
-    <div class="cluster">
-      {# Soft-launch: nav hidden in production (meta.navigation.hideNav) but
-         always revealed in local dev (`eleventy --serve`) so it stays testable.
-         Parenthesised because Nunjucks parses `not A or B` as `not (A or B)`. #}
-      {% if (not meta.navigation.hideNav) or (eleventy.env.runMode === "serve") %}
-        {% include "partials/main-nav.njk" %}
-      {% endif %}
-      {# Theme toggle is the LAST item so the moon stays pinned to the right edge
-         (mirroring the logomark on the left) in every state: alone in production,
-         and to the right of the nav / burger once the nav is revealed. It's
-         outside the hideNav gate so it still shows while the nav is soft-hidden. #}
-      {% include "partials/theme-toggle.njk" %}
+  {# Two header styles, picked by meta.navigation.headerStyle:
+       'logo'       — classic logomark + wordmark home link (left), main nav + theme toggle (right).
+       'breadcrumb' — URL-derived breadcrumb (left), ONLY the theme toggle (right), no main nav.
+     The theme toggle is the LAST item in either right-hand cluster so the moon stays
+     pinned to the right edge in every state. #}
+  {% if meta.navigation.headerStyle === "logo" %}
+    <div class="repel ontop gutter-s">
+      <a href="/" class="logo | cluster" {{ indicateActiveHome }}>
+        {% svg "misc/logo" %}
+
+        <span class="font-base">{{ meta.siteName }}</span>
+      </a>
+      <div class="cluster">
+        {# Soft-launch: nav hidden in production (meta.navigation.hideNav) but
+           always revealed in local dev (`eleventy --serve`) so it stays testable.
+           Parenthesised because Nunjucks parses `not A or B` as `not (A or B)`. #}
+        {% if (not meta.navigation.hideNav) or (eleventy.env.runMode === "serve") %}
+          {% include "partials/main-nav.njk" %}
+        {% endif %}
+        {% include "partials/theme-toggle.njk" %}
+      </div>
     </div>
-  </div>
+  {% else %}
+    <div class="repel ontop gutter-s breadcrumb-bar">
+      {% include "partials/breadcrumb.njk" %}
+      <div class="cluster">
+        {% include "partials/theme-toggle.njk" %}
+      </div>
+    </div>
+  {% endif %}
 </header>

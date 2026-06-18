@@ -1,0 +1,40 @@
+/*
+SITE LOGO
+The classic header brand — logomark + wordmark, linking home. Shown when
+meta.navigation.headerStyle is 'logo' (the alternative to the breadcrumb header;
+see partials/header.njk). Site-wide header chrome, so it lives in global/blocks
+alongside breadcrumb.css. Styled to match the breadcrumb's logomark treatment
+(same icon fill, same uppercase/bold/tracked wordmark) so the two header styles
+feel like one system. The markup pairs `.logo` with the `.cluster` composition,
+which provides the flex row + gap (via --gutter).
+
+No color/fill transition — see the note in breadcrumb.css: a color that resolves
+from color-mix(var(--color-text)…) gets stuck on the pre-toggle value across a
+theme switch in Chromium. Active-home state is carried by aria-current (set in
+base.njk's indicateActiveHome), not the old body.pageIndex hook.
+*/
+
+.logo {
+  --gutter: var(--space-xs);
+
+  padding-block: var(--space-m);
+  font-family: var(--font-base);
+  font-size: var(--size-step-min-2);
+  font-weight: var(--font-bold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--color-text);
+}
+
+.logo svg {
+  inline-size: 1.15em;
+  block-size: 1.2em;
+  fill: var(--color-logo-icon);
+}
+
+.logo:hover svg,
+.logo:focus-visible svg,
+.logo[aria-current="page"] svg {
+  fill: var(--color-orange-500);
+}

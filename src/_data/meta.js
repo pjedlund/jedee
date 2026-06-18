@@ -86,9 +86,14 @@ export const navigation = {
   ariaTop: 'Main',
   ariaBottom: 'Complementary',
   ariaPlatforms: 'Platforms',
+  // Which header to render (header.njk):
+  //   'breadcrumb' — logomark › section › page, with ONLY the theme toggle on the right (no main nav).
+  //   'logo'       — classic logo + wordmark home link, plus the full main nav + theme toggle on the right.
+  // In 'logo' mode the page's own <h1> is shown (entry-header.njk), since no breadcrumb names the page.
+  headerStyle: 'breadcrumb',
   drawerNav: true,
   subMenu: true,
-  hideNav: true // soft-launch: hide the main nav in PRODUCTION (header keeps logo + skip-link); header.njk still reveals it in `eleventy --serve` for local dev. Flip to false at 1.0.0 to show everywhere.
+  hideNav: true // soft-launch: hide the main nav in PRODUCTION (header keeps logo + skip-link); header.njk still reveals it in `eleventy --serve` for local dev. Only applies in 'logo' header style (breadcrumb has no nav). Flip to false at 1.0.0 to show everywhere.
 };
 // Accessible name for the single header light/dark toggle (aria-pressed conveys
 // the on/off state; this is the static label).

@@ -2,12 +2,14 @@
    The per-type layout wraps this inside <div class="region"><div class="wrapper flow prose">,
    so this partial only renders the title/image/meta block. Tags moved to entry-footer.njk. #}
 
-{# The breadcrumb in the header carries the visible title (Config A), so the page's
-   own h1 is kept for the document outline / SEO / microformats `p-name` but hidden.
-   A type can opt back into a visible heading with `visibleHeading: true` (e.g. long-form
-   articles) — see the breadcrumb plan. #}
+{# In the 'breadcrumb' header style the breadcrumb's final crumb carries the visible
+   title, so the page's own h1 is kept for the document outline / SEO / microformats
+   `p-name` but visually hidden (a type can opt back in with `visibleHeading: true`).
+   In the 'logo' header style there is no breadcrumb to name the page, so the h1 is
+   always shown. See meta.navigation.headerStyle + header.njk. #}
 {% if title %}
-  <h1 class="p-name{% if not visibleHeading %} visually-hidden{% endif %}">{{ title }}</h1>
+  {% set hideHeading = (not visibleHeading) and (meta.navigation.headerStyle !== "logo") %}
+  <h1 class="p-name{% if hideHeading %} visually-hidden{% endif %}">{{ title }}</h1>
 {% endif %}
 
 {% if image %}
