@@ -25,7 +25,7 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
 
 .menu-toggle {
   --menu-toggle-gap: var(--space-2xs);
-  --menu-toggle-border-color: color-mix(in oklab, var(--color-text) 35%, var(--color-bg));
+  --menu-toggle-border-color: color-mix(in oklab, var(--color-text) 25%, var(--color-bg));
   --menu-toggle-color: var(--color-text);
 
   display: inline-flex;
@@ -45,7 +45,7 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
 }
 
 .menu-toggle:hover {
-  --menu-toggle-border-color: var(--color-text);
+  --menu-toggle-border-color: color-mix(in oklab, var(--color-text) 55%, var(--color-bg));
 }
 
 .menu-toggle svg {
@@ -76,7 +76,11 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
 /* JS-enhanced: the panel becomes an absolute dropdown attached under the trigger.
    `.menu-toggle + .megamenu` only matches once the button precedes the list (post-JS). */
 .menu-toggle + .megamenu {
-  --megamenu-bg: var(--color-bg);
+  /* Panel surface — almost-white in light, a touch DARKER than the page in dark
+     (Johan's call: the panel reads as its own sheet, not a lifted card; dark value
+     overridden below). With no border, this bg difference plus the drop shadow is
+     what separates the panel from the page. */
+  --megamenu-bg: color-mix(in oklab, white 85%, var(--color-bg));
   --megamenu-width: min(40rem, calc(100vw - 2 * var(--space-m)));
 
   position: absolute;
@@ -92,9 +96,27 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
   inline-size: var(--megamenu-width);
   padding: var(--space-s);
   background: var(--megamenu-bg);
-  border: 2px solid var(--color-text);
   border-radius: var(--border-radius-medium);
-  box-shadow: 0 10px 25px -8px hsl(0 0% 0% / 0.18);
+  /* No resting border — separation comes from the drop shadow alone. A real edge
+     is restored for Windows High Contrast / forced-colors (where shadows vanish)
+     below, and every link keeps its own :focus-visible ring for keyboard nav. */
+  box-shadow:
+    0 4px 10px -4px hsl(0 0% 0% / 0.12),
+    0 18px 40px -12px hsl(0 0% 0% / 0.32);
+}
+
+/* forced-colors: drop shadows aren't painted, so give the panel an edge back. */
+@media (forced-colors: active) {
+  .menu-toggle + .megamenu {
+    border: 1px solid CanvasText;
+  }
+}
+
+/* Dark theme: the panel sits a little DARKER than the page (a recessed sheet, not
+   a lifted card) — Johan's preference. data-theme is always set before the panel
+   can open (inline no-flash script), so no prefers-color-scheme branch is needed. */
+:root[data-theme='dark'] .menu-toggle + .megamenu {
+  --megamenu-bg: color-mix(in oklab, var(--color-bg) 82%, black);
 }
 
 /* closed / open — toggle visibility (not opacity/transform alone) so the links are
@@ -131,13 +153,13 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
   --megamenu-row-color: color-mix(in oklab, var(--color-text) 80%, var(--color-bg));
   --megamenu-icon-color: var(--color-accent-blue);
   --megamenu-count-color: color-mix(in oklab, var(--color-text) 55%, var(--color-bg));
-  --megamenu-dot-color: color-mix(in oklab, var(--color-text) 10%, var(--color-bg));
+  --megamenu-dot-color: color-mix(in oklab, var(--color-text) 14%, var(--color-bg));
   --megamenu-row-bg: transparent;
 
   display: flex;
   align-items: baseline;
   gap: var(--space-2xs);
-  padding: var(--space-2xs) var(--space-xs);
+  padding: var(--space-xs) var(--space-s);
   background: var(--megamenu-row-bg);
   border-radius: var(--border-radius-medium);
   color: var(--megamenu-row-color);
@@ -148,8 +170,9 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
 .megamenu a svg {
   flex: none;
   align-self: center; /* icon vertically centred, not sat on the text baseline */
-  inline-size: 1.1em;
-  block-size: 1.1em;
+  inline-size: 0.95em;
+  block-size: 0.95em;
+  margin-inline-end: var(--space-2xs); /* extra breathing room before the label */
   color: var(--megamenu-icon-color);
 }
 
@@ -161,9 +184,12 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
    baseline (the table-of-contents / index move). Pure CSS, no images, no JS. */
 .megamenu-dots {
   flex: 1 1 auto;
+  /* Zero-height box → flexbox synthesises its baseline from the bottom edge, so
+     baseline-aligning it drops the dotted rule exactly onto the text baseline
+     (no eyeballed translate). */
   align-self: baseline;
+  line-height: 0;
   border-block-end: 1px dotted var(--megamenu-dot-color);
-  translate: 0 -0.18em; /* lift the dotted rule onto the baseline guide */
 }
 
 .megamenu-count {
