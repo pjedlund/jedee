@@ -184,12 +184,16 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
    baseline (the table-of-contents / index move). Pure CSS, no images, no JS. */
 .megamenu-dots {
   flex: 1 1 auto;
-  /* Zero-height box → flexbox synthesises its baseline from the bottom edge, so
-     baseline-aligning it drops the dotted rule exactly onto the text baseline
-     (no eyeballed translate). */
+  /* A 1px-tall box, baseline-aligned so its bottom edge (its synthesised baseline)
+     lands on the text baseline. The dots are painted as a repeating radial gradient
+     rather than a `dotted` border, whose gap the UA fixes at ~the border width — the
+     gradient lets us space them out: ~1px dots on a 4px pitch, roughly half as many. */
   align-self: baseline;
-  line-height: 0;
-  border-block-end: 1px dotted var(--megamenu-dot-color);
+  block-size: 1px;
+  background-image: radial-gradient(circle, var(--megamenu-dot-color) 0.5px, transparent 0.5px);
+  background-position: 0 100%;
+  background-size: 4px 100%;
+  background-repeat: repeat-x;
 }
 
 .megamenu-count {
