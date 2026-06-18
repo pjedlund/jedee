@@ -1,34 +1,32 @@
 <header class="wrapper">
   <a href="#main" class="skip-link">{{ meta.skipContent }}</a>
 
-  {# Two header styles, picked by meta.navigation.headerStyle:
-       'logo'       — classic logomark + wordmark home link (left), main nav + theme toggle (right).
-       'breadcrumb' — URL-derived breadcrumb (left), ONLY the theme toggle (right), no main nav.
-     The theme toggle is the LAST item in either right-hand cluster so the moon stays
-     pinned to the right edge in every state. #}
-  {% if meta.navigation.headerStyle === "logo" %}
-    <div class="repel ontop gutter-s">
+  {# Header chrome, driven by two INDEPENDENT toggles in meta.navigation:
+       breadcrumb — left side: true = breadcrumb trail (◍ › Section › page),
+                    false = classic logomark + wordmark home link.
+       hideNav    — main nav: true = hidden, false = shown. Revealed in
+                    `eleventy --serve` for local dev regardless (soft-launch gate).
+     The theme toggle is always present and is the LAST cluster item, so the moon
+     stays pinned to the right edge in every combination. The .breadcrumb-bar hook
+     (one-line / truncating row) is only needed when the breadcrumb is shown. #}
+  <div class="repel ontop gutter-s{% if meta.navigation.breadcrumb %} breadcrumb-bar{% endif %}">
+    {% if meta.navigation.breadcrumb %}
+      {% include "partials/breadcrumb.njk" %}
+    {% else %}
       <a href="/" class="logo | cluster" {{ indicateActiveHome }}>
         {% svg "misc/logo" %}
 
         <span class="font-base">{{ meta.siteName }}</span>
       </a>
-      <div class="cluster">
-        {# Soft-launch: nav hidden in production (meta.navigation.hideNav) but
-           always revealed in local dev (`eleventy --serve`) so it stays testable.
-           Parenthesised because Nunjucks parses `not A or B` as `not (A or B)`. #}
-        {% if (not meta.navigation.hideNav) or (eleventy.env.runMode === "serve") %}
-          {% include "partials/main-nav.njk" %}
-        {% endif %}
-        {% include "partials/theme-toggle.njk" %}
-      </div>
+    {% endif %}
+    <div class="cluster">
+      {# Soft-launch: nav hidden in production (meta.navigation.hideNav) but always
+         revealed in local dev (`eleventy --serve`) so it stays testable.
+         Parenthesised because Nunjucks parses `not A or B` as `not (A or B)`. #}
+      {% if (not meta.navigation.hideNav) or (eleventy.env.runMode === "serve") %}
+        {% include "partials/main-nav.njk" %}
+      {% endif %}
+      {% include "partials/theme-toggle.njk" %}
     </div>
-  {% else %}
-    <div class="repel ontop gutter-s breadcrumb-bar">
-      {% include "partials/breadcrumb.njk" %}
-      <div class="cluster">
-        {% include "partials/theme-toggle.njk" %}
-      </div>
-    </div>
-  {% endif %}
+  </div>
 </header>
