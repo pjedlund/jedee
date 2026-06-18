@@ -9,6 +9,7 @@ cover: https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/95/2a/8d/952a8d69-d8
 genre:
   - "[[Rock]]"
 year: 1991
+youtubeSlug: "HoD8GS_iWcA"
 odesliUrl: https://song.link/i/211684423
 tags:
   - posts

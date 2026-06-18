@@ -9,6 +9,7 @@ cover: https://is1-ssl.mzstatic.com/image/thumb/Music118/v4/b4/87/6c/b4876c2d-14
 genre:
   - "[[Alternative]]"
 year: 1989
+youtubeSlug: "d9DjDh3yjSM"
 odesliUrl: https://song.link/i/1308855679
 tags:
   - posts
