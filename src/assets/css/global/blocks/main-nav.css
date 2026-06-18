@@ -11,6 +11,16 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
   position: relative;
 }
 
+/* Centre the JS-injected MENU trigger on the header row. The nav wrapper otherwise
+   inherits the body's tall line-height (~34px), so the inline-flex button sits on
+   that oversized text baseline instead of the row's optical centre (where the
+   breadcrumb logomark and the theme toggle sit). Scoped with :has() to the enhanced
+   state so the no-JS static list keeps its block layout. */
+.mainnav:has(.menu-toggle) {
+  display: flex;
+  align-items: center;
+}
+
 /* ---------- the disclosure trigger (injected from #menu-template by nav-menu.js) ---------- */
 
 .menu-toggle {
@@ -121,7 +131,7 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
   --megamenu-row-color: color-mix(in oklab, var(--color-text) 80%, var(--color-bg));
   --megamenu-icon-color: var(--color-accent-blue);
   --megamenu-count-color: color-mix(in oklab, var(--color-text) 55%, var(--color-bg));
-  --megamenu-dot-color: color-mix(in oklab, var(--color-text) 25%, var(--color-bg));
+  --megamenu-dot-color: color-mix(in oklab, var(--color-text) 10%, var(--color-bg));
   --megamenu-row-bg: transparent;
 
   display: flex;
@@ -152,7 +162,7 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
 .megamenu-dots {
   flex: 1 1 auto;
   align-self: baseline;
-  border-block-end: 2px dotted var(--megamenu-dot-color);
+  border-block-end: 1px dotted var(--megamenu-dot-color);
   translate: 0 -0.18em; /* lift the dotted rule onto the baseline guide */
 }
 

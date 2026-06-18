@@ -124,3 +124,12 @@ run shouldn't show. The actual no-flash theme is set by the inline theme-toggle.
 is-land:not(:defined) .theme-toggle {
   display: none;
 }
+
+/* The header is-land inherits the body's tall line-height (~34px), which would let
+   the inline-flex button sit on an oversized text baseline. Flex-centre the wrapper
+   so the toggle lands on the header row's optical centre — level with the MENU
+   trigger and the breadcrumb logomark. */
+is-land:has(> .theme-toggle) {
+  display: flex;
+  align-items: center;
+}

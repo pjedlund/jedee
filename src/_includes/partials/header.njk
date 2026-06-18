@@ -6,9 +6,10 @@
                     false = classic logomark + wordmark home link.
        hideNav    — main nav: true = hidden, false = shown. Revealed in
                     `eleventy --serve` for local dev regardless (soft-launch gate).
-     Right cluster order is moon → MENU, so the bordered "Menu ⌄" trigger is pinned
-     to the right edge (the mega-menu drops down from it). The .breadcrumb-bar hook
-     (one-line / truncating row) is only needed when the breadcrumb is shown. #}
+     Right cluster order is MENU → moon: the theme toggle (sun/moon) is pinned to the
+     far right edge, the bordered "Menu ⌄" trigger sits just inside it, and the
+     mega-menu still drops down right-aligned under that trigger. The .breadcrumb-bar
+     hook (one-line / truncating row) is only needed when the breadcrumb is shown. #}
   <div class="repel ontop gutter-s{% if meta.navigation.breadcrumb %} breadcrumb-bar{% endif %}">
     {% if meta.navigation.breadcrumb %}
       {% include "partials/breadcrumb.njk" %}
@@ -20,13 +21,13 @@
       </a>
     {% endif %}
     <div class="cluster">
-      {% include "partials/theme-toggle.njk" %}
       {# Soft-launch: nav hidden in production (meta.navigation.hideNav) but always
          revealed in local dev (`eleventy --serve`) so it stays testable.
          Parenthesised because Nunjucks parses `not A or B` as `not (A or B)`. #}
       {% if (not meta.navigation.hideNav) or (eleventy.env.runMode === "serve") %}
         {% include "partials/main-nav.njk" %}
       {% endif %}
+      {% include "partials/theme-toggle.njk" %}
     </div>
   </div>
 </header>
