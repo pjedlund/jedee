@@ -1,4 +1,4 @@
-<header class="wrapper">
+<header class="site-header wrapper">
   <a href="#main" class="skip-link">{{ meta.skipContent }}</a>
 
   {# Header chrome, driven by two INDEPENDENT toggles in meta.navigation:
@@ -6,8 +6,8 @@
                     false = classic logomark + wordmark home link.
        hideNav    — main nav: true = hidden, false = shown. Revealed in
                     `eleventy --serve` for local dev regardless (soft-launch gate).
-     The theme toggle is always present and is the LAST cluster item, so the moon
-     stays pinned to the right edge in every combination. The .breadcrumb-bar hook
+     Right cluster order is moon → MENU, so the bordered "Menu ⌄" trigger is pinned
+     to the right edge (the mega-menu drops down from it). The .breadcrumb-bar hook
      (one-line / truncating row) is only needed when the breadcrumb is shown. #}
   <div class="repel ontop gutter-s{% if meta.navigation.breadcrumb %} breadcrumb-bar{% endif %}">
     {% if meta.navigation.breadcrumb %}
@@ -20,13 +20,13 @@
       </a>
     {% endif %}
     <div class="cluster">
+      {% include "partials/theme-toggle.njk" %}
       {# Soft-launch: nav hidden in production (meta.navigation.hideNav) but always
          revealed in local dev (`eleventy --serve`) so it stays testable.
          Parenthesised because Nunjucks parses `not A or B` as `not (A or B)`. #}
       {% if (not meta.navigation.hideNav) or (eleventy.env.runMode === "serve") %}
         {% include "partials/main-nav.njk" %}
       {% endif %}
-      {% include "partials/theme-toggle.njk" %}
     </div>
   </div>
 </header>

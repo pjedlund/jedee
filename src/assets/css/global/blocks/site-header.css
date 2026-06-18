@@ -1,0 +1,13 @@
+/*
+SITE HEADER
+The full-width header band. The <header> element spans the viewport (a clean modern
+band) while its contents stay aligned to the centred content column via the .wrapper
+grid it carries (header.njk) — so the bar reads edge-to-edge without abandoning the
+editorial column. Site-wide chrome → global/blocks.
+*/
+
+.site-header {
+  --site-header-border-color: color-mix(in oklab, var(--color-text) 12%, var(--color-bg));
+
+  border-block-end: 1px solid var(--site-header-border-color);
+}

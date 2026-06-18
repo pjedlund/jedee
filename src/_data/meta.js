@@ -93,8 +93,6 @@ export const navigation = {
   // The theme toggle is always present (rightmost). The page <h1> is always visible
   // (entry-header.njk), independent of both toggles.
   breadcrumb: true,
-  drawerNav: true,
-  subMenu: true,
   hideNav: true // soft-launch: hide the main nav in PRODUCTION (header keeps the breadcrumb/logo + skip-link); header.njk still reveals it in `eleventy --serve` for local dev. Independent of `breadcrumb`. Flip to false at 1.0.0 to show everywhere.
 };
 // Accessible name for the single header light/dark toggle (aria-pressed conveys
