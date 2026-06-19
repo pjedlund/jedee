@@ -9,6 +9,17 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
 
 .mainnav {
   position: relative;
+
+  /* Shared panel / active-trigger surface — a slightly lighter version of the page
+     in BOTH themes (a gently lifted sheet; dark overridden below). Used by the
+     dropdown panel and the MENU button's active (open) state so they read as one
+     connected sheet. */
+  --megamenu-surface: color-mix(in oklab, white 45%, var(--color-bg));
+}
+
+:root[data-theme='dark'] .mainnav {
+  /* lifted toward white off the dark page, not recessed below it */
+  --megamenu-surface: color-mix(in oklab, white 7%, var(--color-bg));
 }
 
 /* Centre the JS-injected MENU trigger on the header row. The nav wrapper otherwise
@@ -25,16 +36,17 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
 
 .menu-toggle {
   --menu-toggle-gap: var(--space-2xs);
-  --menu-toggle-border-color: color-mix(in oklab, var(--color-text) 25%, var(--color-bg));
+  /* very faint hairline — the MENU label + chevron carry the affordance, not the edge */
+  --menu-toggle-border-color: color-mix(in oklab, var(--color-text) 18%, var(--color-bg));
   --menu-toggle-color: var(--color-text);
 
   display: inline-flex;
   align-items: center;
   gap: var(--menu-toggle-gap);
-  padding: var(--space-2xs) var(--space-xs);
+  padding: var(--space-xs) var(--space-s);
   background: transparent;
   color: var(--menu-toggle-color);
-  border: 2px solid var(--menu-toggle-border-color);
+  border: 1px solid var(--menu-toggle-border-color);
   border-radius: var(--border-radius-medium);
   font-size: var(--size-step-min-2);
   font-weight: var(--font-bold);
@@ -45,7 +57,13 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
 }
 
 .menu-toggle:hover {
-  --menu-toggle-border-color: color-mix(in oklab, var(--color-text) 55%, var(--color-bg));
+  --menu-toggle-border-color: color-mix(in oklab, var(--color-text) 40%, var(--color-bg));
+}
+
+/* Active (menu open): fill with the shared panel surface so the trigger and the
+   dropdown read as one connected sheet (test). */
+.menu-toggle[aria-expanded='true'] {
+  background: var(--megamenu-surface);
 }
 
 .menu-toggle svg {
@@ -76,11 +94,10 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
 /* JS-enhanced: the panel becomes an absolute dropdown attached under the trigger.
    `.menu-toggle + .megamenu` only matches once the button precedes the list (post-JS). */
 .menu-toggle + .megamenu {
-  /* Panel surface — almost-white in light, a touch DARKER than the page in dark
-     (Johan's call: the panel reads as its own sheet, not a lifted card; dark value
-     overridden below). With no border, this bg difference plus the drop shadow is
-     what separates the panel from the page. */
-  --megamenu-bg: color-mix(in oklab, white 85%, var(--color-bg));
+  /* Surface comes from the shared --megamenu-surface on .mainnav (so the open MENU
+     trigger can match it). With no border, this bg difference plus the drop shadow
+     is what separates the panel from the page. */
+  --megamenu-bg: var(--megamenu-surface);
   --megamenu-width: min(40rem, calc(100vw - 2 * var(--space-m)));
 
   position: absolute;
@@ -97,12 +114,14 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
   padding: var(--space-s);
   background: var(--megamenu-bg);
   border-radius: var(--border-radius-medium);
-  /* No resting border — separation comes from the drop shadow alone. A real edge
-     is restored for Windows High Contrast / forced-colors (where shadows vanish)
-     below, and every link keeps its own :focus-visible ring for keyboard nav. */
-  box-shadow:
-    0 4px 10px -4px hsl(0 0% 0% / 0.12),
-    0 18px 40px -12px hsl(0 0% 0% / 0.32);
+  /* No resting border — separation comes from the slightly-lighter surface plus a
+     soft drop shadow. A real edge is restored for Windows High Contrast / forced-
+     colors (where shadows vanish) below, and every link keeps its :focus-visible ring.
+     Light keeps the shadow gentle; dark restores depth (overridden below). */
+  --megamenu-shadow:
+    0 2px 6px -4px hsl(0 0% 0% / 0.06),
+    0 10px 28px -14px hsl(0 0% 0% / 0.16);
+  box-shadow: var(--megamenu-shadow);
 }
 
 /* forced-colors: drop shadows aren't painted, so give the panel an edge back. */
@@ -112,11 +131,12 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
   }
 }
 
-/* Dark theme: the panel sits a little DARKER than the page (a recessed sheet, not
-   a lifted card) — Johan's preference. data-theme is always set before the panel
-   can open (inline no-flash script), so no prefers-color-scheme branch is needed. */
+/* Dark keeps more shadow depth — "less shadow" was a light-theme ask, and on dark the
+   panel's lift comes mostly from the lighter surface (the shadow barely shows anyway). */
 :root[data-theme='dark'] .menu-toggle + .megamenu {
-  --megamenu-bg: color-mix(in oklab, var(--color-bg) 82%, black);
+  --megamenu-shadow:
+    0 4px 10px -4px hsl(0 0% 0% / 0.35),
+    0 18px 40px -12px hsl(0 0% 0% / 0.55);
 }
 
 /* closed / open — toggle visibility (not opacity/transform alone) so the links are
@@ -209,6 +229,15 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
   --megamenu-icon-color: var(--color-accent-orange);
   --megamenu-count-color: var(--color-text);
   --megamenu-row-bg: color-mix(in oklab, var(--color-text) 6%, var(--color-bg));
+}
+
+/* Lift the focused row into its own stacking context so its offset focus ring
+   (global 3px / 0.3ch) paints ABOVE an adjacent active-page row's background
+   instead of being clipped behind it — the rows are dense and the ring overlaps
+   its neighbour. */
+.megamenu a:focus-visible {
+  position: relative;
+  z-index: 1;
 }
 
 /* current section */
