@@ -24,28 +24,13 @@ const EXTRA_LABELS = {
 const titleCase = segment =>
   segment.replace(/-/g, ' ').replace(/\b\w/g, character => character.toUpperCase());
 
-// Flatten navigation.top (and any submenus) into a { '/url/': 'Label' } lookup,
-// so '/jams/' resolves to the same label the nav uses ('Jams').
-const navLabelMap = navigation => {
-  const map = {};
-  const add = items =>
-    (items || []).forEach(item => {
-      if (item.url && item.text) map[item.url] = item.text;
-      if (item.submenu) add(item.submenu);
-    });
-  if (navigation) add(navigation.top);
-  return map;
-};
-
-const sectionLabel = (segment, url, navMap) =>
-  navMap[url] || EXTRA_LABELS[segment] || titleCase(segment);
+const sectionLabel = segment => EXTRA_LABELS[segment] || titleCase(segment);
 
 export default {
   breadcrumbs: data => {
     const url = data && data.page && data.page.url;
     if (typeof url !== 'string' || !url.startsWith('/')) return [];
 
-    const navMap = navLabelMap(data.navigation);
     const segments = url.split('/').filter(segment => segment && !PAGINATION.test(segment));
 
     const siteName = (data.meta && data.meta.siteName) || 'Home';
@@ -58,7 +43,7 @@ export default {
       crumbs.push({
         isHome: false,
         url: `${path}/`,
-        label: isLast ? data.title || titleCase(segment) : sectionLabel(segment, `${path}/`, navMap),
+        label: isLast ? data.title || titleCase(segment) : sectionLabel(segment),
         current: isLast,
       });
     });
