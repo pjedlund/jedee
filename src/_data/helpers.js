@@ -24,26 +24,10 @@ export function getLinkActiveState(itemUrl, pageUrl) {
 }
 
 /**
- * Take an array of keys and return back items that match.
- * Note: items in the collection must have a key attribute in
- * Front Matter.
- *
- * @param {Array} collection - 11ty collection.
- * @param {Array} keys - Collection of keys.
- * @returns {Array} - Result collection or empty.
- */
-export function filterCollectionByKeys(collection, keys) {
-  return collection.filter(x => keys.includes(x.data.key));
-}
-
-/**
  * Generates a random UUID (Universally Unique Identifier).
  *
  * @returns {string} A random UUID.
  */
 export function random() {
-  const segment = () => {
-    return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
-  };
-  return `${segment()}-${segment()}-${segment()}`;
+  return crypto.randomUUID();
 }

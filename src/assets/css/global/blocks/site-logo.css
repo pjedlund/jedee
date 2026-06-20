@@ -1,37 +1,40 @@
+/*
+SITE LOGO
+The classic header brand — logomark + wordmark, linking home. Shown when
+meta.navigation.headerStyle is 'logo' (the alternative to the breadcrumb header;
+see partials/header.njk). Site-wide header chrome, so it lives in global/blocks
+alongside breadcrumb.css. Styled to match the breadcrumb's logomark treatment
+(same icon fill, same uppercase/bold/tracked wordmark) so the two header styles
+feel like one system. The markup pairs `.logo` with the `.cluster` composition,
+which provides the flex row + gap (via --gutter).
+
+No color/fill transition — see the note in breadcrumb.css: a color that resolves
+from color-mix(var(--color-text)…) gets stuck on the pre-toggle value across a
+theme switch in Chromium. Active-home state is carried by aria-current (set in
+base.njk's indicateActiveHome), not the old body.pageIndex hook.
+*/
+
 .logo {
   --gutter: var(--space-xs);
-  /* hack var(--space-l) to get logo to line up with MENU */
-  padding: var(--space-m) 0;
+
+  padding-block: var(--space-m);
+  font-family: var(--font-base);
   font-size: var(--size-step-min-2);
   font-weight: var(--font-bold);
-  /* letter-spacing: .1rem; */
   letter-spacing: var(--tracking-wide);
-  transition: all 0.2 var(--nav-list-timing-function), visibility 0.2s ease-in-out;
-  text-decoration: none;
   text-transform: uppercase;
-  color: color-mix(in oklab, var(--color-text) 70%, black);
+  text-decoration: none;
+  color: var(--color-text);
 }
 
 .logo svg {
-  width: 1.15em;
-  height: 1.2em;
+  inline-size: 1.15em;
+  block-size: 1.2em;
   fill: var(--color-logo-icon);
 }
 
 .logo:hover svg,
-body.pageIndex .logo svg {
+.logo:focus-visible svg,
+.logo[aria-current="page"] svg {
   fill: var(--color-orange-500);
-  color: var(--color-text);
 }
-
-.logo:hover {
-  color: var(--color-text);
-}
-
-body.pageIndex .logo {
-  color: var(--color-text);
-}
-
-/* a.logo {
-  --nav-item-text-color: color-mix(in oklab, var(--color-text) 70%, black);
-} */

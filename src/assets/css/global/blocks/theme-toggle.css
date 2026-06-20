@@ -23,6 +23,13 @@ run shouldn't show. The actual no-flash theme is set by the inline theme-toggle.
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  /* WCAG 2.5.8 (AA) target of 24px, kept tight on purpose: a bigger hit area
+     here is empty space that pushes the moon away from the nav. 24px clears AA
+     while sitting a normal cluster-gap from the last nav item, glyph still
+     near the right edge. (border-box so the min is the whole button.) */
+  box-sizing: border-box;
+  min-block-size: 24px;
+  min-inline-size: 24px;
   padding: var(--space-2xs);
   color: var(--theme-toggle-color);
   background: none;
@@ -41,15 +48,6 @@ run shouldn't show. The actual no-flash theme is set by the inline theme-toggle.
   block-size: var(--theme-toggle-size);
   inline-size: var(--theme-toggle-size);
   stroke-linecap: round;
-}
-
-/* Keep the icon wordmark-sized, but guarantee a comfortable tap target on
-   touch / coarse pointers (WCAG 2.5.5) by growing the hit area, not the glyph. */
-@media (hover: none) {
-  .theme-toggle {
-    min-block-size: 44px;
-    min-inline-size: 44px;
-  }
 }
 
 /* Sun, moon-mask and beams share a centre pivot. */
@@ -125,4 +123,13 @@ run shouldn't show. The actual no-flash theme is set by the inline theme-toggle.
 /* No JS / before hydration: hide the control entirely. */
 is-land:not(:defined) .theme-toggle {
   display: none;
+}
+
+/* The header is-land inherits the body's tall line-height (~34px), which would let
+   the inline-flex button sit on an oversized text baseline. Flex-centre the wrapper
+   so the toggle lands on the header row's optical centre — level with the MENU
+   trigger and the breadcrumb logomark. */
+is-land:has(> .theme-toggle) {
+  display: flex;
+  align-items: center;
 }

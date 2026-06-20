@@ -2,6 +2,9 @@
    The per-type layout wraps this inside <div class="region"><div class="wrapper flow prose">,
    so this partial only renders the title/image/meta block. Tags moved to entry-footer.njk. #}
 
+{# The page heading is always shown: it's the document outline / SEO / microformats
+   `p-name`. With the breadcrumb on it sits just below the trail (the standard
+   breadcrumb + heading pattern); with the breadcrumb off it's the page's only title. #}
 {% if title %}
   <h1 class="p-name">{{ title }}</h1>
 {% endif %}

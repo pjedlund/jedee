@@ -1,0 +1,22 @@
+{# BreadcrumbList structured data, built from the shared `breadcrumbs` computed data
+   (src/_data/eleventyComputed.js) so it matches the visible trail exactly. Emitted on
+   every page that has a trail; skipped on the homepage (home crumb only). Labels go
+   through `dump` so titles with quotes can't break the JSON. #}
+{%- if breadcrumbs and breadcrumbs.length > 1 -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {%- for crumb in breadcrumbs %}
+    {
+      "@type": "ListItem",
+      "position": {{ loop.index }},
+      "name": {{ (meta.siteName if crumb.isHome else crumb.label) | dump | safe }},
+      "item": {{ (meta.url + crumb.url) | dump | safe }}
+    }{% if not loop.last %},{% endif %}
+    {%- endfor %}
+  ]
+}
+</script>
+{%- endif -%}

@@ -1,0 +1,15 @@
+{# BREADCRUMB LEAF — the label for the current page (final crumb).
+   Default = the page title. Per-type enrichment lives here:
+   - jam → "Song by Artist", with a serif-italic "by" and the artist un-wikilinked.
+     The artist is plain text for now (no artist archive exists yet — no dead link).
+   Keep the markup minimal; the surrounding <span aria-current="page"> + truncation
+   live in breadcrumb.njk / breadcrumb.css. The plain `breadcrumbs[].label` (used for
+   aria/JSON-LD) stays the raw title — only this *visible* leaf is enriched. #}
+{%- if category == "jam" and artist -%}
+  {{ title }} <span class="breadcrumb-by">by</span> {{ artist | unwikilink }}
+{%- elif tag -%}
+  {# Tag archive pages: show the bare tag, not the page title "Tag: <x>". #}
+  {{ tag }}
+{%- else -%}
+  {{ title }}
+{%- endif -%}

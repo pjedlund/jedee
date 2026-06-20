@@ -1,290 +1,261 @@
+/*
+MAIN NAV — post-type mega-menu
+A single disclosure: the "Menu ⌄" button drops a two-column, table-of-contents-style
+panel of every post type (icon · name · leader dots · count). Built on Manuel
+Matuzović's progressive-enhancement nav pattern (see the nav-accessible skill):
+plain <a> list → <ul role="list"> → <nav> landmark → JS-injected toggle button.
+Without JS the panel is a static, visible list. Site-wide header chrome → global/blocks.
+*/
+
 .mainnav {
-  /* --nav-list-timing-function: cubic-bezier(0.68, -0.55, 0.27, 1.55); */
-  /* easeOutQuad https://www.cssportal.com/css-cubic-bezier-generator/ */
-  --nav-list-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-
-  /* The nav flows inline within the header cluster, to the right of the theme
-     toggle. On narrow viewports the nav box only holds the burger button — the
-     drawer itself is the fixed, off-canvas <ul> below — so keeping the nav in
-     normal flow (rather than absolute) lets the cluster place the toggle just to
-     its left, with no overlap, at every width and whether the drawer is open or
-     closed. The burger stays clickable above the open panel via its own
-     z-index (see [data-drawer-toggle] below). */
-  position: var(--nav-position, relative);
-}
-
-.mainnav ul {
-  /* configuration */
-  --gutter: var(--space-xs);
-  --cluster-vertical-alignment: normal;
-  --cluster-wrap: wrap;
-  --cluster-direction: column;
-  --nav-list-background: var(--color-bg);
-  --nav-list-shadow: -10px 0 25px 0 hsl(0 0% 0% / 0.08);
-  --nav-list-height: 100dvh;
-  --nav-list-padding-block: var(--space-2xl);
-  --nav-list-padding-inline: var(--space-s);
-  --nav-list-position: fixed;
-  --nav-list-width: min(18rem, 100vw);
-  --nav-list-visibility: hidden;
-  --nav-list-opacity: 0;
-
-  background: var(--nav-list-background);
-  box-shadow: var(--nav-list-shadow);
-  block-size: var(--nav-list-height);
-  list-style: none;
-  margin: 0;
-  padding-block: var(--nav-list-padding-block);
-  padding-inline: var(--nav-list-padding-inline);
-  position: var(--nav-list-position);
-  inset-block-start: 0;
-  inset-inline-end: 0;
-  inline-size: var(--nav-list-width);
-  opacity: var(--nav-list-opacity);
-  transition: opacity 0.2s var(--nav-list-timing-function), visibility 0.2s ease-in-out;
-  visibility: var(--nav-list-visibility);
-}
-
-.mainnav ul[data-no-flash] {
-  transition: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .mainnav > ul {
-    --nav-list-transform: translateX(100%);
-    --nav-list-opacity: 1;
-    transform: var(--nav-list-transform);
-    transition: transform 0.3s var(--nav-list-timing-function), visibility 0.2s linear;
-  }
-
-  .mainnav svg {
-    transition: transform 0.3s var(--nav-list-timing-function);
-  }
-}
-
-.mainnav [data-drawer-toggle] {
-  --gutter: var(--space-2xs);
-  --cluster-vertical-alignment: center;
-  background: var(--color-bg);
-  display: var(--nav-button-display, inline-flex);
   position: relative;
-  z-index: 2;
-  padding: var(--space-2xs) 0;
-  line-height: var(--leading-flat);
+
+  /* Shared panel / active-trigger surface — a slightly lighter version of the page
+     in BOTH themes (a gently lifted sheet; dark overridden below). Used by the
+     dropdown panel and the MENU button's active (open) state so they read as one
+     connected sheet. */
+  --megamenu-surface: color-mix(in oklab, white 45%, var(--color-bg));
 }
 
-.mainnav [data-drawer-toggle][aria-expanded='true'] + ul {
-  --cluster-wrap: nowrap;
-  --nav-list-visibility: visible;
-  --nav-list-transform: translateX(0);
-  --nav-list-opacity: 1;
-  overflow-y: auto;
+:root[data-theme='dark'] .mainnav {
+  /* lifted toward white off the dark page, not recessed below it */
+  --megamenu-surface: color-mix(in oklab, white 7%, var(--color-bg));
 }
 
-body:has([data-drawer-toggle][aria-expanded='true']) {
-  overflow: hidden;
+/* Centre the JS-injected MENU trigger on the header row. The nav wrapper otherwise
+   inherits the body's tall line-height (~34px), so the inline-flex button sits on
+   that oversized text baseline instead of the row's optical centre (where the
+   breadcrumb logomark and the theme toggle sit). Scoped with :has() to the enhanced
+   state so the no-JS static list keeps its block layout. */
+.mainnav:has(.menu-toggle) {
+  display: flex;
+  align-items: center;
 }
 
-.mainnav span {
-  font-weight: var(--font-bold);
+/* ---------- the disclosure trigger (injected from #menu-template by nav-menu.js) ---------- */
+
+.menu-toggle {
+  --menu-toggle-gap: var(--space-2xs);
+  /* very faint hairline — the MENU label + chevron carry the affordance, not the edge */
+  --menu-toggle-border-color: color-mix(in oklab, var(--color-text) 18%, var(--color-bg));
+  --menu-toggle-color: var(--color-text);
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--menu-toggle-gap);
+  padding: var(--space-xs) var(--space-s);
+  background: transparent;
+  color: var(--menu-toggle-color);
+  border: 1px solid var(--menu-toggle-border-color);
+  border-radius: var(--border-radius-medium);
   font-size: var(--size-step-min-2);
-  text-transform: uppercase;
+  font-weight: var(--font-bold);
   letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  line-height: var(--leading-flat);
+  cursor: pointer;
 }
 
-.mainnav svg {
+.menu-toggle:hover {
+  --menu-toggle-border-color: color-mix(in oklab, var(--color-text) 40%, var(--color-bg));
+}
+
+/* Active (menu open): fill with the shared panel surface so the trigger and the
+   dropdown read as one connected sheet (test). */
+.menu-toggle[aria-expanded='true'] {
+  background: var(--megamenu-surface);
+}
+
+.menu-toggle svg {
+  inline-size: 0.9em;
   block-size: 0.9em;
-  /* color: var(--color-text); */
-  color: var(--color-logo-icon);
   stroke-width: 3;
 }
 
-.mainnav [aria-expanded='true'] svg {
-  transform: rotate(45deg);
-  color: currentcolor;
+@media (prefers-reduced-motion: no-preference) {
+  .menu-toggle svg {
+    transition: rotate 0.2s var(--transition-timing, ease);
+  }
 }
 
-.mainnav :is(a, [data-submenu-toggle]) {
-  /* configuration */
-  --nav-item-background: transparent;
-  --nav-item-text-color: color-mix(in oklab, var(--color-text) 70%, black);
-  --nav-item-padding: var(--space-xs) var(--space-2xs);
-  --nav-item-decoration-color: transparent;
-  --nav-item-font-size: var(--size-step-min-2);
-  --nav-item-font-weight: var(--font-bold);
+/* chevron flips when the panel is open */
+.menu-toggle[aria-expanded='true'] svg {
+  rotate: 180deg;
+}
 
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
+/* ---------- the panel ---------- */
 
-  background: var(--nav-item-background);
-  color: var(--nav-item-text-color);
-  font-size: var(--nav-item-font-size);
-  font-weight: var(--nav-item-font-weight);
-  padding: var(--nav-item-padding);
-  display: block;
+.megamenu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* JS-enhanced: the panel becomes an absolute dropdown attached under the trigger.
+   `.menu-toggle + .megamenu` only matches once the button precedes the list (post-JS). */
+.menu-toggle + .megamenu {
+  /* Surface comes from the shared --megamenu-surface on .mainnav (so the open MENU
+     trigger can match it). With no border, this bg difference plus the drop shadow
+     is what separates the panel from the page. */
+  --megamenu-bg: var(--megamenu-surface);
+  --megamenu-width: min(40rem, calc(100vw - 2 * var(--space-m)));
+
+  position: absolute;
+  inset-block-start: calc(100% + var(--space-2xs));
+  inset-inline-end: 0;
+  z-index: 5;
+
+  display: grid; /* nav-menu.js also sets this inline, to beat the pre-JS display:none */
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  column-gap: var(--space-l);
+  row-gap: var(--space-3xs);
+
+  inline-size: var(--megamenu-width);
+  padding: var(--space-s);
+  background: var(--megamenu-bg);
   border-radius: var(--border-radius-medium);
-  text-decoration-line: underline;
-  text-decoration-color: var(--nav-item-decoration-color);
-  text-decoration-thickness: 3px;
-  text-underline-offset: 0.4em;
+  /* No resting border — separation comes from the slightly-lighter surface plus a
+     soft drop shadow. A real edge is restored for Windows High Contrast / forced-
+     colors (where shadows vanish) below, and every link keeps its :focus-visible ring.
+     Light keeps the shadow gentle; dark restores depth (overridden below). */
+  --megamenu-shadow:
+    0 2px 6px -4px hsl(0 0% 0% / 0.06),
+    0 10px 28px -14px hsl(0 0% 0% / 0.16);
+  box-shadow: var(--megamenu-shadow);
 }
 
-.mainnav:has(.nav-sublist) :is(a, [data-submenu-toggle]) {
-  /* font-weight: var(--nav-item-font-weight); */
+/* forced-colors: drop shadows aren't painted, so give the panel an edge back. */
+@media (forced-colors: active) {
+  .menu-toggle + .megamenu {
+    border: 1px solid CanvasText;
+  }
 }
 
-.mainnav [data-submenu-toggle] {
-  gap: var(--space-2xs);
+/* Dark keeps more shadow depth — "less shadow" was a light-theme ask, and on dark the
+   panel's lift comes mostly from the lighter surface (the shadow barely shows anyway). */
+:root[data-theme='dark'] .menu-toggle + .megamenu {
+  --megamenu-shadow:
+    0 4px 10px -4px hsl(0 0% 0% / 0.35),
+    0 18px 40px -12px hsl(0 0% 0% / 0.55);
+}
+
+/* closed / open — toggle visibility (not opacity/transform alone) so the links are
+   not Tab-focusable while closed (nav-accessible layer 6). */
+.menu-toggle[aria-expanded='false'] + .megamenu {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.menu-toggle[aria-expanded='true'] + .megamenu {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* top-down reveal — gated behind reduced-motion (nav-accessible layer 7) */
+@media (prefers-reduced-motion: no-preference) {
+  .menu-toggle + .megamenu {
+    transform: translateY(-0.5rem);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s linear;
+  }
+
+  .menu-toggle[aria-expanded='true'] + .megamenu {
+    transform: translateY(0);
+  }
+}
+
+.megamenu[data-no-flash] {
+  transition: none;
+}
+
+/* ---------- a row: icon · name · leader dots · count ---------- */
+
+.megamenu a {
+  --megamenu-row-color: color-mix(in oklab, var(--color-text) 80%, var(--color-bg));
+  --megamenu-icon-color: var(--color-accent-blue);
+  --megamenu-count-color: color-mix(in oklab, var(--color-text) 55%, var(--color-bg));
+  --megamenu-dot-color: color-mix(in oklab, var(--color-text) 14%, var(--color-bg));
+  --megamenu-row-bg: transparent;
+
   display: flex;
-  inline-size: 100%;
-  align-items: center;
-  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-2xs);
+  padding: var(--space-xs) var(--space-s);
+  background: var(--megamenu-row-bg);
+  border-radius: var(--border-radius-medium);
+  color: var(--megamenu-row-color);
+  font-size: var(--size-step-min-1);
+  text-decoration: none;
 }
 
-.mainnav [data-submenu-toggle] svg {
-  margin-inline-end: calc(var(--gap) - var(--nav-list-padding-inline));
+.megamenu a svg {
+  flex: none;
+  align-self: center; /* icon vertically centred, not sat on the text baseline */
+  inline-size: 0.95em;
+  block-size: 0.95em;
+  margin-inline-end: var(--space-2xs); /* extra breathing room before the label */
+  color: var(--megamenu-icon-color);
 }
 
-.mainnav :is(a, [data-submenu-toggle]):hover {
-  --nav-item-background: transparent;
-  --nav-item-text-color: var(--color-text);
-  --nav-item-decoration-color: var(--color-bg-accent-2);
+.megamenu-label {
+  flex: none;
 }
 
-.mainnav [aria-current='page'],
-.mainnav [data-state='active'] {
-  --nav-item-background: var(--color-bg);
-  --nav-item-text-color: var(--color-text);
-  --nav-item-decoration-color: var(--color-base-dark);
+/* the leader dots — an empty flexible spacer whose dotted underline meets the text
+   baseline (the table-of-contents / index move). Pure CSS, no images, no JS. */
+.megamenu-dots {
+  flex: 1 1 auto;
+  /* A 1px-tall box, baseline-aligned so its bottom edge (its synthesised baseline)
+     lands on the text baseline. The dots are painted as a repeating radial gradient
+     rather than a `dotted` border, whose gap the UA fixes at ~the border width — the
+     gradient lets us space them out: ~1px dots on a 4px pitch, roughly half as many. */
+  align-self: baseline;
+  block-size: 1px;
+  background-image: radial-gradient(circle, var(--megamenu-dot-color) 0.5px, transparent 0.5px);
+  background-position: 0 100%;
+  background-size: 4px 100%;
+  background-repeat: repeat-x;
 }
 
-/* current parent (if submenu) */
-li:has(ul a[aria-current='page']) > [data-submenu-toggle] {
-  --nav-item-background: var(--color-bg);
-  --nav-item-text-color: var(--color-text);
-  --nav-item-decoration-color: var(--color-orange-500);
+.megamenu-count {
+  flex: none;
+  color: var(--megamenu-count-color);
+  font-variant-numeric: tabular-nums;
 }
 
-/* sub menu */
-
-.mainnav [data-submenu-toggle][aria-expanded='false'] + ul {
-  display: none;
+/* hover / focus: row lifts, icon → orange, count brightens */
+.megamenu a:hover,
+.megamenu a:focus-visible {
+  --megamenu-row-color: var(--color-text);
+  --megamenu-icon-color: var(--color-accent-orange);
+  --megamenu-count-color: var(--color-text);
+  --megamenu-row-bg: color-mix(in oklab, var(--color-text) 6%, var(--color-bg));
 }
 
-.mainnav .nav-sublist {
-  --gutter: 0;
-  --cluster-direction: column;
-  --nav-sublist-position: relative;
-  --nav-sublist-background: var(--color-bg);
-  --nav-sublist-width: 100%;
-  --nav-list-visibility: visible;
-  --nav-list-opacity: 1;
-  --nav-list-padding-block: 0 var(--space-m);
-  --nav-list-padding-inline: 0;
-  box-shadow: none;
-  position: var(--nav-sublist-position);
-  inline-size: var(--nav-sublist-width);
-  block-size: auto;
-  background: var(--nav-sublist-background);
-  z-index: 2;
+/* Lift the focused row into its own stacking context so its offset focus ring
+   (global 3px / 0.3ch) paints ABOVE an adjacent active-page row's background
+   instead of being clipped behind it — the rows are dense and the ring overlaps
+   its neighbour. */
+.megamenu a:focus-visible {
+  position: relative;
+  z-index: 1;
 }
 
-.mainnav .nav-sublist a {
-  --nav-item-font-weight: var(--font-regular);
+/* current section */
+.megamenu [aria-current='page'],
+.megamenu [data-state='active'] {
+  --megamenu-row-color: var(--color-text);
+  --megamenu-icon-color: var(--color-accent-orange);
+  --megamenu-row-bg: color-mix(in oklab, var(--color-text) 6%, var(--color-bg));
 }
 
-@media screen(navigation) {
-  .mainnav {
-    --nav-position: static;
-    --nav-button-display: none;
-  }
-
-  .mainnav :is(a, [data-submenu-toggle]) {
-    /* --nav-item-font-weight: var(--font-regular); */
-  }
-
-  .mainnav ul {
-    --cluster-direction: row;
-    --nav-list-position: static;
-    --nav-list-padding-block: 0;
-    --nav-list-padding-inline: 0;
-    --nav-list-height: auto;
-    --nav-list-width: 100%;
-    --nav-list-shadow: none;
-    --nav-list-visibility: visible;
-    --nav-list-transform: translateX(0);
-    --nav-list-opacity: 1;
-  }
-
-  .mainnav [aria-current='page'],
-  .mainnav [data-state='active'],
-  li:has(ul a[aria-current='page']) > [data-submenu-toggle] {
-    --nav-item-background: transparent;
-    --nav-item-text-color: var(--color-text);
-    --nav-item-decoration-color: var(--color-orange-500);
-  }
-
-  .mainnav [data-submenu-toggle] {
-    inline-size: auto;
-  }
-
-  .mainnav [data-submenu-toggle] svg {
-    margin-inline-end: 0;
-  }
-
-  .mainnav .nav-sublist {
-    --nav-sublist-position: absolute;
-    --nav-sublist-background: var(--color-bg);
-    --nav-sublist-border: var(--color-text);
-    --nav-sublist-width: max-content;
-    --nav-list-padding-block: var(--space-xs);
-    --nav-list-padding-inline: var(--space-xs);
-    border: 3px solid var(--nav-sublist-border);
-    inset-block-start: var(--space-xl);
-    inset-inline-start: var(--space-2xs);
-  }
-}
-
-/* Repeat the settings to provide a different styling when JavaScript is disabled or drawerNav is set to false. The selector
-assumes that the button doesn’t exist without JS, making the list the first child within the navigation. */
-
-.mainnav ul:first-child {
-  --cluster-direction: row;
-  --nav-list-position: static;
-  --nav-list-padding-block: 0;
-  --nav-list-padding-inline: 0;
-  --nav-list-height: auto;
-  --nav-list-width: 100%;
-  --nav-list-shadow: none;
-  --nav-list-visibility: visible;
-  --nav-list-transform: translateX(0);
-  --nav-list-opacity: 1;
-}
-
-.mainnav ul:first-child [aria-current='page'],
-.mainnav ul:first-child [data-state='active'] {
-  --nav-item-background: transparent;
-  --nav-item-text-color: var(--color-accent-orange);
-  --nav-item-decoration-color: var(--color-accent-orange);
-}
-
-/* make menu wrap without drawer */
-.mainnav:has(ul:first-child) {
-  --nav-position: relative;
-}
-
-/* no JS fallback for sub menus */
-@media (scripting: none) {
-  .mainnav ul:first-child ul.nav-sublist {
-    --cluster-direction: row;
-    --cluster-wrap: wrap;
-  }
-}
-
-@media (scripting: none) {
-  @media screen(navigation) {
-    .mainnav ul:first-child ul.nav-sublist {
-      --cluster-direction: column;
-    }
-  }
+/* ---------- no-JS fallback ----------
+   The button is never injected, so the <ul> is the first child of .mainnav. Show it
+   as a static, visible two-column list in normal flow (no dropdown, no shadow). */
+.mainnav > .megamenu:first-child {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  column-gap: var(--space-l);
+  row-gap: var(--space-3xs);
+  visibility: visible;
+  opacity: 1;
 }

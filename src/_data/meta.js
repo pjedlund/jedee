@@ -86,9 +86,14 @@ export const navigation = {
   ariaTop: 'Main',
   ariaBottom: 'Complementary',
   ariaPlatforms: 'Platforms',
-  drawerNav: true,
-  subMenu: true,
-  hideNav: true // soft-launch: hide the main nav in PRODUCTION (header keeps logo + skip-link); header.njk still reveals it in `eleventy --serve` for local dev. Flip to false at 1.0.0 to show everywhere.
+  // Header chrome — two INDEPENDENT toggles (header.njk):
+  //   breadcrumb — left side: true = breadcrumb trail (◍ › Section › page),
+  //                false = classic logomark + wordmark home link.
+  //   hideNav    — main nav on the right: true = hidden, false = shown (note below).
+  // The theme toggle is always present (rightmost). The page <h1> is always visible
+  // (entry-header.njk), independent of both toggles.
+  breadcrumb: true,
+  hideNav: true // soft-launch: hide the main nav in PRODUCTION (header keeps the breadcrumb/logo + skip-link); header.njk still reveals it in `eleventy --serve` for local dev. Independent of `breadcrumb`. Flip to false at 1.0.0 to show everywhere.
 };
 // Accessible name for the single header light/dark toggle (aria-pressed conveys
 // the on/off state; this is the static label).

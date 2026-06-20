@@ -8,6 +8,12 @@ Rollout of JEDEE's 15-type IndieWeb post taxonomy.
 
 (The cited records live in `__design/` (git-tracked); other working artifacts stay in `_generated/`, gitignored.)
 
+## Header & navigation (separate workstream)
+
+- **Header breadcrumb + toggles** — ✅ shipped on `feat/logo-breadcrumb` (breadcrumb left, `breadcrumb` + `hideNav` toggles, always-visible Source Serif H1).
+- **Post-type mega-menu nav** — ⬜ **next, design decided 2026-06-18:** `__design/Plan - Post-type mega-menu nav.md`. Replaces the `Posts` submenu with a top-down, two-column mega-menu of all 15 types (icon · name · leader-dots · count); breadcrumb stays; About/Now → footer. Build with `nav-accessible`.
+- **Future polish** — view transitions (CSS-only; "JOHAN EDLUND" bloom on returning home), a search affordance + keyboard-shortcuts modal (Ariel Salminen style). See the plan's *Deferred / future*.
+
 ## Two workstreams
 
 - **The rollout (Phases 1–4)** — building the 15 post types into the site.
