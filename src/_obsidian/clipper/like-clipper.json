@@ -5,6 +5,11 @@
 	"noteContentFormat": "",
 	"properties": [
 		{
+			"name": "title",
+			"value": "{{meta:property:og:title}}",
+			"type": "text"
+		},
+		{
 			"name": "draft",
 			"value": "true",
 			"type": "checkbox"
@@ -18,6 +23,26 @@
 			"name": "likeOf",
 			"value": "{{url}}",
 			"type": "text"
+		},
+		{
+			"name": "sourceName",
+			"value": "{{meta:property:og:site_name}}",
+			"type": "text"
+		},
+		{
+			"name": "sourceUrl",
+			"value": "{{url|split:\"/\"|slice:0,3|join:\"/\"}}",
+			"type": "text"
+		},
+		{
+			"name": "description",
+			"value": "{{description}}",
+			"type": "text"
+		},
+		{
+			"name": "tags",
+			"value": "",
+			"type": "multitext"
 		}
 	],
 	"triggers": [],

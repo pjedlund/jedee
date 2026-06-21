@@ -1,12 +1,12 @@
 {
 	"schemaVersion": "0.1.0",
-	"name": "Reply",
+	"name": "Repost",
 	"behavior": "create",
 	"noteContentFormat": "",
 	"properties": [
 		{
 			"name": "title",
-			"value": "Re: {{meta:property:og:title}}",
+			"value": "{{meta:property:og:title}}",
 			"type": "text"
 		},
 		{
@@ -20,7 +20,7 @@
 			"type": "text"
 		},
 		{
-			"name": "inReplyTo",
+			"name": "repostOf",
 			"value": "{{url}}",
 			"type": "text"
 		},
@@ -47,5 +47,5 @@
 	],
 	"triggers": [],
 	"noteNameFormat": "{{meta:property:og:title|safe_name}}",
-	"path": "posts/replies/"
+	"path": "posts/reposts/"
 }

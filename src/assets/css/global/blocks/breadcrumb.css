@@ -130,13 +130,13 @@ inert to assistive tech. Reduced motion / focus rings come from the global style
   translate: 0 -0.05em;
 }
 
-/* The "by" in a Jam leaf: a quiet italic against the uppercase trail. Uses the
-   body face (Source Sans) on purpose — it's the only family with a real italic
-   loaded. The display serif ships upright-only, so `font-style: italic` there
-   would be a faux (browser-synthesized) slant of the bold roman, not true
-   italic glyphs. Source Sans is a variable face (weight 100–1000), so 400
-   renders as a genuine italic. */
-.breadcrumb-by {
+/* Connector words in a leaf — the Jam "by", the Like "on": a quiet italic against
+   the uppercase trail. Uses the body face (Source Sans) on purpose — it's the only
+   family with a real italic loaded. The display serif ships upright-only, so
+   `font-style: italic` there would be a faux (browser-synthesized) slant of the bold
+   roman, not true italic glyphs. Source Sans is a variable face (weight 100–1000), so
+   400 renders as a genuine italic. */
+.breadcrumb-connector {
   font-family: var(--font-base);
   font-style: italic;
   font-weight: var(--font-normal, 400);
