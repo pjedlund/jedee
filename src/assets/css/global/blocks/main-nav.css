@@ -107,11 +107,13 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
   --megamenu-width: min(40rem, 100%);
 
   position: absolute;
-  /* Drop flush from the header's bottom line. 100% = the full header row (the
-     .repel.ontop anchor), so the panel hangs right off the hairline under the
-     trigger — no gap. (An extra +space-2xs here reads as "detached" since the row
-     is taller than the button itself.) */
-  inset-block-start: 100%;
+  /* Tuck the panel up to ~5px under the Menu button (where it sat before it was
+     re-anchored to the full header row). 100% drops it to the row's bottom edge (the
+     hairline); the row is taller than the short button, so pull back up by that empty
+     space. space-m + space-2xs tracks that gap *fluidly* — both scale with the row's
+     spacing — so it stays ~5px under the button at every width, no magic pixel. The
+     open panel rides up over the hairline, reading as a dropdown hung off the button. */
+  inset-block-start: calc(100% - var(--space-m) - var(--space-2xs));
   inset-inline-end: 0;
   z-index: 5;
 
