@@ -8,7 +8,11 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
 */
 
 .mainnav {
-  position: relative;
+  /* The dropdown panel is NOT anchored to .mainnav. It's absolutely positioned
+     against the full-width header row (.repel.ontop in header.njk — position:relative
+     via the .ontop utility). That row's right edge sits under the theme toggle (the
+     moon) and its left edge at the page gutter, so the panel hangs under the moon with
+     equal gutters left and right. Keep .mainnav static for that anchor to win. */
 
   /* Shared panel / active-trigger surface — a slightly lighter version of the page
      in BOTH themes (a gently lifted sheet; dark overridden below). Used by the
@@ -98,10 +102,18 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
      trigger can match it). With no border, this bg difference plus the drop shadow
      is what separates the panel from the page. */
   --megamenu-bg: var(--megamenu-surface);
-  --megamenu-width: min(40rem, calc(100vw - 2 * var(--space-m)));
+  /* 40rem on desktop; on narrow screens fill the header content row (100% of the
+     .repel.ontop anchor) so the panel never overflows and the gutters stay equal. */
+  --megamenu-width: min(40rem, 100%);
 
   position: absolute;
-  inset-block-start: calc(100% + var(--space-2xs));
+  /* Tuck the panel up to ~5px under the Menu button (where it sat before it was
+     re-anchored to the full header row). 100% drops it to the row's bottom edge (the
+     hairline); the row is taller than the short button, so pull back up by that empty
+     space. space-m + space-2xs tracks that gap *fluidly* — both scale with the row's
+     spacing — so it stays ~5px under the button at every width, no magic pixel. The
+     open panel rides up over the hairline, reading as a dropdown hung off the button. */
+  inset-block-start: calc(100% - var(--space-m) - var(--space-2xs));
   inset-inline-end: 0;
   z-index: 5;
 
