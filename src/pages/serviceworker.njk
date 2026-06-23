@@ -3,29 +3,24 @@ permalink: /serviceworker.js
 eleventyExcludeFromCollections: true
 ---
 //service worker by Max Böck https://github.com/maxboeck/eleventastic/blob/master/src/serviceworker.njk
+//extended with runtime caching: visited pages + their assets are cached and
+//served offline, so the offline page is only the fallback for never-seen URLs.
 const CACHE_NAME = 'cache-{{ buildTime|toIsoString}}'
 const OFFLINE_PAGE_URL = '/offline/'
+
+// Warm the cache on install with the offline fallback and a couple of stable
+// entry points. Everything else (CSS/JS bundles, fonts, images) is cached at
+// runtime as it's first requested — so the hashed /bundle/<hash>.css paths,
+// which can't be hardcoded here, get cached automatically on the first visit.
 const PRECACHE_RESOURCES = [
-  // css, js etc.
-  '/assets/components/lite-yt-embed.css',
-  '/assets/components/lite-yt-embed.js',
-  '/assets/scripts/components/custom-easteregg.js',
-  '/assets/scripts/components/custom-masonry.js',
-  // icons and graphics
+  '/',
   '/favicon.ico',
   '/favicon.svg',
   '/icon-192x192.png',
   '/icon-512x512.png',
   '/maskable-icon.png',
-  '/apple-touch-icon.png',
-  // fonts
-  '/assets/fonts/source-sans/source-sans.woff2',
-  '/assets/fonts/source-serif/source-serif.woff2',
-  '/assets/fonts/source-sans/source-sans-italic.woff2',
-  '/assets/fonts/source-code-pro/source-code-pro.woff2'
+  '/apple-touch-icon.png'
 ]
-{# const IGNORED_HOSTS = ['localhost'] #}
-const IGNORED_HOSTS = []
 
 // On Install
 self.addEventListener('install', (event) => {
@@ -35,8 +30,7 @@ self.addEventListener('install', (event) => {
 
       // add all resources we want to precache first
       if (PRECACHE_RESOURCES.length) {
-        cache.addAll(PRECACHE_RESOURCES)
-        console.log('cache addAll')
+        await cache.addAll(PRECACHE_RESOURCES)
       }
 
       // then add the offline page.
@@ -76,41 +70,54 @@ self.addEventListener('activate', (event) => {
   self.clients.claim()
 })
 
+// Put a copy in the cache without blocking the response or letting a failed
+// put (redirects, partial 206s) swallow a good network response.
+const cacheCopy = (event, response) => {
+  const copy = response.clone()
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy)).catch(() => {})
+  )
+}
+
 // On Request
-self.addEventListener('fetch', function(event) {
-  const { hostname } = new URL(event.request.url)
-  if (IGNORED_HOSTS.indexOf(hostname) >= 0) {
-      return
+self.addEventListener('fetch', (event) => {
+  const { request } = event
+
+  // Only same-origin GETs are cacheable; let everything else hit the network
+  // untouched (POSTs, hotlinked cross-origin avatars, etc.).
+  if (request.method !== 'GET' || new URL(request.url).origin !== self.location.origin) {
+    return
   }
 
-  // For navigation requests (GET to a new location)
-  if (event.request.mode === 'navigate') {
+  // Page navigations: network-first so content stays fresh, but keep a copy.
+  // Offline → the cached page if we've visited it, else the offline fallback.
+  if (request.mode === 'navigate') {
     event.respondWith(
       (async () => {
         try {
-          // First, try to use the navigation preload response if it's supported.
           const preloadResponse = await event.preloadResponse
-          if (preloadResponse) {
-            return preloadResponse
-          }
-          // Then try the network.
-          const networkResponse = await fetch(event.request)
-          return networkResponse
-      } catch (error) {
-          // catch is only triggered if an exception is thrown, which is likely
-          // due to a network error.
-          // If fetch() returns a valid HTTP response with a response code in
-          // the 4xx or 5xx range, the catch() will NOT be called.
-          console.log(
-            'Fetch failed; returning offline page instead.',
-            error
-          )
-
-          const cache = await caches.open(CACHE_NAME)
-          const cachedResponse = await cache.match(OFFLINE_PAGE_URL)
-          return cachedResponse
+          const response = preloadResponse || (await fetch(request))
+          cacheCopy(event, response)
+          return response
+        } catch (error) {
+          return (await caches.match(request)) || (await caches.match(OFFLINE_PAGE_URL))
         }
       })()
     )
+    return
   }
+
+  // Static assets (css/js/fonts/images): cache-first, fill the cache on miss.
+  // ponytail: unbounded cache, but CACHE_NAME is versioned per build and old
+  // caches are deleted on activate, so every deploy clears it. Add per-type
+  // expiration (or Workbox) only if the cache ever grows uncomfortable.
+  event.respondWith(
+    (async () => {
+      const cached = await caches.match(request)
+      if (cached) return cached
+      const response = await fetch(request)
+      if (response.ok) cacheCopy(event, response)
+      return response
+    })()
+  )
 })
