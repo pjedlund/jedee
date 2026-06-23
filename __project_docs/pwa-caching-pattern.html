@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PWA caching — convention — JEDEE</title>
+<link rel="stylesheet" href="spec.css">
+<style>
+  .pwa-fig { margin: 1.6rem 0; }
+  .pwa-fig svg { width: 100%; height: auto; display: block; }
+  .pwa-fig figcaption { font-size: .85rem; color: var(--ink-soft); margin-top: .5rem; font-style: italic; }
+  .pwa-fig text { font-family: ui-sans-serif, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  .pwa-fig .t  { fill: var(--ink); font-size: 14px; font-weight: 400; }
+  .pwa-fig .th { fill: var(--ink); font-size: 14px; font-weight: 600; }
+  .pwa-fig .ts { fill: var(--ink-soft); font-size: 12px; font-weight: 400; }
+  .pwa-fig .box { fill: #fffdf9; stroke: var(--rule); stroke-width: 1; }
+  .pwa-fig .dec { fill: #efece6; stroke: #cfc6b8; stroke-width: 1; }
+  .pwa-fig .cache .pill { fill: #f1e7d9; stroke: #6b4423; stroke-width: 1; }
+  .pwa-fig .cache text { fill: #5a3a1e; }
+  .pwa-fig .net .pill { fill: #e3e8ec; stroke: #495464; stroke-width: 1; }
+  .pwa-fig .net text { fill: #33404a; }
+  .pwa-fig .arr { stroke: var(--ink-soft); stroke-width: 1.5; fill: none; }
+  .pwa-fig .leader { stroke: var(--rule); stroke-width: 1; stroke-dasharray: 3 3; fill: none; }
+  .pwa-fig .bar { fill: #b9a98f; }
+  .pwa-fig .swatch-cache { fill: #f1e7d9; stroke: #6b4423; stroke-width: 1; }
+  .pwa-fig .swatch-net { fill: #e3e8ec; stroke: #495464; stroke-width: 1; }
+</style>
+</head>
+<body data-doc-key="pwa-caching-pattern">
+
+<div class="site-header">
+  <a class="home" href="index.html">JEDEE / Project documentation</a>
+  <span class="breadcrumb">conventions › PWA caching</span>
+</div>
+
+<header class="doc-header" id="top">
+  <p class="eyebrow">cross-cutting convention</p>
+  <h1>PWA caching</h1>
+  <p class="meta">Runtime caching shipped 23 Jun 2026 (<code>0275458</code>) · live · no dependencies · extracted from <code>src/pages/serviceworker.njk</code></p>
+</header>
+
+<nav id="toc" class="toc" aria-label="Sections"></nav>
+
+<main>
+
+<p>JEDEE is an installable Progressive Web App. A <strong>service worker</strong> — a small script the browser keeps running in the background — sits between every page request and the network and decides, per request, whether the response comes from the <strong>network</strong>, from a local <strong>cache</strong>, or both. Until 23 Jun 2026 the worker did only one thing: serve a static <code>/offline/</code> page when you lost connection. It now does <strong>runtime caching</strong> — a page you have visited is stored and served back offline, fully styled — in ~25 lines of hand-written JavaScript, no library.</p>
+
+<p class="note"><strong>One file, no dependency.</strong> The whole behavior lives in <code>src/pages/serviceworker.njk</code> (a templated page that outputs <code>/serviceworker.js</code>), registered by a six-line inline script at the foot of <code>src/_layouts/base.njk</code>. There is no Workbox, no build step, no npm package — see §4 for why.</p>
+
+<h2>1. The five strategies</h2>
+<p>Service-worker caching is conventionally described as five strategies (the same five <a href="https://developer.chrome.com/docs/workbox/modules/workbox-strategies/">Workbox</a> names). JEDEE uses three of them; the diagram marks which.</p>
+
+<figure class="pwa-fig">
+<svg viewBox="0 0 680 428" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>The five service-worker caching strategies and which JEDEE uses</title>
+<desc>Five rows comparing cache-first, network-first, stale-while-revalidate, network-only and cache-only. Cache-first, network-first and network-only are marked used in JEDEE; stale-while-revalidate and cache-only are not used.</desc>
+<defs><marker id="arrow1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#4a4038" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+
+<rect class="bar" x="30" y="40" width="6" height="58" rx="3"/>
+<rect class="box" x="44" y="40" width="164" height="58" rx="6"/>
+<text class="th" x="58" y="67">Cache first</text>
+<text class="ts" x="58" y="85">cache → network</text>
+<g class="cache"><rect class="pill" x="222" y="54" width="86" height="30" rx="6"/><text class="th" x="265" y="74" text-anchor="middle">Cache</text></g>
+<line class="arr" x1="308" y1="69" x2="341" y2="69" marker-end="url(#arrow1)"/>
+<g class="net"><rect class="pill" x="344" y="54" width="86" height="30" rx="6"/><text class="th" x="387" y="74" text-anchor="middle">Network</text></g>
+<rect class="box" x="482" y="47" width="158" height="44" rx="6"/>
+<text class="th" x="494" y="67">Used</text>
+<text class="ts" x="494" y="84">static assets</text>
+
+<rect class="bar" x="30" y="110" width="6" height="58" rx="3"/>
+<rect class="box" x="44" y="110" width="164" height="58" rx="6"/>
+<text class="th" x="58" y="137">Network first</text>
+<text class="ts" x="58" y="155">network → cache</text>
+<g class="net"><rect class="pill" x="222" y="124" width="86" height="30" rx="6"/><text class="th" x="265" y="144" text-anchor="middle">Network</text></g>
+<line class="arr" x1="308" y1="139" x2="341" y2="139" marker-end="url(#arrow1)"/>
+<g class="cache"><rect class="pill" x="344" y="124" width="86" height="30" rx="6"/><text class="th" x="387" y="144" text-anchor="middle">Cache</text></g>
+<rect class="box" x="482" y="117" width="158" height="44" rx="6"/>
+<text class="th" x="494" y="137">Used</text>
+<text class="ts" x="494" y="154">page loads</text>
+
+<rect class="box" x="44" y="180" width="164" height="58" rx="6"/>
+<text class="th" x="58" y="202">Stale-while-</text>
+<text class="th" x="58" y="218">revalidate</text>
+<text class="ts" x="58" y="233">cache + refresh</text>
+<g class="cache"><rect class="pill" x="222" y="194" width="86" height="30" rx="6"/><text class="th" x="265" y="214" text-anchor="middle">Cache</text></g>
+<line class="leader" x1="308" y1="209" x2="344" y2="209"/>
+<g class="net"><rect class="pill" x="344" y="194" width="86" height="30" rx="6"/><text class="th" x="387" y="214" text-anchor="middle">Network</text></g>
+<rect class="box" x="482" y="187" width="158" height="44" rx="6"/>
+<text class="th" x="494" y="213">Not used</text>
+
+<rect class="bar" x="30" y="250" width="6" height="58" rx="3"/>
+<rect class="box" x="44" y="250" width="164" height="58" rx="6"/>
+<text class="th" x="58" y="277">Network only</text>
+<text class="ts" x="58" y="295">always network</text>
+<g class="net"><rect class="pill" x="302" y="264" width="86" height="30" rx="6"/><text class="th" x="345" y="284" text-anchor="middle">Network</text></g>
+<rect class="box" x="482" y="257" width="158" height="44" rx="6"/>
+<text class="th" x="494" y="277">Used</text>
+<text class="ts" x="494" y="294">cross-origin · POST</text>
+
+<rect class="box" x="44" y="320" width="164" height="58" rx="6"/>
+<text class="th" x="58" y="347">Cache only</text>
+<text class="ts" x="58" y="365">always cache</text>
+<g class="cache"><rect class="pill" x="302" y="334" width="86" height="30" rx="6"/><text class="th" x="345" y="354" text-anchor="middle">Cache</text></g>
+<rect class="box" x="482" y="327" width="158" height="44" rx="6"/>
+<text class="th" x="494" y="353">Not used</text>
+
+<rect class="swatch-cache" x="44" y="388" width="14" height="14" rx="3"/>
+<text class="ts" x="64" y="399">from cache</text>
+<rect class="swatch-net" x="150" y="388" width="14" height="14" rx="3"/>
+<text class="ts" x="170" y="399">from network</text>
+<rect class="bar" x="296" y="388" width="6" height="14" rx="2"/>
+<text class="ts" x="310" y="399">used in JEDEE</text>
+<line class="arr" x1="452" y1="395" x2="476" y2="395" marker-end="url(#arrow1)"/>
+<text class="ts" x="482" y="399">= fallback</text>
+</svg>
+<figcaption>The five strategies. The warm bar marks the three JEDEE runs.</figcaption>
+</figure>
+
+<table>
+<tr><th>Strategy</th><th>Behavior</th><th>In JEDEE</th></tr>
+<tr><td><code>Cache first</code></td><td>Serve from cache if present; only hit the network on a miss, then store it.</td><td><strong>Assets</strong> — CSS, JS, fonts, images.</td></tr>
+<tr><td><code>Network first</code></td><td>Try the network; fall back to cache when offline. Keeps content fresh.</td><td><strong>Pages</strong> — every navigation.</td></tr>
+<tr><td><code>Stale-while-revalidate</code></td><td>Serve the cached copy at once and refresh it from the network in the background for next time.</td><td>Not used. (The natural next strategy — see §6.)</td></tr>
+<tr><td><code>Network only</code></td><td>Always the network, never cached.</td><td><strong>Pass-through</strong> — non-GET and cross-origin requests.</td></tr>
+<tr><td><code>Cache only</code></td><td>Always the cache, never the network.</td><td>Not used as a read path. JEDEE precaches a few files but they still fall back to the network on a miss (cache-first), so nothing is pure cache-only.</td></tr>
+</table>
+
+<h2>2. The request router</h2>
+<p>The worker's <code>fetch</code> handler is a short decision tree, read top to bottom. The diagram is that exact <code>if/else</code>.</p>
+
+<figure class="pwa-fig">
+<svg viewBox="0 0 680 437" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>JEDEE's service-worker request router</title>
+<desc>Decision flow. Requests that are not same-origin GETs go to network only. Page navigations use network first with cache and offline fallbacks. Other same-origin assets use cache first.</desc>
+<defs><marker id="arrow2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#4a4038" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+
+<rect class="box" x="270" y="40" width="140" height="46" rx="6"/>
+<text class="th" x="340" y="62" text-anchor="middle">Incoming request</text>
+<text class="ts" x="340" y="78" text-anchor="middle">fetch event</text>
+<line class="arr" x1="340" y1="86" x2="340" y2="116" marker-end="url(#arrow2)"/>
+
+<rect class="dec" x="270" y="118" width="140" height="46" rx="6"/>
+<text class="th" x="340" y="146" text-anchor="middle">Same-origin GET?</text>
+<line class="arr" x1="410" y1="141" x2="468" y2="141" marker-end="url(#arrow2)"/>
+<text class="ts" x="430" y="134">no</text>
+<g class="net"><rect class="pill" x="470" y="118" width="150" height="46" rx="6"/><text class="th" x="545" y="140" text-anchor="middle">Network only</text><text class="ts" x="545" y="156" text-anchor="middle">cross-origin · POST</text></g>
+<line class="arr" x1="340" y1="164" x2="340" y2="196" marker-end="url(#arrow2)"/>
+<text class="ts" x="348" y="184">yes</text>
+
+<rect class="dec" x="270" y="198" width="140" height="46" rx="6"/>
+<text class="th" x="340" y="220" text-anchor="middle">Navigation?</text>
+<text class="ts" x="340" y="236" text-anchor="middle">a page load</text>
+<line class="arr" x1="270" y1="221" x2="212" y2="221" marker-end="url(#arrow2)"/>
+<text class="ts" x="232" y="214">yes</text>
+<g class="net"><rect class="pill" x="60" y="198" width="150" height="46" rx="6"/><text class="th" x="135" y="220" text-anchor="middle">Network first</text><text class="ts" x="135" y="236" text-anchor="middle">pages → then cache</text></g>
+<line class="arr" x1="340" y1="244" x2="340" y2="274" marker-end="url(#arrow2)"/>
+<text class="ts" x="348" y="262">no</text>
+
+<g class="cache"><rect class="pill" x="270" y="276" width="140" height="46" rx="6"/><text class="th" x="340" y="298" text-anchor="middle">Cache first</text><text class="ts" x="340" y="314" text-anchor="middle">assets · on miss</text></g>
+
+<rect class="box" x="44" y="346" width="592" height="44" rx="6"/>
+<text class="ts" x="60" y="364">Offline: a visited page is served from cache.</text>
+<text class="ts" x="60" y="380">A URL you have never opened falls back to /offline/.</text>
+
+<rect class="swatch-cache" x="266" y="402" width="14" height="14" rx="3"/>
+<text class="ts" x="286" y="413">cache</text>
+<rect class="swatch-net" x="356" y="402" width="14" height="14" rx="3"/>
+<text class="ts" x="376" y="413">network</text>
+</svg>
+<figcaption>The fetch handler, as built. Three branches, in order.</figcaption>
+</figure>
+
+<ul>
+<li><strong>Network only (pass-through).</strong> The handler returns early for any request that isn't a same-origin <code>GET</code> — POSTs, and cross-origin requests such as the hot-linked webmention avatars (which carry <code>eleventy:ignore</code>). The browser handles them normally; nothing is cached.</li>
+<li><strong>Network first (pages).</strong> Navigations try the network first (using navigation preload where supported), so content is always fresh online. A copy of the response is put in the cache in the background. Offline, the handler returns the cached page if you have visited it, and only falls back to <code>/offline/</code> for a URL it has never seen.</li>
+<li><strong>Cache first (assets).</strong> Everything else same-origin — CSS, JS, fonts, images — is served from cache when present, otherwise fetched and stored. This is what lets a revisited page render <em>fully styled</em> offline, including the hashed <code>/bundle/&lt;hash&gt;.css</code> that can't be precached by hand (see §3).</li>
+</ul>
+
+<h2>3. What's cached, and when</h2>
+<p>Two fill mechanisms, one cache.</p>
+<table>
+<tr><th>&nbsp;</th><th>Precache (on install)</th><th>Runtime (on first request)</th></tr>
+<tr><td>When</td><td>Once, when the worker installs.</td><td>As each resource is first requested.</td></tr>
+<tr><td>What</td><td><code>/</code>, the favicon + app icons, and <code>/offline/</code>.</td><td>Every visited page and every asset it pulls in.</td></tr>
+<tr><td>Why this split</td><td>A tiny, stable set so the home shell, the install icons, and the offline fallback exist before the first offline visit.</td><td>The page CSS is served as hashed/query-busted paths (<code>/assets/css/global.css?…</code>, <code>/bundle/&lt;hash&gt;.css</code>) that <strong>can't</strong> be hard-coded into a precache list — runtime caching grabs them automatically on first load.</td></tr>
+</table>
+
+<p class="note"><strong>The cache resets itself every deploy.</strong> The cache is named <code>cache-&lt;buildTime&gt;</code>, stamped at build time. On <code>activate</code>, the worker deletes every cache whose name isn't the current one, so a new deploy wipes the old cache wholesale. That is why aggressive cache-first storage of un-hashed assets is safe here — there is no long-lived staleness to manage. (<code>skipWaiting</code> + <code>clients.claim</code> make the new worker take over immediately rather than waiting for every tab to close.)</p>
+
+<p class="note"><strong>ponytail ceiling.</strong> The runtime cache is unbounded within a build — there is no per-entry count or age cap. For a personal site that browses a few hundred pages between deploys this is a non-issue, and each deploy clears it. If it ever grows uncomfortable, add per-type expiry (or adopt Workbox, §4) — the upgrade path, not a present need.</p>
+
+<h2>4. Why not Workbox</h2>
+<p>Google's <a href="https://developer.chrome.com/docs/workbox/">Workbox</a> is the standard library for this. JEDEE deliberately does <strong>not</strong> use it. The whole need here is ~25 lines of vanilla JavaScript, and the one thing Workbox does that is genuinely awkward by hand — precaching the hashed <code>/bundle/&lt;hash&gt;.css</code> paths with auto-generated revisions — simply disappears once runtime caching is in play, because runtime cache-first grabs hashed assets on first load anyway.</p>
+<p>Workbox earns its keep in the separate <strong>indiee</strong> finisher-template plan, where the goal is a precache manifest that auto-expands as a forker adds post types across many sites. That is a template-reuse problem JEDEE — a single site — doesn't have. Keep Workbox in the pocket for indiee; it buys almost nothing here.</p>
+
+<h2>5. The offline page</h2>
+<p><code>src/pages/offline.md</code> (permalink <code>/offline/</code>) renders through the normal <code>base.njk</code> layout and is precached on install. It is now strictly the <strong>last resort</strong>: the network-first branch reaches it only when you are offline <em>and</em> the requested URL was never visited (so it isn't in the cache). Any page you have opened before is served from cache instead.</p>
+
+<h2>6. Open / next</h2>
+<ul>
+<li><strong>stale-while-revalidate</strong> is the natural addition if you ever want instant loads <em>and</em> background freshness on the same resource. The place it would help is non-versioned third-party assets. Not wired today.</li>
+<li>No install-prompt UX (the <code>beforeinstallprompt</code> button / iOS "Add to Home Screen" hint). The site is fully usable without it; deferred.</li>
+<li>No per-entry cache expiry — relies on the per-build cache reset (§3).</li>
+</ul>
+
+<h2>7. Reference files</h2>
+<ul>
+<li><code>src/pages/serviceworker.njk</code> — the worker; outputs <code>/serviceworker.js</code>. Install (precache), activate (cache cleanup + navigation preload), fetch (the §2 router).</li>
+<li><code>src/_layouts/base.njk</code> — the six-line inline registration at the foot of <code>&lt;body&gt;</code>.</li>
+<li><code>src/common/site-manifest.njk</code> — the web app manifest (<code>/site.webmanifest</code>); icons, theme colors, <code>display: standalone</code>.</li>
+<li><code>src/_includes/head/meta-info.njk</code> — the <code>&lt;link rel="manifest"&gt;</code>.</li>
+<li><code>src/pages/offline.md</code> — the <code>/offline/</code> fallback page.</li>
+<li>Commit <code>0275458</code> (runtime caching) — based on Max Böck's <a href="https://github.com/maxboeck/eleventastic/blob/master/src/serviceworker.njk">eleventastic</a> offline-page pattern, extended with the runtime branches.</li>
+</ul>
+
+</main>
+
+<footer>JEDEE · __project_docs · git-tracked working docs</footer>
+
+<!-- Annotation UI (ported from tolstoy.life serve.py) -->
+<div id="ann-popover">
+  <div class="ann-quote" id="ann-quote"></div>
+  <textarea id="ann-text" placeholder="Your comment…" autocomplete="off"></textarea>
+  <div class="ann-actions">
+    <button id="ann-cancel">Cancel</button>
+    <button class="primary" id="ann-save">Save</button>
+  </div>
+</div>
+<div id="ann-tooltip"></div>
+<div id="ann-bar">
+  <button id="ann-export">Copy annotations</button>
+  <button class="danger" id="ann-clear">Clear all</button>
+</div>
+
+<script src="spec.js"></script>
+</body>
+</html>
