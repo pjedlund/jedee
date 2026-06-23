@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Build &amp; browser caching — convention — JEDEE</title>
+<link rel="stylesheet" href="spec.css">
+<style>
+  .fig { margin: 1.6rem 0; }
+  .fig svg { width: 100%; height: auto; display: block; }
+  .fig figcaption { font-size: .85rem; color: var(--ink-soft); margin-top: .5rem; font-style: italic; }
+  .fig text { font-family: ui-sans-serif, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  .fig .t  { fill: var(--ink); font-size: 14px; font-weight: 400; }
+  .fig .th { fill: var(--ink); font-size: 14px; font-weight: 600; }
+  .fig .ts { fill: var(--ink-soft); font-size: 12px; font-weight: 400; }
+  .fig .box { fill: #fffdf9; stroke: var(--rule); stroke-width: 1; }
+  .fig .dec { fill: #efece6; stroke: #cfc6b8; stroke-width: 1; }
+  .fig .cache .pill { fill: #f1e7d9; stroke: #6b4423; stroke-width: 1; }
+  .fig .cache text { fill: #5a3a1e; }
+  .fig .net .pill { fill: #e3e8ec; stroke: #495464; stroke-width: 1; }
+  .fig .net text { fill: #33404a; }
+  .fig .arr { stroke: var(--ink-soft); stroke-width: 1.5; fill: none; }
+  .fig .leader { stroke: var(--rule); stroke-width: 1; stroke-dasharray: 3 3; fill: none; }
+  .fig .bar { fill: #b9a98f; }
+  .fig .swatch-cache { fill: #f1e7d9; stroke: #6b4423; stroke-width: 1; }
+  .fig .swatch-net { fill: #e3e8ec; stroke: #495464; stroke-width: 1; }
+</style>
+</head>
+<body data-doc-key="build-and-browser-caching">
+
+<div class="site-header">
+  <a class="home" href="index.html">JEDEE / Project documentation</a>
+  <span class="breadcrumb">conventions › Build &amp; browser caching</span>
+</div>
+
+<header class="doc-header" id="top">
+  <p class="eyebrow">cross-cutting convention</p>
+  <h1>Build &amp; browser caching</h1>
+  <p class="meta">Reference · written 23 Jun 2026 · facts verified against the live site (<code>johanedlund.se</code>) and a production build · no code change</p>
+</header>
+
+<nav id="toc" class="toc" aria-label="Sections"></nav>
+
+<main>
+
+<p>The word <em>cache</em> shows up three times on JEDEE, meaning three different things in three different places. They are easy to conflate. This doc keeps them apart: a <strong>build cache</strong> that only speeds up deploys, the ordinary <strong>browser cache</strong> that every visitor's browser keeps, and the <strong>service-worker cache</strong> that the PWA layer adds on top. The third already has its own doc — this one covers the first two and shows where the third fits.</p>
+
+<p class="note"><strong>A cache</strong> is simply a stored copy of something, kept so it doesn't have to be fetched or rebuilt next time. The three layers below differ only in <em>who</em> keeps the copy and <em>who</em> benefits — the build server, the visitor's browser, or the installed app.</p>
+
+<h2>1. Three caching layers</h2>
+<p>Two of the three never touch a visitor. The build cache lives on Netlify's build server and only makes the next deploy faster. The browser cache and the service-worker cache both live on the visitor's device. The diagram separates them by <em>who sees each one</em>.</p>
+
+<figure class="fig">
+<svg viewBox="0 0 680 308" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>JEDEE's three caching layers and who each one serves</title>
+<desc>Three stacked rows. The build cache speeds up deploys and the visitor never sees it. The browser cache is the visitor's own HTTP cache. The service-worker cache sits in front of the browser cache and makes the site work offline.</desc>
+<defs><marker id="cf1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#4a4038" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+
+<rect class="box" x="24" y="28" width="632" height="72" rx="8"/>
+<text class="th" x="44" y="56">1 · Build cache</text>
+<text class="ts" x="44" y="78">Speeds up deploys — the visitor never sees it</text>
+<g class="net"><rect class="pill" x="470" y="49" width="80" height="30" rx="6"/><text class="th" x="510" y="69" text-anchor="middle">network</text></g>
+<line class="arr" x1="550" y1="64" x2="566" y2="64" marker-end="url(#cf1)"/>
+<g class="cache"><rect class="pill" x="568" y="49" width="72" height="30" rx="6"/><text class="th" x="604" y="69" text-anchor="middle">.cache/</text></g>
+
+<rect class="box" x="24" y="116" width="632" height="72" rx="8"/>
+<text class="th" x="44" y="144">2 · Browser cache</text>
+<text class="ts" x="44" y="166">The visitor's own cache — Cache-Control + ETag, set by Netlify</text>
+<g class="cache"><rect class="pill" x="470" y="137" width="80" height="30" rx="6"/><text class="th" x="510" y="157" text-anchor="middle">browser</text></g>
+<line class="arr" x1="550" y1="152" x2="566" y2="152" marker-start="url(#cf1)" marker-end="url(#cf1)"/>
+<g class="net"><rect class="pill" x="568" y="137" width="72" height="30" rx="6"/><text class="th" x="604" y="157" text-anchor="middle">edge</text></g>
+
+<rect class="box" x="24" y="204" width="632" height="72" rx="8"/>
+<text class="th" x="44" y="232">3 · Service worker</text>
+<text class="ts" x="44" y="254">Sits in front of the browser cache — makes the site work offline</text>
+<g class="cache"><rect class="pill" x="470" y="225" width="96" height="30" rx="6"/><text class="th" x="518" y="245" text-anchor="middle">SW cache</text></g>
+<text class="ts" x="576" y="245">→ PWA doc</text>
+
+<rect class="swatch-cache" x="24" y="288" width="14" height="14" rx="3"/>
+<text class="ts" x="44" y="299">local / stored</text>
+<rect class="swatch-net" x="150" y="288" width="14" height="14" rx="3"/>
+<text class="ts" x="170" y="299">remote / network</text>
+</svg>
+<figcaption>Three caches, three audiences. Brown is a stored local copy; slate is the network.</figcaption>
+</figure>
+
+<table>
+<tr><th>Layer</th><th>Lives on</th><th>Speeds up</th><th>Busted by</th></tr>
+<tr><td><strong>Build cache</strong></td><td>Netlify's build server</td><td>The next deploy.</td><td>Nothing automatic — it just grows; safe to clear by hand.</td></tr>
+<tr><td><strong>Browser cache</strong></td><td>The visitor's browser</td><td>Repeat visits.</td><td>A changed URL, or ETag revalidation (§3).</td></tr>
+<tr><td><strong>Service-worker cache</strong></td><td>The visitor's browser (PWA)</td><td>Offline + repeat visits.</td><td>Each deploy wipes it (see the <a href="pwa-caching-pattern.html">PWA caching doc</a>).</td></tr>
+</table>
+
+<h2>2. The build cache</h2>
+<p>When Netlify builds the site it fetches a handful of things from the open web. Re-fetching all of them on every deploy would be slow and rude to those servers, so the downloads are stored in a folder called <code>.cache/</code> and <strong>carried over from one deploy to the next</strong>. This is the only reason it exists; it never ships to a visitor.</p>
+
+<p>The carry-over is done by one Netlify plugin, declared at the top of <code>netlify.toml</code>:</p>
+
+<pre><code>[[plugins]]
+package = "netlify-plugin-cache"
+  [plugins.inputs]
+  paths = [ ".cache" ]</code></pre>
+
+<p>Without it, every deploy would re-download every remote thing below. <code>.cache/</code> is the store used by <strong><code>@11ty/eleventy-fetch</code></strong> — Eleventy's helper for "fetch this once and remember it." Three build steps fill it:</p>
+
+<table>
+<tr><th>What's cached</th><th>Fetched by</th><th>Why</th></tr>
+<tr><td>Remote cover images</td><td>The eleventy-img HTML&nbsp;Transform (uses eleventy-fetch under the hood)</td><td>Each remote <code>cover:</code> URL is downloaded and self-hosted at build. Full story: <a href="cover-image-pattern.html">Build-time cover images</a>.</td></tr>
+<tr><td>Webmentions</td><td><code>src/_data/webmentions.js</code> (eleventy-fetch, directly)</td><td>Pulls replies/likes from <code>webmention.io</code> so they can be rendered into the page at build.</td></tr>
+<tr><td>Photo static maps</td><td>The same image transform, from a Geoapify URL built in <code>partials/photo-map.njk</code></td><td>A small map image per photo post. The request URL carries <code>MAP_API_KEY</code> (from <code>src/_data/meta.js</code>).</td></tr>
+</table>
+
+<p class="note"><strong>Why the build cache is excluded from secret scanning.</strong> The Geoapify map URL has the API key baked into it, and eleventy-fetch stores the URL verbatim under <code>.cache/</code>. Netlify scans build-generated files for leaked secrets, so <code>netlify.toml</code> tells it to skip the cache:</p>
+
+<pre><code>[build.environment]
+  SECRETS_SCAN_OMIT_PATHS = ".cache/**"</code></pre>
+
+<p>This is safe because the cache is <strong>not deployed</strong> — only <code>dist/</code> ships, and the deployed output never contains the key. The key itself lives in the Netlify UI (Builds scope), never in the committed <code>netlify.toml</code>. If a deploy is mysteriously slow, the first thing to check is whether the build log says it restored this cache.</p>
+
+<h2>3. The browser cache</h2>
+<p>This is the cache people mean by "the cache" — the copies a visitor's browser keeps so a second visit doesn't re-download everything. The browser decides what to keep from the <strong><code>Cache-Control</code></strong> header on each response, and whether a kept copy is still current using its <strong><code>ETag</code></strong> (a content fingerprint). On JEDEE those headers come entirely from <code>netlify.toml</code>; there is no <code>_headers</code> file.</p>
+
+<p>Only two kinds of file get a long cache. Everything else falls to Netlify's default, which is "keep a copy, but check with the server every time before using it." The values below were read live off <code>johanedlund.se</code> on 23 Jun 2026.</p>
+
+<table>
+<tr><th>Resource</th><th><code>Cache-Control</code></th><th>Set by</th></tr>
+<tr><td>Fonts — <code>*.woff2</code></td><td><code>max-age=31536000, public, must-revalidate</code> (1&nbsp;year)</td><td><code>netlify.toml</code></td></tr>
+<tr><td>Component scripts — <code>/assets/scripts/components/*.js</code></td><td><code>max-age=31536000, public, must-revalidate</code> (1&nbsp;year)</td><td><code>netlify.toml</code></td></tr>
+<tr><td>HTML pages</td><td><code>public, max-age=0, must-revalidate</code> + ETag</td><td>Netlify default</td></tr>
+<tr><td>Images, favicon, <code>feed.json</code>, everything else</td><td><code>public, max-age=0, must-revalidate</code> + ETag</td><td>Netlify default</td></tr>
+</table>
+
+<p><code>max-age=0, must-revalidate</code> sounds like "don't cache," but it isn't — the browser <em>keeps</em> the copy and revalidates it cheaply: it sends the ETag back and the server answers <code>304 Not Modified</code> (no body) if nothing changed, or <code>200</code> with the new copy if it did. So unchanged pages and images cost a tiny round-trip, not a full download. The 1-year files skip even that round-trip until the year is up.</p>
+
+<figure class="fig">
+<svg viewBox="0 0 680 432" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>How the browser decides whether to download a resource again</title>
+<desc>A returning visitor's browser checks whether a resource has a one-year cache header. If so it is served straight from the browser store with no request. Otherwise the browser revalidates with its ETag and the Netlify edge replies 304 Not Modified to reuse the cached copy, or 200 with a fresh copy.</desc>
+<defs><marker id="cf2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#4a4038" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+
+<rect class="box" x="270" y="30" width="140" height="46" rx="6"/>
+<text class="th" x="340" y="52" text-anchor="middle">Browser needs</text>
+<text class="ts" x="340" y="68" text-anchor="middle">a resource again</text>
+<line class="arr" x1="340" y1="76" x2="340" y2="100" marker-end="url(#cf2)"/>
+
+<rect class="dec" x="250" y="102" width="180" height="52" rx="6"/>
+<text class="th" x="340" y="126" text-anchor="middle">Long-cache header?</text>
+<text class="ts" x="340" y="143" text-anchor="middle">woff2 · component .js</text>
+<line class="arr" x1="430" y1="128" x2="470" y2="128" marker-end="url(#cf2)"/>
+<text class="ts" x="445" y="120">yes</text>
+<g class="cache"><rect class="pill" x="472" y="103" width="176" height="50" rx="6"/><text class="th" x="560" y="125" text-anchor="middle">From browser store</text><text class="ts" x="560" y="143" text-anchor="middle">no request for ~1 year</text></g>
+<line class="arr" x1="340" y1="154" x2="340" y2="182" marker-end="url(#cf2)"/>
+<text class="ts" x="348" y="172">no</text>
+
+<rect class="box" x="255" y="184" width="170" height="52" rx="6"/>
+<text class="th" x="340" y="208" text-anchor="middle">Revalidate (ETag)</text>
+<text class="ts" x="340" y="225" text-anchor="middle">If-None-Match header</text>
+<line class="arr" x1="340" y1="236" x2="340" y2="266" marker-end="url(#cf2)"/>
+
+<g class="net"><rect class="pill" x="270" y="268" width="140" height="46" rx="6"/><text class="th" x="340" y="295" text-anchor="middle">Netlify edge</text></g>
+<line class="arr" x1="320" y1="314" x2="220" y2="348" marker-end="url(#cf2)"/>
+<line class="arr" x1="360" y1="314" x2="460" y2="348" marker-end="url(#cf2)"/>
+
+<g class="cache"><rect class="pill" x="44" y="350" width="214" height="52" rx="6"/><text class="th" x="151" y="374" text-anchor="middle">304 Not Modified</text><text class="ts" x="151" y="391" text-anchor="middle">browser keeps its copy</text></g>
+<g class="net"><rect class="pill" x="426" y="350" width="214" height="52" rx="6"/><text class="th" x="533" y="374" text-anchor="middle">200 OK</text><text class="ts" x="533" y="391" text-anchor="middle">changed — new copy sent</text></g>
+
+<rect class="swatch-cache" x="44" y="412" width="14" height="14" rx="3"/>
+<text class="ts" x="64" y="423">from cache</text>
+<rect class="swatch-net" x="150" y="412" width="14" height="14" rx="3"/>
+<text class="ts" x="170" y="423">from network</text>
+</svg>
+<figcaption>HTML, images, and the inlined-CSS pages all take the revalidate path; only fonts and component scripts skip it.</figcaption>
+</figure>
+
+<p>Every response also carries the <strong>security headers</strong> from the <code>for = "/*"</code> block (<code>Content-Security-Policy: upgrade-insecure-requests</code>, <code>X-Content-Type-Options</code>, <code>X-Frame-Options</code>, a locked-down <code>Permissions-Policy</code>, and so on). That block sets <em>no</em> <code>Cache-Control</code> — caching and security are configured independently.</p>
+
+<h2>4. Cache-busting — by inlining, not by filename</h2>
+<p>"Cache-busting" is the trick of making sure a visitor never gets a stale copy of changed code. Many sites do it by putting a content fingerprint in the filename — <code>style.a1b2c3.css</code> — so the URL changes whenever the content does. JEDEE's CSS and JavaScript reach that same guarantee a simpler way: <strong>they ride inside the HTML.</strong></p>
+
+<p>In a production build, <code>src/_includes/head/css-inline.njk</code> inlines the whole stylesheet into every page as a <code>&lt;style&gt;</code> block, and the site's own JavaScript is inlined as <code>&lt;script&gt;</code> blocks. There is no separate CSS file request at all. Since the HTML itself is served <code>max-age=0, must-revalidate</code> (§3), every visit revalidates the page — and the CSS and JS, being part of that page, are revalidated with it. A code change ships on the next deploy with zero chance of a stale stylesheet.</p>
+
+<p class="note"><strong>The <code>/bundle/&lt;hash&gt;.css</code> path is dev-only.</strong> Eleventy's bundle plugin (<code>eleventy.config.js:100</code>, <code>addBundle('css', { hoist: true })</code>) <em>can</em> emit content-hashed <code>/bundle/&lt;hash&gt;.css</code> files, and it does — but only when you run <code>npm start</code>. In that mode <code>css-inline.njk</code> <em>links</em> those files (so a browser refresh picks up edits without a full reload). The production branch <em>inlines</em> instead, so <strong>a production build emits no <code>/bundle/</code> directory and no page links one.</strong> If you ever expected a <code>[[headers]]</code> rule for <code>/bundle/*</code>, that's why there isn't one — there is nothing at that path to cache in production.</p>
+
+<p>The CSS and JS are assembled by two build steps before being inlined: <code>src/_config/events/build-css.js</code> runs the PostCSS pipeline over the <code>global/</code> tree, and <code>src/_config/events/build-js.js</code> bundles the JavaScript with esbuild. The <code>npm run build</code> command wipes the previous output first (<code>npm run clean</code> = <code>rimraf dist src/_includes/css src/_includes/scripts</code>), so each build is from scratch.</p>
+
+<p class="note"><strong>Worth knowing — the long-cached files use stable names, not hashes.</strong> The only resources with a 1-year cache (the <code>*.woff2</code> fonts and the <code>/assets/scripts/components/*.js</code> component scripts) keep the <em>same</em> filename across deploys. Fonts effectively never change, so that's free. A component script changing within a returning visitor's cached year is the one case where a hashed filename would help — but <code>must-revalidate</code> means the browser can't serve it stale past the year, and PWA visitors get a clean cache on every deploy (the SW cache is per-build; see the <a href="pwa-caching-pattern.html">PWA doc</a>). It's a minor, EE-stock trade-off, not a bug — flagged here so a future reader isn't surprised by it.</p>
+
+<h2>5. Reference files</h2>
+<ul>
+<li><code>netlify.toml</code> — the <code>netlify-plugin-cache</code> block (build cache), the three <code>[[headers]]</code> blocks (browser cache + security), and <code>SECRETS_SCAN_OMIT_PATHS</code>.</li>
+<li><code>.nvmrc</code> — the <strong>only</strong> source of the build's Node version (currently <code>22</code>); not <code>netlify.toml</code>, not <code>package.json</code>.</li>
+<li><code>src/_includes/head/css-inline.njk</code> — the inline-in-production / link-in-dev switch (§4).</li>
+<li><code>eleventy.config.js:100</code> — <code>addBundle('css', …)</code>, the source of the dev-only <code>/bundle/&lt;hash&gt;</code> paths.</li>
+<li><code>src/_config/events/build-css.js</code> + <code>build-js.js</code> — the PostCSS and esbuild steps that produce the inlined CSS/JS.</li>
+<li><code>src/_data/webmentions.js</code> — the one direct <code>eleventy-fetch</code> consumer (build cache).</li>
+<li><code>src/_includes/partials/photo-map.njk</code> + <code>src/_data/meta.js</code> — the Geoapify static-map URL that makes the secret-scan exclusion necessary.</li>
+<li>Cross-links: <a href="cover-image-pattern.html">Build-time cover images</a> (what the build cache mostly holds) · <a href="pwa-caching-pattern.html">PWA caching</a> (the third layer, in front of the browser cache).</li>
+</ul>
+
+</main>
+
+<footer>JEDEE · __project_docs · git-tracked working docs</footer>
+
+<!-- Annotation UI (ported from tolstoy.life serve.py) -->
+<div id="ann-popover">
+  <div class="ann-quote" id="ann-quote"></div>
+  <textarea id="ann-text" placeholder="Your comment…" autocomplete="off"></textarea>
+  <div class="ann-actions">
+    <button id="ann-cancel">Cancel</button>
+    <button class="primary" id="ann-save">Save</button>
+  </div>
+</div>
+<div id="ann-tooltip"></div>
+<div id="ann-bar">
+  <button id="ann-export">Copy annotations</button>
+  <button class="danger" id="ann-clear">Clear all</button>
+</div>
+
+<script src="spec.js"></script>
+</body>
+</html>
