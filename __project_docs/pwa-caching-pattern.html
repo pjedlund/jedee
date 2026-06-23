@@ -176,6 +176,8 @@
 <li><strong>Cache first (assets).</strong> Everything else same-origin — CSS, JS, fonts, images — is served from cache when present, otherwise fetched and stored. This is what lets a revisited page render <em>fully styled</em> offline, including the hashed <code>/bundle/&lt;hash&gt;.css</code> that can't be precached by hand (see §3).</li>
 </ul>
 
+<p class="note"><strong>Dev bypass.</strong> Before any of the three branches, the handler returns early for any request whose hostname is in <code>IGNORED_HOSTS</code> (<code>localhost</code>, <code>127.0.0.1</code>), so the worker caches nothing while you run <code>npm start</code> — the dev server's live reload and freshly-edited assets are never masked by the cache. The worker still <em>registers</em> on localhost (service workers are allowed there over plain http); it just intercepts no requests. This restores Max Böck's original localhost guard, which the first runtime-caching version had dropped. If you dev on a LAN IP or a custom host, add it to the array.</p>
+
 <h2>3. What's cached, and when</h2>
 <p>Two fill mechanisms, one cache.</p>
 <table>

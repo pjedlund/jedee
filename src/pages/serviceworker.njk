@@ -22,6 +22,12 @@ const PRECACHE_RESOURCES = [
   '/apple-touch-icon.png'
 ]
 
+// Hosts the worker passes straight through — no caching, no offline
+// interception — so the dev server's live reload and freshly-edited assets are
+// never masked by the cache. The worker still registers on localhost; it just
+// does nothing there. Empty in production.
+const IGNORED_HOSTS = ['localhost', '127.0.0.1']
+
 // On Install
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -82,10 +88,15 @@ const cacheCopy = (event, response) => {
 // On Request
 self.addEventListener('fetch', (event) => {
   const { request } = event
+  const url = new URL(request.url)
+
+  // Dev bypass: skip the worker entirely on localhost so live reload and
+  // freshly-edited assets are never served stale from the cache.
+  if (IGNORED_HOSTS.includes(url.hostname)) return
 
   // Only same-origin GETs are cacheable; let everything else hit the network
   // untouched (POSTs, hotlinked cross-origin avatars, etc.).
-  if (request.method !== 'GET' || new URL(request.url).origin !== self.location.origin) {
+  if (request.method !== 'GET' || url.origin !== self.location.origin) {
     return
   }
 
