@@ -5,6 +5,8 @@
    - like → "Title on Source", with an italic "on"; Source links to the site root
      (sourceUrl) when given, else plain text. Falls back to the bare title if a like
      has no sourceName (older likes).
+   - bookmark → same "Title on Source" shape. Bookmarks carry no human `sourceName`,
+     so Source is the bare host of sourceUrl/bookmarkOf (e.g. "miriamsuzanne.com").
    Keep the markup minimal; the surrounding <span aria-current="page"> + truncation
    live in breadcrumb.njk / breadcrumb.css. The plain `breadcrumbs[].label` (used for
    aria/JSON-LD) stays the raw title — only this *visible* leaf is enriched. #}
@@ -12,6 +14,8 @@
   {{ title }} <span class="breadcrumb-connector">by</span> {{ artist | unwikilink }}
 {%- elif category == "like" and sourceName -%}
   {{ title }} <span class="breadcrumb-connector">on</span> {{ sourceName }}
+{%- elif category == "bookmark" and (sourceName or ((sourceUrl or bookmarkOf) | hostname)) -%}
+  {{ title }} <span class="breadcrumb-connector">on</span> {{ sourceName or ((sourceUrl or bookmarkOf) | hostname) }}
 {%- elif tag -%}
   {# Tag archive pages: show the bare tag, not the page title "Tag: <x>". #}
   {{ tag }}
