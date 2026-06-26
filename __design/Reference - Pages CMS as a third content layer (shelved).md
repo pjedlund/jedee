@@ -50,10 +50,10 @@ That's the value, and it's real.
 1. **Hosted**, not self-hosted (§1).
 2. **Scope = all 15 post types** (the IndieWeb response types are nearly free to add).
 3. **Photos:** edit all frontmatter + upload the **display image** (`photo.src`) into
-   `src/assets/images/photos/` via the CMS; the **Bunny original**
+   `src/assets/images/photos/` via the CMS; the **R2 original**
    (`photo.downloads.original` + `bytes`/`width`/`height`) **stays a manual/laptop step** —
    Pages CMS uploads only ever commit into the git repo, it cannot push to
-   `files.johanedlund.se` (Bunny). See [[project_jedee_media_host]].
+   Cloudflare R2. See [[project_jedee_media_host]].
 4. **Body = raw-markdown editor**, never rich-text. Rich-text round-trips through turndown
    and would mangle `[[wikilinks]]`, footnotes, and `{:attributes}` (same silent-data-loss
    class as §4). JEDEE's markdown-it stack (footnotes, wikilinks, attributes, abbr, anchors)
@@ -100,7 +100,7 @@ to `main`. Any future round-trip test must be: *open a real existing post → sa
   `recipes` (ingredient + step lists), `reading`/`watching`/`jams` (cover + rating +
   the optional `slug:` override).
 - **Hard** — `photos`: nested `photo` object **and** the two-image split (repo display image
-  vs. Bunny original, §3.3). The trickiest type, and the one still most in flux.
+  vs. R2 original, §3.3). The trickiest type, and the one still most in flux.
 
 **Cross-cutting:** filenames must stay **Title-Case** (Obsidian wikilinks) while URLs
 slugify — Pages CMS's per-collection `filename` template handles this; the permalink
@@ -139,6 +139,6 @@ before the full schema work is done.)
 - Local copy: `/Users/johanedlund/Projects/pagescms-main` (v2.1.7) — reference only.
 - Sibling layers: `__project_docs/micropub-pattern.html`,
   `__project_docs/web-clipper-pattern.html`; skills `micropub`, `web-clipper`.
-- Media host: [[project_jedee_media_host]] (Bunny / `files.johanedlund.se`).
+- Media host: [[project_jedee_media_host]] (Cloudflare R2 / `r2.dev`).
 - Post-type model: `__design/Plan - Phase 3 (10 new post types) - final.md`,
   `__design/Plan - Photo post type (Phase 3b design).md`.
