@@ -56,7 +56,7 @@
     {% for dl in photo.downloads %}
     <li>
       <a class="button" href="{{ dl.url }}" rel="enclosure" download>
-        {{ dl.label }}{% if dl.format %} &mdash; {{ dl.format }}{% endif %}{% if dl.width and dl.height %}, {{ dl.width }}&times;{{ dl.height }}{% endif %}{% if dl.bytes %} ({{ (dl.bytes / 1000000) | round }}&nbsp;MB){% endif %}
+        {{ dl.label }}
       </a>
     </li>
     {% endfor %}

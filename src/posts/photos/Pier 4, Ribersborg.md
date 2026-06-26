@@ -9,12 +9,16 @@ photo:
   development: Tetenal Colortec C-41 — 3:30 @ 38 °C
   scanner: Sony a7
   downloads:
-    - label: Full-size JPEG
+    - label: Full-size JPEG (9437×3375, 11 MB)
       url: https://pub-820f82fa11f94b03ab1d34e77b3572f6.r2.dev/photos/120-R012-F01-S01-E01.jpg
       format: JPEG
       width: 9437
       height: 3375
       bytes: 11456471
+    - label: Original (TIFF, 146MB)
+      url: https://pub-820f82fa11f94b03ab1d34e77b3572f6.r2.dev/photos/120-R012-F01-S01-E01-positive.tif
+      format: TIFF
+      bytes: 146448308
 title: Pier 4, Ribersborg
 date: 2026-06-04T20:00:00+02:00
 description: A 6×17 pinhole panorama across the Øresund at dusk, made on the lower pinhole of a RealitySoSubtle and home-developed on Kodak Ektar 100.
@@ -25,4 +29,6 @@ syndication:
   - https://www.flickr.com/photos/pjedlund/53236844443/
 ---
 
-Ribersborg at the blue hour, the open-air baths gone quiet and the already very calm Öresund is flat as poured glass because of the 60 second exposure. On a clear evening Copenhagen sits as a low band of light across the water. The film rebate is left in on purpose; the Ektar edge markings are part of the picture now.
+Ribersborg at sunset. The already very calm Öresund is flat as poured glass because of the 60 second exposure. On a clear evening Copenhagen sits as a low band of light across the water.
+
+A couple walk by on the beach and excused themselves for be intruding in the frame. I said no worries, you'll likely not be visible because of the long exposure. A few birds we're still enough to be captured though.
