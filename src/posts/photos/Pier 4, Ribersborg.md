@@ -31,4 +31,4 @@ syndication:
 
 Ribersborg at sunset. The already very calm Öresund is flat as poured glass because of the 60 second exposure. On a clear evening Copenhagen sits as a low band of light across the water.
 
-A couple walk by on the beach and excused themselves for be intruding in the frame. I said no worries, you'll likely not be visible because of the long exposure. A few birds were still enough to be captured though.
+A couple walked by on the beach and excused themselves for intruding in the frame. I said no worries, you're likely not visible because of the long exposure. A few birds were still enough to be captured though.
