@@ -21,7 +21,7 @@ photo:
       bytes: 146448308
 title: Pier 4, Ribersborg
 date: 2026-06-04T20:00:00+02:00
-description: A 6×17 pinhole panorama across the Øresund at dusk, made on the lower pinhole of a RealitySoSubtle and home-developed on Kodak Ektar 100.
+description: A 6×17 pinhole panorama across the Öresund at dusk using Kodak Ektar 100 medium format film and the lower pinhole of a RealitySoSubtle.
 tags:
   - photography
   - pinhole
@@ -31,4 +31,4 @@ syndication:
 
 Ribersborg at sunset. The already very calm Öresund is flat as poured glass because of the 60 second exposure. On a clear evening Copenhagen sits as a low band of light across the water.
 
-A couple walk by on the beach and excused themselves for be intruding in the frame. I said no worries, you'll likely not be visible because of the long exposure. A few birds we're still enough to be captured though.
+A couple walk by on the beach and excused themselves for be intruding in the frame. I said no worries, you'll likely not be visible because of the long exposure. A few birds were still enough to be captured though.
