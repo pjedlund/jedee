@@ -1,0 +1,36 @@
+/*
+TRAINING LOG
+The Strava activity table on /training/. Page-specific, so it lives in a local
+bundle (included by training.njk), not global/blocks/ — same pattern as
+custom-card.css. The wide table sits in a horizontally scrollable wrapper
+(.training-scroll) for narrow screens; the scroll region is keyboard-focusable
+in the markup so it's reachable without a pointer.
+*/
+.training-scroll {
+  overflow-x: auto;
+}
+
+.training-log {
+  --training-cell-space: var(--space-2xs) var(--space-s);
+
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: var(--size-step-min-1, var(--size-step-0));
+}
+
+.training-log :is(th, td) {
+  padding: var(--training-cell-space);
+  text-align: start;
+  white-space: nowrap;
+  border-block-end: var(--border-thickness) solid var(--color-bg-accent);
+}
+
+.training-log th {
+  font-weight: var(--font-bold, 700);
+}
+
+/* The note can be long; let it wrap rather than force the table wider. */
+.training-log td:last-child {
+  white-space: normal;
+  min-inline-size: 16ch;
+}

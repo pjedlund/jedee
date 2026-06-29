@@ -31,6 +31,10 @@ export default {
       url: '/about/'
     },
     {
+      text: 'Training',
+      url: '/training/'
+    },
+    {
       text: 'Imprint',
       url: '/imprint/'
     },
