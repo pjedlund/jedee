@@ -1,10 +1,23 @@
 ---
 title: Training
-description: 'A log of my most recent public Strava activities.'
+description: 'A log of my workouts — the real sessions, posted from my watch.'
 permalink: /training/index.html
 layout: page
 ---
 
+{% if collections.workout.length %}
+<p>My workouts — the real sessions, posted from my watch. Newest first.</p>
+
+<div class="grid" style="--grid-min-item-size: 18rem">
+  {% for item in collections.workout %}
+    {% include "partials/card-workout.njk" %}
+  {% endfor %}
+</div>
+{% else %}
+{# Parked fallback: the Strava bulk-CSV table, kept live until real workout posts
+   exist. Once enough posts have landed, retire this whole branch + the CSV machinery
+   (src/_data/strava.js, src/_config/strava-export.js, __strava/). See the
+   project_jedee_strava_training_page memory. #}
 <p>My most recent public activities, pulled from Strava when the site builds. Multi-sport, metric, newest first.</p>
 
 {%- css "local" -%}
@@ -42,4 +55,5 @@ layout: page
 </div>
 {% else %}
 <p>No public activities to show yet.</p>
+{% endif %}
 {% endif %}

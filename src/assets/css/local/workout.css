@@ -1,0 +1,35 @@
+/*
+WORKOUT STATS
+The recorded-data block on a /training/ workout post (workout.njk) and the compact
+stat line on its archive card (card-workout.njk). Page/type-specific, so it lives in
+a local bundle included by those two templates — not global/blocks/ — the same
+pattern as custom-card.css. Hierarchy comes from type size alone (there's no muted
+text token); numbers use tabular figures so columns of stats line up.
+*/
+.workout-stats {
+  --gutter: var(--space-s-l);
+
+  margin-block: var(--space-s);
+}
+
+.workout-stats > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.workout-stats dt {
+  font-size: var(--size-step-min-1);
+}
+
+.workout-stats dd {
+  margin-inline-start: 0;
+  font-size: var(--size-step-1);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Card stat line: distance · duration · pace, gap-separated, wraps with the card. */
+.workout-stat-line {
+  --gutter: var(--space-xs);
+
+  font-variant-numeric: tabular-nums;
+}
