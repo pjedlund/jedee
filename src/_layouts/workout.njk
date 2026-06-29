@@ -24,6 +24,9 @@ schema: BlogPosting
       {% if hrAvg %}
         <div><dt>Avg heart rate</dt><dd>{{ hrAvg }} bpm</dd></div>
       {% endif %}
+      {% if hrMax %}
+        <div><dt>Max heart rate</dt><dd>{{ hrMax }} bpm</dd></div>
+      {% endif %}
       {% if energyKcal %}
         <div><dt>Energy</dt><dd>{{ energyKcal }} kcal</dd></div>
       {% endif %}

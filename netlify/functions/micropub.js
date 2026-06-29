@@ -98,11 +98,13 @@ export const WORKOUT_KEY = {
   duration: 'duration',
   'heart-rate': 'hrAvg',
   hr: 'hrAvg',
+  'max-heart-rate': 'hrMax',
+  'hr-max': 'hrMax',
   energy: 'energyKcal',
   strava: 'stravaUrl',
   livelox: 'liveloxUrl'
 }
-const WORKOUT_NUMERIC = new Set(['distanceKm', 'duration', 'hrAvg', 'energyKcal'])
+const WORKOUT_NUMERIC = new Set(['distanceKm', 'duration', 'hrAvg', 'hrMax', 'energyKcal'])
 
 // --- helpers (exported for unit tests) -----------------------------------
 
