@@ -75,34 +75,42 @@ async function fetchActivities() {
     return false;
   }
 
-  // 1. Refresh-token grant → short-lived access token. duration '0s': always fresh.
-  const token = await EleventyFetch('https://www.strava.com/oauth/token', {
-    duration: '0s',
-    type: 'json',
-    fetchOptions: {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        client_id: STRAVA_CLIENT_ID,
-        client_secret: STRAVA_CLIENT_SECRET,
-        grant_type: 'refresh_token',
-        refresh_token: STRAVA_REFRESH_TOKEN
-      })
+  // A non-2xx from Strava makes EleventyFetch throw; catch it so a rejected
+  // token or the subscriber-only API gate (from 2026-06-30) degrades to an
+  // empty table instead of failing the whole site build.
+  try {
+    // 1. Refresh-token grant → short-lived access token. duration '0s': always fresh.
+    const token = await EleventyFetch('https://www.strava.com/oauth/token', {
+      duration: '0s',
+      type: 'json',
+      fetchOptions: {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          client_id: STRAVA_CLIENT_ID,
+          client_secret: STRAVA_CLIENT_SECRET,
+          grant_type: 'refresh_token',
+          refresh_token: STRAVA_REFRESH_TOKEN
+        })
+      }
+    });
+    if (!token.access_token) {
+      console.warn('>>> Strava token exchange failed');
+      return false;
     }
-  });
-  if (!token.access_token) {
-    console.warn('>>> Strava token exchange failed');
+
+    // 2. 50 most recent activities.
+    const activities = await EleventyFetch('https://www.strava.com/api/v3/athlete/activities?per_page=50', {
+      duration: '0s',
+      type: 'json',
+      fetchOptions: {headers: {Authorization: `Bearer ${token.access_token}`}}
+    });
+    console.log(`>>> ${activities.length} Strava activities fetched`);
+    return activities;
+  } catch (err) {
+    console.warn(`>>> unable to fetch Strava: ${err.message}`);
     return false;
   }
-
-  // 2. 50 most recent activities.
-  const activities = await EleventyFetch('https://www.strava.com/api/v3/athlete/activities?per_page=50', {
-    duration: '0s',
-    type: 'json',
-    fetchOptions: {headers: {Authorization: `Bearer ${token.access_token}`}}
-  });
-  console.log(`>>> ${activities.length} Strava activities fetched`);
-  return activities;
 }
 
 function writeCache(data) {
