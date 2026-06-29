@@ -86,6 +86,24 @@ export const MEDIA_KEY = {
   'listen-of': 'source'
 }
 
+// Workout post (Apple Watch -> iOS Shortcut -> /api/micropub). There is no native
+// engine post-type for a workout, so the Shortcut POSTs a plain h-entry with these
+// flat properties and the engine routes it as a `note`; the store wrapper detects
+// the `activity` property and reroutes it to src/posts/training/ (see workoutFile).
+// Pace/speed is DERIVED at render (paceOrSpeed filter), never stored — so only the
+// recorded raw numbers land here. Numeric props are coerced; the rest stay strings.
+export const WORKOUT_KEY = {
+  activity: 'activityType',
+  distance: 'distanceKm',
+  duration: 'duration',
+  'heart-rate': 'hrAvg',
+  hr: 'hrAvg',
+  energy: 'energyKcal',
+  strava: 'stravaUrl',
+  livelox: 'liveloxUrl'
+}
+const WORKOUT_NUMERIC = new Set(['distanceKm', 'duration', 'hrAvg', 'energyKcal'])
+
 // --- helpers (exported for unit tests) -----------------------------------
 
 // Mirror the engine's slugify (lowercase, kebab, drop punctuation).
@@ -187,6 +205,21 @@ export const rewriteFrontmatter = (data = {}) => {
       else if (value === 'private') out.draft = true
       continue
     }
+    // A workout's flat property -> the training post's frontmatter key. Numeric
+    // props (distance/duration/hr/energy) are coerced; empty/non-numeric ones are
+    // skipped so they never write a null or NaN line.
+    if (key in WORKOUT_KEY) {
+      const target = WORKOUT_KEY[key]
+      const v = flatten(value)
+      if (v === '' || v == null) continue
+      if (WORKOUT_NUMERIC.has(target)) {
+        const n = Number(v)
+        if (!Number.isNaN(n)) out[target] = n
+      } else {
+        out[target] = v
+      }
+      continue
+    }
     // A watch/read/listen h-cite: take its url as the identity key, then recover
     // the title/cover/year/(artist|author)/plot the layouts (and Obsidian filenames)
     // need. A jam diverges from film/book in two cite fields (see below), so the
@@ -249,6 +282,12 @@ export const rewriteFrontmatter = (data = {}) => {
     else delete out.tags // inherit tags:"posts" from the folder JSON
   }
 
+  // A workout carries no `name`, so give it a title for <title>/OG/feeds/card/p-name:
+  // the activity, plus the distance when there is one ("Run · 5.2 km" / "Strength").
+  if (out.activityType && !out.title) {
+    out.title = out.distanceKm ? `${out.activityType} · ${out.distanceKm} km` : out.activityType
+  }
+
   return out
 }
 
@@ -294,6 +333,28 @@ export const resolveFilename = (filename, data = {}, content = '', derivedTitle 
   const better = slugify(derivedTitle) || contentSlug(content) || targetSlug(data)
   if (!better || better === slug) return unchanged
   return { finalName: `${dir}/${folder}/${better}.md`, location: publicUrl(better) }
+}
+
+// YYYY-MM-DD from an ISO date string (the engine's `date`); '' if unparseable.
+export const ymd = (d) => {
+  const dt = new Date(d)
+  return Number.isNaN(dt.getTime()) ? '' : dt.toISOString().slice(0, 10)
+}
+
+// A workout's committed filename + public URL. The engine has no `workout` type, so
+// it routed the post to notes/ — force the `training` folder instead, and build a
+// dated kebab slug (`2026-06-29-run-5-2-km`) so same-day repeats don't collide. Pure
+// (no I/O); `data` is the already-rewritten frontmatter (carries `title` + `date`).
+export const workoutFile = (filename, data = {}) => {
+  const unchanged = { finalName: filename, location: null }
+  const m = filename.match(/^(.*)\/([^/]+)\/([^/]+)\.md$/)
+  if (!m) return unchanged
+  const dir = m[1]
+  const folder = 'training'
+  const slug = [ymd(data.date), slugify(data.title || data.activityType)].filter(Boolean).join('-')
+  if (!slug) return unchanged
+  const location = ME ? `${ME.replace(/\/$/, '')}/${folder}/${slug}` : null
+  return { finalName: `${dir}/${folder}/${slug}.md`, location }
 }
 
 // --- title derivation ------------------------------------------------------
@@ -397,6 +458,15 @@ class JedeeStore {
   async createFile(filename, content) {
     const parsed = matter(content)
     const data = rewriteFrontmatter(parsed.data)
+
+    // A workout routes to src/posts/training/ with a dated kebab filename; its title
+    // is already derived (activity + distance) by rewriteFrontmatter, so it skips the
+    // generic title/slug path entirely.
+    if ('activityType' in data) {
+      const { finalName, location } = workoutFile(filename, data)
+      if (location && this.onLocation) this.onLocation(location)
+      return this.inner.createFile(finalName, matter.stringify(parsed.content, data))
+    }
 
     // Guarantee a `title` (additive) so the post isn't blank in <title>/OG/feeds/
     // cards/p-name. The SAME derived title also drives the clean slug for a

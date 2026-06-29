@@ -53,6 +53,7 @@ export default async function(eleventyConfig) {
   eleventyConfig.addLayoutAlias('event', 'event.njk');
   eleventyConfig.addLayoutAlias('audio', 'audio.njk');
   eleventyConfig.addLayoutAlias('video', 'video.njk');
+  eleventyConfig.addLayoutAlias('workout', 'workout.njk');
   eleventyConfig.addLayoutAlias('post', 'post.njk');
   eleventyConfig.addLayoutAlias('tags', 'tags.njk');
 
@@ -119,6 +120,9 @@ export default async function(eleventyConfig) {
   // Recipe durations (§9): integer minutes OR PT…M → normalized PT…M + human-readable.
   eleventyConfig.addFilter('toISODuration', filters.toISODuration);
   eleventyConfig.addFilter('formatDuration', filters.formatDuration);
+  // Workout pace/speed (training log): derive min/km or km/h from stored raw
+  // distance + duration at render — the workout post type never stores the value.
+  eleventyConfig.addFilter('paceOrSpeed', filters.paceOrSpeed);
   // Event archive partition (§9): build-time upcoming/past split + event-date sorts.
   eleventyConfig.addFilter('filterUpcoming', filters.filterUpcoming);
   eleventyConfig.addFilter('filterPast', filters.filterPast);

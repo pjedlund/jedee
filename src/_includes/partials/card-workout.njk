@@ -1,0 +1,30 @@
+{# Archive card for the Workout type (/training/). No cover image; a compact stat
+   line (distance · duration · pace) under the title, the activity in the footer.
+   Mirrors card-notes / card-jam. Pace is derived; duration is seconds -> clock. #}
+
+{% set headingLevel = headingLevel | default("h2") %}
+{% set definedDate = definedDate | default(item.date) %}
+
+<custom-card>
+  <{{ headingLevel }} slot="headline" class="text-step-1">
+    <a href="{{ item.url | url }}">{{ item.data.title }}</a>
+  </{{ headingLevel }}>
+  <span slot="date">{%- if item.data.draft -%}<span class="button" data-small-button data-button-variant='tertiary'>draft</span>{%- endif %} {% include "partials/date.njk" %}</span>
+  <div slot="content" webc:nokeep>
+    <p class="workout-stat-line | cluster">
+      {% if item.data.distanceKm %}<span>{{ item.data.distanceKm }} km</span>{% endif %}
+      <span>{{ item.data.duration | itunesDuration }}</span>
+      {% set pace = item.data.activityType | paceOrSpeed(item.data.distanceKm, item.data.duration) %}
+      {% if pace %}<span>{{ pace }}</span>{% endif %}
+      {% if item.data.hrAvg %}<span>{{ item.data.hrAvg }} bpm</span>{% endif %}
+    </p>
+  </div>
+  <footer slot="footer" class="repel">
+    {{ item.data.activityType }}
+  </footer>
+</custom-card>
+
+{% css "local" %}
+  {% include "css/custom-card.css" %}
+  {% include "css/workout.css" %}
+{% endcss %}

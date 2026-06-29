@@ -1,0 +1,54 @@
+---
+layout: base
+schema: BlogPosting
+---
+
+<div class="region" style="--region-space-top: var(--space-xl-2xl)">
+  <article class="wrapper flow prose h-entry">
+    {% include 'partials/entry-header.njk' %}
+
+    {# Recorded data. No standard mf2 property exists for a workout's stats, so this
+       is plain semantic markup (a description list) — the entry stays a valid h-entry
+       on title (p-name) + date (dt-published) + commentary (e-content). Pace/speed is
+       DERIVED here from the stored raw numbers; duration is seconds -> clock via the
+       shared itunesDuration filter. #}
+    <dl class="workout-stats | cluster">
+      {% if distanceKm %}
+        <div><dt>Distance</dt><dd>{{ distanceKm }} km</dd></div>
+      {% endif %}
+      <div><dt>Duration</dt><dd>{{ duration | itunesDuration }}</dd></div>
+      {% set pace = activityType | paceOrSpeed(distanceKm, duration) %}
+      {% if pace %}
+        <div><dt>Pace / speed</dt><dd>{{ pace }}</dd></div>
+      {% endif %}
+      {% if hrAvg %}
+        <div><dt>Avg heart rate</dt><dd>{{ hrAvg }} bpm</dd></div>
+      {% endif %}
+      {% if energyKcal %}
+        <div><dt>Energy</dt><dd>{{ energyKcal }} kcal</dd></div>
+      {% endif %}
+    </dl>
+
+    {% if stravaUrl or liveloxUrl %}
+      <p class="cluster gutter-xs-s">
+        {% if stravaUrl %}<a class="button" data-small-button href="{{ stravaUrl }}">View on Strava</a>{% endif %}
+        {% if liveloxUrl %}<a class="button" data-small-button href="{{ liveloxUrl }}">View on Livelox</a>{% endif %}
+      </p>
+    {% endif %}
+
+    {% if content %}
+      <div class="e-content | flow">
+        {{ content | safe }}
+      </div>
+    {% endif %}
+
+    {% include 'partials/entry-footer.njk' %}
+    {% include 'partials/hidden-author.njk' %}
+  </article>
+</div>
+
+{%- css "local" -%}
+  {%- include 'css/post.css' -%}
+  {%- include 'css/footnotes.css' -%}
+  {%- include 'css/workout.css' -%}
+{%- endcss -%}
