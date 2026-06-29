@@ -14,15 +14,43 @@ import path from 'node:path';
 const CSV_FILE = path.join(process.cwd(), '__strava', 'activities.csv');
 const MAX_ROWS = 50;
 
-// Override: Johan tags trail runs only when orienteering. Matches both the new
-// "TrailRun" and the legacy "Trail Run" spelling. Otherwise split camelCase
-// (new sport_type) — a no-op on already-spaced legacy types.
-const TYPE_OVERRIDES = {trailrun: 'Orienteering'};
+// Sport label, normalized to English (Johan's export is Swedish; the site is
+// US-English). The override Johan cares about: trail runs are only ever
+// orienteering for him, so TrailRun / Terränglöpning → Orienteering. Unknown
+// types fall back to camelCase-split (handles English sport_type, leaves an
+// unrecognized label readable).
 const normalize = s => (s || '').replace(/\s+/g, '').toLowerCase();
+const TYPE_MAP = {
+  // Johan's override, both languages
+  trailrun: 'Orienteering', terränglöpning: 'Orienteering',
+  // Swedish → English (the types in his export)
+  löpning: 'Run', cykeltur: 'Ride', cykling: 'Ride', promenad: 'Walk',
+  vandring: 'Hike', simning: 'Swim', styrketräning: 'Weight Training',
+  träningspass: 'Workout', träning: 'Workout', längdskidåkning: 'Nordic Ski'
+};
 
 export function prettifyType(s) {
   if (!s) return '';
-  return TYPE_OVERRIDES[normalize(s)] || s.replace(/([a-z])([A-Z])/g, '$1 $2');
+  return TYPE_MAP[normalize(s)] || s.replace(/([a-z])([A-Z])/g, '$1 $2');
+}
+
+// Numbers: Strava's localized export uses a decimal COMMA in human columns
+// ("4,84" km) but a dot in SI columns — tolerate both. '' / missing → NaN.
+const num = s => (s ? parseFloat(String(s).replace(',', '.')) : NaN);
+
+// Dates: English exports parse with `new Date`; Swedish ones ("14 maj 2026
+// 08.09.54", "21 aug. 2025 13.09.53") don't — match day + month (full or
+// abbreviated, first 3 letters) + year + optional dotted/colon time.
+const SV_MONTH = {jan: 0, feb: 1, mar: 2, apr: 3, maj: 4, jun: 5, jul: 6, aug: 7, sep: 8, okt: 9, nov: 10, dec: 11};
+function parseDate(s) {
+  const d = new Date(s);
+  if (!isNaN(d)) return d;
+  const m = s.match(/(\d{1,2})\s+([a-zåäö]+)\.?\s+(\d{4})(?:\s+(\d{1,2})[.:](\d{2})(?:[.:](\d{2}))?)?/i);
+  if (m) {
+    const month = SV_MONTH[m[2].slice(0, 3).toLowerCase()];
+    if (month !== undefined) return new Date(+m[3], month, +m[1], +(m[4] || 0), +(m[5] || 0), +(m[6] || 0));
+  }
+  return new Date(NaN);
 }
 
 // Pace (min/km) vs speed (km/h) by sport family, keyed on the normalized type.
@@ -102,23 +130,28 @@ const pick = (row, ...names) => {
 };
 
 export function mapRow(row) {
-  const type = pick(row, 'Activity Type', 'Sport Type');
-  const km = parseFloat(pick(row, 'Distance')) || null; // metric export: first "Distance" is km
-  const movingTime = parseInt(pick(row, 'Moving Time', 'Elapsed Time'), 10) || 0;
-  const hrAvg = Math.round(parseFloat(pick(row, 'Average Heart Rate')));
-  const hrMax = Math.round(parseFloat(pick(row, 'Max Heart Rate')));
-  const date = new Date(pick(row, 'Activity Date'));
+  const type = prettifyType(pick(row, 'Activity Type', 'Sport Type', 'Aktivitetstyp'));
+  const km = num(pick(row, 'Distance', 'Distans')); // first "Distance"/"Distans" is km
+  const distanceKm = km > 0 ? +km.toFixed(2) : null;
+  // Prefer moving time; strength sessions have no movement, so fall back to elapsed.
+  const moving = num(pick(row, 'Moving Time', 'Tid i rörelse'));
+  const elapsed = num(pick(row, 'Elapsed Time', 'Total tid'));
+  const seconds = Math.round((moving > 0 ? moving : elapsed) || 0);
+  const hrAvg = Math.round(num(pick(row, 'Average Heart Rate', 'Genomsnittlig puls')));
+  const hrMax = Math.round(num(pick(row, 'Max Heart Rate', 'Maxpuls')));
+  const rawDate = pick(row, 'Activity Date', 'Aktivitetsdatum');
+  const date = parseDate(rawDate);
   return {
-    id: pick(row, 'Activity ID'),
-    type: prettifyType(type),
-    date: isNaN(date) ? pick(row, 'Activity Date') : DATE_FMT.format(date),
+    id: pick(row, 'Activity ID', 'Aktivitets-ID'),
+    type,
+    date: isNaN(date) ? rawDate : DATE_FMT.format(date),
     ts: isNaN(date) ? 0 : date.getTime(),
-    distanceKm: km,
-    duration: formatDuration(movingTime),
-    paceOrSpeed: paceOrSpeed(type, km, movingTime),
+    distanceKm,
+    duration: formatDuration(seconds),
+    paceOrSpeed: paceOrSpeed(type, distanceKm, seconds),
     hrAvg: hrAvg || null,
     hrMax: hrMax || null,
-    note: pick(row, 'Activity Description')
+    note: pick(row, 'Activity Description', 'Aktivitetsbeskrivning')
   };
 }
 
