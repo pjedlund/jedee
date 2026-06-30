@@ -1,7 +1,7 @@
 ---
 title: MOK torsdag Bokskogen
 date: '2026-05-14T06:09:54.000Z'
-activityType: Run
+activityType: Orienteering
 distanceKm: 4.84
 duration: 3012
 hrAvg: 149

@@ -1,7 +1,7 @@
 ---
 title: MOK-torsdag nattorientering Bokskogen
 date: '2026-01-22T16:00:44.000Z'
-activityType: Run
+activityType: Orienteering
 distanceKm: 6.11
 duration: 3355
 hrAvg: 145

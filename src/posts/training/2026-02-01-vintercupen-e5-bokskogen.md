@@ -1,7 +1,7 @@
 ---
 title: Vintercupen E5 Bokskogen
 date: '2026-02-01T07:58:53.000Z'
-activityType: Run
+activityType: Orienteering
 distanceKm: 10.47
 duration: 5395
 hrAvg: 155

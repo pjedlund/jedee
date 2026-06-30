@@ -1,7 +1,7 @@
 ---
 title: Vintercupen E4 Svaneholms Norrskog
 date: '2026-01-25T07:59:58.000Z'
-activityType: Run
+activityType: Orienteering
 distanceKm: 12.45
 duration: 6341
 hrAvg: 148

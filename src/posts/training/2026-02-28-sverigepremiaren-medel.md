@@ -1,7 +1,7 @@
 ---
 title: Sverigepremiären medel
 date: '2026-02-28T10:09:52.000Z'
-activityType: Run
+activityType: Orienteering
 distanceKm: 4.88
 duration: 2926
 hrAvg: 151
