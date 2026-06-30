@@ -8,5 +8,5 @@ hrAvg: 148
 stravaUrl: 'https://www.strava.com/activities/17171727787'
 draft: false
 ---
-Fipplade med handskarna och hängde bara på i starten för att sedan inse att jag borde spring söderut istället för norrut. :/<br />
+Fipplade med handskarna och hängde bara på i starten för att sedan inse att jag borde spring söderut istället för norrut. :/
 Knöligt på den frusna marken. Tre rundor.
