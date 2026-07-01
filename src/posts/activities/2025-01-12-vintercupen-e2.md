@@ -10,4 +10,5 @@ energyKcal: 647
 stravaUrl: https://www.strava.com/activities/13333771739
 elevationGain: 173
 elevationLoss: 181
+eventorUrl: https://eventor.orientering.se/Events/Show/52791
 ---

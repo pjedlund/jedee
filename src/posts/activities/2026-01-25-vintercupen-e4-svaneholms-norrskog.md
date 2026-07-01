@@ -10,6 +10,7 @@ energyKcal: 1026
 stravaUrl: https://www.strava.com/activities/17171727787
 elevationGain: 209
 elevationLoss: 212
+eventorUrl: https://eventor.orientering.se/Events/Show/28478
 ---
 
 Fipplade med handskarna och hängde bara på i starten för att sedan inse att jag borde spring söder istället för norr. :/

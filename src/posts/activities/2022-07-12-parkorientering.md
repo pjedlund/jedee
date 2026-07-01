@@ -10,6 +10,7 @@ energyKcal: 144
 stravaUrl: https://www.strava.com/activities/7457934424
 elevationGain: 6
 elevationLoss: 11
+eventorUrl: https://eventor.orientering.se/Events/Show/41831
 ---
 
 Växlande molnighet, 24°C, Upplevd temperatur 24°C, Fuktighet 50%, Vind 2m/s från N - Klimat.app

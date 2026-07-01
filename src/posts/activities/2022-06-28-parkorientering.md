@@ -10,6 +10,7 @@ energyKcal: 314
 stravaUrl: https://www.strava.com/activities/7397877399
 elevationGain: 4
 elevationLoss: 3
+eventorUrl: https://eventor.orientering.se/Events/Show/41651
 ---
 
 Klar himmel, 21°C, Upplevd temperatur 20°C, Fuktighet 58%, Vind 3m/s från NNV - Klimat.app

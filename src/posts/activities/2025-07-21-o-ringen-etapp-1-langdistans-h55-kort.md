@@ -11,6 +11,7 @@ stravaUrl: https://www.strava.com/activities/15186412106
 elevationGain: 140
 elevationLoss: 146
 liveloxUrl: https://www.livelox.com/Events/Show/161771
+eventorUrl: https://eventor.orientering.se/Events/Show/44022
 ---
 
 Foten höll och rent lopp även om det gick långsamt i den ganska brötiga terrängen.
