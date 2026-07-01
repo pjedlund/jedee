@@ -10,4 +10,5 @@ energyKcal: 308
 stravaUrl: https://www.strava.com/activities/11588616135
 elevationGain: 34
 elevationLoss: 32
+liveloxUrl: https://www.livelox.com/Viewer/6-juni/Svarare?classId=783353
 ---

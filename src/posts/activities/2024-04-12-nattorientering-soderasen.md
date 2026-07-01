@@ -10,4 +10,5 @@ energyKcal: 542
 stravaUrl: https://www.strava.com/activities/11167155048
 elevationGain: 239
 elevationLoss: 241
+liveloxUrl: https://www.livelox.com/Viewer/Svalov-V-Sverige?sessionId=13026779
 ---

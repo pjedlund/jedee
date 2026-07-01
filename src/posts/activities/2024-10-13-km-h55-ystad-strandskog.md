@@ -10,4 +10,5 @@ energyKcal: 577
 stravaUrl: https://www.strava.com/activities/12645697633
 elevationGain: 133
 elevationLoss: 139
+liveloxUrl: https://www.livelox.com/Viewer/KM-KontinentMOK/H55?classId=862274
 ---

@@ -10,4 +10,5 @@ energyKcal: 629
 stravaUrl: https://www.strava.com/activities/11179181834
 elevationGain: 173
 elevationLoss: 188
+liveloxUrl: https://www.livelox.com/Viewer/Soderasenrundan/H55?classId=741109
 ---

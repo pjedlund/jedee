@@ -11,4 +11,5 @@ stravaUrl: https://www.strava.com/activities/12900881184
 eventorUrl: https://eventor.orientering.se/Events/Show/51905
 elevationGain: 172
 elevationLoss: 163
+liveloxUrl: https://www.livelox.com/Viewer/Bokskogsnatta/LANG-5-2-km?classId=863993
 ---

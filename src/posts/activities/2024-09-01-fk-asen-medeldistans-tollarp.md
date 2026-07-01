@@ -11,4 +11,5 @@ stravaUrl: https://www.strava.com/activities/12296712412
 elevationGain: 87
 elevationLoss: 104
 eventorUrl: https://eventor.orientering.se/Events/Show/25464
+liveloxUrl: https://www.livelox.com/Viewer/FK-Asen-medel/H55?classId=828393
 ---

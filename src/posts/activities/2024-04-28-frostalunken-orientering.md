@@ -11,4 +11,5 @@ stravaUrl: https://www.strava.com/activities/11281829930
 elevationGain: 120
 elevationLoss: 122
 eventorUrl: https://eventor.orientering.se/Events/Show/53400
+liveloxUrl: https://www.livelox.com/Viewer/Frostalunken/H55?classId=752600
 ---

@@ -10,4 +10,5 @@ energyKcal: 407
 stravaUrl: https://www.strava.com/activities/13054234226
 elevationGain: 103
 elevationLoss: 102
+liveloxUrl: https://www.livelox.com/Viewer/Torsdag-5-december/Mellan?classId=881621
 ---

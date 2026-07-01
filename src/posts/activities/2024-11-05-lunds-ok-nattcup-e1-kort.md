@@ -10,4 +10,5 @@ energyKcal: 439
 stravaUrl: https://www.strava.com/activities/12831337733
 elevationGain: 93
 elevationLoss: 95
+liveloxUrl: https://www.livelox.com/Viewer/Lunds-OK-Nattcup-etapp-1/Herr-Kort?classId=871216
 ---

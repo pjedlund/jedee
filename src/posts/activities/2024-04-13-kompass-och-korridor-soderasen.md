@@ -10,4 +10,5 @@ energyKcal: 299
 stravaUrl: https://www.strava.com/activities/11174005931
 elevationGain: 130
 elevationLoss: 123
+liveloxUrl: https://www.livelox.com/Viewer/Vargadalen-S-traning-2024/Kort-?classId=740219
 ---

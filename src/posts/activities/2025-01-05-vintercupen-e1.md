@@ -10,4 +10,5 @@ energyKcal: 707
 stravaUrl: https://www.strava.com/activities/13271966190
 elevationGain: 176
 elevationLoss: 175
+liveloxUrl: https://www.livelox.com/Viewer/Vintercupen-E1-SV-Kretsen-Skane/H45?classId=888250
 ---

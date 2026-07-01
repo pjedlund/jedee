@@ -10,4 +10,5 @@ energyKcal: 580
 stravaUrl: https://www.strava.com/activities/13310590528
 elevationGain: 166
 elevationLoss: 162
+liveloxUrl: https://www.livelox.com/Viewer/Torsdag-9-januari/Lang?classId=889061
 ---

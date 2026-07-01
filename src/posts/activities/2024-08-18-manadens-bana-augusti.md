@@ -10,6 +10,7 @@ energyKcal: 549
 stravaUrl: https://www.strava.com/activities/12178840989
 elevationGain: 120
 elevationLoss: 116
+liveloxUrl: https://www.livelox.com/Viewer/Manadens-bana-augusti/augusti-2024?classId=811716
 ---
 
 Skoj bana och bra kontrast i banpåtrycket. Tackar Svante Hermansson!

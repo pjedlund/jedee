@@ -11,4 +11,5 @@ stravaUrl: https://www.strava.com/activities/12474875170
 elevationGain: 93
 elevationLoss: 107
 eventorUrl: https://eventor.orientering.se/Events/Show/44868
+liveloxUrl: https://www.livelox.com/Viewer/Fyrklubbs/BHK?classId=842067
 ---
