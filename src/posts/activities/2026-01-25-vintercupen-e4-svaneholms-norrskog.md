@@ -11,6 +11,7 @@ stravaUrl: https://www.strava.com/activities/17171727787
 elevationGain: 209
 elevationLoss: 212
 eventorUrl: https://eventor.orientering.se/Events/Show/28478
+liveloxUrl: https://www.livelox.com/Viewer/Vintercupen-E4-SV-kretsen-Skane/H45?classId=1103296
 ---
 
 Fipplade med handskarna och hängde bara på i starten för att sedan inse att jag borde spring söder istället för norr. :/

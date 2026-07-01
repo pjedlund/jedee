@@ -10,4 +10,5 @@ energyKcal: 570
 stravaUrl: https://www.strava.com/activities/15934864790
 elevationGain: 132
 elevationLoss: 136
+liveloxUrl: https://www.livelox.com/Viewer/Svedala-NV-Sverige?sessionId=20009127
 ---

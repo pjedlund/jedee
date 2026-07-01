@@ -10,6 +10,7 @@ energyKcal: 528
 stravaUrl: https://www.strava.com/activities/16089198026
 elevationGain: 133
 elevationLoss: 131
+liveloxUrl: https://www.livelox.com/Viewer/Oppet-Kretsmasterskap-Natt-OL-SV-Skanes-Idrottskrets/H55?classId=1064451
 ---
 
 Bad om att bli diskad då jag hamnade fel efter 9:an och följde banvallen utanför kartan. Upptäckte att det inte fanns någon avtagsväg och var tvungen att springa hela vägen till perrongen. 🤪

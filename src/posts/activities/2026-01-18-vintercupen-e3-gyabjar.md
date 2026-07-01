@@ -10,6 +10,7 @@ energyKcal: 925
 stravaUrl: https://www.strava.com/activities/17092248034
 elevationGain: 251
 elevationLoss: 253
+liveloxUrl: https://www.livelox.com/Viewer/Vintercupen-E3-SV-kretsen-Skane/Bana-D?classId=1096308
 ---
 
 Tre banor (B,D,A). Jobbigt.

@@ -11,6 +11,7 @@ stravaUrl: https://www.strava.com/activities/16739416101
 elevationGain: 55
 elevationLoss: 60
 eventorUrl: https://eventor.orientering.se/Events/Show/51599
+liveloxUrl: https://www.livelox.com/Viewer/AdventOrient-etapp-3/H55?classId=1091958
 ---
 
 Hoppade tyvärr återigen över en kontroll (10an) som var svår att se på kartan. Vann dock en julkorv! Är visserligen vegan men korven kommer nog uppskattas på julbordet. 😊

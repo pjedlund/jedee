@@ -10,6 +10,7 @@ energyKcal: 387
 stravaUrl: https://www.strava.com/activities/18507741997
 elevationGain: 84
 elevationLoss: 97
+liveloxUrl: https://www.livelox.com/Viewer/Torsdagstraning-14-maj-2026/Violett?classId=1177747
 ---
 
 Kände av foten och fick korta ner 5km rundan.

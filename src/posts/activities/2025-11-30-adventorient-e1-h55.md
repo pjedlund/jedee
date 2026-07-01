@@ -11,6 +11,7 @@ stravaUrl: https://www.strava.com/activities/16609550149
 elevationGain: 119
 elevationLoss: 120
 eventorUrl: https://eventor.orientering.se/Events/Show/51597
+liveloxUrl: https://www.livelox.com/Viewer/AdventOrient-etapp-1/H55?classId=1087790
 ---
 
 Svårt med glasögonen i regnet men hyfsat lopp ändå.

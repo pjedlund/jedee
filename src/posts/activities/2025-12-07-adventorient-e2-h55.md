@@ -10,6 +10,7 @@ energyKcal: 555
 stravaUrl: https://www.strava.com/activities/16674987244
 elevationGain: 27
 elevationLoss: 39
+liveloxUrl: https://www.livelox.com/Viewer/AdventOrient-etapp-2/H55?classId=1090004
 ---
 
 Inget vidare lopp. Börjar med nybörjarmisstaget att inte knyta skosnörena ordentligt och får stanna två gånger för det. Läser fel vid 7an och springer mot elvan. Efter det knackigt.
