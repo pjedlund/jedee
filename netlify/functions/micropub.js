@@ -89,7 +89,7 @@ export const MEDIA_KEY = {
 // Workout post (Apple Watch -> iOS Shortcut -> /api/micropub). There is no native
 // engine post-type for a workout, so the Shortcut POSTs a plain h-entry with these
 // flat properties and the engine routes it as a `note`; the store wrapper detects
-// the `activity` property and reroutes it to src/posts/training/ (see workoutFile).
+// the `activity` property and reroutes it to src/posts/activities/ (see workoutFile).
 // Pace/speed is DERIVED at render (paceOrSpeed filter), never stored — so only the
 // recorded raw numbers land here. Numeric props are coerced; the rest stay strings.
 export const WORKOUT_KEY = {
@@ -98,11 +98,14 @@ export const WORKOUT_KEY = {
   duration: 'duration',
   'heart-rate': 'hrAvg',
   hr: 'hrAvg',
+  'max-heart-rate': 'hrMax',
+  'hr-max': 'hrMax',
   energy: 'energyKcal',
   strava: 'stravaUrl',
-  livelox: 'liveloxUrl'
+  livelox: 'liveloxUrl',
+  eventor: 'eventorUrl'
 }
-const WORKOUT_NUMERIC = new Set(['distanceKm', 'duration', 'hrAvg', 'energyKcal'])
+const WORKOUT_NUMERIC = new Set(['distanceKm', 'duration', 'hrAvg', 'hrMax', 'energyKcal'])
 
 // --- helpers (exported for unit tests) -----------------------------------
 
@@ -342,7 +345,7 @@ export const ymd = (d) => {
 }
 
 // A workout's committed filename + public URL. The engine has no `workout` type, so
-// it routed the post to notes/ — force the `training` folder instead, and build a
+// it routed the post to notes/ — force the `activities` folder instead, and build a
 // dated kebab slug (`2026-06-29-run-5-2-km`) so same-day repeats don't collide. Pure
 // (no I/O); `data` is the already-rewritten frontmatter (carries `title` + `date`).
 export const workoutFile = (filename, data = {}) => {
@@ -350,7 +353,7 @@ export const workoutFile = (filename, data = {}) => {
   const m = filename.match(/^(.*)\/([^/]+)\/([^/]+)\.md$/)
   if (!m) return unchanged
   const dir = m[1]
-  const folder = 'training'
+  const folder = 'activities'
   const slug = [ymd(data.date), slugify(data.title || data.activityType)].filter(Boolean).join('-')
   if (!slug) return unchanged
   const location = ME ? `${ME.replace(/\/$/, '')}/${folder}/${slug}` : null

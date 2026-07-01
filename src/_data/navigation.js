@@ -21,7 +21,11 @@ export default {
     {text: 'Likes', url: '/likes/', icon: 'heart', collection: 'like'},
     {text: 'RSVPs', url: '/rsvps/', icon: 'calendar-check', collection: 'rsvp'},
     {text: 'Audio', url: '/audio/', icon: 'mic', collection: 'audio'},
-    {text: 'Videos', url: '/videos/', icon: 'video', collection: 'video'}
+    {text: 'Videos', url: '/videos/', icon: 'video', collection: 'video'},
+    // Lucide has no running-figure glyph yet (open feature request, not shipped) —
+    // `activity` (the heartbeat/pulse glyph) is Lucide's own fitness-tracking icon
+    // and matches the section name directly.
+    {text: 'Activities', url: '/activities/', icon: 'activity', collection: 'workout'}
   ],
   // Footer nav. About lives here now (moved out of the top nav); Now joins it once
   // the page exists.
@@ -31,8 +35,8 @@ export default {
       url: '/about/'
     },
     {
-      text: 'Training',
-      url: '/training/'
+      text: 'Activities',
+      url: '/activities/'
     },
     {
       text: 'Imprint',

@@ -120,9 +120,11 @@ export default async function(eleventyConfig) {
   // Recipe durations (§9): integer minutes OR PT…M → normalized PT…M + human-readable.
   eleventyConfig.addFilter('toISODuration', filters.toISODuration);
   eleventyConfig.addFilter('formatDuration', filters.formatDuration);
-  // Workout pace/speed (training log): derive min/km or km/h from stored raw
-  // distance + duration at render — the workout post type never stores the value.
+  // Workout pace/speed (/activities/): derive min/km (+ /mi) or km/h (+ mph) from
+  // stored raw distance + duration at render — the workout post type never stores
+  // the derived value. withMiles pairs a stored km distance with its mi equivalent.
   eleventyConfig.addFilter('paceOrSpeed', filters.paceOrSpeed);
+  eleventyConfig.addFilter('withMiles', filters.withMiles);
   // Event archive partition (§9): build-time upcoming/past split + event-date sorts.
   eleventyConfig.addFilter('filterUpcoming', filters.filterUpcoming);
   eleventyConfig.addFilter('filterPast', filters.filterPast);
