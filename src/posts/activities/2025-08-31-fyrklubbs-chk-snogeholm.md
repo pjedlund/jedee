@@ -11,6 +11,7 @@ stravaUrl: https://www.strava.com/activities/15647699049
 elevationGain: 91
 elevationLoss: 88
 eventorUrl: https://eventor.orientering.se/Events/Show/48933
+cover: "/assets/images/activities/2025-08-31-fyrklubbs-chk-snogeholm.jpg"
 ---
 
 Ganska seg i värmen men ingen bom så nöjd i alla fall.

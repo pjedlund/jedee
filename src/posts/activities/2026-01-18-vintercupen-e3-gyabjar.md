@@ -11,6 +11,7 @@ stravaUrl: https://www.strava.com/activities/17092248034
 elevationGain: 251
 elevationLoss: 253
 liveloxUrl: https://www.livelox.com/Viewer/Vintercupen-E3-SV-kretsen-Skane/Bana-D?classId=1096308
+cover: "/assets/images/activities/2026-01-18-vintercupen-e3-gyabjar.jpg"
 ---
 
 Tre banor (B,D,A). Jobbigt.

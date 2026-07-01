@@ -11,6 +11,7 @@ stravaUrl: https://www.strava.com/activities/16449075385
 elevationGain: 136
 elevationLoss: 139
 liveloxUrl: https://www.livelox.com/Viewer/Bokskogsnatta/Lang?classId=1077269
+cover: "/assets/images/activities/2025-11-13-bokskogsnatta-lang.jpg"
 ---
 
 Bortlurad av reflex vid sjuan och sedan ut på fel stig till åttan. Sprang hundra meter och fick springa tillbaka samma hundra meter när jag till slut kollade kompassen. Annars helt ok lopp. Många djurögon i mörkret som jag en gång misstog för att vara min kontroll. Tills kontrollen rörde på sig. :)

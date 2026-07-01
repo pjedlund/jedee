@@ -11,6 +11,7 @@ stravaUrl: https://www.strava.com/activities/9442983124
 elevationGain: 149
 elevationLoss: 149
 eventorUrl: https://eventor.orientering.se/Events/Show/40396
+cover: "/assets/images/activities/2023-07-13-gotland-dag-10-gotland-3-dagars-etapp-3.jpg"
 ---
 
 Puh… långdistans och inte mycket kraft kvar i benen trots pasta och gel, men ganska bra orientering förutom en dum bom på 4:an när jag slappnade av lite efter en bra inledning. Den svåra 9:an fick jag direkt fast det var nog mest tur :). 
