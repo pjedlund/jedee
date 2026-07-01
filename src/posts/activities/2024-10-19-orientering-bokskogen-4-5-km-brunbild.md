@@ -10,6 +10,8 @@ energyKcal: 463
 stravaUrl: https://www.strava.com/activities/12691764033
 elevationGain: 108
 elevationLoss: 111
+eventorUrl: https://eventor.orientering.se/Events/Show/51852
+liveloxUrl: https://www.livelox.com/Events/Show/141003/Host-i-Bokskogen
 ---
 
 Stökigt i början då jag ”badade” i en göl vid ettan. Lyckades tom bada en gång till på slutet och satt fast i gyttjan upp till axlarna. Bra träning i alla fall. :)

@@ -10,6 +10,7 @@ energyKcal: 408
 stravaUrl: https://www.strava.com/activities/9436341340
 elevationGain: 84
 elevationLoss: 67
+eventorUrl: https://eventor.orientering.se/Events/Show/40396
 ---
 
 Bättre orientering idag förutom en stor miss på 6an. Börjar förstå kartan bättre nu även om det är väldigt svårt att avgöra vad som är öppna områden kontra vit skog. Plankan passar bra för den här terrängen!

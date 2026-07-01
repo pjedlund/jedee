@@ -10,6 +10,7 @@ energyKcal: 482
 stravaUrl: https://www.strava.com/activities/16609550149
 elevationGain: 119
 elevationLoss: 120
+eventorUrl: https://eventor.orientering.se/Events/Show/51597
 ---
 
 Svårt med glasögonen i regnet men hyfsat lopp ändå.

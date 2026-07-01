@@ -8,6 +8,8 @@ hrAvg: 160
 hrMax: 177
 energyKcal: 416
 stravaUrl: https://www.strava.com/activities/15196623675
+liveloxUrl: https://www.livelox.com/Events/Show/161772/O-Ringen-Jonkoping-etapp-2
+eventorUrl: https://eventor.orientering.se/Events/Show/44022
 elevationGain: 137
 elevationLoss: 144
 ---

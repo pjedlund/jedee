@@ -8,6 +8,7 @@ hrAvg: 160
 hrMax: 168
 energyKcal: 442
 stravaUrl: https://www.strava.com/activities/15812411192
+eventorUrl: https://eventor.orientering.se/Events/Show/51396
 elevationGain: 123
 elevationLoss: 121
 ---

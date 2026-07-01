@@ -10,6 +10,7 @@ energyKcal: 424
 stravaUrl: https://www.strava.com/activities/17555331772
 elevationGain: 92
 elevationLoss: 100
+eventorUrl: https://eventor.orientering.se/Events/Show/53555
 ---
 
 Fick tyvärr bryta efter halva loppet.

@@ -10,6 +10,7 @@ energyKcal: 702
 stravaUrl: https://www.strava.com/activities/12358118690
 elevationGain: 253
 elevationLoss: 238
+eventorUrl: https://eventor.orientering.se/Events/Show/45037
 ---
 
 Bröt när jag gick förbi 10an och direkt till 11an.

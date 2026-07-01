@@ -9,6 +9,7 @@ hrMax: 170
 energyKcal: 957
 stravaUrl: https://www.strava.com/activities/9430817604
 elevationGain: 0
+eventorUrl: https://eventor.orientering.se/Events/Show/40396
 ---
 
 Gjorde två jättebommar trots noggrann kompasskurs. Mycket svårt att hitta något att läsa på — antingen plottrigt detaljerat eller diffusa områden. Dessutom var alla kontroller finurligt gömda. Behöver ta det ännu lugnare i morgon. Verkar inte som GPS sparades.
