@@ -1,0 +1,13 @@
+---
+title: "Romeleträffen medel H55"
+date: "2025-04-05T08:54:56+02:00"
+activityType: orienteering
+distanceKm: 4.98
+duration: 2326
+hrAvg: 157
+hrMax: 167
+energyKcal: 458
+stravaUrl: https://www.strava.com/activities/14085928635
+elevationGain: 118
+elevationLoss: 119
+---

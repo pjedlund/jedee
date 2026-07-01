@@ -1,0 +1,13 @@
+---
+title: "Göingeträffen orientering"
+date: "2022-10-02T08:38:00+02:00"
+activityType: orienteering
+distanceKm: 5.28
+duration: 2510
+hrAvg: 157
+hrMax: 171
+energyKcal: 452
+stravaUrl: https://www.strava.com/activities/7898895431
+elevationGain: 39
+elevationLoss: 37
+---

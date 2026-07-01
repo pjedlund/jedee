@@ -1,0 +1,13 @@
+---
+title: "Vintercupen E1"
+date: "2025-01-05T08:49:47+01:00"
+activityType: orienteering
+distanceKm: 8.28
+duration: 3855
+hrAvg: 155
+hrMax: 169
+energyKcal: 707
+stravaUrl: https://www.strava.com/activities/13271966190
+elevationGain: 176
+elevationLoss: 175
+---
