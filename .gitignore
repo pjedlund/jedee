@@ -49,3 +49,7 @@ IDEAS.md
 LOG.md
 TODO.md
 
+
+# Netlify dev regenerates this Edge Functions bootstrap lockfile on every run;
+# the production build (npm run build -> Eleventy) never uses Deno.
+deno.lock
