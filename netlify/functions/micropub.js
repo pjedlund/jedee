@@ -41,7 +41,7 @@ const {
   GITHUB_BRANCH // optional — unset commits to the repo's default branch (main)
 } = process.env
 
-const CONTENT_DIR = 'src/posts'
+export const CONTENT_DIR = 'src/posts'
 const FIREHOSE_TAG = 'posts' // every post carries tags:"posts" via its folder JSON
 
 // Engine post-type -> destination folder under CONTENT_DIR. The post `category`
@@ -101,11 +101,14 @@ export const WORKOUT_KEY = {
   'max-heart-rate': 'hrMax',
   'hr-max': 'hrMax',
   energy: 'energyKcal',
+  'elevation-gain': 'elevationGain',
+  'elevation-loss': 'elevationLoss',
+  'health-export-id': 'healthExportId',
   strava: 'stravaUrl',
   livelox: 'liveloxUrl',
   eventor: 'eventorUrl'
 }
-const WORKOUT_NUMERIC = new Set(['distanceKm', 'duration', 'hrAvg', 'hrMax', 'energyKcal'])
+const WORKOUT_NUMERIC = new Set(['distanceKm', 'duration', 'hrAvg', 'hrMax', 'energyKcal', 'elevationGain', 'elevationLoss'])
 
 // --- helpers (exported for unit tests) -----------------------------------
 
@@ -177,6 +180,13 @@ export const upgradeCoverUrl = (url = '') => {
 // is upgraded later in the store.
 export const formatSlug = (type = 'note', slug = '') =>
   `${TYPE_DIR[type] || type}/${slug.replace(/^\d+-/, '')}`
+
+// A workout carries no `name`, so give it a title for <title>/OG/feeds/card/p-name:
+// the activity, plus the distance when there is one ("Run · 5.2 km" / "Strength").
+// Exported so the health-export adapter can predict the same title (and therefore
+// the same workoutFile slug) before a post exists, to check for a collision.
+export const deriveWorkoutTitle = (activityType, distanceKm) =>
+  distanceKm ? `${activityType} · ${distanceKm} km` : activityType
 
 // Rewrite the engine's frontmatter to JEDEE conventions. Pure: returns the new
 // frontmatter object; the body is left untouched.
@@ -285,10 +295,8 @@ export const rewriteFrontmatter = (data = {}) => {
     else delete out.tags // inherit tags:"posts" from the folder JSON
   }
 
-  // A workout carries no `name`, so give it a title for <title>/OG/feeds/card/p-name:
-  // the activity, plus the distance when there is one ("Run · 5.2 km" / "Strength").
   if (out.activityType && !out.title) {
-    out.title = out.distanceKm ? `${out.activityType} · ${out.distanceKm} km` : out.activityType
+    out.title = deriveWorkoutTitle(out.activityType, out.distanceKm)
   }
 
   return out
@@ -494,7 +502,7 @@ class JedeeStore {
 
 // --- handler --------------------------------------------------------------
 
-const buildEndpoint = (onLocation) =>
+export const buildEndpoint = (onLocation) =>
   new MicropubEndpoint({
     me: ME,
     tokenEndpoint: TOKEN_ENDPOINT,
