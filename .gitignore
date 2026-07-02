@@ -41,6 +41,9 @@ _generated/
 _tests/
 .github
 
+# Local Strava/Livelox export scratch (import source, not site content)
+__strava
+
 # Project notes (kept locally, not in repo)
 AGENTS.md
 CLAUDE.md
