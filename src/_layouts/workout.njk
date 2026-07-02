@@ -7,35 +7,42 @@ schema: BlogPosting
   <article class="wrapper flow prose h-entry">
     {% include 'partials/entry-header.njk' %}
 
-    {# Recorded data. No standard mf2 property exists for a workout's stats, so this
-       is plain semantic markup (a description list) — the entry stays a valid h-entry
-       on title (p-name) + date (dt-published) + commentary (e-content). Pace/speed is
-       DERIVED here from the stored raw numbers; duration is seconds -> clock via the
-       shared itunesDuration filter. #}
+    {# Cover renders as a plain <img> (the Image transform self-hosts remote URLs and resolves
+       local paths); never the {% image %} shortcode, which is local-only and errors on a remote URL. #}
+    {% if cover %}
+      <img class="cover" eleventy:optional="placeholder" src="{{ cover | safe }}" alt="Cover for {{ title }}" loading="lazy" eleventy:widths="160,224,448" sizes="auto">
+    {% endif %}
+
+    {# Recorded data for /activities/. No standard mf2 property exists for a workout's
+       stats, so this is plain semantic markup (a description list) — the entry stays
+       a valid h-entry on title (p-name) + date (dt-published) + commentary (e-content).
+       Pace/speed is DERIVED here from the stored raw numbers; duration is seconds ->
+       clock via the shared itunesDuration filter. #}
     <dl class="workout-stats | cluster">
       {% if distanceKm %}
-        <div><dt>Distance</dt><dd>{{ distanceKm }} km</dd></div>
+        <div><dt>Distance</dt><dd>{{ distanceKm | withMiles }}</dd></div>
       {% endif %}
       <div><dt>Duration</dt><dd>{{ duration | itunesDuration }}</dd></div>
       {% set pace = activityType | paceOrSpeed(distanceKm, duration) %}
       {% if pace %}
-        <div><dt>Pace / speed</dt><dd>{{ pace }}</dd></div>
+        <div><dt>Pace</dt><dd>{{ pace }}</dd></div>
       {% endif %}
       {% if hrAvg %}
-        <div><dt>Avg heart rate</dt><dd>{{ hrAvg }} bpm</dd></div>
+        <div><dt>Heart rate</dt><dd>{{ hrAvg }}{% if hrMax %} ({{ hrMax }} max){% endif %}</dd></div>
       {% endif %}
-      {% if hrMax %}
-        <div><dt>Max heart rate</dt><dd>{{ hrMax }} bpm</dd></div>
+      {% if elevationGain %}
+        <div><dt>Elevation</dt><dd>+{{ elevationGain }} m{% if elevationLoss %} / -{{ elevationLoss }} m{% endif %}</dd></div>
       {% endif %}
       {% if energyKcal %}
         <div><dt>Energy</dt><dd>{{ energyKcal }} kcal</dd></div>
       {% endif %}
     </dl>
 
-    {% if stravaUrl or liveloxUrl %}
+    {% if stravaUrl or liveloxUrl or eventorUrl %}
       <p class="cluster gutter-xs-s">
         {% if stravaUrl %}<a class="button" data-small-button href="{{ stravaUrl }}">View on Strava</a>{% endif %}
         {% if liveloxUrl %}<a class="button" data-small-button href="{{ liveloxUrl }}">View on Livelox</a>{% endif %}
+        {% if eventorUrl %}<a class="button" data-small-button href="{{ eventorUrl }}">View on Eventor</a>{% endif %}
       </p>
     {% endif %}
 
@@ -54,4 +61,5 @@ schema: BlogPosting
   {%- include 'css/post.css' -%}
   {%- include 'css/footnotes.css' -%}
   {%- include 'css/workout.css' -%}
+  {%- include 'css/cover.css' -%}
 {%- endcss -%}

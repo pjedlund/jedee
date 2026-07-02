@@ -1,0 +1,6 @@
+{
+  "layout": "workout",
+  "tags": "posts",
+  "category": "workout",
+  "permalink": "/activities/{{ date | formatDate('YYYY-MM-DD') }}-{{ page.fileSlug | slugify }}/index.html"
+}

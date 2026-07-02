@@ -41,7 +41,7 @@ const {
   GITHUB_BRANCH // optional — unset commits to the repo's default branch (main)
 } = process.env
 
-const CONTENT_DIR = 'src/posts'
+export const CONTENT_DIR = 'src/posts'
 const FIREHOSE_TAG = 'posts' // every post carries tags:"posts" via its folder JSON
 
 // Engine post-type -> destination folder under CONTENT_DIR. The post `category`
@@ -89,7 +89,7 @@ export const MEDIA_KEY = {
 // Workout post (Apple Watch -> iOS Shortcut -> /api/micropub). There is no native
 // engine post-type for a workout, so the Shortcut POSTs a plain h-entry with these
 // flat properties and the engine routes it as a `note`; the store wrapper detects
-// the `activity` property and reroutes it to src/posts/training/ (see workoutFile).
+// the `activity` property and reroutes it to src/posts/activities/ (see workoutFile).
 // Pace/speed is DERIVED at render (paceOrSpeed filter), never stored — so only the
 // recorded raw numbers land here. Numeric props are coerced; the rest stay strings.
 export const WORKOUT_KEY = {
@@ -101,10 +101,14 @@ export const WORKOUT_KEY = {
   'max-heart-rate': 'hrMax',
   'hr-max': 'hrMax',
   energy: 'energyKcal',
+  'elevation-gain': 'elevationGain',
+  'elevation-loss': 'elevationLoss',
+  'health-export-id': 'healthExportId',
   strava: 'stravaUrl',
-  livelox: 'liveloxUrl'
+  livelox: 'liveloxUrl',
+  eventor: 'eventorUrl'
 }
-const WORKOUT_NUMERIC = new Set(['distanceKm', 'duration', 'hrAvg', 'hrMax', 'energyKcal'])
+const WORKOUT_NUMERIC = new Set(['distanceKm', 'duration', 'hrAvg', 'hrMax', 'energyKcal', 'elevationGain', 'elevationLoss'])
 
 // --- helpers (exported for unit tests) -----------------------------------
 
@@ -176,6 +180,13 @@ export const upgradeCoverUrl = (url = '') => {
 // is upgraded later in the store.
 export const formatSlug = (type = 'note', slug = '') =>
   `${TYPE_DIR[type] || type}/${slug.replace(/^\d+-/, '')}`
+
+// A workout carries no `name`, so give it a title for <title>/OG/feeds/card/p-name:
+// the activity, plus the distance when there is one ("Run · 5.2 km" / "Strength").
+// Exported so the health-export adapter can predict the same title (and therefore
+// the same workoutFile slug) before a post exists, to check for a collision.
+export const deriveWorkoutTitle = (activityType, distanceKm) =>
+  distanceKm ? `${activityType} · ${distanceKm} km` : activityType
 
 // Rewrite the engine's frontmatter to JEDEE conventions. Pure: returns the new
 // frontmatter object; the body is left untouched.
@@ -284,10 +295,8 @@ export const rewriteFrontmatter = (data = {}) => {
     else delete out.tags // inherit tags:"posts" from the folder JSON
   }
 
-  // A workout carries no `name`, so give it a title for <title>/OG/feeds/card/p-name:
-  // the activity, plus the distance when there is one ("Run · 5.2 km" / "Strength").
   if (out.activityType && !out.title) {
-    out.title = out.distanceKm ? `${out.activityType} · ${out.distanceKm} km` : out.activityType
+    out.title = deriveWorkoutTitle(out.activityType, out.distanceKm)
   }
 
   return out
@@ -344,7 +353,7 @@ export const ymd = (d) => {
 }
 
 // A workout's committed filename + public URL. The engine has no `workout` type, so
-// it routed the post to notes/ — force the `training` folder instead, and build a
+// it routed the post to notes/ — force the `activities` folder instead, and build a
 // dated kebab slug (`2026-06-29-run-5-2-km`) so same-day repeats don't collide. Pure
 // (no I/O); `data` is the already-rewritten frontmatter (carries `title` + `date`).
 export const workoutFile = (filename, data = {}) => {
@@ -352,7 +361,7 @@ export const workoutFile = (filename, data = {}) => {
   const m = filename.match(/^(.*)\/([^/]+)\/([^/]+)\.md$/)
   if (!m) return unchanged
   const dir = m[1]
-  const folder = 'training'
+  const folder = 'activities'
   const slug = [ymd(data.date), slugify(data.title || data.activityType)].filter(Boolean).join('-')
   if (!slug) return unchanged
   const location = ME ? `${ME.replace(/\/$/, '')}/${folder}/${slug}` : null
@@ -493,7 +502,7 @@ class JedeeStore {
 
 // --- handler --------------------------------------------------------------
 
-const buildEndpoint = (onLocation) =>
+export const buildEndpoint = (onLocation) =>
   new MicropubEndpoint({
     me: ME,
     tokenEndpoint: TOKEN_ENDPOINT,

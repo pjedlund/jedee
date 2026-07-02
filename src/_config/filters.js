@@ -11,6 +11,7 @@ import { unwikilink } from './filters/unwikilink.js';
 import { hostname } from './filters/hostname.js';
 import { toISODuration, formatDuration, itunesDuration } from './filters/duration.js';
 import { paceOrSpeed } from './filters/pace.js';
+import { withMiles } from './filters/distance.js';
 import { filterUpcoming, filterPast, sortByStartAsc, sortByStartDesc } from './filters/events.js';
 import { enclosureBytes, enclosureType } from './filters/enclosure.js';
 import {
@@ -38,6 +39,7 @@ export default {
   formatDuration,
   itunesDuration,
   paceOrSpeed,
+  withMiles,
   filterUpcoming,
   filterPast,
   sortByStartAsc,

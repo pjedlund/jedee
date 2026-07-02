@@ -41,6 +41,7 @@ _generated/
 _tests/
 .github
 
+# Local Strava/Livelox export scratch (import source, not site content)
 __strava
 
 # Project notes (kept locally, not in repo)
@@ -51,3 +52,7 @@ IDEAS.md
 LOG.md
 TODO.md
 
+
+# Netlify dev regenerates this Edge Functions bootstrap lockfile on every run;
+# the production build (npm run build -> Eleventy) never uses Deno.
+deno.lock
