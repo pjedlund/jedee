@@ -59,6 +59,24 @@ export const normalizeDistanceKm = ({ qty, units } = {}) => {
   return Math.round(n * 100) / 100 // km, or an unrecognized unit passed through as-is
 }
 
+// Health Auto Export sends Apple's workout *display name* ("Running", "Trail
+// Running"); the site stores — and paceOrSpeed (src/_config/filters/pace.js)
+// recognizes — its own short lowercase vocabulary ("run", "trailrun"). Without this
+// a plain run would store activityType:"Running", which pace.js's FOOT set doesn't
+// know, so the derived pace line would silently vanish. Map the paced foot
+// activities whose site token is known; anything else (strength, or a one-off manual
+// export) passes through unchanged for Johan to relabel on review. Keyed by the same
+// space-stripped/lowercased form pace.js itself normalizes to.
+const ACTIVITY_LABEL = {
+  running: 'run',
+  trailrunning: 'trailrun',
+  walking: 'walk',
+  hiking: 'hike'
+}
+
+export const toActivityLabel = (name = '') =>
+  ACTIVITY_LABEL[String(name).replace(/\s+/g, '').toLowerCase()] ?? name
+
 // Same folder+slug logic the real post will get (workoutFile, already exported from
 // micropub.js) — lets the handler check for a collision BEFORE forwarding, using a
 // throwaway source path (only its directory portion survives workoutFile's rewrite).
@@ -76,11 +94,12 @@ export const mapWorkout = (workout = {}) => {
   if (!name || !start || !id) return null
   const date = healthExportDateToIso(start)
   if (!date) return null
+  const activity = toActivityLabel(name)
   const distanceKm = workout.distance?.qty != null ? normalizeDistanceKm(workout.distance) : null
 
   const props = {
     h: 'entry',
-    activity: name,
+    activity,
     date,
     visibility: 'private',
     'health-export-id': id
@@ -93,7 +112,7 @@ export const mapWorkout = (workout = {}) => {
   if (workout.elevationUp?.qty != null) props['elevation-gain'] = String(Math.round(workout.elevationUp.qty))
   if (workout.elevationDown?.qty != null) props['elevation-loss'] = String(Math.round(workout.elevationDown.qty))
 
-  return { props, predictedPath: predictWorkoutPath(name, distanceKm, date), healthExportId: id }
+  return { props, predictedPath: predictWorkoutPath(activity, distanceKm, date), healthExportId: id }
 }
 
 // --- handler ------------------------------------------------------------
