@@ -95,3 +95,78 @@ export const mapWorkout = (workout = {}) => {
 
   return { props, predictedPath: predictWorkoutPath(name, distanceKm, date), healthExportId: id }
 }
+
+// --- handler ------------------------------------------------------------
+
+export default async (req) => {
+  if (req.method !== 'POST') return new Response('method not allowed', { status: 405 })
+
+  try {
+    const auth = req.headers.get('authorization') || ''
+    const mode = new URL(req.url).searchParams.get('mode') === 'manual' ? 'manual' : 'auto'
+
+    let body
+    try {
+      body = await req.json()
+    } catch {
+      return new Response('bad json', { status: 400 })
+    }
+    const workouts = body?.data?.workouts || []
+    if (!workouts.length) return new Response('no workouts', { status: 200 })
+
+    const store = new GitHubStore({
+      token: GITHUB_TOKEN,
+      user: GITHUB_USER,
+      repo: GITHUB_REPO,
+      ...(GITHUB_BRANCH && { branch: GITHUB_BRANCH })
+    })
+    const endpoint = buildEndpoint(() => {})
+
+    for (const workout of workouts) {
+      if (!isAllowedActivity(workout.name, mode)) {
+        console.log(`health-export: skipping "${workout.name}" (not on the allow-list, mode=${mode})`)
+        continue
+      }
+
+      const mapped = mapWorkout(workout)
+      if (!mapped) {
+        console.warn('health-export: could not map workout', workout?.id)
+        continue
+      }
+
+      const existing = await store.getFile(mapped.predictedPath)
+      if (existing) {
+        const parsed = matter(existing.content)
+        if (parsed.data.healthExportId === mapped.healthExportId) {
+          console.log(`health-export: already posted, skipping (${mapped.predictedPath})`)
+        } else {
+          console.warn(
+            `health-export: slug collision at ${mapped.predictedPath} with a different workout - skipping, add by hand if needed`
+          )
+        }
+        continue
+      }
+
+      const mpReq = new Request('https://internal.invalid/api/micropub', {
+        method: 'POST',
+        headers: {
+          authorization: auth,
+          'content-type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams(mapped.props).toString()
+      })
+      const res = await endpoint.micropubHandler(mpReq)
+      if (res.status !== 201) {
+        console.error(`health-export: micropub rejected workout ${workout.id}`, res.status, await res.text().catch(() => ''))
+      }
+    }
+
+    return new Response('ok', { status: 200 })
+  } catch (err) {
+    console.error('health-export: unhandled error', err)
+    return new Response('error', { status: 500 })
+  }
+}
+
+// Netlify Functions v2 native route — no redirect needed.
+export const config = { path: '/api/health-export' }
