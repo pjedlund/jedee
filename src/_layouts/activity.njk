@@ -18,7 +18,7 @@ schema: BlogPosting
        a valid h-entry on title (p-name) + date (dt-published) + commentary (e-content).
        Pace/speed is DERIVED here from the stored raw numbers; duration is seconds ->
        clock via the shared itunesDuration filter. #}
-    <dl class="workout-stats | cluster">
+    <dl class="activity-stats | cluster">
       {% if distanceKm %}
         <div><dt>Distance</dt><dd>{{ distanceKm | withMiles }}</dd></div>
       {% endif %}

@@ -11,7 +11,7 @@
   </{{ headingLevel }}>
   <span slot="date">{%- if item.data.draft -%}<span class="button" data-small-button data-button-variant='tertiary'>draft</span>{%- endif %} {% include "partials/date.njk" %}</span>
   <div slot="content" webc:nokeep>
-    <p class="workout-stat-line | cluster">
+    <p class="activity-stat-line | cluster">
       {% if item.data.distanceKm %}<span>{{ item.data.distanceKm | withMiles }}</span>{% endif %}
       <span>{{ item.data.duration | itunesDuration }}</span>
       {% set pace = item.data.activityType | paceOrSpeed(item.data.distanceKm, item.data.duration) %}
