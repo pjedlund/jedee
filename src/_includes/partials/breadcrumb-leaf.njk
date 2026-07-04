@@ -3,8 +3,8 @@
    - jam → "Song by Artist", with a serif-italic "by" and the artist un-wikilinked.
      The artist is plain text for now (no artist archive exists yet — no dead link).
    - workout → "Orienteering: Mok Torsdag Bokskogen" — activityType + colon prefixed
-     onto the title in the same quiet italic treatment as the Jam "by" (activityType
-     is stored lowercase; capitalize it).
+     onto the title, plain (no connector styling; activityType is stored lowercase;
+     capitalize it).
    - like / bookmark → "Title on Source" shape, where Source is ALWAYS the bare host
      of sourceUrl/likeOf (like) or sourceUrl/bookmarkOf (bookmark), e.g.
      "arielsalminen.com" — never sourceName.
@@ -14,7 +14,7 @@
 {%- if category == "jam" and artist -%}
   {{ title }} <span class="breadcrumb-connector">by</span> {{ artist | unwikilink }}
 {%- elif category == "workout" and activityType -%}
-  <span class="breadcrumb-connector">{{ activityType | capitalize }}:</span> {{ title }}
+  {{ activityType | capitalize }}: {{ title }}
 {%- elif category == "like" and ((sourceUrl or likeOf) | hostname) -%}
   {{ title }} <span class="breadcrumb-connector">on</span> {{ (sourceUrl or likeOf) | hostname }}
 {%- elif category == "bookmark" and ((sourceUrl or bookmarkOf) | hostname) -%}
