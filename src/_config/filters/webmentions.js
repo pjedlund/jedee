@@ -8,16 +8,6 @@ export const webmentionGetForUrl = (webmentions, url) => {
   return webmentions.children.filter(entry => entry['wm-target'] === url);
 };
 
-/** Safe length (0 for null/undefined). */
-export const webmentionSize = mentions => {
-  return !mentions ? 0 : mentions.length;
-};
-
-/** Mentions carrying a given JF2 property key, e.g. 'like-of', 'in-reply-to'. */
-export const webmentionByType = (mentions, mentionType) => {
-  return mentions.filter(entry => !!entry[mentionType]);
-};
-
 /** True if the mention is one of Johan's own / a self-echo — so the template can
  *  exclude it. Two cases:
  *  (1) Bridgy backfeeds the silo POST itself: its `wm-source` is a brid.gy

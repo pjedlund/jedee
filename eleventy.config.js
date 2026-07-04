@@ -136,8 +136,6 @@ export default async function(eleventyConfig) {
   eleventyConfig.addFilter('enclosureType', filters.enclosureType);
   // Webmention render (Phase 2): five composable slicers; the partial groups.
   eleventyConfig.addFilter('webmentionGetForUrl', filters.webmentionGetForUrl);
-  eleventyConfig.addFilter('webmentionSize', filters.webmentionSize);
-  eleventyConfig.addFilter('webmentionByType', filters.webmentionByType);
   eleventyConfig.addFilter('webmentionisOwn', filters.webmentionisOwn);
   eleventyConfig.addFilter('webmentionSort', filters.webmentionSort);
 

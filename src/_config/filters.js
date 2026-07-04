@@ -15,8 +15,6 @@ import { filterUpcoming, filterPast, sortByStartAsc, sortByStartDesc } from './f
 import { enclosureBytes, enclosureType } from './filters/enclosure.js';
 import {
   webmentionGetForUrl,
-  webmentionSize,
-  webmentionByType,
   webmentionisOwn,
   webmentionSort
 } from './filters/webmentions.js';
@@ -45,8 +43,6 @@ export default {
   enclosureBytes,
   enclosureType,
   webmentionGetForUrl,
-  webmentionSize,
-  webmentionByType,
   webmentionisOwn,
   webmentionSort
 };
