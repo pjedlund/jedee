@@ -6,10 +6,8 @@
  *
  *  Usage (value-first, Nunjucks): {{ activityType | paceOrSpeed(distanceKm, seconds) }}
  *
- *  ponytail: a self-contained copy of the same logic strava-export.js carries.
- *  That file is parked for deletion with the rest of the Strava-CSV path, so the
- *  workout path owns its pace logic rather than importing from death-row code.
- *  When the CSV path is retired, this stays. */
+ *  Originally copied from the retired Strava-CSV path (strava-export.js, deleted
+ *  2026-07-04); the workout path owns its pace logic. */
 
 const normalize = s => (s || '').replace(/\s+/g, '').toLowerCase();
 const FOOT = new Set(['run', 'trailrun', 'walk', 'hike', 'orienteering']);
