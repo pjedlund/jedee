@@ -25,7 +25,7 @@ export default {
     // Lucide has no running-figure glyph yet (open feature request, not shipped) —
     // `activity` (the heartbeat/pulse glyph) is Lucide's own fitness-tracking icon
     // and matches the section name directly.
-    {text: 'Activities', url: '/activities/', icon: 'activity', collection: 'workout'}
+    {text: 'Activities', url: '/activities/', icon: 'activity', collection: 'activity'}
   ],
   // Footer nav. About lives here now (moved out of the top nav); Now joins it once
   // the page exists.

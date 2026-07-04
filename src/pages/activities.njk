@@ -3,7 +3,7 @@ layout: base
 title: Activities
 description: 'A log of my activities.'
 pagination:
-  data: collections.workout
+  data: collections.activity
   size: 50
 permalink: 'activities/{% if pagination.pageNumber >=1 %}page-{{ pagination.pageNumber + 1 }}/{% endif %}index.html'
 ---
@@ -12,9 +12,9 @@ permalink: 'activities/{% if pagination.pageNumber >=1 %}page-{{ pagination.page
   Running, orienteering and other physical activities. Newest first.
 {% endset %}
 
-{% set cardPartial = "card-workout.njk" %}
+{% set cardPartial = "card-activity.njk" %}
 {% set masonryLayout = "33-33-33" %}
-{% set collectionToPaginate = collections.workout %}
+{% set collectionToPaginate = collections.activity %}
 {% set paginationMetaKey = "blog" %}
 
 {% include "partials/archive-listing.njk" %}

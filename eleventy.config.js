@@ -53,7 +53,7 @@ export default async function(eleventyConfig) {
   eleventyConfig.addLayoutAlias('event', 'event.njk');
   eleventyConfig.addLayoutAlias('audio', 'audio.njk');
   eleventyConfig.addLayoutAlias('video', 'video.njk');
-  eleventyConfig.addLayoutAlias('workout', 'workout.njk');
+  eleventyConfig.addLayoutAlias('activity', 'activity.njk');
   eleventyConfig.addLayoutAlias('post', 'post.njk');
   eleventyConfig.addLayoutAlias('tags', 'tags.njk');
 
@@ -119,8 +119,8 @@ export default async function(eleventyConfig) {
   // Recipe durations (§9): integer minutes OR PT…M → normalized PT…M + human-readable.
   eleventyConfig.addFilter('toISODuration', filters.toISODuration);
   eleventyConfig.addFilter('formatDuration', filters.formatDuration);
-  // Workout pace/speed (/activities/): derive min/km (+ /mi) or km/h (+ mph) from
-  // stored raw distance + duration at render — the workout post type never stores
+  // Activity pace/speed (/activities/): derive min/km (+ /mi) or km/h (+ mph) from
+  // stored raw distance + duration at render — the activity post type never stores
   // the derived value. withMiles pairs a stored km distance with its mi equivalent.
   eleventyConfig.addFilter('paceOrSpeed', filters.paceOrSpeed);
   eleventyConfig.addFilter('withMiles', filters.withMiles);

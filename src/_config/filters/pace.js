@@ -1,13 +1,13 @@
-/** paceOrSpeed — derive a workout's pace (min/km, foot sports) or speed (km/h,
+/** paceOrSpeed — derive an activity's pace (min/km, foot sports) or speed (km/h,
  *  wheels/skis) from its stored raw distance + duration, at RENDER time, with the
- *  imperial equivalent alongside it. The workout post type (/activities/) stores
+ *  imperial equivalent alongside it. The activity post type (/activities/) stores
  *  only the recorded numbers and never the derived pace; the layout + card call
  *  this filter.
  *
  *  Usage (value-first, Nunjucks): {{ activityType | paceOrSpeed(distanceKm, seconds) }}
  *
  *  Originally copied from the retired Strava-CSV path (strava-export.js, deleted
- *  2026-07-04); the workout path owns its pace logic. */
+ *  2026-07-04); the activity path owns its pace logic. */
 
 const normalize = s => (s || '').replace(/\s+/g, '').toLowerCase();
 const FOOT = new Set(['run', 'trailrun', 'walk', 'hike', 'orienteering']);
