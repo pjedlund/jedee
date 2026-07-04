@@ -1,4 +1,3 @@
-import { categoryFilter } from './filters/category-filter.js';
 import { toISOString, formatDate } from './filters/dates.js';
 import { dtcgItems } from './filters/dtcg-items.js';
 import { markdownFormat } from './filters/markdown-format.js';
@@ -16,14 +15,11 @@ import { filterUpcoming, filterPast, sortByStartAsc, sortByStartDesc } from './f
 import { enclosureBytes, enclosureType } from './filters/enclosure.js';
 import {
   webmentionGetForUrl,
-  webmentionSize,
-  webmentionByType,
   webmentionisOwn,
   webmentionSort
 } from './filters/webmentions.js';
 
 export default {
-  categoryFilter,
   toISOString,
   formatDate,
   dtcgItems,
@@ -47,8 +43,6 @@ export default {
   enclosureBytes,
   enclosureType,
   webmentionGetForUrl,
-  webmentionSize,
-  webmentionByType,
   webmentionisOwn,
   webmentionSort
 };

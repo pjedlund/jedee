@@ -9,6 +9,10 @@ permalink: 'watching/{% if pagination.pageNumber >=1 %}page-{{ pagination.pageNu
 ---
 
 
+{% set archiveDescription %}
+  Films and series I've watched. Newest first.
+{% endset %}
+
 {% set cardPartial = "card-watching.njk" %}
 {% set masonryLayout = "33-33-33" %}
 {% set collectionToPaginate = collections.watching %}

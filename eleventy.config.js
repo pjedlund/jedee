@@ -105,7 +105,6 @@ export default async function(eleventyConfig) {
   eleventyConfig.addDataExtension('yaml', contents => yaml.load(contents));
 
   // --------------------- Filters
-  eleventyConfig.addFilter('categoryFilter', filters.categoryFilter);
   eleventyConfig.addFilter('toIsoString', filters.toISOString);
   eleventyConfig.addFilter('formatDate', filters.formatDate);
   eleventyConfig.addFilter('markdownFormat', filters.markdownFormat);
@@ -135,10 +134,8 @@ export default async function(eleventyConfig) {
   eleventyConfig.addFilter('itunesDuration', filters.itunesDuration);
   eleventyConfig.addFilter('enclosureBytes', filters.enclosureBytes);
   eleventyConfig.addFilter('enclosureType', filters.enclosureType);
-  // Webmention render (Phase 2): five composable slicers; the partial groups.
+  // Webmention render (Phase 2): three composable slicers; the partial groups.
   eleventyConfig.addFilter('webmentionGetForUrl', filters.webmentionGetForUrl);
-  eleventyConfig.addFilter('webmentionSize', filters.webmentionSize);
-  eleventyConfig.addFilter('webmentionByType', filters.webmentionByType);
   eleventyConfig.addFilter('webmentionisOwn', filters.webmentionisOwn);
   eleventyConfig.addFilter('webmentionSort', filters.webmentionSort);
 

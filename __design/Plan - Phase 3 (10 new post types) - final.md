@@ -173,6 +173,10 @@ the archive cards, and run a sample URL through indiewebify.me for µf2 sanity.
 - **Feeds ×3 (Bookmark/Reply/RSVP):** `src/feeds/<plural>.json.njk` + `.xml.njk`
 - **Nav (1):** `src/_data/navigation.js`
 
+## Settled exceptions
+
+> Settled exception: photos uses `photos.11tydata.js` (not `.json`) because it computes EXIF fields at build time — see the file's own header comment.
+
 ## Decisions locked / flagged
 
 - **Field naming — LOCKED: camelCase** (`bookmarkOf`, `likeOf`, `inReplyTo`, `repostOf`, `rsvp`).
