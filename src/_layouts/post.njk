@@ -11,6 +11,7 @@ schema: BlogPosting
       {{ content | safe }}
     </div>
 
+    {% include 'partials/backlinks.njk' %}
     {% include 'partials/entry-footer.njk' %}
     {% include 'partials/hidden-author.njk' %}
   </article>
