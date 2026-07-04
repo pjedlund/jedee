@@ -19,7 +19,7 @@
   </header>
 
   <div class="region flow prose" style="--region-space-top: var(--space-xl-2xl)">
-    <p>{{ archiveDescription | safe }}</p>
+    {% if archiveDescription %}<p>{{ archiveDescription | safe }}</p>{% endif %}
   </div>
 
   {% if pagination.items.length %}

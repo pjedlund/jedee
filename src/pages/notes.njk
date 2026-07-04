@@ -8,6 +8,10 @@ pagination:
 permalink: 'notes/{% if pagination.pageNumber >=1 %}page-{{ pagination.pageNumber + 1 }}/{% endif %}index.html'
 ---
 
+{% set archiveDescription %}
+  Short thoughts, observations, and asides. Newest first.
+{% endset %}
+
 {% set cardPartial = "card-note.njk" %}
 {% set masonryLayout = "33-33-33" %}
 {% set collectionToPaginate = collections.note %}

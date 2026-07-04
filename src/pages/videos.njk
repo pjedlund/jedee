@@ -9,6 +9,10 @@ pagination:
 permalink: 'videos/{% if pagination.pageNumber >=1 %}page-{{ pagination.pageNumber + 1 }}/{% endif %}index.html'
 ---
 
+{% set archiveDescription %}
+  Videos I've published. Newest first.
+{% endset %}
+
 {% set cardPartial = "card-video.njk" %}
 {% set masonryLayout = "33-33-33" %}
 {% set collectionToPaginate = collections.video %}

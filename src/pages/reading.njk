@@ -8,6 +8,10 @@ pagination:
 permalink: 'reading/{% if pagination.pageNumber >=1 %}page-{{ pagination.pageNumber + 1 }}/{% endif %}index.html'
 ---
 
+{% set archiveDescription %}
+  Books I've read, with notes along the way. Newest first.
+{% endset %}
+
 {% set cardPartial = "card-reading.njk" %}
 {% set masonryLayout = "33-33-33" %}
 {% set collectionToPaginate = collections.reading %}
