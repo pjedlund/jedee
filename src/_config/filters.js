@@ -1,4 +1,3 @@
-import { categoryFilter } from './filters/category-filter.js';
 import { toISOString, formatDate } from './filters/dates.js';
 import { dtcgItems } from './filters/dtcg-items.js';
 import { markdownFormat } from './filters/markdown-format.js';
@@ -23,7 +22,6 @@ import {
 } from './filters/webmentions.js';
 
 export default {
-  categoryFilter,
   toISOString,
   formatDate,
   dtcgItems,
