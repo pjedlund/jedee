@@ -3,6 +3,8 @@ permalink: /audio/feed.xml
 eleventyExcludeFromCollections: true
 excludeFromSitemap: true
 ---
+{# XML only, on purpose: this is a podcast-style feed with audio/video attachments,
+   and podcast apps read only the XML kind — a JSON twin would have no readers. #}
 {%- set feedCollection = collections.audio -%}
 {%- set feedTitle = "Audio" -%}
 {%- set feedDescription = "Audio I've published — recordings and episodes." -%}

@@ -3,6 +3,8 @@ permalink: /videos/feed.xml
 eleventyExcludeFromCollections: true
 excludeFromSitemap: true
 ---
+{# XML only, on purpose: this is a podcast-style feed with audio/video attachments,
+   and podcast apps read only the XML kind — a JSON twin would have no readers. #}
 {%- set feedCollection = collections.video -%}
 {%- set feedTitle = "Videos" -%}
 {%- set feedDescription = "Videos I've published — self-hosted clips and embeds." -%}
