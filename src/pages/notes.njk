@@ -8,13 +8,8 @@ pagination:
 permalink: 'notes/{% if pagination.pageNumber >=1 %}page-{{ pagination.pageNumber + 1 }}/{% endif %}index.html'
 ---
 
-{% set archiveDescription %}
-  This page has a pagination of <strong>{{ pagination.size }}</strong> notes per page.<br>
-  The pagination is only shown if there are more notes ({{ collections.note.length }}) than items per page ({{ pagination.size }}).
-{% endset %}
-
 {% set cardPartial = "card-notes.njk" %}
-{% set masonryLayout = "50-50" %}
+{% set masonryLayout = "33-33-33" %}
 {% set collectionToPaginate = collections.note %}
 {% set paginationMetaKey = "blog" %}
 

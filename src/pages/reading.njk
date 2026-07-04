@@ -4,17 +4,12 @@ title: Reading
 description: 'All books can be found here'
 pagination:
   data: collections.reading
-  size: 2
+  size: 10
 permalink: 'reading/{% if pagination.pageNumber >=1 %}page-{{ pagination.pageNumber + 1 }}/{% endif %}index.html'
 ---
 
-{% set archiveDescription %}
-  This page has a pagination of <strong>{{ pagination.size }}</strong> books per page.<br>
-  The pagination is only shown if there are more books ({{ collections.reading.length }}) than items per page ({{ pagination.size }}).
-{% endset %}
-
 {% set cardPartial = "card-reading.njk" %}
-{% set masonryLayout = "50-50" %}
+{% set masonryLayout = "33-33-33" %}
 {% set collectionToPaginate = collections.reading %}
 {% set paginationMetaKey = "blog" %}
 

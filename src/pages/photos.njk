@@ -10,7 +10,6 @@ permalink: 'photos/{% if pagination.pageNumber >=1 %}page-{{ pagination.pageNumb
 
 {% set archiveDescription %}
   Photographs I've published, newest first.<br>
-  Pagination kicks in once there are more than {{ pagination.size }} entries ({{ collections.photo.length }} so far).
 {% endset %}
 
 {% set cardPartial = "card-photo.njk" %}
