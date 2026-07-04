@@ -6,27 +6,27 @@ a local bundle included by those two templates — not global/blocks/ — the sa
 pattern as custom-card.css. Hierarchy comes from type size alone (there's no muted
 text token); numbers use tabular figures so columns of stats line up.
 */
-.workout-stats {
+.activity-stats {
   margin-block: var(--space-s);
 }
 
-.workout-stats > div {
+.activity-stats > div {
   display: flex;
   flex-direction: column;
 }
 
-.workout-stats dt {
+.activity-stats dt {
   font-size: var(--size-step-min-1);
 }
 
-.workout-stats dd {
+.activity-stats dd {
   margin-inline-start: 0;
   font-size: var(--size-step-1);
   font-variant-numeric: tabular-nums;
 }
 
 /* Card stat line: distance · duration · pace, gap-separated, wraps with the card. */
-.workout-stat-line {
+.activity-stat-line {
   --gutter: var(--space-xs);
 
   font-variant-numeric: tabular-nums;
