@@ -1,4 +1,4 @@
-// Five small, composable webmention filters. Ported from Lene Saile's pattern —
+// Three small, composable webmention filters. Ported from Lene Saile's pattern —
 // the TEMPLATE (partials/webmentions.njk) does the grouping; these just slice the
 // flat JF2 `children` array. Registered in eleventy.config.js and re-exported from
 // the filters.js barrel. Unit-tested in _tests/webmentions.test.js.
