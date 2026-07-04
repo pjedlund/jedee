@@ -13,7 +13,7 @@ schema: BlogPosting
       <img class="cover" eleventy:optional="placeholder" src="{{ cover | safe }}" alt="Cover for {{ title }}" loading="lazy" eleventy:widths="160,224,448" sizes="auto">
     {% endif %}
 
-    {# Recorded data for /activities/. No standard mf2 property exists for a workout's
+    {# Recorded data for /activities/. No standard mf2 property exists for an activity's
        stats, so this is plain semantic markup (a description list) — the entry stays
        a valid h-entry on title (p-name) + date (dt-published) + commentary (e-content).
        Pace/speed is DERIVED here from the stored raw numbers; duration is seconds ->
@@ -61,6 +61,6 @@ schema: BlogPosting
 {%- css "local" -%}
   {%- include 'css/post.css' -%}
   {%- include 'css/footnotes.css' -%}
-  {%- include 'css/workout.css' -%}
+  {%- include 'css/activity.css' -%}
   {%- include 'css/cover.css' -%}
 {%- endcss -%}
