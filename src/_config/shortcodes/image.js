@@ -126,7 +126,9 @@ const processImage = async options => {
     // @-prefixed WebC props as invalid HTML attributes, so a bare
     // <photo-lightbox @…> line gets escaped + smart-quoted as text. A chunk
     // that STARTS with a known block tag is taken as one raw html_block.
-    return `<div><photo-lightbox ${lightboxAttributes}><picture slot="image"${containerClass ? ` class="${escapeHtml(containerClass)}"` : ''}> ${imageSources}<img ${imageAttributes}></picture></photo-lightbox></div>`;
+    // containerClass goes on this outer div, not the inner picture: wrapper
+    // breakout classes (.feature etc.) only work on a direct child of .wrapper.
+    return `<div${containerClass ? ` class="${escapeHtml(containerClass)}"` : ''}><photo-lightbox ${lightboxAttributes}><picture slot="image"> ${imageSources}<img ${imageAttributes}></picture></photo-lightbox></div>`;
   }
 
   return caption ?
