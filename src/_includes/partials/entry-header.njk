@@ -9,14 +9,20 @@
   <h1 class="p-name">{{ title }}</h1>
 {% endif %}
 
+{# The featured image is always a lightbox. credit renders as the figcaption,
+   outside the clickable area ("credit" was never a shortcode option — the old
+   pass-through silently dropped it). sizes matches the .feature breakout
+   width, same as the photo layout's hero. #}
 {% if image %}
   {%
     imageKeys {
       "src": image,
       "alt": alt or "",
-      "credit": credit,
+      "caption": credit,
       "loading": "eager",
-      "containerClass": "feature"
+      "containerClass": "feature",
+      "sizes": "(min-width: 82rem) 78rem, 100vw",
+      "lightbox": true
     }
   %}
 {% endif %}
