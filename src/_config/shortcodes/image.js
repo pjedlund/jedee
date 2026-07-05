@@ -45,6 +45,10 @@ const processImage = async options => {
     lightbox = false
   } = options;
 
+  // Positional callers pass null to skip an argument ("add null to skip"),
+  // which bypasses the destructuring default — normalize it here.
+  loading = loading ?? 'lazy';
+
   // Set sizes based on loading (if not provided)
   if (sizes == null) {
     sizes = loading === 'lazy' ? 'auto' : '100vw';
@@ -72,7 +76,11 @@ const processImage = async options => {
     }
   });
 
-  const lowsrc = metadata.jpeg[metadata.jpeg.length - 1];
+  // Prefer JPEG for the <img> fallback src (and the lightbox zoom target);
+  // when jpeg isn't among the requested formats (e.g. formats: ["webp"]),
+  // use the last format listed instead of crashing on metadata.jpeg.
+  const fallbackFormat = metadata.jpeg ?? Object.values(metadata).at(-1);
+  const lowsrc = fallbackFormat[fallbackFormat.length - 1];
 
   const imageSources = Object.values(metadata)
     .map(imageFormat => {
@@ -107,12 +115,11 @@ const processImage = async options => {
   // loads the right size for the screen and upgrades on zoom. The caption is
   // passed to the component, which renders the <figcaption> OUTSIDE the link.
   if (lightbox) {
-    const largest = metadata.jpeg[metadata.jpeg.length - 1];
     const lightboxAttributes = stringifyAttributes({
-      '@href': largest.url,
-      '@width': largest.width,
-      '@height': largest.height,
-      '@srcset': metadata.jpeg.map(entry => entry.srcset).join(', '),
+      '@href': lowsrc.url,
+      '@width': lowsrc.width,
+      '@height': lowsrc.height,
+      '@srcset': fallbackFormat.map(entry => entry.srcset).join(', '),
       ...(caption && {'@caption': caption})
     });
     // The <div> wrapper is load-bearing in markdown: markdown-it rejects the
@@ -165,9 +172,12 @@ export const imageKeysShortcode = async (options = {}) => {
 
 // Responsive image that opens in the PhotoSwipe lightbox. Usable in any
 // template or markdown post: {% lightbox "/assets/images/foo.jpg", "alt", "caption" %}
-export const lightboxShortcode = async (src, alt, caption, widths, sizes) => {
+// Positional order mirrors {% image %} (src, alt, caption, loading, …); pass
+// null to skip. For containerClass/imageClass/formats use {% imageKeys %}
+// with "lightbox": true, which accepts every processImage option.
+export const lightboxShortcode = async (src, alt, caption, loading, widths, sizes) => {
   if (!src) {
     errorSrcRequired('lightbox');
   }
-  return processImage({src, alt, caption, widths, sizes, lightbox: true});
+  return processImage({src, alt, caption, loading, widths, sizes, lightbox: true});
 };
