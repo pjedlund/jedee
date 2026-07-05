@@ -37,3 +37,25 @@
 .full {
   grid-column: full;
 }
+
+/* Post bodies wrap their markdown in a container (.e-content), which makes
+   everything inside a *grandchild* of .wrapper — and the breakout classes
+   above only work on direct grid children. .wrapper-pass, on a direct child,
+   spans the full track and re-exposes the wrapper's named columns to its own
+   children via subgrid, so .popout/.feature/.full work one level down too.
+   Without subgrid support the container stays a normal content-column block
+   and breakouts simply render at content width. */
+@supports (grid-template-columns: subgrid) {
+  .wrapper > .wrapper-pass {
+    grid-column: full;
+    display: grid;
+    grid-template-columns: subgrid;
+  }
+
+  /* :where() keeps this at zero specificity so .popout/.feature/.full
+     (one class) can still override it, mirroring how .wrapper > * loses
+     to them at the top level. */
+  :where(.wrapper > .wrapper-pass) > * {
+    grid-column: content;
+  }
+}

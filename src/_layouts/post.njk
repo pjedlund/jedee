@@ -7,7 +7,7 @@ schema: BlogPosting
   <article class="wrapper flow prose h-entry">
     {% include 'partials/entry-header.njk' %}
 
-    <div class="e-content | flow">
+    <div class="e-content | wrapper-pass flow">
       {{ content | safe }}
     </div>
 
