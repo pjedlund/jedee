@@ -3,9 +3,11 @@
     <figure>
       <a
         class="no-indicator"
+        style="display: block"
         :href="href"
         :data-pswp-width="width"
         :data-pswp-height="height"
+        :data-pswp-srcset="srcset"
         target="_blank"
         rel="noopener"
       >
@@ -16,6 +18,9 @@
 
     <template data-island="once" webc:raw>
       <link rel="stylesheet" href="/assets/components/photoswipe.css" />
+      <style>
+        is-land[ready] photo-lightbox a { cursor: zoom-in; }
+      </style>
       <script type="module" src="/assets/scripts/components/photo-lightbox.js"></script>
     </template>
   </photo-lightbox>
