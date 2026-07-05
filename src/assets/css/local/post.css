@@ -17,8 +17,11 @@
   font-size: var(--size-step-2);
 }
 
-/* make featured image alwyays 16/9 */
-.post h1 + :is(picture, figure) img {
+/* make featured image alwyays 16/9
+   (second selector: the featured image is a lightbox now, so the element
+   after the h1 is its div.feature wrapper, not a bare picture/figure) */
+.post h1 + :is(picture, figure) img,
+.post h1 + .feature picture img {
   max-inline-size: var(--max-img-width, 100%);
   block-size: auto;
   aspect-ratio: 16/9;

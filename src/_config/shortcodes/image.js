@@ -174,12 +174,33 @@ export const imageKeysShortcode = async (options = {}) => {
 
 // Responsive image that opens in the PhotoSwipe lightbox. Usable in any
 // template or markdown post: {% lightbox "/assets/images/foo.jpg", "alt", "caption" %}
-// Positional order mirrors {% image %} (src, alt, caption, loading, …); pass
-// null to skip. For containerClass/imageClass/formats use {% imageKeys %}
-// with "lightbox": true, which accepts every processImage option.
-export const lightboxShortcode = async (src, alt, caption, loading, widths, sizes) => {
+// Positional order is identical to {% image %}; pass null to skip. e.g. a
+// feature-width lightbox: {% lightbox "…", "alt", null, null, "feature" %}
+// (named parameters: {% imageKeys %} with "lightbox": true).
+export const lightboxShortcode = async (
+  src,
+  alt,
+  caption,
+  loading,
+  containerClass,
+  imageClass,
+  widths,
+  sizes,
+  formats
+) => {
   if (!src) {
     errorSrcRequired('lightbox');
   }
-  return processImage({src, alt, caption, loading, widths, sizes, lightbox: true});
+  return processImage({
+    src,
+    alt,
+    caption,
+    loading,
+    containerClass,
+    imageClass,
+    widths,
+    sizes,
+    formats,
+    lightbox: true
+  });
 };
