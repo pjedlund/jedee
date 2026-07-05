@@ -1,4 +1,4 @@
-import {imageShortcode, imageKeysShortcode} from './shortcodes/image.js';
+import {imageShortcode, imageKeysShortcode, lightboxShortcode} from './shortcodes/image.js';
 import {svgShortcode} from './shortcodes/svg.js';
 
-export default {imageShortcode, imageKeysShortcode, svgShortcode};
+export default {imageShortcode, imageKeysShortcode, lightboxShortcode, svgShortcode};
