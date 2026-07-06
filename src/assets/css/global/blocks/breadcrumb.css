@@ -144,3 +144,190 @@ inert to assistive tech. Reduced motion / focus rings come from the global style
   letter-spacing: normal;
   color: var(--breadcrumb-color-ancestor);
 }
+
+/*
+BLOOM — the signature animation on every page load.
+A cursor backspaces the trail away (right to left), types "› Johan Edlund", blinks
+twice, backspaces it, then retypes the trail. CSS only: page navigation on an MPA IS
+a page load, so the keyframes need no trigger. The trail is hidden/revealed with an
+animated clip-path (works with the proportional face — a steps() typewriter wouldn't);
+the cursor is a pseudo-element riding the clip edge. One shared timeline (percentages
+of --bloom-duration) keeps every layer in sync:
+
+  0.0– 3.4%   beat (trail as normal)
+  3.4–17.0%   trail backspaced, cursor ends beside the logomark
+ 17.0–21.6%   beat
+ 21.6–39.8%   "› Johan Edlund" typed on
+ 39.8–62.5%   cursor blinks twice
+ 62.5–76.1%   name backspaced
+ 76.1–80.7%   beat
+ 80.7–94.3%   trail typed back on
+ 94.3– 100%   cursor off, rest
+
+The trail wipe stops at --breadcrumb-bloom-hold (logomark width + gap) so the logomark
+never hides. While clipped, the trail links are transiently unclickable (clip-path
+excludes them from hit-testing) but keyboard/AT access is unaffected; at rest the last
+keyframe is clip-path: none, so nothing stays clipped. The overlay is aria-hidden and
+absolutely positioned — on a very narrow viewport with a short trail it may briefly
+overhang the empty header middle; harmless and gone in seconds.
+Gated behind prefers-reduced-motion (EE opt-in idiom): reduce users only ever see the
+static trail.
+*/
+
+.breadcrumb {
+  --breadcrumb-bloom-duration: 4.4s;
+  --breadcrumb-bloom-hold: calc(1.15em + var(--breadcrumb-gap));
+  --breadcrumb-bloom-caret: var(--color-accent-orange);
+
+  position: relative;
+}
+
+.breadcrumb ol {
+  position: relative;
+}
+
+.breadcrumb-bloom {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: var(--breadcrumb-bloom-hold);
+  translate: 0 -50%;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--breadcrumb-gap);
+  white-space: nowrap;
+  color: var(--breadcrumb-color-current);
+  visibility: hidden;
+  clip-path: inset(-15% 100% -15% 0);
+}
+
+/* Same CSS-drawn chevron as the trail separators ("›" isn't in the font subset). */
+.breadcrumb-bloom::before {
+  content: "";
+  flex: none;
+  inline-size: 0.32em;
+  block-size: 0.32em;
+  border: solid var(--breadcrumb-color-separator);
+  border-width: 0.1em 0.1em 0 0;
+  rotate: 45deg;
+  translate: 0 -0.05em;
+}
+
+/* The cursors: one rides the trail's wipe edge, one the name's. Hidden at rest. */
+.breadcrumb ol::after,
+.breadcrumb-bloom::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 50%;
+  translate: 0 -50%;
+  inline-size: 0.1em;
+  block-size: 1.3em;
+  background: var(--breadcrumb-bloom-caret);
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .breadcrumb-bloom {
+    visibility: visible;
+  }
+
+  .breadcrumb ol {
+    animation: breadcrumb-bloom-trail var(--breadcrumb-bloom-duration) linear both;
+  }
+
+  .breadcrumb ol::after {
+    animation:
+      breadcrumb-bloom-trail-caret var(--breadcrumb-bloom-duration) linear both,
+      breadcrumb-bloom-trail-caret-blink var(--breadcrumb-bloom-duration) step-end both;
+  }
+
+  .breadcrumb-bloom {
+    animation: breadcrumb-bloom-name var(--breadcrumb-bloom-duration) linear both;
+  }
+
+  .breadcrumb-bloom::after {
+    animation:
+      breadcrumb-bloom-name-caret var(--breadcrumb-bloom-duration) linear both,
+      breadcrumb-bloom-name-caret-blink var(--breadcrumb-bloom-duration) step-end both;
+  }
+}
+
+/* Trail: visible → backspaced to the logomark → held → typed back → unclipped rest.
+   Negative block insets keep descenders and focus rings unclipped mid-animation. */
+@keyframes breadcrumb-bloom-trail {
+  0%, 3.4% {
+    clip-path: inset(-15% 0 -15% 0);
+    animation-timing-function: ease-in-out;
+  }
+  17%, 80.7% {
+    clip-path: inset(-15% calc(100% - var(--breadcrumb-bloom-hold)) -15% 0);
+    animation-timing-function: ease-in-out;
+  }
+  94.3% {
+    clip-path: inset(-15% 0 -15% 0);
+  }
+  100% {
+    clip-path: none;
+  }
+}
+
+@keyframes breadcrumb-bloom-trail-caret {
+  0%, 3.4% {
+    inset-inline-start: 100%;
+    animation-timing-function: ease-in-out;
+  }
+  17%, 80.7% {
+    inset-inline-start: var(--breadcrumb-bloom-hold);
+    animation-timing-function: ease-in-out;
+  }
+  94.3%, 100% {
+    inset-inline-start: 100%;
+  }
+}
+
+@keyframes breadcrumb-bloom-trail-caret-blink {
+  0% { opacity: 0; }
+  3.4% { opacity: 1; }
+  21.6% { opacity: 0; }
+  80.7% { opacity: 1; }
+  94.3%, 100% { opacity: 0; }
+}
+
+/* Name: hidden → typed on → held through the blinks → backspaced → hidden rest. */
+@keyframes breadcrumb-bloom-name {
+  0%, 21.6% {
+    clip-path: inset(-15% 100% -15% 0);
+    animation-timing-function: ease-in-out;
+  }
+  39.8%, 62.5% {
+    clip-path: inset(-15% 0 -15% 0);
+    animation-timing-function: ease-in-out;
+  }
+  76.1%, 100% {
+    clip-path: inset(-15% 100% -15% 0);
+  }
+}
+
+@keyframes breadcrumb-bloom-name-caret {
+  0%, 21.6% {
+    inset-inline-start: 0%;
+    animation-timing-function: ease-in-out;
+  }
+  39.8%, 62.5% {
+    inset-inline-start: 100%;
+    animation-timing-function: ease-in-out;
+  }
+  76.1%, 100% {
+    inset-inline-start: 0%;
+  }
+}
+
+/* Two off-gaps between typing and backspacing = the cursor blinks twice. */
+@keyframes breadcrumb-bloom-name-caret-blink {
+  0% { opacity: 0; }
+  21.6% { opacity: 1; }
+  45.5% { opacity: 0; }
+  51.1% { opacity: 1; }
+  56.8% { opacity: 0; }
+  62.5% { opacity: 1; }
+  80.7%, 100% { opacity: 0; }
+}
