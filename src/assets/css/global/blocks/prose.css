@@ -49,7 +49,9 @@
 
 .prose mark {
   background-color: var(--color-accent-green);
-  color: var(--color-dark);
+  /* Light text keeps the highlight bold and saturated while passing AA on the
+     dark-olive green in both themes (was near-black text → ~2.77:1). */
+  color: var(--color-light);
 }
 
 /* block space only for "regular lists" and sublists */

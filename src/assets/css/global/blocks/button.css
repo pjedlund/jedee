@@ -70,9 +70,11 @@
 }
 
 .button[data-button-variant='tertiary'] {
-  --button-bg: var(--color-accent-green);
-  --button-color: var(--color-dark);
-  --button-color: color-mix(in oklab, var(--color-accent-green) 10%, var(--color-dark));
+  /* Draft badge. Tint the page bg with the accent green so it reads as a soft
+     green in light mode and a dark green in dark mode; --color-text flips to
+     match, keeping AA contrast in both (was near-black text on dark olive). */
+  --button-bg: color-mix(in oklab, var(--color-accent-green) 20%, var(--color-bg));
+  --button-color: var(--color-text);
 }
 
 .button[data-ghost-button] {
