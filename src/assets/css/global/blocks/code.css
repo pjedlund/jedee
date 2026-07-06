@@ -1,5 +1,5 @@
 :root {
-  --color-code-orange: hsl(30, 95%, 30%);
+  --color-code-orange: hsl(30, 95%, 50%); /* dark theme: L=50 → 7:1 on --color-code-bg (was 30% = 2.9:1, fails AA) */
   --color-code-blue: hsla(210, 90%, 95%, 0.8);
   --color-code-indigo: hsla(260, 48%, 56%, 0.8);
   --color-code-violet: hsla(314, 70%, 60%, 0.9);
@@ -16,7 +16,7 @@
     --color-code-orange: hsl(30, 95%, 30%);
     --color-code-blue: hsla(210, 95%, 25%, 0.8);
     --color-code-indigo: hsla(260, 50%, 65%, 0.9);
-    --color-code-violet: hsla(314, 80%, 45%, 1);
+    --color-code-violet: hsla(314, 80%, 42%, 1); /* light theme: L=42 → 5:1 on light bg (was 45% = 4.4:1, just under AA) */
     --color-code-pink: hsl(350, 90%, 30%);
     --color-code-gray: hsla(0, 0%, 35%, 0.85);
     --color-code-text: color-mix(in oklab, var(--color-text-accent) 90%, black);
@@ -29,7 +29,7 @@
   --color-code-orange: hsl(30, 95%, 30%);
   --color-code-blue: hsla(210, 95%, 25%, 0.8);
   --color-code-indigo: hsla(260, 50%, 65%, 0.9);
-  --color-code-violet: hsla(314, 80%, 45%, 1);
+  --color-code-violet: hsla(314, 80%, 42%, 1); /* light theme: L=42 → 5:1 on light bg (was 45% = 4.4:1, just under AA) */
   --color-code-pink: hsl(350, 90%, 30%);
   --color-code-gray: hsla(0, 0%, 35%, 0.85);
   --color-code-text: color-mix(in oklab, var(--color-text-accent) 90%, black);
@@ -67,8 +67,6 @@ pre {
 
 /* Style Adjustments for <code> within different contexts */
 :where(:not(pre)) > code {
-  position: relative;
-  top: -0.05em;
   padding: 0.1em 0.4em;
 }
 

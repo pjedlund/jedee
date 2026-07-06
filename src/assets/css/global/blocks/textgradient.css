@@ -13,3 +13,22 @@
   background-repeat: repeat;
   background-clip: text;
 }
+
+/* Dark theme: the conic gradient's blue/green-subdued segments fall to ~2.2–3.0:1
+   on the dark bg (below the 3:1 large-text minimum). background-clip:text hides
+   this from auto checkers, so fall back to a solid, readable headline colour.
+   Both selectors, mirroring the site's theming: the media query covers a dark
+   system with JS off; [data-theme='dark'] covers the toggle. */
+@media (prefers-color-scheme: dark) {
+  .gradient-text,
+  .gradient-text-linear {
+    color: var(--color-headline);
+    background-image: none;
+  }
+}
+
+:root[data-theme='dark'] .gradient-text,
+:root[data-theme='dark'] .gradient-text-linear {
+  color: var(--color-headline);
+  background-image: none;
+}
