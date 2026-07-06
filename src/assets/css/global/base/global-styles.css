@@ -9,19 +9,6 @@ html {
   color-scheme: light dark;
 }
 
-/* Cross-document view transitions: same-origin navigations get a quick
-   whole-page crossfade instead of a white flash, and named elements (the
-   breadcrumb — see blocks/breadcrumb.css) choreograph their own handoff.
-   Both pages carry this rule (it's in the global stylesheet), which is the
-   whole requirement; browsers without support (Firefox, mid-2026) and
-   reloads just navigate instantly. Opt-in only without reduced motion, so
-   reduce users never get the transition layer at all. */
-@media (prefers-reduced-motion: no-preference) {
-  @view-transition {
-    navigation: auto;
-  }
-}
-
 body {
   display: flex;
   flex-direction: column;

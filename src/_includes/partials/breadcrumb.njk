@@ -34,11 +34,4 @@
       </li>
     {% endfor %}
   </ol>
-  {# The "bloom" — LANDING PAGE ONLY: the landing breadcrumb is the bare logomark, so
-     on load a cursor types this beside it (saying what the mark is, since the wordmark
-     is hidden), blinks twice, and backspaces it away — see breadcrumb.css. Hidden at
-     rest and for reduced motion; never navigation, so hidden from assistive tech. #}
-  {% if page.url == "/" %}
-    <span class="breadcrumb-bloom" aria-hidden="true">Johan Edlund</span>
-  {% endif %}
 </nav>
