@@ -34,4 +34,9 @@
       </li>
     {% endfor %}
   </ol>
+  {# The "bloom": a decorative overlay the CSS animation types over the trail on page
+     load (cursor backspaces the trail, types this, blinks twice, backspaces it away,
+     retypes the trail — see breadcrumb.css). Hidden at rest and for reduced motion;
+     never navigation, so hidden from assistive tech entirely. #}
+  <span class="breadcrumb-bloom" aria-hidden="true">Johan Edlund</span>
 </nav>
