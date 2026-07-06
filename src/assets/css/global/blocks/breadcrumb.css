@@ -64,21 +64,31 @@ inert to assistive tech. Reduced motion / focus rings come from the global style
 }
 
 .breadcrumb-current {
-  /* Single-line clamp + ellipsis. We use -webkit-line-clamp rather than
-     `white-space: nowrap`, because the global `* { text-wrap: pretty }` reset
-     re-enables wrapping even against an explicit nowrap. `min-inline-size: 0`
-     lets this (nested) flex item shrink below its content so the clamp bites. */
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
+  /* Single line + ellipsis. This used to be `-webkit-line-clamp: 1`, but
+     Chromium's CROSS-DOCUMENT view-transition capture rasterizes a
+     `display: -webkit-box` element as an opaque white rectangle (the
+     same-document capture is fine) — so the page-swipe animation below showed
+     a white box instead of the old trail. Plain nowrap+ellipsis instead; the
+     descendant `text-wrap-mode` rule under this one is what makes nowrap
+     stick against the global `* { text-wrap: pretty }` reset (that reset's
+     shorthand resets wrap MODE on every descendant, which is why a bare
+     `white-space: nowrap` up here never worked). `min-inline-size: 0` lets
+     this (nested) flex item shrink below its content so the ellipsis bites. */
+  display: block;
   overflow: hidden;
+  text-overflow: ellipsis;
   min-inline-size: 0;
   color: var(--breadcrumb-color-current);
   /* The trail sets `line-height: 1`, which is fine for the uppercase ancestor
      crumbs (no descenders) but clips the descender of a lowercase leaf — most
-     visibly the italic "y" in a Jam's "by". Give the clamped line box room for
+     visibly the italic "y" in a Jam's "by". Give the line box room for
      descenders; `align-items: center` on the <li> keeps it aligned. */
   line-height: 1.35;
+}
+
+.breadcrumb-current,
+.breadcrumb-current * {
+  text-wrap-mode: nowrap;
 }
 
 /* Links: muted, underline only on hover/keyboard focus (focus ring is global). */
@@ -146,46 +156,61 @@ inert to assistive tech. Reduced motion / focus rings come from the global style
 }
 
 /*
-BLOOM — the signature animation on every page load.
-A cursor backspaces the trail away (right to left), types "› Johan Edlund", blinks
-twice, backspaces it, then retypes the trail. CSS only: page navigation on an MPA IS
-a page load, so the keyframes need no trigger. The trail is hidden/revealed with an
-animated clip-path (works with the proportional face — a steps() typewriter wouldn't);
-the cursor is a pseudo-element riding the clip edge. One shared timeline (percentages
-of --bloom-duration) keeps every layer in sync:
+BLOOM + PAGE SWIPE — the signature breadcrumb motion. Two layers, both CSS-only,
+both gated behind prefers-reduced-motion:
 
-  0.0– 3.4%   beat (trail as normal)
-  3.4–17.0%   trail backspaced, cursor ends beside the logomark
- 17.0–21.6%   beat
- 21.6–39.8%   "› Johan Edlund" typed on
- 39.8–62.5%   cursor blinks twice
- 62.5–76.1%   name backspaced
- 76.1–80.7%   beat
- 80.7–94.3%   trail typed back on
- 94.3– 100%   cursor off, rest
+1. PAGE SWIPE (cross-document view transition, any navigation): a cursor
+   backspaces the OLD page's trail right-to-left, holds a beat at the logomark,
+   then types the NEW page's trail back on. The old trail only exists as a
+   view-transition snapshot, so this lives on the ::view-transition pseudos —
+   the @view-transition opt-in is in base/global-styles.css. Browsers without
+   cross-document view transitions (Firefox, mid-2026) and reload/direct visits
+   get an instant static breadcrumb: no animation, no flash, no replay.
 
-The trail wipe stops at --breadcrumb-bloom-hold (logomark width + gap) so the logomark
-never hides. While clipped, the trail links are transiently unclickable (clip-path
-excludes them from hit-testing) but keyboard/AT access is unaffected; at rest the last
-keyframe is clip-path: none, so nothing stays clipped. The overlay is aria-hidden and
-absolutely positioned — on a very narrow viewport with a short trail it may briefly
-overhang the empty header middle; harmless and gone in seconds.
-Gated behind prefers-reduced-motion (EE opt-in idiom): reduce users only ever see the
-static trail.
+2. LANDING BLOOM (plain on-load animation, landing page ONLY — the partial
+   renders the overlay just on /): the landing breadcrumb is the bare logomark,
+   so a cursor types "› Johan Edlund" beside it — saying what the mark is, since
+   the wordmark is hidden — blinks twice, and backspaces it away. Rest = bare
+   logomark. Its opening beat leaves room for the page-swipe erase to finish.
+
+The two breadcrumb states carry DIFFERENT view-transition-names (`breadcrumb`
+for a trail page, `breadcrumb-home` for the landing logomark) so landing↔section
+navigations get a clean exit/entry each instead of a stretch-morph between
+boxes of very different widths.
+
+Swipe mechanics, because they're non-obvious: the ::view-transition pseudos hang
+off the root and can't see .breadcrumb's custom properties, so the swipe
+measurements live on :root. Each snapshot wipes by animating its own inline-size
+with object-fit: none (crop, never squish) and the cursor is its inline-end
+border riding that moving edge; percentages then resolve against the group box,
+so the group's auto-generated old-size→new-size morph is re-timed with a
+linear() step to snap during the mid-swipe beat — old-sized while the old trail
+erases, new-sized while the new one types. Timeline (of --breadcrumb-swipe-duration):
+
+   0 – 41%   old trail backspaced to the logomark, cursor on its edge
+  41 – 55%   beat — cursor parked at the logomark; group box snaps sizes,
+             old snapshot hands off to new (their logomarks overlap exactly)
+  55 – 96%   new trail typed on, cursor riding
+  96 – 100%  cursor off, snapshot = the real page
 */
 
+:root {
+  --breadcrumb-swipe-duration: 1.1s;
+  /* Where the wipes stop: the logomark (1.15em of the breadcrumb size) + gap,
+     spelled out in tokens because em here would resolve against the root size. */
+  --breadcrumb-swipe-hold: calc(1.15 * var(--size-step-min-2) + var(--space-2xs));
+  --breadcrumb-caret-color: var(--color-accent-orange);
+}
+
 .breadcrumb {
-  --breadcrumb-bloom-duration: 4.4s;
+  --breadcrumb-bloom-duration: 4s;
   --breadcrumb-bloom-hold: calc(1.15em + var(--breadcrumb-gap));
-  --breadcrumb-bloom-caret: var(--color-accent-orange);
 
   position: relative;
 }
 
-.breadcrumb ol {
-  position: relative;
-}
-
+/* The landing overlay. Hidden at rest (and always, under reduced motion) by its
+   own clip — never navigation, so also hidden from assistive tech in the markup. */
 .breadcrumb-bloom {
   position: absolute;
   inset-block-start: 50%;
@@ -212,122 +237,178 @@ static trail.
   translate: 0 -0.05em;
 }
 
-/* The cursors: one rides the trail's wipe edge, one the name's. Hidden at rest. */
-.breadcrumb ol::after,
+/* Its cursor, riding the typing edge. Hidden at rest. */
 .breadcrumb-bloom::after {
   content: "";
   position: absolute;
   inset-block-start: 50%;
+  inset-inline-start: 0;
   translate: 0 -50%;
   inline-size: 0.1em;
   block-size: 1.3em;
-  background: var(--breadcrumb-bloom-caret);
+  background: var(--breadcrumb-caret-color);
   opacity: 0;
 }
 
 @media (prefers-reduced-motion: no-preference) {
+  /* ---- landing bloom ---- */
+
   .breadcrumb-bloom {
     visibility: visible;
-  }
-
-  .breadcrumb ol {
-    animation: breadcrumb-bloom-trail var(--breadcrumb-bloom-duration) linear both;
-  }
-
-  .breadcrumb ol::after {
-    animation:
-      breadcrumb-bloom-trail-caret var(--breadcrumb-bloom-duration) linear both,
-      breadcrumb-bloom-trail-caret-blink var(--breadcrumb-bloom-duration) step-end both;
-  }
-
-  .breadcrumb-bloom {
     animation: breadcrumb-bloom-name var(--breadcrumb-bloom-duration) linear both;
   }
 
   .breadcrumb-bloom::after {
     animation:
-      breadcrumb-bloom-name-caret var(--breadcrumb-bloom-duration) linear both,
-      breadcrumb-bloom-name-caret-blink var(--breadcrumb-bloom-duration) step-end both;
+      breadcrumb-bloom-caret var(--breadcrumb-bloom-duration) linear both,
+      breadcrumb-bloom-caret-blink var(--breadcrumb-bloom-duration) step-end both;
+  }
+
+  /* ---- page swipe ---- */
+
+  .breadcrumb {
+    view-transition-name: breadcrumb;
+  }
+
+  /* Landing = the bare logomark: its own name, no motion of its own. */
+  .breadcrumb:has(.breadcrumb-home[aria-current="page"]) {
+    view-transition-name: breadcrumb-home;
+  }
+
+  ::view-transition-group(breadcrumb) {
+    animation-duration: var(--breadcrumb-swipe-duration);
+    /* Re-time the auto-generated size morph: hold the OLD box through the erase,
+       snap to the NEW box during the beat (see the timeline above). */
+    animation-timing-function: linear(0, 0 45%, 1 55%, 1);
+  }
+
+  /* The cursor on both snapshots is a 2px background sliver (a border can't ride
+     a clip edge, and extra elements can't be added to the pseudo tree). */
+  ::view-transition-old(breadcrumb),
+  ::view-transition-new(breadcrumb) {
+    block-size: 100%;
+    background-size: 2px 1.4em;
+    background-repeat: no-repeat;
+    background-position: 100% center;
+  }
+
+  /* OLD snapshot = a static raster: it honors box sizing, so the backspace is a
+     width animation (object-fit: none crops instead of squishing) and the cursor
+     is simply pinned to the shrinking right edge — zero sync drift. */
+  ::view-transition-old(breadcrumb) {
+    object-fit: none;
+    object-position: left center;
+    background-image: linear-gradient(var(--breadcrumb-caret-color), var(--breadcrumb-caret-color));
+    animation: breadcrumb-swipe-out var(--breadcrumb-swipe-duration) linear both;
+  }
+
+  /* NEW snapshot = the live page rendering: it paints at natural size and
+     IGNORES box-width cropping (Chromium), so the typing reveal is a clip-path —
+     geometric, clips live content too — with the cursor's background-position
+     animated on the same curve as the clip edge. The caret background-image
+     arrives only at the handoff (see the step-end keyframes) so it doesn't sit
+     parked beside the logomark while the old cursor is still sweeping. */
+  ::view-transition-new(breadcrumb) {
+    background-image: none;
+    animation:
+      breadcrumb-swipe-in var(--breadcrumb-swipe-duration) linear both,
+      breadcrumb-swipe-in-caret var(--breadcrumb-swipe-duration) step-end both;
+  }
+
+  ::view-transition-old(breadcrumb-home),
+  ::view-transition-new(breadcrumb-home) {
+    animation-duration: 0s;
   }
 }
 
-/* Trail: visible → backspaced to the logomark → held → typed back → unclipped rest.
-   Negative block insets keep descenders and focus rings unclipped mid-animation. */
-@keyframes breadcrumb-bloom-trail {
-  0%, 3.4% {
-    clip-path: inset(-15% 0 -15% 0);
+/* OLD trail: backspaced to the logomark, parked through the beat, then gone
+   (the new snapshot's identical logomark has taken over underneath). */
+@keyframes breadcrumb-swipe-out {
+  0% {
+    inline-size: 100%;
+    opacity: 1;
     animation-timing-function: ease-in-out;
   }
-  17%, 80.7% {
-    clip-path: inset(-15% calc(100% - var(--breadcrumb-bloom-hold)) -15% 0);
-    animation-timing-function: ease-in-out;
+  41%, 50% {
+    inline-size: var(--breadcrumb-swipe-hold);
+    opacity: 1;
   }
-  94.3% {
-    clip-path: inset(-15% 0 -15% 0);
+  50.1%, 100% {
+    inline-size: var(--breadcrumb-swipe-hold);
+    opacity: 0;
+  }
+}
+
+/* NEW trail: clipped to the logomark strip through the beat, then typed on.
+   The cursor's background-position runs on the same segment and easing as the
+   clip edge, so they travel together. */
+@keyframes breadcrumb-swipe-in {
+  0%, 55% {
+    clip-path: inset(-5% calc(100% - var(--breadcrumb-swipe-hold)) -5% 0);
+    background-position-x: var(--breadcrumb-swipe-hold);
+    animation-timing-function: ease-in-out;
   }
   100% {
-    clip-path: none;
+    clip-path: inset(-5% 0 -5% 0);
+    background-position-x: 100%;
   }
 }
 
-@keyframes breadcrumb-bloom-trail-caret {
-  0%, 3.4% {
-    inset-inline-start: 100%;
-    animation-timing-function: ease-in-out;
+/* Its cursor appears at the handoff, rides the typing, then off. */
+@keyframes breadcrumb-swipe-in-caret {
+  0%, 50% {
+    background-image: none;
   }
-  17%, 80.7% {
-    inset-inline-start: var(--breadcrumb-bloom-hold);
-    animation-timing-function: ease-in-out;
+  50.1% {
+    background-image: linear-gradient(var(--breadcrumb-caret-color), var(--breadcrumb-caret-color));
   }
-  94.3%, 100% {
-    inset-inline-start: 100%;
+  96%, 100% {
+    background-image: none;
   }
 }
 
-@keyframes breadcrumb-bloom-trail-caret-blink {
-  0% { opacity: 0; }
-  3.4% { opacity: 1; }
-  21.6% { opacity: 0; }
-  80.7% { opacity: 1; }
-  94.3%, 100% { opacity: 0; }
-}
-
-/* Name: hidden → typed on → held through the blinks → backspaced → hidden rest. */
+/* Landing bloom timeline (of --breadcrumb-bloom-duration):
+    0 – 15%   beat (room for an incoming page-swipe erase to finish)
+   15 – 35%   "› Johan Edlund" typed on
+   35 – 60%   cursor blinks twice
+   60 – 77.5% backspaced away
+ 77.5 – 100%  cursor off, rest = the bare logomark
+   Negative block insets keep descenders unclipped mid-animation. */
 @keyframes breadcrumb-bloom-name {
-  0%, 21.6% {
+  0%, 15% {
     clip-path: inset(-15% 100% -15% 0);
     animation-timing-function: ease-in-out;
   }
-  39.8%, 62.5% {
+  35%, 60% {
     clip-path: inset(-15% 0 -15% 0);
     animation-timing-function: ease-in-out;
   }
-  76.1%, 100% {
+  77.5%, 100% {
     clip-path: inset(-15% 100% -15% 0);
   }
 }
 
-@keyframes breadcrumb-bloom-name-caret {
-  0%, 21.6% {
+@keyframes breadcrumb-bloom-caret {
+  0%, 15% {
     inset-inline-start: 0%;
     animation-timing-function: ease-in-out;
   }
-  39.8%, 62.5% {
+  35%, 60% {
     inset-inline-start: 100%;
     animation-timing-function: ease-in-out;
   }
-  76.1%, 100% {
+  77.5%, 100% {
     inset-inline-start: 0%;
   }
 }
 
 /* Two off-gaps between typing and backspacing = the cursor blinks twice. */
-@keyframes breadcrumb-bloom-name-caret-blink {
+@keyframes breadcrumb-bloom-caret-blink {
   0% { opacity: 0; }
-  21.6% { opacity: 1; }
-  45.5% { opacity: 0; }
-  51.1% { opacity: 1; }
-  56.8% { opacity: 0; }
-  62.5% { opacity: 1; }
-  80.7%, 100% { opacity: 0; }
+  15% { opacity: 1; }
+  41.25% { opacity: 0; }
+  47.5% { opacity: 1; }
+  53.75% { opacity: 0; }
+  60% { opacity: 1; }
+  77.5%, 100% { opacity: 0; }
 }
