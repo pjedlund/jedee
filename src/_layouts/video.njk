@@ -17,7 +17,7 @@ schema: BlogPosting
       <video class="u-video" controls preload="metadata"{% if video.poster %} poster="{{ video.poster | replace('./src', '') }}"{% endif %} src="{{ video.src | replace('./src', '') }}"></video>
 
     {% elif video.provider == "youtube" %}
-      <custom-youtube @slug="{{ video.slug }}" @label="{{ title }}"></custom-youtube>
+      <custom-youtube @slug="{{ video.slug }}" @poster="{{ video.slug | youtubePoster }}" @label="{{ title }}"></custom-youtube>
 
     {% elif video.provider == "peertube" %}
       <custom-peertube @instance="{{ video.instance }}" @embed-slug="{{ video.embedSlug }}" @slug="{{ video.slug }}" @label="{{ title }}"></custom-peertube>

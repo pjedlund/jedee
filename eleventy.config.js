@@ -115,6 +115,7 @@ export default async function(eleventyConfig) {
   eleventyConfig.addFilter('slugify', filters.slugifyString);
   eleventyConfig.addFilter('unwikilink', filters.unwikilink);
   eleventyConfig.addFilter('hostname', filters.hostname);
+  eleventyConfig.addFilter('youtubePoster', filters.youtubePoster);
   eleventyConfig.addFilter('dtcgItems', filters.dtcgItems);
   // Recipe durations (§9): integer minutes OR PT…M → normalized PT…M + human-readable.
   eleventyConfig.addFilter('toISODuration', filters.toISODuration);
