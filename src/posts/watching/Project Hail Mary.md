@@ -1,5 +1,4 @@
 ---
-summary: 'Watched Project Hail Mary, 2026 - ★★★'
 date: '2026-05-29'
 url: 'https://themoviedb.org/movie/687163'
 title: Project Hail Mary
@@ -11,9 +10,7 @@ plot: >-
   he begins to uncover his mission: solve the riddle of the mysterious substance
   causing the sun to die out. He must call on his scientific knowledge and
   unorthodox ideas to save everything on Earth from extinction.
-progress: finished
-rating: '3'
+scoreMy: 3
 draft: true
-updated: '2026-06-02T20:06:40.671Z'
 ---
 Pretty nice but I have a hard time not to think about how this world works instead of following along in the movie.

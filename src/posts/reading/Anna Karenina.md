@@ -2,7 +2,6 @@
 title: Anna Karenina
 subtitle:
 author: Leo Tolstoy
-authors: Leo Tolstoy
 publisher: OUP Oxford
 publishDate: 2014-08-28
 date: 2026-01-11T13:50:58+01:00

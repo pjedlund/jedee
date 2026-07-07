@@ -5,7 +5,7 @@ description: "We can use Markdown, Nunjucks shortcodes or pure HTML to add image
 eleventyExcludeFromCollections: false
 excludeFromSitemap: false
 date: 2025-01-09
-updateDate: 2026-03-06
+updatedDate: 2026-03-06
 draft: false
 image: '/assets/images/gallery/asturias-2.jpg'
 tags: ['image', 'feature']
