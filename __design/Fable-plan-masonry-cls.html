@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fable plan — Steady masonry front page (no layout shifts)</title>
+<style>
+  :root { color-scheme: light dark; --accent: #b45309; --muted: #6b7280; --border: #d1d5db; --card: #f6f6f4; }
+  @media (prefers-color-scheme: dark) { :root { --accent: #fbbf24; --muted: #9ca3af; --border: #3f3f46; --card: #1f2125; } }
+  body { font-family: Georgia, 'Source Serif 4', serif; line-height: 1.6; max-width: 46rem; margin: 2rem auto 6rem; padding: 0 1.25rem; }
+  h1 { font-size: 1.7rem; line-height: 1.25; }
+  h2 { font-size: 1.2rem; margin-top: 2.2em; border-block-end: 1px solid var(--border); padding-block-end: .3em; }
+  .kicker { color: var(--accent); font-variant: small-caps; letter-spacing: .06em; }
+  .lead { font-size: 1.08rem; }
+  code, pre { font-family: ui-monospace, 'Source Code Pro', monospace; font-size: .88em; }
+  pre { background: var(--card); border: 1px solid var(--border); border-radius: .4rem; padding: .8rem 1rem; overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+  th, td { text-align: left; border-block-end: 1px solid var(--border); padding: .4em .6em .4em 0; vertical-align: top; }
+  .note { background: var(--card); border-inline-start: 3px solid var(--accent); padding: .7rem 1rem; border-radius: 0 .4rem .4rem 0; }
+  .muted { color: var(--muted); }
+  ol li, ul li { margin-block-end: .35em; }
+</style>
+</head>
+<body>
+<p class="kicker">Fable plan · rank 1 — do this first</p>
+<h1>Steady masonry front page (no layout shifts)</h1>
+
+<p class="lead">The tiles on the front page jump into place a moment after the page paints. That jump is the layout-shift penalty you spotted in Lighthouse. The fix: let CSS do the masonry instead of JavaScript — the tiles then land in their final spots on the very first paint, and the shift score drops to zero.</p>
+
+<h2>Why it shifts today</h2>
+<p>The wall is a <code>&lt;custom-masonry&gt;</code> component. It first lays the tiles out as a normal grid, and only <em>after</em> the first paint does its JavaScript pull each tile up under the one above it. Moving things after paint <em>is</em> a layout shift — no amount of tuning fixes that; the JavaScript pass has to go.</p>
+
+<h2>The chosen approach: CSS columns</h2>
+<p>CSS has a native multi-column layout (<code>columns</code>) that gives the masonry look with no JavaScript at all. Two properties on the wall, one on each tile. It also keeps every tile's exact proportions at any screen width, which the alternative techniques don't.</p>
+<div class="note">
+<p><strong>One trade-off, accepted for now:</strong> with columns, the tiles read top-to-bottom per column instead of left-to-right. Today the wall is decorative placeholder blocks (the real cards wait on the Penpot card design), so order doesn't matter yet. When real cards land, we revisit — there's a fallback technique documented in the plan if left-to-right ever becomes a must.</p>
+</div>
+
+<h2>Scope — only the front page</h2>
+<p>The same masonry component also wraps the archive pages, tag pages, and the events page. Those hold real text cards, which are a different (harder) problem — <strong>they stay untouched in this pass</strong>. The component stays in the codebase; it just stops being used on the front page.</p>
+
+<h2>What changes</h2>
+<table>
+<tr><th>File</th><th>Change</th></tr>
+<tr><td><code>src/pages/index.njk</code></td><td>The <code>&lt;custom-masonry&gt;</code> block becomes a plain <code>&lt;div class="masonry"&gt;</code> with the same tiles.</td></tr>
+<tr><td><code>src/assets/css/global/compositions/masonry.css</code></td><td>New composition: the columns rules, written CUBE-style like the existing <code>grid.css</code>.</td></tr>
+<tr><td>The global CSS bundle</td><td>One include line so the new file ships, mirroring how <code>grid.css</code> gets there.</td></tr>
+</table>
+
+<h2>Order of work</h2>
+<ol>
+<li>Measure first: production build, serve <code>dist/</code>, run Lighthouse mobile on the front page and one article. Write the four scores down.</li>
+<li>Write the new <code>masonry.css</code> composition and wire it into the bundle.</li>
+<li>Swap the front-page markup to the plain masonry div; trim the now-redundant inline styles.</li>
+<li>Rebuild, confirm the wall looks the same, confirm no masonry JavaScript loads on the front page (and still loads on the archives).</li>
+<li>Re-run Lighthouse: the layout-shift score should read zero.</li>
+<li>Fix only cheap, safe items the report surfaces; log anything bigger in TODO.md instead.</li>
+<li>Unit tests + the pa11y accessibility run, then merge to <code>main</code> locally. You push.</li>
+</ol>
+
+<h2>Gotchas already scouted (so nobody trips on them)</h2>
+<ul>
+<li>In a columns layout, <code>gap</code> only spaces the columns — the vertical space between tiles needs a bottom margin on each tile. Forgetting this makes the tiles touch.</li>
+<li><code>break-inside: avoid</code> on tiles, or a tile can split across two columns.</li>
+<li>Lighthouse must run against a <em>production</em> build — the dev server serves drafts, unminified files, and shows the hidden nav.</li>
+<li>Running <code>npm run build</code> wipes the folder the dev server serves — known quirk, restart the dev server after.</li>
+<li>A perfect 400 is <em>impossible</em> until launch: the SEO category fails on purpose while the site carries the soft-launch "don't index me" tag. Expected result now: three 100s, SEO failing only on that one audit.</li>
+<li>Don't delete the masonry component files — four other pages still use them.</li>
+</ul>
+
+<h2>Done means</h2>
+<ul>
+<li>Lighthouse mobile on the front page: layout shift = 0, before/after scores recorded in LOG.md.</li>
+<li>The wall looks the same in both light and dark mode (screenshots).</li>
+<li>No masonry JavaScript on the front page; archives unchanged.</li>
+<li>Unit tests and pa11y green; merged to <code>main</code>, waiting for your push.</li>
+</ul>
+
+<p class="muted">Agent version with exact code and commands: <code>__design/Fable-plan-masonry-cls.md</code></p>
+</body>
+</html>

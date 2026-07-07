@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fable plan — 1.0.0 go-live</title>
+<style>
+  :root { color-scheme: light dark; --accent: #b45309; --muted: #6b7280; --border: #d1d5db; --card: #f6f6f4; }
+  @media (prefers-color-scheme: dark) { :root { --accent: #fbbf24; --muted: #9ca3af; --border: #3f3f46; --card: #1f2125; } }
+  body { font-family: Georgia, 'Source Serif 4', serif; line-height: 1.6; max-width: 46rem; margin: 2rem auto 6rem; padding: 0 1.25rem; }
+  h1 { font-size: 1.7rem; line-height: 1.25; }
+  h2 { font-size: 1.2rem; margin-top: 2.2em; border-block-end: 1px solid var(--border); padding-block-end: .3em; }
+  .kicker { color: var(--accent); font-variant: small-caps; letter-spacing: .06em; }
+  .lead { font-size: 1.08rem; }
+  code, pre { font-family: ui-monospace, 'Source Code Pro', monospace; font-size: .88em; }
+  table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+  th, td { text-align: left; border-block-end: 1px solid var(--border); padding: .4em .6em .4em 0; vertical-align: top; }
+  .note { background: var(--card); border-inline-start: 3px solid var(--accent); padding: .7rem 1rem; border-radius: 0 .4rem .4rem 0; }
+  .muted { color: var(--muted); }
+  ol li, ul li { margin-block-end: .35em; }
+</style>
+</head>
+<body>
+<p class="kicker">Fable plan · rank 2 — highest impact, runs right after the masonry fix</p>
+<h1>1.0.0 go-live: drop the "don't index me" tag, show the nav, start sending webmentions</h1>
+
+<p class="lead">The site has quietly lived on johanedlund.se since the end of May — invisible to search engines and with the nav hidden. Everything behind it (Micropub, incoming webmentions, feeds, content pipeline) is already live and verified. Launching is now two switches in one file, a version bump, a careful verification pass, and a short checklist that's yours alone.</p>
+
+<div class="note"><p><strong>You decide when.</strong> This plan executes the launch; it doesn't decide readiness. Suggested order: run the masonry fix first so the front page is at its best when the crawlers arrive — and because the perfect Lighthouse score only becomes possible once the "don't index" tag is gone.</p></div>
+
+<h2>The code part (an agent can do all of it)</h2>
+<table>
+<tr><th>Where</th><th>What</th></tr>
+<tr><td><code>src/_data/meta.js</code></td><td><code>noindexSite: true → false</code> (search engines welcome) and <code>hideNav: true → false</code> (nav shows everywhere). The <code>breadcrumb</code> switch stays as it is.</td></tr>
+<tr><td><code>package.json</code></td><td>Version <code>0.9.0 → 1.0.0</code> (with the lock file kept in step).</td></tr>
+</table>
+<p>Then a full verification pass on a production build: the robots tag is gone from every page, the nav markup is actually in the built HTML, the sitemap is intact, unit tests pass, and — importantly — the pa11y accessibility suite runs <em>with the nav visible in a production-style build for the first time ever</em>. If the nav surfaces accessibility complaints, they get fixed using the navigation pattern the site is built on, not ad-hoc. Everything merges to <code>main</code> and stops there.</p>
+
+<h2>Your checklist (the agent prints it, you do it)</h2>
+<ol>
+<li><strong>Push <code>main</code>.</strong> Netlify deploys; no settings need changing — the site already builds on the apex domain.</li>
+<li>Spot-check the live site: view source on the front page — no robots tag, nav visible; click through the mega-menu.</li>
+<li><strong>Turn on outgoing webmentions</strong> at <a href="https://webmention.app">webmention.app</a>: sign in with johanedlund.se (the GitHub rel=me sign-in — already proven to work), register <code>https://johanedlund.se/feed.xml</code>. It then checks hourly and sends webmentions for the links in new posts.</li>
+<li>Heads-up: only posts published <em>after</em> registration send automatically. Older posts can be sent by hand via <code>webmention.app/check?url=…</code>.</li>
+<li>Test sending against <a href="https://webmention.rocks">webmention.rocks</a> first, then a real like or reply to someone's IndieWeb site.</li>
+<li>Optional: a Netlify "deploy succeeded" webhook to webmention.app makes sending instant instead of hourly. Optional: tag the release <code>1.0.0</code> in git. Then: tell people.</li>
+</ol>
+
+<h2>Gotchas already scouted</h2>
+<ul>
+<li>The nav is <em>always</em> visible on the local dev server — "it looks fine in dev" proves nothing. Every check must be against a production build.</li>
+<li>Posts marked <code>visibility: unlisted</code> keep their own per-post "don't index" tag after launch — that machinery must not be touched. (There are currently no published unlisted posts, so nothing visible changes.)</li>
+<li>The version bump must not use <code>npm version</code> — it silently creates a git tag; tagging is your call.</li>
+<li>If the per-section feeds plan runs, it should run <strong>before</strong> launch — it moves the podcast feed's address, which is free while nobody is subscribed and disruptive afterward.</li>
+</ul>
+
+<h2>Done means</h2>
+<ul>
+<li>Production build: robots tag gone, nav present on every page, version 1.0.0, all tests green.</li>
+<li>Merged to <code>main</code>, unpushed, with your six-step checklist printed at the end.</li>
+<li>Lighthouse SEO on the front page reads 100 against the local build.</li>
+</ul>
+
+<p class="muted">Agent version with exact greps and commands: <code>__design/Fable-plan-go-live.md</code></p>
+</body>
+</html>

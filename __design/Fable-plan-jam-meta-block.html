@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fable plan — Jam metadata block (Job 2C)</title>
+<style>
+  :root { color-scheme: light dark; --accent: #b45309; --muted: #6b7280; --border: #d1d5db; --card: #f6f6f4; }
+  @media (prefers-color-scheme: dark) { :root { --accent: #fbbf24; --muted: #9ca3af; --border: #3f3f46; --card: #1f2125; } }
+  body { font-family: Georgia, 'Source Serif 4', serif; line-height: 1.6; max-width: 46rem; margin: 2rem auto 6rem; padding: 0 1.25rem; }
+  h1 { font-size: 1.7rem; line-height: 1.25; }
+  h2 { font-size: 1.2rem; margin-top: 2.2em; border-block-end: 1px solid var(--border); padding-block-end: .3em; }
+  .kicker { color: var(--accent); font-variant: small-caps; letter-spacing: .06em; }
+  .lead { font-size: 1.08rem; }
+  code, pre { font-family: ui-monospace, 'Source Code Pro', monospace; font-size: .88em; }
+  pre { background: var(--card); border: 1px solid var(--border); border-radius: .4rem; padding: .8rem 1rem; overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+  th, td { text-align: left; border-block-end: 1px solid var(--border); padding: .4em .6em .4em 0; vertical-align: top; }
+  .note { background: var(--card); border-inline-start: 3px solid var(--accent); padding: .7rem 1rem; border-radius: 0 .4rem .4rem 0; }
+  .muted { color: var(--muted); }
+  ol li, ul li { margin-block-end: .35em; }
+  .demo { border: 1px solid var(--border); border-radius: .4rem; padding: 1rem 1.2rem; }
+  .demo .line { font-size: .95rem; }
+  .demo .genres { font-size: .85rem; color: var(--muted); }
+  .demo .fav { font-size: .9rem; }
+</style>
+</head>
+<body>
+<p class="kicker">Fable plan · rank 4 — closes the This Is My Jam arc</p>
+<h1>Jam metadata block: artist · album · year on every jam page</h1>
+
+<p class="lead">The last open job from the This Is My Jam import (Job 2C): the jam frontmatter is rich — artist, album, year, genres, sometimes a favorite track — but none of it shows on the page. This plan puts a quiet byline-style block under the title. The structure and a tasteful default styling get built; the final look stays yours to adjust.</p>
+
+<h2>Roughly this, under the title</h2>
+<div class="demo">
+  <p class="line"><strong>Woo York</strong> · Chill Out 2 · 2015</p>
+  <p class="genres">Techno · Musik · Dance</p>
+  <p class="fav">Favorite track: <a href="#">Chasing the Dream</a></p>
+</div>
+<p class="muted" style="margin-top:.5rem">The favorite-track row exists on only 3 of 118 jams today — it appears only when set.</p>
+
+<h2>What shows, what deliberately doesn't</h2>
+<table>
+<tr><th>Field</th><th>Treatment</th></tr>
+<tr><td>artist, album, year</td><td>The byline row. Artist is stored as a wikilink and gets unwrapped by the (already committed) <code>unwikilink</code> filter.</td></tr>
+<tr><td>genre</td><td>A muted second row, dot-separated. Also wikilinks, also unwrapped.</td></tr>
+<tr><td>favoriteTrack + URL</td><td>A linked row, only when present.</td></tr>
+<tr><td>source / odesliUrl</td><td><strong>Stay invisible</strong> — the listen link remains hidden machine data; the YouTube embed covers playback. Decided earlier.</td></tr>
+<tr><td>title, cover, embed, date</td><td>Already on the page — not repeated.</td></tr>
+</table>
+
+<h2>Where it lives</h2>
+<ul>
+<li>Markup: inline in <code>src/_layouts/jam.njk</code>, right after the entry header (before the cover image).</li>
+<li>Styling: a new per-page stylesheet <code>src/assets/css/local/jam-meta.css</code>, modeled on the photo pages' metadata block — small type, accent tokens, easy for you to restyle.</li>
+</ul>
+
+<h2>One thing before starting</h2>
+<div class="note"><p>The working tree currently holds the finished-but-uncommitted <strong>self-hosted YouTube poster</strong> work, which also touches <code>jam.njk</code>. That gets verified and committed as its own commit first, so the two pieces of work don't tangle.</p></div>
+
+<h2>Gotchas already scouted</h2>
+<ul>
+<li>Coverage is ragged: ~20 jams miss album/year/genre, one (the Boiler Room DJ mix) has no artist at all. Every piece must vanish cleanly — the separators are drawn by CSS, so a missing field never leaves a dangling "·".</li>
+<li>The markup stays inline in the layout — moving it to a conditional include walks into a known Eleventy trap that silently blanks content.</li>
+<li>Artist and genre names are <em>not</em> links — artist/genre pages don't exist (yet).</li>
+<li>No new microformat classes by default; the hidden machine-readable data already satisfies parsers.</li>
+</ul>
+
+<h2>Done means</h2>
+<ul>
+<li><code>/jams/chasing-the-dream/</code> shows the full block including the favorite track; a This Is My Jam import shows the byline + genres; the DJ mix renders cleanly with no artist.</li>
+<li>No visible listen/odesli links anywhere; the hidden machine data untouched.</li>
+<li>Tests green, merged to <code>main</code>, waiting for your push — and Job 2C is finally closed.</li>
+</ul>
+
+<p class="muted">Agent version with field shapes, snippets and verify targets: <code>__design/Fable-plan-jam-meta-block.md</code></p>
+</body>
+</html>
