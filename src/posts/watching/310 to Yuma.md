@@ -11,9 +11,8 @@ url: "https://letterboxd.com/film/310-to-yuma/"
 myUrl: "https://letterboxd.com/pjedlund/film/310-to-yuma/"
 director:
   - "Delmer Daves"
-rating: 3.925
-myRating: 4
 scoreLB: 3.92
+scoreMy: 4
 cast:
   - "[[Glenn Ford]]"
   - "[[Van Heflin]]"

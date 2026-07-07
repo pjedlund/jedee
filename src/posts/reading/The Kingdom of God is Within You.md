@@ -2,7 +2,6 @@
 title: The Kingdom of God is Within You
 subtitle:
 author: Leo Tolstoy
-authors: Leo Tolstoy
 publisher: Simon and Schuster
 publishDate: 2012-12-10
 date: 2025-12-10
