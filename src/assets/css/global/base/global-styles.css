@@ -9,6 +9,24 @@ html {
   color-scheme: light dark;
 }
 
+/* Cross-document view transitions: same-origin navigations get the browser's
+   default whole-page crossfade instead of a white flash. Both pages carry this
+   rule (it's in the global stylesheet), which is the whole requirement;
+   browsers without support (Firefox, mid-2026) and reloads just navigate
+   instantly. This is the ONLY @view-transition opt-in — the ungated EE-stock
+   copy was removed from reset.css so the gate actually holds: the reset's
+   reduced-motion clamp (`*, ::before, ::after`) does not match
+   ::view-transition-* pseudos, so reduce users only stay transition-free if
+   the opt-in itself is gated. (A per-crumb breadcrumb wipe was built on top of
+   this in 2026-07 and shelved — branch feat/breadcrumb-directional-wipe; see
+   the scroll-gate findings in _generated/Reference - breadcrumb hover bloom
+   (parked).md.) */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
+
 body {
   display: flex;
   flex-direction: column;
