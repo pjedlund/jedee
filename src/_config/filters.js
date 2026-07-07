@@ -8,6 +8,7 @@ import { striptags } from './filters/striptags.js';
 import { slugifyString } from './filters/slugify.js';
 import { unwikilink } from './filters/unwikilink.js';
 import { hostname } from './filters/hostname.js';
+import { youtubePoster } from './filters/youtube-poster.js';
 import { toISODuration, formatDuration, itunesDuration } from './filters/duration.js';
 import { paceOrSpeed } from './filters/pace.js';
 import { withMiles } from './filters/distance.js';
@@ -31,6 +32,7 @@ export default {
   slugifyString,
   unwikilink,
   hostname,
+  youtubePoster,
   toISODuration,
   formatDuration,
   itunesDuration,
