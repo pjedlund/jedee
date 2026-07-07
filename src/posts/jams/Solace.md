@@ -14,6 +14,7 @@ year: 2006
 favoriteTrack: "Everything All of the Time"
 favoriteTrackUrl: "https://music.apple.com/se/song/everything-all-of-the-time/1774380712"
 odesliUrl:
+youtubeSlug: uixEOC5ieC8
 ---
 I keep coming back to this album more and more. Jacob is instrumental post/math-rock of the finest variant.
 
