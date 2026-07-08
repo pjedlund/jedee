@@ -47,7 +47,16 @@
       {% endif %}
     </dl>
 
-    {% if showMap %}{% include "partials/photo-map.njk" %}{% endif %}
+    {# The static map (photo-map.njk) is a plain <a><img>, self-hosted by the
+       eleventy-img transform and a working no-JS link to openstreetmap.org.
+       <photo-map> wraps it: on idle it becomes a zoom-in trigger + fullscreen
+       button that open a live Leaflet map in an overlay. #}
+    {% if showMap %}
+      {% set mapPlace = ex.place.city if (ex.place and ex.place.city) else "" %}
+      <photo-map @lat="{{ ex.gps.lat }}" @lon="{{ ex.gps.lon }}" @zoom="{{ photo.mapZoom or 13 }}" @place="{{ mapPlace }}">
+        {% include "partials/photo-map.njk" %}
+      </photo-map>
+    {% endif %}
   </div>
   {% endif %}
 
@@ -92,4 +101,5 @@
 
 {% css "local" %}
   {% include "css/photo-meta.css" %}
+  {% if showMap %}{% include "css/photo-map.css" %}{% endif %}
 {% endcss %}

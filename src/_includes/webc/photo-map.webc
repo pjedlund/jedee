@@ -1,0 +1,11 @@
+<!-- Enhances the slotted static map into a fullscreen live map on idle. Mirrors photo-lightbox.webc (is-land sole root, no sibling <style>). CSS: css/photo-map.css · JS: photo-map.js -->
+<is-land on:idle>
+  <photo-map webc:root webc:keep :data-lat="lat" :data-lon="lon" :data-zoom="zoom" :data-place="place">
+    <slot></slot>
+
+    <template data-island="once" webc:raw>
+      <link rel="stylesheet" href="/assets/components/leaflet.css" />
+      <script type="module" src="/assets/scripts/components/photo-map.js"></script>
+    </template>
+  </photo-map>
+</is-land>

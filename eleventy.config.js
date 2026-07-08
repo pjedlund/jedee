@@ -174,7 +174,12 @@ export default async function(eleventyConfig) {
     // Single-file (non-glob) source: must name the destination file explicitly.
     // A trailing-slash dir target writes a file literally named `components`,
     // clobbering the lite-youtube glob's directory (Eleventy 3.x behaviour).
-    'node_modules/photoswipe/dist/photoswipe.css': `assets/components/photoswipe.css`
+    'node_modules/photoswipe/dist/photoswipe.css': `assets/components/photoswipe.css`,
+    // Leaflet's JS is bundled into photo-map.js by esbuild (import L from 'leaflet');
+    // only its stylesheet needs copying. Its url()'d marker/layer PNGs are skipped
+    // on purpose — <photo-map> uses circleMarker (pure SVG) + the zoom control, so
+    // none of those images are ever requested.
+    'node_modules/leaflet/dist/leaflet.css': `assets/components/leaflet.css`
   });
 
   // ----------------------  ignore test files

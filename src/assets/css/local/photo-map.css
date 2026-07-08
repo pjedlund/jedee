@@ -1,0 +1,129 @@
+/*
+PHOTO-MAP
+Progressive enhancement of the static map in photo-meta (photo-meta.css owns the
+static `.photo-map img` treatment). On idle, photo-map.js turns the static image
+into a zoom-in trigger and adds a fullscreen button; both open a live Leaflet map
+in a dark overlay — the photo-lightbox pattern. The live map and its CARTO tiles
+load only when the overlay opens. Local bundle, included from photo-meta.njk.
+
+Leaflet's own stylesheet is injected as a body <link> when the island hydrates —
+i.e. AFTER this inlined bundle — so every override of a `.leaflet-*` rule is
+scoped under `.map-overlay` to win on specificity instead of reaching for
+!important.
+*/
+
+/* --- hydrated inline trigger --- */
+photo-map {
+  display: block;
+}
+photo-map[data-map-ready] {
+  position: relative; /* anchors the fullscreen button */
+}
+photo-map[data-map-ready] a.photo-map {
+  cursor: zoom-in;
+}
+
+/* Fullscreen button, over the static map's top-right corner. Global :focus-visible
+   handles the keyboard ring; the button sits outside the clipped area so the
+   default outset ring is fine here (unlike the live map below). */
+.map-fullscreen {
+  --map-fullscreen-surface: color-mix(in srgb, var(--color-bg-accent) 92%, transparent);
+
+  position: absolute;
+  inset-block-start: var(--space-2xs);
+  inset-inline-end: var(--space-2xs);
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  inline-size: 2.25rem;
+  block-size: 2.25rem;
+  padding: 0;
+  color: var(--color-text);
+  background: var(--map-fullscreen-surface);
+  border: var(--stroke);
+  border-radius: var(--border-radius-small);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.map-fullscreen:hover {
+  color: var(--color-headline);
+  border-color: color-mix(in oklab, var(--color-text) 30%, var(--color-bg));
+}
+
+/* --- fullscreen overlay (always dark, like the photo lightbox) --- */
+.map-overlay {
+  --map-overlay-inset: clamp(0.75rem, 3vw, 2.5rem);
+
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: none;
+  padding: var(--map-overlay-inset);
+  background: color-mix(in srgb, var(--color-gray-900) 97%, transparent);
+}
+.map-overlay[data-open] {
+  display: block;
+}
+.map-overlay .map-frame {
+  block-size: 100%;
+  border: 1px solid var(--color-gray-700);
+  border-radius: var(--border-radius-small);
+  overflow: hidden;
+}
+.map-overlay .map {
+  block-size: 100%;
+  inline-size: 100%;
+  background: var(--color-gray-800); /* pre-tile surface */
+}
+
+.map-overlay-close {
+  position: absolute;
+  z-index: 1;
+  inset-block-start: calc(var(--map-overlay-inset) + var(--space-2xs));
+  inset-inline-end: calc(var(--map-overlay-inset) + var(--space-2xs));
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  display: grid;
+  place-items: center;
+  color: var(--color-gray-200);
+  background: color-mix(in srgb, var(--color-gray-800) 94%, transparent);
+  border: 1px solid var(--color-gray-700);
+  border-radius: var(--border-radius-small);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.map-overlay-close:hover {
+  color: #fff;
+  border-color: var(--color-gray-250);
+}
+
+/* --- Leaflet chrome, token-skinned for the dark overlay --- */
+.map-overlay .leaflet-container {
+  font-family: var(--font-base);
+  font-size: var(--size-step-min-2);
+}
+/* frame clips → inset ring (the custom-youtube play-button lesson) */
+.map-overlay .leaflet-container:focus-visible {
+  outline: 3px solid var(--color-gray-200);
+  outline-offset: -4px;
+}
+.map-overlay .leaflet-control-attribution {
+  background: color-mix(in srgb, var(--color-gray-800) 94%, transparent);
+  color: var(--color-gray-250);
+  font-size: 11px;
+}
+.map-overlay .leaflet-control-attribution a {
+  color: var(--color-gray-200);
+}
+.map-overlay .leaflet-bar a {
+  background: color-mix(in srgb, var(--color-gray-800) 94%, transparent);
+  color: var(--color-gray-200);
+  border-color: var(--color-gray-700);
+}
+.map-overlay .leaflet-bar a:hover,
+.map-overlay .leaflet-bar a:focus {
+  background: var(--color-gray-700);
+  color: #fff;
+}
