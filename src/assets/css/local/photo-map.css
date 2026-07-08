@@ -134,6 +134,12 @@ photo-map[data-map-ready] > a.photo-map {
 }
 
 /* --- Leaflet chrome, token-skinned; theme-adaptive, inline + overlay alike --- */
+/* Leaflet tiles are <img>, and the map sits inside .prose, whose `img { border:
+   var(--stroke) }` (prose.css) would frame every tile → a grey grid over the map.
+   Cancel it inside the canvas. (0,2,0) outranks .prose :is(img,video) (0,1,1). */
+[data-photo-map-canvas] .leaflet-tile {
+  border: 0;
+}
 [data-photo-map-canvas].leaflet-container {
   font-family: var(--font-base);
   font-size: var(--size-step-min-2);
