@@ -16,14 +16,14 @@
   Bare-include-friendly: no async shortcode, so the interlinker {% if %}-blank trap
   doesn't apply even though photo.njk wraps this include in {% if showMap %}.
   Expects in context: ex.gps {lat, lon}, ex.place, photo.mapZoom?, meta.mapApiKey.
-  This is the no-JS fallback for the <photo-map> popout element — 16:9 to match
-  the live map that replaces it on idle; zoom matches photo-map.js's default.
+  This is the no-JS fallback for the <place-map> element — 16:9 to match the live map
+  that replaces it on idle; zoom matches place-map.js's default.
 #}
 {%- set mz = photo.mapZoom or 13 -%}
 {%- set center = ex.gps.lon ~ "," ~ ex.gps.lat -%}
 {# style=positron (minimal light-grey, theme-agnostic); marker = --color-accent-orange (#d0621e). #}
 {%- set mapSrc = "https://maps.geoapify.com/v1/staticmap?style=positron&width=1280&height=720&center=lonlat:" ~ center ~ "&zoom=" ~ mz ~ "&marker=lonlat:" ~ center ~ ";type:material;color:%23d0621e;size:large&apiKey=" ~ meta.mapApiKey -%}
 {%- set mapOsm = "https://www.openstreetmap.org/?mlat=" ~ ex.gps.lat ~ "&mlon=" ~ ex.gps.lon ~ "#map=" ~ mz ~ "/" ~ ex.gps.lat ~ "/" ~ ex.gps.lon -%}
-<a class="photo-map no-indicator" href="{{ mapOsm }}" target="_blank" rel="noopener">
+<a class="place-map-static no-indicator" href="{{ mapOsm }}" target="_blank" rel="noopener">
   <img eleventy:optional="placeholder" src="{{ mapSrc | safe }}" alt="Map showing where this photograph was taken{% if ex.place and ex.place.city %}, near {{ ex.place.city }}{% endif %}" loading="lazy" eleventy:widths="640,1280" sizes="(min-width: 82rem) 72rem, 100vw">
 </a>

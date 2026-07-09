@@ -57,26 +57,8 @@ Loaded per-page via {% css "local" %} (photo layout only), CUBE block layer.
   margin-block-start: var(--space-xs);
 }
 
-/*
-  Capture facts + static map sit side by side via the .sidebar composition
-  (map = right-hand sidebar via data-direction="rtl"; both stack on narrow
-  screens). The map self-hosts through the eleventy-img transform, so it renders
-  as a <picture><img> after build.
-*/
-.photo-map {
-  display: block;
-}
-
-.photo-map :is(img, picture) {
-  display: block;
-  inline-size: 100%;
-  block-size: auto;
-}
-
-.photo-map img {
-  border: var(--stroke);
-  border-radius: var(--border-radius-small);
-}
+/* The location map is a popout <place-map> element in photo.njk; its styles (incl. the
+   static-fallback image) live in css/place-map.css, not here. */
 
 /* Download actions wrap as a button cluster; keep list semantics without bullets. */
 .photo-downloads {

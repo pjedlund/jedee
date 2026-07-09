@@ -41,15 +41,15 @@ schema: BlogPosting
     {% include 'partials/photo-meta.njk' %}
 
     {# Location map — a popout-width element (replaces the old sidebar thumbnail).
-       The slotted static <a><img> is the no-JS fallback; <photo-map> upgrades it
-       to a live, click-to-enlarge map on idle. photoExif carries the GPS. #}
+       The slotted static <a><img> is the no-JS fallback; <place-map> upgrades it
+       to a live, maximizable map on idle. photoExif carries the GPS. #}
     {% set ex = photoExif %}
     {% if ex and ex.gps and meta.mapApiKey and not photo.hideMap %}
       {% set mapPlace = ex.place.city if (ex.place and ex.place.city) else "" %}
       <div class="popout">
-        <photo-map @lat="{{ ex.gps.lat }}" @lon="{{ ex.gps.lon }}" @zoom="{{ photo.mapZoom or 13 }}" @place="{{ mapPlace }}">
-          {% include "partials/photo-map.njk" %}
-        </photo-map>
+        <place-map @lat="{{ ex.gps.lat }}" @lon="{{ ex.gps.lon }}" @zoom="{{ photo.mapZoom or 13 }}" @place="{{ mapPlace }}">
+          {% include "partials/place-map.njk" %}
+        </place-map>
       </div>
     {% endif %}
 
@@ -68,5 +68,5 @@ schema: BlogPosting
   {%- include 'css/post.css' -%}
   {%- include 'css/footnotes.css' -%}
   {%- include 'css/webmentions.css' -%}
-  {%- if photoExif and photoExif.gps and meta.mapApiKey and not photo.hideMap -%}{%- include 'css/photo-map.css' -%}{%- endif -%}
+  {%- if photoExif and photoExif.gps and meta.mapApiKey and not photo.hideMap -%}{%- include 'css/place-map.css' -%}{%- endif -%}
 {%- endcss -%}
