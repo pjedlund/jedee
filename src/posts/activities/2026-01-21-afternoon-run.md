@@ -7,5 +7,7 @@ duration: 3281
 hrAvg: 145
 stravaUrl: 'https://www.strava.com/activities/17129168866'
 draft: false
+lat: 55.59677
+lon: 12.96976
 ---
 

@@ -11,4 +11,6 @@ stravaUrl: https://www.strava.com/activities/11167155048
 elevationGain: 239
 elevationLoss: 241
 liveloxUrl: https://www.livelox.com/Viewer/Svalov-V-Sverige?sessionId=13026779
+lat: 56.04675
+lon: 13.07633
 ---

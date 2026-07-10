@@ -11,4 +11,6 @@ stravaUrl: https://www.strava.com/activities/13310590528
 elevationGain: 166
 elevationLoss: 162
 liveloxUrl: https://www.livelox.com/Viewer/Torsdag-9-januari/Lang?classId=889061
+lat: 55.55421
+lon: 13.20603
 ---

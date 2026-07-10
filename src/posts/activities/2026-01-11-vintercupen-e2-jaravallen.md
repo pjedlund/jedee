@@ -12,6 +12,8 @@ elevationGain: 106
 elevationLoss: 115
 liveloxUrl: https://www.livelox.com/Viewer/Vintercupen-E2-SV-kretsen-Skane/H45?classId=1099211
 cover: "/assets/images/activities/2026-01-11-vintercupen-e2-jaravallen.jpg"
+lat: 55.80339
+lon: 12.95099
 ---
 
 Snöpuls och bra träning. Frös om fötterna efter en halvtimme. Ska pröva med syntetsocka + neopren på inrådan från Svante Hermansson Yllesocka funkade inget vidare. Tre banor (B,C,D) med en del småmissar här och där.

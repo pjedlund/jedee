@@ -11,4 +11,6 @@ stravaUrl: https://www.strava.com/activities/12578623035
 elevationGain: 101
 elevationLoss: 156
 liveloxUrl: https://www.livelox.com/Viewer/Pepparkaksluffen/H55?classId=856814
+lat: 57.8552
+lon: 11.79939
 ---

@@ -47,6 +47,7 @@
     "@benjifs/micropub": "^2.0.1",
     "@photogabble/eleventy-plugin-interlinker": "^1.1.0",
     "gray-matter": "^4.0.3",
+    "leaflet": "^1.9.4",
     "lite-youtube-embed": "^0.3.4",
     "markdown-it-wikilinks-plus": "github:actuallysomecat/markdown-it-wikilinks-plus",
     "photoswipe": "^5.4.4",

@@ -1,0 +1,356 @@
+/*
+PLACE-MAP
+A reusable OpenStreetMap/Leaflet map, authored like an image (see place-map.webc +
+place-map.js). The slotted static <a><img> is the no-JS fallback; on idle the JS swaps
+in a live map (drag + zoom buttons; wheel/pinch off so the page keeps scrolling). The
+maximize button grows THE SAME map into a modal overlay where wheel + pinch turn on.
+
+Tiles + chrome follow the page theme via semantic tokens, so the inline map and the
+overlay always match. The overlay scrim stays dark, like the photo lightbox.
+
+Leaflet's own stylesheet is injected as a body <link> when the island hydrates — AFTER
+this bundle — so every Leaflet override is scoped under the [data-place-map-canvas] hook
+(set on the map container in JS) to win on specificity instead of !important. That scope
+is also the "keep-out fence": nothing here leaks to, or is leaked into by, the rest of
+the page.
+*/
+
+place-map {
+  display: block;
+}
+
+/* Static fallback (no-JS / pre-hydration): a self-hosted map image linking to OSM. */
+.place-map-static {
+  display: block;
+}
+.place-map-static :is(img, picture) {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+}
+.place-map-static img {
+  border: var(--stroke);
+  border-radius: var(--border-radius-small);
+}
+/* Once the live map is in, drop the static fallback (kept for no-JS only). */
+place-map[data-map-ready] > .place-map-static {
+  display: none;
+}
+
+/* Live inline map. Same 16:9 as the static fallback so the swap doesn't shift layout;
+   the box keeps its height when the canvas is moved out to the overlay. position:relative
+   anchors the maximize button; isolation contains Leaflet's z-index stack. */
+.place-map-live {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  inline-size: 100%;
+  border: var(--stroke);
+  border-radius: var(--border-radius-small);
+  background: color-mix(in oklab, var(--color-bg) 92%, black); /* pre-tile surface */
+  overflow: hidden;
+  isolation: isolate;
+}
+.place-map-canvas {
+  block-size: 100%;
+  inline-size: 100%;
+  /* Contain Leaflet's internal z-indexes (tile pane = 200+) INSIDE the canvas, so the
+     sibling maximize button (z-index 1) paints above the map. Without this the tiles
+     cover the button — while clicks still reach it, because tiles are pointer-events
+     transparent: an invisible-but-working button. */
+  isolation: isolate;
+}
+
+/* Maximize button, over the map's top-right corner. Semantic surface → reads on the
+   matching-theme tiles in both light and dark. Global :focus-visible handles the ring
+   (it sits outside the clipped map, so an outset ring is fine). */
+.place-map-maximize {
+  --place-map-btn-surface: color-mix(in srgb, var(--color-bg-accent) 92%, transparent);
+
+  position: absolute;
+  z-index: 1;
+  inset-block-start: var(--space-2xs);
+  inset-inline-end: var(--space-2xs);
+  display: grid;
+  place-items: center;
+  inline-size: 2.25rem;
+  block-size: 2.25rem;
+  padding: 0;
+  color: var(--color-text);
+  background: var(--place-map-btn-surface);
+  border: var(--stroke);
+  border-radius: var(--border-radius-small);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.place-map-maximize:hover {
+  color: var(--color-headline);
+  border-color: color-mix(in oklab, var(--color-text) 30%, var(--color-bg));
+}
+
+/* --- maximize overlay: dark scrim, themed map (like the photo lightbox) --- */
+.place-map-overlay {
+  --place-map-overlay-inset: clamp(0.75rem, 3vw, 2.5rem);
+
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: none;
+  padding: var(--place-map-overlay-inset);
+  background: color-mix(in srgb, var(--color-gray-900) 97%, transparent);
+}
+.place-map-overlay[data-open] {
+  display: block;
+}
+.place-map-overlay-frame {
+  position: relative; /* anchors the chips when they ride along into the overlay */
+  block-size: 100%;
+  border: 1px solid color-mix(in oklab, var(--color-text) 20%, var(--color-bg));
+  border-radius: var(--border-radius-small);
+  overflow: hidden;
+  isolation: isolate; /* contain Leaflet's z-index so the close button stays on top */
+  background: color-mix(in oklab, var(--color-bg) 92%, black); /* pre-tile surface */
+}
+.place-map-overlay-frame .place-map-canvas {
+  block-size: 100%;
+  inline-size: 100%;
+}
+
+/* A little zoom on open — the "enlarge" gesture, like the image lightbox. */
+@media (prefers-reduced-motion: no-preference) {
+  .place-map-overlay[data-open] .place-map-overlay-frame {
+    animation: place-map-zoom-in 220ms ease-out;
+  }
+  @keyframes place-map-zoom-in {
+    from {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+.place-map-overlay-close {
+  position: absolute;
+  z-index: 10; /* above the isolated frame */
+  inset-block-start: calc(var(--place-map-overlay-inset) + var(--space-2xs));
+  inset-inline-end: calc(var(--place-map-overlay-inset) + var(--space-2xs));
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  display: grid;
+  place-items: center;
+  color: var(--color-text);
+  background: color-mix(in srgb, var(--color-bg-accent) 92%, transparent);
+  border: var(--stroke);
+  border-radius: var(--border-radius-small);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.place-map-overlay-close:hover {
+  color: var(--color-headline);
+  border-color: color-mix(in oklab, var(--color-text) 30%, var(--color-bg));
+}
+
+/* --- Leaflet chrome, token-skinned; theme-adaptive, inline + overlay alike. All scoped
+   under the canvas hook so nothing leaks (the "keep-out fence"). --- */
+/* Leaflet tiles are <img>, and the map can sit inside .prose, whose `img { border }`
+   would frame every tile → a grey grid over the map. Cancel it inside the canvas.
+   (0,2,0) outranks .prose :is(img,video) (0,1,1). */
+[data-place-map-canvas] .leaflet-tile {
+  border: 0;
+}
+/* The site's global `svg { block-size: 0.6lh }` would collapse Leaflet's overlay <svg>
+   (the circleMarker) to nothing — restore intrinsic sizing inside the canvas. */
+[data-place-map-canvas] .leaflet-overlay-pane svg {
+  block-size: auto;
+  inline-size: auto;
+}
+/* Leaflet's own `.leaflet-container { background: #ddd }` would win over an unscoped
+   surface (the grey "sparkles" bug); (0,2,0) beats it. */
+[data-place-map-canvas].leaflet-container {
+  font-family: var(--font-base);
+  font-size: var(--size-step-min-2);
+  background: color-mix(in oklab, var(--color-bg) 92%, black);
+}
+/* frame clips → inset ring (the custom-youtube play-button lesson) */
+[data-place-map-canvas].leaflet-container:focus-visible {
+  outline: 3px solid var(--color-text);
+  outline-offset: -4px;
+}
+/* .leaflet-container is repeated in these selectors on purpose: leaflet.css itself uses
+   two-class selectors (`.leaflet-container .leaflet-control-attribution`,
+   `.leaflet-touch .leaflet-bar a`) and loads AFTER this bundle, so a bare
+   [data-place-map-canvas] descendant rule (0,2,x) only ties and loses on order —
+   the white-attribution-in-dark-mode bug. (0,3,x) wins outright. */
+[data-place-map-canvas].leaflet-container .leaflet-control-attribution {
+  background: color-mix(in srgb, var(--color-bg-accent) 90%, transparent);
+  color: var(--color-text-accent);
+  font-size: 11px;
+}
+[data-place-map-canvas].leaflet-container .leaflet-control-attribution a {
+  color: var(--color-text);
+}
+[data-place-map-canvas].leaflet-container .leaflet-bar a {
+  background: color-mix(in srgb, var(--color-bg-accent) 90%, transparent);
+  color: var(--color-text);
+  border-color: color-mix(in oklab, var(--color-text) 20%, var(--color-bg));
+}
+[data-place-map-canvas].leaflet-container .leaflet-bar a:hover,
+[data-place-map-canvas].leaflet-container .leaflet-bar a:focus {
+  background: var(--color-bg-accent);
+  color: var(--color-headline);
+}
+
+/* --- groups mode: chips on the map surface + the always-visible place list below.
+   The server-rendered list is the no-JS / screen-reader path; place-map.js reads it,
+   builds the map, wraps each group heading's content in an aria-pressed toggle and
+   mirrors it as a chip. --dot (a semantic accent token, set per group in the markup)
+   colors the group's dot everywhere: heading, chip, and — resolved via computed
+   style — the map markers. --- */
+
+/* the group dot — hollow when the group is toggled off */
+.place-dot {
+  display: inline-block;
+  inline-size: 0.7em;
+  block-size: 0.7em;
+  flex: none;
+  border-radius: 50%;
+  background: var(--dot, var(--color-primary));
+}
+
+/* chips: floating on the map, top-left, clear of the maximize button. A desktop
+   convenience — below 40rem they hide and the list headings carry the toggles,
+   so no function is lost (the decided mobile behavior). */
+.place-map-chips {
+  position: absolute;
+  z-index: 1;
+  inset-block-start: var(--space-2xs);
+  inset-inline-start: var(--space-2xs);
+  max-inline-size: calc(100% - 3.5rem);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.place-map-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  padding: 0.3em 0.7em;
+  font-family: var(--font-base);
+  font-size: var(--size-step-min-2);
+  font-weight: var(--font-bold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-text);
+  background: color-mix(in srgb, var(--color-bg-accent) 92%, transparent);
+  border: var(--stroke);
+  border-radius: var(--border-radius-small);
+  cursor: pointer;
+}
+.place-map-chip:hover {
+  color: var(--color-headline);
+  border-color: color-mix(in oklab, var(--color-text) 30%, var(--color-bg));
+}
+@media (max-width: 40rem) {
+  .place-map-chips {
+    display: none;
+  }
+}
+
+/* the place list: legend + toggles + real browsable content, always present */
+.place-map-places {
+  margin-block-start: var(--space-s);
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: var(--space-s);
+}
+.place-group-heading {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  font-family: var(--font-base);
+  font-size: var(--size-step-min-2);
+  font-weight: var(--font-bold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-text);
+}
+/* the JS moves the heading's content into this toggle button */
+.place-group-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.1em 0;
+  background: none;
+  border: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+.place-count {
+  color: var(--color-text-accent);
+  font-weight: var(--font-normal);
+  letter-spacing: normal;
+}
+/* toggled-off group: struck-through control, hollow dot, dimmed list */
+:is(.place-map-chip, .place-group-toggle)[aria-pressed='false'] {
+  color: var(--color-text-accent);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+:is(.place-map-chip, .place-group-toggle)[aria-pressed='false'] .place-dot {
+  background: transparent;
+  box-shadow: inset 0 0 0 2px var(--dot, var(--color-primary));
+}
+.place-list {
+  margin-block-start: var(--space-2xs);
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--space-3xs);
+  transition: opacity var(--transition-duration, 0.15s);
+}
+.place-group[data-off] .place-list {
+  opacity: 0.4;
+}
+.place-list li {
+  line-height: 1.35;
+}
+.place-note {
+  color: var(--color-text-accent);
+}
+.place-note::before {
+  content: ' — ';
+}
+
+/* marker popups (groups mode: click a dot → the place's name, linked), themed like
+   the rest of the chrome. Popup panes live inside the canvas, so the fence covers
+   them; same (0,3,x) repetition as the attribution rules, for the same reason. */
+[data-place-map-canvas].leaflet-container .leaflet-popup-content-wrapper,
+[data-place-map-canvas].leaflet-container .leaflet-popup-tip {
+  background: var(--color-bg-accent);
+  color: var(--color-text);
+  border-radius: var(--border-radius-small);
+  box-shadow: none;
+  border: var(--stroke);
+}
+[data-place-map-canvas].leaflet-container .leaflet-popup-content a {
+  color: var(--color-text);
+}
+
+/* (A duotone tile-tint mechanism lived here briefly — Johan judged any tint a net
+   negative for map contrast/legibility 2026-07-10, so the maps stay untinted.
+   If it's ever wanted again: commits 09298d3 + 72be19a have the working version,
+   incl. the why-not-mix-blend-mode lesson.) */

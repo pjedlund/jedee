@@ -12,6 +12,8 @@ liveloxUrl: https://www.livelox.com/Events/Show/161772/O-Ringen-Jonkoping-etapp-
 eventorUrl: https://eventor.orientering.se/Events/Show/44022
 elevationGain: 137
 elevationLoss: 144
+lat: 57.70691273925
+lon: 14.1902569321965
 ---
 
 Miss till ettan. Aargh! Sprang och grämde mig resten av loppet som dock gick felfritt.

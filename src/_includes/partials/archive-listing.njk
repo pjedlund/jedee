@@ -6,6 +6,9 @@
      - masonryLayout     (string)   "thirds" | "50-50"
      - collectionToPaginate (array) the source collection, used for the count + pagination gate
      - paginationMetaKey (string)   meta.js pagination key, e.g. "blog"
+     - archiveExtra      (html, optional) extra block rendered between the intro and
+                                    the cards — a direct .wrapper child, so breakout
+                                    classes (.feature etc.) work on its root element
    `pagination.size`, `pagination.items`, and `pagination.pageNumber` come from
    the wrapper's `pagination:` frontmatter, which Eleventy resolves per page. #}
 
@@ -21,6 +24,8 @@
   <div class="region flow prose" style="--region-space-top: var(--space-xl-2xl)">
     {% if archiveDescription %}<p>{{ archiveDescription | safe }}</p>{% endif %}
   </div>
+
+  {% if archiveExtra %}{{ archiveExtra | safe }}{% endif %}
 
   {% if pagination.items.length %}
     <custom-masonry layout="{{ masonryLayout }}">

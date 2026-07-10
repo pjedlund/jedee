@@ -8,6 +8,8 @@ energyKcal: 296
 stravaUrl: https://www.strava.com/activities/5959629043
 elevationGain: 9
 elevationLoss: 7
+lat: 55.37967
+lon: 13.087
 ---
 
 Orienteering. Should be in the list of sports Strava.

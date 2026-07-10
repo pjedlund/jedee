@@ -11,7 +11,7 @@
 
   Bare include from photo.njk (no async shortcodes here), so the interlinker
   async-blank trap doesn't apply and internal {% if %} guards are safe. The
-  <photo-map> custom element is expanded by the WebC transform, then its remote
+  <place-map> custom element is expanded by the WebC transform, then its remote
   <img> is fetched + self-hosted by the eleventy-img transform — no async shortcode.
   Microformats: p-location (+ nested h-adr) on the place; h-geo on the coords.
 #}
@@ -21,34 +21,30 @@
 {% set raster = false %}
 {% if photo.downloads %}{% set raster = photo.downloads[0] %}{% endif %}
 
-{# Show the build-time map only with GPS + a configured key + no per-post opt-out. #}
-{% set showMap = ex and ex.gps and meta.mapApiKey and not photo.hideMap %}
-
+{# The map moved out of this sidebar to a popout <place-map> element in photo.njk;
+   this block is now just the capture-facts list. The Place row links to
+   OpenStreetMap whenever there's GPS. #}
 {% if ex or photo.downloads %}
 <section class="photo-meta | flow" aria-label="Photograph details">
 
   {% if ex %}
-  <div class="sidebar" data-direction="rtl" style="--sidebar-target-width: 18rem; --sidebar-content-min-width: 60%; --gutter: var(--space-m)">
-    <dl>
-      {% if ex.camera %}<dt>Camera</dt><dd>{{ ex.camera }}</dd>{% endif %}
-      {% if photo.format %}<dt>Format</dt><dd>{{ photo.format }}</dd>{% endif %}
-      {% if photo.exposure %}<dt>Exposure</dt><dd>{{ photo.exposure }}</dd>{% endif %}
-      {% if photo.film %}<dt>Film</dt><dd>{{ photo.film }}</dd>{% endif %}
-      {% if photo.development %}<dt>Development</dt><dd>{{ photo.development }}</dd>{% endif %}
-      {% if ex.dateTaken %}<dt>Taken</dt><dd>{{ ex.dateTaken }}</dd>{% endif %}
-      {% if ex.place %}<dt>Place</dt>
-        <dd class="p-location h-adr">
-          {%- if ex.gps and not showMap %}<a href="https://www.openstreetmap.org/?mlat={{ ex.gps.lat }}&mlon={{ ex.gps.lon }}#map={{ photo.mapZoom or 12 }}/{{ ex.gps.lat }}/{{ ex.gps.lon }}" target="_blank" rel="noopener">{% endif -%}
-          {%- if ex.place.city %}<span class="p-locality">{{ ex.place.city }}</span>{% endif -%}
-          {%- if ex.place.region %}{% if ex.place.city %}, {% endif %}<span class="p-region">{{ ex.place.region }}</span>{% endif -%}
-          {%- if ex.place.country %}{% if ex.place.city or ex.place.region %}, {% endif %}<span class="p-country-name">{{ ex.place.country }}</span>{% endif -%}
-          {%- if ex.gps and not showMap %}</a>{% endif -%}
-        </dd>
-      {% endif %}
-    </dl>
-
-    {% if showMap %}{% include "partials/photo-map.njk" %}{% endif %}
-  </div>
+  <dl>
+    {% if ex.camera %}<dt>Camera</dt><dd>{{ ex.camera }}</dd>{% endif %}
+    {% if photo.format %}<dt>Format</dt><dd>{{ photo.format }}</dd>{% endif %}
+    {% if photo.exposure %}<dt>Exposure</dt><dd>{{ photo.exposure }}</dd>{% endif %}
+    {% if photo.film %}<dt>Film</dt><dd>{{ photo.film }}</dd>{% endif %}
+    {% if photo.development %}<dt>Development</dt><dd>{{ photo.development }}</dd>{% endif %}
+    {% if ex.dateTaken %}<dt>Taken</dt><dd>{{ ex.dateTaken }}</dd>{% endif %}
+    {% if ex.place %}<dt>Place</dt>
+      <dd class="p-location h-adr">
+        {%- if ex.gps %}<a href="https://www.openstreetmap.org/?mlat={{ ex.gps.lat }}&mlon={{ ex.gps.lon }}#map={{ photo.mapZoom or 13 }}/{{ ex.gps.lat }}/{{ ex.gps.lon }}" target="_blank" rel="noopener">{% endif -%}
+        {%- if ex.place.city %}<span class="p-locality">{{ ex.place.city }}</span>{% endif -%}
+        {%- if ex.place.region %}{% if ex.place.city %}, {% endif %}<span class="p-region">{{ ex.place.region }}</span>{% endif -%}
+        {%- if ex.place.country %}{% if ex.place.city or ex.place.region %}, {% endif %}<span class="p-country-name">{{ ex.place.country }}</span>{% endif -%}
+        {%- if ex.gps %}</a>{% endif -%}
+      </dd>
+    {% endif %}
+  </dl>
   {% endif %}
 
   {% if photo.downloads %}

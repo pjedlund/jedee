@@ -11,4 +11,6 @@ stravaUrl: https://www.strava.com/activities/11179181834
 elevationGain: 173
 elevationLoss: 188
 liveloxUrl: https://www.livelox.com/Viewer/Soderasenrundan/H55?classId=741109
+lat: 56.00641
+lon: 13.1491
 ---

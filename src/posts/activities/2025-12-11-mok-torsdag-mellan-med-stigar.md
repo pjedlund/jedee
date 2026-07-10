@@ -11,4 +11,6 @@ stravaUrl: https://www.strava.com/activities/16716030970
 elevationGain: 77
 elevationLoss: 79
 liveloxUrl: https://www.livelox.com/Viewer/Torsdag-11-december/Mellan?classId=1091586
+lat: 55.54956
+lon: 13.20236
 ---

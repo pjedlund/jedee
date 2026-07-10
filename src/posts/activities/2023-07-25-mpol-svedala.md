@@ -11,6 +11,8 @@ stravaUrl: https://www.strava.com/activities/9523449617
 elevationGain: 27
 elevationLoss: 26
 eventorUrl: https://eventor.orientering.se/Events/Show/45834
+lat: 55.5139738968608
+lon: 13.2375840008892
 ---
 
 Tyvärr känning i vänster vad så jag tog det lugnt men fick ändå gå andra halvan av banan.

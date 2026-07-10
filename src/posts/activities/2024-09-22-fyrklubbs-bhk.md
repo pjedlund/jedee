@@ -12,4 +12,6 @@ elevationGain: 93
 elevationLoss: 107
 eventorUrl: https://eventor.orientering.se/Events/Show/44868
 liveloxUrl: https://www.livelox.com/Viewer/Fyrklubbs/BHK?classId=842067
+lat: 56.2330732325778
+lon: 13.8544090259656
 ---

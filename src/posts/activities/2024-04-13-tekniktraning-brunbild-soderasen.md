@@ -11,4 +11,6 @@ stravaUrl: https://www.strava.com/activities/11170658369
 elevationGain: 173
 elevationLoss: 164
 liveloxUrl: https://www.livelox.com/Viewer/Klippan-C-Sverige?sessionId=13032858
+lat: 56.03483
+lon: 13.18116
 ---

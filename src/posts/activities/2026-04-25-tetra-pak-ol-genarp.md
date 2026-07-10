@@ -10,6 +10,8 @@ energyKcal: 547
 stravaUrl: https://www.strava.com/activities/18249985200
 elevationGain: 108
 elevationLoss: 116
+lat: 55.60041
+lon: 13.43179
 ---
 
 Lugn jogg/gång men skönt att komma ut i skogen igen.

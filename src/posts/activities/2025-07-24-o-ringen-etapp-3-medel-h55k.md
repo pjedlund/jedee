@@ -12,6 +12,8 @@ liveloxUrl: https://www.livelox.com/Events/Show/161773
 eventorUrl: https://eventor.orientering.se/Events/Show/44022
 elevationGain: 192
 elevationLoss: 180
+lat: 57.6966793407015
+lon: 14.3052058526218
 ---
 
 Segt idag men foten håller hyfsat fortfarande. En bom och allmänt ofokuserat.

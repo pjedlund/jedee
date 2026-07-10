@@ -10,6 +10,8 @@ energyKcal: 354
 stravaUrl: https://www.strava.com/activities/11368480323
 elevationGain: 49
 elevationLoss: 51
+lat: 55.65809
+lon: 13.08529
 ---
 
 Ofokuserat lopp. Ont i knät.

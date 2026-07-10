@@ -7,5 +7,7 @@ duration: 3238
 hrAvg: 155
 stravaUrl: 'https://www.strava.com/activities/17228135734'
 draft: false
+lat: 55.59677
+lon: 12.96975
 ---
 Borde valt moturs för att slippa motvinden längs Ribbanstranden. En del snödrivor vid nudistfyren.

@@ -12,6 +12,8 @@ elevationGain: 140
 elevationLoss: 146
 liveloxUrl: https://www.livelox.com/Events/Show/161771
 eventorUrl: https://eventor.orientering.se/Events/Show/44022
+lat: 57.707043305776
+lon: 14.1904369515431
 ---
 
 Foten höll och rent lopp även om det gick långsamt i den ganska brötiga terrängen.
