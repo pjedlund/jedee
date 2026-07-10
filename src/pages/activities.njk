@@ -17,4 +17,19 @@ permalink: 'activities/{% if pagination.pageNumber >=1 %}page-{{ pagination.page
 {% set collectionToPaginate = collections.activity %}
 {% set paginationMetaKey = "blog" %}
 
+{# Race/activity overview map + place list — first page only; the map always covers
+   the whole collection, so repeating it on page-2+ would just duplicate content. #}
+{% if pagination.pageNumber == 0 %}
+  {% set archiveExtra %}
+    <div class="feature flow">
+      <h2>Where I've been active</h2>
+      {% include "partials/place-map-activities.njk" %}
+    </div>
+  {% endset %}
+{% endif %}
+
 {% include "partials/archive-listing.njk" %}
+
+{% css "local" %}
+  {% include 'css/place-map.css' %}
+{% endcss %}

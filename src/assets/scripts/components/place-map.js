@@ -5,6 +5,14 @@
 // keeps scrolling. The maximize button grows THE SAME map instance into a modal overlay
 // where wheel + pinch turn on; pan/zoom state is preserved because it's one map, not a
 // rebuilt second one. Esc / backdrop / close button exit, focus returns to the trigger.
+//
+// Two modes, decided by the slotted markup:
+//  - single pin (photo pages): data-lat/data-lon on the element, static <a><img> slot.
+//  - groups: a slotted [data-place-groups] place list — each .place-group holds
+//    <li data-lat data-lon> items. The LIST is the data source and the no-JS/screen-
+//    reader path (Leaflet markers' keyboard/SR handling is broken upstream, so nobody
+//    is forced through the map). JS builds the map above it, turns the group headings
+//    into aria-pressed toggles, and adds synced chips on the map surface.
 import L from 'leaflet';
 
 const TILES = {
@@ -30,11 +38,11 @@ const markerStroke = (theme) => (theme === 'dark' ? '#141619' : '#ffffff');
 
 // Build one live map. Wheel + pinch start disabled (toggled on when maximized); drag,
 // keyboard and the +/- zoom control stay on inline so the map is usable in place.
-function makeMap(el, { lat, lon, zoom, place }) {
+// Returns { map, addDot } — dots added through addDot get theme re-stroking and the
+// grow-a-little-on-zoom behavior, whichever layer they sit in.
+function makeMap(el, { center, zoom, bounds, place }) {
   let theme = pageTheme();
   const map = L.map(el, {
-    center: [lat, lon],
-    zoom,
     zoomControl: false,
     attributionControl: false,
     scrollWheelZoom: false, // enabled only when maximized (else it traps page scroll)
@@ -43,6 +51,17 @@ function makeMap(el, { lat, lon, zoom, place }) {
     fadeAnimation: !REDUCED,
     markerZoomAnimation: !REDUCED,
   });
+  const fit = () => map.fitBounds(bounds, { padding: [28, 28] });
+  if (bounds) {
+    fit();
+    // A map fitted while its container has no size (hidden tab, collapsed viewport)
+    // computes a garbage zoom — refit once it gets its first real size.
+    if (!el.clientWidth)
+      map.once('resize', () => {
+        fit();
+        refZoom = map.getZoom();
+      });
+  } else map.setView(center, zoom);
   el.dataset.placeMapCanvas = ''; // styling hook that outranks leaflet.css
   el.setAttribute('role', 'application');
   el.setAttribute('aria-label', place ? `Map of ${place}` : 'Map of this location');
@@ -50,13 +69,6 @@ function makeMap(el, { lat, lon, zoom, place }) {
   L.control.zoom({ position: 'bottomleft' }).addTo(map);
 
   let tiles = L.tileLayer(TILES[theme], { maxZoom: 19 }).addTo(map);
-  const marker = L.circleMarker([lat, lon], {
-    radius: 7,
-    weight: 2,
-    color: markerStroke(theme),
-    fillColor: MARKER_FILL,
-    fillOpacity: 0.9,
-  }).addTo(map);
 
   // Ctrl/⌘ + wheel zooms the inline map around the pointer; a PLAIN wheel keeps
   // scrolling the page (no scroll trap — the reason scrollWheelZoom stays off inline).
@@ -72,12 +84,27 @@ function makeMap(el, { lat, lon, zoom, place }) {
     { passive: false }
   );
 
-  // Marker swells a little as you zoom in, shrinks out — clamped (circleMarker radius is
+  const dots = [];
+  const addDot = (lat, lon, { fill = MARKER_FILL, layer, popup } = {}) => {
+    const dot = L.circleMarker([lat, lon], {
+      radius: 7,
+      weight: 2,
+      color: markerStroke(theme),
+      fillColor: fill,
+      fillOpacity: 0.9,
+    }).addTo(layer || map);
+    if (popup) dot.bindPopup(popup);
+    dots.push(dot);
+    return dot;
+  };
+
+  // Dots swell a little as you zoom in, shrink out — clamped (circleMarker radius is
   // screen px, constant per zoom level).
-  const refZoom = map.getZoom();
-  map.on('zoomend', () =>
-    marker.setRadius(Math.max(4, Math.min(13, 7 + (map.getZoom() - refZoom) * 0.8)))
-  );
+  let refZoom = map.getZoom();
+  map.on('zoomend', () => {
+    const r = Math.max(4, Math.min(13, 7 + (map.getZoom() - refZoom) * 0.8));
+    dots.forEach((d) => d.setRadius(r));
+  });
 
   // Re-tile + re-stroke when the site theme flips, so the map never keeps stale
   // light/dark tiles after a toggle (old inline-map bug).
@@ -87,7 +114,7 @@ function makeMap(el, { lat, lon, zoom, place }) {
     theme = next;
     map.removeLayer(tiles);
     tiles = L.tileLayer(TILES[theme], { maxZoom: 19 }).addTo(map);
-    marker.setStyle({ color: markerStroke(theme) });
+    dots.forEach((d) => d.setStyle({ color: markerStroke(theme) }));
   };
   new MutationObserver(onTheme).observe(document.documentElement, {
     attributes: true,
@@ -95,7 +122,7 @@ function makeMap(el, { lat, lon, zoom, place }) {
   });
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', onTheme);
 
-  return map;
+  return { map, addDot };
 }
 
 // --- shared maximize overlay (one per page, built on first open). It's just a themed
@@ -136,7 +163,7 @@ function buildOverlay() {
 }
 
 // Keep Tab focus inside the open dialog (Leaflet's zoom/attribution links + the map
-// container + the close button are the focus stops).
+// container + the chips + the close button are the focus stops).
 function trapTab(e) {
   const f = overlay.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])');
   if (!f.length) return;
@@ -153,14 +180,15 @@ function trapTab(e) {
 
 class PlaceMap extends HTMLElement {
   connectedCallback() {
-    const lat = Number(this.dataset.lat);
-    const lon = Number(this.dataset.lon);
-    const zoom = Number(this.dataset.zoom) || 13;
     this.place = this.dataset.place || '';
-    if (!Number.isFinite(lat) || !Number.isFinite(lon)) return; // no coords → leave the static map
+    const groupsRoot = this.querySelector('[data-place-groups]');
+    if (groupsRoot) this.initGroups(groupsRoot);
+    else this.initSinglePin();
+  }
 
-    // Live inline slot. Its aspect-ratio holds the box, so moving the canvas out to the
-    // overlay (and back) never shifts the page.
+  // The live inline slot. Its aspect-ratio holds the box, so moving the canvas out to
+  // the overlay (and back) never shifts the page.
+  buildBox() {
     this.box = document.createElement('div');
     this.box.className = 'place-map-live';
     this.canvas = document.createElement('div');
@@ -187,28 +215,119 @@ class PlaceMap extends HTMLElement {
       if (!parent) return;
       this.canvas.style.inlineSize = parent.clientWidth + 'px';
       this.canvas.style.blockSize = parent.clientHeight + 'px';
-      this.map?.invalidateSize();
+      this.mapObj?.map.invalidateSize();
     };
     this.fitCanvas(); // before the map initializes, so its very first layout is integer
     new ResizeObserver(this.fitCanvas).observe(this.box);
+  }
 
-    this.map = makeMap(this.canvas, { lat, lon, zoom, place: this.place });
+  finishInit() {
     requestAnimationFrame(this.fitCanvas);
-
     this.maxBtn.addEventListener('click', () => this.open());
     this.dataset.mapReady = '';
+  }
+
+  initSinglePin() {
+    if (!this.dataset.lat) return; // no coords → leave the static map
+    const lat = Number(this.dataset.lat);
+    const lon = Number(this.dataset.lon);
+    const zoom = Number(this.dataset.zoom) || 13;
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
+
+    this.buildBox();
+    this.mapObj = makeMap(this.canvas, { center: [lat, lon], zoom, place: this.place });
+    this.mapObj.addDot(lat, lon);
+    this.finishInit();
+  }
+
+  // Groups mode: the slotted place list is the data source. Parse it, build the map
+  // fitted to every place, one toggleable layer per group, chips + heading toggles
+  // synced over the same state.
+  initGroups(root) {
+    const groups = [...root.querySelectorAll('.place-group')]
+      .map((li) => ({
+        li,
+        key: li.dataset.group,
+        heading: li.querySelector('.place-group-heading'),
+        // --dot is authored as a token reference; computed style resolves it to a color
+        color: getComputedStyle(li).getPropertyValue('--dot').trim() || MARKER_FILL,
+        places: [...li.querySelectorAll('li[data-lat]')].map((p) => {
+          const a = p.querySelector('a');
+          return { lat: Number(p.dataset.lat), lon: Number(p.dataset.lon), name: a?.textContent.trim() || p.textContent.trim(), url: a?.getAttribute('href') };
+        }),
+      }))
+      .filter((g) => g.places.length);
+    const all = groups.flatMap((g) => g.places);
+    if (!all.length) return; // nothing to map → leave the plain list
+
+    this.buildBox();
+    this.mapObj = makeMap(this.canvas, {
+      bounds: L.latLngBounds(all.map((p) => [p.lat, p.lon])),
+      place: this.place,
+    });
+
+    const controls = {}; // key -> [chip, heading button] — two synced controls, one state
+    const setGroup = (g, on) => {
+      on ? this.mapObj.map.addLayer(g.layer) : this.mapObj.map.removeLayer(g.layer);
+      controls[g.key].forEach((b) => b.setAttribute('aria-pressed', String(on)));
+      g.li.toggleAttribute('data-off', !on);
+    };
+    const register = (g, btn) => {
+      (controls[g.key] ||= []).push(btn);
+      btn.addEventListener('click', () => setGroup(g, btn.getAttribute('aria-pressed') !== 'true'));
+    };
+
+    // Chips on the map surface — a desktop convenience; CSS hides them on small
+    // screens, where the list headings carry the same toggles (no function lost).
+    this.chips = document.createElement('ul');
+    this.chips.className = 'place-map-chips';
+
+    for (const g of groups) {
+      g.layer = L.layerGroup().addTo(this.mapObj.map);
+      g.places.forEach((p) =>
+        this.mapObj.addDot(p.lat, p.lon, {
+          fill: g.color,
+          layer: g.layer,
+          popup: p.url ? `<a href="${p.url}">${p.name}</a>` : p.name,
+        })
+      );
+
+      // Turn the server-rendered heading into a toggle (a no-JS heading must not be a
+      // button), and mirror it as a chip.
+      const toggle = document.createElement('button');
+      toggle.type = 'button';
+      toggle.className = 'place-group-toggle';
+      toggle.setAttribute('aria-pressed', 'true');
+      toggle.append(...g.heading.childNodes);
+      g.heading.append(toggle);
+      register(g, toggle);
+
+      const chipLi = document.createElement('li');
+      const chip = document.createElement('button');
+      chip.type = 'button';
+      chip.className = 'place-map-chip';
+      chip.setAttribute('aria-pressed', 'true');
+      chip.style.setProperty('--dot', g.color);
+      chip.innerHTML = toggle.innerHTML;
+      register(g, chip);
+      chipLi.append(chip);
+      this.chips.append(chipLi);
+    }
+    this.box.append(this.chips);
+    this.finishInit();
   }
 
   open() {
     if (!overlay) buildOverlay();
     active = this;
     overlayFrame.append(this.canvas); // move the SAME map into the overlay
+    if (this.chips) overlayFrame.append(this.chips); // chips ride along
     overlay.setAttribute('data-open', '');
     overlay.setAttribute('aria-label', this.place ? `Map showing ${this.place}` : 'Interactive map');
     this.canvas.setAttribute('aria-label', this.place ? `Interactive map of ${this.place}` : 'Interactive map of this location');
     document.body.style.overflow = 'hidden';
-    this.map.scrollWheelZoom.enable();
-    this.map.touchZoom.enable();
+    this.mapObj.map.scrollWheelZoom.enable();
+    this.mapObj.map.touchZoom.enable();
     closeBtn.focus(); // move focus into the dialog now that it's visible
     if (!this.roOverlay) {
       new ResizeObserver(this.fitCanvas).observe(overlayFrame);
@@ -218,11 +337,12 @@ class PlaceMap extends HTMLElement {
   }
 
   close() {
-    this.map.scrollWheelZoom.disable();
-    this.map.touchZoom.disable();
+    this.mapObj.map.scrollWheelZoom.disable();
+    this.mapObj.map.touchZoom.disable();
     overlay.removeAttribute('data-open');
     document.body.style.overflow = '';
     this.box.prepend(this.canvas); // move the map back inline
+    if (this.chips) this.box.append(this.chips);
     this.canvas.setAttribute('aria-label', this.place ? `Map of ${this.place}` : 'Map of this location');
     requestAnimationFrame(this.fitCanvas);
     active = null;
