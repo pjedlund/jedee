@@ -12,4 +12,6 @@ elevationGain: 179
 elevationLoss: 200
 eventorUrl: https://eventor.orientering.se/Events/Show/40057
 cover: "/assets/images/activities/2023-11-19-hostrusket-orientering.jpg"
+lat: 56.2780011333167
+lon: 13.2658364295959
 ---

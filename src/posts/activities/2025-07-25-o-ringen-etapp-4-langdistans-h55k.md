@@ -12,6 +12,8 @@ liveloxUrl: https://www.livelox.com/Events/Show/161774/O-Ringen-Jonkoping-etapp-
 eventorUrl: https://eventor.orientering.se/Events/Show/44022
 elevationGain: 111
 elevationLoss: 119
+lat: 57.6431864864092
+lon: 14.0751212324149
 ---
 
 I stort sett inga misstag men stukade foten i slutet av banan, trots att jag tejpat anklarna. Den sporttejp jag köpte igår på o-ringen-torget var av usel kvalité och tejpen hade lossnat på båda fötterna.

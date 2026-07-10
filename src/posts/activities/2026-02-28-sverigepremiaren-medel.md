@@ -13,6 +13,8 @@ elevationLoss: 100
 eventorUrl: https://eventor.orientering.se/Events/Show/53555
 liveloxUrl: https://www.livelox.com/Viewer/Sverigepremiaren-medel/H55?classId=1114545
 cover: "/assets/images/activities/2026-02-28-sverigepremiaren-medel.jpg"
+lat: 55.8451932083709
+lon: 14.2142261194289
 ---
 
 Fick tyvärr bryta efter halva loppet.

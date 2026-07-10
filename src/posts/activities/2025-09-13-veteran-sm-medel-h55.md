@@ -12,6 +12,8 @@ eventorUrl: https://eventor.orientering.se/Events/Show/51396
 elevationGain: 123
 elevationLoss: 121
 cover: "/assets/images/activities/2025-09-13-veteran-sm-medel-h55.jpg"
+lat: 57.2714831042064
+lon: 17.0467256110753
 ---
 
 Riktigt dåligt lopp. Strul från början med en miss på den svåra andra kontrollen. Seden en stor bom på tionde.

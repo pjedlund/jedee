@@ -12,6 +12,8 @@ elevationGain: 108
 elevationLoss: 111
 eventorUrl: https://eventor.orientering.se/Events/Show/51852
 liveloxUrl: https://www.livelox.com/Viewer/Host-i-Bokskogen/Brunbild-4-5-km?classId=864838
+lat: 55.5540991601339
+lon: 13.2061821393189
 ---
 
 Stökigt i början då jag ”badade” i en göl vid ettan. Lyckades tom bada en gång till på slutet och satt fast i gyttjan upp till axlarna. Bra träning i alla fall. :)

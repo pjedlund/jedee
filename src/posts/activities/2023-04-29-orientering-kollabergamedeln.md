@@ -11,4 +11,6 @@ stravaUrl: https://www.strava.com/activities/8977056032
 elevationGain: 147
 elevationLoss: 161
 eventorUrl: https://eventor.orientering.se/Events/Show/40446
+lat: 56.0667077810889
+lon: 13.3092732718737
 ---

@@ -11,6 +11,8 @@ stravaUrl: https://www.strava.com/activities/7473947782
 elevationGain: 132
 elevationLoss: 137
 eventorUrl: https://eventor.orientering.se/Events/Show/36382
+lat: 56.8884
+lon: 12.742
 ---
 
 Lätt molnighet, 19°C, Upplevd temperatur 18°C, Fuktighet 55%, Vind 4m/s från VNV - Klimat.app

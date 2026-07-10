@@ -12,4 +12,6 @@ elevationGain: 120
 elevationLoss: 122
 eventorUrl: https://eventor.orientering.se/Events/Show/53400
 liveloxUrl: https://www.livelox.com/Viewer/Frostalunken/H55?classId=752600
+lat: 55.887351030815
+lon: 13.6648287864511
 ---
