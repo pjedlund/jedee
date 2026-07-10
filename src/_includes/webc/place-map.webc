@@ -3,7 +3,7 @@
      the element renders doubled — see the eleventy-excellent WebC gotcha), with the kept
      custom element for the JS to upgrade. CSS: css/place-map.css · JS: place-map.js -->
 <is-land on:idle>
-  <place-map webc:root webc:keep :data-lat="lat" :data-lon="lon" :data-zoom="zoom" :data-place="place" :data-tint="tint">
+  <place-map webc:root webc:keep :data-lat="lat" :data-lon="lon" :data-zoom="zoom" :data-place="place">
     <slot></slot>
 
     <template data-island="once" webc:raw>

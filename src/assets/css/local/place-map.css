@@ -204,34 +204,7 @@ place-map[data-map-ready] > .place-map-static {
   color: var(--color-headline);
 }
 
-/* --- optional tint: @tint on <place-map> (any color token, e.g. var(--color-accent-blue))
-   re-shades the monochrome tiles as a duotone: dark pixels ramp toward the tint, light
-   pixels stay light. Done with an SVG filter the JS builds from the RESOLVED tint color
-   (see applyTint in place-map.js) — NOT mix-blend-mode: Leaflet's map pane carries a
-   transform, which isolates its contents from blending with anything painted beneath,
-   so a blend against a tinted canvas surface silently never composites. Both custom
-   properties are set inline on the canvas so the tint travels into the overlay.
-   The canvas background doubles as the pre-tile loading surface. --- */
-[data-place-map-canvas][data-place-map-tint].leaflet-container {
-  background: var(--place-map-tint);
-}
-[data-place-map-canvas][data-place-map-tint] .leaflet-tile-pane {
-  filter: var(--place-map-tile-filter, none);
-}
-
-/* The house tint, per theme (same switching idiom as variables.css): light = the site
-   themeColor (base-darkest — a very subtle slate on the near-white tiles), dark =
-   accent-blue (a rich steel blue). Use via @tint="var(--place-map-tint-preset)";
-   any other color token still works as a one-off. */
-:root,
-:root[data-theme='light'] {
-  --place-map-tint-preset: var(--color-base-darkest);
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --place-map-tint-preset: var(--color-accent-blue);
-  }
-}
-:root[data-theme='dark'] {
-  --place-map-tint-preset: var(--color-accent-blue);
-}
+/* (A duotone tile-tint mechanism lived here briefly — Johan judged any tint a net
+   negative for map contrast/legibility 2026-07-10, so the maps stay untinted.
+   If it's ever wanted again: commits 09298d3 + 72be19a have the working version,
+   incl. the why-not-mix-blend-mode lesson.) */

@@ -47,7 +47,7 @@ schema: BlogPosting
     {% if ex and ex.gps and meta.mapApiKey and not photo.hideMap %}
       {% set mapPlace = ex.place.city if (ex.place and ex.place.city) else "" %}
       <div class="popout">
-        <place-map @lat="{{ ex.gps.lat }}" @lon="{{ ex.gps.lon }}" @zoom="{{ photo.mapZoom or 13 }}" @place="{{ mapPlace }}" @tint="var(--place-map-tint-preset)">
+        <place-map @lat="{{ ex.gps.lat }}" @lon="{{ ex.gps.lon }}" @zoom="{{ photo.mapZoom or 13 }}" @place="{{ mapPlace }}">
           {% include "partials/place-map.njk" %}
         </place-map>
       </div>
