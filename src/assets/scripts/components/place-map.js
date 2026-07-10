@@ -58,6 +58,20 @@ function makeMap(el, { lat, lon, zoom, place }) {
     fillOpacity: 0.9,
   }).addTo(map);
 
+  // Ctrl/⌘ + wheel zooms the inline map around the pointer; a PLAIN wheel keeps
+  // scrolling the page (no scroll trap — the reason scrollWheelZoom stays off inline).
+  // Trackpad pinch arrives as ctrlKey wheel events, so pinch-to-zoom works too.
+  // When maximized, Leaflet's own (enabled) handler owns the wheel — skip.
+  el.addEventListener(
+    'wheel',
+    (e) => {
+      if (!(e.ctrlKey || e.metaKey) || map.scrollWheelZoom.enabled()) return;
+      e.preventDefault();
+      map.setZoomAround(map.mouseEventToLatLng(e), map.getZoom() + (e.deltaY < 0 ? 1 : -1));
+    },
+    { passive: false }
+  );
+
   // Marker swells a little as you zoom in, shrinks out — clamped (circleMarker radius is
   // screen px, constant per zoom level).
   const refZoom = map.getZoom();
@@ -159,6 +173,13 @@ class PlaceMap extends HTMLElement {
     this.maxBtn.setAttribute('aria-label', this.place ? `Enlarge map of ${this.place}` : 'Enlarge map');
     this.maxBtn.innerHTML = '<span aria-hidden="true">⛶</span>';
     this.box.append(this.maxBtn);
+
+    // Optional tint (any CSS color / token). Set INLINE on the canvas — an inherited
+    // custom property would be lost when the canvas moves into the maximize overlay.
+    if (this.dataset.tint) {
+      this.canvas.style.setProperty('--place-map-tint', this.dataset.tint);
+      this.canvas.dataset.placeMapTint = '';
+    }
 
     this.prepend(this.box);
     this.map = makeMap(this.canvas, { lat, lon, zoom, place: this.place });

@@ -175,21 +175,38 @@ place-map[data-map-ready] > .place-map-static {
   outline: 3px solid var(--color-text);
   outline-offset: -4px;
 }
-[data-place-map-canvas] .leaflet-control-attribution {
+/* .leaflet-container is repeated in these selectors on purpose: leaflet.css itself uses
+   two-class selectors (`.leaflet-container .leaflet-control-attribution`,
+   `.leaflet-touch .leaflet-bar a`) and loads AFTER this bundle, so a bare
+   [data-place-map-canvas] descendant rule (0,2,x) only ties and loses on order —
+   the white-attribution-in-dark-mode bug. (0,3,x) wins outright. */
+[data-place-map-canvas].leaflet-container .leaflet-control-attribution {
   background: color-mix(in srgb, var(--color-bg-accent) 90%, transparent);
   color: var(--color-text-accent);
   font-size: 11px;
 }
-[data-place-map-canvas] .leaflet-control-attribution a {
+[data-place-map-canvas].leaflet-container .leaflet-control-attribution a {
   color: var(--color-text);
 }
-[data-place-map-canvas] .leaflet-bar a {
+[data-place-map-canvas].leaflet-container .leaflet-bar a {
   background: color-mix(in srgb, var(--color-bg-accent) 90%, transparent);
   color: var(--color-text);
   border-color: color-mix(in oklab, var(--color-text) 20%, var(--color-bg));
 }
-[data-place-map-canvas] .leaflet-bar a:hover,
-[data-place-map-canvas] .leaflet-bar a:focus {
+[data-place-map-canvas].leaflet-container .leaflet-bar a:hover,
+[data-place-map-canvas].leaflet-container .leaflet-bar a:focus {
   background: var(--color-bg-accent);
   color: var(--color-headline);
+}
+
+/* --- optional tint: @tint on <place-map> (any color token, e.g. var(--color-accent-blue))
+   re-shades the monochrome tiles. The tiles keep only their luminosity; hue and
+   saturation come from the tint surface painted beneath them. The JS sets both the
+   flag and the --place-map-tint inline value on the canvas itself, so the tint
+   travels with the map into the maximize overlay. --- */
+[data-place-map-canvas][data-place-map-tint].leaflet-container {
+  background: var(--place-map-tint);
+}
+[data-place-map-canvas][data-place-map-tint] .leaflet-tile-pane {
+  mix-blend-mode: luminosity;
 }
