@@ -28,6 +28,40 @@ function pageTheme() {
 // Stroke = the theme's background, so the dot always reads a clean halo.
 const markerStroke = (theme) => (theme === 'dark' ? '#141619' : '#ffffff');
 
+// --- optional tile tint (data-tint on <place-map>) ---
+// A duotone SVG filter on the tile pane: dark pixels ramp toward the tint color, white
+// stays white. mix-blend-mode can't do this here — Leaflet's map pane has a transform,
+// which isolates its contents from blending with the canvas surface beneath. The filter
+// is built from the RESOLVED tint (the canvas background, painted by place-map.css from
+// --place-map-tint), so any token works and a theme flip just means re-reading it.
+let tintSeq = 0;
+function parseColor(str) {
+  let m = str.match(/^rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)/);
+  if (m) return [m[1] / 255, m[2] / 255, m[3] / 255];
+  m = str.match(/^color\(srgb\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)/);
+  if (m) return [+m[1], +m[2], +m[3]];
+  return null;
+}
+function applyTint(el) {
+  const rgb = parseColor(getComputedStyle(el).backgroundColor);
+  if (!rgb) return;
+  if (!el.tintFuncs) {
+    const id = `place-map-tint-${tintSeq++}`;
+    const holder = document.createElement('div');
+    holder.setAttribute('aria-hidden', 'true');
+    holder.style.cssText = 'position:absolute;inline-size:0;block-size:0;overflow:hidden';
+    holder.innerHTML =
+      `<svg><filter id="${id}" color-interpolation-filters="sRGB">` +
+      '<feColorMatrix type="saturate" values="0"/>' +
+      '<feComponentTransfer><feFuncR type="table"/><feFuncG type="table"/><feFuncB type="table"/></feComponentTransfer>' +
+      '</filter></svg>';
+    el.append(holder); // inside the canvas, so the filter travels with it into the overlay
+    el.tintFuncs = holder.querySelectorAll('feFuncR, feFuncG, feFuncB');
+    el.style.setProperty('--place-map-tile-filter', `url(#${id})`);
+  }
+  el.tintFuncs.forEach((f, i) => f.setAttribute('tableValues', `${rgb[i]} 1`));
+}
+
 // Build one live map. Wheel + pinch start disabled (toggled on when maximized); drag,
 // keyboard and the +/- zoom control stay on inline so the map is usable in place.
 function makeMap(el, { lat, lon, zoom, place }) {
@@ -44,6 +78,8 @@ function makeMap(el, { lat, lon, zoom, place }) {
     markerZoomAnimation: !REDUCED,
   });
   el.dataset.placeMapCanvas = ''; // styling hook that outranks leaflet.css
+  const tinted = 'placeMapTint' in el.dataset;
+  if (tinted) applyTint(el); // needs the canvas hook above, so the tint background resolves
   el.setAttribute('role', 'application');
   el.setAttribute('aria-label', place ? `Map of ${place}` : 'Map of this location');
   L.control.attribution({ prefix: false }).addAttribution(ATTRIB).addTo(map);
@@ -88,6 +124,7 @@ function makeMap(el, { lat, lon, zoom, place }) {
     map.removeLayer(tiles);
     tiles = L.tileLayer(TILES[theme], { maxZoom: 19 }).addTo(map);
     marker.setStyle({ color: markerStroke(theme) });
+    if (tinted) applyTint(el); // the token resolves to a new color per theme
   };
   new MutationObserver(onTheme).observe(document.documentElement, {
     attributes: true,
