@@ -11,4 +11,6 @@ stravaUrl: https://www.strava.com/activities/12908736551
 elevationGain: 176
 elevationLoss: 156
 liveloxUrl: https://www.livelox.com/Viewer/Dalbyskogen-by-Night/6-manna/1?classId=874391&relayLeg=1
+lat: 55.67434
+lon: 13.35524
 ---

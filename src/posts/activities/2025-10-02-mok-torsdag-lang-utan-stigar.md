@@ -11,6 +11,8 @@ stravaUrl: https://www.strava.com/activities/16012476793
 elevationGain: 163
 elevationLoss: 161
 liveloxUrl: https://www.livelox.com/Viewer/MOK-Torsdag-2-okt/Lang?classId=1062816
+lat: 55.56046
+lon: 13.21209
 ---
 
 Första rundan med pannlampa. Enklare att hitta kontrollerna. 😊

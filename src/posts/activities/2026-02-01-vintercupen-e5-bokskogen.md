@@ -11,6 +11,8 @@ stravaUrl: https://www.strava.com/activities/17249102041
 elevationGain: 181
 elevationLoss: 187
 liveloxUrl: https://www.livelox.com/Viewer/Vintercupen-2026-E5/A?classId=1106003
+lat: 55.55335
+lon: 13.21054
 ---
 
 Tre rundor: A,B,C  Ont i knäet - dags för gymmet igen.

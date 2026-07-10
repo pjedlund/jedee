@@ -11,6 +11,8 @@ stravaUrl: https://www.strava.com/activities/17142242235
 elevationGain: 117
 elevationLoss: 122
 liveloxUrl: https://www.livelox.com/Viewer/Torsdag-22-januari/Lang?classId=1102353
+lat: 55.54956
+lon: 13.20239
 ---
 
 Lång med stigar.

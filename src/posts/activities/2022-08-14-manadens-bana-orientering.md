@@ -10,6 +10,8 @@ energyKcal: 717
 stravaUrl: https://www.strava.com/activities/7637534794
 elevationGain: 60
 elevationLoss: 58
+lat: 55.56078
+lon: 13.21391
 ---
 
 Klar himmel, 27°C, Upplevd temperatur 27°C, Fuktighet 41%, Vind 7m/s från O - Klimat.app

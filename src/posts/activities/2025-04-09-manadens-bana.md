@@ -10,4 +10,6 @@ energyKcal: 686
 stravaUrl: https://www.strava.com/activities/14128664184
 elevationGain: 166
 elevationLoss: 168
+lat: 55.55743
+lon: 13.20812
 ---

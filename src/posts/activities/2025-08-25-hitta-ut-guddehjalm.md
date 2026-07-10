@@ -10,6 +10,8 @@ energyKcal: 577
 stravaUrl: https://www.strava.com/activities/15583223823
 elevationGain: 178
 elevationLoss: 174
+lat: 57.88036
+lon: 11.88584
 ---
 
 Guddehjälms bokskog är ovanligt snäll terräng för att vara södra Bohuslän. Försökte att ignorera stigarna och gå rakt på för att få det mer utmanande.

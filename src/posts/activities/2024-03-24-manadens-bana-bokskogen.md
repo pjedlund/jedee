@@ -11,4 +11,6 @@ stravaUrl: https://www.strava.com/activities/11030449783
 elevationGain: 131
 elevationLoss: 134
 liveloxUrl: https://www.livelox.com/Viewer/Svedala-NV-Sverige?sessionId=12776501
+lat: 55.56091
+lon: 13.21112
 ---

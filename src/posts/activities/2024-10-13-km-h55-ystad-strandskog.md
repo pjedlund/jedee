@@ -11,4 +11,6 @@ stravaUrl: https://www.strava.com/activities/12645697633
 elevationGain: 133
 elevationLoss: 139
 liveloxUrl: https://www.livelox.com/Viewer/KM-KontinentMOK/H55?classId=862274
+lat: 55.43314
+lon: 13.84857
 ---

@@ -7,5 +7,7 @@ duration: 916
 hrAvg: 147
 stravaUrl: 'https://www.strava.com/activities/18106134069'
 draft: false
+lat: 55.59915
+lon: 12.9702
 ---
 Fösta joggen på länge. Tror tyvärr att jag behöver ännu mer gymträning men skönt att komma ut på Ribban igen.

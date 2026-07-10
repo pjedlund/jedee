@@ -11,6 +11,8 @@ stravaUrl: https://www.strava.com/activities/18507741997
 elevationGain: 84
 elevationLoss: 97
 liveloxUrl: https://www.livelox.com/Viewer/Torsdagstraning-14-maj-2026/Violett?classId=1177747
+lat: 55.55426
+lon: 13.20606
 ---
 
 Kände av foten och fick korta ner 5km rundan.

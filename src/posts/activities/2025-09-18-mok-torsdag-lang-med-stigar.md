@@ -11,4 +11,6 @@ stravaUrl: https://www.strava.com/activities/15857715139
 elevationGain: 131
 elevationLoss: 132
 liveloxUrl: https://www.livelox.com/Viewer/MOK-Torsdag-18-sep/Lang?classId=1051818
+lat: 55.55424
+lon: 13.20616
 ---
