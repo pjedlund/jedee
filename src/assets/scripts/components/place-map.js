@@ -49,17 +49,7 @@ function makeMap(el, { lat, lon, zoom, place }) {
   L.control.attribution({ prefix: false }).addAttribution(ATTRIB).addTo(map);
   L.control.zoom({ position: 'bottomleft' }).addTo(map);
 
-  // A fractional map size makes tiles land on subpixel offsets, leaving hairline gaps
-  // where four corners meet — the canvas surface peeks through as a grid of tiny
-  // plus-signs (loudest when a tint darkens the surface). Stretch each tile 0.5px to
-  // overlap the seam — the standard Leaflet #3575 workaround, invisible at 256px scale.
-  const sealSeams = (layer) =>
-    layer.on('tileload', (e) => {
-      e.tile.style.width = '256.5px';
-      e.tile.style.height = '256.5px';
-    });
-
-  let tiles = sealSeams(L.tileLayer(TILES[theme], { maxZoom: 19 })).addTo(map);
+  let tiles = L.tileLayer(TILES[theme], { maxZoom: 19 }).addTo(map);
   const marker = L.circleMarker([lat, lon], {
     radius: 7,
     weight: 2,
@@ -96,7 +86,7 @@ function makeMap(el, { lat, lon, zoom, place }) {
     if (next === theme) return;
     theme = next;
     map.removeLayer(tiles);
-    tiles = sealSeams(L.tileLayer(TILES[theme], { maxZoom: 19 })).addTo(map);
+    tiles = L.tileLayer(TILES[theme], { maxZoom: 19 }).addTo(map);
     marker.setStyle({ color: markerStroke(theme) });
   };
   new MutationObserver(onTheme).observe(document.documentElement, {
@@ -185,8 +175,25 @@ class PlaceMap extends HTMLElement {
     this.box.append(this.maxBtn);
 
     this.prepend(this.box);
+
+    // Keep the canvas a WHOLE number of pixels. The box's fluid 16:9 sizing lands on
+    // fractions (e.g. 514.375px tall); Leaflet then puts tiles on fractional offsets
+    // and rounding opens hairline gaps between them — seen as grid lines / plus-sign
+    // dots of the surface color. An integer canvas puts every tile on whole pixels.
+    // (Sized from whichever parent currently holds the canvas, so the maximize
+    // overlay gets the same treatment. The ≤1px remainder hides under the box border.)
+    this.fitCanvas = () => {
+      const parent = this.canvas.parentElement;
+      if (!parent) return;
+      this.canvas.style.inlineSize = parent.clientWidth + 'px';
+      this.canvas.style.blockSize = parent.clientHeight + 'px';
+      this.map?.invalidateSize();
+    };
+    this.fitCanvas(); // before the map initializes, so its very first layout is integer
+    new ResizeObserver(this.fitCanvas).observe(this.box);
+
     this.map = makeMap(this.canvas, { lat, lon, zoom, place: this.place });
-    requestAnimationFrame(() => this.map.invalidateSize());
+    requestAnimationFrame(this.fitCanvas);
 
     this.maxBtn.addEventListener('click', () => this.open());
     this.dataset.mapReady = '';
@@ -203,7 +210,11 @@ class PlaceMap extends HTMLElement {
     this.map.scrollWheelZoom.enable();
     this.map.touchZoom.enable();
     closeBtn.focus(); // move focus into the dialog now that it's visible
-    requestAnimationFrame(() => this.map.invalidateSize());
+    if (!this.roOverlay) {
+      new ResizeObserver(this.fitCanvas).observe(overlayFrame);
+      this.roOverlay = true;
+    }
+    requestAnimationFrame(this.fitCanvas);
   }
 
   close() {
@@ -213,7 +224,7 @@ class PlaceMap extends HTMLElement {
     document.body.style.overflow = '';
     this.box.prepend(this.canvas); // move the map back inline
     this.canvas.setAttribute('aria-label', this.place ? `Map of ${this.place}` : 'Map of this location');
-    requestAnimationFrame(() => this.map.invalidateSize());
+    requestAnimationFrame(this.fitCanvas);
     active = null;
     this.maxBtn.focus();
   }
