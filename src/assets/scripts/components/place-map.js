@@ -85,7 +85,17 @@ function makeMap(el, { lat, lon, zoom, place }) {
   L.control.attribution({ prefix: false }).addAttribution(ATTRIB).addTo(map);
   L.control.zoom({ position: 'bottomleft' }).addTo(map);
 
-  let tiles = L.tileLayer(TILES[theme], { maxZoom: 19 }).addTo(map);
+  // A fractional map size makes tiles land on subpixel offsets, leaving hairline gaps
+  // where four corners meet — the canvas surface peeks through as a grid of tiny
+  // plus-signs (loudest when a tint darkens the surface). Stretch each tile 0.5px to
+  // overlap the seam — the standard Leaflet #3575 workaround, invisible at 256px scale.
+  const sealSeams = (layer) =>
+    layer.on('tileload', (e) => {
+      e.tile.style.width = '256.5px';
+      e.tile.style.height = '256.5px';
+    });
+
+  let tiles = sealSeams(L.tileLayer(TILES[theme], { maxZoom: 19 })).addTo(map);
   const marker = L.circleMarker([lat, lon], {
     radius: 7,
     weight: 2,
@@ -122,7 +132,7 @@ function makeMap(el, { lat, lon, zoom, place }) {
     if (next === theme) return;
     theme = next;
     map.removeLayer(tiles);
-    tiles = L.tileLayer(TILES[theme], { maxZoom: 19 }).addTo(map);
+    tiles = sealSeams(L.tileLayer(TILES[theme], { maxZoom: 19 })).addTo(map);
     marker.setStyle({ color: markerStroke(theme) });
     if (tinted) applyTint(el); // the token resolves to a new color per theme
   };
