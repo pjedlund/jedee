@@ -53,6 +53,11 @@ place-map[data-map-ready] > .place-map-static {
 .place-map-canvas {
   block-size: 100%;
   inline-size: 100%;
+  /* Contain Leaflet's internal z-indexes (tile pane = 200+) INSIDE the canvas, so the
+     sibling maximize button (z-index 1) paints above the map. Without this the tiles
+     cover the button — while clicks still reach it, because tiles are pointer-events
+     transparent: an invisible-but-working button. */
+  isolation: isolate;
 }
 
 /* Maximize button, over the map's top-right corner. Semantic surface → reads on the
