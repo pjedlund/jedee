@@ -1,0 +1,31 @@
+{
+	"schemaVersion": "0.1.0",
+	"name": "Raw (wiki source)",
+	"behavior": "create",
+	"noteContentFormat": "{{content}}",
+	"properties": [
+		{
+			"name": "sourceUrl",
+			"value": "{{url}}",
+			"type": "text"
+		},
+		{
+			"name": "sourceName",
+			"value": "{{site}}",
+			"type": "text"
+		},
+		{
+			"name": "author",
+			"value": "{{author|split:\", \"}}",
+			"type": "multitext"
+		},
+		{
+			"name": "clipped",
+			"value": "{{date}}",
+			"type": "text"
+		}
+	],
+	"triggers": [],
+	"noteNameFormat": "{{title|safe_name}}",
+	"path": "_raw/"
+}
