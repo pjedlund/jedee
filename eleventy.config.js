@@ -23,6 +23,7 @@ import { POST_TYPES, byCategory, showInSitemap, tagList } from './src/_config/co
 import events from './src/_config/events.js';
 import filters from './src/_config/filters.js';
 import plugins from './src/_config/plugins.js';
+import {resolveOrPlainText} from './src/_config/plugins/interlinker-resolver.js';
 import shortcodes from './src/_config/shortcodes.js';
 
 export default async function(eleventyConfig) {
@@ -72,7 +73,12 @@ export default async function(eleventyConfig) {
   eleventyConfig.addCollection('tagList', tagList);
 
   // ---------------------  Plugins
-  eleventyConfig.addPlugin(plugins.interlinker);
+  eleventyConfig.addPlugin(plugins.interlinker, {
+    // stubUrl false → a dead wikilink arrives at the resolver with href === false
+    // instead of the plugin's default "/stubs/" link, so it can render as plain text.
+    stubUrl: false,
+    resolvingFns: new Map([['default', resolveOrPlainText]])
+  });
 
   eleventyConfig.addPlugin(plugins.htmlConfig);
   eleventyConfig.addPlugin(plugins.drafts);
