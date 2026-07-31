@@ -13,12 +13,17 @@ dotenv.config();
 
 // add yaml support
 import yaml from 'js-yaml';
+import fs from 'node:fs';
+
+// The wiki dial (src/_data/features.yaml). Read here too because ignores must be set at config time, before the data cascade runs.
+const features = yaml.load(fs.readFileSync('./src/_data/features.yaml', 'utf8'));
 
 //  config import
 import { POST_TYPES, byCategory, showInSitemap, tagList } from './src/_config/collections.js';
 import events from './src/_config/events.js';
 import filters from './src/_config/filters.js';
 import plugins from './src/_config/plugins.js';
+import {resolveOrPlainText} from './src/_config/plugins/interlinker-resolver.js';
 import shortcodes from './src/_config/shortcodes.js';
 
 export default async function(eleventyConfig) {
@@ -68,7 +73,12 @@ export default async function(eleventyConfig) {
   eleventyConfig.addCollection('tagList', tagList);
 
   // ---------------------  Plugins
-  eleventyConfig.addPlugin(plugins.interlinker);
+  eleventyConfig.addPlugin(plugins.interlinker, {
+    // stubUrl false → a dead wikilink arrives at the resolver with href === false
+    // instead of the plugin's default "/stubs/" link, so it can render as plain text.
+    stubUrl: false,
+    resolvingFns: new Map([['default', resolveOrPlainText]])
+  });
 
   eleventyConfig.addPlugin(plugins.htmlConfig);
   eleventyConfig.addPlugin(plugins.drafts);
@@ -188,6 +198,14 @@ export default async function(eleventyConfig) {
   if (process.env.ELEVENTY_ENV != 'test') {
     eleventyConfig.ignores.add('src/common/pa11y.njk');
   }
+
+  // ---------------------- private LLM wiki: never build while the dial reads "private"
+  if (features?.wiki?.visibility !== 'private') {
+    throw new Error(
+      `features.wiki.visibility is "${features?.wiki?.visibility}" — only "private" is built so far. See _local/design/Plan - LLM wiki (private-first).md §6.`
+    );
+  }
+  eleventyConfig.ignores.add('src/wiki/**');
 
   // --------------------- general config
   return {

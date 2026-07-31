@@ -37,6 +37,9 @@ src/_obsidian/*
 # Raw import source texts, not site content
 /src/_raw/
 
+# Private LLM wiki — own inner git repo, never in this one (see _local/design/Plan - LLM wiki (private-first).md)
+/src/wiki/
+
 .claude
 .omc
 .github
