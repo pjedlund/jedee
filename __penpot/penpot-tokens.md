@@ -11,7 +11,7 @@ npm run penpot:tokens
 
 That writes two files from the same JSON sources:
 
-- `tokens/penpot-tokens.dtcg.json` — import in Penpot
+- `__penpot/penpot-tokens.dtcg.json` — import in Penpot
   (JEDEE - design tokens file → **Tokens panel** → import)
 - `../DESIGN.md` — Anthropic-style design-system spec for AI agents
   and humans (front matter is regenerated; the markdown body is
@@ -130,7 +130,7 @@ all sets in the Tokens panel first.
 ```bash
 # After editing any token JSON:
 npm run colors           # only if colorsBase.json changed
-npm run penpot:tokens    # regenerates tokens/penpot-tokens.dtcg.json
+npm run penpot:tokens    # regenerates __penpot/penpot-tokens.dtcg.json
 # Then in Penpot: Tokens panel → import → select the file
 ```
 
@@ -149,6 +149,6 @@ drive it directly.
 
 - `src/_config/setup/build-penpot-tokens.js` — the build script
 - `src/_data/designTokens/*.json` — sources
-- `tokens/penpot-tokens.dtcg.json` — generated artifact (committed so
+- `__penpot/penpot-tokens.dtcg.json` — generated artifact (committed so
   PR diffs show token changes)
 - `package.json` → `scripts.penpot:tokens`
