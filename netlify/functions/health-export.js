@@ -9,7 +9,7 @@
 // Export" action) with `?mode=manual` on the URL, which skips the activity-type
 // filter entirely — for one-off activities outside that net (a hike, a ski tour).
 //
-// See __design/Plan - Apple Watch workout pipeline (POSSE + orienteering backfill).md
+// See _local/design/Plan - Apple Watch workout pipeline (POSSE + orienteering backfill).md
 
 import matter from 'gray-matter'
 import GitHubStore from '@benjifs/github-store'

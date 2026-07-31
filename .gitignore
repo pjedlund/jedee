@@ -17,9 +17,10 @@ src/_includes/scripts
 .nova
 .vscode
 .DS_Store
-_originals
-_resources
-_backup
+
+# All local-only project material lives under one umbrella (anchored so it can
+# never match anything inside src/). See _local/generated/Plan - Folder reorg (_local umbrella).md
+/_local/
 
 # Local Netlify folder
 .netlify
@@ -28,21 +29,17 @@ _backup
 .obsidian
 .vault-nickname
 # Vault tooling stays local (Bases, note templates), but the Web Clipper
-# templates are tracked — they're the source of truth (see __project_docs/web-clipper-pattern.html).
+# templates are tracked — they're the source of truth (see _local/project_docs/web-clipper-pattern.html).
 src/_obsidian/*
 !src/_obsidian/clipper/
 
 /src/posts/articles/-drafts
+# Raw import source texts, not site content
+/src/_raw/
 
 .claude
 .omc
-_raw/
-_generated/
-_tests/
 .github
-
-# Local Strava/Livelox export scratch (import source, not site content)
-_strava
 
 # Project notes (kept locally, not in repo)
 AGENTS.md
@@ -51,6 +48,9 @@ DESIGN.md
 IDEAS.md
 LOG.md
 TODO.md
+ROADMAP.md
+# AI tool config, kept local (decided 2026-07-31)
+.mcp.json
 
 
 # Netlify dev regenerates this Edge Functions bootstrap lockfile on every run;

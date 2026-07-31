@@ -19,7 +19,7 @@ html {
    ::view-transition-* pseudos, so reduce users only stay transition-free if
    the opt-in itself is gated. (A per-crumb breadcrumb wipe was built on top of
    this in 2026-07 and shelved — branch feat/breadcrumb-directional-wipe; see
-   the scroll-gate findings in _generated/Reference - breadcrumb hover bloom
+   the scroll-gate findings in _local/generated/Reference - breadcrumb hover bloom
    (parked).md.) */
 @media (prefers-reduced-motion: no-preference) {
   @view-transition {

@@ -5,7 +5,7 @@
 // committed to the repo via the GitHub Contents API. A Micropub post lands as
 // the *same* kind of .md, in the *same* src/posts/<type>/ folder, as an Obsidian
 // Web Clipper clip — the two are complementary authoring paths over one content
-// layer. See the `micropub` skill and __project_docs/micropub-pattern.html.
+// layer. See the `micropub` skill and _local/project_docs/micropub-pattern.html.
 //
 // Engine: @benjifs/micropub (auth, routing, frontmatter, CRUD) +
 // @benjifs/github-store (the GitHub backend). We "vendor-but-patch": the engine

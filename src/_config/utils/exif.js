@@ -15,7 +15,7 @@
 // Dates are formatted from the raw wall-clock string (not a revived Date) so a
 // Netlify build running in UTC can't shift a midnight-local capture date to the
 // previous day. See the `microformats`/`indieweb` skills for how this data is
-// marked up, and `__design` for the design record.
+// marked up, and `_local/design` for the design record.
 import exifr from 'exifr';
 
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];

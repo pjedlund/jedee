@@ -1,7 +1,7 @@
 // Three small, composable webmention filters. Ported from Lene Saile's pattern —
 // the TEMPLATE (partials/webmentions.njk) does the grouping; these just slice the
 // flat JF2 `children` array. Registered in eleventy.config.js and re-exported from
-// the filters.js barrel. Unit-tested in _tests/webmentions.test.js.
+// the filters.js barrel. Unit-tested in _local/tests/webmentions.test.js.
 
 /** All mentions whose `wm-target` is this page's absolute URL. */
 export const webmentionGetForUrl = (webmentions, url) => {
