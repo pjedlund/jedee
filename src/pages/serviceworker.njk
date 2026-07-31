@@ -9,9 +9,13 @@ const CACHE_NAME = 'cache-{{ buildTime|toIsoString}}'
 const OFFLINE_PAGE_URL = '/offline/'
 
 // Warm the cache on install with the offline fallback and a couple of stable
-// entry points. Everything else (CSS/JS bundles, fonts, images) is cached at
-// runtime as it's first requested — so the hashed /bundle/<hash>.css paths,
-// which can't be hardcoded here, get cached automatically on the first visit.
+// entry points. Everything else (fonts, images, component scripts) is cached at
+// runtime as it's first requested, so nothing has to be hardcoded here.
+// NOTE: this used to say the hashed /bundle/<hash>.css paths get picked up the
+// same way. They don't exist to pick up — css-inline.njk only links them when
+// runMode === "serve", and a production build inlines the CSS into the HTML
+// instead. In dev, where the paths do exist, IGNORED_HOSTS makes this worker
+// intercept nothing at all. Corrected 2026-07-31.
 const PRECACHE_RESOURCES = [
   '/',
   '/favicon.ico',
