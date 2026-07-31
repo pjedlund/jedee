@@ -13,6 +13,10 @@ dotenv.config();
 
 // add yaml support
 import yaml from 'js-yaml';
+import fs from 'node:fs';
+
+// The wiki dial (src/_data/features.yaml). Read here too because ignores must be set at config time, before the data cascade runs.
+const features = yaml.load(fs.readFileSync('./src/_data/features.yaml', 'utf8'));
 
 //  config import
 import { POST_TYPES, byCategory, showInSitemap, tagList } from './src/_config/collections.js';
@@ -188,6 +192,14 @@ export default async function(eleventyConfig) {
   if (process.env.ELEVENTY_ENV != 'test') {
     eleventyConfig.ignores.add('src/common/pa11y.njk');
   }
+
+  // ---------------------- private LLM wiki: never build while the dial reads "private"
+  if (features?.wiki?.visibility !== 'private') {
+    throw new Error(
+      `features.wiki.visibility is "${features?.wiki?.visibility}" — only "private" is built so far. See _local/design/Plan - LLM wiki (private-first).md §6.`
+    );
+  }
+  eleventyConfig.ignores.add('src/wiki/**');
 
   // --------------------- general config
   return {
