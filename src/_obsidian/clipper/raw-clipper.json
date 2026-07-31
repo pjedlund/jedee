@@ -23,6 +23,11 @@
 			"name": "clipped",
 			"value": "{{date}}",
 			"type": "text"
+		},
+		{
+			"name": "published",
+			"value": "",
+			"type": "text"
 		}
 	],
 	"triggers": [],
