@@ -26,6 +26,18 @@ import plugins from './src/_config/plugins.js';
 import {resolveOrPlainText} from './src/_config/plugins/interlinker-resolver.js';
 import shortcodes from './src/_config/shortcodes.js';
 
+// Cap eleventy-img's parallel workers (default = CPU count, 10 on this machine). It
+// throttles how many of the ~370 images fetch + encode at once, so fewer large image
+// buffers are live together — the memory that spikes a cold build and can trip the
+// "JavaScript heap out of memory" crash on `npm start`, worst on a cold cache when
+// ~100 remote images download simultaneously. Image.concurrency is a module global, so
+// this one line covers every eleventy-img path: the transform plugin, the {% image %}
+// / {% lightbox %} shortcodes, OG-image generation, and YouTube posters.
+// ponytail: 4 measured no slower than the default here; lower it if a cold build still
+//   runs out of memory, raise it toward the core count if builds ever feel slow.
+import Image from '@11ty/eleventy-img';
+Image.concurrency = 4;
+
 export default async function(eleventyConfig) {
   // --------------------- Events: before build
   eleventyConfig.on('eleventy.before', async () => {
