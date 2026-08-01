@@ -5,8 +5,10 @@
 {# The page heading is always shown: it's the document outline / SEO / microformats
    `p-name`. With the breadcrumb on it sits just below the trail (the standard
    breadcrumb + heading pattern); with the breadcrumb off it's the page's only title. #}
+{# titleLang is set (to "sv") only for Swedish activity titles — see eleventyComputed.js.
+   Other post types leave it undefined, so the h1 stays at the page's language. #}
 {% if title %}
-  <h1 class="p-name">{{ title }}</h1>
+  <h1 class="p-name"{% if titleLang %} lang="{{ titleLang }}"{% endif %}>{{ title }}</h1>
 {% endif %}
 
 {# The featured image is always a lightbox. credit renders as the figcaption,

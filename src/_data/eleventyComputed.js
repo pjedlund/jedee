@@ -14,6 +14,8 @@
 // archive page, so the trail never invents a dead intermediate crumb. Pagination
 // segments (page-2, …) are dropped.
 
+import {looksSwedish} from '../_config/utils/looks-swedish.js';
+
 const PAGINATION = /^page-\d+$/;
 
 // Section labels that aren't in the main nav.
@@ -27,6 +29,12 @@ const titleCase = segment =>
 const sectionLabel = segment => EXTRA_LABELS[segment] || titleCase(segment);
 
 export default {
+  // Activity titles are a Swedish/English mix from Strava; flag the Swedish ones so the
+  // shared entry-header h1 can carry lang="sv". Only for activities — other post types
+  // keep the page's `en` default. See utils/looks-swedish.js for the detection rationale.
+  titleLang: data =>
+    data.category === 'activity' && looksSwedish(data.title) ? 'sv' : undefined,
+
   breadcrumbs: data => {
     const url = data && data.page && data.page.url;
     if (typeof url !== 'string' || !url.startsWith('/')) return [];
