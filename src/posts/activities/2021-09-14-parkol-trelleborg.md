@@ -2,6 +2,7 @@
 title: "ParkOL Trelleborg"
 date: "2021-09-14T16:08:52+02:00"
 activityType: orienteering
+captionLang: en
 distanceKm: 2.71
 duration: 956
 energyKcal: 296
