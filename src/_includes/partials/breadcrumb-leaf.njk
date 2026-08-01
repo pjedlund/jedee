@@ -14,7 +14,9 @@
 {%- if category == "jam" and artist -%}
   {{ title }} <span class="breadcrumb-connector">by</span> {{ artist | unwikilink }}
 {%- elif category == "activity" and activityType -%}
-  {{ activityType | capitalize }}: {{ title }}
+  {# activityType is an English controlled term ("orienteering") — only the title may be
+     Swedish, so lang="sv" (set by titleLang, see eleventyComputed.js) wraps the title alone. #}
+  {{ activityType | capitalize }}: {% if titleLang %}<span lang="{{ titleLang }}">{{ title }}</span>{% else %}{{ title }}{% endif %}
 {%- elif category == "like" and ((sourceUrl or likeOf) | hostname) -%}
   {{ title }} <span class="breadcrumb-connector">on</span> {{ (sourceUrl or likeOf) | hostname }}
 {%- elif category == "bookmark" and ((sourceUrl or bookmarkOf) | hostname) -%}
