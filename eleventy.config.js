@@ -199,13 +199,28 @@ export default async function(eleventyConfig) {
     eleventyConfig.ignores.add('src/common/pa11y.njk');
   }
 
-  // ---------------------- private LLM wiki: never build while the dial reads "private"
-  if (features?.wiki?.visibility !== 'private') {
+  // ---------------------- private LLM wiki (src/wiki/) — design plan §3/§6.
+  // The wiki never reaches the published site. A production build (npm run build →
+  // ELEVENTY_ENV=production, what Netlify runs) ALWAYS ignores src/wiki/, whatever the
+  // dial says — that is the hard guarantee. "local" is the only position that builds
+  // the wiki, and only outside production, so it's browsable in `npm start`.
+  const wikiVisibility = features?.wiki?.visibility;
+  if (!['private', 'local'].includes(wikiVisibility)) {
     throw new Error(
-      `features.wiki.visibility is "${features?.wiki?.visibility}" — only "private" is built so far. See _local/design/Plan - LLM wiki (private-first).md §6.`
+      `features.wiki.visibility is "${wikiVisibility}" — only "private" and "local" are built so far. See _local/design/Plan - LLM wiki (private-first).md §6.`
     );
   }
-  eleventyConfig.ignores.add('src/wiki/**');
+  if (wikiVisibility === 'local' && process.env.ELEVENTY_ENV !== 'production') {
+    // src/wiki/ is gitignored (its own inner repo), and Eleventy honours .gitignore —
+    // so to build it locally we must stop honouring .gitignore, then re-add the other
+    // src/ paths it was hiding (raw sources, draft articles). src/_obsidian stays covered
+    // by .eleventyignore. This branch never runs in production (guarded above).
+    eleventyConfig.setUseGitIgnore(false);
+    eleventyConfig.ignores.add('src/_raw/**');
+    eleventyConfig.ignores.add('src/posts/articles/-drafts/**');
+  } else {
+    eleventyConfig.ignores.add('src/wiki/**');
+  }
 
   // --------------------- general config
   return {

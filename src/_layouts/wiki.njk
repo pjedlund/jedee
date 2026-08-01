@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="{{ meta.lang }}" data-theme="light">
+  {# Private LLM wiki — local-only reading view. Deliberately does NOT extend base.njk:
+     no site nav, feeds, service worker, canonical URLs or JSON-LD schema (which needs a
+     `schema:` front-matter key the wiki pages don't carry). Reuses the site's CSS + theme
+     so prose styling and dark mode work. The wiki never ships — see the dial in
+     eleventy.config.js — so `noindex` is belt-and-suspenders. #}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>
+      {%- if page.fileSlug == "wiki" -%}JEDEE wiki{%- else -%}{{ page.fileSlug }} · JEDEE wiki{%- endif -%}
+    </title>
+    {% include "head/js-inline.njk" %}
+    {% include "head/css-inline.njk" %}
+  </head>
+
+  <body class="wiki">
+    <main id="main" class="region wrapper flow prose" style="--region-space-top: var(--space-l)">
+      {% if page.fileSlug != "wiki" %}
+        <p><a href="/wiki/">← JEDEE wiki index</a></p>
+      {% endif %}
+      {{ content | safe }}
+    </main>
+  </body>
+</html>
