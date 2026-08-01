@@ -2,5 +2,6 @@
   "layout": "activity",
   "tags": "posts",
   "category": "activity",
-  "permalink": "/activities/{{ date | formatDate('YYYY-MM-DD') }}-{{ page.fileSlug | slugify }}/index.html"
+  "permalink": "/activities/{{ date | formatDate('YYYY-MM-DD') }}-{{ page.fileSlug | slugify }}/index.html",
+  "captionLang": "sv"
 }
