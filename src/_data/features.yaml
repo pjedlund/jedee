@@ -1,3 +1,9 @@
-# The wiki dial. Only "private" works today; "hidden" and "public" are reserved future positions — see _local/design/Plan - LLM wiki (private-first).md §6. Flipping to one of them stops the build with a clear message instead of half-working.
+# The wiki dial.
+#   private (default) — the wiki is fully ignored; nothing builds.
+#   local — the wiki builds to /wiki/… pages, but ONLY in the dev server (npm start).
+#           A production build (npm run build, what Netlify runs) always ignores it, so
+#           the published site stays wiki-free whatever this says. Flip here to read it.
+#   hidden | public — reserved future positions (_local/design/Plan - LLM wiki (private-first).md §6);
+#           flipping to one stops the build with a clear message instead of half-working.
 wiki:
-  visibility: private   # private | hidden | public
+  visibility: private   # private | local | (hidden | public reserved)
