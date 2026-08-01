@@ -19,11 +19,22 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
      dropdown panel and the MENU button's active (open) state so they read as one
      connected sheet. */
   --megamenu-surface: color-mix(in oklab, white 45%, var(--color-bg));
+
+  /* Resting colour of a row's icon. Themed up here on the wrapper rather than on
+     `.megamenu a` so the row's own :hover / [aria-current] states keep winning the
+     cascade — they set --megamenu-icon-color at their (lower) specificity. */
+  --megamenu-icon-rest: var(--color-accent-blue);
 }
 
 :root[data-theme='dark'] .mainnav {
   /* lifted toward white off the dark page, not recessed below it */
   --megamenu-surface: color-mix(in oklab, white 7%, var(--color-bg));
+
+  /* --color-accent-blue is a dark navy — correct where it's a BACKGROUND (buttons,
+     pagination, badges), but as a glyph on the dark panel it measures 1.94:1 and all
+     but disappears. Lift it toward the text colour for the icon alone: 4.97:1, still
+     recognisably blue. Light theme keeps the raw token (7.76:1) and is untouched. */
+  --megamenu-icon-rest: color-mix(in oklab, var(--color-accent-blue) 45%, var(--color-text));
 }
 
 /* Centre the JS-injected MENU trigger on the header row. The nav wrapper otherwise
@@ -183,7 +194,7 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
 
 .megamenu a {
   --megamenu-row-color: color-mix(in oklab, var(--color-text) 80%, var(--color-bg));
-  --megamenu-icon-color: var(--color-accent-blue);
+  --megamenu-icon-color: var(--megamenu-icon-rest);
   --megamenu-count-color: color-mix(in oklab, var(--color-text) 55%, var(--color-bg));
   --megamenu-dot-color: color-mix(in oklab, var(--color-text) 14%, var(--color-bg));
   --megamenu-row-bg: transparent;
