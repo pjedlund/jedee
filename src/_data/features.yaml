@@ -5,4 +5,4 @@
 #   hidden — reserved (_local/design/Plan - LLM wiki (private-first).md §6); flipping to it stops the build with a clear message instead of half-working.
 # Netlify footnote: the wiki's content lives in its own inner git repo that the public JEDEE repo on GitHub never sees. So "public" only produces a wiki-bearing site for builds made from Johan's machine — Netlify's build from the public repo has no wiki source to include.
 wiki:
-  visibility: private   # private | local | public   (hidden reserved)
+  visibility: local   # private | local | public   (hidden reserved)
