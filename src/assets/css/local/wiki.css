@@ -16,3 +16,23 @@ tracks any future change to them.
   border: 1px solid var(--wiki-eyebrow-border);
   border-radius: var(--border-radius-medium);
 }
+
+/*
+WIKI EXTERNAL-LINK ICON
+Wiki prose is AI-written and cites a lot of sources, so mark outbound links with a small
+↗ glyph after the link text. Scoped to .prose because this bundle only ships on wiki pages
+(loaded via the layout's {% css "local" %}). Internal links are relative (/about/) so they
+never match href^='http'; the own-domain / localhost exclusions cover the rare absolute
+self-link. The icon is decorative — links open in the same tab, so no extra announcement.
+*/
+.prose a[href^='http']:not([href*='johanedlund.se']):not([href*='localhost'])::after {
+  content: '';
+  display: inline-block;
+  inline-size: 0.75em;
+  block-size: 0.75em;
+  margin-inline-start: 0.15em;
+  background-image: url('/assets/images/template/external.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
