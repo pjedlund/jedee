@@ -1,9 +1,8 @@
-# The wiki dial.
-#   private (default) — the wiki is fully ignored; nothing builds.
-#   local — the wiki builds to /wiki/… pages, but ONLY in the dev server (npm start).
-#           A production build (npm run build, what Netlify runs) always ignores it, so
-#           the published site stays wiki-free whatever this says. Flip here to read it.
-#   hidden | public — reserved future positions (_local/design/Plan - LLM wiki (private-first).md §6);
-#           flipping to one stops the build with a clear message instead of half-working.
+# The wiki dial. Three working positions:
+#   private (default) — the wiki is fully ignored; nothing builds, anywhere.
+#   local — the wiki builds to /wiki/… pages, but ONLY in the dev server (npm start). A production build (npm run build) always ignores it, so the published site stays wiki-free whatever this says. Flip here to read it.
+#   public — the wiki builds everywhere, production included: this is how it goes fully live.
+#   hidden — reserved (_local/design/Plan - LLM wiki (private-first).md §6); flipping to it stops the build with a clear message instead of half-working.
+# Netlify footnote: the wiki's content lives in its own inner git repo that the public JEDEE repo on GitHub never sees. So "public" only produces a wiki-bearing site for builds made from Johan's machine — Netlify's build from the public repo has no wiki source to include.
 wiki:
-  visibility: private   # private | local | (hidden | public reserved)
+  visibility: private   # private | local | public   (hidden reserved)
