@@ -53,17 +53,9 @@ export default async function(eleventyConfig) {
   eleventyConfig.addWatchTarget('./src/assets/**/*.{css,js,svg,png,jpeg}');
   eleventyConfig.addWatchTarget('./src/_includes/**/*.{webc}');
 
-  // Never let the watcher react to files WE generate. The `eleventy.before` event above
-  // rewrites all of src/_includes/css/ and src/_includes/scripts/ on every build, so if the
-  // watcher can see them, one CSS edit becomes: rebuild → rewrite 23 files → watcher fires →
-  // rebuild → … until Node dies with "JavaScript heap out of memory". Those dirs are in
-  // .gitignore, which used to hide them — but the wiki dial below turns .gitignore off
-  // (setUseGitIgnore(false)), which un-hid them and opened the loop. watchIgnores is
-  // watch-only, so it can't affect template discovery or include resolution.
-  // Kept unconditional: generated output should never trigger a rebuild whatever the dial says.
-  // Measured: without these two lines, ONE css edit produced 18 rebuilds and 408 self-triggers
-  // in three minutes and kept going. (src/wiki/'s inner .git needs no entry — tested, it
-  // triggers nothing.)
+  // `eleventy.before` rewrites both these dirs every build. .gitignore used to hide them
+  // from the watcher; the wiki dial below turns .gitignore off, so without these two lines
+  // each build retriggers itself — one CSS edit measured 18 rebuilds and climbing.
   eleventyConfig.watchIgnores.add('src/_includes/css/**');
   eleventyConfig.watchIgnores.add('src/_includes/scripts/**');
 
