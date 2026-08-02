@@ -8,7 +8,7 @@ tags:
 draft: true
 ---
 
-I was changing one number in a stylesheet — a percentage, in a menu, the sort of thing described in the note next to this one — and the dev server kept falling over. Not slowly. I would save the file, wait, and find the whole thing dead with *JavaScript heap out of memory*.
+I was changing one number in a stylesheet — a percentage, in a menu, the sort of thing described in [[One percentage point of room]] — and the dev server kept falling over. Not slowly. I would save the file, wait, and find the whole thing dead with *JavaScript heap out of memory*.
 
 I knew what this was. I'd seen it before, back when the site's images were being rebuilt and something in the image pipeline would eat every byte the machine had. I'd even written it down so I wouldn't have to work it out twice: if the build runs out of memory, it's the images, don't go looking at whatever you just changed.
 
