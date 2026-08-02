@@ -179,13 +179,13 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
   transition: none;
 }
 
-/* ---------- a row: icon · name · leader dots · count ---------- */
-
 .megamenu a {
-  --megamenu-row-color: color-mix(in oklab, var(--color-text) 80%, var(--color-bg));
-  --megamenu-icon-color: var(--color-accent-blue);
-  --megamenu-count-color: color-mix(in oklab, var(--color-text) 55%, var(--color-bg));
-  --megamenu-dot-color: color-mix(in oklab, var(--color-text) 14%, var(--color-bg));
+  --megamenu-row-color: var(--color-text);
+  --megamenu-icon-rest: color-mix(in oklab, var(--color-accent-blue) 40%, var(--color-bg));
+  --megamenu-icon-color: var(--megamenu-icon-rest);
+  --megamenu-count-rest: color-mix(in oklab, var(--color-text) 80%, var(--color-bg));
+  --megamenu-count-color: var(--megamenu-count-rest);
+  --megamenu-dot-color: color-mix(in oklab, var(--color-text) 55%, var(--color-bg));
   --megamenu-row-bg: transparent;
 
   display: flex;
@@ -208,6 +208,13 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
   color: var(--megamenu-icon-color);
 }
 
+:root[data-theme='dark'] .megamenu a {
+  --megamenu-icon-rest: oklch(from var(--color-accent-blue) 0.5 calc(c * 1.6) h);
+  /* Dark has headroom light doesn't: 68% is where 4.5:1 runs out here, vs 79% in light.
+     72% keeps a margin off that floor rather than sitting on it. */
+  --megamenu-count-rest: color-mix(in oklab, var(--color-text) 72%, var(--color-bg));
+}
+
 .megamenu-label {
   flex: none;
 }
@@ -219,12 +226,12 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
   /* A 1px-tall box, baseline-aligned so its bottom edge (its synthesised baseline)
      lands on the text baseline. The dots are painted as a repeating radial gradient
      rather than a `dotted` border, whose gap the UA fixes at ~the border width — the
-     gradient lets us space them out: ~1px dots on a 4px pitch, roughly half as many. */
+     gradient lets us space them out: ~1px dots on a 6px pitch, a third as many. */
   align-self: baseline;
   block-size: 1px;
   background-image: radial-gradient(circle, var(--megamenu-dot-color) 0.5px, transparent 0.5px);
   background-position: 0 100%;
-  background-size: 4px 100%;
+  background-size: 6px 100%;
   background-repeat: repeat-x;
 }
 
@@ -234,13 +241,13 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
   font-variant-numeric: tabular-nums;
 }
 
-/* hover / focus: row lifts, icon → orange, count brightens */
+/* hover / focus: row background lifts, icon → orange, count brightens to match the label
+   (the label itself is already at full strength, so it no longer changes here) */
 .megamenu a:hover,
 .megamenu a:focus-visible {
-  --megamenu-row-color: var(--color-text);
   --megamenu-icon-color: var(--color-accent-orange);
   --megamenu-count-color: var(--color-text);
-  --megamenu-row-bg: color-mix(in oklab, var(--color-text) 6%, var(--color-bg));
+  --megamenu-row-bg: color-mix(in oklab, var(--color-text) 2%, var(--color-bg));
 }
 
 /* Lift the focused row into its own stacking context so its offset focus ring
@@ -255,9 +262,9 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
 /* current section */
 .megamenu [aria-current='page'],
 .megamenu [data-state='active'] {
-  --megamenu-row-color: var(--color-text);
   --megamenu-icon-color: var(--color-accent-orange);
-  --megamenu-row-bg: color-mix(in oklab, var(--color-text) 6%, var(--color-bg));
+  --megamenu-count-color: var(--color-text);
+  --megamenu-row-bg: color-mix(in oklab, var(--color-text) 2%, var(--color-bg));
 }
 
 /* ---------- no-JS fallback ----------

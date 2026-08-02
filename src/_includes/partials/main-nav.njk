@@ -13,7 +13,7 @@
    before this one. #}
 
 <nav id="mainnav" class="mainnav" aria-label="{{ meta.navigation.ariaTop }}">
-  <ul class="megamenu" role="list" data-no-flash>
+  <ul id="megamenu" class="megamenu" role="list" data-no-flash>
     {% for item in navigation.postTypes %}
       {% if collections[item.collection].length %}
         {% set iconName = "posts/" + item.icon %}
@@ -37,7 +37,7 @@
    is "panel already visible". Inserted before the list so Tab order is button →
    first link. Based on Manuel Matuzović / the Web Accessibility Cookbook. #}
 <template id="menu-template">
-  <button data-menu-toggle class="menu-toggle" type="button" aria-expanded="false" aria-controls="mainnav">
+  <button data-menu-toggle class="menu-toggle" type="button" aria-expanded="false" aria-controls="megamenu">
     <span>{{ meta.navigation.navLabel }}</span>
     {% svg "misc/chev-down" %}
   </button>
