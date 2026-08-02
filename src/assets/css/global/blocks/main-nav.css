@@ -186,7 +186,9 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
      information (no aria-hidden escape hatch, unlike the icon and dots), so it has to
      clear 4.5:1 at this size — and 80% is the first mix that does in light mode, measured
      against --megamenu-surface rather than --color-bg. The label moved up to compensate,
-     keeping the two-step hierarchy that would otherwise flatten. */
+     keeping the two-step hierarchy that would otherwise flatten. Light mode is now sitting
+     on its floor: 79% is the last mix that clears 4.5:1, so there is nothing left to soften
+     here. Dark has room and takes it below. */
   --megamenu-row-color: var(--color-text);
   /* Softened off the page so the icons read as quiet markers, not a second accent
      colour competing with the orange hover state. Held in its own --…-rest property so
@@ -194,7 +196,8 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
      outranking the hover/active rules, which set --megamenu-icon-color directly. */
   --megamenu-icon-rest: color-mix(in oklab, var(--color-accent-blue) 62%, var(--color-bg));
   --megamenu-icon-color: var(--megamenu-icon-rest);
-  --megamenu-count-color: color-mix(in oklab, var(--color-text) 80%, var(--color-bg));
+  --megamenu-count-rest: color-mix(in oklab, var(--color-text) 80%, var(--color-bg));
+  --megamenu-count-color: var(--megamenu-count-rest);
   /* 35%, not the earlier 10–14%: those were softened before the panel got its own
      lighter surface, which the mix doesn't account for, so the dots all but vanished
      on it (1.1–1.3:1). Fewer dots (6px pitch) carry a slightly stronger colour without
@@ -222,12 +225,18 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
   color: var(--megamenu-icon-color);
 }
 
-/* Dark mode uses --color-blue-subdued, which sits almost as dark as the page — on the
-   panel the icons all but disappear. Lift the lightness and push the chroma so they
-   read as a real blue. (Falls back to the muted mix above where relative colour syntax
-   isn't supported.) */
+/* Dark-theme rest values. Both are set through their --…-rest property rather than the
+   --…-color one this selector could reach directly: at (0,3,1) it outranks the hover
+   (0,2,1) and active (0,2,0) rules below, so setting the -color properties here would
+   pin the icon blue and the count dim in exactly the states meant to brighten them. */
 :root[data-theme='dark'] .megamenu a {
+  /* --color-blue-subdued sits almost as dark as the page, so on the panel the icons all
+     but disappear. Lift the lightness and push the chroma so they read as a real blue.
+     (Falls back to the muted light-mode mix where relative colour syntax isn't supported.) */
   --megamenu-icon-rest: oklch(from var(--color-accent-blue) 0.65 calc(c * 1.6) h);
+  /* Dark has headroom light doesn't: 68% is where 4.5:1 runs out here, vs 79% in light.
+     72% keeps a margin off that floor rather than sitting on it. */
+  --megamenu-count-rest: color-mix(in oklab, var(--color-text) 72%, var(--color-bg));
 }
 
 .megamenu-label {
