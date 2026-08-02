@@ -53,6 +53,20 @@ export default async function(eleventyConfig) {
   eleventyConfig.addWatchTarget('./src/assets/**/*.{css,js,svg,png,jpeg}');
   eleventyConfig.addWatchTarget('./src/_includes/**/*.{webc}');
 
+  // Never let the watcher react to files WE generate. The `eleventy.before` event above
+  // rewrites all of src/_includes/css/ and src/_includes/scripts/ on every build, so if the
+  // watcher can see them, one CSS edit becomes: rebuild → rewrite 23 files → watcher fires →
+  // rebuild → … until Node dies with "JavaScript heap out of memory". Those dirs are in
+  // .gitignore, which used to hide them — but the wiki dial below turns .gitignore off
+  // (setUseGitIgnore(false)), which un-hid them and opened the loop. watchIgnores is
+  // watch-only, so it can't affect template discovery or include resolution.
+  // Kept unconditional: generated output should never trigger a rebuild whatever the dial says.
+  eleventyConfig.watchIgnores.add('src/_includes/css/**');
+  eleventyConfig.watchIgnores.add('src/_includes/scripts/**');
+  // Eleventy's default only covers the root .git/; src/wiki/ has its own inner repo, so
+  // without this a commit in the wiki triggers a rebuild storm while the dev server runs.
+  eleventyConfig.watchIgnores.add('**/.git/**');
+
   // --------------------- layout aliases
   eleventyConfig.addLayoutAlias('base', 'base.njk');
   eleventyConfig.addLayoutAlias('page', 'page.njk');
