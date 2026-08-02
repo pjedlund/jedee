@@ -183,7 +183,12 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
 
 .megamenu a {
   --megamenu-row-color: color-mix(in oklab, var(--color-text) 80%, var(--color-bg));
-  --megamenu-icon-color: var(--color-accent-blue);
+  /* Softened off the page so the icons read as quiet markers, not a second accent
+     colour competing with the orange hover state. Held in its own --…-rest property so
+     the dark-theme value below can be set by a higher-specificity selector without also
+     outranking the hover/active rules, which set --megamenu-icon-color directly. */
+  --megamenu-icon-rest: color-mix(in oklab, var(--color-accent-blue) 62%, var(--color-bg));
+  --megamenu-icon-color: var(--megamenu-icon-rest);
   --megamenu-count-color: color-mix(in oklab, var(--color-text) 55%, var(--color-bg));
   /* 35%, not the earlier 10–14%: those were softened before the panel got its own
      lighter surface, which the mix doesn't account for, so the dots all but vanished
@@ -210,6 +215,14 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
   block-size: 0.95em;
   margin-inline-end: var(--space-2xs); /* extra breathing room before the label */
   color: var(--megamenu-icon-color);
+}
+
+/* Dark mode uses --color-blue-subdued, which sits almost as dark as the page — on the
+   panel the icons all but disappear. Lift the lightness and push the chroma so they
+   read as a real blue. (Falls back to the muted mix above where relative colour syntax
+   isn't supported.) */
+:root[data-theme='dark'] .megamenu a {
+  --megamenu-icon-rest: oklch(from var(--color-accent-blue) 0.65 calc(c * 1.6) h);
 }
 
 .megamenu-label {
@@ -261,6 +274,7 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
 .megamenu [data-state='active'] {
   --megamenu-row-color: var(--color-text);
   --megamenu-icon-color: var(--color-accent-orange);
+  --megamenu-count-color: var(--color-text);
   --megamenu-row-bg: color-mix(in oklab, var(--color-text) 6%, var(--color-bg));
 }
 
