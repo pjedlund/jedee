@@ -182,14 +182,19 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
 /* ---------- a row: icon · name · leader dots · count ---------- */
 
 .megamenu a {
-  --megamenu-row-color: color-mix(in oklab, var(--color-text) 80%, var(--color-bg));
+  /* Label at full strength, count one step down. The count is the only carrier of its
+     information (no aria-hidden escape hatch, unlike the icon and dots), so it has to
+     clear 4.5:1 at this size — and 80% is the first mix that does in light mode, measured
+     against --megamenu-surface rather than --color-bg. The label moved up to compensate,
+     keeping the two-step hierarchy that would otherwise flatten. */
+  --megamenu-row-color: var(--color-text);
   /* Softened off the page so the icons read as quiet markers, not a second accent
      colour competing with the orange hover state. Held in its own --…-rest property so
      the dark-theme value below can be set by a higher-specificity selector without also
      outranking the hover/active rules, which set --megamenu-icon-color directly. */
   --megamenu-icon-rest: color-mix(in oklab, var(--color-accent-blue) 62%, var(--color-bg));
   --megamenu-icon-color: var(--megamenu-icon-rest);
-  --megamenu-count-color: color-mix(in oklab, var(--color-text) 55%, var(--color-bg));
+  --megamenu-count-color: color-mix(in oklab, var(--color-text) 80%, var(--color-bg));
   /* 35%, not the earlier 10–14%: those were softened before the panel got its own
      lighter surface, which the mix doesn't account for, so the dots all but vanished
      on it (1.1–1.3:1). Fewer dots (6px pitch) carry a slightly stronger colour without
@@ -251,10 +256,10 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
   font-variant-numeric: tabular-nums;
 }
 
-/* hover / focus: row lifts, icon → orange, count brightens */
+/* hover / focus: row background lifts, icon → orange, count brightens to match the label
+   (the label itself is already at full strength, so it no longer changes here) */
 .megamenu a:hover,
 .megamenu a:focus-visible {
-  --megamenu-row-color: var(--color-text);
   --megamenu-icon-color: var(--color-accent-orange);
   --megamenu-count-color: var(--color-text);
   --megamenu-row-bg: color-mix(in oklab, var(--color-text) 6%, var(--color-bg));
@@ -272,7 +277,6 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
 /* current section */
 .megamenu [aria-current='page'],
 .megamenu [data-state='active'] {
-  --megamenu-row-color: var(--color-text);
   --megamenu-icon-color: var(--color-accent-orange);
   --megamenu-count-color: var(--color-text);
   --megamenu-row-bg: color-mix(in oklab, var(--color-text) 6%, var(--color-bg));
