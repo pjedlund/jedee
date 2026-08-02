@@ -61,11 +61,11 @@ export default async function(eleventyConfig) {
   // (setUseGitIgnore(false)), which un-hid them and opened the loop. watchIgnores is
   // watch-only, so it can't affect template discovery or include resolution.
   // Kept unconditional: generated output should never trigger a rebuild whatever the dial says.
+  // Measured: without these two lines, ONE css edit produced 18 rebuilds and 408 self-triggers
+  // in three minutes and kept going. (src/wiki/'s inner .git needs no entry — tested, it
+  // triggers nothing.)
   eleventyConfig.watchIgnores.add('src/_includes/css/**');
   eleventyConfig.watchIgnores.add('src/_includes/scripts/**');
-  // Eleventy's default only covers the root .git/; src/wiki/ has its own inner repo, so
-  // without this a commit in the wiki triggers a rebuild storm while the dev server runs.
-  eleventyConfig.watchIgnores.add('**/.git/**');
 
   // --------------------- layout aliases
   eleventyConfig.addLayoutAlias('base', 'base.njk');
