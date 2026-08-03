@@ -1,8 +1,4 @@
-/* MEGA-MENU critical path — hide the panel before the toggle button is injected,
-   but only when JS can run, so the no-JS fallback (no button) leaves the panel
-   visible. nav-menu.js then hands layout back via inline display:grid and opens /
-   closes the panel via aria-expanded. Mirrors the old drawer's nav-main-drawer-cls
-   mechanism (see the nav-accessible skill). */
+/* MEGA-MENU critical path — hide the panel before the toggle button is injected, but only when JS can run, so the no-JS fallback (no button) leaves it visible. nav-menu.js then hands layout back via inline display:grid and opens/closes via aria-expanded. */
 @media (scripting: enabled) {
   .mainnav > ul {
     display: none;

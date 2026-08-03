@@ -1,10 +1,6 @@
 /*
 ACTIVITY STATS
-The recorded-data block on an /activities/ activity post (activity.njk) and the compact
-stat line on its archive card (card-activity.njk). Page/type-specific, so it lives in
-a local bundle included by those two templates — not global/blocks/ — the same
-pattern as custom-card.css. Hierarchy comes from type size alone (there's no muted
-text token); numbers use tabular figures so columns of stats line up.
+The recorded-data block on an activity post (activity.njk) and the compact stat line on its archive card (card-activity.njk). Type-specific, so it lives in a local bundle included by those two templates rather than global/blocks/. Hierarchy comes from type size alone; numbers use tabular figures so columns of stats line up.
 */
 .activity-stats {
   margin-block: var(--space-s);
@@ -25,7 +21,7 @@ text token); numbers use tabular figures so columns of stats line up.
   font-variant-numeric: tabular-nums;
 }
 
-/* Card stat line: distance · duration · pace, gap-separated, wraps with the card. */
+/* card stat line: distance · duration · pace, gap-separated, wraps with the card */
 .activity-stat-line {
   --gutter: var(--space-xs);
 

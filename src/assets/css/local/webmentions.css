@@ -1,11 +1,6 @@
 /*
 WEBMENTIONS
-Build-time static render of received webmentions on article, note, and photo
-pages (partials/webmentions.njk). A facepile of overlapping circular avatars for
-pure reactions (likes / reposts / bookmarks), then reply cards below for
-text-bearing mentions. Per-page `local` bundle — included only by the three
-layouts that render it, never global. Ported from Lene Saile's pattern with this
-project's tokens (`--stroke`, semantic `--color-*`, `--size-step-*`).
+Build-time static render of received webmentions on article, note, and photo pages (partials/webmentions.njk): a facepile of overlapping circular avatars for pure reactions, then reply cards for text-bearing mentions. Per-page `local` bundle, included only by the three layouts that render it. Ported from Lene Saile's pattern with this project's tokens.
 */
 .webmentions {
   --webmention-avatar-size: var(--size-step-2);
@@ -24,8 +19,7 @@ project's tokens (`--stroke`, semantic `--color-*`, `--size-step-*`).
   color: var(--color-text-accent);
 }
 
-/* Strip the default list marker/padding — these lists carry a class, so the
-   prose block (which only styles unclassed lists) leaves UA bullets in place. */
+/* Strip the default marker/padding — these lists carry a class, and the prose block only styles unclassed lists, so UA bullets would survive. */
 .webmentions ul[role='list'] {
   list-style: none;
   padding-inline-start: 0;

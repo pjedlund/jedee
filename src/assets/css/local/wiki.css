@@ -1,10 +1,6 @@
 /*
 WIKI EYEBROW
-The "part of the AI wiki" banner at the top of every wiki page. Reads like a code block —
-popout width (via the .popout wrapper-breakout class in the markup) and the same corner
-radius — but sits a touch darker than a code sample in both light and dark themes, so it's
-clearly a note *about* the page rather than page content. Derived from the code tokens so it
-tracks any future change to them.
+The "part of the AI wiki" banner at the top of every wiki page. Reads like a code block — popout width, same corner radius — but a touch darker in both themes, so it's clearly a note *about* the page rather than page content. Derived from the code tokens so it tracks any future change to them.
 */
 .wiki-eyebrow {
   --wiki-eyebrow-bg: color-mix(in oklab, var(--color-code-bg) 90%, black);

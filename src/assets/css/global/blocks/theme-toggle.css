@@ -1,20 +1,14 @@
 /*
 THEME TOGGLE — animated sun ↔ moon
-Single icon button (header) that flips light/dark. Shows the CURRENT theme:
-sun in light mode, moon in dark mode. Switching to dark grows the sun's disc,
-fades and rotates its beams, and slides a masked circle in to carve the crescent.
-Adapted from Adam Argyle's "Building a theme switch component" (web.dev, MIT):
-rewritten flat (no @nest), with the easings inlined (no remote @import) and
-motion gated on prefers-reduced-motion.
-Progressive enhancement: hidden until <is-land> upgrades — a toggle that can't
-run shouldn't show. The actual no-flash theme is set by the inline theme-toggle.js.
+Single icon button in the header, showing the CURRENT theme: sun in light, moon in dark. Switching to dark grows the sun's disc, fades and rotates its beams, and slides a masked circle in to carve the crescent. Adapted from Adam Argyle's "Building a theme switch component" (web.dev, MIT), rewritten flat with the easings inlined and motion gated on prefers-reduced-motion.
+Progressive enhancement: hidden until <is-land> upgrades — a toggle that can't run shouldn't show. The no-flash theme itself is set by the inline theme-toggle.js.
 */
 .theme-toggle {
-  /* Sized to sit alongside the wordmark logo in the header. */
+  /* sized to sit alongside the wordmark logo in the header */
   --theme-toggle-size: var(--size-step-min-1);
   --theme-toggle-color: var(--color-text);
 
-  /* Open Props elastic/standard easings, inlined to avoid a runtime @import. */
+  /* Open Props elastic/standard easings, inlined to avoid a runtime @import */
   --ease-3: cubic-bezier(0.25, 0, 0.3, 1);
   --ease-out-5: cubic-bezier(0, 0, 0, 1);
   --ease-elastic-3: cubic-bezier(0.5, 1.25, 0.75, 1.25);
@@ -23,10 +17,7 @@ run shouldn't show. The actual no-flash theme is set by the inline theme-toggle.
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  /* WCAG 2.5.8 (AA) target of 24px, kept tight on purpose: a bigger hit area
-     here is empty space that pushes the moon away from the nav. 24px clears AA
-     while sitting a normal cluster-gap from the last nav item, glyph still
-     near the right edge. (border-box so the min is the whole button.) */
+  /* WCAG 2.5.8 (AA) target of 24px, kept tight on purpose: a bigger hit area here is empty space that pushes the moon away from the nav. border-box so the min covers the whole button. */
   box-sizing: border-box;
   min-block-size: 24px;
   min-inline-size: 24px;
@@ -50,7 +41,7 @@ run shouldn't show. The actual no-flash theme is set by the inline theme-toggle.
   stroke-linecap: round;
 }
 
-/* Sun, moon-mask and beams share a centre pivot. */
+/* sun, moon-mask and beams share a center pivot */
 .sun-and-moon > :is(.moon, .sun, .sun-beams) {
   transform-origin: center center;
 }
@@ -60,8 +51,7 @@ run shouldn't show. The actual no-flash theme is set by the inline theme-toggle.
   stroke-width: 2px;
 }
 
-/* DARK = moon: the disc grows, the beams fade, and the mask circle slides in
-   to bite the crescent (cx where supported, translateX as a fallback). */
+/* DARK = moon: the disc grows, the beams fade, and the mask circle slides in to bite the crescent (cx where supported, translateX as a fallback). */
 [data-theme='dark'] .sun-and-moon > .sun {
   transform: scale(1.75);
 }
@@ -81,8 +71,7 @@ run shouldn't show. The actual no-flash theme is set by the inline theme-toggle.
   }
 }
 
-/* Motion only when the user is OK with it; reduced-motion users get an instant
-   swap (the dark-state rules above still apply, just without transitions). */
+/* Motion only when the user is OK with it; reduced-motion gets an instant swap (the dark-state rules above still apply, minus the transitions). */
 @media (prefers-reduced-motion: no-preference) {
   .sun-and-moon > .sun {
     transition: transform 0.5s var(--ease-elastic-3);
@@ -120,15 +109,12 @@ run shouldn't show. The actual no-flash theme is set by the inline theme-toggle.
   }
 }
 
-/* No JS / before hydration: hide the control entirely. */
+/* no JS / before hydration: hide the control entirely */
 is-land:not(:defined) .theme-toggle {
   display: none;
 }
 
-/* The header is-land inherits the body's tall line-height (~34px), which would let
-   the inline-flex button sit on an oversized text baseline. Flex-centre the wrapper
-   so the toggle lands on the header row's optical centre — level with the MENU
-   trigger and the breadcrumb logomark. */
+/* The header is-land inherits the body's tall line-height (~34px), which would sit the inline-flex button on an oversized text baseline. Flex-center the wrapper so the toggle lands level with the MENU trigger and the breadcrumb logomark. */
 is-land:has(> .theme-toggle) {
   display: flex;
   align-items: center;

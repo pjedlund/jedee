@@ -1,23 +1,12 @@
 /*
 MAIN NAV — post-type mega-menu
-A single disclosure: the "Menu ⌄" button drops a two-column, table-of-contents-style
-panel of every post type (icon · name · leader dots · count). Built on Manuel
-Matuzović's progressive-enhancement nav pattern (see the nav-accessible skill):
-plain <a> list → <ul role="list"> → <nav> landmark → JS-injected toggle button.
-Without JS the panel is a static, visible list. Site-wide header chrome → global/blocks.
+A "Menu ⌄" button drops a two-column, table-of-contents-style panel of every post type (icon · name · leader dots · count). Progressive enhancement per the nav-accessible skill: plain <a> list → <ul role="list"> → <nav> landmark → JS-injected toggle button. Without JS the panel is a static row of pills.
 */
 
 .mainnav {
-  /* The dropdown panel is NOT anchored to .mainnav. It's absolutely positioned
-     against the full-width header row (.repel.ontop in header.njk — position:relative
-     via the .ontop utility). That row's right edge sits under the theme toggle (the
-     moon) and its left edge at the page gutter, so the panel hangs under the moon with
-     equal gutters left and right. Keep .mainnav static for that anchor to win. */
+  /* The panel is anchored to the full-width header row (.repel.ontop in header.njk), not to .mainnav — that puts it under the theme toggle with equal gutters. Keep .mainnav static so the anchor wins. */
 
-  /* Shared panel / active-trigger surface — a slightly lighter version of the page
-     in BOTH themes (a gently lifted sheet; dark overridden below). Used by the
-     dropdown panel and the MENU button's active (open) state so they read as one
-     connected sheet. */
+  /* Shared surface for the panel and the open MENU trigger, so the two read as one connected sheet. A lifted version of the page in both themes (dark overridden below). */
   --megamenu-surface: color-mix(in oklab, white 45%, var(--color-bg));
 }
 
@@ -26,11 +15,7 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
   --megamenu-surface: color-mix(in oklab, white 7%, var(--color-bg));
 }
 
-/* Centre the JS-injected MENU trigger on the header row. The nav wrapper otherwise
-   inherits the body's tall line-height (~34px), so the inline-flex button sits on
-   that oversized text baseline instead of the row's optical centre (where the
-   breadcrumb logomark and the theme toggle sit). Scoped with :has() to the enhanced
-   state so the no-JS static list keeps its block layout. */
+/* The nav wrapper inherits the body's tall line-height (~34px), so the inline-flex button sits on that oversized baseline instead of the row's optical center. :has() scopes this to the enhanced state; the no-JS list keeps its block layout. */
 .mainnav:has(.menu-toggle) {
   display: flex;
   align-items: center;
@@ -64,8 +49,7 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
   --menu-toggle-border-color: color-mix(in oklab, var(--color-text) 40%, var(--color-bg));
 }
 
-/* Active (menu open): fill with the shared panel surface so the trigger and the
-   dropdown read as one connected sheet (test). */
+/* open: fill with the panel surface so trigger and panel read as one sheet */
 .menu-toggle[aria-expanded='true'] {
   background: var(--megamenu-surface);
 }
@@ -95,24 +79,14 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
   padding: 0;
 }
 
-/* JS-enhanced: the panel becomes an absolute dropdown attached under the trigger.
-   `.menu-toggle + .megamenu` only matches once the button precedes the list (post-JS). */
+/* JS-enhanced: the panel becomes an absolute dropdown under the trigger. This only matches once the button precedes the list, i.e. post-JS. */
 .menu-toggle + .megamenu {
-  /* Surface comes from the shared --megamenu-surface on .mainnav (so the open MENU
-     trigger can match it). With no border, this bg difference plus the drop shadow
-     is what separates the panel from the page. */
   --megamenu-bg: var(--megamenu-surface);
-  /* 40rem on desktop; on narrow screens fill the header content row (100% of the
-     .repel.ontop anchor) so the panel never overflows and the gutters stay equal. */
+  /* 40rem, or the header content row on narrow screens, so the panel never overflows and the gutters stay equal */
   --megamenu-width: min(40rem, 100%);
 
   position: absolute;
-  /* Tuck the panel up to ~5px under the Menu button (where it sat before it was
-     re-anchored to the full header row). 100% drops it to the row's bottom edge (the
-     hairline); the row is taller than the short button, so pull back up by that empty
-     space. space-m + space-2xs tracks that gap *fluidly* — both scale with the row's
-     spacing — so it stays ~5px under the button at every width, no magic pixel. The
-     open panel rides up over the hairline, reading as a dropdown hung off the button. */
+  /* 100% drops the panel to the row's bottom edge; the row is taller than the short button, so pull back up by that empty space. space-m + space-2xs tracks the gap fluidly — ~5px under the button at every width, no magic pixel. */
   inset-block-start: calc(100% - var(--space-m) - var(--space-2xs));
   inset-inline-end: 0;
   z-index: 5;
@@ -126,33 +100,28 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
   padding: var(--space-s);
   background: var(--megamenu-bg);
   border-radius: var(--border-radius-medium);
-  /* No resting border — separation comes from the slightly-lighter surface plus a
-     soft drop shadow. A real edge is restored for Windows High Contrast / forced-
-     colors (where shadows vanish) below, and every link keeps its :focus-visible ring.
-     Light keeps the shadow gentle; dark restores depth (overridden below). */
+  /* No resting border — separation is the lighter surface plus a soft shadow. Light stays gentle, dark restores depth (below), and forced-colors gets a real edge back. */
   --megamenu-shadow:
     0 2px 6px -4px hsl(0 0% 0% / 0.06),
     0 10px 28px -14px hsl(0 0% 0% / 0.16);
   box-shadow: var(--megamenu-shadow);
 }
 
-/* forced-colors: drop shadows aren't painted, so give the panel an edge back. */
+/* forced-colors: drop shadows aren't painted, so give the panel an edge back */
 @media (forced-colors: active) {
   .menu-toggle + .megamenu {
     border: 1px solid CanvasText;
   }
 }
 
-/* Dark keeps more shadow depth — "less shadow" was a light-theme ask, and on dark the
-   panel's lift comes mostly from the lighter surface (the shadow barely shows anyway). */
+/* "Less shadow" was a light-theme ask; on dark the lift comes mostly from the surface anyway. */
 :root[data-theme='dark'] .menu-toggle + .megamenu {
   --megamenu-shadow:
     0 4px 10px -4px hsl(0 0% 0% / 0.35),
     0 18px 40px -12px hsl(0 0% 0% / 0.55);
 }
 
-/* closed / open — toggle visibility (not opacity/transform alone) so the links are
-   not Tab-focusable while closed (nav-accessible layer 6). */
+/* closed / open — visibility, not opacity/transform alone, so closed links aren't Tab-focusable (nav-accessible layer 6) */
 .menu-toggle[aria-expanded='false'] + .megamenu {
   visibility: hidden;
   opacity: 0;
@@ -201,7 +170,7 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
 
 .megamenu a svg {
   flex: none;
-  align-self: center; /* icon vertically centred, not sat on the text baseline */
+  align-self: center; /* icon vertically centered, not sat on the text baseline */
   inline-size: 0.95em;
   block-size: 0.95em;
   margin-inline-end: var(--space-2xs); /* extra breathing room before the label */
@@ -210,8 +179,7 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
 
 :root[data-theme='dark'] .megamenu a {
   --megamenu-icon-rest: oklch(from var(--color-accent-blue) 0.5 calc(c * 1.6) h);
-  /* Dark has headroom light doesn't: 68% is where 4.5:1 runs out here, vs 79% in light.
-     72% keeps a margin off that floor rather than sitting on it. */
+  /* Dark has headroom light doesn't: 4.5:1 runs out at 68% here vs 79% in light. 72% keeps a margin off that floor. */
   --megamenu-count-rest: color-mix(in oklab, var(--color-text) 72%, var(--color-bg));
 }
 
@@ -219,14 +187,10 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
   flex: none;
 }
 
-/* the leader dots — an empty flexible spacer whose dotted underline meets the text
-   baseline (the table-of-contents / index move). Pure CSS, no images, no JS. */
+/* Leader dots: an empty flexible spacer whose dotted underline meets the text baseline — the table-of-contents move, pure CSS. */
 .megamenu-dots {
   flex: 1 1 auto;
-  /* A 1px-tall box, baseline-aligned so its bottom edge (its synthesised baseline)
-     lands on the text baseline. The dots are painted as a repeating radial gradient
-     rather than a `dotted` border, whose gap the UA fixes at ~the border width — the
-     gradient lets us space them out: ~1px dots on a 6px pitch, a third as many. */
+  /* A 1px-tall box, baseline-aligned so its bottom edge lands on the text baseline. Painted as a repeating radial gradient rather than a `dotted` border, whose gap the UA fixes at ~the border width — this way the dots sit on a 6px pitch. */
   align-self: baseline;
   block-size: 1px;
   background-image: radial-gradient(circle, var(--megamenu-dot-color) 0.5px, transparent 0.5px);
@@ -241,8 +205,7 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
   font-variant-numeric: tabular-nums;
 }
 
-/* hover / focus: row background lifts, icon → orange, count brightens to match the label
-   (the label itself is already at full strength, so it no longer changes here) */
+/* hover / focus: row background lifts, icon → orange, count brightens to the label's strength (the label is already there, so it doesn't change) */
 .megamenu a:hover,
 .megamenu a:focus-visible {
   --megamenu-icon-color: var(--color-accent-orange);
@@ -250,10 +213,7 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
   --megamenu-row-bg: color-mix(in oklab, var(--color-text) 2%, var(--color-bg));
 }
 
-/* Lift the focused row into its own stacking context so its offset focus ring
-   (global 3px / 0.3ch) paints ABOVE an adjacent active-page row's background
-   instead of being clipped behind it — the rows are dense and the ring overlaps
-   its neighbour. */
+/* Own stacking context, so the offset focus ring paints above the neighboring row's background instead of being clipped behind it. The rows are dense enough to overlap. */
 .megamenu a:focus-visible {
   position: relative;
   z-index: 1;
@@ -268,13 +228,39 @@ Without JS the panel is a static, visible list. Site-wide header chrome → glob
 }
 
 /* ---------- no-JS fallback ----------
-   The button is never injected, so the <ul> is the first child of .mainnav. Show it
-   as a static, visible two-column list in normal flow (no dropdown, no shadow). */
+   No button is injected, so the <ul> is the first child of .mainnav. Show it as a static row of wrapping pills — what the nav-accessible pattern recommends. The two-column panel needs width the header row can't give it: it collapsed to one 16-row column.
+   The row is built around a small MENU trigger — it never wraps, and it pins the controls cluster (breadcrumb.css). Both pins have to relax here, or the pill row eats the row and the breadcrumb crushes to "NO". */
+.site-header .repel:not(:has(.menu-toggle)) {
+  flex-wrap: wrap;
+}
+
+.site-header .repel > .cluster:not(:has(.menu-toggle)) {
+  /* Basis 22rem, not `auto`: the pill row's max-content is ~2000px, so an auto basis makes the cluster the biggest thing on the row and flexbox takes the shrink out of the breadcrumb beside it. From 22rem it grows into whatever the trail leaves on a wide row and wraps below it on a narrow one. `nowrap` keeps the theme toggle alongside the pills rather than stranded on its own line. */
+  flex: 1 1 22rem;
+  flex-wrap: nowrap;
+  min-inline-size: 0;
+}
+
+.mainnav:not(:has(.menu-toggle)) {
+  min-inline-size: 0;
+}
+
 .mainnav > .megamenu:first-child {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
-  column-gap: var(--space-l);
-  row-gap: var(--space-3xs);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-3xs) var(--space-2xs);
   visibility: visible;
   opacity: 1;
+}
+
+/* Pills: tighter than the panel's index rows, and no leader dots — they only read as leaders when every row shares a width. */
+.mainnav > .megamenu:first-child a {
+  padding: var(--space-3xs) var(--space-2xs);
+  /* The count's rest color was calibrated against the panel surface; on the page background the same mix measures 4.43:1 in light. 88% clears 4.5:1 in both themes (light 5.29, dark 8.52). */
+  --megamenu-count-rest: color-mix(in oklab, var(--color-text) 88%, var(--color-bg));
+}
+
+.mainnav > .megamenu:first-child .megamenu-dots {
+  display: none;
 }

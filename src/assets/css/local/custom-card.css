@@ -120,9 +120,7 @@ custom-card[clickable] a:after {
 
 /* -------------------- recipe duration/yield badge --------------------  */
 
-/* Small pills in the recipe card's content slot (card-recipe.njk, spec §6).
-   Wrap + gap ride the .cluster composition via --gutter; this adds only the
-   pills' visual treatment. Semantic tokens keep it theme-aware (dark mode). */
+/* Small pills in the recipe card's content slot (card-recipe.njk). Wrap + gap ride the .cluster composition via --gutter; this adds only the visual treatment. */
 
 .recipe-badge {
   --gutter: var(--space-xs);
@@ -140,10 +138,7 @@ custom-card[clickable] a:after {
 
 /* -------------------- event date badge --------------------  */
 
-/* Date-led lead for the event card (card-event.njk, spec §6): a stacked
-   day/month/year block that occupies the card's `image` grid row in place of a
-   photo. `grid-row: image` overrides the default `custom-card > p` → `desc`
-   placement so the badge leads the card. Semantic tokens keep it theme-aware. */
+/* Date-led lead for the event card (card-event.njk): a stacked day/month/year block in the card's `image` grid row instead of a photo. `grid-row: image` overrides the default `custom-card > p` → `desc` placement so the badge leads the card. */
 
 .event-date-badge {
   grid-row: image;
@@ -174,11 +169,7 @@ custom-card[clickable] a:after {
   font-size: var(--size-step-min-1);
 }
 
-/* Event card meta line (card-event.njk): location + status sit together on one
-   wrapping line below the description — the same shape as .recipe-badge, so the
-   status pill is a content-sized flex item (not a stretched grid child) and the
-   card keeps to two content columns like the recipe card. The status pill's
-   colours live in the global event-status block; this only spaces the line. */
+/* Event card meta line (card-event.njk): location + status on one wrapping line below the description — the same shape as .recipe-badge, so the status pill is a content-sized flex item rather than a stretched grid child. The pill's colors live in the global event-status block; this only spaces the line. */
 
 .event-card-meta {
   --gutter: var(--space-xs);
@@ -192,10 +183,7 @@ custom-card[clickable] a:after {
 
 /* -------------------- audio/video duration badge --------------------  */
 
-/* Pills in the media cards' content slot (card-audio.njk / card-video.njk,
-   audio spec §6 / video spec §7): a duration (+ episode) pill. Same treatment
-   as .recipe-badge so the heavy types read consistently; kept as its own class
-   for semantics. Wrap + gap ride the .cluster composition via --gutter. */
+/* Duration (+ episode) pill in the media cards' content slot (card-audio.njk / card-video.njk). Same treatment as .recipe-badge so the heavy types read consistently; its own class for semantics. */
 
 .media-badge {
   --gutter: var(--space-xs);
@@ -213,13 +201,7 @@ custom-card[clickable] a:after {
 
 /* -------------------- video play overlay --------------------  */
 
-/* A play affordance over the poster on video cards (card-video.njk, video
-   spec §7). Implemented as a grid pseudo-element placed in the `image` row so
-   it overlaps the poster WITHOUT adding a hoisted child element (which
-   webc:nokeep would stretch into its own grid cell — the Event lesson). Scoped
-   with :has(picture) so it only appears when a poster is present (a posterless
-   embed card stays clean). Decorative + non-interactive, so the card's
-   clickable link still receives the click. */
+/* A play affordance over the poster on video cards (card-video.njk). A grid pseudo-element in the `image` row, so it overlaps the poster without a hoisted child element — webc:nokeep would stretch one into its own grid cell (the Event lesson). :has(picture) keeps posterless embed cards clean. Decorative and non-interactive, so the card's link still gets the click. */
 
 custom-card[data-video]:has(picture) {
   position: relative;
