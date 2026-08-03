@@ -6,7 +6,7 @@ bookmarkOf: "https://chisenires.design/blog/my-personal-website-should-have-supp
 sourceUrl: "https://chisenires.design"
 tags:
   - modern-web-sucks
-  - 11ty
+  - eleventy
   - webmention
 draft: true
 ---

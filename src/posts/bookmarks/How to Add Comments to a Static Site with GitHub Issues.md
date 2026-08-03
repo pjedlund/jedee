@@ -5,7 +5,7 @@ date: 2026-05-27
 bookmarkOf: "https://www.aleksandrhovhannisyan.com/blog/static-site-comments-github-issues/"
 sourceUrl: "https://www.aleksandrhovhannisyan.com"
 tags:
-  - 11ty
+  - eleventy
   - netlify
   - github
 draft: true
