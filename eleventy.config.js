@@ -24,6 +24,7 @@ import events from './src/_config/events.js';
 import filters from './src/_config/filters.js';
 import plugins from './src/_config/plugins.js';
 import {resolveOrPlainText} from './src/_config/plugins/interlinker-resolver.js';
+import ignoreWikilinksInCode from './src/_config/plugins/interlinker-ignore-code.js';
 import shortcodes from './src/_config/shortcodes.js';
 
 // Caps how many of the ~370 images fetch + encode at once (default = CPU count), so fewer
@@ -86,6 +87,9 @@ export default async function(eleventyConfig) {
   eleventyConfig.addCollection('tagList', tagList);
 
   // ---------------------  Plugins
+  // Patches the parser prototype, so it has to land before the plugin builds its parser.
+  await ignoreWikilinksInCode();
+
   eleventyConfig.addPlugin(plugins.interlinker, {
     // stubUrl false → a dead wikilink arrives at the resolver with href === false
     // instead of the plugin's default "/stubs/" link, so it can render as plain text.
