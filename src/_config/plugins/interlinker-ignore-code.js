@@ -31,6 +31,17 @@ import path from 'node:path';
 export const stripCode = markdown =>
   markdown.replace(/(`{3,}|~{3,})[\s\S]*?\1/g, '\n').replace(/(`+)[^`\n]*?\1/g, ' ');
 
+// The parsers run on RAW template source, before Nunjucks renders anything, so an href
+// built from an expression — `href="/tags/{{ tag | slugify }}/"` in tags.njk, tagList.njk
+// and entry-footer.njk — is matched as the literal string and reported dead. It can never
+// be anything else: there is no page at that literal path, and by the time a real path
+// exists the parsers have long since run. So these are never real backlinks and dropping
+// them loses nothing. Neutralized rather than deleted, so the rest of the tag stays intact.
+export const stripTemplatedHrefs = markdown =>
+  markdown.replace(/href="\/[^"]*\{[{%][^"]*"/g, 'href="#"');
+
+const prepare = markdown => stripTemplatedHrefs(stripCode(markdown));
+
 let patched = false;
 
 // Both parsers scan the same raw markdown and are blind the same way: WikilinkParser
@@ -57,7 +68,7 @@ export default async function ignoreWikilinksInCode() {
 
     const find = Parser.prototype.find;
     Parser.prototype.find = function (document, ...rest) {
-      return find.call(this, stripCode(document), ...rest);
+      return find.call(this, prepare(document), ...rest);
     };
   }
 
