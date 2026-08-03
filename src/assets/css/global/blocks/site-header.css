@@ -1,9 +1,6 @@
 /*
 SITE HEADER
-The full-width header band. The <header> element spans the viewport (a clean modern
-band) while its contents stay aligned to the centred content column via the .wrapper
-grid it carries (header.njk) — so the bar reads edge-to-edge without abandoning the
-editorial column. Site-wide chrome → global/blocks.
+The full-width header band. The <header> spans the viewport while its contents stay aligned to the centered content column via the .wrapper grid it carries (header.njk) — edge-to-edge without abandoning the editorial column. Site-wide chrome → global/blocks.
 */
 
 .site-header {

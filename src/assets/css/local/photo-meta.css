@@ -1,8 +1,6 @@
 /*
 PHOTO-META
-Capture + scan/technical metadata for photo posts, the download-original action,
-and the public-domain line. Paired with partials/photo-meta.njk.
-Loaded per-page via {% css "local" %} (photo layout only), CUBE block layer.
+Capture + scan/technical metadata for photo posts, the download-original action, and the public-domain line. Paired with partials/photo-meta.njk, loaded per-page via {% css "local" %}.
 */
 .photo-meta {
   --photo-meta-label-color: var(--color-text-accent);
@@ -36,11 +34,7 @@ Loaded per-page via {% css "local" %} (photo layout only), CUBE block layer.
   color: var(--color-text-accent);
 }
 
-/*
-  Collapsible scan/technical block — a single native <details> (the audio.njk
-  precedent), NOT the .details accordion partial. Styles only the disclosure
-  chrome; the inner <dl> inherits the grid above.
-*/
+/* Collapsible scan/technical block — a plain native <details> (the audio.njk precedent), not the .details accordion partial. Only the disclosure chrome; the inner <dl> inherits the grid above. */
 .photo-tech > summary {
   cursor: pointer;
   font-weight: var(--font-bold);
@@ -57,10 +51,9 @@ Loaded per-page via {% css "local" %} (photo layout only), CUBE block layer.
   margin-block-start: var(--space-xs);
 }
 
-/* The location map is a popout <place-map> element in photo.njk; its styles (incl. the
-   static-fallback image) live in css/place-map.css, not here. */
+/* The location map is a popout <place-map> in photo.njk; its styles live in css/place-map.css. */
 
-/* Download actions wrap as a button cluster; keep list semantics without bullets. */
+/* download actions wrap as a button cluster; keep list semantics without bullets */
 .photo-downloads {
   list-style: none;
   padding-inline-start: 0;
