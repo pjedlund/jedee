@@ -35,8 +35,8 @@ export default {
       url: '/about/'
     },
     {
-      text: 'Activities',
-      url: '/activities/'
+      text: 'Style Guide',
+      url: '/styleguide/'
     },
     {
       text: 'Imprint',
