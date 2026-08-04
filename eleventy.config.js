@@ -11,12 +11,12 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-// add yaml support
-import yaml from 'js-yaml';
+// add yaml support (js-yaml 5 is ESM-only and dropped its default export)
+import {load as yamlLoad} from 'js-yaml';
 import fs from 'node:fs';
 
 // The wiki dial (src/_data/features.yaml). Read here too because ignores must be set at config time, before the data cascade runs.
-const features = yaml.load(fs.readFileSync('./src/_data/features.yaml', 'utf8'));
+const features = yamlLoad(fs.readFileSync('./src/_data/features.yaml', 'utf8'));
 
 //  config import
 import { POST_TYPES, byCategory, showInSitemap, tagList } from './src/_config/collections.js';
@@ -129,7 +129,7 @@ export default async function(eleventyConfig) {
 
   // 	--------------------- Library and Data
   eleventyConfig.setLibrary('md', plugins.markdownLib);
-  eleventyConfig.addDataExtension('yaml', contents => yaml.load(contents));
+  eleventyConfig.addDataExtension('yaml', contents => yamlLoad(contents));
 
   // --------------------- Filters
   eleventyConfig.addFilter('toIsoString', filters.toISOString);

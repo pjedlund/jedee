@@ -31,7 +31,7 @@
 import {mkdir, readFile, writeFile} from 'node:fs/promises';
 import {dirname, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
-import yaml from 'js-yaml';
+import {dump as yamlDump, load as yamlLoad} from 'js-yaml';
 
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../../..');
 const TOKENS_DIR = resolve(REPO_ROOT, 'src/_data/designTokens');
@@ -366,7 +366,7 @@ const FRONTMATTER_RE = /^---\n[\s\S]*?\n---\n?/;
 
 const data = await build();
 
-const yamlOut = yaml.dump(data, {
+const yamlOut = yamlDump(data, {
 	quotingType: '"',
 	forceQuotes: false,
 	lineWidth: 100,
@@ -390,7 +390,7 @@ await mkdir(dirname(OUTPUT_PATH), {recursive: true});
 await writeFile(OUTPUT_PATH, finalText, 'utf8');
 
 // Validate the round trip
-const parsed = yaml.load(yamlOut);
+const parsed = yamlLoad(yamlOut);
 if (!parsed?.name || !parsed?.colors || !parsed?.typography) {
 	console.error('Validation failed: front matter is missing required keys');
 	process.exit(1);
