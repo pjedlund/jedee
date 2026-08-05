@@ -9,6 +9,10 @@ audio:
       format: FLAC
       bytes: 0
 poster: ./src/assets/images/audio/nybrostrand.jpg
+posterFull:
+  url: https://pub-820f82fa11f94b03ab1d34e77b3572f6.r2.dev/photos/nybrostrand-beach.jpg
+  width: 3993
+  height: 1996
 posterAlt: Small waves breaking onto a wide sandy beach on a bright summer day, foam spreading thin across the sand in the foreground, the sea flat and glittering out to a hazy horizon under a pale blue sky with thin high cloud.
 title: Nybrostrand
 date: 2026-07-14T16:13:00+02:00
@@ -17,11 +21,10 @@ description: Small waves arriving on the sand at Nybrostrand on a warm afternoon
 place: Nybrostrand
 lat: 55.43287
 lon: 13.93232
-recorder: ""
-mic: ""
+recorder: "Zoom F3"
+mic: "audio-technica BP4025"
 tags:
   - field-recording
-  - pinhole
 ---
 
 A warm, bright afternoon in the middle of July. The sea was almost flat — the waves arriving here are small, more a steady arrival than a crash, and they spread out thin and wide across the sand before sliding back.
