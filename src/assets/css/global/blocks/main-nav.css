@@ -229,12 +229,13 @@ A "Menu ⌄" button drops a two-column, table-of-contents-style panel of every p
 
 /* ---------- no-JS fallback ----------
    No button is injected, so the <ul> is the first child of .mainnav. Show it as a static row of wrapping pills — what the nav-accessible pattern recommends. The two-column panel needs width the header row can't give it: it collapsed to one 16-row column.
-   The row is built around a small MENU trigger — it never wraps, and it pins the controls cluster (breadcrumb.css). Both pins have to relax here, or the pill row eats the row and the breadcrumb crushes to "NO". */
-.site-header .repel:not(:has(.menu-toggle)) {
+   The row is built around a small MENU trigger — it never wraps, and it pins the controls cluster (breadcrumb.css). Both pins have to relax here, or the pill row eats the row and the breadcrumb crushes to "NO".
+   `:has(.mainnav)` is load-bearing: during the soft launch header.njk omits the nav entirely in production, which also means no .menu-toggle. Without this guard the cluster grew to 22rem around nothing but the theme toggle, stranding the moon in the middle of the row instead of pinned right. */
+.site-header .repel:has(.mainnav):not(:has(.menu-toggle)) {
   flex-wrap: wrap;
 }
 
-.site-header .repel > .cluster:not(:has(.menu-toggle)) {
+.site-header .repel > .cluster:has(.mainnav):not(:has(.menu-toggle)) {
   /* Basis 22rem, not `auto`: the pill row's max-content is ~2000px, so an auto basis makes the cluster the biggest thing on the row and flexbox takes the shrink out of the breadcrumb beside it. From 22rem it grows into whatever the trail leaves on a wide row and wraps below it on a narrow one. `nowrap` keeps the theme toggle alongside the pills rather than stranded on its own line. */
   flex: 1 1 22rem;
   flex-wrap: nowrap;
