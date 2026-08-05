@@ -27,13 +27,8 @@ export default {
     // and matches the section name directly.
     {text: 'Activities', url: '/activities/', icon: 'activity', collection: 'activity'}
   ],
-  // Footer nav. About lives here now (moved out of the top nav); Now joins it once
-  // the page exists.
+  // Footer nav. Now joins it once the page exists.
   bottom: [
-    {
-      text: 'About',
-      url: '/about/'
-    },
     {
       text: 'Style Guide',
       url: '/styleguide/'
