@@ -15,9 +15,13 @@ schema: BlogPosting
     {# Artwork is a LOCAL asset → {% image %} (the Photo poster pattern, not the
        remote-cover plain <img> of reading/watching). Breaks out to .feature width:
        square podcast art and a landscape field-recording frame both read better
-       wider than the prose column, and the widths list carries a retina candidate
-       for that width. Called directly in the layout, so the interlinker's
-       {% if %}-wrapped-include trap doesn't apply. #}
+       wider than the prose column. Called directly in the layout, so the interlinker's
+       {% if %}-wrapped-include trap doesn't apply.
+       `lightbox` matches the featured image in entry-header.njk — it wraps the picture
+       in <photo-lightbox>, which carries its own PhotoSwipe CSS/JS on the island, so
+       nothing needs adding to the {% css "local" %} block below. It also sets the
+       widths to [650, 960, 1400, 2000], the 2000w candidate doubling as the zoom
+       target — hence no explicit widths here. #}
     {% if poster %}
       {%
         imageKeys {
@@ -25,8 +29,8 @@ schema: BlogPosting
           "alt": posterAlt or "",
           "loading": "eager",
           "containerClass": "feature",
-          "widths": [650, 960, 1400, 2000],
-          "sizes": "(min-width: 82rem) 78rem, 100vw"
+          "sizes": "(min-width: 82rem) 78rem, 100vw",
+          "lightbox": true
         }
       %}
     {% endif %}
