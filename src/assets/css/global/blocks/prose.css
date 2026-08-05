@@ -86,8 +86,12 @@
    relative (/about/) so they never match href^='http'; the own-domain / localhost
    exclusions cover the rare absolute self-link. Decorative — links open in the same tab,
    so no extra announcement. Reuses the static external.svg (its #888 stroke reads in both
-   themes; a background image can't inherit currentColor anyway). */
-.prose a[href^='http']:not([href*='johanedlund.se']):not([href*='localhost'])::after {
+   themes; a background image can't inherit currentColor anyway).
+   `.no-indicator` opts a link out. Templates have marked links with it since the footer
+   was written, but nothing ever defined it, so an image-only outbound link (the photo
+   lightbox, the static map) drew a stray arrow on its own line under the picture with no
+   text to follow. The class is the opt-out for any link whose content isn't words. */
+.prose a[href^='http']:not([href*='johanedlund.se']):not([href*='localhost']):not(.no-indicator)::after {
   content: '';
   display: inline-block;
   inline-size: 0.75em;
