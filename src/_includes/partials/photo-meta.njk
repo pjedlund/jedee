@@ -25,7 +25,7 @@
    this block is now just the capture-facts list. The Place row links to
    OpenStreetMap whenever there's GPS. #}
 {% if ex or photo.downloads %}
-<section class="photo-meta | flow" aria-label="Photograph details">
+<section class="media-meta | flow" aria-label="Photograph details">
 
   {% if ex %}
   <dl>
@@ -48,7 +48,7 @@
   {% endif %}
 
   {% if photo.downloads %}
-  <ul class="photo-downloads | cluster" role="list">
+  <ul class="media-downloads | cluster" role="list">
     {% for dl in photo.downloads %}
     <li>
       <a class="button" href="{{ dl.url }}" rel="enclosure" download>
@@ -59,7 +59,7 @@
   </ul>
   {% endif %}
 
-  <p class="text-step-min-1 photo-license">
+  <p class="text-step-min-1 media-license">
     <a rel="license" href="https://creativecommons.org/publicdomain/zero/1.0/">Public domain (CC0)</a> &mdash; download and reuse freely.
   </p>
 
@@ -87,5 +87,5 @@
 {% endif %}
 
 {% css "local" %}
-  {% include "css/photo-meta.css" %}
+  {% include "css/media-meta.css" %}
 {% endcss %}
