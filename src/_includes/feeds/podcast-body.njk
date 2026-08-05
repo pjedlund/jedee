@@ -17,6 +17,10 @@
     feedCategory    – itunes:category text (default "Technology")
     feedExplicit    – "true" | "false" (default "false")
 
+  `audio.src` may be a LOCAL path ("./src/assets/…", podcast episodes) or a REMOTE URL (R2,
+  field recordings). The `replace('./src','')` is a no-op on a full URL, and enclosureType
+  reads the extension either way; only the byte length needs the authored fallback below.
+
   Audio episodes always carry a file (audio.src) → always an <enclosure>. Video
   is asymmetric: provider "file" gets an <enclosure>; "youtube"/"peertube"
   embeds have no local file → no enclosure (the item links to the post page,
@@ -66,7 +70,10 @@
       <description>{{ post.data.description }}</description>
       {%- endif %}
       {%- if mediaSrc %}
-      <enclosure url="{{ mediaSrc | replace('./src', '') | absoluteUrl(meta.url) }}" length="{{ mediaSrc | enclosureBytes }}" type="{{ mediaSrc | enclosureType }}" />
+      {#- `length` prefers an authored `bytes` (the only possible source for a file hosted
+          off-site on R2 — enclosureBytes stats the local disk and would return 0), and falls
+          back to the stat for episodes whose file really is in src/assets. -#}
+      <enclosure url="{{ mediaSrc | replace('./src', '') | absoluteUrl(meta.url) }}" length="{{ media.bytes or (mediaSrc | enclosureBytes) }}" type="{{ mediaSrc | enclosureType }}" />
       {%- endif %}
       {%- if media.duration %}
       <itunes:duration>{{ media.duration | itunesDuration }}</itunes:duration>

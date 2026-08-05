@@ -45,6 +45,16 @@ src/_obsidian/*
 # never produced one of these; if a post ever genuinely needs one, add it with `git add -f`.
 /src/assets/images/*_MD5.*
 
+# Uncompressed audio masters. A field-recording master runs to hundreds of MB (the Nybrostrand
+# take is 336 MB), and the repo pattern is the same as for photos: the small derived file ships
+# in src/assets/, the original lives on R2. A stray `git add -A` must not be able to pull one in.
+*.wav
+*.WAV
+*.aif
+*.aiff
+*.flac
+*.FLAC
+
 .claude
 .omc
 .github

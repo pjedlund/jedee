@@ -45,9 +45,15 @@ schema: BlogPosting
        to a live, maximizable map on idle. photoExif carries the GPS. #}
     {% set ex = photoExif %}
     {% if ex and ex.gps and meta.mapApiKey and not photo.hideMap %}
+      {# place-map.njk reads these caller-set variables rather than photoExif, so audio
+         (and later video) can slot the same fallback in from plain front matter. #}
       {% set mapPlace = ex.place.city if (ex.place and ex.place.city) else "" %}
+      {% set mapLat = ex.gps.lat %}
+      {% set mapLon = ex.gps.lon %}
+      {% set mapZoom = photo.mapZoom or 13 %}
+      {% set mapSubject = "this photograph was taken" %}
       <div class="popout">
-        <place-map @lat="{{ ex.gps.lat }}" @lon="{{ ex.gps.lon }}" @zoom="{{ photo.mapZoom or 13 }}" @place="{{ mapPlace }}">
+        <place-map @lat="{{ mapLat }}" @lon="{{ mapLon }}" @zoom="{{ mapZoom }}" @place="{{ mapPlace }}">
           {% include "partials/place-map.njk" %}
         </place-map>
       </div>

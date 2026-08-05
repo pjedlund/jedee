@@ -3,20 +3,53 @@ layout: base
 schema: BlogPosting
 ---
 
+{# The audio type carries two flavours from one layout: podcast episodes (episode/season/
+   transcript, file in src/assets/audio) and field recordings (lat/lon, recorder/mic,
+   file on R2). Every block below is guarded on the field that distinguishes them, so a
+   post of either kind renders only what it actually has. #}
+
 <div class="region" style="--region-space-top: var(--space-xl-2xl)">
   <article class="wrapper flow prose h-entry">
     {% include 'partials/entry-header.njk' %}
 
-    {# Episode artwork is a LOCAL asset → {% image %} (the Photo poster pattern,
-       not the remote-cover plain <img> of reading/watching). Square-ish podcast
-       art renders at its natural ratio on the post page. #}
+    {# Artwork is a LOCAL asset → {% image %} (the Photo poster pattern, not the
+       remote-cover plain <img> of reading/watching). Breaks out to .feature width:
+       square podcast art and a landscape field-recording frame both read better
+       wider than the prose column. Called directly in the layout, so the interlinker's
+       {% if %}-wrapped-include trap doesn't apply.
+       Either way the poster opens in <photo-lightbox>, which carries its own PhotoSwipe
+       CSS/JS on the island — nothing needs adding to the {% css "local" %} block below.
+       Two routes to it, the same split photo.njk makes:
+         - posterFull set  → the Pier 4 pattern. The full-size original on R2 is the zoom
+           target, so zoom runs well past the largest page derivative. Needs width+height:
+           PhotoSwipe sizes the slide from them before the image loads. No srcset is passed,
+           so it fetches that one file — which is the point.
+         - otherwise       → imageKeys' own lightbox mode, zooming to the 2000w JPEG it
+           generates. It sets widths to [650, 960, 1400, 2000] itself, hence none here. #}
     {% if poster %}
-      {% image poster, title, "", "eager" %}
+      {% if posterFull and posterFull.url and posterFull.width and posterFull.height %}
+        <div class="feature">
+          <photo-lightbox @href="{{ posterFull.url }}" @width="{{ posterFull.width }}" @height="{{ posterFull.height }}">
+            {% image poster, posterAlt or "", "", "eager", "", "", [650, 960, 1400, 2000], "(min-width: 82rem) 78rem, 100vw" %}
+          </photo-lightbox>
+        </div>
+      {% else %}
+        {%
+          imageKeys {
+            "src": poster,
+            "alt": posterAlt or "",
+            "loading": "eager",
+            "containerClass": "feature",
+            "sizes": "(min-width: 82rem) 78rem, 100vw",
+            "lightbox": true
+          }
+        %}
+      {% endif %}
     {% endif %}
 
     {# The recording IS the content, so u-audio rides the visible <audio>.
-       audio.src is "./src/assets/audio/…"; strip "./src" for the public URL
-       (the file is passthrough-copied — Eleventy Image doesn't move .mp3). #}
+       audio.src is either "./src/assets/audio/…" (passthrough-copied — Eleventy Image
+       doesn't move .mp3) or a full R2 URL; stripping "./src" is a no-op on the latter. #}
     {% if audio.src %}
       <audio class="u-audio" controls preload="metadata" src="{{ audio.src | replace('./src', '') }}"></audio>
     {% endif %}
@@ -34,6 +67,70 @@ schema: BlogPosting
       </details>
     {% endif %}
 
+    {# Recording metadata + downloads + licence. Inline rather than a partial: it has
+       exactly one caller, and audio.njk already inlines the transcript block the same
+       way. Shares media-meta.css with photo-meta.njk. Microformats: p-location (+ nested
+       h-adr) on the place, h-geo on the coordinates — same markup as the photo type. #}
+    {% if recorder or mic or audio.duration or place or audio.downloads %}
+      <section class="media-meta | flow" aria-label="Recording details">
+
+        {% if recorder or mic or audio.duration or place %}
+        <dl>
+          {% if recorder %}<dt>Recorder</dt><dd>{{ recorder }}</dd>{% endif %}
+          {% if mic %}<dt>Microphone</dt><dd>{{ mic }}</dd>{% endif %}
+          {% if audio.duration %}<dt>Length</dt><dd>{{ audio.duration | itunesDuration }}</dd>{% endif %}
+          {% if place %}<dt>Place</dt>
+            <dd class="p-location h-adr">
+              {%- if lat and lon %}<a href="https://www.openstreetmap.org/?mlat={{ lat }}&mlon={{ lon }}#map={{ mapZoom or 13 }}/{{ lat }}/{{ lon }}" target="_blank" rel="noopener">{% endif -%}
+              <span class="p-locality">{{ place }}</span>
+              {%- if lat and lon %}</a>{% endif -%}
+            </dd>
+          {% endif %}
+          {% if lat and lon %}<dt>Coordinates</dt>
+            <dd class="h-geo"><data class="p-latitude" value="{{ lat }}">{{ lat | round(5) }}</data>, <data class="p-longitude" value="{{ lon }}">{{ lon | round(5) }}</data></dd>
+          {% endif %}
+        </dl>
+        {% endif %}
+
+        {% if audio.downloads %}
+        <ul class="media-downloads | cluster" role="list">
+          {% for dl in audio.downloads %}
+          <li>
+            <a class="button" href="{{ dl.url }}" rel="enclosure" download>
+              {{ dl.label }}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+
+        {# Tied to `downloads`, not to the block as a whole: the CC0 offer only makes sense
+           where the file is actually being handed over for reuse. A podcast episode has a
+           player and no downloads, and must not claim a licence it wasn't given. #}
+        {% if audio.downloads %}
+        <p class="text-step-min-1 media-license">
+          <a rel="license" href="https://creativecommons.org/publicdomain/zero/1.0/">Public domain (CC0)</a> &mdash; download and reuse freely.
+        </p>
+        {% endif %}
+
+      </section>
+    {% endif %}
+
+    {# Location map — a popout <place-map>, same as the photo layout. The slotted static
+       <a><img> is the no-JS fallback; <place-map> upgrades it to a live, maximizable map
+       on idle. Coordinates come from front matter here (audio has no EXIF to read). #}
+    {% if lat and lon and meta.mapApiKey and not hideMap %}
+      {% set mapLat = lat %}
+      {% set mapLon = lon %}
+      {% set mapPlace = place or "" %}
+      {% set mapSubject = "this recording was made" %}
+      <div class="popout">
+        <place-map @lat="{{ mapLat }}" @lon="{{ mapLon }}" @zoom="{{ mapZoom or 13 }}" @place="{{ mapPlace }}">
+          {% include "partials/place-map.njk" %}
+        </place-map>
+      </div>
+    {% endif %}
+
     {% include 'partials/backlinks.njk' %}
     {% include 'partials/entry-footer.njk' %}
     {% include 'partials/hidden-author.njk' %}
@@ -43,4 +140,6 @@ schema: BlogPosting
 {%- css "local" -%}
   {%- include 'css/post.css' -%}
   {%- include 'css/footnotes.css' -%}
+  {%- if recorder or mic or audio.duration or place or audio.downloads -%}{%- include 'css/media-meta.css' -%}{%- endif -%}
+  {%- if lat and lon and meta.mapApiKey and not hideMap -%}{%- include 'css/place-map.css' -%}{%- endif -%}
 {%- endcss -%}

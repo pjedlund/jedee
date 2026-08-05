@@ -1,0 +1,61 @@
+/*
+MEDIA-META
+Capture metadata, download actions and the public-domain line for the media post types. Shared by partials/photo-meta.njk (photographs) and the metadata block in audio.njk (recordings); video.njk is the next likely caller. Loaded per-page via {% css "local" %}, so it ships only where a media post is rendered.
+Type-specific pieces stay with their type: `.photo-tech` below is the photograph's scan/technical disclosure and has no audio equivalent.
+*/
+.media-meta {
+  --media-meta-label-color: var(--color-text-accent);
+  --media-meta-column-gap: var(--space-s-m);
+  --media-meta-row-gap: var(--space-xs);
+
+  font-size: var(--size-step-min-1);
+  border-block-start: var(--stroke);
+  padding-block-start: var(--space-s-m);
+}
+
+/* label | value grid — dt/dd flow straight into the two columns (no wrappers) */
+.media-meta dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  column-gap: var(--media-meta-column-gap);
+  row-gap: var(--media-meta-row-gap);
+  margin: 0;
+}
+
+.media-meta dt {
+  color: var(--media-meta-label-color);
+  font-weight: var(--font-bold);
+}
+
+.media-meta dd {
+  margin: 0;
+}
+
+.media-meta .media-license {
+  color: var(--color-text-accent);
+}
+
+/* Collapsible scan/technical block — a plain native <details> (the audio.njk precedent), not the .details accordion partial. Only the disclosure chrome; the inner <dl> inherits the grid above. */
+.photo-tech > summary {
+  cursor: pointer;
+  font-weight: var(--font-bold);
+  color: var(--media-meta-label-color, var(--color-text-accent));
+}
+
+.photo-tech > summary:hover,
+.photo-tech > summary:focus-visible,
+.photo-tech[open] > summary {
+  color: var(--color-primary);
+}
+
+.photo-tech[open] > dl {
+  margin-block-start: var(--space-xs);
+}
+
+/* The location map is a popout <place-map> in the layout; its styles live in css/place-map.css. */
+
+/* download actions wrap as a button cluster; keep list semantics without bullets */
+.media-downloads {
+  list-style: none;
+  padding-inline-start: 0;
+}
