@@ -137,7 +137,15 @@ export const greenweb = {
 export const tests = {
   pa11y: {
     // keep customPaths empty if you want to test all pages
-    customPaths: ['/', '/about/', '/articles/', '/styleguide/'],
+    //
+    // The first four are chrome-and-prose pages. `/audio/nybrostrand/` is here to cover a
+    // media POST layout instead: the <audio> player, the capture-metadata <dl>, the download
+    // buttons and the <place-map> — none of which any of the other four render.
+    // It is a DRAFT, so it only exists because `pa11y:build` sets BUILD_DRAFTS=1. That is
+    // deliberate: a post is worth checking before it ships, not after. The consequence is
+    // that a listed path may be a draft — if a draft here is ever deleted or published under
+    // a different slug, this list must follow it or pa11y will request a 404 and fail.
+    customPaths: ['/', '/about/', '/articles/', '/styleguide/', '/audio/nybrostrand/'],
     globalIgnore: []
   }
 };
