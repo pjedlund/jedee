@@ -14,7 +14,7 @@ audio:
       bytes: 132192728
 poster: ./src/assets/images/audio/nybrostrand.jpg
 posterAlt: Small waves breaking onto a wide sandy beach on a bright summer day, foam spreading thin across the sand in the foreground, the sea flat and glittering out to a hazy horizon under a pale blue sky with thin high cloud.
-title: Rolling waves
+title: Small waves
 date: 2026-07-14T16:14:07+02:00
 description: Small waves on the sand at Nybrostrand, 14 July 2026 — a stereo field recording made a meter out in the shallows, at the placement and direction of an intended pinhole frame.
 place: Nybrostrand

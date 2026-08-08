@@ -18,8 +18,8 @@
      Swedish, so lang="sv" (set by titleLang, see eleventyComputed.js) wraps the title alone. #}
   {{ activityType | capitalize }}: {% if titleLang %}<span lang="{{ titleLang }}">{{ title }}</span>{% else %}{{ title }}{% endif %}
 {%- elif category == "audio" and place -%}
-  {# Field recordings title the SUBJECT ("Rolling waves"), so the crumb composes it with
-     where it was recorded: "Rolling waves at Nybrostrand Beach". "at" carries almost every
+  {# Field recordings title the SUBJECT ("Small waves"), so the crumb composes it with
+     where it was recorded: "Small waves at Nybrostrand". "at" carries almost every
      named location; a post that wants "in"/"on" (a forest, a train) sets placePreposition.
      `region` is deliberately left out — the leaf truncates to one line in the header, so it
      would be the first thing lost, and it already appears in the recording details. #}
