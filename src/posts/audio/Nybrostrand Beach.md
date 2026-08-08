@@ -26,12 +26,13 @@ tags:
   - field-recording
 ---
 
-Stereo recording of waves rolling up on the beach at Nybrostrand outside Ystad, the 14th of July, 2026. 
+Stereo recording of waves rolling up on the beach at Nybrostrand outside Ystad, the 14th of July, 2026.
 
-At first I stood a meter out in the shallows pointing the microphone straight into the wind coming from the south. After about 3 minutes I turned and pointed the microphone west along the beach, at the placement and direction where I also took a pinhole camera shot. This position was better sheltered from the wind than the previous angle and no rumbling bass is heard in the recording. 
+At first I stood a meter out in the shallows pointing the microphone straight into the wind coming from the south. After about 3 minutes I turned and pointed the microphone west along the beach, at the placement and direction where I also took a pinhole camera shot. This position was better sheltered from the wind than the previous angle and no rumbling bass is heard in the recording.
 
 Since I'm standing in the water the waves almost appear to come from the right in the stereo field even though the waves come from the left.
 
-The full 7:39 recording is available as a <abbr title="Waveform Audio File Format">WAV</abbr> download, including the windy first stretch before the microphone was moved. Unfortunately, only using the Rycote Baby Ball Gag was not enough to protect the capsules from the wind when pointing the mic straight into the wind. 
+*[WAV]: Waveform Audio File Format
+The full 7:39 recording is available as a WAV download, including the windy first stretch before the microphone was moved. Unfortunately, only using the Rycote Baby Ball Gag was not enough to protect the capsules from the wind when pointing the mic straight into the wind.
 
 Both the clip and the download have had the level raised. On the clip I also cut the rumble below 70 Hz, which is wind on the capsules rather than sea. The download is left un-EQ'd, so that rumble is still in it.
