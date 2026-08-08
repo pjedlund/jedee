@@ -35,3 +35,5 @@ At first I stood a meter out in the shallows pointing the microphone straight in
 Since I'm standing in the water the waves almost appear to come from the right in the stereo field even though the waves come from the left.
 
 The full 7:39 recording is available as a <abbr title="Waveform Audio File Format">WAV</abbr> download, including the windy first stretch before the microphone was moved. Unfortunately, only using the Rycote Baby Ball Gag was not enough to protect the capsules from the wind when pointing the mic straight into the wind. 
+
+Both the clip and the download have had the level raised. On the clip I also cut the rumble below 70 Hz, which is wind on the capsules rather than sea. The download is left un-EQ'd, so that rumble is still in it.
