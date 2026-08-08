@@ -78,6 +78,7 @@ schema: BlogPosting
         <dl>
           {% if recorder %}<dt>Recorder</dt><dd>{{ recorder }}</dd>{% endif %}
           {% if mic %}<dt>Microphone</dt><dd>{{ mic }}</dd>{% endif %}
+          {% if windProtection %}<dt>Wind protection</dt><dd>{{ windProtection }}</dd>{% endif %}
           {% if audio.duration %}<dt>Length</dt><dd>{{ audio.duration | itunesDuration }}</dd>{% endif %}
           {% if place %}<dt>Place</dt>
             <dd class="p-location h-adr">
