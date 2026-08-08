@@ -12,9 +12,12 @@ schema: BlogPosting
     {# Dish photo is cover-style: a remote URL (clipped) or a local passthrough
        path (hand-authored). A plain <img> lets eleventy-img's HTML Transform
        self-host a remote src and optimize a local one — the {% image %}
-       shortcode is local-only (it prepends ./src and breaks on a remote URL). #}
+       shortcode is local-only (it prepends ./src and breaks on a remote URL).
+       Alt text comes from `coverAlt` when the post writes one. `default` substitutes only on
+       UNDEFINED, so `coverAlt: ""` is honoured as empty. Worth writing here more than on the
+       other cover types: a photo of the finished dish carries information the title doesn't. #}
     {% if cover %}
-      <img class="cover" eleventy:optional="placeholder" src="{{ cover | safe }}" alt="{{ title }}" loading="lazy" eleventy:widths="320,640,960" sizes="auto">
+      <img class="cover" eleventy:optional="placeholder" src="{{ cover | safe }}" alt="{{ coverAlt | default(title) }}" loading="lazy" eleventy:widths="320,640,960" sizes="auto">
     {% endif %}
 
     {% if yield or totalTime %}

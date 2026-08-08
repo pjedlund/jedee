@@ -138,14 +138,14 @@ export const tests = {
   pa11y: {
     // keep customPaths empty if you want to test all pages
     //
-    // The first four are chrome-and-prose pages. `/audio/nybrostrand/` is here to cover a
-    // media POST layout instead: the <audio> player, the capture-metadata <dl>, the download
+    // The first four are chrome-and-prose pages. `/audio/nybrostrand-beach/` is here to cover
+    // a media POST layout instead: the <audio> player, the capture-metadata <dl>, the download
     // buttons and the <place-map> — none of which any of the other four render.
-    // It is a DRAFT, so it only exists because `pa11y:build` sets BUILD_DRAFTS=1. That is
-    // deliberate: a post is worth checking before it ships, not after. The consequence is
-    // that a listed path may be a draft — if a draft here is ever deleted or published under
-    // a different slug, this list must follow it or pa11y will request a 404 and fail.
-    customPaths: ['/', '/about/', '/articles/', '/styleguide/', '/audio/nybrostrand/'],
+    // `pa11y:build` sets BUILD_DRAFTS=1, so a path listed here may be a draft — checking a post
+    // before it ships is the point. The catch: a path that no longer exists does not fail the
+    // run, it scores zero errors and passes silently. So whenever a post listed here is deleted,
+    // or renamed (the file name drives the slug), this list has to follow it by hand.
+    customPaths: ['/', '/about/', '/articles/', '/styleguide/', '/audio/nybrostrand-beach/'],
     globalIgnore: []
   }
 };
