@@ -4,16 +4,21 @@ audio:
   bytes: 1841536
   duration: PT1M17S
   downloads:
+    - label: Clip (MP3, 1:17, 1.8 MB)
+      url: https://pub-820f82fa11f94b03ab1d34e77b3572f6.r2.dev/audio/nybrostrand-waves.mp3
+      format: MP3
+      bytes: 1841536
     - label: Full recording (WAV, 7:39, 132 MB)
       url: https://pub-820f82fa11f94b03ab1d34e77b3572f6.r2.dev/audio/nybrostrand-NoEQ.wav
       format: WAV
       bytes: 132192728
 poster: ./src/assets/images/audio/nybrostrand.jpg
 posterAlt: Small waves breaking onto a wide sandy beach on a bright summer day, foam spreading thin across the sand in the foreground, the sea flat and glittering out to a hazy horizon under a pale blue sky with thin high cloud.
-title: Nybrostrand Beach
+title: Small waves
 date: 2026-07-14T16:14:07+02:00
 description: Small waves on the sand at Nybrostrand, 14 July 2026 — a stereo field recording made a meter out in the shallows, at the placement and direction of an intended pinhole frame.
 place: Nybrostrand
+region: Skåne
 lat: 55.43287
 lon: 13.93232
 mapZoom: 10

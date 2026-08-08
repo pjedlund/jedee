@@ -73,11 +73,15 @@ schema: BlogPosting
              two-column grid that dt/dd flow straight into, so a second <dd> would land in the
              label column. #}
           {% if windProtection %}<dt>Wind protection</dt><dd>{{ windProtection | join(", ") }}</dd>{% endif %}
-          {% if audio.duration %}<dt>Length</dt><dd>{{ audio.duration | itunesDuration }}</dd>{% endif %}
+          {# Length only when the player is the whole recording. Once `downloads` exists the
+             files carry their own lengths in their labels, and a lone "Length" row reads as
+             the length of the download rather than of the clip above it. #}
+          {% if audio.duration and not audio.downloads %}<dt>Length</dt><dd>{{ audio.duration | itunesDuration }}</dd>{% endif %}
           {% if place %}<dt>Place</dt>
             <dd class="p-location h-adr">
               {%- if lat and lon %}<a href="https://www.openstreetmap.org/?mlat={{ lat }}&mlon={{ lon }}#map={{ mapZoom or 13 }}/{{ lat }}/{{ lon }}" target="_blank" rel="noopener">{% endif -%}
               <span class="p-locality">{{ place }}</span>
+              {%- if region %}, <span class="p-region">{{ region }}</span>{% endif -%}
               {%- if lat and lon %}</a>{% endif -%}
             </dd>
           {% endif %}
