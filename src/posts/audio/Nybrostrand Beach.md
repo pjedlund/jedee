@@ -19,7 +19,8 @@ lon: 13.93232
 recordingEnded: 2026-07-14T16:21:46+02:00
 recorder: "Zoom F3"
 mic: "Audio-Technica BP4025"
-windProtection: "Rycote Baby Ball Gag"
+windProtection:
+  - "Rycote Baby Ball Gag"
 tags:
   - field-recording
 ---
