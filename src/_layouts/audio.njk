@@ -17,34 +17,24 @@ schema: BlogPosting
        square podcast art and a landscape field-recording frame both read better
        wider than the prose column. Called directly in the layout, so the interlinker's
        {% if %}-wrapped-include trap doesn't apply.
-       Either way the poster opens in <photo-lightbox>, which carries its own PhotoSwipe
-       CSS/JS on the island — nothing needs adding to the {% css "local" %} block below.
-       Two routes to it, the same split photo.njk makes:
-         - posterFull set  → the Pier 4 pattern. The full-size original on R2 is the zoom
-           target, so zoom runs well past the largest page derivative. Needs width+height:
-           PhotoSwipe sizes the slide from them before the image loads. No srcset is passed,
-           so it fetches that one file — which is the point.
-         - otherwise       → imageKeys' own lightbox mode, zooming to the 2000w JPEG it
-           generates. It sets widths to [650, 960, 1400, 2000] itself, hence none here. #}
+       imageKeys' own lightbox mode zooms to the 2000w JPEG it generates, with the smaller
+       derivatives as a srcset behind it. It sets widths to [650, 960, 1400, 2000] itself,
+       hence none here. The <photo-lightbox> it emits carries its own PhotoSwipe CSS/JS on
+       the island — nothing needs adding to the {% css "local" %} block below.
+       photo.njk has a second route for zooming past the page derivatives, to a full-size
+       original on R2. Deliberately not carried over: no poster here has needed that much
+       zoom, and one route is easier to reason about than two. #}
     {% if poster %}
-      {% if posterFull and posterFull.url and posterFull.width and posterFull.height %}
-        <div class="feature">
-          <photo-lightbox @href="{{ posterFull.url }}" @width="{{ posterFull.width }}" @height="{{ posterFull.height }}">
-            {% image poster, posterAlt or "", "", "eager", "", "", [650, 960, 1400, 2000], "(min-width: 82rem) 78rem, 100vw" %}
-          </photo-lightbox>
-        </div>
-      {% else %}
-        {%
-          imageKeys {
-            "src": poster,
-            "alt": posterAlt or "",
-            "loading": "eager",
-            "containerClass": "feature",
-            "sizes": "(min-width: 82rem) 78rem, 100vw",
-            "lightbox": true
-          }
-        %}
-      {% endif %}
+      {%
+        imageKeys {
+          "src": poster,
+          "alt": posterAlt or "",
+          "loading": "eager",
+          "containerClass": "feature",
+          "sizes": "(min-width: 82rem) 78rem, 100vw",
+          "lightbox": true
+        }
+      %}
     {% endif %}
 
     {# The recording IS the content, so u-audio rides the visible <audio>.
