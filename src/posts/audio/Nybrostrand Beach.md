@@ -16,6 +16,7 @@ description: Small waves on the sand at Nybrostrand, 14 July 2026 — a stereo f
 place: Nybrostrand
 lat: 55.43287
 lon: 13.93232
+mapZoom: 10
 recordingEnded: 2026-07-14T16:21:46+02:00
 recorder: "Zoom F3"
 mic: "Audio-Technica BP4025"

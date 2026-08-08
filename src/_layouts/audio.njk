@@ -135,7 +135,6 @@ schema: BlogPosting
 {%- css "local" -%}
   {%- include 'css/post.css' -%}
   {%- include 'css/footnotes.css' -%}
-  {%- if audio.src -%}{%- include 'css/audio-player.css' -%}{%- endif -%}
   {%- if recorder or mic or audio.duration or place or audio.downloads -%}{%- include 'css/media-meta.css' -%}{%- endif -%}
   {%- if lat and lon and meta.mapApiKey and not hideMap -%}{%- include 'css/place-map.css' -%}{%- endif -%}
 {%- endcss -%}
