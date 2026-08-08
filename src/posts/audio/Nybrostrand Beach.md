@@ -9,10 +9,6 @@ audio:
       format: WAV
       bytes: 132192728
 poster: ./src/assets/images/audio/nybrostrand.jpg
-posterFull:
-  url: https://pub-820f82fa11f94b03ab1d34e77b3572f6.r2.dev/photos/nybrostrand-beach.jpg
-  width: 3993
-  height: 1996
 posterAlt: Small waves breaking onto a wide sandy beach on a bright summer day, foam spreading thin across the sand in the foreground, the sea flat and glittering out to a hazy horizon under a pale blue sky with thin high cloud.
 title: Nybrostrand Beach
 date: 2026-07-14T16:14:07+02:00
