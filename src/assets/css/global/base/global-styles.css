@@ -101,6 +101,13 @@ strong {
   font-weight: var(--font-bold);
 }
 
+abbr[title] {
+  cursor: help;
+  text-decoration: underline dotted;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
+}
+
 hr {
   border: none;
   height: 1px;
