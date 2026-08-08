@@ -1,0 +1,19 @@
+/*
+AUDIO-PLAYER
+The native <audio> element on the audio post type. One job: centre the player under the
+poster. <audio> is an inline replaced element, so it needs `display: block` before
+`margin-inline: auto` can do anything; width is left at the UA's intrinsic size on purpose.
+Everything inside the player is the browser's own control set and is deliberately left
+alone — it is keyboard-operable and screen-reader-labelled for free, which a hand-built
+player would have to re-earn. Note there is no `controlsList` on the element: that
+attribute only ever REMOVES controls, so its absence is what keeps Chrome's overflow menu
+(playback speed, download) available.
+Loaded per-page via {% css "local" %} from audio.njk.
+*/
+.prose audio {
+  display: block;
+  margin-inline: auto;
+  /* The UA width is a fixed 300px, which is wider than the content column on the
+     narrowest phones — cap it so it shrinks instead of pushing the page sideways. */
+  max-inline-size: 100%;
+}
