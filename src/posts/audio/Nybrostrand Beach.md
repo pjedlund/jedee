@@ -17,7 +17,7 @@ posterAlt: Small waves breaking onto a wide sandy beach on a bright summer day, 
 title: Small waves
 date: 2026-07-14T16:14:07+02:00
 description: Small waves on the sand at Nybrostrand, 14 July 2026 — a stereo field recording made a meter out in the shallows, at the placement and direction of an intended pinhole frame.
-place: Nybrostrand
+place: Nybrostrand Beach
 region: Skåne
 lat: 55.43287
 lon: 13.93232
