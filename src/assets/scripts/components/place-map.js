@@ -36,11 +36,11 @@ function pageTheme() {
 // Stroke = the theme's background, so the dot always reads a clean halo.
 const markerStroke = (theme) => (theme === 'dark' ? '#141619' : '#ffffff');
 
-// Marker popup: the group's type as a small italic label, then the place's name on its
-// own line, linked to the post. Styling is in place-map.css.
-const popupHtml = (label, p) => {
+// Marker popup: the date in italics, then the place's name on its own line, linked to
+// the post. Styling is in place-map.css.
+const popupHtml = (p) => {
   const name = p.url ? `<a href="${p.url}">${p.name}</a>` : p.name;
-  return label ? `<i class="place-popup-type">${label}:</i>${name}` : name;
+  return p.date ? `<i class="place-popup-date">${p.date}</i>${name}` : name;
 };
 
 // Build one live map. Wheel + pinch start disabled (toggled on when maximized); drag,
@@ -255,13 +255,12 @@ class PlaceMap extends HTMLElement {
       .map((li) => ({
         li,
         key: li.dataset.group,
-        label: li.dataset.label || '',
         heading: li.querySelector('.place-group-heading'),
         // --dot is authored as a token reference; computed style resolves it to a color
         color: getComputedStyle(li).getPropertyValue('--dot').trim() || MARKER_FILL,
         places: [...li.querySelectorAll('li[data-lat]')].map((p) => {
           const a = p.querySelector('a');
-          return { lat: Number(p.dataset.lat), lon: Number(p.dataset.lon), name: a?.textContent.trim() || p.textContent.trim(), url: a?.getAttribute('href') };
+          return { lat: Number(p.dataset.lat), lon: Number(p.dataset.lon), date: p.dataset.date || '', name: a?.textContent.trim() || p.textContent.trim(), url: a?.getAttribute('href') };
         }),
       }))
       .filter((g) => g.places.length);
@@ -296,7 +295,7 @@ class PlaceMap extends HTMLElement {
         this.mapObj.addDot(p.lat, p.lon, {
           fill: g.color,
           layer: g.layer,
-          popup: popupHtml(g.label, p),
+          popup: popupHtml(p),
         })
       );
 

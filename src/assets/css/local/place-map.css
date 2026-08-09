@@ -313,7 +313,7 @@ place-map[data-map-ready] > .place-map-static {
 }
 [data-place-map-canvas].leaflet-container .leaflet-popup-content a {
   color: var(--color-text);
-  font-weight: 500;
+  font-weight: 600;
   text-decoration: none;
 }
 
@@ -322,8 +322,8 @@ place-map[data-map-ready] > .place-map-static {
   text-wrap: inherit;
 }
 
-/* The activity type above the name: own line, same size as the name, separated by weight and slant rather than by scale — regular italic against the name's 500. Source Sans is variable (100–1000) with a real italic file, so both are genuine faces, not synthesized. */
-.place-popup-type {
+/* The date above the name: own line, same size as the name, separated by weight and slant rather than by scale — regular italic against the name's 600. Source Sans is variable (100–1000) with a real italic file, so both are genuine faces, not synthesized. */
+.place-popup-date {
   display: block;
   font-weight: 400;
   line-height: 1.2;
