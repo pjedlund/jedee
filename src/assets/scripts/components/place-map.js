@@ -36,6 +36,13 @@ function pageTheme() {
 // Stroke = the theme's background, so the dot always reads a clean halo.
 const markerStroke = (theme) => (theme === 'dark' ? '#141619' : '#ffffff');
 
+// Marker popup: the group's type as a small italic label, then the place's name on its
+// own line, linked to the post. Styling is in place-map.css.
+const popupHtml = (label, p) => {
+  const name = p.url ? `<a href="${p.url}">${p.name}</a>` : p.name;
+  return label ? `<i class="place-popup-type">${label}:</i>${name}` : name;
+};
+
 // Build one live map. Wheel + pinch start disabled (toggled on when maximized); drag,
 // keyboard and the +/- zoom control stay on inline so the map is usable in place.
 // Returns { map, addDot } — dots added through addDot get theme re-stroking and the
@@ -248,6 +255,7 @@ class PlaceMap extends HTMLElement {
       .map((li) => ({
         li,
         key: li.dataset.group,
+        label: li.dataset.label || '',
         heading: li.querySelector('.place-group-heading'),
         // --dot is authored as a token reference; computed style resolves it to a color
         color: getComputedStyle(li).getPropertyValue('--dot').trim() || MARKER_FILL,
@@ -288,7 +296,7 @@ class PlaceMap extends HTMLElement {
         this.mapObj.addDot(p.lat, p.lon, {
           fill: g.color,
           layer: g.layer,
-          popup: p.url ? `<a href="${p.url}">${p.name}</a>` : p.name,
+          popup: popupHtml(g.label, p),
         })
       );
 

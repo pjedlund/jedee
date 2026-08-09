@@ -313,6 +313,20 @@ place-map[data-map-ready] > .place-map-static {
 }
 [data-place-map-canvas].leaflet-container .leaflet-popup-content a {
   color: var(--color-text);
+  text-decoration: none;
+}
+
+/* Leaflet sizes a popup by setting `white-space: nowrap` on the content, measuring it, then writing that width back. The popup pane is a zero-width containing block, so without the nowrap an absolutely positioned popup shrink-wraps to MIN-content — one word per line. The reset's `* { text-wrap: pretty }` hits every descendant with a specificity the inline nowrap can't reach past, so the anchor kept wrapping and every popup measured one word wide. Letting descendants inherit restores the measurement, and the popup sizes to its longest line again (Leaflet's own 300px maxWidth still caps it). Same collision the breadcrumb hit — see breadcrumb.css. */
+[data-place-map-canvas].leaflet-container .leaflet-popup-content * {
+  text-wrap: inherit;
+}
+
+/* The activity type above the name: own line, smaller, quieter. Sized in `em` rather than off the type scale on purpose — Leaflet sets the popup's own base size, so the popup sits outside the page's reading rhythm and even `--size-step-min-1` (1.375rem at wide viewports) comes out LARGER than the name beside it. Relative to the parent is the relationship that actually holds. */
+.place-popup-type {
+  display: block;
+  font-size: 0.8em;
+  line-height: 1.2;
+  color: var(--color-text-accent);
 }
 
 /* A duotone tile-tint mechanism lived here briefly — judged a net negative for map legibility on 2026-07-10, so the maps stay untinted. Commits 09298d3 + 72be19a have the working version if it's ever wanted back. */
