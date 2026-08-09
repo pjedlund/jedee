@@ -1,8 +1,11 @@
 /*
 COVER
-Book / film / album / recipe cover image on the reading, watching, jam and recipe detail pages, at a fixed max width. Archive-card covers are sized by the card grid instead, so they don't use this block. Per-page `local` bundle, included by those four layouts.
+Book / film / album / recipe cover image on the reading, watching, jam and recipe detail pages, and the race map on an activity page, at a fixed max width. Archive-card covers are sized by the card grid instead, so they don't use this block. Per-page `local` bundle, included by those five layouts.
+
+.cover-zoom is the wrapper the lightbox shortcode generates around a zoomable cover (activity maps). It needs the same cap because the generated <a> is display:block and would otherwise stretch the clickable area across the whole column.
 */
-.cover {
+.cover,
+.cover-zoom {
   --cover-max-inline-size: 14rem;
   --cover-radius: var(--border-radius-medium);
 
