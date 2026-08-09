@@ -28,7 +28,10 @@
             <h3 class="place-group-heading"><span class="place-dot" aria-hidden="true"></span>{{ type | title }} <span class="place-count">{{ posts.length }}</span></h3>
             <ul class="place-list" role="list">
               {%- for post in posts %}
-                <li data-lat="{{ post.data.lat }}" data-lon="{{ post.data.lon }}">
+                {# data-date is the marker popup's first line, in the site's usual date format.
+                   The visible list carries only the year, which is too coarse for the map: a
+                   multi-stage event puts several dots in one wood, all in the same year. #}
+                <li data-lat="{{ post.data.lat }}" data-lon="{{ post.data.lon }}" data-date="{{ post.date | formatDate('D MMM YYYY') }}">
                   <a href="{{ post.url }}">{{ post.data.title }}</a><span class="place-note">{{ post.date.getFullYear() }}</span>
                 </li>
               {%- endfor %}

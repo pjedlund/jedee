@@ -7,13 +7,32 @@ schema: BlogPosting
   <article class="wrapper flow prose h-entry">
     {% include 'partials/entry-header.njk' %}
 
-    {# Cover renders as a plain <img> (the Image transform self-hosts remote URLs and resolves
-       local paths); never the {% image %} shortcode, which is local-only and errors on a remote URL.
-       Alt text comes from `coverAlt` when the post writes one. `default` substitutes only on
-       UNDEFINED, so `coverAlt: ""` is honoured as empty — the right answer for a cover that just
-       repeats the title beside it. #}
+    {# An activity's cover is the race map, printed small beside the stats — too small to read,
+       so it opens in the PhotoSwipe lightbox. Unlike the other cover-carrying types (reading,
+       watching, jam, recipe), these covers are always LOCAL scans under
+       /assets/images/activities/, so the local-only {% imageKeys %} shortcode is safe here where
+       those layouts need a plain <img> for their remote URLs. Alt text comes from `coverAlt` when
+       the post writes one; `default` substitutes only on UNDEFINED, so `coverAlt: ""` is honoured
+       as empty.
+
+       The widths are three page candidates plus the zoom target. 224 is the displayed size, 448
+       covers a 2x screen, 900 keeps the first frame of an opened lightbox cheap on a laptop — and
+       `null` means the ORIGINAL, whatever that is: eleventy-img never upscales, so each map tops
+       out at its own scan (up to 4032px) rather than a shared 1600px ceiling. That top candidate
+       is what PhotoSwipe zooms into, and reading a control description off a 1:7500 map wants
+       every pixel the scan has. #}
     {% if cover %}
-      <img class="cover" eleventy:optional="placeholder" src="{{ cover | safe }}" alt="{{ coverAlt | default('Cover for ' + title) }}" loading="lazy" eleventy:widths="160,224,448" sizes="auto">
+      {%
+        imageKeys {
+          "src": cover,
+          "alt": coverAlt | default('Cover for ' + title),
+          "containerClass": "cover-zoom",
+          "imageClass": "cover",
+          "widths": [224, 448, 900, null],
+          "sizes": "14rem",
+          "lightbox": true
+        }
+      %}
     {% endif %}
 
     {# Recorded data for /activities/. No standard mf2 property exists for an activity's
