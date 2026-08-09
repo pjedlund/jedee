@@ -313,6 +313,7 @@ place-map[data-map-ready] > .place-map-static {
 }
 [data-place-map-canvas].leaflet-container .leaflet-popup-content a {
   color: var(--color-text);
+  font-weight: 500;
   text-decoration: none;
 }
 
@@ -321,10 +322,10 @@ place-map[data-map-ready] > .place-map-static {
   text-wrap: inherit;
 }
 
-/* The activity type above the name: own line, smaller, quieter. Sized in `em` rather than off the type scale on purpose — Leaflet sets the popup's own base size, so the popup sits outside the page's reading rhythm and even `--size-step-min-1` (1.375rem at wide viewports) comes out LARGER than the name beside it. Relative to the parent is the relationship that actually holds. */
+/* The activity type above the name: own line, same size as the name, separated by weight and slant rather than by scale — regular italic against the name's 500. Source Sans is variable (100–1000) with a real italic file, so both are genuine faces, not synthesized. */
 .place-popup-type {
   display: block;
-  font-size: 0.8em;
+  font-weight: 400;
   line-height: 1.2;
   color: var(--color-text-accent);
 }
