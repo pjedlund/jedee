@@ -322,12 +322,17 @@ place-map[data-map-ready] > .place-map-static {
   text-wrap: inherit;
 }
 
-/* The date above the name: own line, same size as the name, separated by weight and slant rather than by scale — regular italic against the name's 600. Source Sans is variable (100–1000) with a real italic file, so both are genuine faces, not synthesized. */
+/* The date above the name: own line, a step down in size, regular italic against the name's 600. Source Sans is variable (100–1000) with a real italic file, so both are genuine faces, not synthesized.
+
+Sized in `em` rather than off the type scale on purpose — Leaflet sets the popup's own base size, so the popup sits outside the page's reading rhythm and even `--size-step-min-1` (1.375rem at wide viewports) comes out LARGER than the name beside it. Relative to the parent is the relationship that actually holds.
+
+Dimmed by mixing the text color toward the popup's OWN surface, not by reaching for `--color-text-accent` — that token is the HIGHER-contrast one in both themes (brighter than body text in dark, darker in light), so it was making the date the boldest thing in the popup rather than the quietest. Measured against the popup background at 80%: 4.89:1 dark, 4.79:1 light — both clear of 4.5:1, which is the bar that applies since this is small text. Don't dim further without re-measuring; 75% drops to 4.49/4.23 and fails. */
 .place-popup-date {
   display: block;
+  font-size: 0.85em;
   font-weight: 400;
   line-height: 1.2;
-  color: var(--color-text-accent);
+  color: color-mix(in oklab, var(--color-text) 80%, var(--color-bg-accent));
 }
 
 /* A duotone tile-tint mechanism lived here briefly — judged a net negative for map legibility on 2026-07-10, so the maps stay untinted. Commits 09298d3 + 72be19a have the working version if it's ever wanted back. */
