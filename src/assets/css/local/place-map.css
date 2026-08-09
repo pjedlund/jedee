@@ -311,10 +311,33 @@ place-map[data-map-ready] > .place-map-static {
   box-shadow: none;
   border: var(--stroke);
 }
+
+/* Lift the box off the tiles — the same two-layer recipe as the megamenu panel, scaled down, and likewise deeper on dark where the surface alone gives less separation. The TIP keeps `box-shadow: none` above: it's a rotated square, so a shadow on it smudges across the box's own edge instead of continuing it. Under forced-colors the shadow isn't painted, but the border above survives, so the box keeps an edge without a fallback rule. */
+[data-place-map-canvas].leaflet-container .leaflet-popup-content-wrapper {
+  --place-popup-shadow:
+    0 1px 3px -2px hsl(0 0% 0% / 0.08),
+    0 6px 16px -10px hsl(0 0% 0% / 0.18);
+
+  box-shadow: var(--place-popup-shadow);
+}
+:root[data-theme='dark'] [data-place-map-canvas].leaflet-container .leaflet-popup-content-wrapper {
+  --place-popup-shadow:
+    0 2px 6px -3px hsl(0 0% 0% / 0.4),
+    0 10px 24px -10px hsl(0 0% 0% / 0.5);
+}
+
+/* Hover moves the name AWAY from the popup surface — lighter on dark, darker on light. That's what --color-text-accent already is in both themes (it's the higher-contrast token, which is why the date deliberately doesn't use it), so the direction comes for free rather than from a per-theme override. Reduced motion needs no guard here: the reset clamps transition-duration globally in its `reduce` branch. */
 [data-place-map-canvas].leaflet-container .leaflet-popup-content a {
+  --place-popup-fade: 90ms;
+
   color: var(--color-text);
   font-weight: 600;
   text-decoration: none;
+  transition: color var(--place-popup-fade) var(--transition-timing);
+}
+[data-place-map-canvas].leaflet-container .leaflet-popup-content a:hover,
+[data-place-map-canvas].leaflet-container .leaflet-popup-content a:focus-visible {
+  color: var(--color-text-accent);
 }
 
 /* Leaflet sizes a popup by setting `white-space: nowrap` on the content, measuring it, then writing that width back. The popup pane is a zero-width containing block, so without the nowrap an absolutely positioned popup shrink-wraps to MIN-content — one word per line. The reset's `* { text-wrap: pretty }` hits every descendant with a specificity the inline nowrap can't reach past, so the anchor kept wrapping and every popup measured one word wide. Letting descendants inherit restores the measurement, and the popup sizes to its longest line again (Leaflet's own 300px maxWidth still caps it). Same collision the breadcrumb hit — see breadcrumb.css. */
