@@ -1,0 +1,10 @@
+---
+permalink: /audio/feed.json
+eleventyExcludeFromCollections: true
+excludeFromSitemap: true
+---
+{%- set feedCollection = collections.audio -%}
+{%- set feedTitle = "Audio" -%}
+{%- set feedDescription = "Audio I've published — recordings and episodes." -%}
+{%- set feedSelfUrl = "/audio/feed.json" -%}
+{%- include "feeds/json-body.njk" -%}

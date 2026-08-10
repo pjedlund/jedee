@@ -1,0 +1,12 @@
+---
+permalink: /videos/podcast.xml
+eleventyExcludeFromCollections: true
+excludeFromSitemap: true
+---
+{# Moved off /videos/feed.xml on 2026-08-10 — see audio-podcast.xml.njk for the
+   reasoning, which applies identically here. #}
+{%- set feedCollection = collections.video -%}
+{%- set feedTitle = "Videos" -%}
+{%- set feedDescription = "Videos I've published — self-hosted clips and embeds." -%}
+{%- set feedSelfUrl = "/videos/podcast.xml" -%}
+{%- include "feeds/podcast-body.njk" -%}
