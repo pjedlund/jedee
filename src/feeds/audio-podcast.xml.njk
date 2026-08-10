@@ -1,0 +1,15 @@
+---
+permalink: /audio/podcast.xml
+eleventyExcludeFromCollections: true
+excludeFromSitemap: true
+---
+{# The podcast feed used to hold /audio/feed.xml. It moved here on 2026-08-10 so
+   the regular Atom feed could take the canonical section URL, which is what
+   most subscribers want — see the note in audio.xml.njk. Safe to move because
+   the feed has never been submitted to a directory (the channel artwork is
+   still the OpenGraph default), so there is nothing pointing at the old URL. #}
+{%- set feedCollection = collections.audio -%}
+{%- set feedTitle = "Audio" -%}
+{%- set feedDescription = "Audio I've published — recordings and episodes." -%}
+{%- set feedSelfUrl = "/audio/podcast.xml" -%}
+{%- include "feeds/podcast-body.njk" -%}

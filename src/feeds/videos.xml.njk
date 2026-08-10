@@ -3,10 +3,11 @@ permalink: /videos/feed.xml
 eleventyExcludeFromCollections: true
 excludeFromSitemap: true
 ---
-{# XML only, on purpose: this is a podcast-style feed with audio/video attachments,
-   and podcast apps read only the XML kind — a JSON twin would have no readers. #}
+{# The regular Atom feed — see audio.xml.njk for why it, and not the RSS 2.0
+   vodcast feed, holds the canonical section URL. The vodcast feed is at
+   /videos/podcast.xml. #}
 {%- set feedCollection = collections.video -%}
 {%- set feedTitle = "Videos" -%}
 {%- set feedDescription = "Videos I've published — self-hosted clips and embeds." -%}
 {%- set feedSelfUrl = "/videos/feed.xml" -%}
-{%- include "feeds/podcast-body.njk" -%}
+{%- include "feeds/atom-body.njk" -%}

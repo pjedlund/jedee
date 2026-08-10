@@ -1,0 +1,10 @@
+---
+permalink: /likes/feed.xml
+eleventyExcludeFromCollections: true
+excludeFromSitemap: true
+---
+{%- set feedCollection = collections.like -%}
+{%- set feedTitle = "Likes" -%}
+{%- set feedDescription = "Things I've liked elsewhere on the web." -%}
+{%- set feedSelfUrl = "/likes/feed.xml" -%}
+{%- include "feeds/atom-body.njk" -%}
