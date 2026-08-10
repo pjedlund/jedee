@@ -22,9 +22,17 @@
   {%- set absolutePostUrl = post.url | absoluteUrl(meta.url) -%}
   {# Cover as a plain <img> (sync — async shortcodes render empty inside a
      {% set %} capture); renderTransforms optimizes it and makes the URL
-     absolute, exactly as photo-atom-body.njk does. #}
+     absolute, exactly as photo-atom-body.njk does.
+
+     `eleventy:widths` caps the feed copy at 1200px. The transform's global
+     default is `widths: ['auto']` — the original — and a race map scan is up
+     to 4032px / ~2MB, too much to push at a reader for an image that only
+     needs to show the shape of a course. The page is untouched: it renders
+     the cover through {% imageKeys %} in activity.njk, which asks for its own
+     widths including the full scan for the lightbox. eleventy-img never
+     upscales, so smaller maps stay at their own size. #}
   {%- set activityHtml %}
-    {%- if post.data.cover %}<img src="{{ post.data.cover }}" alt="{{ post.data.coverAlt | default('Cover for ' + post.data.title) }}">{% endif -%}
+    {%- if post.data.cover %}<img eleventy:widths="1200" src="{{ post.data.cover }}" alt="{{ post.data.coverAlt | default('Cover for ' + post.data.title) }}">{% endif -%}
     <p>
       {%- if post.data.distanceKm %}{{ post.data.distanceKm | withMiles }} · {% endif -%}
       {{ post.data.duration | itunesDuration }}
