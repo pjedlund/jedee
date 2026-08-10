@@ -1,0 +1,55 @@
+{#-
+  Activity-aware Atom feed body. Identical to atom-body.njk except it renders the
+  recorded numbers (distance, duration, pace, heart rate) and the race map cover
+  ahead of post.content. The shared atom-body emits ONLY post.content, and 100 of
+  the 157 activities have no body at all — a plain clone would syndicate an
+  entry with a title and nothing else. Same stat line as card-activity.njk.
+  Set the same vars as atom-body.njk before including:
+    feedCollection, feedTitle, feedDescription, feedSelfUrl
+-#}
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="{{ meta.lang or page.lang }}" xml:base="{{ meta.url }}/">
+  <title>{{ feedTitle }}</title>
+  <subtitle>{{ feedDescription }}</subtitle>
+  <link href="{{ feedSelfUrl | htmlBaseUrl(meta.url) }}" rel="self" />
+  <link href="{{ meta.url | addPathPrefixToFullUrl }}" />
+  <updated>{{ feedCollection | getNewestCollectionItemDate | dateToRfc3339 }}</updated>
+  <id>{{ meta.url | addPathPrefixToFullUrl }}</id>
+  <author>
+    <name>{{ meta.author.name }}</name>
+  </author>
+  {%- for post in feedCollection | reverse -%}
+  {%- set absolutePostUrl = post.url | absoluteUrl(meta.url) -%}
+  {# Cover as a plain <img> (sync — async shortcodes render empty inside a
+     {% set %} capture); renderTransforms optimizes it and makes the URL
+     absolute, exactly as photo-atom-body.njk does.
+
+     `eleventy:widths` caps the feed copy at 1200px. The transform's global
+     default is `widths: ['auto']` — the original — and a race map scan is up
+     to 4032px / ~2MB, too much to push at a reader for an image that only
+     needs to show the shape of a course. The page is untouched: it renders
+     the cover through {% imageKeys %} in activity.njk, which asks for its own
+     widths including the full scan for the lightbox. eleventy-img never
+     upscales, so smaller maps stay at their own size. #}
+  {%- set activityHtml %}
+    {%- if post.data.cover %}<img eleventy:widths="1200" src="{{ post.data.cover }}" alt="{{ post.data.coverAlt | default('Cover for ' + post.data.title) }}">{% endif -%}
+    <p>
+      {%- if post.data.distanceKm %}{{ post.data.distanceKm | withMiles }} · {% endif -%}
+      {{ post.data.duration | itunesDuration }}
+      {%- set pace = post.data.activityType | paceOrSpeed(post.data.distanceKm, post.data.duration) -%}
+      {%- if pace %} · {{ pace }}{% endif -%}
+      {%- if post.data.hrAvg %} · {{ post.data.hrAvg }} bpm{% if post.data.hrMax %} ({{ post.data.hrMax }} max){% endif %}{% endif -%}
+      {%- if post.data.activityType %} · {{ post.data.activityType }}{% endif -%}
+    </p>
+  {% endset -%}
+    <entry>
+      <title>{{ post.data.title }}</title>
+      <link href="{{ absolutePostUrl }}" />
+      <updated>{{ post.date | dateToRfc3339 }}</updated>
+      <id>{{ absolutePostUrl }}</id>
+      <content type="html">
+        {{ (activityHtml ~ post.content) | renderTransforms(post.data.page, meta.url) }}
+      </content>
+    </entry>
+  {%- endfor -%}
+</feed>

@@ -1,0 +1,10 @@
+---
+permalink: /activities/feed.xml
+eleventyExcludeFromCollections: true
+excludeFromSitemap: true
+---
+{%- set feedCollection = collections.activity -%}
+{%- set feedTitle = "Activities" -%}
+{%- set feedDescription = "Runs, races and workouts." -%}
+{%- set feedSelfUrl = "/activities/feed.xml" -%}
+{%- include "feeds/activity-atom-body.njk" -%}
