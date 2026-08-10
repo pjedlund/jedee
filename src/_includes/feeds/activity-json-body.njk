@@ -1,0 +1,46 @@
+{#-
+  Activity-aware JSON Feed body (jsonfeed.org/version/1.1). Identical to
+  json-body.njk except it prepends the recorded numbers and the race map cover
+  to content_html — see activity-atom-body.njk for the why (100 of the 157
+  activities have no body, so the plain body would syndicate a title and
+  nothing else). Same stat line, same 1200px cap on the map. Set the same vars
+  as json-body.njk before including.
+-#}
+{
+  "version": "https://jsonfeed.org/version/1.1",
+  "title": "{{ feedTitle }}",
+  "language": "{{ meta.lang or page.lang }}",
+  "home_page_url": "{{ meta.url | addPathPrefixToFullUrl }}",
+  "feed_url": "{{ feedSelfUrl | htmlBaseUrl(meta.url) }}",
+  "description": "{{ feedDescription }}",
+  "authors": [
+    {
+      "name": "{{ meta.author.name }}"
+    }
+  ],
+  "items": [
+    {%- for post in feedCollection | reverse -%}
+    {%- set absolutePostUrl = post.url | absoluteUrl(meta.url) -%}
+    {# Plain <img> (sync) — see activity-atom-body.njk for why not the shortcode. #}
+    {%- set activityHtml %}
+      {%- if post.data.cover %}<img eleventy:widths="1200" src="{{ post.data.cover }}" alt="{{ post.data.coverAlt | default('Cover for ' + post.data.title) }}">{% endif -%}
+      <p>
+        {%- if post.data.distanceKm %}{{ post.data.distanceKm | withMiles }} · {% endif -%}
+        {{ post.data.duration | itunesDuration }}
+        {%- set pace = post.data.activityType | paceOrSpeed(post.data.distanceKm, post.data.duration) -%}
+        {%- if pace %} · {{ pace }}{% endif -%}
+        {%- if post.data.hrAvg %} · {{ post.data.hrAvg }} bpm{% if post.data.hrMax %} ({{ post.data.hrMax }} max){% endif %}{% endif -%}
+        {%- if post.data.activityType %} · {{ post.data.activityType }}{% endif -%}
+      </p>
+    {% endset -%}
+    {
+      "id": "{{ absolutePostUrl }}",
+      "url": "{{ absolutePostUrl }}",
+      "title": "{{ post.data.title }}",
+      "content_html": {{ (activityHtml ~ post.content) | renderTransforms(post.data.page, meta.url) | dump | safe }},
+      "date_published": "{{ post.date | dateToRfc3339 }}"
+    }
+    {% if not loop.last %},{% endif %}
+    {%- endfor %}
+  ]
+}
