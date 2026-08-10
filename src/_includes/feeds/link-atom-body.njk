@@ -1,0 +1,46 @@
+{#-
+  Link-post Atom feed body — likes, bookmarks, replies, RSVPs. Identical to
+  atom-body.njk except it renders the link line and the description ahead of
+  post.content.
+
+  Why these four need it: a link post's substance is its front matter. The
+  shared atom-body emits ONLY post.content, and 46 of the 50 bookmarks have no
+  body at all — so the plain body syndicated a title with no indication of what
+  had been bookmarked, or why. Same wrinkle photo and activity hit, one body for
+  the whole cohort because all four are the same shape: a verb, a target URL,
+  and an optional description.
+
+  The link line is the one each layout renders (like.njk, bookmark.njk,
+  reply.njk, rsvp.njk) — same words, same raw-URL link text, so a post reads the
+  same in a reader as on its page. No mf2 classes: a feed reader parses the Atom
+  elements, not the microformats inside <content>. The RSVP branch comes before
+  the reply branch because an RSVP post carries `inReplyTo` too.
+
+  Set the same vars as atom-body.njk before including:
+    feedCollection, feedTitle, feedDescription, feedSelfUrl
+-#}
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="{{ meta.lang or page.lang }}" xml:base="{{ meta.url }}/">
+  <title>{{ feedTitle }}</title>
+  <subtitle>{{ feedDescription }}</subtitle>
+  <link href="{{ feedSelfUrl | htmlBaseUrl(meta.url) }}" rel="self" />
+  <link href="{{ meta.url | addPathPrefixToFullUrl }}" />
+  <updated>{{ feedCollection | getNewestCollectionItemDate | dateToRfc3339 }}</updated>
+  <id>{{ meta.url | addPathPrefixToFullUrl }}</id>
+  <author>
+    <name>{{ meta.author.name }}</name>
+  </author>
+  {%- for post in feedCollection | reverse -%}
+  {%- set absolutePostUrl = post.url | absoluteUrl(meta.url) -%}
+  {%- set linkHtml %}{% include "feeds/link-line.njk" %}{% endset -%}
+    <entry>
+      <title>{{ post.data.title }}</title>
+      <link href="{{ absolutePostUrl }}" />
+      <updated>{{ post.date | dateToRfc3339 }}</updated>
+      <id>{{ absolutePostUrl }}</id>
+      <content type="html">
+        {{ (linkHtml ~ post.content) | renderTransforms(post.data.page, meta.url) }}
+      </content>
+    </entry>
+  {%- endfor -%}
+</feed>

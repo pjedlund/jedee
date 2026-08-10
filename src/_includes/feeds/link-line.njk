@@ -1,0 +1,21 @@
+{#-
+  The link line + description for one link post, shared by link-atom-body.njk and
+  link-json-body.njk. Reads `post` from the enclosing loop.
+
+  The wording matches each type's layout exactly (like.njk, bookmark.njk,
+  reply.njk, rsvp.njk) so a post reads the same in a reader as on its page.
+  RSVP is tested before reply because an RSVP post carries `inReplyTo` too.
+  No async shortcodes in here on purpose — this is included inside a {% set %}
+  capture inside a {% for %}, which is exactly the shape the interlinker plugin
+  blanks when an async shortcode is involved.
+-#}
+{%- if post.data.likeOf -%}
+<p>Liked <a href="{{ post.data.likeOf }}">{{ post.data.likeOf }}</a></p>
+{%- elif post.data.bookmarkOf -%}
+<p>Bookmarked <a href="{{ post.data.bookmarkOf }}">{{ post.data.bookmarkOf }}</a></p>
+{%- elif post.data.rsvp -%}
+<p>RSVP: {{ post.data.rsvp }} to <a href="{{ post.data.inReplyTo }}">{{ post.data.inReplyTo }}</a></p>
+{%- elif post.data.inReplyTo -%}
+<p>In reply to <a href="{{ post.data.inReplyTo }}">{{ post.data.inReplyTo }}</a></p>
+{%- endif -%}
+{%- if post.data.description %}<p>{{ post.data.description }}</p>{% endif -%}
