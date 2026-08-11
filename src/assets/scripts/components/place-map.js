@@ -25,6 +25,10 @@ const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 // Marker keeps the site's orange; read the token so it tracks the palette.
 const MARKER_FILL =
   getComputedStyle(document.documentElement).getPropertyValue('--color-accent-orange').trim() || '#d0621e';
+// Route start dot — the site's green, same token the activities overview uses for its
+// fallback group color.
+const START_FILL =
+  getComputedStyle(document.documentElement).getPropertyValue('--color-accent-green').trim() || '#3a7d44';
 
 // Follow the page theme (the site sets data-theme; fall back to the OS setting) so the
 // inline map and the overlay always show matching light/dark tiles.
@@ -188,8 +192,10 @@ function trapTab(e) {
 class PlaceMap extends HTMLElement {
   connectedCallback() {
     this.place = this.dataset.place || '';
+    const routeScript = this.querySelector('script[type="application/json"][data-route]');
     const groupsRoot = this.querySelector('[data-place-groups]');
-    if (groupsRoot) this.initGroups(groupsRoot);
+    if (routeScript) this.initRoute(routeScript);
+    else if (groupsRoot) this.initGroups(groupsRoot);
     else this.initSinglePin();
   }
 
@@ -244,6 +250,39 @@ class PlaceMap extends HTMLElement {
     this.buildBox();
     this.mapObj = makeMap(this.canvas, { center: [lat, lon], zoom, place: this.place });
     this.mapObj.addDot(lat, lon);
+    this.finishInit();
+  }
+
+  // Route mode: a slotted GeoJSON LineString (from the post's committed .geojson).
+  // Draw the track fitted to its bounds, a green start dot and a checkered finish flag.
+  // No slotted list here — the no-JS path is the "View on Strava" link on the page.
+  initRoute(script) {
+    let gj;
+    try {
+      gj = JSON.parse(script.textContent);
+    } catch {
+      return; // malformed data → leave the page mapless, Strava link still stands
+    }
+    const coords = gj?.geometry?.coordinates;
+    if (!coords || coords.length < 2) return;
+    const latlngs = coords.map(([lon, lat]) => [lat, lon]); // GeoJSON [lon,lat] → Leaflet [lat,lon]
+
+    this.buildBox();
+    this.mapObj = makeMap(this.canvas, {
+      bounds: L.latLngBounds(latlngs),
+      place: this.place,
+    });
+    L.polyline(latlngs, { color: MARKER_FILL, weight: 4, opacity: 0.9 }).addTo(this.mapObj.map);
+
+    // Start: reuse addDot so it gets the theme re-stroke + zoom-swell, but in green.
+    this.mapObj.addDot(latlngs[0][0], latlngs[0][1], { fill: START_FILL });
+    // Finish: a checkered flag, centered on the last point. Not a keyboard stop — the
+    // map isn't the screen-reader path here.
+    L.marker(latlngs.at(-1), {
+      icon: L.divIcon({ className: 'route-finish', html: '🏁', iconSize: [22, 22], iconAnchor: [11, 11] }),
+      keyboard: false,
+    }).addTo(this.mapObj.map);
+
     this.finishInit();
   }
 
