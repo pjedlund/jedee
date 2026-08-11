@@ -1,5 +1,5 @@
 ---
-title: "Afternoon Run"
+title: "Löpning i Torup"
 date: "2023-04-02T14:08:50+02:00"
 activityType: run
 distanceKm: 7.4

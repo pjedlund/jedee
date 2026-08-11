@@ -1,5 +1,5 @@
 ---
-title: "Evening Run"
+title: "Löpning i Oxie"
 date: "2022-08-02T18:24:59+02:00"
 activityType: run
 distanceKm: 3.97

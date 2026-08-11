@@ -1,5 +1,5 @@
 ---
-title: "Afternoon Run"
+title: "Löpning i Östra Göinge"
 date: "2023-04-22T15:55:08+02:00"
 activityType: run
 distanceKm: 3.84

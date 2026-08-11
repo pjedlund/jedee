@@ -1,5 +1,5 @@
 ---
-title: "Afternoon Run"
+title: "Löpning i Trelleborg"
 date: "2022-08-30T17:48:30+02:00"
 activityType: run
 distanceKm: 4.28

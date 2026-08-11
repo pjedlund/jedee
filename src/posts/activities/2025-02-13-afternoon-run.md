@@ -1,5 +1,5 @@
 ---
-title: "Afternoon Run"
+title: "Löpning i Kungälv"
 date: "2025-02-13T15:35:05+01:00"
 activityType: run
 distanceKm: 5.32
