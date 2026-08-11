@@ -24,10 +24,17 @@ for = "*.woff2"
 [headers.values]
   Cache-Control = "max-age=31536000,public,must-revalidate"
 
+# Component scripts are built to STABLE, unhashed filenames (build-js.js ->
+# dist/assets/scripts/components/<name>.js) and referenced unhashed in the .webc
+# components, so a long cache leaves returning visitors on an old copy after any
+# change to one (the route-line place-map update hit exactly this). Revalidate on
+# every load instead: the ETag makes an unchanged file a cheap 304, and these
+# scripts load lazily on idle so the conditional request isn't on the critical path.
+# If these ever get content-hashed filenames, restore the 1-year immutable cache.
 [[headers]]
 for = "/assets/scripts/components/*.js"
 [headers.values]
-  Cache-Control = "max-age=31536000,public,must-revalidate"
+  Cache-Control = "max-age=0,public,must-revalidate"
 
 [build]
   # build:11ty, NOT the full `build` script: `build` runs `clean` (rimraf dist)
