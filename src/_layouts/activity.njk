@@ -7,6 +7,17 @@ schema: BlogPosting
   <article class="wrapper flow prose h-entry">
     {% include 'partials/entry-header.njk' %}
 
+    {# Recorded route line. The .geojson sibling (from _local/generated/extract-route.py)
+       is inlined into <place-map> route mode as a slotted JSON script; place-map.js draws
+       the track + start/finish markers on idle. No-JS visitors get no map here, which is
+       fine: the stats and the "View on Strava" link below carry the route. #}
+    {% set routeJson = page.inputPath | routeGeoJSON %}
+    {% if routeJson %}
+      <place-map @place="this route">
+        <script type="application/json" data-route>{{ routeJson | safe }}</script>
+      </place-map>
+    {% endif %}
+
     {# An activity's cover is the race map, printed small beside the stats — too small to read,
        so it opens in the PhotoSwipe lightbox. Unlike the other cover-carrying types (reading,
        watching, jam, recipe), these covers are always LOCAL scans under
@@ -88,4 +99,5 @@ schema: BlogPosting
   {%- include 'css/footnotes.css' -%}
   {%- include 'css/activity.css' -%}
   {%- include 'css/cover.css' -%}
+  {%- if page.inputPath | routeGeoJSON -%}{%- include 'css/place-map.css' -%}{%- endif -%}
 {%- endcss -%}

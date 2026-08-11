@@ -9,6 +9,7 @@ import { slugifyString } from './filters/slugify.js';
 import { unwikilink } from './filters/unwikilink.js';
 import { hostname } from './filters/hostname.js';
 import { located } from './filters/located.js';
+import { routeGeoJSON } from './filters/route-geojson.js';
 import { youtubePoster } from './filters/youtube-poster.js';
 import { toISODuration, formatDuration, itunesDuration } from './filters/duration.js';
 import { paceOrSpeed } from './filters/pace.js';
@@ -34,6 +35,7 @@ export default {
   unwikilink,
   hostname,
   located,
+  routeGeoJSON,
   youtubePoster,
   toISODuration,
   formatDuration,

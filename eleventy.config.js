@@ -144,6 +144,7 @@ export default async function(eleventyConfig) {
   eleventyConfig.addFilter('hostname', filters.hostname);
   // posts that carry lat/lon frontmatter → the place-map overview
   eleventyConfig.addFilter('located', filters.located);
+  eleventyConfig.addFilter('routeGeoJSON', filters.routeGeoJSON);
   eleventyConfig.addFilter('youtubePoster', filters.youtubePoster);
   eleventyConfig.addFilter('dtcgItems', filters.dtcgItems);
   // Recipe durations (§9): integer minutes OR PT…M → normalized PT…M + human-readable.
