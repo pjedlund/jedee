@@ -21,6 +21,26 @@ const TILES = {
 };
 const ATTRIB =
   '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>';
+// Alternate base layers offered by the tile switch (the themed "Map" default is built
+// per-map in makeMap). All free to use WITH attribution — Leaflet shows the active
+// layer's automatically. Esri's World Imagery URL is {z}/{y}/{x} (row before column).
+const BASE_LAYERS = [
+  [
+    'Satellite',
+    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    { maxZoom: 19, attribution: 'Imagery &copy; <a href="https://www.esri.com/">Esri</a>, Maxar, Earthstar Geographics' },
+  ],
+  [
+    'Topographic',
+    'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+    {
+      maxZoom: 17,
+      attribution:
+        'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
+    },
+  ],
+  ['Streets', 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 20, attribution: ATTRIB }],
+];
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 // Marker keeps the site's orange; read the token so it tracks the palette.
 const MARKER_FILL =
@@ -47,6 +67,33 @@ const popupHtml = (p) => {
   return p.date ? `<i class="place-popup-date">${p.date}</i>${name}` : name;
 };
 
+// A compact base-layer switch (bottom-right). A native <select> — correct single-choice
+// semantics, keyboard + screen-reader support for free — instead of Leaflet's own layers
+// control, whose toggle icon is a PNG the build doesn't ship. As a Leaflet control it lives
+// inside the map container, so it rides into the maximize overlay with the canvas for free.
+function addTileSwitch(map, bases) {
+  const names = Object.keys(bases);
+  const control = L.control({ position: 'bottomright' });
+  control.onAdd = () => {
+    // `leaflet-control` restores pointer-events (the corner containers set none) — without
+    // it the select can't be clicked.
+    const wrap = L.DomUtil.create('div', 'place-map-tiles leaflet-control');
+    const select = L.DomUtil.create('select', '', wrap);
+    select.setAttribute('aria-label', 'Map style');
+    for (const n of names) select.append(new Option(n, n));
+    let shown = bases[names[0]]; // "Map" is on the map at start
+    select.addEventListener('change', () => {
+      map.removeLayer(shown);
+      shown = bases[select.value];
+      map.addLayer(shown);
+    });
+    L.DomEvent.disableClickPropagation(wrap); // a click on the select must not pan the map
+    L.DomEvent.disableScrollPropagation(wrap);
+    return wrap;
+  };
+  control.addTo(map);
+}
+
 // Build one live map. Wheel + pinch start disabled (toggled on when maximized); drag,
 // keyboard and the +/- zoom control stay on inline so the map is usable in place.
 // Returns { map, addDot } — dots added through addDot get theme re-stroking and the
@@ -55,7 +102,7 @@ function makeMap(el, { center, zoom, bounds, place }) {
   let theme = pageTheme();
   const map = L.map(el, {
     zoomControl: false,
-    attributionControl: false,
+    attributionControl: false, // we add our own (prefix-less) one below
     scrollWheelZoom: false, // enabled only when maximized (else it traps page scroll)
     touchZoom: false, // ditto — no pinch-trap inline
     zoomAnimation: !REDUCED,
@@ -76,10 +123,24 @@ function makeMap(el, { center, zoom, bounds, place }) {
   el.dataset.placeMapCanvas = ''; // styling hook that outranks leaflet.css
   el.setAttribute('role', 'application');
   el.setAttribute('aria-label', place ? `Map of ${place}` : 'Map of this location');
-  L.control.attribution({ prefix: false }).addAttribution(ATTRIB).addTo(map);
   L.control.zoom({ position: 'bottomleft' }).addTo(map);
 
-  let tiles = L.tileLayer(TILES[theme], { maxZoom: 19 }).addTo(map);
+  // "Map" = the themed CARTO basemap (its light/dark tracks the page theme; see onTheme).
+  // Satellite / Topographic / Streets are fixed styles. Each layer carries its own
+  // attribution option, so the single attribution control shows whichever base is active.
+  const mapTiles = L.tileLayer(TILES[theme], { maxZoom: 19, attribution: ATTRIB });
+  const bases = { Map: mapTiles };
+  for (const [name, url, opts] of BASE_LAYERS) bases[name] = L.tileLayer(url, opts);
+
+  // Attribution first, switch second: in a Leaflet corner the LAST-added control stacks on
+  // top, so this pins the attribution to the bottom edge with the switch just above it.
+  L.control.attribution({ prefix: false }).addTo(map);
+  addTileSwitch(map, bases); // bottom-right, above the attribution
+  // Add "Map" only now — AFTER the attribution control exists — so it registers through the
+  // control's `layeradd` handler, which is what also wires attribution REMOVAL on layer
+  // remove. Add it earlier and its credit would stick when you switch away (Leaflet only
+  // attaches the removal hook to layers added via layeradd, not its onAdd catch-up loop).
+  mapTiles.addTo(map);
 
   // Ctrl/⌘ + wheel zooms the inline map around the pointer; a PLAIN wheel keeps
   // scrolling the page (no scroll trap — the reason scrollWheelZoom stays off inline).
@@ -123,8 +184,10 @@ function makeMap(el, { center, zoom, bounds, place }) {
     const next = pageTheme();
     if (next === theme) return;
     theme = next;
-    map.removeLayer(tiles);
-    tiles = L.tileLayer(TILES[theme], { maxZoom: 19 }).addTo(map);
+    // Redraws in place when "Map" is the shown layer; a no-op on the theme-agnostic
+    // alternates (setUrl on a detached layer just stores the URL for next time it's shown),
+    // so a theme flip never overrides a manual Satellite/Topo/Streets choice.
+    mapTiles.setUrl(TILES[theme]);
     dots.forEach((d) => d.setStyle({ color: markerStroke(theme) }));
   };
   new MutationObserver(onTheme).observe(document.documentElement, {

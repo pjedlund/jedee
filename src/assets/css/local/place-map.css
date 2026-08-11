@@ -71,6 +71,22 @@ place-map[data-map-ready] > .place-map-static {
   border-color: color-mix(in oklab, var(--color-text) 30%, var(--color-bg));
 }
 
+/* Base-layer style switch — a native <select>, added as a Leaflet control bottom-right (above the attribution). Skinned like the chips / maximize button so it reads on the matching-theme "Map" tiles; the solid-ish surface + border keep it legible on the alternate (satellite / topographic) layers too, which don't track the theme. The native disclosure arrow and OS-drawn option list are left alone — that's the accessible, no-cost part. */
+[data-place-map-canvas].leaflet-container .place-map-tiles select {
+  font-family: var(--font-base);
+  font-size: var(--size-step-min-2);
+  color: var(--color-text);
+  background: color-mix(in srgb, var(--color-bg-accent) 92%, transparent);
+  border: var(--stroke);
+  border-radius: var(--border-radius-small);
+  padding: 0.3em 0.6em;
+  cursor: pointer;
+}
+[data-place-map-canvas].leaflet-container .place-map-tiles select:hover {
+  color: var(--color-headline);
+  border-color: color-mix(in oklab, var(--color-text) 30%, var(--color-bg));
+}
+
 /* --- maximize overlay: dark scrim, themed map (like the photo lightbox) --- */
 .place-map-overlay {
   --place-map-overlay-inset: clamp(0.75rem, 3vw, 2.5rem);
