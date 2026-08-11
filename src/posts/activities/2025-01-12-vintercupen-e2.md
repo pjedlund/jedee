@@ -12,6 +12,6 @@ elevationGain: 173
 elevationLoss: 181
 eventorUrl: https://eventor.orientering.se/Events/Show/52791
 liveloxUrl: https://www.livelox.com/Viewer/Vintercupen-E2-SV-kretsen-Skane/Bana-A?classId=889804
-lat: 57.6401291627068
-lon: 12.1354203558312
+lat: 55.90901
+lon: 13.3737
 ---

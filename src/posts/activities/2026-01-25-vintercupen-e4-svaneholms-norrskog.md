@@ -13,8 +13,8 @@ elevationLoss: 212
 eventorUrl: https://eventor.orientering.se/Events/Show/28478
 liveloxUrl: https://www.livelox.com/Viewer/Vintercupen-E4-SV-kretsen-Skane/H45?classId=1103296
 cover: "/assets/images/activities/2026-01-25-vintercupen-e4-svaneholms-norrskog.jpg"
-lat: 55.80339
-lon: 12.94307
+lat: 55.50691
+lon: 13.46695
 ---
 
 Fipplade med handskarna och hängde bara på i starten för att sedan inse att jag borde spring söder istället för norr. :/
