@@ -1,7 +1,13 @@
 [[plugins]]
 package = "netlify-plugin-cache"
   [plugins.inputs]
-  paths = [ ".cache" ]
+  # .cache = the eleventy-fetch cache (remote cover images, webmentions).
+  # dist/assets/images = eleventy-img's optimized LOCAL output (activity race-map
+  # scans, photos): v7 skips the sharp work whenever the target file already
+  # exists on disk, so persisting this folder across deploys avoids re-optimizing
+  # ~83 MB of unchanged maps on every build. This only helps because the build
+  # below no longer wipes dist first — see the [build] command.
+  paths = [ ".cache", "dist/assets/images" ]
 
 [[headers]]
 for = "/*"
@@ -24,7 +30,11 @@ for = "/assets/scripts/components/*.js"
   Cache-Control = "max-age=31536000,public,must-revalidate"
 
 [build]
-  command = "npm run build"
+  # build:11ty, NOT the full `build` script: `build` runs `clean` (rimraf dist)
+  # first, which would delete the image cache netlify-plugin-cache just restored.
+  # Netlify checks out a fresh tree each deploy, so there's no stale local dist to
+  # clean anyway — clean only matters for repeated LOCAL builds.
+  command = "npm run build:11ty"
   publish = "dist"
 
 # Secrets scanning: the photo static-map fetch (Geoapify) puts MAP_API_KEY in the
