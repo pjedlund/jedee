@@ -25,10 +25,10 @@ const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 // Marker keeps the site's orange; read the token so it tracks the palette.
 const MARKER_FILL =
   getComputedStyle(document.documentElement).getPropertyValue('--color-accent-orange').trim() || '#d0621e';
-// Route start dot — the site's green, same token the activities overview uses for its
-// fallback group color.
+// Route start dot — a saturated green of its own (the accent green is a muted olive
+// that reads grey on the map). Token defined in variables.css so it stays adjustable.
 const START_FILL =
-  getComputedStyle(document.documentElement).getPropertyValue('--color-accent-green').trim() || '#3a7d44';
+  getComputedStyle(document.documentElement).getPropertyValue('--color-route-start').trim() || '#2e9d4f';
 
 // Follow the page theme (the site sets data-theme; fall back to the OS setting) so the
 // inline map and the overlay always show matching light/dark tiles.

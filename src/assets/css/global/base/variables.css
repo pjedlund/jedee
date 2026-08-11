@@ -35,6 +35,11 @@
   --color-dark: var(--color-gray-900);
   --color-mid: var(--color-gray-400);
 
+  /* Route start marker on the activity map. The accent green is a muted olive that
+     reads grey on the map, so the "start" dot uses a saturated green of its own —
+     one value works on both the light and dark tile sets. */
+  --color-route-start: var(--color-green-vivid);
+
   --color-logo-icon: var(--color-orange-500);
   --color-border-height: 1rem;
 }
