@@ -20,4 +20,4 @@ cover: "https://m.media-amazon.com/images/M/MV5BNGNhNTNiZjMtM2U1Yy00MTYwLWJhZGMt
 plot: "Crook Johnny Clay assembles a five-man team to plan and execute a daring racetrack robbery."
 year: 1956
 ---
-Nice script with only a few plotholes, including a scene that was, or at least felt like, a two minute dialogue without any edits. The non-linear storytelling is smooth and you hardly notice how the time of day shifts.
+Nice script with very few plotholes. Great acting and a scene that was, or at least felt like, a two minute dialogue without any edits. The non-linear storytelling is smooth and you hardly notice how the time of day shifts.
