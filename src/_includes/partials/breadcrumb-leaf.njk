@@ -7,9 +7,10 @@
    - activity → "Orienteering: Mok Torsdag Bokskogen" — activityType + colon prefixed
      onto the title, plain (no connector styling; activityType is stored lowercase;
      capitalize it).
-   - the link cohort (like / bookmark / reply / repost / rsvp) → "Title on Source",
-     where Source is ALWAYS the bare host of whichever URL field that type uses —
-     e.g. "arielsalminen.com" — never sourceName.
+   - the link cohort (like / bookmark / reply / repost) → "Title on Source", where
+     Source is ALWAYS the bare host of whichever URL field that type uses — e.g.
+     "arielsalminen.com" — never sourceName. RSVP is deliberately NOT in the cohort:
+     its title already says what it is a reply to, so the host only repeats it.
    Keep the markup minimal; the surrounding <span aria-current="page"> + truncation
    live in breadcrumb.njk / breadcrumb.css. The plain `breadcrumbs[].label` (used for
    aria/JSON-LD) stays the raw title — only this *visible* leaf is enriched. #}
@@ -30,7 +31,7 @@
      `region` is deliberately left out — the leaf truncates to one line in the header, so it
      would be the first thing lost, and it already appears in the recording details. #}
   {{ title }} <span class="breadcrumb-connector">{{ placePreposition or "at" }}</span> {{ place }}
-{%- elif category in ["like", "bookmark", "reply", "repost", "rsvp"] and (linkedHost) -%}
+{%- elif category in ["like", "bookmark", "reply", "repost"] and (linkedHost) -%}
   {{ title }} <span class="breadcrumb-connector">on</span> {{ linkedHost }}
 {%- elif tag -%}
   {# Tag archive pages: show the bare tag, not the page title "Tag: <x>". #}
