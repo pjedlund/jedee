@@ -2,6 +2,8 @@
    Default = the page title. Per-type enrichment lives here:
    - jam → "Song by Artist", with a serif-italic "by" and the artist un-wikilinked.
      The artist is plain text for now (no artist archive exists yet — no dead link).
+   - watching / reading → the same "by" shape, with the film's director or the book's
+     author. Both fields may be a single name or a list, with or without [[wikilinks]].
    - activity → "Orienteering: Mok Torsdag Bokskogen" — activityType + colon prefixed
      onto the title, plain (no connector styling; activityType is stored lowercase;
      capitalize it).
@@ -13,6 +15,9 @@
    aria/JSON-LD) stays the raw title — only this *visible* leaf is enriched. #}
 {%- if category == "jam" and artist -%}
   {{ title }} <span class="breadcrumb-connector">by</span> {{ artist | unwikilink }}
+{%- elif (category == "watching" and director) or (category == "reading" and author) -%}
+  {%- set byline = director if category == "watching" else author -%}
+  {{ title }} <span class="breadcrumb-connector">by</span> {% if byline is string %}{{ byline | unwikilink }}{% else %}{{ byline | unwikilink | join(", ") }}{% endif %}
 {%- elif category == "activity" and activityType -%}
   {# activityType is an English controlled term ("orienteering") — only the title may be
      Swedish, so lang="sv" (set by titleLang, see eleventyComputed.js) wraps the title alone. #}
