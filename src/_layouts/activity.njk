@@ -14,6 +14,12 @@ schema: BlogPosting
     {% set routeJson = page.inputPath | routeGeoJSON %}
     {% if routeJson %}
       <place-map @place="this route">
+        {#- Empty 16:9 box rendered server-side so its aspect-ratio holds the space from first
+            paint; place-map.js adopts it instead of building + prepending one on idle, which
+            is what shoved the stats below down (the same shift the activity index had). #}
+        <div class="place-map-live" data-place-map-box>
+          <p class="place-map-pending">Map of this route</p>
+        </div>
         <script type="application/json" data-route>{{ routeJson | safe }}</script>
       </place-map>
     {% endif %}

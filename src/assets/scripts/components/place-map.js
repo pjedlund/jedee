@@ -387,6 +387,22 @@ class PlaceMap extends HTMLElement {
     const startMarker = L.marker(startLL, { icon: routeSymbol('route-start-symbol', startSvg(heading), START_APEX), keyboard: false }).addTo(this.mapObj.map);
     const finishMarker = L.marker(latlngs.at(-1), { icon: routeSymbol('route-finish-symbol', FINISH_SVG), keyboard: false }).addTo(this.mapObj.map);
 
+    // Scale the symbols with the map zoom (clamped to ±2 levels) so they keep proportion with the
+    // route rather than staying a fixed screen size. Start scales about its apex (the tip stays
+    // pinned to the line start); finish about its center (its anchor). `zoomanim` keeps it in step
+    // with Leaflet's own zoom animation; `zoomend` is the authority for non-animated zooms. The
+    // easing is CSS-side and gated behind prefers-reduced-motion.
+    const startSvgEl = startMarker.getElement()?.querySelector('svg');
+    const finishSvgEl = finishMarker.getElement()?.querySelector('svg');
+    const baseZoom = this.mapObj.map.getZoom();
+    const applyScale = (z) => {
+      const s = Math.min(4, Math.max(0.5, 2 ** (z - baseZoom)));
+      if (startSvgEl) startSvgEl.style.transform = `rotate(${heading}deg) scale(${s})`;
+      if (finishSvgEl) finishSvgEl.style.transform = `scale(${s})`;
+    };
+    this.mapObj.map.on('zoomanim', (e) => applyScale(e.zoom));
+    this.mapObj.map.on('zoomend', () => applyScale(this.mapObj.map.getZoom()));
+
     // Intro on first paint: fade the map up, fade the start in, draw the line, reveal the finish.
     if (!REDUCED) this.routeIntro(line, startMarker, finishMarker);
 

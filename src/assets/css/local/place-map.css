@@ -308,5 +308,13 @@ Dimmed by mixing the text color toward the popup's OWN surface, not by reaching 
 :root[data-theme='dark'] [data-place-map-canvas] .route-finish-symbol {
   --route-halo: #141619;
 }
+/* Ease the zoom-driven scale in step with Leaflet's own zoom animation; under reduced motion the
+   symbols still resize (a state change tied to zoom), just without the transition. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-place-map-canvas] .route-start-symbol svg,
+  [data-place-map-canvas] .route-finish-symbol svg {
+    transition: transform 0.25s ease-out;
+  }
+}
 
 /* A duotone tile-tint mechanism lived here briefly — judged a net negative for map legibility on 2026-07-10, so the maps stay untinted. Commits 09298d3 + 72be19a have the working version if it's ever wanted back. */
