@@ -33,8 +33,25 @@
   {%- if draft -%}
     <span class="button" data-small-button data-button-variant="tertiary">draft</span>
   {%- endif %}
+  {# Activity pages only: the activity type with its own glyph, to the left of the date.
+     activityType is set only on activity posts, so this block never renders on other types.
+     Small local icon+label map — Johan's four types ("Gym" is the weight-training label). #}
+  {%- if activityType %}
+    {%- set activityMeta = {
+      "orienteering": {"icon": "compass", "label": "Orienteering"},
+      "weight training": {"icon": "dumbbell", "label": "Gym"},
+      "run": {"icon": "footprints", "label": "Run"},
+      "hike": {"icon": "mountain", "label": "Hike"}
+    } -%}
+    {%- set at = activityMeta[activityType] -%}
+    {%- if at %}
+      <span class="meta-item">{% svg 'posts/' + at.icon, '', 'meta-icon' %}{{ at.label }}</span>
+    {%- endif %}
+  {%- endif %}
+  {# The date, with a calendar glyph, on every post type. Kept here (not in date.njk) so it
+     rides only the post meta line — date.njk is shared by every archive card too. #}
   {% if date %}
-    {% set definedDate = date %}{% include "partials/date.njk" %}
+    <span class="meta-item">{% svg 'posts/calendar', '', 'meta-icon' %}{% set definedDate = date %}{% include "partials/date.njk" %}</span>
   {% endif %}
   {% if updatedDate %}
      | Updated: {{ updatedDate | formatDate('MMMM D, YYYY') }}

@@ -47,3 +47,17 @@
 .post .meta {
   font-size: var(--size-step-min-1);
 }
+
+/* An icon + its label on the meta line (activity type, date). The cluster gap keeps the
+   items apart; this keeps each glyph tight to its own text. */
+.post .meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+}
+
+.post .meta-icon {
+  flex: none;
+  inline-size: 1em;
+  block-size: 1em;
+}
