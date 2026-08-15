@@ -46,33 +46,21 @@ const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const MARKER_FILL =
   getComputedStyle(document.documentElement).getPropertyValue('--color-accent-orange').trim() || '#d0621e';
 
-// Orienteering route symbols — start = triangle (apex spun to face the first leg),
-// finish = double concentric circles — drawn Lucide-style (24 viewBox, round joins, no
-// fill). Their color (the blue accent, shared with the line) and a light/dark halo live
-// in place-map.css and track data-theme on their own, so a divIcon (which, unlike
-// addDot's circleMarker, gets neither the theme re-stroke nor the zoom-swell) needs no
-// JS theming here. `deg` rotates the triangle around its center (= the anchor).
+// Orienteering route symbols — start = triangle (apex spun to face the first leg and
+// anchored ON the line's start, so the tip is exactly where the track begins), finish =
+// double concentric circles centered on the track's end — drawn Lucide-style (24 viewBox,
+// round joins, no fill). Their color (shared with the line) and a light/dark halo live in
+// place-map.css and track data-theme on their own, so a divIcon (which, unlike addDot's
+// circleMarker, gets neither the theme re-stroke nor the zoom-swell) needs no JS theming
+// here. `deg` rotates the triangle about its apex (≈12,3 in the viewBox) = the anchor, so
+// the tip stays pinned to the start point whichever way it faces.
+const START_APEX = [12, 3];
 const startSvg = (deg) =>
-  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" aria-hidden="true" style="transform:rotate(${deg}deg)"><path d="M13.73 4a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3L13.73 4z"/></svg>`;
+  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" aria-hidden="true" style="transform:rotate(${deg}deg);transform-origin:${START_APEX[0]}px ${START_APEX[1]}px"><path d="M13.73 4a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3L13.73 4z"/></svg>`;
 const FINISH_SVG =
   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg>';
-const routeSymbol = (className, html) =>
-  L.divIcon({ className, html, iconSize: [24, 24], iconAnchor: [12, 12] });
-
-// One-shot line-draw on first render: hide the whole stroke with a full-length dash, flush
-// layout, then transition the offset back to reveal it start → finish. Leaflet re-creates the
-// <path>'s geometry on later redraws (zoom/maximize) but keeps the same element; the styles
-// simply stop mattering once the offset has reached 0, so there's nothing to clean up.
-function drawLine(line) {
-  const path = line._path;
-  if (!path || !path.getTotalLength) return;
-  const len = path.getTotalLength();
-  path.style.strokeDasharray = len;
-  path.style.strokeDashoffset = len;
-  path.getBoundingClientRect(); // flush, so that offset is the transition's start value
-  path.style.transition = 'stroke-dashoffset 1.6s ease-in-out';
-  path.style.strokeDashoffset = '0';
-}
+const routeSymbol = (className, html, anchor = [12, 12]) =>
+  L.divIcon({ className, html, iconSize: [24, 24], iconAnchor: anchor });
 
 // Follow the page theme (the site sets data-theme; fall back to the OS setting) so the
 // inline map and the overlay always show matching light/dark tiles.
@@ -95,7 +83,7 @@ const popupHtml = (p) => {
 // semantics, keyboard + screen-reader support for free — instead of Leaflet's own layers
 // control, whose toggle icon is a PNG the build doesn't ship. As a Leaflet control it lives
 // inside the map container, so it rides into the maximize overlay with the canvas for free.
-function addTileSwitch(map, bases) {
+function addTileSwitch(map, bases, defaultBase = Object.keys(bases)[0]) {
   const names = Object.keys(bases);
   const control = L.control({ position: 'bottomright' });
   control.onAdd = () => {
@@ -105,7 +93,8 @@ function addTileSwitch(map, bases) {
     const select = L.DomUtil.create('select', '', wrap);
     select.setAttribute('aria-label', 'Map style');
     for (const n of names) select.append(new Option(n, n));
-    let shown = bases[names[0]]; // "Map" is on the map at start
+    select.value = defaultBase; // match the layer makeMap put on the map at start
+    let shown = bases[defaultBase];
     select.addEventListener('change', () => {
       map.removeLayer(shown);
       shown = bases[select.value];
@@ -122,7 +111,7 @@ function addTileSwitch(map, bases) {
 // keyboard and the +/- zoom control stay on inline so the map is usable in place.
 // Returns { map, addDot } — dots added through addDot get theme re-stroking and the
 // grow-a-little-on-zoom behavior, whichever layer they sit in.
-function makeMap(el, { center, zoom, bounds, place }) {
+function makeMap(el, { center, zoom, bounds, place, defaultBase = 'Map', fitPadding = [28, 28] }) {
   let theme = pageTheme();
   const map = L.map(el, {
     zoomControl: false,
@@ -133,7 +122,7 @@ function makeMap(el, { center, zoom, bounds, place }) {
     fadeAnimation: !REDUCED,
     markerZoomAnimation: !REDUCED,
   });
-  const fit = () => map.fitBounds(bounds, { padding: [28, 28] });
+  const fit = () => map.fitBounds(bounds, { padding: fitPadding });
   if (bounds) {
     fit();
     // A map fitted while its container has no size (hidden tab, collapsed viewport)
@@ -159,12 +148,12 @@ function makeMap(el, { center, zoom, bounds, place }) {
   // Attribution first, switch second: in a Leaflet corner the LAST-added control stacks on
   // top, so this pins the attribution to the bottom edge with the switch just above it.
   L.control.attribution({ prefix: false }).addTo(map);
-  addTileSwitch(map, bases); // bottom-right, above the attribution
-  // Add "Map" only now — AFTER the attribution control exists — so it registers through the
-  // control's `layeradd` handler, which is what also wires attribution REMOVAL on layer
-  // remove. Add it earlier and its credit would stick when you switch away (Leaflet only
+  addTileSwitch(map, bases, defaultBase); // bottom-right, above the attribution
+  // Add the default base only now — AFTER the attribution control exists — so it registers
+  // through the control's `layeradd` handler, which is what also wires attribution REMOVAL on
+  // layer remove. Add it earlier and its credit would stick when you switch away (Leaflet only
   // attaches the removal hook to layers added via layeradd, not its onAdd catch-up loop).
-  mapTiles.addTo(map);
+  bases[defaultBase].addTo(map);
 
   // Ctrl/⌘ + wheel zooms the inline map around the pointer; a PLAIN wheel keeps
   // scrolling the page (no scroll trap — the reason scrollWheelZoom stays off inline).
@@ -367,22 +356,98 @@ class PlaceMap extends HTMLElement {
     this.mapObj = makeMap(this.canvas, {
       bounds: L.latLngBounds(latlngs),
       place: this.place,
+      defaultBase: 'Topographic', // terrain suits an orienteering route
+      fitPadding: [14, 14], // sit a little closer to the track than the default
     });
-    // The course line — blue, styled via CSS (.route-line) so it tracks the theme like the
-    // symbols. Drawn start → finish on first paint unless reduced motion is asked for.
+    // The course line — a lighter blue, styled via CSS (.route-line) so it tracks the theme
+    // like the symbols.
     const line = L.polyline(latlngs, { weight: 4, opacity: 0.9, className: 'route-line' }).addTo(this.mapObj.map);
-    if (!REDUCED) drawLine(line);
 
-    // Start + finish: the standard orienteering symbols, centered on the track's ends. The
-    // start triangle's apex is spun to face the first leg (its screen bearing off the start).
-    // Neither is a keyboard stop — the map isn't the screen-reader path here.
-    const p0 = this.mapObj.map.project(latlngs[0]);
-    const p1 = this.mapObj.map.project(latlngs[1]);
+    // Start + finish: the standard orienteering symbols. The start triangle's apex is anchored
+    // on the line's first point (so its tip is exactly where the track begins) and spun to face
+    // the initial bearing — measured to the first point at least ~25 m out, because the opening
+    // GPS fixes cluster on the spot and a 2-point bearing there is pure noise. Neither is a
+    // keyboard stop — the map isn't the screen-reader path here.
+    const startLL = latlngs[0];
+    let aheadLL = latlngs.at(-1);
+    for (let i = 1; i < latlngs.length; i++) {
+      if (this.mapObj.map.distance(startLL, latlngs[i]) >= 25) {
+        aheadLL = latlngs[i];
+        break;
+      }
+    }
+    const p0 = this.mapObj.map.project(startLL);
+    const p1 = this.mapObj.map.project(aheadLL);
     const heading = (Math.atan2(p1.y - p0.y, p1.x - p0.x) * 180) / Math.PI + 90;
-    L.marker(latlngs[0], { icon: routeSymbol('route-start-symbol', startSvg(heading)), keyboard: false }).addTo(this.mapObj.map);
-    L.marker(latlngs.at(-1), { icon: routeSymbol('route-finish-symbol', FINISH_SVG), keyboard: false }).addTo(this.mapObj.map);
+    const startMarker = L.marker(startLL, { icon: routeSymbol('route-start-symbol', startSvg(heading), START_APEX), keyboard: false }).addTo(this.mapObj.map);
+    const finishMarker = L.marker(latlngs.at(-1), { icon: routeSymbol('route-finish-symbol', FINISH_SVG), keyboard: false }).addTo(this.mapObj.map);
+
+    // Intro on first paint: fade the map up, fade the start in, draw the line, reveal the finish.
+    if (!REDUCED) this.routeIntro(line, startMarker, finishMarker);
 
     this.finishInit();
+  }
+
+  // Sequenced route intro: (0) fade the whole canvas up, (1) fade the START symbol in, (2) draw
+  // the line start → finish, (3) reveal the FINISH once the line reaches it. Only called when
+  // motion is allowed, so under reduced motion everything is left in its resting, visible state.
+  routeIntro(line, startMarker, finishMarker) {
+    const MAP_FADE = 500; // canvas fade-up
+    const MARK_FADE = 320; // symbol fade
+    const LINE_DRAW = 3400; // slow line sweep
+
+    const path = line._path;
+    const startEl = startMarker.getElement();
+    const finishEl = finishMarker.getElement();
+    const fadeIn = (el) => {
+      if (!el) return;
+      el.style.transition = `opacity ${MARK_FADE}ms ease-out`;
+      el.style.opacity = '1';
+    };
+
+    // Hide the line (a full-length dash), the start, and — until the line arrives — the finish.
+    if (path && path.getTotalLength) {
+      const len = path.getTotalLength();
+      path.style.strokeDasharray = len;
+      path.style.strokeDashoffset = len;
+    }
+    if (startEl) startEl.style.opacity = '0';
+    if (finishEl) finishEl.style.opacity = '0';
+
+    // (0) fade the canvas up.
+    this.canvas.style.opacity = '0';
+    this.canvas.getBoundingClientRect(); // flush so the fades below start from 0
+    this.canvas.style.transition = `opacity ${MAP_FADE}ms ease-out`;
+    this.canvas.style.opacity = '1';
+
+    // (1) once the map is up, fade the START symbol in.
+    setTimeout(() => fadeIn(startEl), MAP_FADE);
+
+    // (3) reveal the FINISH when the line reaches it. Clearing the dash here doubles as the
+    // zoom-bug fix: a leftover dasharray sized to the OLD length stops matching after a zoom
+    // re-projects the path, which clipped the line to nothing.
+    const finishRoute = () => {
+      if (path) {
+        path.style.strokeDasharray = 'none';
+        path.style.strokeDashoffset = '';
+        path.style.transition = '';
+      }
+      fadeIn(finishEl);
+    };
+
+    if (!path) {
+      setTimeout(finishRoute, MAP_FADE + MARK_FADE); // no line to draw — just reveal the finish
+      return;
+    }
+
+    // (2) after the start, sweep the line in.
+    setTimeout(() => {
+      path.style.transition = `stroke-dashoffset ${LINE_DRAW}ms ease-in-out`;
+      path.style.strokeDashoffset = '0';
+      path.addEventListener('transitionend', finishRoute, { once: true });
+    }, MAP_FADE + MARK_FADE);
+    // A zoom before/during the draw snaps the line solid and reveals the finish, so nothing stays hidden.
+    this.mapObj.map.once('zoomstart', finishRoute);
   }
 
   // Places mode: the slotted list is the data source. Parse every item that carries
