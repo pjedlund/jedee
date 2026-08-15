@@ -11,6 +11,13 @@ stravaUrl: https://www.strava.com/activities/10245310889
 elevationGain: 179
 elevationLoss: 200
 eventorUrl: https://eventor.orientering.se/Events/Show/40057
+organiser: Örkelljunga FK
+region: Skåne
+eventForm: individual
+eventClassification: National event
+raceDistance: Middle
+timeOfEvent: day
+discipline: FootO
 cover: "/assets/images/activities/2023-11-19-hostrusket-orientering.jpg"
 lat: 56.2780011333167
 lon: 13.2658364295959

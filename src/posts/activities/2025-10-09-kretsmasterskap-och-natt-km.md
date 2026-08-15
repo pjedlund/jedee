@@ -10,6 +10,14 @@ energyKcal: 528
 stravaUrl: https://www.strava.com/activities/16089198026
 elevationGain: 133
 elevationLoss: 131
+eventorUrl: https://eventor.orientering.se/Events/Show/56025
+organiser: Eslövs FK
+region: Skåne
+eventForm: individual
+eventClassification: Local event
+raceDistance: Long
+timeOfEvent: night
+discipline: FootO
 liveloxUrl: https://www.livelox.com/Viewer/Oppet-Kretsmasterskap-Natt-OL-SV-Skanes-Idrottskrets/H55?classId=1064451
 cover: "/assets/images/activities/2025-10-09-kretsmasterskap-och-natt-km.jpg"
 lat: 55.90275

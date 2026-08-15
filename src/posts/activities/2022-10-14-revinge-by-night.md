@@ -11,6 +11,13 @@ stravaUrl: https://www.strava.com/activities/7963081846
 elevationGain: 29
 elevationLoss: 31
 eventorUrl: https://eventor.orientering.se/Events/Show/36434
+organiser: "Lunds OK, Malmö OK"
+region: Skåne
+eventForm: relay
+eventClassification: Regional event
+raceDistance: Middle
+timeOfEvent: night
+discipline: FootO
 lat: 55.7186103003987
 lon: 13.4692575591984
 ---

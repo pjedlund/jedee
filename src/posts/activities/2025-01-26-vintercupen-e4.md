@@ -11,6 +11,13 @@ stravaUrl: https://www.strava.com/activities/13457057616
 elevationGain: 115
 elevationLoss: 117
 eventorUrl: https://eventor.orientering.se/Events/Show/28478
+organiser: OK Silva
+region: Skåne
+eventForm: individual
+eventClassification: Local event
+raceDistance: Long
+timeOfEvent: day
+discipline: FootO
 lat: 55.38939
 lon: 12.83984
 ---

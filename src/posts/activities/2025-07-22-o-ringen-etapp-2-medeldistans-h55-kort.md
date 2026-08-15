@@ -10,6 +10,10 @@ energyKcal: 416
 stravaUrl: https://www.strava.com/activities/15196623675
 liveloxUrl: https://www.livelox.com/Events/Show/161772/O-Ringen-Jonkoping-etapp-2
 eventorUrl: https://eventor.orientering.se/Events/Show/44022
+organiser: "Smålands OF, Svensk Orientering Events"
+region: Småland
+eventForm: individual
+eventClassification: National event
 elevationGain: 137
 elevationLoss: 144
 lat: 57.70691273925

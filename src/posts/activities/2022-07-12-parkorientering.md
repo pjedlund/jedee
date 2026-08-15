@@ -11,6 +11,13 @@ stravaUrl: https://www.strava.com/activities/7457934424
 elevationGain: 6
 elevationLoss: 11
 eventorUrl: https://eventor.orientering.se/Events/Show/41831
+organiser: Malmö OK
+region: Skåne
+eventForm: individual
+eventClassification: Local event
+raceDistance: Sprint
+timeOfEvent: day
+discipline: FootO
 lat: 55.5705848356004
 lon: 12.9060161611699
 ---

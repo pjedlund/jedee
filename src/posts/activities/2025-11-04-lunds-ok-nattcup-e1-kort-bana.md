@@ -10,6 +10,14 @@ energyKcal: 481
 stravaUrl: https://www.strava.com/activities/16355950275
 elevationGain: 142
 elevationLoss: 145
+eventorUrl: https://eventor.orientering.se/Events/Show/55875
+organiser: Lunds OK
+region: Skåne
+eventForm: individual
+eventClassification: Local event
+raceDistance: Long
+timeOfEvent: night
+discipline: FootO
 liveloxUrl: https://www.livelox.com/Viewer/Lunds-OK-Nattcup-etapp-1/Herr-Kort?classId=1076663
 cover: "/assets/images/activities/2025-11-04-lunds-ok-nattcup-e1-kort-bana.jpg"
 lat: 55.5494

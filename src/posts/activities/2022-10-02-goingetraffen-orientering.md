@@ -11,6 +11,13 @@ stravaUrl: https://www.strava.com/activities/7898895431
 elevationGain: 39
 elevationLoss: 37
 eventorUrl: https://eventor.orientering.se/Events/Show/34539
+organiser: Hässleholms OK
+region: Skåne
+eventForm: individual
+eventClassification: National event
+raceDistance: Middle
+timeOfEvent: day
+discipline: FootO
 lat: 56.1529257553778
 lon: 13.7175891893163
 ---

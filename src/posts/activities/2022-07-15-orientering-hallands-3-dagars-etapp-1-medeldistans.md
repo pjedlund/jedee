@@ -11,6 +11,11 @@ stravaUrl: https://www.strava.com/activities/7473947782
 elevationGain: 132
 elevationLoss: 137
 eventorUrl: https://eventor.orientering.se/Events/Show/36382
+organiser: "Ätrans IF, Falkenbergs OK, Hylte OK, IK Trenne Ullared, OK Gläntan Vessigebro"
+region: Halland
+eventForm: individual
+eventClassification: National event
+discipline: FootO
 lat: 56.8884
 lon: 12.742
 ---

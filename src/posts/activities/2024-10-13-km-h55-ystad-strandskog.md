@@ -10,6 +10,14 @@ energyKcal: 577
 stravaUrl: https://www.strava.com/activities/12645697633
 elevationGain: 133
 elevationLoss: 139
+eventorUrl: https://eventor.orientering.se/Events/Show/51605
+organiser: OK Kontinent
+region: Skåne
+eventForm: individual
+eventClassification: Club event
+raceDistance: Long
+timeOfEvent: day
+discipline: FootO
 liveloxUrl: https://www.livelox.com/Viewer/KM-KontinentMOK/H55?classId=862274
 lat: 55.43314
 lon: 13.84857

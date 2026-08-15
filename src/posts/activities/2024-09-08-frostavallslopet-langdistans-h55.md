@@ -11,6 +11,13 @@ stravaUrl: https://www.strava.com/activities/12358118690
 elevationGain: 253
 elevationLoss: 238
 eventorUrl: https://eventor.orientering.se/Events/Show/45037
+organiser: Ringsjö OK
+region: Skåne
+eventForm: individual
+eventClassification: National event
+raceDistance: Long
+timeOfEvent: day
+discipline: FootO
 liveloxUrl: https://www.livelox.com/Viewer/Frostavallslopet/H55?classId=830161
 lat: 55.9708760811276
 lon: 13.5156563860737

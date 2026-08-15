@@ -10,6 +10,14 @@ energyKcal: 934
 stravaUrl: https://www.strava.com/activities/16932506335
 elevationGain: 215
 elevationLoss: 218
+eventorUrl: https://eventor.orientering.se/Events/Show/57024
+organiser: Lunds OK
+region: Skåne
+eventForm: individual
+eventClassification: Local event
+raceDistance: Long
+timeOfEvent: day
+discipline: FootO
 liveloxUrl: https://www.livelox.com/Viewer/Vintercupen-E1-SV-kretsen-Skane/H45?classId=1097124
 cover: "/assets/images/activities/2026-01-04-vintercupen-e1-skrylle-3-banor-a-b-c.jpg"
 lat: 55.69179

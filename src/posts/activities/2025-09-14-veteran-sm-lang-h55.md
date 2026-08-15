@@ -9,6 +9,13 @@ hrMax: 174
 energyKcal: 659
 stravaUrl: https://www.strava.com/activities/15812449078
 eventorUrl: https://eventor.orientering.se/Events/Show/51397
+organiser: "Ålems OK, Kalmar OK, Nybro OK, SOK Viljan, Torsås OK"
+region: Småland
+eventForm: individual
+eventClassification: Championship event
+raceDistance: Long
+timeOfEvent: day
+discipline: FootO
 elevationGain: 127
 elevationLoss: 140
 cover: "/assets/images/activities/2025-09-14-veteran-sm-lang-h55.jpg"

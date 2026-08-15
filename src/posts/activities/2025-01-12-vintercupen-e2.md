@@ -11,6 +11,13 @@ stravaUrl: https://www.strava.com/activities/13333771739
 elevationGain: 173
 elevationLoss: 181
 eventorUrl: https://eventor.orientering.se/Events/Show/52791
+organiser: Frölunda OL
+region: Göteborg
+eventForm: individual
+eventClassification: Club event
+raceDistance: Long
+timeOfEvent: day
+discipline: FootO
 liveloxUrl: https://www.livelox.com/Viewer/Vintercupen-E2-SV-kretsen-Skane/Bana-A?classId=889804
 lat: 55.90901
 lon: 13.3737

@@ -11,6 +11,13 @@ stravaUrl: https://www.strava.com/activities/8657797978
 elevationGain: 105
 elevationLoss: 105
 eventorUrl: https://eventor.orientering.se/Events/Show/40427
+organiser: OK Pan-Kristianstad
+region: Skåne
+eventForm: individual
+eventClassification: National event
+raceDistance: Middle
+timeOfEvent: day
+discipline: FootO
 lat: 55.8440763065664
 lon: 14.2148016829583
 ---

@@ -10,6 +10,12 @@ energyKcal: 458
 stravaUrl: https://www.strava.com/activities/19432060349
 elevationGain: 203
 elevationLoss: 206
+eventorUrl: https://eventor.orientering.se/Events/Show/50594
+organiser: "Göteborgs OF, Svensk Orientering Events"
+region: Göteborg
+eventForm: individual
+eventClassification: National event
+discipline: FootO
 liveloxUrl: https://www.livelox.com/Viewer/O-Ringen-Goteborg-etapp-3-medel/H55-Kort?classId=1211560
 cover: "/assets/images/activities/2026-07-23-o-ringen-e3-h55k-slottsskogen.jpg"
 coverAlt: "KungSängen-etappen, etapp 3 — the H55 Kort course drawn on the Slottsskogen map, 1:5 000"
