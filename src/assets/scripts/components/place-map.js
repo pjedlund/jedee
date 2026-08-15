@@ -54,11 +54,16 @@ const MARKER_FILL =
 // circleMarker, gets neither the theme re-stroke nor the zoom-swell) needs no JS theming
 // here. `deg` rotates the triangle about its apex (≈12,3 in the viewBox) = the anchor, so
 // the tip stays pinned to the start point whichever way it faces.
+// Each symbol is drawn twice: a wider `.halo` stroke (the theme background, from CSS) UNDER
+// the colored stroke. That's a pure-vector stand-in for a drop-shadow halo — a filter would
+// force the browser to rasterize the icon, and rasterizing then rotating the start triangle
+// softened its edges. Two overlaid strokes stay crisp at any zoom / pixel ratio.
 const START_APEX = [12, 3];
+const START_D = 'M13.73 4a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3L13.73 4z';
 const startSvg = (deg) =>
-  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" aria-hidden="true" style="transform:rotate(${deg}deg);transform-origin:${START_APEX[0]}px ${START_APEX[1]}px"><path d="M13.73 4a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3L13.73 4z"/></svg>`;
+  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round" aria-hidden="true" style="transform:rotate(${deg}deg);transform-origin:${START_APEX[0]}px ${START_APEX[1]}px"><path class="halo" stroke-width="5" d="${START_D}"/><path stroke-width="2.5" d="${START_D}"/></svg>`;
 const FINISH_SVG =
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg>';
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><circle class="halo" stroke-width="5" cx="12" cy="12" r="9"/><circle class="halo" stroke-width="5" cx="12" cy="12" r="4"/><circle stroke-width="2.5" cx="12" cy="12" r="9"/><circle stroke-width="2.5" cx="12" cy="12" r="4"/></svg>';
 const routeSymbol = (className, html, anchor = [12, 12]) =>
   L.divIcon({ className, html, iconSize: [24, 24], iconAnchor: anchor });
 
@@ -357,7 +362,7 @@ class PlaceMap extends HTMLElement {
       bounds: L.latLngBounds(latlngs),
       place: this.place,
       defaultBase: 'Topographic', // terrain suits an orienteering route
-      fitPadding: [14, 14], // sit a little closer to the track than the default
+      fitPadding: [20, 20], // sit a little closer to the track than the default, with room for the symbols
     });
     // The course line — a lighter blue, styled via CSS (.route-line) so it tracks the theme
     // like the symbols.
