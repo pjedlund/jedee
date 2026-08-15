@@ -45,10 +45,18 @@ const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 // Marker keeps the site's orange; read the token so it tracks the palette.
 const MARKER_FILL =
   getComputedStyle(document.documentElement).getPropertyValue('--color-accent-orange').trim() || '#d0621e';
-// Route start dot — a saturated green of its own (the accent green is a muted olive
-// that reads grey on the map). Token defined in variables.css so it stays adjustable.
-const START_FILL =
-  getComputedStyle(document.documentElement).getPropertyValue('--color-route-start').trim() || '#2e9d4f';
+
+// Orienteering route symbols — start = triangle, finish = double concentric circles —
+// drawn Lucide-style (24 viewBox, round joins, no fill). Their color and a light/dark
+// halo live in place-map.css and track data-theme on their own, so a divIcon (which,
+// unlike addDot's circleMarker, gets neither the theme re-stroke nor the zoom-swell)
+// needs no JS theming here.
+const START_SVG =
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" aria-hidden="true"><path d="M13.73 4a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3L13.73 4z"/></svg>';
+const FINISH_SVG =
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg>';
+const routeSymbol = (className, html) =>
+  L.divIcon({ className, html, iconSize: [24, 24], iconAnchor: [12, 12] });
 
 // Follow the page theme (the site sets data-theme; fall back to the OS setting) so the
 // inline map and the overlay always show matching light/dark tiles.
@@ -326,8 +334,8 @@ class PlaceMap extends HTMLElement {
   }
 
   // Route mode: a slotted GeoJSON LineString (from the post's committed .geojson).
-  // Draw the track fitted to its bounds, a green start dot and a checkered finish flag.
-  // No slotted list here — the no-JS path is the "View on Strava" link on the page.
+  // Draw the track fitted to its bounds, an orienteering start triangle and a finish
+  // double-circle. No slotted list here — the no-JS path is the "View on Strava" link.
   initRoute(script) {
     let gj;
     try {
@@ -346,14 +354,10 @@ class PlaceMap extends HTMLElement {
     });
     L.polyline(latlngs, { color: MARKER_FILL, weight: 4, opacity: 0.9 }).addTo(this.mapObj.map);
 
-    // Start: reuse addDot so it gets the theme re-stroke + zoom-swell, but in green.
-    this.mapObj.addDot(latlngs[0][0], latlngs[0][1], { fill: START_FILL });
-    // Finish: a checkered flag, centered on the last point. Not a keyboard stop — the
-    // map isn't the screen-reader path here.
-    L.marker(latlngs.at(-1), {
-      icon: L.divIcon({ className: 'route-finish', html: '🏁', iconSize: [22, 22], iconAnchor: [11, 11] }),
-      keyboard: false,
-    }).addTo(this.mapObj.map);
+    // Start + finish: the standard orienteering symbols, centered on the track's ends.
+    // Neither is a keyboard stop — the map isn't the screen-reader path here.
+    L.marker(latlngs[0], { icon: routeSymbol('route-start-symbol', START_SVG), keyboard: false }).addTo(this.mapObj.map);
+    L.marker(latlngs.at(-1), { icon: routeSymbol('route-finish-symbol', FINISH_SVG), keyboard: false }).addTo(this.mapObj.map);
 
     this.finishInit();
   }

@@ -283,4 +283,28 @@ Dimmed by mixing the text color toward the popup's OWN surface, not by reaching 
   color: color-mix(in oklab, var(--color-text) 80%, var(--color-bg-accent));
 }
 
+/* Orienteering route markers (place-map.js divIcons: start = triangle, finish = double concentric circles). Passing our own className replaces Leaflet's default `.leaflet-div-icon`, so there's no white box to undo — just color and, like addDot's dots, a theme-matched halo so the stroked symbols stay legible on both light and dark tiles. The halo color mirrors markerStroke() in place-map.js (#fff light, #141619 dark); data-theme is stamped before paint, so `[data-theme='dark']` alone covers the OS-dark case too. */
+[data-place-map-canvas] .route-start-symbol,
+[data-place-map-canvas] .route-finish-symbol {
+  --route-halo: #ffffff;
+
+  filter: drop-shadow(0 0 1px var(--route-halo)) drop-shadow(0 0 1px var(--route-halo));
+}
+[data-place-map-canvas] .route-start-symbol {
+  color: var(--color-route-start);
+}
+[data-place-map-canvas] .route-finish-symbol {
+  color: var(--color-accent-orange);
+}
+[data-place-map-canvas] .route-start-symbol svg,
+[data-place-map-canvas] .route-finish-symbol svg {
+  display: block;
+  inline-size: 24px;
+  block-size: 24px;
+}
+:root[data-theme='dark'] [data-place-map-canvas] .route-start-symbol,
+:root[data-theme='dark'] [data-place-map-canvas] .route-finish-symbol {
+  --route-halo: #141619;
+}
+
 /* A duotone tile-tint mechanism lived here briefly — judged a net negative for map legibility on 2026-07-10, so the maps stay untinted. Commits 09298d3 + 72be19a have the working version if it's ever wanted back. */
