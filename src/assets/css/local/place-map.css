@@ -195,118 +195,28 @@ place-map[data-map-ready] > .place-map-static {
   color: var(--color-headline);
 }
 
-/* --- groups mode: chips on the map surface + the always-visible place list below. The server-rendered list is the no-JS / screen-reader path; place-map.js reads it, builds the map, wraps each group heading's content in an aria-pressed toggle and mirrors it as a chip. --dot (set per group in the markup) colors the group's dot everywhere: heading, chip, and — read back via computed style — the map markers. --- */
+/* --- places mode: the activity index. The server-rendered list is BOTH the map's data source and the no-JS / screen-reader path; place-map.js reads its [data-lat] items and drops one dot each into the box above. --- */
 
-/* the group dot — hollow when the group is toggled off */
-.place-dot {
-  display: inline-block;
-  inline-size: 0.7em;
-  block-size: 0.7em;
-  flex: none;
-  border-radius: 50%;
-  background: var(--dot, var(--color-primary));
-}
-
-/* Chips float on the map, top-left, clear of the maximize button. A desktop convenience: below 40rem they hide and the list headings carry the toggles, so no function is lost. */
-.place-map-chips {
-  position: absolute;
-  z-index: 1;
-  inset-block-start: var(--space-2xs);
-  inset-inline-start: var(--space-2xs);
-  max-inline-size: calc(100% - 3.5rem);
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3xs);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.place-map-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45em;
-  padding: 0.3em 0.7em;
-  font-family: var(--font-base);
-  font-size: var(--size-step-min-2);
-  font-weight: var(--font-bold);
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
-  color: var(--color-text);
-  background: color-mix(in srgb, var(--color-bg-accent) 92%, transparent);
-  border: var(--stroke);
-  border-radius: var(--border-radius-small);
-  cursor: pointer;
-}
-.place-map-chip:hover {
-  color: var(--color-headline);
-  border-color: color-mix(in oklab, var(--color-text) 30%, var(--color-bg));
-}
-@media (max-width: 40rem) {
-  .place-map-chips {
-    display: none;
-  }
-}
-
-/* the place list: legend + toggles + real browsable content, always present */
-.place-map-places {
-  margin-block-start: var(--space-s);
-  padding: 0;
-  list-style: none;
+/* Caption inside the server-rendered map box, which reserves the map's space from first paint. The JS clears it when the live map takes over, so it's only ever seen before hydration or without JS. */
+.place-map-pending {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-  gap: var(--space-s);
-}
-.place-group-heading {
+  place-items: center;
+  block-size: 100%;
   margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 0.5em;
+  padding: var(--space-s);
+  text-align: center;
   font-family: var(--font-base);
   font-size: var(--size-step-min-2);
-  font-weight: var(--font-bold);
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
-  color: var(--color-text);
-}
-/* the JS moves the heading's content into this toggle button */
-.place-group-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5em;
-  padding: 0.1em 0;
-  background: none;
-  border: 0;
-  font: inherit;
-  letter-spacing: inherit;
-  text-transform: inherit;
-  color: inherit;
-  cursor: pointer;
-}
-.place-count {
   color: var(--color-text-accent);
-  font-weight: var(--font-normal);
-  letter-spacing: normal;
 }
-/* toggled-off group: struck-through control, hollow dot, dimmed list */
-:is(.place-map-chip, .place-group-toggle)[aria-pressed='false'] {
-  color: var(--color-text-accent);
-  text-decoration: line-through;
-  text-decoration-thickness: 1px;
-}
-:is(.place-map-chip, .place-group-toggle)[aria-pressed='false'] .place-dot {
-  background: transparent;
-  box-shadow: inset 0 0 0 2px var(--dot, var(--color-primary));
-}
+
 .place-list {
-  margin-block-start: var(--space-2xs);
   padding: 0;
   list-style: none;
   display: grid;
   gap: var(--space-3xs);
-  transition: opacity var(--transition-duration, 0.15s);
-}
-.place-group[data-off] .place-list {
-  opacity: 0.4;
 }
 .place-list li {
   line-height: 1.35;
@@ -317,7 +227,6 @@ place-map[data-map-ready] > .place-map-static {
 .place-note::before {
   content: ' — ';
 }
-
 /* Marker popups (click a dot → the place's name, linked), themed like the rest of the chrome. Popup panes live inside the canvas, so the fence covers them; same (0,3,x) repetition as the attribution rules, for the same reason. */
 [data-place-map-canvas].leaflet-container .leaflet-popup-content-wrapper,
 [data-place-map-canvas].leaflet-container .leaflet-popup-tip {

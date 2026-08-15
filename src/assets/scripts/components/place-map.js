@@ -6,13 +6,13 @@
 // where wheel + pinch turn on; pan/zoom state is preserved because it's one map, not a
 // rebuilt second one. Esc / backdrop / close button exit, focus returns to the trigger.
 //
-// Two modes, decided by the slotted markup:
+// Three modes, decided by the slotted markup:
 //  - single pin (photo pages): data-lat/data-lon on the element, static <a><img> slot.
-//  - groups: a slotted [data-place-groups] place list — each .place-group holds
-//    <li data-lat data-lon> items. The LIST is the data source and the no-JS/screen-
-//    reader path (Leaflet markers' keyboard/SR handling is broken upstream, so nobody
-//    is forced through the map). JS builds the map above it, turns the group headings
-//    into aria-pressed toggles, and adds synced chips on the map surface.
+//  - places (the activity index): a slotted [data-place-list] of <li data-lat data-lon>
+//    items. The LIST is the data source and the no-JS/screen-reader path (Leaflet
+//    markers' keyboard/SR handling is broken upstream, so nobody is forced through the
+//    map). JS drops one dot per item into the box above it.
+//  - route (an activity post): a slotted GeoJSON LineString.
 import L from 'leaflet';
 
 const TILES = {
@@ -237,7 +237,7 @@ function buildOverlay() {
 }
 
 // Keep Tab focus inside the open dialog (Leaflet's zoom/attribution links + the map
-// container + the chips + the close button are the focus stops).
+// container + the close button are the focus stops).
 function trapTab(e) {
   const f = overlay.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])');
   if (!f.length) return;
@@ -256,17 +256,26 @@ class PlaceMap extends HTMLElement {
   connectedCallback() {
     this.place = this.dataset.place || '';
     const routeScript = this.querySelector('script[type="application/json"][data-route]');
-    const groupsRoot = this.querySelector('[data-place-groups]');
+    const placeList = this.querySelector('[data-place-list]');
     if (routeScript) this.initRoute(routeScript);
-    else if (groupsRoot) this.initGroups(groupsRoot);
+    else if (placeList) this.initPlaces(placeList);
     else this.initSinglePin();
   }
 
   // The live inline slot. Its aspect-ratio holds the box, so moving the canvas out to
   // the overlay (and back) never shifts the page.
+  //
+  // A page whose slot has nothing else holding the space (the activity index — a list,
+  // no static map image) renders the box server-side and we adopt it here. Building it
+  // on idle instead pushed the whole page down a second after paint.
   buildBox() {
-    this.box = document.createElement('div');
-    this.box.className = 'place-map-live';
+    this.box = this.querySelector('[data-place-map-box]');
+    const adopted = Boolean(this.box);
+    if (adopted) this.box.replaceChildren(); // drop the no-JS caption
+    else {
+      this.box = document.createElement('div');
+      this.box.className = 'place-map-live';
+    }
     this.canvas = document.createElement('div');
     this.canvas.className = 'place-map-canvas';
     this.box.append(this.canvas);
@@ -278,7 +287,7 @@ class PlaceMap extends HTMLElement {
     this.maxBtn.innerHTML = '<span aria-hidden="true">⛶</span>';
     this.box.append(this.maxBtn);
 
-    this.prepend(this.box);
+    if (!adopted) this.prepend(this.box);
 
     // Keep the canvas a WHOLE number of pixels. The box's fluid 16:9 sizing lands on
     // fractions (e.g. 514.375px tall); Leaflet then puts tiles on fractional offsets
@@ -349,80 +358,31 @@ class PlaceMap extends HTMLElement {
     this.finishInit();
   }
 
-  // Groups mode: the slotted place list is the data source. Parse it, build the map
-  // fitted to every place, one toggleable layer per group, chips + heading toggles
-  // synced over the same state.
-  initGroups(root) {
-    const groups = [...root.querySelectorAll('.place-group')]
-      .map((li) => ({
-        li,
-        key: li.dataset.group,
-        heading: li.querySelector('.place-group-heading'),
-        // --dot is authored as a token reference; computed style resolves it to a color
-        color: getComputedStyle(li).getPropertyValue('--dot').trim() || MARKER_FILL,
-        places: [...li.querySelectorAll('li[data-lat]')].map((p) => {
-          const a = p.querySelector('a');
-          return { lat: Number(p.dataset.lat), lon: Number(p.dataset.lon), date: p.dataset.date || '', name: a?.textContent.trim() || p.textContent.trim(), url: a?.getAttribute('href') };
-        }),
-      }))
-      .filter((g) => g.places.length);
-    const all = groups.flatMap((g) => g.places);
-    if (!all.length) return; // nothing to map → leave the plain list
+  // Places mode: the slotted list is the data source. Parse every item that carries
+  // coordinates, fit the map to them, one dot each. Items without coordinates (indoor
+  // sessions) stay in the list and simply aren't on the map.
+  initPlaces(root) {
+    const places = [...root.querySelectorAll('[data-lat]')]
+      .map((el) => {
+        const a = el.querySelector('a');
+        return {
+          lat: Number(el.dataset.lat),
+          lon: Number(el.dataset.lon),
+          date: el.dataset.date || '',
+          name: a?.textContent.trim() || el.textContent.trim(),
+          url: a?.getAttribute('href'),
+        };
+      })
+      .filter((p) => Number.isFinite(p.lat) && Number.isFinite(p.lon));
+    if (!places.length) return; // nothing to map → leave the plain list
 
     this.buildBox();
     this.mapObj = makeMap(this.canvas, {
-      bounds: L.latLngBounds(all.map((p) => [p.lat, p.lon])),
+      bounds: L.latLngBounds(places.map((p) => [p.lat, p.lon])),
       place: this.place,
     });
+    for (const p of places) this.mapObj.addDot(p.lat, p.lon, { popup: popupHtml(p) });
 
-    const controls = {}; // key -> [chip, heading button] — two synced controls, one state
-    const setGroup = (g, on) => {
-      on ? this.mapObj.map.addLayer(g.layer) : this.mapObj.map.removeLayer(g.layer);
-      controls[g.key].forEach((b) => b.setAttribute('aria-pressed', String(on)));
-      g.li.toggleAttribute('data-off', !on);
-    };
-    const register = (g, btn) => {
-      (controls[g.key] ||= []).push(btn);
-      btn.addEventListener('click', () => setGroup(g, btn.getAttribute('aria-pressed') !== 'true'));
-    };
-
-    // Chips on the map surface — a desktop convenience; CSS hides them on small
-    // screens, where the list headings carry the same toggles (no function lost).
-    this.chips = document.createElement('ul');
-    this.chips.className = 'place-map-chips';
-
-    for (const g of groups) {
-      g.layer = L.layerGroup().addTo(this.mapObj.map);
-      g.places.forEach((p) =>
-        this.mapObj.addDot(p.lat, p.lon, {
-          fill: g.color,
-          layer: g.layer,
-          popup: popupHtml(p),
-        })
-      );
-
-      // Turn the server-rendered heading into a toggle (a no-JS heading must not be a
-      // button), and mirror it as a chip.
-      const toggle = document.createElement('button');
-      toggle.type = 'button';
-      toggle.className = 'place-group-toggle';
-      toggle.setAttribute('aria-pressed', 'true');
-      toggle.append(...g.heading.childNodes);
-      g.heading.append(toggle);
-      register(g, toggle);
-
-      const chipLi = document.createElement('li');
-      const chip = document.createElement('button');
-      chip.type = 'button';
-      chip.className = 'place-map-chip';
-      chip.setAttribute('aria-pressed', 'true');
-      chip.style.setProperty('--dot', g.color);
-      chip.innerHTML = toggle.innerHTML;
-      register(g, chip);
-      chipLi.append(chip);
-      this.chips.append(chipLi);
-    }
-    this.box.append(this.chips);
     this.finishInit();
   }
 
@@ -430,7 +390,6 @@ class PlaceMap extends HTMLElement {
     if (!overlay) buildOverlay();
     active = this;
     overlayFrame.append(this.canvas); // move the SAME map into the overlay
-    if (this.chips) overlayFrame.append(this.chips); // chips ride along
     overlay.setAttribute('data-open', '');
     overlay.setAttribute('aria-label', this.place ? `Map showing ${this.place}` : 'Interactive map');
     this.canvas.setAttribute('aria-label', this.place ? `Interactive map of ${this.place}` : 'Interactive map of this location');
@@ -451,7 +410,6 @@ class PlaceMap extends HTMLElement {
     overlay.removeAttribute('data-open');
     document.body.style.overflow = '';
     this.box.prepend(this.canvas); // move the map back inline
-    if (this.chips) this.box.append(this.chips);
     this.canvas.setAttribute('aria-label', this.place ? `Map of ${this.place}` : 'Map of this location');
     requestAnimationFrame(this.fitCanvas);
     active = null;
