@@ -46,17 +46,33 @@ const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const MARKER_FILL =
   getComputedStyle(document.documentElement).getPropertyValue('--color-accent-orange').trim() || '#d0621e';
 
-// Orienteering route symbols — start = triangle, finish = double concentric circles —
-// drawn Lucide-style (24 viewBox, round joins, no fill). Their color and a light/dark
-// halo live in place-map.css and track data-theme on their own, so a divIcon (which,
-// unlike addDot's circleMarker, gets neither the theme re-stroke nor the zoom-swell)
-// needs no JS theming here.
-const START_SVG =
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" aria-hidden="true"><path d="M13.73 4a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3L13.73 4z"/></svg>';
+// Orienteering route symbols — start = triangle (apex spun to face the first leg),
+// finish = double concentric circles — drawn Lucide-style (24 viewBox, round joins, no
+// fill). Their color (the blue accent, shared with the line) and a light/dark halo live
+// in place-map.css and track data-theme on their own, so a divIcon (which, unlike
+// addDot's circleMarker, gets neither the theme re-stroke nor the zoom-swell) needs no
+// JS theming here. `deg` rotates the triangle around its center (= the anchor).
+const startSvg = (deg) =>
+  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" aria-hidden="true" style="transform:rotate(${deg}deg)"><path d="M13.73 4a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3L13.73 4z"/></svg>`;
 const FINISH_SVG =
   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg>';
 const routeSymbol = (className, html) =>
   L.divIcon({ className, html, iconSize: [24, 24], iconAnchor: [12, 12] });
+
+// One-shot line-draw on first render: hide the whole stroke with a full-length dash, flush
+// layout, then transition the offset back to reveal it start → finish. Leaflet re-creates the
+// <path>'s geometry on later redraws (zoom/maximize) but keeps the same element; the styles
+// simply stop mattering once the offset has reached 0, so there's nothing to clean up.
+function drawLine(line) {
+  const path = line._path;
+  if (!path || !path.getTotalLength) return;
+  const len = path.getTotalLength();
+  path.style.strokeDasharray = len;
+  path.style.strokeDashoffset = len;
+  path.getBoundingClientRect(); // flush, so that offset is the transition's start value
+  path.style.transition = 'stroke-dashoffset 1.6s ease-in-out';
+  path.style.strokeDashoffset = '0';
+}
 
 // Follow the page theme (the site sets data-theme; fall back to the OS setting) so the
 // inline map and the overlay always show matching light/dark tiles.
@@ -352,11 +368,18 @@ class PlaceMap extends HTMLElement {
       bounds: L.latLngBounds(latlngs),
       place: this.place,
     });
-    L.polyline(latlngs, { color: MARKER_FILL, weight: 4, opacity: 0.9 }).addTo(this.mapObj.map);
+    // The course line — blue, styled via CSS (.route-line) so it tracks the theme like the
+    // symbols. Drawn start → finish on first paint unless reduced motion is asked for.
+    const line = L.polyline(latlngs, { weight: 4, opacity: 0.9, className: 'route-line' }).addTo(this.mapObj.map);
+    if (!REDUCED) drawLine(line);
 
-    // Start + finish: the standard orienteering symbols, centered on the track's ends.
+    // Start + finish: the standard orienteering symbols, centered on the track's ends. The
+    // start triangle's apex is spun to face the first leg (its screen bearing off the start).
     // Neither is a keyboard stop — the map isn't the screen-reader path here.
-    L.marker(latlngs[0], { icon: routeSymbol('route-start-symbol', START_SVG), keyboard: false }).addTo(this.mapObj.map);
+    const p0 = this.mapObj.map.project(latlngs[0]);
+    const p1 = this.mapObj.map.project(latlngs[1]);
+    const heading = (Math.atan2(p1.y - p0.y, p1.x - p0.x) * 180) / Math.PI + 90;
+    L.marker(latlngs[0], { icon: routeSymbol('route-start-symbol', startSvg(heading)), keyboard: false }).addTo(this.mapObj.map);
     L.marker(latlngs.at(-1), { icon: routeSymbol('route-finish-symbol', FINISH_SVG), keyboard: false }).addTo(this.mapObj.map);
 
     this.finishInit();
