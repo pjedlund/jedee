@@ -145,8 +145,20 @@ export const tests = {
     // before it ships is the point. The catch: a path that no longer exists does not fail the
     // run, it scores zero errors and passes silently. So whenever a post listed here is deleted,
     // or renamed (the file name drives the slug), this list has to follow it by hand.
-    customPaths: ['/', '/about/', '/articles/', '/styleguide/', '/audio/nybrostrand-beach/'],
-    globalIgnore: []
+    // `/activities/` covers the third layout shape: a very long index (180 links) living
+    // inside a custom element, with the map component in places mode above it.
+    customPaths: ['/', '/about/', '/articles/', '/styleguide/', '/audio/nybrostrand-beach/', '/activities/'],
+    globalIgnore: [],
+    // Which browser pa11y drives. Empty = let puppeteer use the exact Chrome build it pins,
+    // which is the trap this setting exists to avoid: puppeteer arrives transitively under
+    // pa11y-ci, downloads its browser to the machine-wide ~/.cache/puppeteer, and its
+    // postinstall SWALLOWS a failed download — so `npm install` exits clean and the test only
+    // breaks months later with "Could not find Chrome (ver. …)". Worse, every dependency
+    // refresh that bumps puppeteer changes the pinned version, so yesterday's download stops
+    // counting. Pointing at a Chrome that's already installed sidesteps all of it. Override
+    // per machine with PA11Y_CHROME= if Chrome lives elsewhere (Linux, CI, a Setapp install).
+    // Trade-off accepted: this browser auto-updates, so it isn't a pinned version.
+    chromePath: process.env.PA11Y_CHROME || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
   }
 };
 export const viewRepo = {

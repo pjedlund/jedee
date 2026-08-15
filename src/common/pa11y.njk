@@ -44,7 +44,8 @@ permalink: "pa11y.json"
     timeout: 10000,
     ignore: meta.tests.pa11y.globalIgnore or [],
     chromeLaunchConfig: {
-      args: ["--no-sandbox", "--disable-setuid-sandbox"]
+      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      executablePath: meta.tests.pa11y.chromePath or undefined
     }
   },
   urls: urls
