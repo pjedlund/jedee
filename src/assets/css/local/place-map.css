@@ -283,15 +283,15 @@ Dimmed by mixing the text color toward the popup's OWN surface, not by reaching 
   color: color-mix(in oklab, var(--color-text) 80%, var(--color-bg-accent));
 }
 
-/* Orienteering course overprint (place-map.js): the blue line plus the divIcon symbols — start = triangle (apex faces the first leg), finish = double concentric circles. One color for all three, orienteering-style; blue stands in for the sport's purple, which the palette has no token for. The line's stroke is set here rather than through Leaflet's `color` option so it tracks data-theme alongside the symbols (a CSS `stroke` property outranks Leaflet's `stroke` attribute). Passing our own className to the symbols replaces Leaflet's default `.leaflet-div-icon`, so there's no white box to undo; like addDot's dots, each carries a theme-matched halo so the stroked shapes stay legible on both light and dark tiles. The halo mirrors markerStroke() in place-map.js (#fff light, #141619 dark), and data-theme is stamped before paint, so `[data-theme='dark']` alone covers the OS-dark case too. */
+/* Orienteering course overprint (place-map.js): the blue line plus the divIcon symbols — start = triangle (tip anchored on the line's start, apex facing the first leg), finish = double concentric circles. One `--color-route-line` for all three, orienteering-style; blue stands in for the sport's purple, which the palette has no token for. The line's stroke is set here rather than through Leaflet's `color` option so it tracks data-theme alongside the symbols (a CSS `stroke` property outranks Leaflet's `stroke` attribute). Passing our own className to the symbols replaces Leaflet's default `.leaflet-div-icon`, so there's no white box to undo; like addDot's dots, each carries a theme-matched halo so the stroked shapes stay legible on both light and dark tiles. The halo mirrors markerStroke() in place-map.js (#fff light, #141619 dark), and data-theme is stamped before paint, so `[data-theme='dark']` alone covers the OS-dark case too. */
 [data-place-map-canvas] .route-line {
-  stroke: var(--color-accent-blue);
+  stroke: var(--color-route-line);
 }
 [data-place-map-canvas] .route-start-symbol,
 [data-place-map-canvas] .route-finish-symbol {
   --route-halo: #ffffff;
 
-  color: var(--color-accent-blue);
+  color: var(--color-route-line);
   filter: drop-shadow(0 0 1px var(--route-halo)) drop-shadow(0 0 1px var(--route-halo));
 }
 [data-place-map-canvas] .route-start-symbol svg,

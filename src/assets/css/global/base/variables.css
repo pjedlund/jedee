@@ -40,6 +40,11 @@
      one value works on both the light and dark tile sets. */
   --color-route-start: var(--color-green-vivid);
 
+  /* Orienteering course (line + start/finish symbols) on the activity map. A lighter,
+     more saturated blue than the accent — which is a dark navy that muddies on the dark
+     tiles — so the course reads on both tile sets; one value works on both. */
+  --color-route-line: var(--color-blue-vivid);
+
   --color-logo-icon: var(--color-orange-500);
   --color-border-height: 1rem;
 }
