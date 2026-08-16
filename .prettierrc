@@ -11,7 +11,14 @@
     {
       "files": "*.njk",
       "options": {
-        "parser": "jinja-template"
+        "parser": "jinja-template",
+        "printWidth": 1000
+      }
+    },
+    {
+      "files": "*.html",
+      "options": {
+        "printWidth": 1000
       }
     }
   ]
