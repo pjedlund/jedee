@@ -283,38 +283,11 @@ Dimmed by mixing the text color toward the popup's OWN surface, not by reaching 
   color: color-mix(in oklab, var(--color-text) 80%, var(--color-bg-accent));
 }
 
-/* Orienteering course overprint (place-map.js): the blue line plus the divIcon symbols — start = triangle (tip anchored on the line's start, apex facing the first leg), finish = double concentric circles. One `--color-route-line` for all three, orienteering-style; blue stands in for the sport's purple, which the palette has no token for. The line's stroke is set here rather than through Leaflet's `color` option so it tracks data-theme alongside the symbols (a CSS `stroke` property outranks Leaflet's `stroke` attribute). Passing our own className to the symbols replaces Leaflet's default `.leaflet-div-icon`, so there's no white box to undo. Each symbol keeps a theme-matched halo so the stroked shapes stay legible on both tile sets — drawn as a wider `.halo` stroke UNDER the colored one (a pure-vector alternative to a drop-shadow filter, which would rasterize the icon and soften the rotated triangle). The halo mirrors markerStroke() in place-map.js (#fff light, #141619 dark), and data-theme is stamped before paint, so `[data-theme='dark']` alone covers the OS-dark case too. */
-[data-place-map-canvas] .route-line {
-  stroke: var(--color-route-line);
-}
+/* Orienteering course overprint (place-map.js): the blue route line plus the start/finish symbols — start = a triangle (apex on the track's start, pointing down the first leg), finish = two concentric circles on the end. All three are native Leaflet vector shapes (a polyline, a polygon, two circles), so one `--color-route-line` stroke covers them all, orienteering-style; blue stands in for the sport's purple, which the palette has no token for. Stroke is set here rather than through Leaflet's `color` option so it tracks data-theme (a CSS `stroke` property outranks Leaflet's `stroke` attribute). The shapes are hollow (Leaflet's `fill:false` → `fill:none`) and scale with the map on zoom on their own — no halo, no fixed-size markers. */
+[data-place-map-canvas] .route-line,
 [data-place-map-canvas] .route-start-symbol,
 [data-place-map-canvas] .route-finish-symbol {
-  --route-halo: #ffffff;
-
-  color: var(--color-route-line);
-}
-[data-place-map-canvas] .route-start-symbol svg,
-[data-place-map-canvas] .route-finish-symbol svg {
-  display: block;
-  overflow: visible; /* the wider halo stroke can spill past the 24px viewBox */
-  inline-size: 24px;
-  block-size: 24px;
-}
-[data-place-map-canvas] .route-start-symbol .halo,
-[data-place-map-canvas] .route-finish-symbol .halo {
-  stroke: var(--route-halo);
-}
-:root[data-theme='dark'] [data-place-map-canvas] .route-start-symbol,
-:root[data-theme='dark'] [data-place-map-canvas] .route-finish-symbol {
-  --route-halo: #141619;
-}
-/* Ease the zoom-driven scale in step with Leaflet's own zoom animation; under reduced motion the
-   symbols still resize (a state change tied to zoom), just without the transition. */
-@media (prefers-reduced-motion: no-preference) {
-  [data-place-map-canvas] .route-start-symbol svg,
-  [data-place-map-canvas] .route-finish-symbol svg {
-    transition: transform 0.25s ease-out;
-  }
+  stroke: var(--color-route-line);
 }
 
 /* A duotone tile-tint mechanism lived here briefly — judged a net negative for map legibility on 2026-07-10, so the maps stay untinted. Commits 09298d3 + 72be19a have the working version if it's ever wanted back. */

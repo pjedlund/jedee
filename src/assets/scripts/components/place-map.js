@@ -46,26 +46,20 @@ const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const MARKER_FILL =
   getComputedStyle(document.documentElement).getPropertyValue('--color-accent-orange').trim() || '#d0621e';
 
-// Orienteering route symbols — start = triangle (apex spun to face the first leg and
-// anchored ON the line's start, so the tip is exactly where the track begins), finish =
-// double concentric circles centered on the track's end — drawn Lucide-style (24 viewBox,
-// round joins, no fill). Their color (shared with the line) and a light/dark halo live in
-// place-map.css and track data-theme on their own, so a divIcon (which, unlike addDot's
-// circleMarker, gets neither the theme re-stroke nor the zoom-swell) needs no JS theming
-// here. `deg` rotates the triangle about its apex (≈12,3 in the viewBox) = the anchor, so
-// the tip stays pinned to the start point whichever way it faces.
-// Each symbol is drawn twice: a wider `.halo` stroke (the theme background, from CSS) UNDER
-// the colored stroke. That's a pure-vector stand-in for a drop-shadow halo — a filter would
-// force the browser to rasterize the icon, and rasterizing then rotating the start triangle
-// softened its edges. Two overlaid strokes stay crisp at any zoom / pixel ratio.
-const START_APEX = [12, 3];
-const START_D = 'M13.73 4a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3L13.73 4z';
-const startSvg = (deg) =>
-  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linejoin="round" aria-hidden="true" style="transform:rotate(${deg}deg);transform-origin:${START_APEX[0]}px ${START_APEX[1]}px"><path class="halo" stroke-width="5" d="${START_D}"/><path stroke-width="2.5" d="${START_D}"/></svg>`;
-const FINISH_SVG =
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><circle class="halo" stroke-width="5" cx="12" cy="12" r="9"/><circle class="halo" stroke-width="5" cx="12" cy="12" r="4"/><circle stroke-width="2.5" cx="12" cy="12" r="9"/><circle stroke-width="2.5" cx="12" cy="12" r="4"/></svg>';
-const routeSymbol = (className, html, anchor = [12, 12]) =>
-  L.divIcon({ className, html, iconSize: [24, 24], iconAnchor: anchor });
+// Orienteering route symbols — start = triangle (apex on the track's first point, pointing
+// down the first leg), finish = two concentric circles on the track's end. Drawn as NATIVE
+// Leaflet vector geometry (an L.polygon + two L.circle) in the same overlay pane as the route
+// line, so Leaflet re-projects them on zoom for free — they scale with the map like the line,
+// no manual zoom-scaling. Hollow (stroke only), orienteering-style; color tracks the theme via
+// CSS (.route-start-symbol / .route-finish-symbol set `stroke`), the same trick the line uses.
+// Sizes below are PIXELS AT THE FIT ZOOM — the shapes are built in screen pixels then frozen to
+// lat/lon, so they look about this size when the map first fits and grow/shrink from there. This
+// is the calibration knob: eyeball the numbers against the tiles.
+const TRI_HEIGHT = 18; // triangle apex-to-base, px at fit zoom
+const TRI_HALF_WIDTH = 9; // triangle base half-width, px
+const FINISH_OUTER = 9; // finish outer circle radius, px at fit zoom
+const FINISH_INNER = 4; // finish inner circle radius, px
+const SYMBOL_WEIGHT = 2.5; // stroke width, px (constant across zoom, like the line's)
 
 // Follow the page theme (the site sets data-theme; fall back to the OS setting) so the
 // inline map and the overlay always show matching light/dark tiles.
@@ -368,43 +362,53 @@ class PlaceMap extends HTMLElement {
     // like the symbols.
     const line = L.polyline(latlngs, { weight: 4, opacity: 0.9, className: 'route-line' }).addTo(this.mapObj.map);
 
-    // Start + finish: the standard orienteering symbols. The start triangle's apex is anchored
-    // on the line's first point (so its tip is exactly where the track begins) and spun to face
-    // the initial bearing — measured to the first point at least ~25 m out, because the opening
-    // GPS fixes cluster on the spot and a 2-point bearing there is pure noise. Neither is a
-    // keyboard stop — the map isn't the screen-reader path here.
+    // Start + finish: the standard orienteering symbols, drawn as native vector shapes so they
+    // scale with the map on zoom like the line does (no fixed-screen-size marker, no manual
+    // zoom-scaling). The start triangle's apex sits on the track's first point and it points down
+    // the first leg — aimed at the first point at least ~25 m out, because the opening GPS fixes
+    // cluster on the spot and a 2-point bearing there is pure noise. None are interactive — the
+    // map isn't the screen-reader path here.
+    const map = this.mapObj.map;
     const startLL = latlngs[0];
-    let aheadLL = latlngs.at(-1);
+    const endLL = latlngs.at(-1);
+    let aheadLL = endLL;
     for (let i = 1; i < latlngs.length; i++) {
-      if (this.mapObj.map.distance(startLL, latlngs[i]) >= 25) {
+      if (map.distance(startLL, latlngs[i]) >= 25) {
         aheadLL = latlngs[i];
         break;
       }
     }
-    const p0 = this.mapObj.map.project(startLL);
-    const p1 = this.mapObj.map.project(aheadLL);
-    const heading = (Math.atan2(p1.y - p0.y, p1.x - p0.x) * 180) / Math.PI + 90;
-    const startMarker = L.marker(startLL, { icon: routeSymbol('route-start-symbol', startSvg(heading), START_APEX), keyboard: false }).addTo(this.mapObj.map);
-    const finishMarker = L.marker(latlngs.at(-1), { icon: routeSymbol('route-finish-symbol', FINISH_SVG), keyboard: false }).addTo(this.mapObj.map);
 
-    // Scale the symbols with the map zoom (clamped to ±2 levels) so they keep proportion with the
-    // route rather than staying a fixed screen size. Start scales about its apex (the tip stays
-    // pinned to the line start); finish about its center (its anchor). `zoomanim` keeps it in step
-    // with Leaflet's own zoom animation; `zoomend` is the authority for non-animated zooms. The
-    // easing is CSS-side and gated behind prefers-reduced-motion.
-    const startSvgEl = startMarker.getElement()?.querySelector('svg');
-    const finishSvgEl = finishMarker.getElement()?.querySelector('svg');
-    const baseZoom = this.mapObj.map.getZoom();
-    const applyScale = (z) => {
-      const s = Math.min(4, Math.max(0.5, 2 ** (z - baseZoom)));
-      if (startSvgEl) startSvgEl.style.transform = `rotate(${heading}deg) scale(${s})`;
-      if (finishSvgEl) finishSvgEl.style.transform = `scale(${s})`;
-    };
-    this.mapObj.map.on('zoomanim', (e) => applyScale(e.zoom));
-    this.mapObj.map.on('zoomend', () => applyScale(this.mapObj.map.getZoom()));
+    // Build the triangle in screen pixels at the current (fit) zoom, then unproject to lat/lon so
+    // it becomes fixed geographic geometry. Apex pinned exactly on the start point; the body trails
+    // back along the reverse of the travel direction, base vertices offset by the perpendicular.
+    const z = map.getZoom();
+    const p0 = map.project(startLL, z);
+    const p1 = map.project(aheadLL, z);
+    const len = Math.hypot(p1.x - p0.x, p1.y - p0.y) || 1;
+    const ux = (p1.x - p0.x) / len;
+    const uy = (p1.y - p0.y) / len; // unit travel direction, screen px
+    const bx = p0.x - ux * TRI_HEIGHT;
+    const by = p0.y - uy * TRI_HEIGHT; // base midpoint, behind the apex
+    const startShape = L.polygon(
+      [
+        startLL,
+        map.unproject(L.point(bx - uy * TRI_HALF_WIDTH, by + ux * TRI_HALF_WIDTH), z),
+        map.unproject(L.point(bx + uy * TRI_HALF_WIDTH, by - ux * TRI_HALF_WIDTH), z),
+      ],
+      { className: 'route-start-symbol', weight: SYMBOL_WEIGHT, fill: false, interactive: false }
+    ).addTo(map);
+
+    // Finish = two concentric circles on the end point. L.circle's radius is in METRES, so it
+    // scales with zoom too; convert the fit-zoom pixel radii via the local metres-per-pixel.
+    const c = map.getCenter();
+    const mpp = map.distance(c, map.unproject(map.project(c, z).add(L.point(64, 0)), z)) / 64;
+    const finishCircle = (px) =>
+      L.circle(endLL, { radius: px * mpp, className: 'route-finish-symbol', weight: SYMBOL_WEIGHT, fill: false, interactive: false }).addTo(map);
+    const finishShapes = [finishCircle(FINISH_OUTER), finishCircle(FINISH_INNER)];
 
     // Intro on first paint: fade the map up, fade the start in, draw the line, reveal the finish.
-    if (!REDUCED) this.routeIntro(line, startMarker, finishMarker);
+    if (!REDUCED) this.routeIntro(line, startShape, finishShapes);
 
     this.finishInit();
   }
@@ -412,14 +416,14 @@ class PlaceMap extends HTMLElement {
   // Sequenced route intro: (0) fade the whole canvas up, (1) fade the START symbol in, (2) draw
   // the line start → finish, (3) reveal the FINISH once the line reaches it. Only called when
   // motion is allowed, so under reduced motion everything is left in its resting, visible state.
-  routeIntro(line, startMarker, finishMarker) {
+  routeIntro(line, startShape, finishShapes) {
     const MAP_FADE = 500; // canvas fade-up
     const MARK_FADE = 320; // symbol fade
     const LINE_DRAW = 3400; // slow line sweep
 
     const path = line._path;
-    const startEl = startMarker.getElement();
-    const finishEl = finishMarker.getElement();
+    const startEl = startShape._path; // the polygon's SVG <path>
+    const finishEls = finishShapes.map((s) => s._path).filter(Boolean);
     const fadeIn = (el) => {
       if (!el) return;
       el.style.transition = `opacity ${MARK_FADE}ms ease-out`;
@@ -433,7 +437,7 @@ class PlaceMap extends HTMLElement {
       path.style.strokeDashoffset = len;
     }
     if (startEl) startEl.style.opacity = '0';
-    if (finishEl) finishEl.style.opacity = '0';
+    finishEls.forEach((el) => (el.style.opacity = '0'));
 
     // (0) fade the canvas up.
     this.canvas.style.opacity = '0';
@@ -453,7 +457,7 @@ class PlaceMap extends HTMLElement {
         path.style.strokeDashoffset = '';
         path.style.transition = '';
       }
-      fadeIn(finishEl);
+      finishEls.forEach(fadeIn);
     };
 
     if (!path) {
