@@ -1,5 +1,5 @@
 ---
-title: "Bokskogsnatta lång"
+title: "Bokskogsnatta 2025"
 date: "2025-11-13T16:33:45+01:00"
 activityType: orienteering
 eventType: race
