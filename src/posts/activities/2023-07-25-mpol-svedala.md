@@ -1,5 +1,5 @@
 ---
-title: "MPOL Svedala"
+title: "MPOL 2023 E5 Svedala"
 date: "2023-07-25T15:47:41+02:00"
 activityType: orienteering
 eventType: race

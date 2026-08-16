@@ -1,5 +1,5 @@
 ---
-title: "O-ringen etapp 1, långdistans, H55 kort"
+title: "O-Ringen Jönköping, E1"
 date: "2025-07-21T07:59:59+02:00"
 activityType: orienteering
 eventType: race

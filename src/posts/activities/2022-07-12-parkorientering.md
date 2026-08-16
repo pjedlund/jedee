@@ -1,5 +1,5 @@
 ---
-title: "Parkorientering"
+title: "MPOL 2022 E3 Lernacken"
 date: "2022-07-12T16:17:07+02:00"
 activityType: orienteering
 eventType: race

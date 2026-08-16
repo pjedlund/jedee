@@ -1,5 +1,5 @@
 ---
-title: "Parkorientering"
+title: "MPOL 2023 E4 Lindängelund"
 date: "2023-07-18T15:26:18+02:00"
 activityType: orienteering
 eventType: race

@@ -1,5 +1,5 @@
 ---
-title: "O-Ringen 2026 Göteborg E3"
+title: "O-Ringen Göteborg, E3"
 date: "2026-07-23T10:12:50+02:00"
 activityType: orienteering
 eventType: race
