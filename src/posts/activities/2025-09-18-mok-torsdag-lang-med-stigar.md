@@ -1,5 +1,5 @@
 ---
-title: "MOK-torsdag lång med stigar"
+title: "MOK Thursday"
 date: "2025-09-18T15:33:06+02:00"
 activityType: orienteering
 eventType: training

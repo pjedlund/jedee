@@ -1,5 +1,5 @@
 ---
-title: "Natt-OL lång bana"
+title: "MOK Thursday"
 date: "2025-02-20T16:58:54+01:00"
 activityType: orienteering
 eventType: training

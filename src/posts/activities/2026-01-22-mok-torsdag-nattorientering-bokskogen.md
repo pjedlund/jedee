@@ -1,5 +1,5 @@
 ---
-title: "MOK-torsdag nattorientering Bokskogen"
+title: "MOK Thursday"
 date: "2026-01-22T17:00:44+01:00"
 activityType: orienteering
 eventType: training
