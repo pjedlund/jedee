@@ -1,5 +1,5 @@
 ---
-title: "Gotland dag 9: Gotland 3-dagars etapp 2"
+title: "Gotlands 3-dagars 2023, E2"
 date: "2023-07-12T09:02:47+02:00"
 activityType: orienteering
 eventType: race
