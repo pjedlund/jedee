@@ -10,6 +10,14 @@ energyKcal: 891
 stravaUrl: https://www.strava.com/activities/17011606367
 elevationGain: 106
 elevationLoss: 115
+eventorUrl: https://eventor.orientering.se/Events/Show/57149
+organiser: OK Silva
+region: Skåne
+eventForm: individual
+eventClassification: Local event
+raceDistance: Long
+timeOfEvent: day
+discipline: FootO
 liveloxUrl: https://www.livelox.com/Viewer/Vintercupen-E2-SV-kretsen-Skane/H45?classId=1099211
 cover: "/assets/images/activities/2026-01-11-vintercupen-e2-jaravallen.jpg"
 lat: 55.80339

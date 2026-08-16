@@ -10,6 +10,11 @@ energyKcal: 957
 stravaUrl: https://www.strava.com/activities/9430817604
 elevationGain: 0
 eventorUrl: https://eventor.orientering.se/Events/Show/40396
+organiser: Visborgs OK
+region: Gotland
+eventForm: individual
+eventClassification: National event
+discipline: FootO
 cover: "/assets/images/activities/2023-07-11-gotland-dag-8-gotland-3-dagars-etapp-1.jpg"
 lat: 57.8786418654894
 lon: 18.9825881854883

@@ -11,6 +11,11 @@ stravaUrl: https://www.strava.com/activities/9436341340
 elevationGain: 84
 elevationLoss: 67
 eventorUrl: https://eventor.orientering.se/Events/Show/40396
+organiser: Visborgs OK
+region: Gotland
+eventForm: individual
+eventClassification: National event
+discipline: FootO
 cover: "/assets/images/activities/2023-07-12-gotland-dag-9-gotland-3-dagars-etapp-2.jpg"
 lat: 57.8788882253651
 lon: 18.9837192277161

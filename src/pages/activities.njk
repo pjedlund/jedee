@@ -2,31 +2,18 @@
 layout: base
 title: Activities
 description: 'A log of my activities.'
-pagination:
-  data: collections.activity
-  size: 50
-permalink: 'activities/{% if pagination.pageNumber >=1 %}page-{{ pagination.pageNumber + 1 }}/{% endif %}index.html'
+permalink: 'activities/index.html'
 ---
 
 {% set archiveDescription %}
   Running, orienteering and other physical activities. Newest first.
 {% endset %}
 
-{% set cardPartial = "card-activity.njk" %}
-{% set masonryLayout = "33-33-33" %}
-{% set collectionToPaginate = collections.activity %}
-{% set paginationMetaKey = "blog" %}
-
-{# Race/activity overview map + place list — first page only; the map always covers
-   the whole collection, so repeating it on page-2+ would just duplicate content. #}
-{% if pagination.pageNumber == 0 %}
-  {% set archiveExtra %}
-    <div class="feature flow">
-      <h2>Where I've been active</h2>
-      {% include "partials/place-map-activities.njk" %}
-    </div>
-  {% endset %}
-{% endif %}
+{# The map + full activity index replaces the card grid entirely: one page, every
+   activity, no pagination. See partials/place-map-activities.njk. #}
+{% set archiveBody %}
+  {% include "partials/place-map-activities.njk" %}
+{% endset %}
 
 {% include "partials/archive-listing.njk" %}
 

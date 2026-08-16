@@ -11,6 +11,13 @@ stravaUrl: https://www.strava.com/activities/16739416101
 elevationGain: 55
 elevationLoss: 60
 eventorUrl: https://eventor.orientering.se/Events/Show/51599
+organiser: OK Silva
+region: Skåne
+eventForm: individual
+eventClassification: Local event
+raceDistance: Long
+timeOfEvent: day
+discipline: FootO
 liveloxUrl: https://www.livelox.com/Viewer/AdventOrient-etapp-3/H55?classId=1091958
 cover: "/assets/images/activities/2025-12-14-adventorient-e3-h55.jpg"
 lat: 55.77585

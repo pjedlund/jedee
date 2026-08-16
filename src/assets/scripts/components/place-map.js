@@ -6,13 +6,13 @@
 // where wheel + pinch turn on; pan/zoom state is preserved because it's one map, not a
 // rebuilt second one. Esc / backdrop / close button exit, focus returns to the trigger.
 //
-// Two modes, decided by the slotted markup:
+// Three modes, decided by the slotted markup:
 //  - single pin (photo pages): data-lat/data-lon on the element, static <a><img> slot.
-//  - groups: a slotted [data-place-groups] place list — each .place-group holds
-//    <li data-lat data-lon> items. The LIST is the data source and the no-JS/screen-
-//    reader path (Leaflet markers' keyboard/SR handling is broken upstream, so nobody
-//    is forced through the map). JS builds the map above it, turns the group headings
-//    into aria-pressed toggles, and adds synced chips on the map surface.
+//  - places (the activity index): a slotted [data-place-list] of <li data-lat data-lon>
+//    items. The LIST is the data source and the no-JS/screen-reader path (Leaflet
+//    markers' keyboard/SR handling is broken upstream, so nobody is forced through the
+//    map). JS drops one dot per item into the box above it.
+//  - route (an activity post): a slotted GeoJSON LineString.
 import L from 'leaflet';
 
 const TILES = {
@@ -45,10 +45,21 @@ const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 // Marker keeps the site's orange; read the token so it tracks the palette.
 const MARKER_FILL =
   getComputedStyle(document.documentElement).getPropertyValue('--color-accent-orange').trim() || '#d0621e';
-// Route start dot — a saturated green of its own (the accent green is a muted olive
-// that reads grey on the map). Token defined in variables.css so it stays adjustable.
-const START_FILL =
-  getComputedStyle(document.documentElement).getPropertyValue('--color-route-start').trim() || '#2e9d4f';
+
+// Orienteering route symbols — start = triangle (apex on the track's first point, pointing
+// down the first leg), finish = two concentric circles on the track's end. Drawn as NATIVE
+// Leaflet vector geometry (an L.polygon + two L.circle) in the same overlay pane as the route
+// line, so Leaflet re-projects them on zoom for free — they scale with the map like the line,
+// no manual zoom-scaling. Hollow (stroke only), orienteering-style; color tracks the theme via
+// CSS (.route-start-symbol / .route-finish-symbol set `stroke`), the same trick the line uses.
+// Sizes below are PIXELS AT THE FIT ZOOM — the shapes are built in screen pixels then frozen to
+// lat/lon, so they look about this size when the map first fits and grow/shrink from there. This
+// is the calibration knob: eyeball the numbers against the tiles.
+const TRI_HEIGHT = 18; // triangle apex-to-base, px at fit zoom
+const TRI_HALF_WIDTH = 9; // triangle base half-width, px
+const FINISH_OUTER = 9; // finish outer circle radius, px at fit zoom
+const FINISH_INNER = 4; // finish inner circle radius, px
+const SYMBOL_WEIGHT = 2.5; // stroke width, px (constant across zoom, like the line's)
 
 // Follow the page theme (the site sets data-theme; fall back to the OS setting) so the
 // inline map and the overlay always show matching light/dark tiles.
@@ -71,7 +82,7 @@ const popupHtml = (p) => {
 // semantics, keyboard + screen-reader support for free — instead of Leaflet's own layers
 // control, whose toggle icon is a PNG the build doesn't ship. As a Leaflet control it lives
 // inside the map container, so it rides into the maximize overlay with the canvas for free.
-function addTileSwitch(map, bases) {
+function addTileSwitch(map, bases, defaultBase = Object.keys(bases)[0]) {
   const names = Object.keys(bases);
   const control = L.control({ position: 'bottomright' });
   control.onAdd = () => {
@@ -81,7 +92,8 @@ function addTileSwitch(map, bases) {
     const select = L.DomUtil.create('select', '', wrap);
     select.setAttribute('aria-label', 'Map style');
     for (const n of names) select.append(new Option(n, n));
-    let shown = bases[names[0]]; // "Map" is on the map at start
+    select.value = defaultBase; // match the layer makeMap put on the map at start
+    let shown = bases[defaultBase];
     select.addEventListener('change', () => {
       map.removeLayer(shown);
       shown = bases[select.value];
@@ -98,7 +110,7 @@ function addTileSwitch(map, bases) {
 // keyboard and the +/- zoom control stay on inline so the map is usable in place.
 // Returns { map, addDot } — dots added through addDot get theme re-stroking and the
 // grow-a-little-on-zoom behavior, whichever layer they sit in.
-function makeMap(el, { center, zoom, bounds, place }) {
+function makeMap(el, { center, zoom, bounds, place, defaultBase = 'Map', fitPadding = [28, 28] }) {
   let theme = pageTheme();
   const map = L.map(el, {
     zoomControl: false,
@@ -109,7 +121,7 @@ function makeMap(el, { center, zoom, bounds, place }) {
     fadeAnimation: !REDUCED,
     markerZoomAnimation: !REDUCED,
   });
-  const fit = () => map.fitBounds(bounds, { padding: [28, 28] });
+  const fit = () => map.fitBounds(bounds, { padding: fitPadding });
   if (bounds) {
     fit();
     // A map fitted while its container has no size (hidden tab, collapsed viewport)
@@ -135,12 +147,12 @@ function makeMap(el, { center, zoom, bounds, place }) {
   // Attribution first, switch second: in a Leaflet corner the LAST-added control stacks on
   // top, so this pins the attribution to the bottom edge with the switch just above it.
   L.control.attribution({ prefix: false }).addTo(map);
-  addTileSwitch(map, bases); // bottom-right, above the attribution
-  // Add "Map" only now — AFTER the attribution control exists — so it registers through the
-  // control's `layeradd` handler, which is what also wires attribution REMOVAL on layer
-  // remove. Add it earlier and its credit would stick when you switch away (Leaflet only
+  addTileSwitch(map, bases, defaultBase); // bottom-right, above the attribution
+  // Add the default base only now — AFTER the attribution control exists — so it registers
+  // through the control's `layeradd` handler, which is what also wires attribution REMOVAL on
+  // layer remove. Add it earlier and its credit would stick when you switch away (Leaflet only
   // attaches the removal hook to layers added via layeradd, not its onAdd catch-up loop).
-  mapTiles.addTo(map);
+  bases[defaultBase].addTo(map);
 
   // Ctrl/⌘ + wheel zooms the inline map around the pointer; a PLAIN wheel keeps
   // scrolling the page (no scroll trap — the reason scrollWheelZoom stays off inline).
@@ -237,7 +249,7 @@ function buildOverlay() {
 }
 
 // Keep Tab focus inside the open dialog (Leaflet's zoom/attribution links + the map
-// container + the chips + the close button are the focus stops).
+// container + the close button are the focus stops).
 function trapTab(e) {
   const f = overlay.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])');
   if (!f.length) return;
@@ -256,17 +268,26 @@ class PlaceMap extends HTMLElement {
   connectedCallback() {
     this.place = this.dataset.place || '';
     const routeScript = this.querySelector('script[type="application/json"][data-route]');
-    const groupsRoot = this.querySelector('[data-place-groups]');
+    const placeList = this.querySelector('[data-place-list]');
     if (routeScript) this.initRoute(routeScript);
-    else if (groupsRoot) this.initGroups(groupsRoot);
+    else if (placeList) this.initPlaces(placeList);
     else this.initSinglePin();
   }
 
   // The live inline slot. Its aspect-ratio holds the box, so moving the canvas out to
   // the overlay (and back) never shifts the page.
+  //
+  // A page whose slot has nothing else holding the space (the activity index — a list,
+  // no static map image) renders the box server-side and we adopt it here. Building it
+  // on idle instead pushed the whole page down a second after paint.
   buildBox() {
-    this.box = document.createElement('div');
-    this.box.className = 'place-map-live';
+    this.box = this.querySelector('[data-place-map-box]');
+    const adopted = Boolean(this.box);
+    if (adopted) this.box.replaceChildren(); // drop the no-JS caption
+    else {
+      this.box = document.createElement('div');
+      this.box.className = 'place-map-live';
+    }
     this.canvas = document.createElement('div');
     this.canvas.className = 'place-map-canvas';
     this.box.append(this.canvas);
@@ -278,7 +299,7 @@ class PlaceMap extends HTMLElement {
     this.maxBtn.innerHTML = '<span aria-hidden="true">⛶</span>';
     this.box.append(this.maxBtn);
 
-    this.prepend(this.box);
+    if (!adopted) this.prepend(this.box);
 
     // Keep the canvas a WHOLE number of pixels. The box's fluid 16:9 sizing lands on
     // fractions (e.g. 514.375px tall); Leaflet then puts tiles on fractional offsets
@@ -317,8 +338,8 @@ class PlaceMap extends HTMLElement {
   }
 
   // Route mode: a slotted GeoJSON LineString (from the post's committed .geojson).
-  // Draw the track fitted to its bounds, a green start dot and a checkered finish flag.
-  // No slotted list here — the no-JS path is the "View on Strava" link on the page.
+  // Draw the track fitted to its bounds, an orienteering start triangle and a finish
+  // double-circle. No slotted list here — the no-JS path is the "View on Strava" link.
   initRoute(script) {
     let gj;
     try {
@@ -334,95 +355,151 @@ class PlaceMap extends HTMLElement {
     this.mapObj = makeMap(this.canvas, {
       bounds: L.latLngBounds(latlngs),
       place: this.place,
+      defaultBase: 'Topographic', // terrain suits an orienteering route
+      fitPadding: [20, 20], // sit a little closer to the track than the default, with room for the symbols
     });
-    L.polyline(latlngs, { color: MARKER_FILL, weight: 4, opacity: 0.9 }).addTo(this.mapObj.map);
+    // The course line — a lighter blue, styled via CSS (.route-line) so it tracks the theme
+    // like the symbols.
+    const line = L.polyline(latlngs, { weight: 4, opacity: 0.9, className: 'route-line' }).addTo(this.mapObj.map);
 
-    // Start: reuse addDot so it gets the theme re-stroke + zoom-swell, but in green.
-    this.mapObj.addDot(latlngs[0][0], latlngs[0][1], { fill: START_FILL });
-    // Finish: a checkered flag, centered on the last point. Not a keyboard stop — the
+    // Start + finish: the standard orienteering symbols, drawn as native vector shapes so they
+    // scale with the map on zoom like the line does (no fixed-screen-size marker, no manual
+    // zoom-scaling). The start triangle's apex sits on the track's first point and it points down
+    // the first leg — aimed at the first point at least ~25 m out, because the opening GPS fixes
+    // cluster on the spot and a 2-point bearing there is pure noise. None are interactive — the
     // map isn't the screen-reader path here.
-    L.marker(latlngs.at(-1), {
-      icon: L.divIcon({ className: 'route-finish', html: '🏁', iconSize: [22, 22], iconAnchor: [11, 11] }),
-      keyboard: false,
-    }).addTo(this.mapObj.map);
+    const map = this.mapObj.map;
+    const startLL = latlngs[0];
+    const endLL = latlngs.at(-1);
+    let aheadLL = endLL;
+    for (let i = 1; i < latlngs.length; i++) {
+      if (map.distance(startLL, latlngs[i]) >= 25) {
+        aheadLL = latlngs[i];
+        break;
+      }
+    }
+
+    // Build the triangle in screen pixels at the current (fit) zoom, then unproject to lat/lon so
+    // it becomes fixed geographic geometry. Apex pinned exactly on the start point; the body trails
+    // back along the reverse of the travel direction, base vertices offset by the perpendicular.
+    const z = map.getZoom();
+    const p0 = map.project(startLL, z);
+    const p1 = map.project(aheadLL, z);
+    const len = Math.hypot(p1.x - p0.x, p1.y - p0.y) || 1;
+    const ux = (p1.x - p0.x) / len;
+    const uy = (p1.y - p0.y) / len; // unit travel direction, screen px
+    const bx = p0.x - ux * TRI_HEIGHT;
+    const by = p0.y - uy * TRI_HEIGHT; // base midpoint, behind the apex
+    const startShape = L.polygon(
+      [
+        startLL,
+        map.unproject(L.point(bx - uy * TRI_HALF_WIDTH, by + ux * TRI_HALF_WIDTH), z),
+        map.unproject(L.point(bx + uy * TRI_HALF_WIDTH, by - ux * TRI_HALF_WIDTH), z),
+      ],
+      { className: 'route-start-symbol', weight: SYMBOL_WEIGHT, fill: false, interactive: false }
+    ).addTo(map);
+
+    // Finish = two concentric circles on the end point. L.circle's radius is in METRES, so it
+    // scales with zoom too; convert the fit-zoom pixel radii via the local metres-per-pixel.
+    const c = map.getCenter();
+    const mpp = map.distance(c, map.unproject(map.project(c, z).add(L.point(64, 0)), z)) / 64;
+    const finishCircle = (px) =>
+      L.circle(endLL, { radius: px * mpp, className: 'route-finish-symbol', weight: SYMBOL_WEIGHT, fill: false, interactive: false }).addTo(map);
+    const finishShapes = [finishCircle(FINISH_OUTER), finishCircle(FINISH_INNER)];
+
+    // Intro on first paint: fade the map up, fade the start in, draw the line, reveal the finish.
+    if (!REDUCED) this.routeIntro(line, startShape, finishShapes);
 
     this.finishInit();
   }
 
-  // Groups mode: the slotted place list is the data source. Parse it, build the map
-  // fitted to every place, one toggleable layer per group, chips + heading toggles
-  // synced over the same state.
-  initGroups(root) {
-    const groups = [...root.querySelectorAll('.place-group')]
-      .map((li) => ({
-        li,
-        key: li.dataset.group,
-        heading: li.querySelector('.place-group-heading'),
-        // --dot is authored as a token reference; computed style resolves it to a color
-        color: getComputedStyle(li).getPropertyValue('--dot').trim() || MARKER_FILL,
-        places: [...li.querySelectorAll('li[data-lat]')].map((p) => {
-          const a = p.querySelector('a');
-          return { lat: Number(p.dataset.lat), lon: Number(p.dataset.lon), date: p.dataset.date || '', name: a?.textContent.trim() || p.textContent.trim(), url: a?.getAttribute('href') };
-        }),
-      }))
-      .filter((g) => g.places.length);
-    const all = groups.flatMap((g) => g.places);
-    if (!all.length) return; // nothing to map → leave the plain list
+  // Sequenced route intro: (0) fade the whole canvas up, (1) fade the START symbol in, (2) draw
+  // the line start → finish, (3) reveal the FINISH once the line reaches it. Only called when
+  // motion is allowed, so under reduced motion everything is left in its resting, visible state.
+  routeIntro(line, startShape, finishShapes) {
+    const MAP_FADE = 500; // canvas fade-up
+    const MARK_FADE = 320; // symbol fade
+    const LINE_DRAW = 3400; // slow line sweep
+
+    const path = line._path;
+    const startEl = startShape._path; // the polygon's SVG <path>
+    const finishEls = finishShapes.map((s) => s._path).filter(Boolean);
+    const fadeIn = (el) => {
+      if (!el) return;
+      el.style.transition = `opacity ${MARK_FADE}ms ease-out`;
+      el.style.opacity = '1';
+    };
+
+    // Hide the line (a full-length dash), the start, and — until the line arrives — the finish.
+    if (path && path.getTotalLength) {
+      const len = path.getTotalLength();
+      path.style.strokeDasharray = len;
+      path.style.strokeDashoffset = len;
+    }
+    if (startEl) startEl.style.opacity = '0';
+    finishEls.forEach((el) => (el.style.opacity = '0'));
+
+    // (0) fade the canvas up.
+    this.canvas.style.opacity = '0';
+    this.canvas.getBoundingClientRect(); // flush so the fades below start from 0
+    this.canvas.style.transition = `opacity ${MAP_FADE}ms ease-out`;
+    this.canvas.style.opacity = '1';
+
+    // (1) once the map is up, fade the START symbol in.
+    setTimeout(() => fadeIn(startEl), MAP_FADE);
+
+    // (3) reveal the FINISH when the line reaches it. Clearing the dash here doubles as the
+    // zoom-bug fix: a leftover dasharray sized to the OLD length stops matching after a zoom
+    // re-projects the path, which clipped the line to nothing.
+    const finishRoute = () => {
+      if (path) {
+        path.style.strokeDasharray = 'none';
+        path.style.strokeDashoffset = '';
+        path.style.transition = '';
+      }
+      finishEls.forEach(fadeIn);
+    };
+
+    if (!path) {
+      setTimeout(finishRoute, MAP_FADE + MARK_FADE); // no line to draw — just reveal the finish
+      return;
+    }
+
+    // (2) after the start, sweep the line in.
+    setTimeout(() => {
+      path.style.transition = `stroke-dashoffset ${LINE_DRAW}ms ease-in-out`;
+      path.style.strokeDashoffset = '0';
+      path.addEventListener('transitionend', finishRoute, { once: true });
+    }, MAP_FADE + MARK_FADE);
+    // A zoom before/during the draw snaps the line solid and reveals the finish, so nothing stays hidden.
+    this.mapObj.map.once('zoomstart', finishRoute);
+  }
+
+  // Places mode: the slotted list is the data source. Parse every item that carries
+  // coordinates, fit the map to them, one dot each. Items without coordinates (indoor
+  // sessions) stay in the list and simply aren't on the map.
+  initPlaces(root) {
+    const places = [...root.querySelectorAll('[data-lat]')]
+      .map((el) => {
+        const a = el.querySelector('a');
+        return {
+          lat: Number(el.dataset.lat),
+          lon: Number(el.dataset.lon),
+          date: el.dataset.date || '',
+          name: a?.textContent.trim() || el.textContent.trim(),
+          url: a?.getAttribute('href'),
+        };
+      })
+      .filter((p) => Number.isFinite(p.lat) && Number.isFinite(p.lon));
+    if (!places.length) return; // nothing to map → leave the plain list
 
     this.buildBox();
     this.mapObj = makeMap(this.canvas, {
-      bounds: L.latLngBounds(all.map((p) => [p.lat, p.lon])),
+      bounds: L.latLngBounds(places.map((p) => [p.lat, p.lon])),
       place: this.place,
     });
+    for (const p of places) this.mapObj.addDot(p.lat, p.lon, { popup: popupHtml(p) });
 
-    const controls = {}; // key -> [chip, heading button] — two synced controls, one state
-    const setGroup = (g, on) => {
-      on ? this.mapObj.map.addLayer(g.layer) : this.mapObj.map.removeLayer(g.layer);
-      controls[g.key].forEach((b) => b.setAttribute('aria-pressed', String(on)));
-      g.li.toggleAttribute('data-off', !on);
-    };
-    const register = (g, btn) => {
-      (controls[g.key] ||= []).push(btn);
-      btn.addEventListener('click', () => setGroup(g, btn.getAttribute('aria-pressed') !== 'true'));
-    };
-
-    // Chips on the map surface — a desktop convenience; CSS hides them on small
-    // screens, where the list headings carry the same toggles (no function lost).
-    this.chips = document.createElement('ul');
-    this.chips.className = 'place-map-chips';
-
-    for (const g of groups) {
-      g.layer = L.layerGroup().addTo(this.mapObj.map);
-      g.places.forEach((p) =>
-        this.mapObj.addDot(p.lat, p.lon, {
-          fill: g.color,
-          layer: g.layer,
-          popup: popupHtml(p),
-        })
-      );
-
-      // Turn the server-rendered heading into a toggle (a no-JS heading must not be a
-      // button), and mirror it as a chip.
-      const toggle = document.createElement('button');
-      toggle.type = 'button';
-      toggle.className = 'place-group-toggle';
-      toggle.setAttribute('aria-pressed', 'true');
-      toggle.append(...g.heading.childNodes);
-      g.heading.append(toggle);
-      register(g, toggle);
-
-      const chipLi = document.createElement('li');
-      const chip = document.createElement('button');
-      chip.type = 'button';
-      chip.className = 'place-map-chip';
-      chip.setAttribute('aria-pressed', 'true');
-      chip.style.setProperty('--dot', g.color);
-      chip.innerHTML = toggle.innerHTML;
-      register(g, chip);
-      chipLi.append(chip);
-      this.chips.append(chipLi);
-    }
-    this.box.append(this.chips);
     this.finishInit();
   }
 
@@ -430,7 +507,6 @@ class PlaceMap extends HTMLElement {
     if (!overlay) buildOverlay();
     active = this;
     overlayFrame.append(this.canvas); // move the SAME map into the overlay
-    if (this.chips) overlayFrame.append(this.chips); // chips ride along
     overlay.setAttribute('data-open', '');
     overlay.setAttribute('aria-label', this.place ? `Map showing ${this.place}` : 'Interactive map');
     this.canvas.setAttribute('aria-label', this.place ? `Interactive map of ${this.place}` : 'Interactive map of this location');
@@ -451,7 +527,6 @@ class PlaceMap extends HTMLElement {
     overlay.removeAttribute('data-open');
     document.body.style.overflow = '';
     this.box.prepend(this.canvas); // move the map back inline
-    if (this.chips) this.box.append(this.chips);
     this.canvas.setAttribute('aria-label', this.place ? `Map of ${this.place}` : 'Map of this location');
     requestAnimationFrame(this.fitCanvas);
     active = null;

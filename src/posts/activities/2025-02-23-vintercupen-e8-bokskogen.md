@@ -12,4 +12,12 @@ elevationGain: 233
 elevationLoss: 235
 lat: 55.54937
 lon: 13.22608
+eventorUrl: https://eventor.orientering.se/Events/Show/52551
+organiser: Malmö OK
+region: Skåne
+eventForm: individual
+eventClassification: Local event
+raceDistance: Long
+timeOfEvent: day
+discipline: FootO
 ---

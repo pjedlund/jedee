@@ -12,6 +12,10 @@ elevationGain: 140
 elevationLoss: 146
 liveloxUrl: https://www.livelox.com/Events/Show/161771
 eventorUrl: https://eventor.orientering.se/Events/Show/44022
+organiser: "Smålands OF, Svensk Orientering Events"
+region: Småland
+eventForm: individual
+eventClassification: National event
 lat: 57.707043305776
 lon: 14.1904369515431
 ---

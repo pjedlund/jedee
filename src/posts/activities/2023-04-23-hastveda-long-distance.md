@@ -12,4 +12,12 @@ elevationGain: 305
 elevationLoss: 316
 lat: 56.28181
 lon: 13.84939
+eventorUrl: https://eventor.orientering.se/Events/Show/40519
+organiser: Hästveda OK
+region: Skåne
+eventForm: individual
+eventClassification: National event
+raceDistance: Long
+timeOfEvent: day
+discipline: FootO
 ---

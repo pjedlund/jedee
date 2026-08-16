@@ -11,6 +11,13 @@ stravaUrl: https://www.strava.com/activities/17171727787
 elevationGain: 209
 elevationLoss: 212
 eventorUrl: https://eventor.orientering.se/Events/Show/28478
+organiser: OK Silva
+region: Skåne
+eventForm: individual
+eventClassification: Local event
+raceDistance: Long
+timeOfEvent: day
+discipline: FootO
 liveloxUrl: https://www.livelox.com/Viewer/Vintercupen-E4-SV-kretsen-Skane/H45?classId=1103296
 cover: "/assets/images/activities/2026-01-25-vintercupen-e4-svaneholms-norrskog.jpg"
 lat: 55.50691

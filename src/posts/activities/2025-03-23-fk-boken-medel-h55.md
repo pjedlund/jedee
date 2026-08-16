@@ -12,4 +12,12 @@ elevationGain: 136
 elevationLoss: 135
 lat: 56.22171
 lon: 13.34238
+eventorUrl: https://eventor.orientering.se/Events/Show/50990
+organiser: FK Boken
+region: Skåne
+eventForm: individual
+eventClassification: National event
+raceDistance: Long
+timeOfEvent: day
+discipline: FootO
 ---

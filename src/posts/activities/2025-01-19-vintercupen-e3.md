@@ -12,4 +12,12 @@ elevationGain: 292
 elevationLoss: 296
 lat: 56.00385
 lon: 13.27285
+eventorUrl: https://eventor.orientering.se/Events/Show/52688
+organiser: Rävetofta OK
+region: Skåne
+eventForm: individual
+eventClassification: Local event
+raceDistance: Long
+timeOfEvent: day
+discipline: FootO
 ---

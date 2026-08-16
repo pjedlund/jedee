@@ -12,4 +12,12 @@ elevationGain: 30
 elevationLoss: 37
 lat: 55.95114
 lon: 13.39267
+eventorUrl: https://eventor.orientering.se/Events/Show/34480
+organiser: Ringsjö OK
+region: Skåne
+eventForm: individual
+eventClassification: National event
+raceDistance: Middle
+timeOfEvent: day
+discipline: FootO
 ---

@@ -10,6 +10,14 @@ energyKcal: 534
 stravaUrl: https://www.strava.com/activities/16449075385
 elevationGain: 136
 elevationLoss: 139
+eventorUrl: https://eventor.orientering.se/Events/Show/56623
+organiser: Malmö OK
+region: Skåne
+eventForm: individual
+eventClassification: Club event
+raceDistance: Long
+timeOfEvent: night
+discipline: FootO
 liveloxUrl: https://www.livelox.com/Viewer/Bokskogsnatta/Lang?classId=1077269
 cover: "/assets/images/activities/2025-11-13-bokskogsnatta-lang.jpg"
 lat: 55.56049
