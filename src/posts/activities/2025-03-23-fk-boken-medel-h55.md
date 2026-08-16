@@ -2,6 +2,7 @@
 title: "FK Boken medel H55"
 date: "2025-03-23T10:13:55+01:00"
 activityType: orienteering
+eventType: race
 distanceKm: 4.63
 duration: 2567
 hrAvg: 165

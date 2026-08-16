@@ -2,6 +2,7 @@
 title: "Orienteering"
 date: "2023-04-21T16:45:21+02:00"
 activityType: orienteering
+eventType: training
 distanceKm: 5.24
 duration: 3848
 hrAvg: 150

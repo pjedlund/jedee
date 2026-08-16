@@ -2,6 +2,7 @@
 title: "Sprintorientering Alnarpsparken"
 date: "2023-05-18T09:19:59+02:00"
 activityType: orienteering
+eventType: training
 distanceKm: 5.3
 duration: 2905
 hrAvg: 151

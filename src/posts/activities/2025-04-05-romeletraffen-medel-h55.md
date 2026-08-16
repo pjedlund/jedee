@@ -2,6 +2,7 @@
 title: "Romeleträffen medel H55"
 date: "2025-04-05T08:54:56+02:00"
 activityType: orienteering
+eventType: race
 distanceKm: 4.98
 duration: 2326
 hrAvg: 157

@@ -2,6 +2,7 @@
 title: "Fyrklubbs CHK Snogeholm"
 date: "2025-08-31T08:51:52+02:00"
 activityType: orienteering
+eventType: race
 distanceKm: 3.57
 duration: 1727
 hrAvg: 170

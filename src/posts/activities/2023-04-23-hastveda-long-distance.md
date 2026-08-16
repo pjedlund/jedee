@@ -2,6 +2,7 @@
 title: "Hästveda long distance"
 date: "2023-04-23T08:27:31+02:00"
 activityType: orienteering
+eventType: race
 distanceKm: 8.43
 duration: 5623
 hrAvg: 157

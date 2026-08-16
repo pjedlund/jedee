@@ -2,6 +2,7 @@
 title: "O-ringen etapp 4 långdistans H55K"
 date: "2025-07-25T09:02:50+02:00"
 activityType: orienteering
+eventType: race
 distanceKm: 5.37
 duration: 2843
 hrAvg: 155

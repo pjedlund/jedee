@@ -2,6 +2,7 @@
 title: "Veteran-SM Medel H55"
 date: "2025-09-13T09:58:53+02:00"
 activityType: orienteering
+eventType: race
 distanceKm: 5.11
 duration: 2676
 hrAvg: 160

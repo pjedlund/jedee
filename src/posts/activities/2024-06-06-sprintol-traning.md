@@ -2,6 +2,7 @@
 title: "SprintOL-träning"
 date: "2024-06-06T09:11:03+02:00"
 activityType: orienteering
+eventType: training
 distanceKm: 3.59
 duration: 1352
 hrAvg: 163

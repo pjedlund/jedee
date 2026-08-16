@@ -2,6 +2,7 @@
 title: "MPOL Svedala"
 date: "2023-07-25T15:47:41+02:00"
 activityType: orienteering
+eventType: race
 distanceKm: 3.84
 duration: 1947
 hrAvg: 140

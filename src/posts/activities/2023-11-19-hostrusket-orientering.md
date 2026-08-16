@@ -2,6 +2,7 @@
 title: "Höstrusket"
 date: "2023-11-19T10:06:10+01:00"
 activityType: orienteering
+eventType: race
 distanceKm: 5.17
 duration: 3147
 hrAvg: 160

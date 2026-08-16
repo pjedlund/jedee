@@ -2,6 +2,7 @@
 title: "Revinge by night"
 date: "2022-10-14T18:12:21+02:00"
 activityType: orienteering
+eventType: race
 distanceKm: 6.95
 duration: 2966
 hrAvg: 160

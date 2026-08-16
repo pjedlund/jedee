@@ -2,6 +2,7 @@
 title: "Frostavallslöpet långdistans H55"
 date: "2024-09-08T08:15:46+02:00"
 activityType: orienteering
+eventType: race
 distanceKm: 7.36
 duration: 4433
 hrAvg: 157

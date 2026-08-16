@@ -2,6 +2,7 @@
 title: "Malmö Parkorientering etapp 5 Husie"
 date: "2022-07-26T15:44:40+02:00"
 activityType: orienteering
+eventType: race
 distanceKm: 3.85
 duration: 1425
 hrAvg: 155

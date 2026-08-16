@@ -2,6 +2,7 @@
 title: "O-ringen etapp 1, långdistans, H55 kort"
 date: "2025-07-21T07:59:59+02:00"
 activityType: orienteering
+eventType: race
 distanceKm: 5.49
 duration: 3294
 hrAvg: 167

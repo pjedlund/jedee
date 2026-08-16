@@ -2,6 +2,7 @@
 title: "Månadens bana"
 date: "2025-04-09T12:10:43+02:00"
 activityType: orienteering
+eventType: training
 distanceKm: 7.84
 duration: 4118
 hrAvg: 151

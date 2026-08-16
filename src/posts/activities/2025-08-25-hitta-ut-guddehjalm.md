@@ -2,6 +2,7 @@
 title: "Hitta ut Guddehjälm"
 date: "2025-08-25T12:03:26+02:00"
 activityType: orienteering
+eventType: training
 distanceKm: 6.28
 duration: 3705
 hrAvg: 154

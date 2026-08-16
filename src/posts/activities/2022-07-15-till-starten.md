@@ -2,6 +2,7 @@
 title: "Till starten..."
 date: "2022-07-15T13:58:31+02:00"
 activityType: orienteering
+eventType: training
 distanceKm: 3.24
 duration: 1370
 hrAvg: 151

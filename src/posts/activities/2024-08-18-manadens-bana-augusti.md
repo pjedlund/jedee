@@ -2,6 +2,7 @@
 title: "Månadens bana Augusti"
 date: "2024-08-18T10:13:53+02:00"
 activityType: orienteering
+eventType: training
 distanceKm: 5.96
 duration: 3224
 hrAvg: 161

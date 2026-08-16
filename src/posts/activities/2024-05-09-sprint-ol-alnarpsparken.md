@@ -2,6 +2,7 @@
 title: "Sprint OL Alnarpsparken"
 date: "2024-05-09T09:12:34+02:00"
 activityType: orienteering
+eventType: training
 distanceKm: 4.07
 duration: 1653
 hrAvg: 161

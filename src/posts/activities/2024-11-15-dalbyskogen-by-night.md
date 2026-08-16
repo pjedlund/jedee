@@ -2,6 +2,7 @@
 title: "Dalbyskogen by night"
 date: "2024-11-15T17:59:27+01:00"
 activityType: orienteering
+eventType: race
 distanceKm: 6.6
 duration: 3303
 hrAvg: 154

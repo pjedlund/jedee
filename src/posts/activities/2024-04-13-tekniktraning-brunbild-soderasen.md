@@ -2,6 +2,7 @@
 title: "Teknikträning brunbild Söderåsen"
 date: "2024-04-13T08:25:06+02:00"
 activityType: orienteering
+eventType: training
 distanceKm: 4.05
 duration: 2759
 hrAvg: 139

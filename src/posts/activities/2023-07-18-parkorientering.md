@@ -2,6 +2,7 @@
 title: "Parkorientering"
 date: "2023-07-18T15:26:18+02:00"
 activityType: orienteering
+eventType: race
 distanceKm: 4.44
 duration: 2074
 hrAvg: 158

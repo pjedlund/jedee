@@ -2,6 +2,7 @@
 title: "Tetra Pak OL Genarp"
 date: "2026-04-25T07:41:21+02:00"
 activityType: orienteering
+eventType: training
 distanceKm: 5.97
 duration: 3073
 hrAvg: 163

@@ -2,6 +2,7 @@
 title: "Bokskogen"
 date: "2021-09-29T11:22:42+02:00"
 activityType: orienteering
+eventType: race
 distanceKm: 7.83
 duration: 4015
 energyKcal: 866

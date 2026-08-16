@@ -2,6 +2,7 @@
 title: "Sverigepremiären medel H55"
 date: "2025-03-01T10:32:54+01:00"
 activityType: orienteering
+eventType: race
 distanceKm: 5.32
 duration: 2809
 hrAvg: 155
