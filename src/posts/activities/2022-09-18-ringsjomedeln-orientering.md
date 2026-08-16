@@ -1,5 +1,5 @@
 ---
-title: "Ringsjömedeln, orientering"
+title: "Ringsjömedeln"
 date: "2022-09-18T08:20:41+02:00"
 activityType: orienteering
 distanceKm: 4.91

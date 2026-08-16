@@ -1,5 +1,5 @@
 ---
-title: "Göingeträffen orientering"
+title: "Göingeträffen"
 date: "2022-10-02T08:38:00+02:00"
 activityType: orienteering
 distanceKm: 5.28

@@ -1,5 +1,5 @@
 ---
-title: "Frostalunken orientering"
+title: "Frostalunken"
 date: "2024-04-28T08:23:54+02:00"
 activityType: orienteering
 distanceKm: 4.27

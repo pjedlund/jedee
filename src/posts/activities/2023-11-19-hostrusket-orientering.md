@@ -1,5 +1,5 @@
 ---
-title: "Höstrusket orientering"
+title: "Höstrusket"
 date: "2023-11-19T10:06:10+01:00"
 activityType: orienteering
 distanceKm: 5.17

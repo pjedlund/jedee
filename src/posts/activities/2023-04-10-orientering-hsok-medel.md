@@ -1,5 +1,5 @@
 ---
-title: "Orientering HSOK medel"
+title: "HSOK medel"
 date: "2023-04-10T08:53:33+02:00"
 activityType: orienteering
 distanceKm: 5.24

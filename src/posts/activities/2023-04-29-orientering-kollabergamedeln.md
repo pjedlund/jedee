@@ -1,5 +1,5 @@
 ---
-title: "Orientering Kollabergamedeln"
+title: "Kollabergamedeln"
 date: "2023-04-29T08:31:47+02:00"
 activityType: orienteering
 distanceKm: 5.09

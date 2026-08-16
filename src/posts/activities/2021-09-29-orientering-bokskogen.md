@@ -1,5 +1,5 @@
 ---
-title: "Orientering, Bokskogen"
+title: "Bokskogen"
 date: "2021-09-29T11:22:42+02:00"
 activityType: orienteering
 distanceKm: 7.83

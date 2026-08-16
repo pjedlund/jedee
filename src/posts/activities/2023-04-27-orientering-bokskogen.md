@@ -1,5 +1,5 @@
 ---
-title: "Orientering Bokskogen"
+title: "Bokskogen"
 date: "2023-04-27T16:01:23+02:00"
 activityType: orienteering
 distanceKm: 5.04
