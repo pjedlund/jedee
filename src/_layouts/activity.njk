@@ -13,7 +13,10 @@ schema: BlogPosting
        fine: the stats and the "View on Strava" link below carry the route. #}
     {% set routeJson = page.inputPath | routeGeoJSON %}
     {% if routeJson %}
-      <place-map @place="this route">
+      {#- @breakout puts the .popout class on the component's <is-land> root (the real grid
+          child), so the route map breaks out one step wider than the prose column. A class
+          here would land on the inner <place-map> (webc:root), a grid grandchild, and do nothing. #}
+      <place-map @breakout="popout" @place="this route">
         {#- Empty 16:9 box rendered server-side so its aspect-ratio holds the space from first
             paint; place-map.js adopts it instead of building + prepending one on idle, which
             is what shoved the stats below down (the same shift the activity index had). #}
