@@ -40,11 +40,10 @@
      one value works on both the light and dark tile sets. */
   --color-route-start: var(--color-green-vivid);
 
-  /* Orienteering course (line + start/finish symbols) on the activity map. Dark purple,
-     the sport's own overprint colour — a fixed value on purpose, not a palette token, so
-     it reads as "orienteering" rather than tracking the site's blues. Tune here if it goes
-     muddy on the dark "Map" tiles (route pages default to the light Topographic base). */
-  --color-route-line: #6a1b9a;
+  /* Orienteering course (line + start/finish symbols) on the activity map. The site's
+     accent orange — the same colour as the map's location markers — because it reads on
+     every tile set (topo green, satellite, light and dark), where a purple vanished on some. */
+  --color-route-line: var(--color-accent-orange);
 
   --color-logo-icon: var(--color-orange-500);
   --color-border-height: 1rem;
