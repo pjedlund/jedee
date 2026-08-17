@@ -283,7 +283,7 @@ Dimmed by mixing the text color toward the popup's OWN surface, not by reaching 
   color: color-mix(in oklab, var(--color-text) 80%, var(--color-bg-accent));
 }
 
-/* Orienteering course overprint (place-map.js): the blue route line plus the start/finish symbols — start = a triangle (apex on the track's start, pointing down the first leg), finish = two concentric circles on the end. All three are native Leaflet vector shapes (a polyline, a polygon, two circles), so one `--color-route-line` stroke covers them all, orienteering-style; blue stands in for the sport's purple, which the palette has no token for. Stroke is set here rather than through Leaflet's `color` option so it tracks data-theme (a CSS `stroke` property outranks Leaflet's `stroke` attribute). The shapes are hollow (Leaflet's `fill:false` → `fill:none`) and scale with the map on zoom on their own — no halo, no fixed-size markers. */
+/* Orienteering course overprint (place-map.js): the blue route line plus the start/finish symbols — start = a triangle (apex on the track's start, pointing down the first leg), finish = two concentric circles on the end. All three are native Leaflet vector shapes (a polyline, a polygon, two circles), so one `--color-route-line` stroke covers them all in the sport's dark-purple overprint colour, orienteering-style. Stroke is set here rather than through Leaflet's `color` option so it tracks data-theme (a CSS `stroke` property outranks Leaflet's `stroke` attribute). The shapes are hollow (Leaflet's `fill:false` → `fill:none`) and scale with the map on zoom on their own — no halo, no fixed-size markers. */
 [data-place-map-canvas] .route-line,
 [data-place-map-canvas] .route-start-symbol,
 [data-place-map-canvas] .route-finish-symbol {
