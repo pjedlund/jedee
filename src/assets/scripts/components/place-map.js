@@ -408,18 +408,23 @@ class PlaceMap extends HTMLElement {
     const finishShapes = [finishCircle(FINISH_OUTER), finishCircle(FINISH_INNER)];
 
     // Intro on first paint: fade the map up, fade the start in, draw the line, reveal the finish.
-    if (!REDUCED) this.routeIntro(line, startShape, finishShapes);
+    // properties.times (from extract-route.py) = cumulative seconds per point; when present it
+    // drives a real-speed replay. One per coordinate, or nothing.
+    const times = Array.isArray(gj.properties?.times) && gj.properties.times.length === latlngs.length ? gj.properties.times : null;
+    if (!REDUCED) this.routeIntro(line, startShape, finishShapes, latlngs, times);
 
     this.finishInit();
   }
 
   // Sequenced route intro: (0) fade the whole canvas up, (1) fade the START symbol in, (2) draw
-  // the line start → finish, (3) reveal the FINISH once the line reaches it. Only called when
-  // motion is allowed, so under reduced motion everything is left in its resting, visible state.
-  routeIntro(line, startShape, finishShapes) {
+  // the line start → finish, (3) reveal the FINISH once the line reaches it. When the route
+  // carries per-point times, step (2) is a REAL-SPEED replay — the tip tracks how fast he actually
+  // moved (fast legs race, slow/technical bits crawl); without times it falls back to a steady
+  // linear sweep. Only called when motion is allowed, so reduced motion leaves everything at rest.
+  routeIntro(line, startShape, finishShapes, latlngs, times) {
     const MAP_FADE = 500; // canvas fade-up
     const MARK_FADE = 320; // symbol fade
-    const LINE_DRAW = 6000; // slow, steady line sweep (calibration knob — bump for slower)
+    const LINE_DRAW = 6000; // steady-sweep fallback when there's no timing (calibration knob)
 
     const path = line._path;
     const startEl = startShape._path; // the polygon's SVG <path>
@@ -431,8 +436,8 @@ class PlaceMap extends HTMLElement {
     };
 
     // Hide the line (a full-length dash), the start, and — until the line arrives — the finish.
-    if (path && path.getTotalLength) {
-      const len = path.getTotalLength();
+    const len = path && path.getTotalLength ? path.getTotalLength() : 0;
+    if (len) {
       path.style.strokeDasharray = len;
       path.style.strokeDashoffset = len;
     }
@@ -451,7 +456,12 @@ class PlaceMap extends HTMLElement {
     // (3) reveal the FINISH when the line reaches it. Clearing the dash here doubles as the
     // zoom-bug fix: a leftover dasharray sized to the OLD length stops matching after a zoom
     // re-projects the path, which clipped the line to nothing.
+    let raf = 0;
+    let done = false;
     const finishRoute = () => {
+      if (done) return;
+      done = true;
+      if (raf) cancelAnimationFrame(raf);
       if (path) {
         path.style.strokeDasharray = 'none';
         path.style.strokeDashoffset = '';
@@ -465,11 +475,44 @@ class PlaceMap extends HTMLElement {
       return;
     }
 
-    // (2) after the start, sweep the line in.
+    // Real-speed schedule: cumulative along-track distance (as a fraction of the whole) paired
+    // with cumulative seconds. Playing the distance fraction against real elapsed time makes the
+    // tip move at the pace he ran. Over one activity's small area the metres-per-pixel wobble is
+    // invisible, so geographic distance stands in for exact SVG path length. Needs a times array.
+    let schedule = null;
+    if (times && times.length === latlngs.length && times.at(-1) > 0) {
+      const map = this.mapObj.map;
+      const cum = [0];
+      for (let i = 1; i < latlngs.length; i++) cum.push(cum[i - 1] + map.distance(latlngs[i - 1], latlngs[i]));
+      const totalDist = cum.at(-1) || 1;
+      schedule = { frac: cum.map((d) => d / totalDist), t: times, total: times.at(-1) };
+    }
+
+    // (2) after the start, sweep the line in — real speed if we have a schedule, else steady.
     setTimeout(() => {
-      path.style.transition = `stroke-dashoffset ${LINE_DRAW}ms linear`;
-      path.style.strokeDashoffset = '0';
-      path.addEventListener('transitionend', finishRoute, { once: true });
+      if (schedule) {
+        // ~4 ms of playback per real second, clamped to a watchable 7–18 s (calibration knob).
+        const PLAY_MS = Math.min(18000, Math.max(7000, schedule.total * 4));
+        const t0 = performance.now();
+        let i = 0;
+        const step = (now) => {
+          if (done) return;
+          const p = Math.min(1, (now - t0) / PLAY_MS);
+          const realT = p * schedule.total;
+          while (i < schedule.t.length - 2 && schedule.t[i + 1] <= realT) i++;
+          const span = schedule.t[i + 1] - schedule.t[i];
+          const segFrac = span > 0 ? (realT - schedule.t[i]) / span : 0;
+          const frac = schedule.frac[i] + (schedule.frac[i + 1] - schedule.frac[i]) * segFrac;
+          path.style.strokeDashoffset = len * (1 - frac);
+          if (p < 1) raf = requestAnimationFrame(step);
+          else finishRoute();
+        };
+        raf = requestAnimationFrame(step);
+      } else {
+        path.style.transition = `stroke-dashoffset ${LINE_DRAW}ms linear`;
+        path.style.strokeDashoffset = '0';
+        path.addEventListener('transitionend', finishRoute, { once: true });
+      }
     }, MAP_FADE + MARK_FADE);
     // A zoom before/during the draw snaps the line solid and reveals the finish, so nothing stays hidden.
     this.mapObj.map.once('zoomstart', finishRoute);
