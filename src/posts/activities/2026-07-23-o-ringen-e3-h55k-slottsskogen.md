@@ -1,5 +1,5 @@
 ---
-title: "O-ringen E3 H55K Slottsskogen"
+title: "O-Ringen 2026 Göteborg E3"
 date: "2026-07-23T10:12:50+02:00"
 activityType: orienteering
 distanceKm: 4.38
@@ -16,6 +16,9 @@ region: Göteborg
 eventForm: individual
 eventClassification: National event
 discipline: FootO
+class: H55 Kort
+map: Slottsskogen
+raceDistance: Middle
 liveloxUrl: https://www.livelox.com/Viewer/O-Ringen-Goteborg-etapp-3-medel/H55-Kort?classId=1211560
 cover: "/assets/images/activities/2026-07-23-o-ringen-e3-h55k-slottsskogen.jpg"
 coverAlt: "KungSängen-etappen, etapp 3 — the H55 Kort course drawn on the Slottsskogen map, 1:5 000"

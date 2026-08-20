@@ -419,7 +419,7 @@ class PlaceMap extends HTMLElement {
   routeIntro(line, startShape, finishShapes) {
     const MAP_FADE = 500; // canvas fade-up
     const MARK_FADE = 320; // symbol fade
-    const LINE_DRAW = 3400; // slow line sweep
+    const LINE_DRAW = 7000; // slow, steady line sweep (calibration knob — bump for slower)
 
     const path = line._path;
     const startEl = startShape._path; // the polygon's SVG <path>
@@ -467,7 +467,7 @@ class PlaceMap extends HTMLElement {
 
     // (2) after the start, sweep the line in.
     setTimeout(() => {
-      path.style.transition = `stroke-dashoffset ${LINE_DRAW}ms ease-in-out`;
+      path.style.transition = `stroke-dashoffset ${LINE_DRAW}ms linear`;
       path.style.strokeDashoffset = '0';
       path.addEventListener('transitionend', finishRoute, { once: true });
     }, MAP_FADE + MARK_FADE);

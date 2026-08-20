@@ -1,5 +1,5 @@
 ---
-title: "Sverigepremiären medel"
+title: "Sverigepremiären"
 date: "2026-02-28T11:09:52+01:00"
 activityType: orienteering
 distanceKm: 4.88
