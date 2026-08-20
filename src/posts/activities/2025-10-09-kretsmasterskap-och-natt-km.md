@@ -2,6 +2,7 @@
 title: "Kretsmästerskap och Natt-KM"
 date: "2025-10-09T17:09:29+02:00"
 activityType: orienteering
+eventType: race
 distanceKm: 5.67
 duration: 2643
 hrAvg: 162

@@ -2,6 +2,7 @@
 title: "Vintercupen E8 Bokskogen"
 date: "2025-02-23T08:59:34+01:00"
 activityType: orienteering
+eventType: race
 distanceKm: 8.7
 duration: 4645
 hrAvg: 156

@@ -2,6 +2,7 @@
 title: "Sverigepremiären"
 date: "2026-02-28T11:09:52+01:00"
 activityType: orienteering
+eventType: race
 distanceKm: 4.88
 duration: 2926
 hrAvg: 151

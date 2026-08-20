@@ -1,7 +1,8 @@
 ---
-title: "Parkorientering"
+title: "MPOL 2022 E1 Kungsparken"
 date: "2022-06-28T16:05:03+02:00"
 activityType: orienteering
+eventType: race
 distanceKm: 3.55
 duration: 1828
 hrAvg: 137

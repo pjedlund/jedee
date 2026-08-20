@@ -2,6 +2,7 @@
 title: "Lunds OK nattcup E1 kort bana"
 date: "2025-11-04T17:25:46+01:00"
 activityType: orienteering
+eventType: race
 distanceKm: 5.29
 duration: 2609
 hrAvg: 158

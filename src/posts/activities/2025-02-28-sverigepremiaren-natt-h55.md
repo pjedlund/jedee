@@ -2,6 +2,7 @@
 title: "Sverigepremiären Natt H55"
 date: "2025-02-28T19:39:28+01:00"
 activityType: orienteering
+eventType: race
 distanceKm: 7.07
 duration: 3419
 hrAvg: 156

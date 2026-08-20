@@ -1,7 +1,8 @@
 ---
-title: "Orientering Bokskogen 4,5 km brunbild"
+title: "Bokskogen 4,5 km brunbild"
 date: "2024-10-19T08:37:02+02:00"
 activityType: orienteering
+eventType: race
 distanceKm: 5.59
 duration: 2935
 hrAvg: 146

@@ -1,7 +1,8 @@
 ---
-title: "MOK natt-ol Bokskogen. Mellan-bana."
+title: "MOK Thursday"
 date: "2024-12-05T17:10:54+01:00"
 activityType: orienteering
+eventType: training
 distanceKm: 4.61
 duration: 2418
 hrAvg: 154

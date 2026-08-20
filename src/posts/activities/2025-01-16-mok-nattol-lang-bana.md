@@ -1,7 +1,8 @@
 ---
-title: "MOK nattOL lång bana"
+title: "MOK Thursday"
 date: "2025-01-16T17:04:24+01:00"
 activityType: orienteering
+eventType: training
 distanceKm: 5.75
 duration: 3011
 hrAvg: 160

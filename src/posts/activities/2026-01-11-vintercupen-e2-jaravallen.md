@@ -2,6 +2,7 @@
 title: "Vintercupen E2 Järavallen"
 date: "2026-01-11T09:03:23+01:00"
 activityType: orienteering
+eventType: race
 distanceKm: 10.89
 duration: 4699
 hrAvg: 157

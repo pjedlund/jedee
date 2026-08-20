@@ -1,7 +1,8 @@
 ---
-title: "MOK torsdag Bokskogen"
+title: "MOK Thursday"
 date: "2026-05-14T08:09:54+02:00"
 activityType: orienteering
+eventType: training
 distanceKm: 4.84
 duration: 3012
 hrAvg: 149

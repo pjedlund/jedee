@@ -1,7 +1,8 @@
 ---
-title: "MOK-torsdag lång med stigar"
+title: "MOK Thursday"
 date: "2025-09-25T15:38:19+02:00"
 activityType: orienteering
+eventType: training
 distanceKm: 6.48
 duration: 3235
 hrAvg: 148

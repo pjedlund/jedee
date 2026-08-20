@@ -2,6 +2,7 @@
 title: "AdventOrient E1 H55"
 date: "2025-11-30T09:14:02+01:00"
 activityType: orienteering
+eventType: race
 distanceKm: 5.98
 duration: 2858
 hrAvg: 159

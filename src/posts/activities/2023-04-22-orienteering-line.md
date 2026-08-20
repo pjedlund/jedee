@@ -2,6 +2,7 @@
 title: "Orienteering line"
 date: "2023-04-22T08:31:55+02:00"
 activityType: orienteering
+eventType: training
 distanceKm: 4.47
 duration: 3714
 hrAvg: 148

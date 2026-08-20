@@ -1,7 +1,8 @@
 ---
-title: "Orientering HSOK medel"
+title: "HSOK medel"
 date: "2023-04-10T08:53:33+02:00"
 activityType: orienteering
+eventType: race
 distanceKm: 5.24
 duration: 3321
 hrAvg: 159

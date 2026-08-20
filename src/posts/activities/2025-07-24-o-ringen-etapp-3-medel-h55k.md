@@ -1,7 +1,8 @@
 ---
-title: "O-ringen etapp 3 medel H55K"
+title: "O-Ringen Jönköping, E3"
 date: "2025-07-24T07:20:53+02:00"
 activityType: orienteering
+eventType: race
 distanceKm: 4.27
 duration: 2688
 hrAvg: 156

@@ -2,6 +2,7 @@
 title: "Kompass och korridor, Söderåsen"
 date: "2024-04-13T13:49:16+02:00"
 activityType: orienteering
+eventType: training
 distanceKm: 3.2
 duration: 2176
 hrAvg: 138

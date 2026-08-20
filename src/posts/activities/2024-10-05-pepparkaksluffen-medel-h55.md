@@ -2,6 +2,7 @@
 title: "Pepparkaksluffen Medel H55"
 date: "2024-10-05T08:02:40+02:00"
 activityType: orienteering
+eventType: race
 distanceKm: 4.33
 duration: 2418
 hrAvg: 164

@@ -1,7 +1,8 @@
 ---
-title: "Orientering Bokskogen"
+title: "Bokskogen"
 date: "2023-03-18T09:04:34+01:00"
 activityType: orienteering
+eventType: training
 distanceKm: 6.63
 duration: 3368
 hrAvg: 153

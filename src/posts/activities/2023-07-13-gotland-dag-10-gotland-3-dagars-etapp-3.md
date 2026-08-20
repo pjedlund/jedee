@@ -1,7 +1,8 @@
 ---
-title: "Gotland dag 10: Gotland 3-dagars etapp 3"
+title: "Gotlands 3-dagars 2023, E3"
 date: "2023-07-13T08:41:53+02:00"
 activityType: orienteering
+eventType: race
 distanceKm: 7.57
 duration: 4751
 hrAvg: 154

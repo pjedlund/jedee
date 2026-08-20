@@ -1,7 +1,8 @@
 ---
-title: "Orientering Hallands 3-dagars etapp 3"
+title: "Hallands 3-dagars 2022, E3"
 date: "2022-07-17T08:53:56+02:00"
 activityType: orienteering
+eventType: race
 distanceKm: 8.81
 duration: 5709
 hrAvg: 142

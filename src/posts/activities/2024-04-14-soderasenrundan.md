@@ -2,6 +2,7 @@
 title: "Söderåsenrundan"
 date: "2024-04-14T08:26:08+02:00"
 activityType: orienteering
+eventType: race
 distanceKm: 6.9
 duration: 3665
 hrAvg: 159

@@ -2,6 +2,7 @@
 title: "Vintercupen E1 Skrylle 3 banor (A,B,C)"
 date: "2026-01-04T09:00:05+01:00"
 activityType: orienteering
+eventType: race
 distanceKm: 10.45
 duration: 5292
 hrAvg: 152

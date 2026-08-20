@@ -2,6 +2,7 @@
 title: "FK Åsen medeldistans Tollarp"
 date: "2024-09-01T07:55:50+02:00"
 activityType: orienteering
+eventType: race
 distanceKm: 3.81
 duration: 1913
 hrAvg: 167

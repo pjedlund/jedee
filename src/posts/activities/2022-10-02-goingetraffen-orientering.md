@@ -1,7 +1,8 @@
 ---
-title: "Göingeträffen orientering"
+title: "Göingeträffen"
 date: "2022-10-02T08:38:00+02:00"
 activityType: orienteering
+eventType: race
 distanceKm: 5.28
 duration: 2510
 hrAvg: 157

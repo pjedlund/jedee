@@ -2,6 +2,7 @@
 title: "Månadens bana, Bokskogen."
 date: "2024-03-24T13:11:18+01:00"
 activityType: orienteering
+eventType: training
 distanceKm: 6.64
 duration: 3401
 hrAvg: 161

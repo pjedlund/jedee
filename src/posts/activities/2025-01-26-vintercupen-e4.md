@@ -2,6 +2,7 @@
 title: "Vintercupen E4"
 date: "2025-01-26T09:00:13+01:00"
 activityType: orienteering
+eventType: race
 distanceKm: 11.64
 duration: 5001
 hrAvg: 152

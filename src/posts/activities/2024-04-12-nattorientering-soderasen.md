@@ -2,6 +2,7 @@
 title: "Nattorientering Söderåsen"
 date: "2024-04-12T18:37:25+02:00"
 activityType: orienteering
+eventType: training
 distanceKm: 5.47
 duration: 3416
 hrAvg: 155

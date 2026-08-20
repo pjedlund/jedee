@@ -1,7 +1,8 @@
 ---
-title: "Orientering: Sverigepremiären medel"
+title: "Sverigepremiären medel"
 date: "2023-03-04T11:07:58+01:00"
 activityType: orienteering
+eventType: race
 distanceKm: 5.92
 duration: 3138
 hrAvg: 159
