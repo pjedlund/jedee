@@ -8,7 +8,8 @@
       "bg-accent-2": "{color.gray.300}",
       "text":        "{color.base.darkest}",
       "text-accent": "{color.gray.700}",
-      "headline":    "{color.base.darkest}"
+      "headline":    "{color.base.darkest}",
+      "logo-icon":   "{color.base.dark}"
     },
     "dark": {
       "bg":          "{color.gray.900}",
@@ -16,7 +17,8 @@
       "bg-accent-2": "{color.gray.600}",
       "text":        "{color.gray.250}",
       "text-accent": "{color.gray.200}",
-      "headline":    "{color.gray.200}"
+      "headline":    "{color.gray.200}",
+      "logo-icon":   "{color.orange.700}"
     }
   }
 }
