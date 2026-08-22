@@ -1,6 +1,6 @@
 {
   "$type": "typography",
-  "$description": "Typography composite tokens — bundled type styles that apply font family, weight, size, and line height in one token. Mirrors the type styles defined in src/assets/css/global/base/global-styles.css. Inner values reference atomic tokens from fonts.json / textWeights.json / textSizes.json / textLeading.json so any change cascades. PENPOT-ONLY FILE: tailwind.config.js does not read this, so nothing here reaches the CSS — only build-penpot-tokens.js and build-design-md.js consume it. That is why letterSpacing may carry a bare number that does NOT match the stylesheet: the CSS uses ch units (--tracking, -0.04ch, font-relative so it scales with each heading), which Penpot has no equivalent for, so the Penpot value is matched by eye against a screenshot instead. Verified 2026-08-22: heading.1's -5 renders 864.66px for \"Hej hej! I'm Johan.\" at 107px/700, against 870.91px for the CSS -0.04ch — 0.7% apart, while a literal -5px in CSS would be 5% tighter. Do not 'correct' it to the CSS number. The two are deliberately unlinked: changing --tracking will not update this, and vice versa.",
+  "$description": "Typography composite tokens — bundled type styles that apply font family, weight, size, and line height in one token. Mirrors the type styles defined in src/assets/css/global/base/global-styles.css. Inner values reference atomic tokens from fonts.json / textWeights.json / textSizes.json / textLeading.json so any change cascades. PENPOT-ONLY FILE: tailwind.config.js does not read this, so nothing here reaches the CSS — only build-penpot-tokens.js and build-design-md.js consume it. That is why letterSpacing may carry a bare number that does NOT match the stylesheet: the CSS uses ch units (--tracking, -0.04ch, font-relative so it scales with each heading), which Penpot has no equivalent for, so the Penpot value is matched by eye against a screenshot instead. Verified 2026-08-22: heading.1's -5 renders 864.66px for \"Hej hej! I'm Johan.\" at 107px/700, against 870.91px for the CSS -0.04ch — 0.7% apart, while a literal -5px in CSS would be 5% tighter. Do not 'correct' these to the CSS numbers. The two sides are deliberately unlinked: changing --tracking will not update this, and vice versa. Only heading.1 was matched by eye; heading.2 (-3.2) and heading.3 (-2.1) are heading.1's value scaled by font size (68/107 and 44/107), which reproduces the same proportional tightness the font-relative ch unit gives in CSS. There were no h2 or h3 texts in the Penpot file to check them against, so confirm them by eye the first time one appears on a board.",
   "styles": {
     "body": {
       "fontFamily": "{font.family.base}",
@@ -19,13 +19,15 @@
       "fontFamily": "{font.family.display}",
       "fontWeight": "{font.weight.bold}",
       "fontSize": "{font.size.step-4}",
-      "lineHeight": "{font.lineHeight.fine}"
+      "lineHeight": "{font.lineHeight.fine}",
+      "letterSpacing": "-3.2"
     },
     "heading.3": {
       "fontFamily": "{font.family.display}",
       "fontWeight": "{font.weight.bold}",
       "fontSize": "{font.size.step-2}",
-      "lineHeight": "{font.lineHeight.fine}"
+      "lineHeight": "{font.lineHeight.fine}",
+      "letterSpacing": "-2.1"
     },
     "blockquote": {
       "fontFamily": "{font.family.base}",
