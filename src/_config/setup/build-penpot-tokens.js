@@ -47,7 +47,7 @@ const LIGHT_DARK_COLOR_NAMES = ['red', 'blue', 'green'];
 
 // Set order matters in Penpot: when the same token name exists in multiple
 // active sets, the latter wins. theme/* must come last so it overrides core/*.
-const CORE_SETS = ['core/colors', 'core/typography', 'core/spacing', 'core/layout'];
+const CORE_SETS = ['core/colors', 'core/typography', 'core/spacing', 'core/layout', 'core/button'];
 const SET_ORDER = [...CORE_SETS, 'theme/light', 'theme/dark'];
 
 async function readJSON(file) {
@@ -86,7 +86,7 @@ function remToPx(v) {
 }
 
 async function build() {
-	const [colors, fonts, spacing, textSizes, textLeading, textWeights, borderRadius, viewports, semanticColors, typography, buttonColors] = await Promise.all([
+	const [colors, fonts, spacing, textSizes, textLeading, textWeights, borderRadius, viewports, semanticColors, typography, buttonColors, megamenuColors] = await Promise.all([
 		readJSON('colors.json'),
 		readJSON('fonts.json'),
 		readJSON('spacing.json'),
@@ -98,6 +98,7 @@ async function build() {
 		readJSON('semanticColors.json'),
 		readJSON('typography.json'),
 		readJSON('buttonColors.json'),
+		readJSON('megamenuColors.json'),
 	]);
 
 	const out = {};
@@ -147,15 +148,22 @@ async function build() {
 	for (const [name, value] of Object.entries(semanticColors.themes?.dark ?? {})) {
 		setLeaf(themeDark, `color.${name}`, token(value, semanticType));
 	}
-	// Per-theme button colors. Emitted with their names verbatim (no color.*
-	// prefix) so they match the bindings the Button variants already carry.
-	// Without this the import would delete them — see buttonColors.json.
-	const buttonType = buttonColors.$type ?? 'color';
-	for (const [name, value] of Object.entries(buttonColors.themes?.light ?? {})) {
-		setLeaf(themeLight, name, token(value, buttonType));
-	}
-	for (const [name, value] of Object.entries(buttonColors.themes?.dark ?? {})) {
-		setLeaf(themeDark, name, token(value, buttonType));
+	// Component colors (buttons, mega-menu). Emitted with their names verbatim (no color.* prefix) so they match the bindings the Penpot components already carry. Without this the import would delete them — see buttonColors.json / megamenuColors.json. A file's `core` block goes to its own core set (values there are plain references, so one copy serves both themes); its `themes` block holds the color-mix() results, which have to be flattened per theme.
+	for (const componentColors of [buttonColors, megamenuColors]) {
+		const componentType = componentColors.$type ?? 'color';
+		const coreSetName = componentColors.$penpotCoreSet;
+		if (coreSetName) {
+			const coreSet = (out[coreSetName] ??= {});
+			for (const [name, value] of Object.entries(componentColors.core ?? {})) {
+				setLeaf(coreSet, name, token(value, componentType));
+			}
+		}
+		for (const [name, value] of Object.entries(componentColors.themes?.light ?? {})) {
+			setLeaf(themeLight, name, token(value, componentType));
+		}
+		for (const [name, value] of Object.entries(componentColors.themes?.dark ?? {})) {
+			setLeaf(themeDark, name, token(value, componentType));
+		}
 	}
 	out['theme/light'] = themeLight;
 	out['theme/dark'] = themeDark;
