@@ -1,0 +1,28 @@
+{
+  "$type": "shadow",
+  "$description": "The site's two shadow recipes, stored as layers because that is Penpot's own shape for a shadow token — offsetX / offsetY / blur / spread / color, colors as 8-digit hex so the alpha travels (Penpot has no separate opacity field here, and CSS reads #RRGGBBAA natively). Both recipes are two-layer: a tight contact shadow plus a wide soft one, and both go deeper on dark, where the surface alone gives less separation. `panel` lifts the mega-menu panel; `popup` is the same recipe scaled down for the place-map popup — it was written by reading the panel's numbers, which is why they now share a source. tailwind.config.js composes these layers into the --box-shadow-* custom properties that main-nav.css and place-map.css read; build-penpot-tokens.js emits panel/popup into theme/light and the -dark pair into theme/dark under the same names, which is how every other theme-swapping token in this system works.",
+  "panel": {
+    "$value": [
+      {"offsetX": "0", "offsetY": "2", "blur": "6", "spread": "-4", "color": "#0000000F"},
+      {"offsetX": "0", "offsetY": "10", "blur": "28", "spread": "-14", "color": "#00000029"}
+    ]
+  },
+  "panel-dark": {
+    "$value": [
+      {"offsetX": "0", "offsetY": "4", "blur": "10", "spread": "-4", "color": "#00000059"},
+      {"offsetX": "0", "offsetY": "18", "blur": "40", "spread": "-12", "color": "#0000008C"}
+    ]
+  },
+  "popup": {
+    "$value": [
+      {"offsetX": "0", "offsetY": "1", "blur": "3", "spread": "-2", "color": "#00000014"},
+      {"offsetX": "0", "offsetY": "6", "blur": "16", "spread": "-10", "color": "#0000002E"}
+    ]
+  },
+  "popup-dark": {
+    "$value": [
+      {"offsetX": "0", "offsetY": "2", "blur": "6", "spread": "-3", "color": "#00000066"},
+      {"offsetX": "0", "offsetY": "10", "blur": "24", "spread": "-10", "color": "#00000080"}
+    ]
+  }
+}

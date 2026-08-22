@@ -1,0 +1,5 @@
+{
+  "$type": "borderWidth",
+  "$description": "The site's border widths. `thin` is the one width nearly everything uses — the hairline under --border-thickness in variables.css, which button.css, code.css and 18 other bordered things inherit. Read by tailwind.config.js (emits --border-width-*) and by build-penpot-tokens.js (emits border.* into core/layout). Icon stroke weights are NOT this token: those belong to the icon artwork, not the border system.",
+  "thin": { "$value": "1px" }
+}

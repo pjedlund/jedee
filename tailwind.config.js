@@ -4,11 +4,13 @@ import plugin from 'tailwindcss/plugin';
 import postcss from 'postcss';
 import postcssJs from 'postcss-js';
 
-import {dtcgToTailwind, dtcgFluidToTailwind} from './src/_config/utils/dtcg-to-tailwind.js';
+import {dtcgToTailwind, dtcgFluidToTailwind, dtcgShadowToTailwind} from './src/_config/utils/dtcg-to-tailwind.js';
 
 // Raw design tokens
 import colorTokens from './src/_data/designTokens/colors.json';
 import borderRadiusTokens from './src/_data/designTokens/borderRadius.json';
+import borderWidthTokens from './src/_data/designTokens/borderWidth.json';
+import shadowTokens from './src/_data/designTokens/shadows.json';
 import fontTokens from './src/_data/designTokens/fonts.json';
 import spacingTokens from './src/_data/designTokens/spacing.json';
 import textSizeTokens from './src/_data/designTokens/textSizes.json';
@@ -19,6 +21,8 @@ import viewportTokens from './src/_data/designTokens/viewports.json';
 // Process design tokens
 const colors = dtcgToTailwind(colorTokens);
 const borderRadius = dtcgToTailwind(borderRadiusTokens);
+const borderWidth = dtcgToTailwind(borderWidthTokens);
+const boxShadow = dtcgShadowToTailwind(shadowTokens);
 const fontFamily = dtcgToTailwind(fontTokens);
 const fontSize = dtcgFluidToTailwind(textSizeTokens);
 const fontWeight = dtcgToTailwind(textWeightTokens);
@@ -38,6 +42,8 @@ export default {
     },
     colors,
     borderRadius,
+    borderWidth,
+    boxShadow,
     spacing,
     fontFamily,
     fontSize,
@@ -96,6 +102,8 @@ export default {
       const groups = [
         {key: 'colors', prefix: 'color'},
         {key: 'borderRadius', prefix: 'border-radius'},
+        {key: 'borderWidth', prefix: 'border-width'},
+        {key: 'boxShadow', prefix: 'box-shadow'},
         {key: 'spacing', prefix: 'space'},
         {key: 'fontSize', prefix: 'size'},
         {key: 'lineHeight', prefix: 'leading'},
