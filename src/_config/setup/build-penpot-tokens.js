@@ -86,7 +86,7 @@ function remToPx(v) {
 }
 
 async function build() {
-	const [colors, fonts, spacing, textSizes, textLeading, textWeights, borderRadius, viewports, semanticColors, typography] = await Promise.all([
+	const [colors, fonts, spacing, textSizes, textLeading, textWeights, borderRadius, viewports, semanticColors, typography, buttonColors] = await Promise.all([
 		readJSON('colors.json'),
 		readJSON('fonts.json'),
 		readJSON('spacing.json'),
@@ -97,6 +97,7 @@ async function build() {
 		readJSON('viewports.json'),
 		readJSON('semanticColors.json'),
 		readJSON('typography.json'),
+		readJSON('buttonColors.json'),
 	]);
 
 	const out = {};
@@ -145,6 +146,16 @@ async function build() {
 	}
 	for (const [name, value] of Object.entries(semanticColors.themes?.dark ?? {})) {
 		setLeaf(themeDark, `color.${name}`, token(value, semanticType));
+	}
+	// Per-theme button colors. Emitted with their names verbatim (no color.*
+	// prefix) so they match the bindings the Button variants already carry.
+	// Without this the import would delete them — see buttonColors.json.
+	const buttonType = buttonColors.$type ?? 'color';
+	for (const [name, value] of Object.entries(buttonColors.themes?.light ?? {})) {
+		setLeaf(themeLight, name, token(value, buttonType));
+	}
+	for (const [name, value] of Object.entries(buttonColors.themes?.dark ?? {})) {
+		setLeaf(themeDark, name, token(value, buttonType));
 	}
 	out['theme/light'] = themeLight;
 	out['theme/dark'] = themeDark;
