@@ -8,7 +8,7 @@
   --button-border-width: var(--border-thickness);
   --button-border-style: solid;
   --button-border-color: color-mix(in oklab, var(--button-bg) 80%, var(--color-text));
-  --button-radius: var(--border-radius-small);
+  --button-radius: var(--border-radius-pill);
   --button-gap: var(--space-2xs);
   --button-padding: var(--space-xs) var(--space-m);
   --button-font-family: var(--font-body);
