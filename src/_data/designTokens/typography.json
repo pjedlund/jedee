@@ -1,6 +1,6 @@
 {
   "$type": "typography",
-  "$description": "Typography composite tokens — bundled type styles that apply font family, weight, size, and line height in one token. Mirrors the type styles defined in src/assets/css/global/base/global-styles.css. Inner values reference atomic tokens from fonts.json / textWeights.json / textSizes.json / textLeading.json so any change cascades.",
+  "$description": "Typography composite tokens — bundled type styles that apply font family, weight, size, and line height in one token. Mirrors the type styles defined in src/assets/css/global/base/global-styles.css. Inner values reference atomic tokens from fonts.json / textWeights.json / textSizes.json / textLeading.json so any change cascades. PENPOT-ONLY FILE: tailwind.config.js does not read this, so nothing here reaches the CSS — only build-penpot-tokens.js and build-design-md.js consume it. That is why letterSpacing may carry a bare number that does NOT match the stylesheet: the CSS uses ch units (--tracking, -0.04ch, font-relative so it scales with each heading), which Penpot has no equivalent for, so the Penpot value is matched by eye against a screenshot instead. Verified 2026-08-22: heading.1's -5 renders 864.66px for \"Hej hej! I'm Johan.\" at 107px/700, against 870.91px for the CSS -0.04ch — 0.7% apart, while a literal -5px in CSS would be 5% tighter. Do not 'correct' it to the CSS number. The two are deliberately unlinked: changing --tracking will not update this, and vice versa.",
   "styles": {
     "body": {
       "fontFamily": "{font.family.base}",
@@ -12,7 +12,8 @@
       "fontFamily": "{font.family.display}",
       "fontWeight": "{font.weight.bold}",
       "fontSize": "{font.size.step-6}",
-      "lineHeight": "{font.lineHeight.extrafine}"
+      "lineHeight": "{font.lineHeight.extrafine}",
+      "letterSpacing": "-5"
     },
     "heading.2": {
       "fontFamily": "{font.family.display}",
