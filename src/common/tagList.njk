@@ -25,6 +25,7 @@ eleventyComputed:
       <a
         href="/tags/{{ tag | slugify }}/"
         class="button"
+        data-small-button
         {{
           helpers.getLinkActiveState('/tags/' + tag | slugify + '/',
           page.url)

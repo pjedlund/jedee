@@ -8,7 +8,7 @@
   --button-border-width: var(--border-thickness);
   --button-border-style: solid;
   --button-border-color: color-mix(in oklab, var(--button-bg) 80%, var(--color-text));
-  --button-radius: var(--border-radius-small);
+  --button-radius: var(--border-radius-pill);
   --button-gap: var(--space-2xs);
   --button-padding: var(--space-xs) var(--space-m);
   --button-font-family: var(--font-body);
@@ -91,11 +91,13 @@
   color: var(--button-color);
 }
 
+/* Shares its geometry and type with `.menu-toggle` in main-nav.css — same padding, radius, border width, size, weight, uppercase and tracking — so the small button and the nav trigger read as one family. Color is deliberately NOT copied across: the toggle is transparent with a faint hairline, while this keeps the .button colors so `data-button-variant` still works (the draft badge is a small tertiary button). Keep the two in step if either changes. */
 .button[data-small-button] {
-  --button-border-width: 2px;
-  --button-radius: var(--border-radius-small);
+  --button-border-width: var(--border-thickness);
+  --button-radius: var(--border-radius-medium);
   --button-font-size: var(--size-step-min-2);
-  --button-padding: var(--space-2xs) var(--space-s) var(--space-3xs) var(--space-s);
+  --button-font-weight: var(--font-bold);
+  --button-padding: var(--space-xs) var(--space-s);
   --button-text-transform: uppercase;
   --button-tracking: var(--tracking-wide);
 }

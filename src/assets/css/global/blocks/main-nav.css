@@ -35,7 +35,7 @@ A "Menu ⌄" button drops a two-column, table-of-contents-style panel of every p
   padding: var(--space-xs) var(--space-s);
   background: transparent;
   color: var(--menu-toggle-color);
-  border: 1px solid var(--menu-toggle-border-color);
+  border: var(--border-thickness) solid var(--menu-toggle-border-color);
   border-radius: var(--border-radius-medium);
   font-size: var(--size-step-min-2);
   font-weight: var(--font-bold);
