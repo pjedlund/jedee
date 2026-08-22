@@ -1,20 +1,36 @@
 {
   "$type": "color",
-  "$description": "Per-theme button colors, pushed into Penpot's theme/light and theme/dark sets by build-penpot-tokens.js. These existed only inside the Penpot file until 2026-08-22, where a token import would silently delete them (import replaces same-named sets, and theme/light + theme/dark are both generated). Ten Button variants bind their fill to one of these, so losing them breaks the component. Token names are emitted verbatim — NOT under the color.* prefix the semanticColors entries get — because the existing Penpot bindings reference them as button.*. The CSS computes these live with color-mix() in oklab; the hexes below are the flattened result and can drift. See the audit note in _local/generated/ for the plan to make the build do the mixing itself.",
+  "$penpotCoreSet": "core/button",
+  "$description": "Button colors, pushed into Penpot by build-penpot-tokens.js. These existed only inside the Penpot file until 2026-08-22, where a token import would silently delete them (import replaces same-named sets), and the ten Button variants bind their fills here. Two tiers. `core` holds the seven values that are plain references to existing tokens, emitted verbatim into a core/button set — NOT under the color.* prefix the semanticColors entries get, because the existing Penpot bindings reference them as button.*. `themes` holds the nine that are genuine color-mix() results in blocks/button.css and so have to be flattened per theme; those hexes are the mix at the current palette and can drift if the palette moves. Three of the flattened nine (default.text, primary.text, secondary.text) were previously approximated in Penpot as the plain references {color.bg} / {color.gray.100}; they are the real mixes here, which shifts those labels slightly (all still clear AA — the largest change is default.text, 6.97:1 to 5.96:1 in light). See the audit note in _local/generated/ for the plan to make the build do the mixing itself.",
+  "core": {
+    "button.default.bg": "{color.text}",
+    "button.primary.bg": "{color.orange.500}",
+    "button.secondary.bg": "{color.semantic.blue}",
+    "button.tertiary.text": "{color.text}",
+    "button.ghost.bg": "{color.bg}",
+    "button.ghost.text": "{color.text}",
+    "button.ghost.border": "{color.text}"
+  },
   "themes": {
     "light": {
-      "button.tertiary.bg": "#D5D6CE",
+      "button.default.text": "#E1E3E3",
       "button.default.bg-hover": "#586371",
+      "button.primary.text": "#F6F1F1",
       "button.primary.bg-hover": "#D5723B",
+      "button.secondary.text": "#ECEFF4",
       "button.secondary.bg-hover": "#396281",
+      "button.tertiary.bg": "#D5D6CE",
       "button.tertiary.bg-hover": "#D8D9D2",
       "button.ghost.bg-hover": "#E7E7E6"
     },
     "dark": {
-      "button.tertiary.bg": "#222423",
+      "button.default.text": "#232528",
       "button.default.bg-hover": "#B4B6B8",
+      "button.primary.text": "#F6F1F1",
       "button.primary.bg-hover": "#BB5A22",
+      "button.secondary.text": "#ECEFF4",
       "button.secondary.bg-hover": "#2C4C65",
+      "button.tertiary.bg": "#222423",
       "button.tertiary.bg-hover": "#212322",
       "button.ghost.bg-hover": "#141619"
     }
