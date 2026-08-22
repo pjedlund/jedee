@@ -86,7 +86,7 @@ function remToPx(v) {
 }
 
 async function build() {
-	const [colors, fonts, spacing, textSizes, textLeading, textWeights, borderRadius, viewports, semanticColors, typography, buttonColors, megamenuColors] = await Promise.all([
+	const [colors, fonts, spacing, textSizes, textLeading, textWeights, borderRadius, borderWidth, viewports, semanticColors, typography, buttonColors, megamenuColors] = await Promise.all([
 		readJSON('colors.json'),
 		readJSON('fonts.json'),
 		readJSON('spacing.json'),
@@ -94,6 +94,7 @@ async function build() {
 		readJSON('textLeading.json'),
 		readJSON('textWeights.json'),
 		readJSON('borderRadius.json'),
+		readJSON('borderWidth.json'),
 		readJSON('viewports.json'),
 		readJSON('semanticColors.json'),
 		readJSON('typography.json'),
@@ -211,6 +212,10 @@ async function build() {
 	for (const [k, v] of Object.entries(borderRadius)) {
 		if (k.startsWith('$')) continue;
 		setLeaf(coreLayout, `radius.${k}`, token(remToPx(v.$value), 'borderRadius'));
+	}
+	for (const [k, v] of Object.entries(borderWidth)) {
+		if (k.startsWith('$')) continue;
+		setLeaf(coreLayout, `border.${k}`, token(v.$value, 'borderWidth'));
 	}
 	for (const [k, v] of Object.entries(viewports)) {
 		if (typeof v !== 'number') continue; // skip title, description

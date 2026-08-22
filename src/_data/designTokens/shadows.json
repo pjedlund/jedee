@@ -1,0 +1,16 @@
+{
+  "$type": "shadow",
+  "$description": "The site's two shadow recipes. Both are two-layer: a tight contact shadow plus a wide soft one, and both go deeper on dark, where the surface alone gives less separation. `panel` lifts the mega-menu panel; `popup` is the same recipe scaled down for the place-map popup — it was written by reading the panel's numbers, which is why they now share a source. Read by tailwind.config.js, which emits --box-shadow-*; main-nav.css and place-map.css reference those. The -dark variants are separate tokens rather than a themes block because tailwind emits one flat :root, and the blocks pick the right one under [data-theme='dark']. NOT yet emitted to Penpot: its plugin API rejects every documented shape for a shadow token value (see the LOG entry for 2026-08-22), so the import shape is unverified and emitting it blindly would risk the theme sets on the next import.",
+  "panel": {
+    "$value": "0 2px 6px -4px hsl(0 0% 0% / 0.06), 0 10px 28px -14px hsl(0 0% 0% / 0.16)"
+  },
+  "panel-dark": {
+    "$value": "0 4px 10px -4px hsl(0 0% 0% / 0.35), 0 18px 40px -12px hsl(0 0% 0% / 0.55)"
+  },
+  "popup": {
+    "$value": "0 1px 3px -2px hsl(0 0% 0% / 0.08), 0 6px 16px -10px hsl(0 0% 0% / 0.18)"
+  },
+  "popup-dark": {
+    "$value": "0 2px 6px -3px hsl(0 0% 0% / 0.4), 0 10px 24px -10px hsl(0 0% 0% / 0.5)"
+  }
+}
