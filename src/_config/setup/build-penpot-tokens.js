@@ -14,7 +14,9 @@
  * Mapping rules:
  *   - JSON nesting becomes dot-separated token names (e.g. gray.100 → color.gray.100).
  *   - Fluid Utopia values { min, max } collapse to the max as "<n>px".
- *   - Border radii keep their rem strings (Penpot accepts unit-suffixed strings).
+ *   - Border radii convert rem → px (base 16px). Penpot's border-radius binding
+ *     validator rejects rem-unit strings — a bound token shows "Reference … is not
+ *     valid or is not in any active set" — even though it imports and resolves fine.
  *   - Bare numbers in viewports.json become "<n>px" dimension tokens.
  *   - The three light_dark colors (red, blue, green) are split:
  *       primary value   → theme/light
@@ -71,6 +73,15 @@ function token(value, type, description) {
 function fluidMaxToPx(v) {
 	if (v && typeof v === 'object' && 'max' in v) return `${v.max}px`;
 	if (typeof v === 'number') return `${v}px`;
+	return v;
+}
+
+// Penpot's border-radius binding validator rejects rem-unit strings, so convert
+// rem → px at the 16px root base. Pass px/unitless values through untouched.
+function remToPx(v) {
+	if (typeof v === 'string' && v.trim().endsWith('rem')) {
+		return `${parseFloat(v) * 16}px`;
+	}
 	return v;
 }
 
@@ -180,7 +191,7 @@ async function build() {
 	const coreLayout = {};
 	for (const [k, v] of Object.entries(borderRadius)) {
 		if (k.startsWith('$')) continue;
-		setLeaf(coreLayout, `radius.${k}`, token(v.$value, 'borderRadius'));
+		setLeaf(coreLayout, `radius.${k}`, token(remToPx(v.$value), 'borderRadius'));
 	}
 	for (const [k, v] of Object.entries(viewports)) {
 		if (typeof v !== 'number') continue; // skip title, description
