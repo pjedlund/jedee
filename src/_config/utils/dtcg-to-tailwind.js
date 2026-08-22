@@ -48,3 +48,21 @@ export const dtcgFluidToTailwind = dtcgObject => {
     )
   );
 };
+
+/**
+ * Like dtcgToTailwind but composes Penpot-shaped shadow layers into a CSS
+ * box-shadow string. The tokens are stored as layers because that is the shape
+ * Penpot's own shadow token uses; CSS is the derived form, not the source.
+ *
+ * @param {object} dtcgObject - DTCG token group whose $values are layer arrays
+ * @returns {object} flat map of {tokenKey: boxShadowString}
+ */
+export const dtcgShadowToTailwind = dtcgObject =>
+  Object.fromEntries(
+    Object.entries(dtcgToTailwind(dtcgObject)).map(([key, layers]) => [
+      key,
+      layers
+        .map(l => `${l.offsetX}px ${l.offsetY}px ${l.blur}px ${l.spread}px ${l.color}`)
+        .join(', ')
+    ])
+  );

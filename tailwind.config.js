@@ -4,7 +4,7 @@ import plugin from 'tailwindcss/plugin';
 import postcss from 'postcss';
 import postcssJs from 'postcss-js';
 
-import {dtcgToTailwind, dtcgFluidToTailwind} from './src/_config/utils/dtcg-to-tailwind.js';
+import {dtcgToTailwind, dtcgFluidToTailwind, dtcgShadowToTailwind} from './src/_config/utils/dtcg-to-tailwind.js';
 
 // Raw design tokens
 import colorTokens from './src/_data/designTokens/colors.json';
@@ -22,7 +22,7 @@ import viewportTokens from './src/_data/designTokens/viewports.json';
 const colors = dtcgToTailwind(colorTokens);
 const borderRadius = dtcgToTailwind(borderRadiusTokens);
 const borderWidth = dtcgToTailwind(borderWidthTokens);
-const boxShadow = dtcgToTailwind(shadowTokens);
+const boxShadow = dtcgShadowToTailwind(shadowTokens);
 const fontFamily = dtcgToTailwind(fontTokens);
 const fontSize = dtcgFluidToTailwind(textSizeTokens);
 const fontWeight = dtcgToTailwind(textWeightTokens);

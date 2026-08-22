@@ -86,7 +86,7 @@ function remToPx(v) {
 }
 
 async function build() {
-	const [colors, fonts, spacing, textSizes, textLeading, textWeights, borderRadius, borderWidth, viewports, semanticColors, typography, buttonColors, megamenuColors] = await Promise.all([
+	const [colors, fonts, spacing, textSizes, textLeading, textWeights, borderRadius, borderWidth, shadows, viewports, semanticColors, typography, buttonColors, megamenuColors] = await Promise.all([
 		readJSON('colors.json'),
 		readJSON('fonts.json'),
 		readJSON('spacing.json'),
@@ -95,6 +95,7 @@ async function build() {
 		readJSON('textWeights.json'),
 		readJSON('borderRadius.json'),
 		readJSON('borderWidth.json'),
+		readJSON('shadows.json'),
 		readJSON('viewports.json'),
 		readJSON('semanticColors.json'),
 		readJSON('typography.json'),
@@ -165,6 +166,18 @@ async function build() {
 		for (const [name, value] of Object.entries(componentColors.themes?.dark ?? {})) {
 			setLeaf(themeDark, name, token(value, componentType));
 		}
+	}
+	// Shadows. Stored per recipe with a `-dark` sibling because tailwind emits one flat
+	// :root and the blocks pick the right one under [data-theme='dark']; Penpot instead
+	// wants the same token name in both theme sets, so the pairs are split back apart here.
+	// Layers pass through as-is — the JSON already holds Penpot's own shadow shape.
+	const shadowType = shadows.$type ?? 'shadow';
+	for (const [k, v] of Object.entries(shadows)) {
+		if (k.startsWith('$')) continue;
+		const isDark = k.endsWith('-dark');
+		const target = isDark ? themeDark : themeLight;
+		const name = isDark ? k.slice(0, -'-dark'.length) : k;
+		setLeaf(target, `shadow.${name}`, token(v.$value, shadowType));
 	}
 	out['theme/light'] = themeLight;
 	out['theme/dark'] = themeDark;

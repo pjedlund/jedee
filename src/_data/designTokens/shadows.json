@@ -1,16 +1,28 @@
 {
   "$type": "shadow",
-  "$description": "The site's two shadow recipes. Both are two-layer: a tight contact shadow plus a wide soft one, and both go deeper on dark, where the surface alone gives less separation. `panel` lifts the mega-menu panel; `popup` is the same recipe scaled down for the place-map popup — it was written by reading the panel's numbers, which is why they now share a source. Read by tailwind.config.js, which emits --box-shadow-*; main-nav.css and place-map.css reference those. The -dark variants are separate tokens rather than a themes block because tailwind emits one flat :root, and the blocks pick the right one under [data-theme='dark']. NOT yet emitted to Penpot: its plugin API rejects every documented shape for a shadow token value (see the LOG entry for 2026-08-22), so the import shape is unverified and emitting it blindly would risk the theme sets on the next import.",
+  "$description": "The site's two shadow recipes, stored as layers because that is Penpot's own shape for a shadow token — offsetX / offsetY / blur / spread / color, colors as 8-digit hex so the alpha travels (Penpot has no separate opacity field here, and CSS reads #RRGGBBAA natively). Both recipes are two-layer: a tight contact shadow plus a wide soft one, and both go deeper on dark, where the surface alone gives less separation. `panel` lifts the mega-menu panel; `popup` is the same recipe scaled down for the place-map popup — it was written by reading the panel's numbers, which is why they now share a source. tailwind.config.js composes these layers into the --box-shadow-* custom properties that main-nav.css and place-map.css read; build-penpot-tokens.js emits panel/popup into theme/light and the -dark pair into theme/dark under the same names, which is how every other theme-swapping token in this system works.",
   "panel": {
-    "$value": "0 2px 6px -4px hsl(0 0% 0% / 0.06), 0 10px 28px -14px hsl(0 0% 0% / 0.16)"
+    "$value": [
+      {"offsetX": "0", "offsetY": "2", "blur": "6", "spread": "-4", "color": "#0000000F"},
+      {"offsetX": "0", "offsetY": "10", "blur": "28", "spread": "-14", "color": "#00000029"}
+    ]
   },
   "panel-dark": {
-    "$value": "0 4px 10px -4px hsl(0 0% 0% / 0.35), 0 18px 40px -12px hsl(0 0% 0% / 0.55)"
+    "$value": [
+      {"offsetX": "0", "offsetY": "4", "blur": "10", "spread": "-4", "color": "#00000059"},
+      {"offsetX": "0", "offsetY": "18", "blur": "40", "spread": "-12", "color": "#0000008C"}
+    ]
   },
   "popup": {
-    "$value": "0 1px 3px -2px hsl(0 0% 0% / 0.08), 0 6px 16px -10px hsl(0 0% 0% / 0.18)"
+    "$value": [
+      {"offsetX": "0", "offsetY": "1", "blur": "3", "spread": "-2", "color": "#00000014"},
+      {"offsetX": "0", "offsetY": "6", "blur": "16", "spread": "-10", "color": "#0000002E"}
+    ]
   },
   "popup-dark": {
-    "$value": "0 2px 6px -3px hsl(0 0% 0% / 0.4), 0 10px 24px -10px hsl(0 0% 0% / 0.5)"
+    "$value": [
+      {"offsetX": "0", "offsetY": "2", "blur": "6", "spread": "-3", "color": "#00000066"},
+      {"offsetX": "0", "offsetY": "10", "blur": "24", "spread": "-10", "color": "#00000080"}
+    ]
   }
 }
