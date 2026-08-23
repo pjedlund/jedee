@@ -2,7 +2,7 @@
 MAIN NAV — post-type mega-menu
 A "Menu ⌄" button drops a two-column, table-of-contents-style panel of every post type (icon · name · leader dots · count). Progressive enhancement per the nav-accessible skill: plain <a> list → <ul role="list"> → <nav> landmark → JS-injected toggle button. Without JS the panel is a static row of pills.
 
-⚠ The seven color-mix() colors below (surface, row hover, icon, count, dots, and the two toggle borders) are mirrored as flat hexes in src/_data/designTokens/megamenuColors.json, because Penpot has no color-mix() and the Mega-menu board binds to them as tokens. Change a percentage here and the mirror drifts — reflatten it and re-run `npm run penpot:tokens`.
+⚠ The seven color-mix() colors below are mirrored as flat hexes in designTokens/megamenuColors.json, since Penpot has no color-mix(). Change a percentage here and the mirror drifts — reflatten and re-run `npm run penpot:tokens`.
 */
 
 .mainnav {
@@ -94,7 +94,7 @@ A "Menu ⌄" button drops a two-column, table-of-contents-style panel of every p
   z-index: 5;
 
   display: grid; /* nav-menu.js also sets this inline, to beat the pre-JS display:none */
-  align-items: stretch; /* the <ul> carries `cluster` for the no-JS pill row; without this its align-items:center would leak in and stop a wrapped row from filling its track */
+  align-items: stretch; /* without this, the cluster's align-items:center leaks in and stops a wrapped row from filling its track */
   grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
   column-gap: var(--space-l);
   row-gap: var(--space-3xs);
@@ -231,12 +231,12 @@ A "Menu ⌄" button drops a two-column, table-of-contents-style panel of every p
    The row is built around a small MENU trigger — it never wraps, and it pins the controls cluster (breadcrumb.css). Both pins have to relax here, or the pill row eats the row and the breadcrumb crushes to "NO".
    `:has(.mainnav)` is load-bearing: during the soft launch header.njk omits the nav entirely in production, which also means no .menu-toggle. Without this guard the cluster grew to 22rem around nothing but the theme toggle, stranding the moon in the middle of the row instead of pinned right. */
 .site-header .repel:has(.mainnav):not(:has(.menu-toggle)) {
-  /* Relaxes the pin breadcrumb.css sets, through repel's own knob. This selector outweighs .breadcrumb-bar, so the wrap wins whether or not the breadcrumb is on. */
+  /* Relaxes the pin breadcrumb.css sets, through repel's own knob. Outweighs .breadcrumb-bar, so the wrap wins either way. */
   --repel-wrap: wrap;
 }
 
 .site-header .repel > .cluster:has(.mainnav):not(:has(.menu-toggle)) {
-  /* Basis 22rem, not `auto`: the pill row's max-content is ~2000px, so an auto basis makes the cluster the biggest thing on the row and flexbox takes the shrink out of the breadcrumb beside it. From 22rem it grows into whatever the trail leaves on a wide row and wraps below it on a narrow one. `--cluster-wrap` (the composition's own knob) keeps the theme toggle alongside the pills rather than stranded on its own line. `flex`/`min-inline-size` stay plain declarations — they size this element as a flex ITEM of the row, which is not something the cluster composition owns. */
+  /* Basis 22rem, not `auto`: the pill row's max-content is ~2000px, so an auto basis makes the cluster the biggest thing on the row and crushes the breadcrumb beside it. --cluster-wrap keeps the theme toggle alongside the pills. `flex`/`min-inline-size` stay plain declarations — they size this element as a flex ITEM of the row, not something cluster owns. */
   --cluster-wrap: nowrap;
 
   flex: 1 1 22rem;
@@ -248,10 +248,10 @@ A "Menu ⌄" button drops a two-column, table-of-contents-style panel of every p
 }
 
 .mainnav > .megamenu:first-child {
-  /* The <ul> carries `cluster`, so the wrapping pill row IS the composition — only its two knobs are set here. (In the enhanced state the panel rule below overrides cluster with `display: grid`; same element, two layouts, one per JS state.) */
+  /* The <ul> carries `cluster`, so the pill row IS the composition — only its knobs are set here. (The panel rule below overrides it with `display: grid` in the enhanced state.) */
   --gutter: var(--space-3xs) var(--space-2xs);
   --cluster-horizontal-alignment: flex-end;
-  /* Re-assert wrapping: the ancestor rule below sets --cluster-wrap: nowrap on the header's cluster, and custom properties inherit — without this the pill row would run off the row instead of wrapping. */
+  /* Re-assert wrapping: the ancestor rule below sets --cluster-wrap: nowrap and custom properties inherit. */
   --cluster-wrap: wrap;
 
   visibility: visible;
