@@ -1,6 +1,5 @@
 /**
- * Converts a DTCG token object into a flat array of {name, value, min, max, description}
- * items for use in Nunjucks templates (e.g. the styleguide).
+ * Converts a DTCG token object into a flat array of {name, value, min, max, description} items for use in Nunjucks templates (e.g. the styleguide).
  *
  * @param {object} dtcgObject - DTCG-formatted token group
  * @returns {array} [{name, value, min, max, description}]
@@ -28,8 +27,7 @@ export const dtcgItems = dtcgObject => {
 
         items.push(item);
       }
-      // A node can be both a leaf ($value) and a group — recurse either way;
-      // non-object children are skipped by the guard above.
+      // A node can be both a leaf ($value) and a group — recurse either way; non-object children are skipped by the guard above.
       traverse(node, name);
     }
   };

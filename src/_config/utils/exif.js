@@ -9,19 +9,14 @@
 //               software, scan date) — labelled separately so f/8 · 1/60 is never
 //               mistaken for the pinhole's exposure.
 //
-// It DELIBERATELY never returns the creator contact fields (home address, phone,
-// email) that live in the file's XMP — they must not reach a rendered page.
+// It DELIBERATELY never returns the creator contact fields (home address, phone, email) that live in the file's XMP — they must not reach a rendered page.
 //
-// Dates are formatted from the raw wall-clock string (not a revived Date) so a
-// Netlify build running in UTC can't shift a midnight-local capture date to the
-// previous day. See the `microformats`/`indieweb` skills for how this data is
-// marked up, and `_local/design` for the design record.
+// Dates are formatted from the raw wall-clock string, never a revived Date — a Netlify build running in UTC would otherwise shift a midnight-local capture to the previous day.
 import exifr from 'exifr';
 
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-// Normalize a front-matter src ("./src/…", "/assets/…", "assets/…") to a path
-// exifr can read from the project root. Mirrors image.js's ./src prepend.
+// Normalize a front-matter src ("./src/…", "/assets/…", "assets/…") to a path exifr can read from the project root. Mirrors image.js's ./src prepend.
 const toFsPath = src => {
   if (src.startsWith('./src')) return src;
   if (src.startsWith('/')) return `./src${src}`;

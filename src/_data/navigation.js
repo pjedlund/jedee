@@ -22,9 +22,7 @@ export default {
     {text: 'RSVPs', url: '/rsvps/', icon: 'calendar-check', collection: 'rsvp'},
     {text: 'Audio', url: '/audio/', icon: 'mic', collection: 'audio'},
     {text: 'Videos', url: '/videos/', icon: 'video', collection: 'video'},
-    // Lucide has no running-figure glyph yet (open feature request, not shipped) —
-    // `activity` (the heartbeat/pulse glyph) is Lucide's own fitness-tracking icon
-    // and matches the section name directly.
+    // Lucide has no running-figure glyph yet (open feature request, not shipped) — `activity` (the heartbeat/pulse glyph) is Lucide's own fitness-tracking icon and matches the section name directly.
     {text: 'Activities', url: '/activities/', icon: 'activity', collection: 'activity'}
   ],
   // Footer nav. Now joins it once the page exists.

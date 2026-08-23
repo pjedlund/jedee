@@ -1,17 +1,8 @@
-// Build-time webmention fetch with our own persistent cache. Ported from Lene
-// Saile's pattern (the EE author): we keep `.cache/webmentions.json` ourselves
-// and fetch INCREMENTALLY with `&since=<lastFetched>`, merging new mentions by
-// `wm-id`, so each build only pulls what's new. `duration: '0s'` because WE own
-// the cache, not eleventy-fetch.
+// Build-time webmention fetch with our own persistent cache, ported from Lene Saile's pattern: we keep `.cache/webmentions.json` and fetch INCREMENTALLY with `&since=<lastFetched>`, merging by `wm-id`. `duration: '0s'` because WE own the cache, not eleventy-fetch.
 //
-// Fetching is PRODUCTION-only: dev/test builds just read whatever is already in
-// `.cache` (seed it with a JF2 fixture to preview rendering locally). A missing
-// domain or token degrades gracefully — `fetchWebmentions` returns `false` and we
-// fall back to the cache, so the build is always green and the section renders
-// empty until `WEBMENTION_IO_TOKEN` is set (in local `.env` + Netlify build env).
+// Fetching is PRODUCTION-only: dev/test builds just read whatever is already in `.cache` (seed it with a JF2 fixture to preview rendering locally). A missing domain or token degrades gracefully — `fetchWebmentions` returns `false` and we fall back to the cache, so the build is always green and the section renders empty until `WEBMENTION_IO_TOKEN` is set (in local `.env` + Netlify build env).
 //
-// The cache survives across deploys via `netlify-plugin-cache` (netlify.toml),
-// which is what makes the incremental `since` model work on Netlify.
+// The cache survives across deploys via `netlify-plugin-cache` (netlify.toml), which is what makes the incremental `since` model work on Netlify.
 import fs from 'node:fs';
 import path from 'node:path';
 import EleventyFetch from '@11ty/eleventy-fetch';

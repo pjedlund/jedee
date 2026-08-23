@@ -1,11 +1,7 @@
 import Image from '@11ty/eleventy-img';
 import path from 'node:path';
 
-// HTML-escape a value for safe interpolation into the markup we build by hand.
-// This shortcode returns raw HTML, so it bypasses Nunjucks' auto-escaping: a
-// straight `"` in a frontmatter `alt`/`caption` would otherwise close the
-// attribute and make the html-minify transform throw a Parse Error, failing the
-// production build. The set covers both attribute and text-node contexts.
+// HTML-escape a value for safe interpolation into the markup we build by hand. This shortcode returns raw HTML, so it bypasses Nunjucks' auto-escaping: a straight `"` in a frontmatter `alt`/`caption` would otherwise close the attribute and make the html-minify transform throw a Parse Error, failing the production build. The set covers both attribute and text-node contexts.
 const HTML_ESCAPES = {
   '&': '&amp;',
   '<': '&lt;',
@@ -45,8 +41,7 @@ const processImage = async options => {
     lightbox = false
   } = options;
 
-  // Positional callers pass null to skip an argument ("add null to skip"),
-  // which bypasses the destructuring default — normalize it here.
+  // Positional callers pass null to skip an argument ("add null to skip"), which bypasses the destructuring default — normalize it here.
   loading = loading ?? 'lazy';
 
   // Set sizes based on loading (if not provided)
@@ -76,9 +71,7 @@ const processImage = async options => {
     }
   });
 
-  // Prefer JPEG for the <img> fallback src (and the lightbox zoom target);
-  // when jpeg isn't among the requested formats (e.g. formats: ["webp"]),
-  // use the last format listed instead of crashing on metadata.jpeg.
+  // Prefer JPEG for the <img> fallback src (and the lightbox zoom target); when jpeg isn't among the requested formats (e.g. formats: ["webp"]), use the last format listed instead of crashing on metadata.jpeg.
   const fallbackFormat = metadata.jpeg ?? Object.values(metadata).at(-1);
   const lowsrc = fallbackFormat[fallbackFormat.length - 1];
 
@@ -97,9 +90,7 @@ const processImage = async options => {
     alt,
     loading,
     'decoding': loading === 'eager' ? 'sync' : 'async',
-    // Eager = above-the-fold hero = the likely LCP element. fetchpriority is
-    // the modern replacement for image preload when the img is in the initial
-    // HTML (web.dev/articles/fetch-priority; cross-browser since Firefox 132).
+    // Eager = above-the-fold hero = the likely LCP element. fetchpriority is the modern replacement for image preload when the img is in the initial HTML (web.dev/articles/fetch-priority; cross-browser since Firefox 132).
     ...(loading === 'eager' && {'fetchpriority': 'high'}),
     ...(imageClass && { class: imageClass }),
     'eleventy:ignore': ''
@@ -107,13 +98,7 @@ const processImage = async options => {
 
   const pictureElement = `<picture> ${imageSources}<img ${imageAttributes}></picture>`;
 
-  // Lightbox mode: wrap the picture in the <photo-lightbox> WebC component
-  // (src/_includes/webc/photo-lightbox.webc — processed by the WebC transform
-  // on the rendered page, so this works from any template or markdown post).
-  // The largest generated JPEG is the pre-JS link target and sets the slide
-  // dimensions; the full JPEG srcset goes to data-pswp-srcset so PhotoSwipe
-  // loads the right size for the screen and upgrades on zoom. The caption is
-  // passed to the component, which renders the <figcaption> OUTSIDE the link.
+  // Lightbox mode: wrap the picture in the <photo-lightbox> WebC component. The largest JPEG is the pre-JS link target and sets the slide dimensions; the full srcset goes to data-pswp-srcset so PhotoSwipe picks the right size. The component renders the <figcaption> OUTSIDE the link.
   if (lightbox) {
     const lightboxAttributes = stringifyAttributes({
       '@href': lowsrc.url,
@@ -172,11 +157,7 @@ export const imageKeysShortcode = async (options = {}) => {
   return processImage(options);
 };
 
-// Responsive image that opens in the PhotoSwipe lightbox. Usable in any
-// template or markdown post: {% lightbox "/assets/images/foo.jpg", "alt", "caption" %}
-// Positional order is identical to {% image %}; pass null to skip. e.g. a
-// feature-width lightbox: {% lightbox "…", "alt", null, null, "feature" %}
-// (named parameters: {% imageKeys %} with "lightbox": true).
+// Responsive image that opens in the PhotoSwipe lightbox. Usable in any template or markdown post: {% lightbox "/assets/images/foo.jpg", "alt", "caption" %} Positional order is identical to {% image %}; pass null to skip. e.g. a feature-width lightbox: {% lightbox "…", "alt", null, null, "feature" %} (named parameters: {% imageKeys %} with "lightbox": true).
 export const lightboxShortcode = async (
   src,
   alt,
