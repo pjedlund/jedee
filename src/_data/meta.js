@@ -3,10 +3,7 @@ export const siteName = 'Johan Edlund';
 export const siteDescription = 'Personal site of Johan Edlund';
 // Extract domain from `url`
 export const domain = new URL(url).hostname;
-// Soft-launch: emit a site-wide noindex,nofollow (head/meta-info.njk). Flip to
-// false at 1.0.0 go-live (alongside navigation.hideNav). `visibility: unlisted`
-// posts carry their own per-post `noindex` regardless, so they stay out of the
-// index after launch (see _config/plugins/drafts.js).
+// Soft-launch: site-wide noindex,nofollow. Flip to false at 1.0.0 go-live, alongside navigation.hideNav. (`visibility: unlisted` posts keep their own per-post noindex either way.)
 export const noindexSite = true;
 export const siteType = 'Person'; // schema
 export const locale = 'en_EN';
@@ -18,8 +15,7 @@ export const author = {
   avatar: '/avatar.webp', // path to the author's avatar.
   email: 'me@johanedlund.se', // email of the author
   website: 'https://johanedlund.se', // the personal site of the author (apex is canonical)
-  // rel=me identities — looped into <link rel="me"> in head/meta-info.njk; the
-  // forward half of bidirectional rel=me that powers IndieAuth / RelMeAuth.
+  // rel=me identities — the forward half of the bidirectional rel=me that powers IndieAuth. Each profile has to link back here.
   me: [
     'https://github.com/pjedlund',
     'https://mastodon.social/@pjedlund',
@@ -86,42 +82,23 @@ export const navigation = {
   ariaTop: 'Main',
   ariaBottom: 'Complementary',
   ariaPlatforms: 'Platforms',
-  // Header chrome — two INDEPENDENT toggles (header.njk):
-  //   breadcrumb — left side: true = breadcrumb trail (◍ › Section › page),
-  //                false = classic logomark + wordmark home link.
-  //   hideNav    — main nav on the right: true = hidden, false = shown (note below).
-  // The theme toggle is always present (rightmost). The page <h1> is always visible
-  // (entry-header.njk), independent of both toggles.
+  // Header chrome — two independent toggles (header.njk). breadcrumb: true = trail, false = logomark + wordmark. hideNav: see below.
   breadcrumb: true,
-  hideNav: true // soft-launch: hide the main nav in PRODUCTION (header keeps the breadcrumb/logo + skip-link); header.njk still reveals it in `eleventy --serve` for local dev. Independent of `breadcrumb`. Flip to false at 1.0.0 to show everywhere.
+  hideNav: true // soft-launch: hides the main nav in PRODUCTION only — header.njk still shows it in `eleventy --serve`. Flip to false at 1.0.0.
 };
-// Accessible name for the single header light/dark toggle (aria-pressed conveys
-// the on/off state; this is the static label).
+// Static label for the header light/dark toggle; aria-pressed carries the state.
 export const themeToggleLabel = 'Toggle dark mode';
-// IndieWeb endpoints, discovered via <link rel> in the <head> (see
-// _includes/head/meta-info.njk). The Micropub server is this site's Netlify
-// Function at /api/micropub; auth is fully delegated to hosted IndieAuth
-// services — this site runs no auth server, it only verifies the bearer token.
-// micropub tracks `url` so the link points at whatever domain the deploy serves.
+// IndieWeb endpoints, discovered via <link rel> in the <head>. Auth is delegated to hosted IndieAuth — this site runs no auth server, it only verifies the bearer token.
 export const indieweb = {
   micropub: `${url}/api/micropub`,
   authorizationEndpoint: 'https://indieauth.com/auth',
   tokenEndpoint: 'https://tokens.indieauth.com/token'
 };
-// Received webmentions (Phase 2). Fetched build-time by _data/webmentions.js and
-// rendered statically by partials/webmentions.njk on article/note/photo pages.
-// The webmention.io account domain is `domain` (apex, derived from `url` above) —
-// reused, not duplicated. `fallbackAvatar` is shown for a mention whose author
-// has no photo. Activate live fetching by setting WEBMENTION_IO_TOKEN (see
-// .env-sample); until then the section renders empty everywhere.
+// Received webmentions, fetched build-time by _data/webmentions.js. Set WEBMENTION_IO_TOKEN (.env-sample) to activate; until then the section renders empty.
 export const webmentions = {
   fallbackAvatar: '/assets/images/template/webmention-avatar.svg'
 };
-// Static maps for photo posts. A build-time Geoapify static-map image is fetched
-// from the photo's GPS and self-hosted by the eleventy-img HTML transform (the
-// remote-cover pattern), so the key is build-time only and never reaches the page.
-// Set MAP_API_KEY (.env + Netlify) to activate; until then the map renders
-// nothing and the place name links to OpenStreetMap instead. Free tier: geoapify.com.
+// Geoapify static maps for photo posts, fetched and self-hosted at build time, so the key never reaches the page. Set MAP_API_KEY (.env + Netlify) to activate; until then the place name links to OpenStreetMap instead.
 export const mapApiKey = process.env.MAP_API_KEY || '';
 export const greenweb = {
   // https://carbontxt.org/
@@ -136,28 +113,11 @@ export const greenweb = {
 };
 export const tests = {
   pa11y: {
-    // keep customPaths empty if you want to test all pages
-    //
-    // The first four are chrome-and-prose pages. `/audio/nybrostrand-beach/` is here to cover
-    // a media POST layout instead: the <audio> player, the capture-metadata <dl>, the download
-    // buttons and the <place-map> — none of which any of the other four render.
-    // `pa11y:build` sets BUILD_DRAFTS=1, so a path listed here may be a draft — checking a post
-    // before it ships is the point. The catch: a path that no longer exists does not fail the
-    // run, it scores zero errors and passes silently. So whenever a post listed here is deleted,
-    // or renamed (the file name drives the slug), this list has to follow it by hand.
-    // `/activities/` covers the third layout shape: a very long index (180 links) living
-    // inside a custom element, with the map component in places mode above it.
+    // Empty = test all pages. Three layout shapes are covered: chrome-and-prose (the first four), a media post (/audio/), and a very long index inside a custom element (/activities/).
+    // ⚠ Keep this list in step by hand when a post is renamed or deleted — a path that no longer exists scores zero errors and passes silently.
     customPaths: ['/', '/about/', '/articles/', '/styleguide/', '/audio/nybrostrand-beach/', '/activities/'],
     globalIgnore: [],
-    // Which browser pa11y drives. Empty = let puppeteer use the exact Chrome build it pins,
-    // which is the trap this setting exists to avoid: puppeteer arrives transitively under
-    // pa11y-ci, downloads its browser to the machine-wide ~/.cache/puppeteer, and its
-    // postinstall SWALLOWS a failed download — so `npm install` exits clean and the test only
-    // breaks months later with "Could not find Chrome (ver. …)". Worse, every dependency
-    // refresh that bumps puppeteer changes the pinned version, so yesterday's download stops
-    // counting. Pointing at a Chrome that's already installed sidesteps all of it. Override
-    // per machine with PA11Y_CHROME= if Chrome lives elsewhere (Linux, CI, a Setapp install).
-    // Trade-off accepted: this browser auto-updates, so it isn't a pinned version.
+    // Point pa11y at an already-installed Chrome. Do not empty this: puppeteer then hunts for its own pinned build and fails with "Could not find Chrome (ver. …)" — see the wiki, "The accessibility test". Override with PA11Y_CHROME= where Chrome lives elsewhere.
     chromePath: process.env.PA11Y_CHROME || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
   }
 };
