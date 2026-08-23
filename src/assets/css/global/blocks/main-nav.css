@@ -231,7 +231,8 @@ A "Menu ⌄" button drops a two-column, table-of-contents-style panel of every p
    The row is built around a small MENU trigger — it never wraps, and it pins the controls cluster (breadcrumb.css). Both pins have to relax here, or the pill row eats the row and the breadcrumb crushes to "NO".
    `:has(.mainnav)` is load-bearing: during the soft launch header.njk omits the nav entirely in production, which also means no .menu-toggle. Without this guard the cluster grew to 22rem around nothing but the theme toggle, stranding the moon in the middle of the row instead of pinned right. */
 .site-header .repel:has(.mainnav):not(:has(.menu-toggle)) {
-  flex-wrap: wrap;
+  /* Relaxes the pin breadcrumb.css sets, through repel's own knob. This selector outweighs .breadcrumb-bar, so the wrap wins whether or not the breadcrumb is on. */
+  --repel-wrap: wrap;
 }
 
 .site-header .repel > .cluster:has(.mainnav):not(:has(.menu-toggle)) {
