@@ -19,8 +19,7 @@ async function createFavicons() {
   await sharp(svgBuffer).resize(192, 192).toFile(`${outputDir}/icon-192x192.png`);
   await sharp(svgBuffer).resize(512, 512).toFile(`${outputDir}/icon-512x512.png`);
 
-  // apple-touch-icon: opaque bg + safe-area padding so iOS doesn't render the
-  // mark edge-to-edge on black. Logo ~56% of the 180px tile; iOS rounds corners.
+  // apple-touch-icon: opaque bg + safe-area padding so iOS doesn't render the mark edge-to-edge on black. Logo ~56% of the 180px tile; iOS rounds corners.
   await sharp(svgBuffer)
     .resize(100, 100)
     .extend({ top: 40, bottom: 40, left: 40, right: 40, background: iconBg })

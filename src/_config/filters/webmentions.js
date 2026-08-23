@@ -1,7 +1,4 @@
-// Three small, composable webmention filters. Ported from Lene Saile's pattern —
-// the TEMPLATE (partials/webmentions.njk) does the grouping; these just slice the
-// flat JF2 `children` array. Registered in eleventy.config.js and re-exported from
-// the filters.js barrel. Unit-tested in _local/tests/webmentions.test.js.
+// Three small, composable webmention filters. Ported from Lene Saile's pattern — the TEMPLATE (partials/webmentions.njk) does the grouping; these just slice the flat JF2 `children` array. Registered in eleventy.config.js and re-exported from the filters.js barrel. Unit-tested in _local/tests/webmentions.test.js.
 
 /** All mentions whose `wm-target` is this page's absolute URL. */
 export const webmentionGetForUrl = (webmentions, url) => {
@@ -9,13 +6,13 @@ export const webmentionGetForUrl = (webmentions, url) => {
 };
 
 /** True if the mention is one of Johan's own / a self-echo — so the template can
- *  exclude it. Two cases:
- *  (1) Bridgy backfeeds the silo POST itself: its `wm-source` is a brid.gy
+ * exclude it. Two cases:
+ * (1) Bridgy backfeeds the silo POST itself: its `wm-source` is a brid.gy
  *      `/post/` URL (vs `/comment/`, `/like/`, `/repost/`). This happens when the
  *      syndicated copy links back to the original — e.g. a Flickr photo whose
  *      description links here surfaces as a `mention-of` carrying the photo's own
  *      caption. It is never a genuine third-party response, so always drop it.
- *  (2) the author is one of Johan's own identities (POSSE copies bouncing back).
+ * (2) the author is one of Johan's own identities (POSSE copies bouncing back).
  *      NB: this does NOT include his silo profiles (e.g. Flickr), so his own
  *      genuine comments — `/comment/` — still render. */
 export const webmentionisOwn = webmention => {

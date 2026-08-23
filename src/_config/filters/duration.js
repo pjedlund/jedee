@@ -1,11 +1,11 @@
 /** Recipe duration helpers (spec §9). Accept an integer number of minutes OR an
- *  ISO-8601 "PT…" string, and produce two outputs from the one input:
+ * ISO-8601 "PT…" string, and produce two outputs from the one input:
  *    - toISODuration → a normalized PT…M for dt-duration (µf2) and schema
  *      prepTime/cookTime/totalTime.
  *    - formatDuration → a human-readable string for the page and card.
- *  No duration helper existed before this — dates.js holds only toISOString /
- *  formatDate, and Audio's itunes:duration formatter is a different (HH:MM:SS)
- *  shape. Parse scope is hours + minutes (recipes don't need days/seconds). */
+ * No duration helper existed before this — dates.js holds only toISOString /
+ * formatDate, and Audio's itunes:duration formatter is a different (HH:MM:SS)
+ * shape. Parse scope is hours + minutes (recipes don't need days/seconds). */
 
 /** Parse an integer-minutes number OR a "PT#H#M" string into total minutes. */
 const toMinutes = input => {
@@ -17,7 +17,7 @@ const toMinutes = input => {
 };
 
 /** Normalized ISO-8601 → dt-duration (µf2) + schema prep/cook/totalTime.
- *  Integer minutes become PT<n>M; an already-valid PT… string passes through. */
+ * Integer minutes become PT<n>M; an already-valid PT… string passes through. */
 export const toISODuration = input => {
   if (typeof input === 'number') return `PT${input}M`;
   return input;
@@ -32,11 +32,7 @@ export const formatDuration = input => {
 };
 
 /** Audio/Video itunes:duration formatter (audio/video spec §8/§9). A different
- *  shape from formatDuration: podcast clients want a colon-separated clock
- *  ("41:12", "1:02:05"), and episodes carry seconds, so this needs a
- *  seconds-aware ISO-8601 parser (toMinutes above only does H+M). Accepts a
- *  "PT#H#M#S" string or an integer number of seconds; emits MM:SS, or H:MM:SS
- *  when there's an hours component. Empty/invalid input yields "". */
+ * shape from formatDuration: podcast clients want a clock ("41:12", "1:02:05") and episodes carry seconds, so this parses "PT#H#M#S" or an integer of seconds (toMinutes above only does H+M). Emits MM:SS, or H:MM:SS with hours; "" on empty/invalid. */
 export const itunesDuration = input => {
   let totalSeconds = 0;
   if (typeof input === 'number') {

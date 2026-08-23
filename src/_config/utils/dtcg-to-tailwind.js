@@ -1,9 +1,7 @@
 import {clampValue} from './clamp-generator.js';
 
 /**
- * Recursively traverse a DTCG token object, joining nested key paths with
- * hyphens to produce the same flat {key: value} map that tokensToTailwind()
- * previously produced via slugify.
+ * Recursively traverse a DTCG token object, joining nested key paths with hyphens to produce the same flat {key: value} map that tokensToTailwind() previously produced via slugify.
  *
  * @param {object} dtcgObject - DTCG-formatted token group
  * @param {string} prefix - accumulated key path (used in recursion)
@@ -22,8 +20,7 @@ export const dtcgToTailwind = (dtcgObject, prefix = '') => {
     if (node.$value !== undefined) {
       result[path] = node.$value;
     }
-    // A node can be both a leaf ($value) and a group — e.g. "red" with a "subdued" child.
-    // Recurse either way; non-object/non-$ children are skipped by the guard above.
+    // A node can be both a leaf ($value) and a group — e.g. "red" with a "subdued" child. Recurse either way; non-object/non-$ children are skipped by the guard above.
     Object.assign(result, dtcgToTailwind(node, path));
   }
 
@@ -31,8 +28,7 @@ export const dtcgToTailwind = (dtcgObject, prefix = '') => {
 };
 
 /**
- * Like dtcgToTailwind but converts fluid {min, max} $values to CSS clamp() strings.
- * Use this for spacing and font-size tokens.
+ * Like dtcgToTailwind but converts fluid {min, max} $values to CSS clamp() strings. Use this for spacing and font-size tokens.
  *
  * @param {object} dtcgObject - DTCG-formatted token group with fluid {min, max} values
  * @returns {object} flat map of {tokenKey: clampString}

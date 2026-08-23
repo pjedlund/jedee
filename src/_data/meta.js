@@ -3,7 +3,7 @@ export const siteName = 'Johan Edlund';
 export const siteDescription = 'Personal site of Johan Edlund';
 // Extract domain from `url`
 export const domain = new URL(url).hostname;
-// Soft-launch: site-wide noindex,nofollow. Flip to false at 1.0.0 go-live, alongside navigation.hideNav. (`visibility: unlisted` posts keep their own per-post noindex either way.)
+// @until 1.0.0 — soft-launch: site-wide noindex,nofollow. Flip to false at go-live, alongside navigation.hideNav. (`visibility: unlisted` posts keep their own per-post noindex either way.)
 export const noindexSite = true;
 export const siteType = 'Person'; // schema
 export const locale = 'en_EN';
@@ -84,7 +84,7 @@ export const navigation = {
   ariaPlatforms: 'Platforms',
   // Header chrome — two independent toggles (header.njk). breadcrumb: true = trail, false = logomark + wordmark. hideNav: see below.
   breadcrumb: true,
-  hideNav: true // soft-launch: hides the main nav in PRODUCTION only — header.njk still shows it in `eleventy --serve`. Flip to false at 1.0.0.
+  hideNav: true // @until 1.0.0 — soft-launch: hides the main nav in PRODUCTION only — header.njk still shows it in `eleventy --serve`.
 };
 // Static label for the header light/dark toggle; aria-pressed carries the state.
 export const themeToggleLabel = 'Toggle dark mode';

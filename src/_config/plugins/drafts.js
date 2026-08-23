@@ -1,9 +1,4 @@
-// Interprets JEDEE's post-status / visibility vocabulary centrally — the single
-// place the `draft` and `visibility` frontmatter keys take effect, so all three
-// authoring paths (hand-written · Obsidian Web Clipper · Micropub) share one
-// contract. The Micropub endpoint translates the Micropub-extension fields into
-// these native keys at the edge (see netlify/functions/micropub.js); everything
-// downstream only ever sees `draft` / `visibility`.
+// Interprets JEDEE's post-status / visibility vocabulary centrally — the single place the `draft` and `visibility` frontmatter keys take effect, so all three authoring paths (hand-written · Obsidian Web Clipper · Micropub) share one contract. The Micropub endpoint translates the Micropub-extension fields into these native keys at the edge (see netlify/functions/micropub.js); everything downstream only ever sees `draft` / `visibility`.
 //
 //   draft: true            -> no public output at all (permalink:false + excluded
 //                             from collections), except in serve/watch builds.
@@ -35,8 +30,7 @@ export const drafts = eleventyConfig => {
         return true;
       }
 
-      // Unlisted: permanently out of every collection (archives, feeds, firehose)
-      // while its permalink still resolves — a real property, not build-gated.
+      // Unlisted: permanently out of every collection (archives, feeds, firehose) while its permalink still resolves — a real property, not build-gated.
       if (isUnlisted(data)) {
         return true;
       }
@@ -45,10 +39,7 @@ export const drafts = eleventyConfig => {
     };
   });
 
-  // Unlisted posts also drop from the sitemap. Redundant once they're excluded
-  // from collections (sitemap.njk loops collections.showInSitemap, which already
-  // honors the exclusion), but explicit and harmless; passes through any value
-  // set elsewhere (the feed/sitemap templates set it true on themselves).
+  // Unlisted posts also drop from the sitemap. Redundant once they're excluded from collections (sitemap.njk loops collections.showInSitemap, which already honors the exclusion), but explicit and harmless; passes through any value set elsewhere (the feed/sitemap templates set it true on themselves).
   eleventyConfig.addGlobalData('eleventyComputed.excludeFromSitemap', function () {
     return data => {
       if (isUnlisted(data)) {
@@ -58,9 +49,7 @@ export const drafts = eleventyConfig => {
     };
   });
 
-  // Per-post noindex hook, read by head/meta-info.njk alongside meta.noindexSite.
-  // Unlisted posts stay noindexed even after the site-wide soft-launch flag flips
-  // at 1.0.0. Passes through any explicit per-post `noindex`.
+  // Per-post noindex hook, read by head/meta-info.njk alongside meta.noindexSite. Unlisted posts stay noindexed even after the site-wide soft-launch flag flips at 1.0.0. Passes through any explicit per-post `noindex`.
   eleventyConfig.addGlobalData('eleventyComputed.noindex', function () {
     return data => {
       if (isUnlisted(data)) {

@@ -1,7 +1,5 @@
 /**
- * Build a DTCG (Design Tokens Community Group) JSON file from the JEDEE
- * design tokens in `src/_data/designTokens/*.json`, ready to import into
- * the JEDEE - design tokens file on design.penpot.app.
+ * Build a DTCG (Design Tokens Community Group) JSON file from the JEDEE design tokens in `src/_data/designTokens/*.json`, ready to import into the JEDEE - design tokens file on design.penpot.app.
  *
  * Workflow:
  *   1. Edit any file in src/_data/designTokens/
@@ -20,15 +18,9 @@
  *       primary value   → theme/light
  *       .subdued value  → theme/dark
  *
- * Token type names use the plural form (`fontFamilies`, `fontSizes`, `fontWeights`)
- * because that is what the Penpot plugin API and Tokens Studio extension expect.
- * If a future Penpot importer rejects them, switch to the W3C singular forms.
+ * Token type names use the plural form (`fontFamilies`, `fontSizes`, `fontWeights`) because that is what the Penpot plugin API and Tokens Studio extension expect. If a future Penpot importer rejects them, switch to the W3C singular forms.
  *
- * Theme membership note: Penpot's Plugin API `theme.addSet()` is silently no-op,
- * so we emit a Tokens Studio-style `$themes` block in the DTCG file and trust
- * the importer to wire it up. If themes still come in empty after import, set
- * their members manually in Penpot's Themes tab — the active sets are
- * documented in _local/penpot/penpot-tokens.md.
+ * Theme membership note: Penpot's Plugin API `theme.addSet()` is silently no-op, so we emit a Tokens Studio-style `$themes` block in the DTCG file and trust the importer to wire it up. If themes still come in empty after import, set their members manually in Penpot's Themes tab — the active sets are documented in _local/penpot/penpot-tokens.md.
  */
 
 import {readFile, writeFile} from 'node:fs/promises';
@@ -39,12 +31,10 @@ const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../../..');
 const TOKENS_DIR = resolve(REPO_ROOT, 'src/_data/designTokens');
 const OUTPUT_PATH = resolve(REPO_ROOT, '_local/penpot/penpot-tokens.dtcg.json');
 
-// Top-level keys in colors.json that have a .subdued sibling and represent
-// the light/dark semantic colors.
+// Top-level keys in colors.json that have a .subdued sibling and represent the light/dark semantic colors.
 const LIGHT_DARK_COLOR_NAMES = ['red', 'blue', 'green'];
 
-// Set order matters in Penpot: when the same token name exists in multiple
-// active sets, the latter wins. theme/* must come last so it overrides core/*.
+// Set order matters in Penpot: when the same token name exists in multiple active sets, the latter wins. theme/* must come last so it overrides core/*.
 const CORE_SETS = ['core/colors', 'core/typography', 'core/spacing', 'core/layout', 'core/button'];
 const SET_ORDER = [...CORE_SETS, 'theme/light', 'theme/dark'];
 
@@ -180,9 +170,7 @@ async function build() {
 	const coreTypo = {};
 	for (const [k, v] of Object.entries(fonts)) {
 		if (k.startsWith('$')) continue;
-		// Penpot only knows specific font names from its registry (e.g. "Source Serif 4"),
-		// not the full CSS fallback stack. Use the explicit `penpot` field if present;
-		// otherwise fall back to the first family in the $value array.
+		// Penpot only knows specific font names from its registry (e.g. "Source Serif 4"), not the full CSS fallback stack. Use the explicit `penpot` field if present; otherwise fall back to the first family in the $value array.
 		const family = v.penpot ?? (Array.isArray(v.$value) ? v.$value[0] : v.$value);
 		setLeaf(coreTypo, `font.family.${k}`, token([family], 'fontFamilies', v.$description));
 	}
@@ -198,8 +186,7 @@ async function build() {
 		if (k.startsWith('$')) continue;
 		setLeaf(coreTypo, `font.lineHeight.${k}`, token(String(v.$value), 'number'));
 	}
-	// Typography composite tokens — bundled type styles (family + weight + size +
-	// lineHeight). Inner keys are singular per Penpot's `typography` token shape.
+	// Typography composite tokens — bundled type styles (family + weight + size + lineHeight). Inner keys are singular per Penpot's `typography` token shape.
 	const typographyType = typography.$type ?? 'typography';
 	for (const [styleName, parts] of Object.entries(typography.styles ?? {})) {
 		setLeaf(coreTypo, `type.${styleName}`, token(parts, typographyType));

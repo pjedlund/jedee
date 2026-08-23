@@ -1,8 +1,5 @@
 /**
- * Regenerate the YAML front matter in `DESIGN.md` from the design
- * tokens in `src/_data/designTokens/*.json`. The markdown body below the
- * front matter is preserved verbatim — humans own the prose; this script
- * owns the tokens.
+ * Regenerate the YAML front matter in `DESIGN.md` from the design tokens in `src/_data/designTokens/*.json`. The markdown body below the front matter is preserved verbatim — humans own the prose; this script owns the tokens.
  *
  * The generated front matter conforms to the alpha DESIGN.md spec:
  *   https://github.com/anthropic-ai (see DESIGN.md and spec.md)
@@ -53,9 +50,7 @@ const META = {
 		'src/_config/setup/build-design-md.js — edit the JSON tokens, not the YAML.',
 };
 
-// Maps DESIGN.md semantic role names → palette short names in colors.json.
-// "blue" / "green" / "red" reach the top-level keys; "gray-500" / "orange-500"
-// reach a nested shade; "base-darkest" reaches a hyphenated top-level key.
+// Maps DESIGN.md semantic role names → palette short names in colors.json. "blue" / "green" / "red" reach the top-level keys; "gray-500" / "orange-500" reach a nested shade; "base-darkest" reaches a hyphenated top-level key.
 const SEMANTIC_ROLES = {
 	primary: 'base-darkest',
 	secondary: 'orange-500',
@@ -305,15 +300,12 @@ async function build() {
 		out.typography[outName] = composite;
 	}
 
-	// Inject letterSpacing on body + headings (matches --tracking in
-	// global-styles.css; ch is not a spec-allowed Dimension unit so the
-	// closest equivalent in em is emitted).
+	// Inject letterSpacing on body + headings (matches --tracking in global-styles.css; ch is not a spec-allowed Dimension unit so the closest equivalent in em is emitted).
 	for (const k of ['body', 'heading-1', 'heading-2', 'heading-3']) {
 		if (out.typography[k]) out.typography[k].letterSpacing = '-0.04em';
 	}
 
-	// label-caps and code styles aren't in typography.json — derive them
-	// from the same atomic tokens so they stay in sync if those change.
+	// label-caps and code styles aren't in typography.json — derive them from the same atomic tokens so they stay in sync if those change.
 	if (fonts.base) {
 		out.typography['label-caps'] = {
 			fontFamily: fonts.base.penpot ?? fonts.base.$value?.[0],
@@ -347,8 +339,7 @@ async function build() {
 		if (k.startsWith('$')) continue;
 		out.spacing[k] = fluidMaxToPx(v.$value);
 	}
-	// Derived constants from variables.css — kept here so the spec stays
-	// honest about what's actually in --gutter and --wrapper-width.
+	// Derived constants from variables.css — kept here so the spec stays honest about what's actually in --gutter and --wrapper-width.
 	out.spacing.gutter = fluidMaxToPx(spacing['m-l']?.$value);
 	out.spacing.wrapper = '1360px';
 
@@ -384,8 +375,7 @@ try {
 }
 
 const finalText = '---\n' + yamlOut + '---\n\n' + body;
-// docs/ is gitignored on this project, so it may not exist on a fresh
-// clone. Create it before writing.
+// docs/ is gitignored on this project, so it may not exist on a fresh clone. Create it before writing.
 await mkdir(dirname(OUTPUT_PATH), {recursive: true});
 await writeFile(OUTPUT_PATH, finalText, 'utf8');
 
