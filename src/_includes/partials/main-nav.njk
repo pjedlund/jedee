@@ -13,7 +13,7 @@
    before this one. #}
 
 <nav id="mainnav" class="mainnav" aria-label="{{ meta.navigation.ariaTop }}">
-  <ul id="megamenu" class="megamenu" role="list" data-no-flash>
+  <ul id="megamenu" class="megamenu | cluster" role="list" data-no-flash>
     {% for item in navigation.postTypes %}
       {% if collections[item.collection].length %}
         {% set iconName = "posts/" + item.icon %}
