@@ -1,12 +1,4 @@
-{# Single light/dark toggle for the header. One button that flips the theme.
-   Shows the CURRENT theme: sun in light mode, moon in dark mode — the sun's disc
-   grows, its beams retract, and a masked circle slides in to carve the crescent
-   (animated sun↔moon, adapted from Adam Argyle's web.dev theme switch, MIT —
-   see theme-toggle.css). Wrapped in <is-land> so it only appears once JS upgrades
-   it — a toggle that can't run shouldn't show (the no-flash theme itself is set by
-   the inline theme-toggle.js, independent of this button).
-   A11y: the SVG is decorative (aria-hidden); the accessible name is the
-   visually-hidden label, and the on/off state is carried by aria-pressed. #}
+{# Single light/dark toggle for the header. Shows the CURRENT theme: sun in light, moon in dark, animated in theme-toggle.css (adapted from Adam Argyle's web.dev theme switch, MIT). Wrapped in <is-land> so it only appears once JS upgrades it — a toggle that can't run shouldn't show; the no-flash theme itself is set by the inline theme-toggle.js, independent of this button. A11y: the SVG is decorative, the accessible name is the visually-hidden label, and the state is carried by aria-pressed. #}
 <is-land on:idle>
   <button type="button" id="theme-toggle" class="theme-toggle" data-theme-toggle aria-pressed="false" title="{{ meta.themeToggleLabel }}">
     <svg class="sun-and-moon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">

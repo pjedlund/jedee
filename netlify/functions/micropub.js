@@ -1,11 +1,6 @@
 // JEDEE's Micropub server — the site's first Netlify Function.
 //
-// One endpoint at /api/micropub that turns an incoming h-entry (from any
-// Micropub client: Sparkles, Quill, iA Writer…) into a shape-correct .md
-// committed to the repo via the GitHub Contents API. A Micropub post lands as
-// the *same* kind of .md, in the *same* src/posts/<type>/ folder, as an Obsidian
-// Web Clipper clip — the two are complementary authoring paths over one content
-// layer. See the `micropub` skill and _local/project_docs/micropub-pattern.html.
+// One endpoint at /api/micropub that turns an incoming h-entry (from any Micropub client: Sparkles, Quill, iA Writer…) into a shape-correct .md committed to the repo via the GitHub Contents API. A Micropub post lands as the *same* kind of .md, in the *same* src/posts/<type>/ folder, as an Obsidian Web Clipper clip — the two are complementary authoring paths over one content layer. See the `micropub` skill and _local/project_docs/micropub-pattern.html.
 //
 // Engine: @benjifs/micropub (auth, routing, frontmatter, CRUD) +
 // @benjifs/github-store (the GitHub backend). We "vendor-but-patch": the engine
@@ -23,9 +18,7 @@
 //                    same title as a clean slug so its filename, URL, and <h1>
 //                    all match (not a bare timestamp).
 //
-// v1 is create-only, text post-types; the media/update/delete surface the engine
-// already supports is simply not wired. Real-client auth presupposes the public
-// `me` domain being live — see the sequencing note in the design doc.
+// v1 is create-only, text post-types; the media/update/delete surface the engine already supports is simply not wired. Real-client auth presupposes the public `me` domain being live — see the sequencing note in the design doc.
 
 import MicropubEndpoint from '@benjifs/micropub'
 import GitHubStore from '@benjifs/github-store'
@@ -63,9 +56,7 @@ export const TYPE_DIR = {
   photo: 'photos'
 }
 
-// Micropub kebab property -> this site's frontmatter key (what the layouts read).
-// name/category/published are already translated by the engine's translateProps;
-// these are the simple target-URL keys it leaves hyphenated (a string value).
+// Micropub kebab property -> this site's frontmatter key (what the layouts read). name/category/published are already translated by the engine's translateProps; these are the simple target-URL keys it leaves hyphenated (a string value).
 export const KEY_MAP = {
   'in-reply-to': 'inReplyTo',
   'like-of': 'likeOf',
@@ -73,25 +64,14 @@ export const KEY_MAP = {
   'repost-of': 'repostOf'
 }
 
-// watch/read/listen are richer: Sparkles' Movie/Book/Listen editors nest the
-// media's identity in an h-cite (name/photo/url/published/author/content) and
-// resend the poster top-level as `featured`. The cite's url becomes the layout's
-// identity key (url/link/source, confirmed against src/_layouts/{watching,reading,
-// jam}.njk); the rest is destructured into title/cover/year/(artist|author)/plot
-// below. A jam diverges: the cite name also fills `album`, and the cite author is
-// the `artist` (film/book keep `author`) — matching the jam clippers + layout.
+// watch/read/listen are richer: Sparkles' editors nest the media's identity in an h-cite, whose url becomes the layout's identity key (url/link/source) and whose rest is destructured into title/cover/year/(artist|author)/plot below. A jam diverges: the cite name also fills `album`, and its author is the `artist` where film/book keep `author`.
 export const MEDIA_KEY = {
   'watch-of': 'url',
   'read-of': 'link',
   'listen-of': 'source'
 }
 
-// Workout post (Apple Watch -> iOS Shortcut -> /api/micropub). There is no native
-// engine post-type for a workout, so the Shortcut POSTs a plain h-entry with these
-// flat properties and the engine routes it as a `note`; the store wrapper detects
-// the `activity` property and reroutes it to src/posts/activities/ (see workoutFile).
-// Pace/speed is DERIVED at render (paceOrSpeed filter), never stored — so only the
-// recorded raw numbers land here. Numeric props are coerced; the rest stay strings.
+// Workout post (Apple Watch -> iOS Shortcut -> /api/micropub). There is no native engine post-type for a workout, so the Shortcut POSTs a plain h-entry with these flat properties and the engine routes it as a `note`; the store wrapper detects the `activity` property and reroutes it to src/posts/activities/ (see workoutFile). Pace/speed is DERIVED at render (paceOrSpeed filter), never stored — so only the recorded raw numbers land here. Numeric props are coerced; the rest stay strings.
 export const WORKOUT_KEY = {
   activity: 'activityType',
   distance: 'distanceKm',
@@ -123,8 +103,7 @@ export const slugify = (s = '') =>
     .replace(/-+/g, '-')
     .replace(/^-+|-+$/g, '')
 
-// Strip HTML tags + entities so markup in the body (e.g. an <a href>, which
-// some clients send) never leaks into the slug.
+// Strip HTML tags + entities so markup in the body (e.g. an <a href>, which some clients send) never leaks into the slug.
 export const stripHtml = (s = '') =>
   String(s).replace(/<[^>]*>/g, ' ').replace(/&[a-z#0-9]+;/gi, ' ')
 
@@ -147,23 +126,17 @@ export const targetSlug = (data = {}) => {
   }
 }
 
-// Flatten a jf2 value that may arrive as an array or a nested h-cite object down
-// to the plain string the layouts expect (e.g. href="{{ likeOf }}").
+// Flatten a jf2 value that may arrive as an array or a nested h-cite object down to the plain string the layouts expect (e.g. href="{{ likeOf }}").
 export const flatten = (v) => {
   if (Array.isArray(v)) v = v[0]
   if (v && typeof v === 'object') return v.url || v.value || v.name || ''
   return v
 }
 
-// Sparkles' Movie/Book/Listen editors hand over a thumbnail-sized cover URL
-// (Apple Music's 100x100, OpenLibrary's -M, ~180px). The .cover block only caps
-// width — it never upscales — so a thumbnail renders tiny. Rewrite the known
-// providers to a full-resolution variant so the build self-hosts a sharp image
-// instead of a blurry one. Unknown hosts pass through unchanged.
+// Sparkles' Movie/Book/Listen editors hand over a thumbnail-sized cover URL (Apple Music's 100x100, OpenLibrary's -M, ~180px). The .cover block only caps width — it never upscales — so a thumbnail renders tiny. Rewrite the known providers to a full-resolution variant so the build self-hosts a sharp image instead of a blurry one. Unknown hosts pass through unchanged.
 export const upgradeCoverUrl = (url = '') => {
   if (!url || typeof url !== 'string') return url
-  // Apple Music / iTunes artwork (mzstatic): the trailing `{w}x{h}bb.<ext>`
-  // segment is the requested render size — ask for 1000x1000.
+  // Apple Music / iTunes artwork (mzstatic): the trailing `{w}x{h}bb.<ext>` segment is the requested render size — ask for 1000x1000.
   if (url.includes('mzstatic.com')) {
     return url.replace(/\/\d+x\d+bb\.(jpe?g|png|webp)$/i, '/1000x1000bb.$1')
   }
@@ -181,15 +154,11 @@ export const upgradeCoverUrl = (url = '') => {
 export const formatSlug = (type = 'note', slug = '') =>
   `${TYPE_DIR[type] || type}/${slug.replace(/^\d+-/, '')}`
 
-// A workout carries no `name`, so give it a title for <title>/OG/feeds/card/p-name:
-// the activity, plus the distance when there is one ("Run · 5.2 km" / "Strength").
-// Exported so the health-export adapter can predict the same title (and therefore
-// the same workoutFile slug) before a post exists, to check for a collision.
+// A workout carries no `name`, so give it a title for <title>/OG/feeds/card/p-name: the activity, plus the distance when there is one ("Run · 5.2 km" / "Strength"). Exported so the health-export adapter can predict the same title (and therefore the same workoutFile slug) before a post exists, to check for a collision.
 export const deriveWorkoutTitle = (activityType, distanceKm) =>
   distanceKm ? `${activityType} · ${distanceKm} km` : activityType
 
-// Rewrite the engine's frontmatter to JEDEE conventions. Pure: returns the new
-// frontmatter object; the body is left untouched.
+// Rewrite the engine's frontmatter to JEDEE conventions. Pure: returns the new frontmatter object; the body is left untouched.
 export const rewriteFrontmatter = (data = {}) => {
   const out = {}
   let mediaSeen = false
@@ -218,9 +187,7 @@ export const rewriteFrontmatter = (data = {}) => {
       else if (value === 'private') out.draft = true
       continue
     }
-    // A workout's flat property -> the training post's frontmatter key. Numeric
-    // props (distance/duration/hr/energy) are coerced; empty/non-numeric ones are
-    // skipped so they never write a null or NaN line.
+    // A workout's flat property -> the training post's frontmatter key. Numeric props (distance/duration/hr/energy) are coerced; empty/non-numeric ones are skipped so they never write a null or NaN line.
     if (key in WORKOUT_KEY) {
       const target = WORKOUT_KEY[key]
       const v = flatten(value)
@@ -233,10 +200,7 @@ export const rewriteFrontmatter = (data = {}) => {
       }
       continue
     }
-    // A watch/read/listen h-cite: take its url as the identity key, then recover
-    // the title/cover/year/(artist|author)/plot the layouts (and Obsidian filenames)
-    // need. A jam diverges from film/book in two cite fields (see below), so the
-    // listen case is split out.
+    // A watch/read/listen h-cite: take its url as the identity key, then recover the title/cover/year/(artist|author)/plot the layouts (and Obsidian filenames) need. A jam diverges from film/book in two cite fields (see below), so the listen case is split out.
     if (MEDIA_KEY[key]) {
       mediaSeen = true
       const isListen = key === 'listen-of'
@@ -250,8 +214,7 @@ export const rewriteFrontmatter = (data = {}) => {
             : null
       if (cite) {
         if (cite.name && !out.title) out.title = flatten(cite.name)
-        // A jam's cite name is also its release: the Listen editor only knows the
-        // album, so mirror it into `album` (film/book have no album concept).
+        // A jam's cite name is also its release: the Listen editor only knows the album, so mirror it into `album` (film/book have no album concept).
         if (isListen && cite.name && !('album' in out)) out.album = flatten(cite.name)
         if (cite.photo && !out.cover) out.cover = flatten(cite.photo)
         if (cite.published && !('year' in out)) out.year = flatten(cite.published)
@@ -270,18 +233,13 @@ export const rewriteFrontmatter = (data = {}) => {
     out[key] = value
   }
 
-  // The media editors also send the poster top-level as `featured`; use it as a
-  // `cover` fallback only inside a media post (never let it pollute other types).
+  // The media editors also send the poster top-level as `featured`; use it as a `cover` fallback only inside a media post (never let it pollute other types).
   if (mediaSeen && data.featured && !out.cover) out.cover = flatten(data.featured)
 
-  // Upgrade a thumbnail cover URL (Apple Music / OpenLibrary) to full-res so the
-  // build self-hosts a sharp image rather than a tiny upscale.
+  // Upgrade a thumbnail cover URL (Apple Music / OpenLibrary) to full-res so the build self-hosts a sharp image rather than a tiny upscale.
   if (out.cover) out.cover = upgradeCoverUrl(out.cover)
 
-  // A custom `mp-slug` on a TITLED post becomes a `slug` URL field — the titled-type
-  // permalinks honor it (`(slug or page.fileSlug) | slugify`), so the file keeps its
-  // Obsidian Title-Case name while the slug drives the URL. On a title-less post the
-  // engine already used the mp-slug as the filename, so don't duplicate it here.
+  // A custom `mp-slug` on a TITLED post becomes a `slug` URL field — the titled-type permalinks honor it (`(slug or page.fileSlug) | slugify`), so the file keeps its Obsidian Title-Case name while the slug drives the URL. On a title-less post the engine already used the mp-slug as the filename, so don't duplicate it here.
   if (out.title && data['mp-slug']) out.slug = flatten(data['mp-slug'])
 
   // tags: the folder JSON's tags:"posts" is added by Eleventy's data cascade
@@ -302,10 +260,7 @@ export const rewriteFrontmatter = (data = {}) => {
   return out
 }
 
-// Turn a post title into an Obsidian-friendly filename: keep Title Case, spaces,
-// commas and apostrophes (so `[[wikilinks]]` read naturally and match the clipper's
-// `Paris, Texas.md`), stripping only the characters Obsidian / most filesystems
-// forbid in a name.
+// Turn a post title into an Obsidian-friendly filename: keep Title Case, spaces, commas and apostrophes (so `[[wikilinks]]` read naturally and match the clipper's `Paris, Texas.md`), stripping only the characters Obsidian / most filesystems forbid in a name.
 export const titleToFilename = (title = '') =>
   String(title)
     .replace(/[\\/:*?"<>|]+/g, '')
@@ -352,10 +307,7 @@ export const ymd = (d) => {
   return Number.isNaN(dt.getTime()) ? '' : dt.toISOString().slice(0, 10)
 }
 
-// A workout's committed filename + public URL. The engine has no `workout` type, so
-// it routed the post to notes/ — force the `activities` folder instead, and build a
-// dated kebab slug (`2026-06-29-run-5-2-km`) so same-day repeats don't collide. Pure
-// (no I/O); `data` is the already-rewritten frontmatter (carries `title` + `date`).
+// A workout's committed filename + public URL. The engine has no `workout` type and routed it to notes/ — force `activities` instead, with a dated kebab slug (`2026-06-29-run-5-2-km`) so same-day repeats don't collide. Pure.
 export const workoutFile = (filename, data = {}) => {
   const unchanged = { finalName: filename, location: null }
   const m = filename.match(/^(.*)\/([^/]+)\/([^/]+)\.md$/)
@@ -368,18 +320,9 @@ export const workoutFile = (filename, data = {}) => {
   return { finalName: `${dir}/${folder}/${slug}.md`, location }
 }
 
-// --- title derivation ------------------------------------------------------
-// Every post should carry a `title`: a title-less post degrades in the page
-// <title> (falls back to the bare site name), og:title + the OG-image path,
-// the Atom/JSON feed entry <title>, the notes archive card headline, and the
-// hidden h-entry p-name. The media/article types already get a title (the cite
-// name / required `name`); these helpers derive one for the title-less types
-// (note, reply, like, bookmark, repost, rsvp) — content-first, then the target.
+// --- title derivation ------------------------------------------------------ Every post should carry a `title`: a title-less post degrades in the page <title> (falls back to the bare site name), og:title + the OG-image path, the Atom/JSON feed entry <title>, the notes archive card headline, and the hidden h-entry p-name. The media/article types already get a title (the cite name / required `name`); these helpers derive one for the title-less types (note, reply, like, bookmark, repost, rsvp) — content-first, then the target.
 
-// A readable title from the body: the first non-empty line, then its first
-// sentence, capped at TITLE_MAX_WORDS words on a word boundary. No ellipsis — the
-// title also becomes the filename/slug for title-less posts, so a clean cut beats
-// signalling truncation — and any stopword left dangling by the cut is trimmed.
+// A readable title from the body: the first non-empty line, then its first sentence, capped at TITLE_MAX_WORDS words on a word boundary. No ellipsis — the title also becomes the filename/slug for title-less posts, so a clean cut beats signalling truncation — and any stopword left dangling by the cut is trimmed.
 const TITLE_MAX_WORDS = 6
 const TRAILING_STOPWORDS = new Set([
   'a', 'an', 'the', 'and', 'or', 'but', 'nor', 'of', 'to', 'in', 'into', 'on',
@@ -424,8 +367,7 @@ export const humanizeUrl = (url = '') => {
   }
 }
 
-// The verb-phrase title for a URL-only response (mirrors card-response.njk):
-// "Liked x.com/y", "In reply to …", "Bookmarked …", "Reposted …", "RSVP yes to …".
+// The verb-phrase title for a URL-only response (mirrors card-response.njk): "Liked x.com/y", "In reply to …", "Bookmarked …", "Reposted …", "RSVP yes to …".
 const RESPONSE_VERB = {
   inReplyTo: 'In reply to',
   likeOf: 'Liked',
@@ -440,9 +382,7 @@ export const titleFromTarget = (data = {}) => {
   return ''
 }
 
-// Guarantee a title: keep an existing one (media/article/client `name`), else
-// derive content-first, else from the response target. Returns the data with
-// `title` first; leaves a truly empty post (no content, no target) title-less.
+// Guarantee a title: keep an existing one (media/article/client `name`), else derive content-first, else from the response target. Returns the data with `title` first; leaves a truly empty post (no content, no target) title-less.
 export const ensureTitle = (data = {}, content = '') => {
   if (data.title) return data
   const derived = titleFromContent(content) || titleFromTarget(data)
@@ -451,10 +391,7 @@ export const ensureTitle = (data = {}, content = '') => {
 
 // --- store ----------------------------------------------------------------
 
-// A GitHubStore that rewrites frontmatter to JEDEE conventions and upgrades a
-// title-less post's timestamp slug to a content/target-derived one, just before
-// the commit. `onLocation` reports the final public URL so the handler can keep
-// the Location header (the client's "view post" link) in sync with any re-slug.
+// A GitHubStore that rewrites frontmatter to JEDEE conventions and upgrades a title-less post's timestamp slug to a content/target-derived one, just before the commit. `onLocation` reports the final public URL so the handler can keep the Location header (the client's "view post" link) in sync with any re-slug.
 class JedeeStore {
   constructor(opts, onLocation) {
     this.inner = new GitHubStore(opts)
@@ -470,28 +407,17 @@ class JedeeStore {
     const parsed = matter(content)
     const data = rewriteFrontmatter(parsed.data)
 
-    // A workout routes to src/posts/training/ with a dated kebab filename; its title
-    // is already derived (activity + distance) by rewriteFrontmatter, so it skips the
-    // generic title/slug path entirely.
+    // A workout routes to src/posts/training/ with a dated kebab filename; its title is already derived (activity + distance) by rewriteFrontmatter, so it skips the generic title/slug path entirely.
     if ('activityType' in data) {
       const { finalName, location } = workoutFile(filename, data)
       if (location && this.onLocation) this.onLocation(location)
       return this.inner.createFile(finalName, matter.stringify(parsed.content, data))
     }
 
-    // Guarantee a `title` (additive) so the post isn't blank in <title>/OG/feeds/
-    // cards/p-name. The SAME derived title also drives the clean slug for a
-    // title-less post (note/reply/rsvp…), so its filename, URL, and <h1> all match;
-    // a titled media/article post keeps its Obsidian Title-Case filename instead
-    // (resolveFilename branches on the original `data.title`, set only for those).
+    // Guarantee a `title` so the post isn't blank in <title>/OG/feeds/cards/p-name. The SAME title drives the slug for a title-less post, so filename, URL and <h1> all match; a titled post keeps its Obsidian filename instead.
     const titled = ensureTitle(data, parsed.content)
 
-    // filename arrives as `${CONTENT_DIR}/<folder>/<slug>.md`. resolveFilename gives
-    // a titled post an Obsidian Title-Case filename and upgrades a title-less post's
-    // bare-timestamp slug to a title/content/target slug, reporting the public URL
-    // it implies so the Location header stays in sync. (A custom `mp-slug` on a
-    // titled post was turned into `data.slug` by rewriteFrontmatter — it routes to
-    // the URL, not the filename.)
+    // resolveFilename gives a titled post an Obsidian Title-Case filename and upgrades a title-less post's bare-timestamp slug, reporting the public URL so the Location header stays in sync.
     const { finalName, location } = resolveFilename(filename, data, parsed.content, titled.title)
     if (location && this.onLocation) this.onLocation(location)
 

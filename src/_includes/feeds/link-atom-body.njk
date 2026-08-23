@@ -1,20 +1,9 @@
 {#-
-  Link-post Atom feed body — likes, bookmarks, replies, RSVPs. Identical to
-  atom-body.njk except it renders the link line and the description ahead of
-  post.content.
+  Link-post Atom feed body — likes, bookmarks, replies, RSVPs. Identical to atom-body.njk except it renders the link line and the description ahead of post.content.
 
-  Why these four need it: a link post's substance is its front matter. The
-  shared atom-body emits ONLY post.content, and 46 of the 50 bookmarks have no
-  body at all — so the plain body syndicated a title with no indication of what
-  had been bookmarked, or why. Same wrinkle photo and activity hit, one body for
-  the whole cohort because all four are the same shape: a verb, a target URL,
-  and an optional description.
+  Why these four need it: a link post's substance is its front matter. The shared atom-body emits ONLY post.content, and 46 of the 50 bookmarks have no body at all — so the plain body syndicated a title with no indication of what had been bookmarked, or why. Same wrinkle photo and activity hit, one body for the whole cohort because all four are the same shape: a verb, a target URL, and an optional description.
 
-  The link line is the one each layout renders (like.njk, bookmark.njk,
-  reply.njk, rsvp.njk) — same words, same raw-URL link text, so a post reads the
-  same in a reader as on its page. No mf2 classes: a feed reader parses the Atom
-  elements, not the microformats inside <content>. The RSVP branch comes before
-  the reply branch because an RSVP post carries `inReplyTo` too.
+  The link line is the one each layout renders (like.njk, bookmark.njk, reply.njk, rsvp.njk) — same words, same raw-URL link text, so a post reads the same in a reader as on its page. No mf2 classes: a feed reader parses the Atom elements, not the microformats inside <content>. The RSVP branch comes before the reply branch because an RSVP post carries `inReplyTo` too.
 
   Set the same vars as atom-body.njk before including:
     feedCollection, feedTitle, feedDescription, feedSelfUrl

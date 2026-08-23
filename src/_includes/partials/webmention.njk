@@ -1,16 +1,8 @@
-{# A single received webmention rendered as a reply/comment card. Called from
-   partials/webmentions.njk for text-bearing mentions (replies + comments).
+{# A single received webmention rendered as a reply/comment card. Called from partials/webmentions.njk for text-bearing mentions (replies + comments).
 
-   Marked up as an h-cite (a citation of the external response) wrapping the
-   author's h-card — the microformats-correct shape for a rendered received
-   mention. NOTE: the date is a plain <time> with NO `dt-published` class: that
-   mf2 property belongs to THIS site's posts (partials/date.njk), not to someone
-   else's mention, so stamping it here would pollute the page's mf2 parse.
+   Marked up as an h-cite (a citation of the external response) wrapping the author's h-card — the microformats-correct shape for a rendered received mention. NOTE: the date is a plain <time> with NO `dt-published` class: that mf2 property belongs to THIS site's posts (partials/date.njk), not to someone else's mention, so stamping it here would pollute the page's mf2 parse.
 
-   `content.text` is rendered WITHOUT `| safe` so Nunjucks auto-escapes it — never
-   trust a remote mention's HTML. Avatars are hotlinked plain <img> (webmention.io
-   proxies them); the {% image %} shortcode is avoided on purpose — it breaks on
-   remote URLs and is async, which the interlinker plugin would drop here. #}
+   `content.text` is rendered WITHOUT `| safe` so Nunjucks auto-escapes it — never trust a remote mention's HTML. Avatars are hotlinked plain <img> (webmention.io proxies them); the {% image %} shortcode is avoided on purpose — it breaks on remote URLs and is async, which the interlinker plugin would drop here. #}
 
 <article id="webmention-{{ webmention['wm-id'] }}" class="webmention h-cite | flow">
   <div class="webmention__meta | cluster">

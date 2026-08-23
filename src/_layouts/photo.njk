@@ -7,15 +7,8 @@ schema: BlogPosting
   <article class="wrapper flow prose h-entry">
     {% include 'partials/entry-header.njk' %}
 
-    {# The photo IS the content, so u-photo goes on the visible <img> — set via
-       the image shortcode's imageClass param (6th positional arg, image.js:70).
-       photo.src is a LOCAL asset, so {% image %} is correct here; the remote-cover
-       plain-<img> pattern (reading/watching/jam) does not apply. #}
-    {# No figcaption here: the photo IS the content and the body paragraph below
-       describes it. The <photo-lightbox> component still supports an optional
-       @caption (outside the link) for reuse on other pages. The photo breaks out
-       wider than the prose column via .feature; widths + sizes are explicit so
-       retina screens get the 2000w candidate at that wider width. #}
+    {# The photo IS the content, so u-photo goes on the visible <img> — set via the image shortcode's imageClass param (6th positional arg, image.js:70). photo.src is a LOCAL asset, so {% image %} is correct here; the remote-cover plain-<img> pattern (reading/watching/jam) does not apply. #}
+    {# No figcaption here: the photo IS the content and the body paragraph below describes it. The <photo-lightbox> component still supports an optional @caption (outside the link) for reuse on other pages. The photo breaks out wider than the prose column via .feature; widths + sizes are explicit so retina screens get the 2000w candidate at that wider width. #}
     {% if photo.src %}
       {# The full-size raster is the first download entry (carries width/height). #}
       {%- set lbox = false -%}
@@ -36,17 +29,13 @@ schema: BlogPosting
       {{ content | safe }}
     </div>
 
-    {# Capture/scan metadata + download original + public-domain line.
-       Bare include (no async shortcodes inside) — see the interlinker trap note. #}
+    {# Capture/scan metadata + download original + public-domain line. Bare include (no async shortcodes inside) — see the interlinker trap note. #}
     {% include 'partials/photo-meta.njk' %}
 
-    {# Location map — a popout-width element (replaces the old sidebar thumbnail).
-       The slotted static <a><img> is the no-JS fallback; <place-map> upgrades it
-       to a live, maximizable map on idle. photoExif carries the GPS. #}
+    {# Location map — a popout-width element (replaces the old sidebar thumbnail). The slotted static <a><img> is the no-JS fallback; <place-map> upgrades it to a live, maximizable map on idle. photoExif carries the GPS. #}
     {% set ex = photoExif %}
     {% if ex and ex.gps and meta.mapApiKey and not photo.hideMap %}
-      {# place-map.njk reads these caller-set variables rather than photoExif, so audio
-         (and later video) can slot the same fallback in from plain front matter. #}
+      {# place-map.njk reads these caller-set variables rather than photoExif, so audio (and later video) can slot the same fallback in from plain front matter. #}
       {% set mapPlace = ex.place.city if (ex.place and ex.place.city) else "" %}
       {% set mapLat = ex.gps.lat %}
       {% set mapLon = ex.gps.lon %}
@@ -64,8 +53,7 @@ schema: BlogPosting
     {% include 'partials/hidden-author.njk' %}
   </article>
 
-  {# Received webmentions — OUTSIDE the h-entry root (Lene/Max pattern). Bare
-     include, interlinker-safe. webmentionUrl = the entry's u-url = each mention's wm-target. #}
+  {# Received webmentions — OUTSIDE the h-entry root (Lene/Max pattern). Bare include, interlinker-safe. webmentionUrl = the entry's u-url = each mention's wm-target. #}
   {% set webmentionUrl = page.url | url | absoluteUrl(meta.url) %}
   {% include "partials/webmentions.njk" %}
 </div>

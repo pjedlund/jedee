@@ -16,8 +16,7 @@ schema: BlogPosting
     {% include 'partials/hidden-author.njk' %}
   </article>
 
-  {# Received webmentions — OUTSIDE the h-entry root (Lene/Max pattern). Bare
-     include, interlinker-safe. webmentionUrl = the entry's u-url = each mention's wm-target. #}
+  {# Received webmentions — OUTSIDE the h-entry root (Lene/Max pattern). Bare include, interlinker-safe. webmentionUrl = the entry's u-url = each mention's wm-target. #}
   {% set webmentionUrl = page.url | url | absoluteUrl(meta.url) %}
   {% include "partials/webmentions.njk" %}
 </div>

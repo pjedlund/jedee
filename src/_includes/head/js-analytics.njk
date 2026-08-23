@@ -1,9 +1,5 @@
 {#
-  Umami — privacy-first, cookieless analytics (no personal data, no consent banner needed).
-  Loaded as a single deferred third-party script, not part of the esbuild bundle, so it
-  lives in its own head partial (same pattern as the other head/ partials).
-  Gated to deployed builds only: on `npm start` URL is unset so meta.domain is "localhost"
-  and the tag is omitted — keeping local dev traffic out of the stats.
+  Umami — privacy-first, cookieless analytics (no personal data, no consent banner needed). Loaded as a single deferred third-party script, not part of the esbuild bundle, so it lives in its own head partial (same pattern as the other head/ partials). Gated to deployed builds only: on `npm start` URL is unset so meta.domain is "localhost" and the tag is omitted — keeping local dev traffic out of the stats.
 #}
 {%- if meta.domain != "localhost" -%}
   <script defer src="https://cloud.umami.is/script.js" data-website-id="75b79efd-f4b0-4425-aace-9fa8230aa1c3"></script>

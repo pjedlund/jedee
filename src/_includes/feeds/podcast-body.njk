@@ -1,37 +1,21 @@
 {#-
-  Shared RSS 2.0 podcast/vodcast feed body for the Audio + Video types
-  (audio spec §8, video spec §9). UNLIKE atom-body.njk / json-body.njk — which
-  emit only post.content — this carries the media <enclosure> plus the iTunes
-  and Podcast namespaces that podcast clients (Apple Podcasts, Overcast, Pocket
-  Casts) read. RSS 2.0 dates are RFC-822 (dateToRfc822), NOT the RFC-3339 Atom
-  uses; dateToRfc822 + absoluteUrl + getNewestCollectionItemDate ship with the
-  registered @11ty/eleventy-plugin-rss. The only to-build formatters are
-  itunesDuration (ISO-8601 → clock) and the enclosure byte/MIME stat filters.
+  Shared RSS 2.0 podcast/vodcast feed body for the Audio + Video types (audio spec §8, video spec §9). Unlike atom-body.njk / json-body.njk it carries the media <enclosure> plus the iTunes and Podcast namespaces podcast clients read. ⚠ RSS 2.0 dates are RFC-822 (dateToRfc822), not the RFC-3339 Atom uses.
 
   Set before including:
     feedCollection  – array (collections.audio | collections.video)
     feedTitle       – channel <title>
     feedDescription – channel <description>
-    feedSelfUrl     – path of this feed, e.g. "/audio/feed.xml"
-  Optional overrides:
+    feedSelfUrl     – path of this feed, e.g. "/audio/feed.xml" Optional overrides:
     feedCategory    – itunes:category text (default "Technology")
     feedExplicit    – "true" | "false" (default "false")
 
-  `audio.src` may be a LOCAL path ("./src/assets/…", podcast episodes) or a REMOTE URL (R2,
-  field recordings). The `replace('./src','')` is a no-op on a full URL, and enclosureType
-  reads the extension either way; only the byte length needs the authored fallback below.
+  `audio.src` may be a LOCAL path ("./src/assets/…", podcast episodes) or a REMOTE URL (R2, field recordings). The `replace('./src','')` is a no-op on a full URL, and enclosureType reads the extension either way; only the byte length needs the authored fallback below.
 
-  Audio episodes always carry a file (audio.src) → always an <enclosure>. Video
-  is asymmetric: provider "file" gets an <enclosure>; "youtube"/"peertube"
-  embeds have no local file → no enclosure (the item links to the post page,
-  which hosts the embed). The per-item `media`/`mediaSrc` switch handles both
-  types from one body — audio posts expose post.data.audio, video posts
-  post.data.video, and only a file-backed entry has a `.src`.
+  Audio episodes always carry a file (audio.src) → always an <enclosure>. Video is asymmetric: provider "file" gets an <enclosure>; "youtube"/"peertube" embeds have no local file → no enclosure (the item links to the post page, which hosts the embed). The per-item `media`/`mediaSrc` switch handles both types from one body — audio posts expose post.data.audio, video posts post.data.video, and only a file-backed entry has a `.src`.
 -#}
 {%- set feedCategory = feedCategory or "Technology" -%}
 {%- set feedExplicit = feedExplicit or "false" -%}
-{# v1 channel artwork: the site OpenGraph default, absolutized. Apple wants
-   square 1400–3000px artwork — replace with real podcast art before launch. #}
+{# v1 channel artwork: the site OpenGraph default, absolutized. Apple wants square 1400–3000px artwork — replace with real podcast art before launch. #}
 {%- set channelArtwork = meta.opengraph_default | absoluteUrl(meta.url) -%}
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0"
@@ -70,9 +54,7 @@
       <description>{{ post.data.description }}</description>
       {%- endif %}
       {%- if mediaSrc %}
-      {#- `length` prefers an authored `bytes` (the only possible source for a file hosted
-          off-site on R2 — enclosureBytes stats the local disk and would return 0), and falls
-          back to the stat for episodes whose file really is in src/assets. -#}
+      {#- `length` prefers an authored `bytes` (the only possible source for a file hosted off-site on R2 — enclosureBytes stats the local disk and would return 0), and falls back to the stat for episodes whose file really is in src/assets. -#}
       <enclosure url="{{ mediaSrc | replace('./src', '') | absoluteUrl(meta.url) }}" length="{{ media.bytes or (mediaSrc | enclosureBytes) }}" type="{{ mediaSrc | enclosureType }}" />
       {%- endif %}
       {%- if media.duration %}

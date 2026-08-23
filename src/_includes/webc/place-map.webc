@@ -1,7 +1,4 @@
-<!-- Enhances the slotted static map into a live, maximizable Leaflet map on idle.
-     Mirrors photo-lightbox.webc: is-land is the SOLE root (no sibling style block, else
-     the element renders doubled — see the eleventy-excellent WebC gotcha), with the kept
-     custom element for the JS to upgrade. CSS: css/place-map.css · JS: place-map.js -->
+<!-- Enhances the slotted static map into a live, maximizable Leaflet map on idle. Mirrors photo-lightbox.webc: is-land is the SOLE root (no sibling style block, else the element renders doubled — see the eleventy-excellent WebC gotcha), with the kept custom element for the JS to upgrade. CSS: css/place-map.css · JS: place-map.js -->
 <is-land on:idle :class="breakout || ''">
   <place-map webc:root webc:keep :data-lat="lat" :data-lon="lon" :data-zoom="zoom" :data-place="place">
     <slot></slot>

@@ -1,5 +1,4 @@
-{# BREADCRUMB LEAF — the label for the current page (final crumb).
-   Default = the page title. Per-type enrichment lives here:
+{# BREADCRUMB LEAF — the label for the current page (final crumb). Default = the page title. Per-type enrichment lives here:
    - jam → "Song by Artist", with a serif-italic "by" and the artist un-wikilinked.
      The artist is plain text for now (no artist archive exists yet — no dead link).
    - watching / reading → the same "by" shape, with the film's director or the book's
@@ -10,10 +9,7 @@
    - the link cohort (like / bookmark / reply / repost) → "Title on Source", where
      Source is ALWAYS the bare host of whichever URL field that type uses — e.g.
      "arielsalminen.com" — never sourceName. RSVP is deliberately NOT in the cohort:
-     its title already says what it is a reply to, so the host only repeats it.
-   Keep the markup minimal; the surrounding <span aria-current="page"> + truncation
-   live in breadcrumb.njk / breadcrumb.css. The plain `breadcrumbs[].label` (used for
-   aria/JSON-LD) stays the raw title — only this *visible* leaf is enriched. #}
+     its title already says what it is a reply to, so the host only repeats it. Keep the markup minimal; the surrounding <span aria-current="page"> + truncation live in breadcrumb.njk / breadcrumb.css. The plain `breadcrumbs[].label` (used for aria/JSON-LD) stays the raw title — only this *visible* leaf is enriched. #}
 {%- set linkedHost = (sourceUrl or likeOf or bookmarkOf or inReplyTo or repostOf) | hostname -%}
 {%- if category == "jam" and artist -%}
   {{ title }} <span class="breadcrumb-connector">by</span> {{ artist | unwikilink }}
@@ -21,15 +17,10 @@
   {%- set byline = director if category == "watching" else author -%}
   {{ title }} <span class="breadcrumb-connector">by</span> {% if byline is string %}{{ byline | unwikilink }}{% else %}{{ byline | unwikilink | join(", ") }}{% endif %}
 {%- elif category == "activity" and activityType -%}
-  {# activityType is an English controlled term ("orienteering") — only the title may be
-     Swedish, so lang="sv" (set by titleLang, see eleventyComputed.js) wraps the title alone. #}
+  {# activityType is an English controlled term ("orienteering") — only the title may be Swedish, so lang="sv" (set by titleLang, see eleventyComputed.js) wraps the title alone. #}
   {{ activityType | capitalize }}: {% if titleLang %}<span lang="{{ titleLang }}">{{ title }}</span>{% else %}{{ title }}{% endif %}
 {%- elif category == "audio" and place -%}
-  {# Field recordings title the SUBJECT ("Small waves"), so the crumb composes it with
-     where it was recorded: "Small waves at Nybrostrand". "at" carries almost every
-     named location; a post that wants "in"/"on" (a forest, a train) sets placePreposition.
-     `region` is deliberately left out — the leaf truncates to one line in the header, so it
-     would be the first thing lost, and it already appears in the recording details. #}
+  {# Field recordings title the SUBJECT ("Small waves"), so the crumb composes it with where it was recorded: "Small waves at Nybrostrand". "at" carries almost every named location; a post that wants "in"/"on" (a forest, a train) sets placePreposition. `region` is deliberately left out — the leaf truncates to one line in the header, so it would be the first thing lost, and it already appears in the recording details. #}
   {{ title }} <span class="breadcrumb-connector">{{ placePreposition or "at" }}</span> {{ place }}
 {%- elif category in ["like", "bookmark", "reply", "repost"] and (linkedHost) -%}
   {{ title }} <span class="breadcrumb-connector">on</span> {{ linkedHost }}

@@ -7,12 +7,7 @@ schema: BlogPosting
   <article class="wrapper flow prose h-entry">
     {% include 'partials/entry-header.njk' %}
 
-    {# One type, three rendering paths, selected by video.provider (spec §6).
-       The two embed paths reuse the SHIPPED custom-youtube / custom-peertube
-       WebC components — they render here because the WebC plugin runs with
-       useTransform:true (so custom elements process in .njk, not only .webc).
-       Self-hosted video carries u-video; embeds carry no file URL, so no
-       u-video (documented µf2 limitation, spec §5). #}
+    {# One type, three rendering paths, selected by video.provider (spec §6). The two embed paths reuse the SHIPPED custom-youtube / custom-peertube WebC components — they render here because the WebC plugin runs with useTransform:true (so custom elements process in .njk, not only .webc). Self-hosted video carries u-video; embeds carry no file URL, so no u-video (documented µf2 limitation, spec §5). #}
     {% if video.provider == "file" and video.src %}
       <video class="u-video" controls preload="metadata"{% if video.poster %} poster="{{ video.poster | replace('./src', '') }}"{% endif %} src="{{ video.src | replace('./src', '') }}"></video>
 

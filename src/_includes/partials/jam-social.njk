@@ -1,18 +1,10 @@
-{# This Is My Jam social recovery — the original likes + comments each jam received
-   on thisismyjam.com (2012–2015), recovered from the Internet Archive Wayback
-   Machine. These are NOT live webmentions: a dedicated, honestly-framed render
-   that REUSES the webmentions facepile + h-cite card styling (webmentions.css).
+{# This Is My Jam social recovery — the original likes + comments each jam received on thisismyjam.com (2012–2015), recovered from the Internet Archive Wayback Machine. These are NOT live webmentions: a dedicated, honestly-framed render that REUSES the webmentions facepile + h-cite card styling (webmentions.css).
 
-   Placed OUTSIDE the post's h-entry root (same as received webmentions on
-   note/photo/post) so the h-cite cards don't nest as children of the entry.
+   Placed OUTSIDE the post's h-entry root (same as received webmentions on note/photo/post) so the h-cite cards don't nest as children of the entry.
 
-   Data: src/_data/jamSocial.json keyed by `page.fileSlug` (the exact import
-   filename — see _local/generated/timj-import/build_jam_social.py). Avatars are
-   self-hosted under /assets/images/jams-social/; unrecoverable ones fall back to
-   meta.webmentions.fallbackAvatar.
+   Data: src/_data/jamSocial.json keyed by `page.fileSlug` (the exact import filename — see _local/generated/timj-import/build_jam_social.py). Avatars are self-hosted under /assets/images/jams-social/; unrecoverable ones fall back to meta.webmentions.fallbackAvatar.
 
-   Bare include from jam.njk, ZERO shortcodes (plain <img eleventy:ignore> only) —
-   interlinker-safe, so the inner {% if %}/{% for %} blocks render fine. #}
+   Bare include from jam.njk, ZERO shortcodes (plain <img eleventy:ignore> only) — interlinker-safe, so the inner {% if %}/{% for %} blocks render fine. #}
 
 {% set social = jamSocial[page.fileSlug] %}
 
