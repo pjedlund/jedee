@@ -27,10 +27,7 @@ import {resolveOrPlainText} from './src/_config/plugins/interlinker-resolver.js'
 import ignoreWikilinksInCode from './src/_config/plugins/interlinker-ignore-code.js';
 import shortcodes from './src/_config/shortcodes.js';
 
-// Caps how many of the ~370 images fetch + encode at once (default = CPU count), so fewer
-// large buffers are live together — the memory that spikes a cold build. Module global, so
-// this covers every eleventy-img path. Lower it if a cold build still OOMs; 4 measured no
-// slower than the default.
+// Caps how many of the ~370 images fetch + encode at once (default = CPU count), so fewer large buffers are live together — the memory that spikes a cold build. Module global, so this covers every eleventy-img path. Lower it if a cold build still OOMs; 4 measured no slower than the default.
 import Image from '@11ty/eleventy-img';
 Image.concurrency = 4;
 
@@ -49,9 +46,7 @@ export default async function(eleventyConfig) {
   eleventyConfig.addWatchTarget('./src/assets/**/*.{css,js,svg,png,jpeg}');
   eleventyConfig.addWatchTarget('./src/_includes/**/*.{webc}');
 
-  // `eleventy.before` rewrites both these dirs every build. .gitignore used to hide them
-  // from the watcher; the wiki dial below turns .gitignore off, so without these two lines
-  // each build retriggers itself — one CSS edit measured 18 rebuilds and climbing.
+  // `eleventy.before` rewrites both these dirs every build. .gitignore used to hide them from the watcher; the wiki dial below turns .gitignore off, so without these two lines each build retriggers itself — one CSS edit measured 18 rebuilds and climbing.
   eleventyConfig.watchIgnores.add('src/_includes/css/**');
   eleventyConfig.watchIgnores.add('src/_includes/scripts/**');
 
@@ -150,9 +145,7 @@ export default async function(eleventyConfig) {
   // Recipe durations (§9): integer minutes OR PT…M → normalized PT…M + human-readable.
   eleventyConfig.addFilter('toISODuration', filters.toISODuration);
   eleventyConfig.addFilter('formatDuration', filters.formatDuration);
-  // Activity pace/speed (/activities/): derive min/km (+ /mi) or km/h (+ mph) from
-  // stored raw distance + duration at render — the activity post type never stores
-  // the derived value. withMiles pairs a stored km distance with its mi equivalent.
+  // Activity pace/speed (/activities/): derive min/km (+ /mi) or km/h (+ mph) from stored raw distance + duration at render — the activity post type never stores the derived value. withMiles pairs a stored km distance with its mi equivalent.
   eleventyConfig.addFilter('paceOrSpeed', filters.paceOrSpeed);
   eleventyConfig.addFilter('withMiles', filters.withMiles);
   // Event archive partition (§9): build-time upcoming/past split + event-date sorts.
@@ -160,8 +153,7 @@ export default async function(eleventyConfig) {
   eleventyConfig.addFilter('filterPast', filters.filterPast);
   eleventyConfig.addFilter('sortByStartAsc', filters.sortByStartAsc);
   eleventyConfig.addFilter('sortByStartDesc', filters.sortByStartDesc);
-  // Audio/Video podcast feed (spec §8–§10): itunes:duration clock + <enclosure>
-  // byte-length/MIME stat'd from the source media file at build.
+  // Audio/Video podcast feed (spec §8–§10): itunes:duration clock + <enclosure> byte-length/MIME stat'd from the source media file at build.
   eleventyConfig.addFilter('itunesDuration', filters.itunesDuration);
   eleventyConfig.addFilter('enclosureBytes', filters.enclosureBytes);
   eleventyConfig.addFilter('enclosureType', filters.enclosureType);
@@ -233,10 +225,7 @@ export default async function(eleventyConfig) {
     wikiVisibility === 'public' ||
     (wikiVisibility === 'local' && process.env.ELEVENTY_ENV !== 'production');
   if (buildWiki) {
-    // src/wiki/ is gitignored (its own inner repo), and Eleventy honours .gitignore —
-    // so to build it we must stop honouring .gitignore, then re-add the other
-    // src/ paths it was hiding (raw sources, draft articles). src/_obsidian stays covered
-    // by .eleventyignore.
+    // src/wiki/ is gitignored (its own inner repo), and Eleventy honours .gitignore — so to build it we must stop honouring .gitignore, then re-add the other src/ paths it was hiding (raw sources, draft articles). src/_obsidian stays covered by .eleventyignore.
     eleventyConfig.setUseGitIgnore(false);
     eleventyConfig.ignores.add('src/_raw/**');
     eleventyConfig.ignores.add('src/posts/articles/-drafts/**');
