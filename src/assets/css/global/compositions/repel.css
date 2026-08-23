@@ -9,16 +9,21 @@ between each item.
 
 --repel-vertical-alignment How items should align vertically.
 Can be any acceptable flexbox alignment value.
+
+--repel-wrap (wrap) Whether the row may stack. Mirrors --cluster-wrap on the
+cluster composition, so a block that shares a row with a repel can pin or relax
+the stacking through the composition's own API instead of overriding flex-wrap
+from outside. The [data-nowrap] exception below is sugar over the same property.
 */
 
 .repel {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: var(--repel-wrap, wrap);
   justify-content: space-between;
   align-items: var(--repel-vertical-alignment, center);
   gap: var(--gutter, var(--space-s-m));
 }
 
 .repel[data-nowrap] {
-  flex-wrap: nowrap;
+  --repel-wrap: nowrap;
 }

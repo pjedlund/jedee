@@ -24,7 +24,7 @@ Top-left wayfinding that replaces the old site logo: the home crumb is the logom
 
 /* The breadcrumb shares the header row with the theme toggle / nav. Keep the row on one line: the trail shrinks (its leaf truncating) while the controls stay pinned to the end. The hook is on the header's repel (header.njk); main-nav.css relaxes both pins in the no-JS state. */
 .breadcrumb-bar {
-  flex-wrap: nowrap;
+  --repel-wrap: nowrap;
 }
 
 .breadcrumb-bar > .breadcrumb {
