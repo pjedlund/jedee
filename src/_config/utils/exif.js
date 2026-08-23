@@ -1,7 +1,6 @@
 // Build-time, curated EXIF/IPTC/XMP extraction for photo posts.
 //
-// Reads an allowlisted, render-safe set of fields from a local image and splits
-// them into two groups:
+// Reads an allowlisted, render-safe set of fields from a local image and splits them into two groups:
 //   - capture:  what made the photograph (camera, film date, place, GPS).
 //               The pinhole/lens line is intentionally NOT surfaced — the camera
 //               model already conveys the pinhole, so it read as redundant.

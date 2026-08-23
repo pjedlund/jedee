@@ -1,5 +1,4 @@
-// UNWIKILINK
-// Strip Obsidian [[wikilink]] brackets for display, keeping the human-readable text. Jam `artist` / `genre` (and any field stored as a graph wikilink) are kept as [[…]] in the source for the Obsidian graph; this cleans them for the rendered page so the brackets never leak into HTML.
+// UNWIKILINK Strip Obsidian [[wikilink]] brackets for display, keeping the human-readable text. Jam `artist` / `genre` (and any field stored as a graph wikilink) are kept as [[…]] in the source for the Obsidian graph; this cleans them for the rendered page so the brackets never leak into HTML.
 //
 //   "[[Woo York]]"            -> "Woo York"
 //   "[[Target|Display]]"      -> "Display"   (Obsidian alias form: show the alias)

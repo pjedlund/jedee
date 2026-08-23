@@ -1,8 +1,6 @@
 // <place-map> — upgrades a slotted static map into a live, maximizable Leaflet map. esbuild bundles Leaflet into this file, so nothing loads until the is-land hydrates on idle. The inline map never wheel-zooms, so the page keeps scrolling; the maximize button grows THE SAME instance into a modal overlay where wheel + pinch turn on, which is why pan/zoom state survives.
 //
-// Three modes, decided by the slotted markup:
-//  - single pin (photo pages): data-lat/data-lon on the element, static <a><img> slot.
-//  - places (the activity index): a slotted [data-place-list] of <li data-lat data-lon>
+// Three modes, decided by the slotted markup: - single pin (photo pages): data-lat/data-lon on the element, static <a><img> slot. - places (the activity index): a slotted [data-place-list] of <li data-lat data-lon>
 //    items. The LIST is the data source and the no-JS/screen-reader path (Leaflet
 //    markers' keyboard/SR handling is broken upstream, so nobody is forced through the
 //    map). JS drops one dot per item into the box above it.
@@ -38,8 +36,7 @@ const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const MARKER_FILL =
   getComputedStyle(document.documentElement).getPropertyValue('--color-accent-orange').trim() || '#d0621e';
 
-// Orienteering route symbols — start triangle, finish double-circle. Native Leaflet vector geometry (L.polygon + L.circle) in the route line's own pane, so they re-project on zoom for free; color tracks the theme via CSS like the line does.
-// Sizes are PIXELS AT THE FIT ZOOM: built in screen pixels then frozen to lat/lon. This is the calibration knob — eyeball the numbers against the tiles.
+// Orienteering route symbols — start triangle, finish double-circle. Native Leaflet vector geometry (L.polygon + L.circle) in the route line's own pane, so they re-project on zoom for free; color tracks the theme via CSS like the line does. Sizes are PIXELS AT THE FIT ZOOM: built in screen pixels then frozen to lat/lon. This is the calibration knob — eyeball the numbers against the tiles.
 const TRI_HEIGHT = 18; // triangle apex-to-base, px at fit zoom
 const TRI_HALF_WIDTH = 9; // triangle base half-width, px
 const FINISH_OUTER = 9; // finish outer circle radius, px at fit zoom
@@ -354,9 +351,7 @@ class PlaceMap extends HTMLElement {
     this.finishInit();
   }
 
-  // Sequenced route intro: (0) fade the whole canvas up, (1) fade the START symbol in, (2) draw
-  // the line start → finish, (3) reveal the FINISH once the line reaches it. Only called when
-  // motion is allowed, so under reduced motion everything is left in its resting, visible state.
+  // Sequenced route intro: (0) fade the whole canvas up, (1) fade the START symbol in, (2) draw the line start → finish, (3) reveal the FINISH once the line reaches it. Only called when motion is allowed, so under reduced motion everything is left in its resting, visible state.
   routeIntro(line, startShape, finishShapes) {
     const MAP_FADE = 500; // canvas fade-up
     const MARK_FADE = 320; // symbol fade

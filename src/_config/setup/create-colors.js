@@ -80,8 +80,7 @@ colorsBase.light_dark.forEach(color => {
   colorTokens[key]['subdued'] = {'$value': subduedHex};
 });
 
-// Palette colors (base theme colors) — flat keys derived via slugify
-// e.g. "base-darkest" → "base-darkest"
+// Palette colors (base theme colors) — flat keys derived via slugify e.g. "base-darkest" → "base-darkest"
 colorsBase.palette.forEach(color => {
   const key = nameSlug(color.name);
   colorTokens[key] = {'$value': color.value};

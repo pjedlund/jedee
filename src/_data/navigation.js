@@ -4,8 +4,7 @@ export default {
   //   url        — section archive URL
   //   icon       — lucide glyph in src/assets/svg/posts/ (swap = one-word edit)
   //   collection — Eleventy collection key, used for the per-type count
-  // NB: Jam is asymmetric — URL /jams/ but collection key `jam` (see collections.js).
-  // Order here is the reading order shown in the panel, not the POST_TYPES order.
+  // NB: Jam is asymmetric — URL /jams/ but collection key `jam` (see collections.js). Order here is the reading order shown in the panel, not the POST_TYPES order.
   postTypes: [
     {text: 'Articles', url: '/articles/', icon: 'newspaper', collection: 'article'},
     {text: 'Notes', url: '/notes/', icon: 'pencil', collection: 'note'},

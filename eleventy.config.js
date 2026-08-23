@@ -72,11 +72,7 @@ export default async function(eleventyConfig) {
   eleventyConfig.addLayoutAlias('tags', 'tags.njk');
 
   //	---------------------  Collections
-  // Per-type collections each filter on `data.category` (set in
-  // src/posts/<type>/<type>.json). POST_TYPES drives registration — add a new
-  // type's category to that array in collections.js. collections.posts (firehose)
-  // is still auto-created by Eleventy from the `tags: "posts"` string in each
-  // folder JSON.
+  // Per-type collections each filter on `data.category` (set in src/posts/<type>/<type>.json). POST_TYPES drives registration — add a new type's category to that array in collections.js. collections.posts (firehose) is still auto-created by Eleventy from the `tags: "posts"` string in each folder JSON.
   POST_TYPES.forEach(type => eleventyConfig.addCollection(type, byCategory(type)));
   eleventyConfig.addCollection('showInSitemap', showInSitemap);
   eleventyConfig.addCollection('tagList', tagList);
@@ -86,8 +82,7 @@ export default async function(eleventyConfig) {
   await ignoreWikilinksInCode();
 
   eleventyConfig.addPlugin(plugins.interlinker, {
-    // stubUrl false → a dead wikilink arrives at the resolver with href === false
-    // instead of the plugin's default "/stubs/" link, so it can render as plain text.
+    // stubUrl false → a dead wikilink arrives at the resolver with href === false instead of the plugin's default "/stubs/" link, so it can render as plain text.
     stubUrl: false,
     resolvingFns: new Map([['default', resolveOrPlainText]])
   });
@@ -175,13 +170,7 @@ export default async function(eleventyConfig) {
   }
 
   // --------------------- Passthrough File Copy
-  // -- same path
-  // Audio/Video self-hosted media: Eleventy Image only moves images, so the
-  // co-located .mp3/.mp4/.vtt files need an explicit passthrough for the
-  // on-page <audio>/<video> src and the feed <enclosure> URL to resolve.
-  // `jams-social` holds the This Is My Jam liker/commenter avatars, recovered from
-  // the Wayback Machine and self-hosted; rendered with `eleventy:ignore` (like the
-  // template fallback avatar), so they need an explicit passthrough to reach dist.
+  // -- same path Audio/Video self-hosted media: Eleventy Image only moves images, so the co-located .mp3/.mp4/.vtt files need an explicit passthrough for the on-page <audio>/<video> src and the feed <enclosure> URL to resolve. `jams-social` holds the This Is My Jam liker/commenter avatars, recovered from the Wayback Machine and self-hosted; rendered with `eleventy:ignore` (like the template fallback avatar), so they need an explicit passthrough to reach dist.
   ['src/assets/fonts/', 'src/assets/images/template', 'src/assets/images/recipes', 'src/assets/images/jams-social', 'src/assets/og-images', 'src/assets/audio', 'src/assets/video'].forEach(path =>
     eleventyConfig.addPassthroughCopy(path)
   );
@@ -193,14 +182,10 @@ export default async function(eleventyConfig) {
 
     // -- node_modules
     'node_modules/lite-youtube-embed/src/lite-yt-embed.{css,js}': `assets/components/`,
-    // Single-file (non-glob) source: must name the destination file explicitly.
-    // A trailing-slash dir target writes a file literally named `components`,
-    // clobbering the lite-youtube glob's directory (Eleventy 3.x behaviour).
+    // Single-file (non-glob) source: must name the destination file explicitly. A trailing-slash dir target writes a file literally named `components`, clobbering the lite-youtube glob's directory (Eleventy 3.x behaviour).
     'node_modules/photoswipe/dist/photoswipe.css': `assets/components/photoswipe.css`,
     // Leaflet's JS is bundled into photo-map.js by esbuild (import L from 'leaflet');
-    // only its stylesheet needs copying. Its url()'d marker/layer PNGs are skipped
-    // on purpose — <photo-map> uses circleMarker (pure SVG) + the zoom control, so
-    // none of those images are ever requested.
+    // only its stylesheet needs copying. Its url()'d marker/layer PNGs are skipped on purpose — <photo-map> uses circleMarker (pure SVG) + the zoom control, so none of those images are ever requested.
     'node_modules/leaflet/dist/leaflet.css': `assets/components/leaflet.css`
   });
 
@@ -212,9 +197,7 @@ export default async function(eleventyConfig) {
   // ---------------------- LLM wiki (src/wiki/) — design plan §3/§6.
   // Three working dial positions: "private" never builds the wiki; "local" builds it
   // only outside production, so it's browsable in `npm start` but never on Netlify;
-  // "public" builds it everywhere, including production. The hard guarantee still holds:
-  // a production build (npm run build → ELEVENTY_ENV=production, what Netlify runs) only
-  // includes the wiki when the dial is explicitly "public" — never on "private"/"local".
+  // "public" builds it everywhere, including production. The hard guarantee still holds: a production build (npm run build → ELEVENTY_ENV=production, what Netlify runs) only includes the wiki when the dial is explicitly "public" — never on "private"/"local".
   const wikiVisibility = features?.wiki?.visibility;
   if (!['private', 'local', 'public'].includes(wikiVisibility)) {
     throw new Error(

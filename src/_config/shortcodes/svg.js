@@ -11,11 +11,7 @@
 import {optimize} from 'svgo';
 import {readFileSync} from 'node:fs';
 
-// NOTE: svgo's optimize() and readFileSync are both synchronous, so this
-// shortcode must stay synchronous too. A leftover `async`/`await` (vestige of
-// svgo v1's old Promise API) made it return a Promise, which the interlinker
-// plugin silently drops inside deeply-nested includes (base→header→main-nav) —
-// blanking the whole nav. Keep this sync.
+// NOTE: svgo's optimize() and readFileSync are both synchronous, so this shortcode must stay synchronous too. A leftover `async`/`await` (vestige of svgo v1's old Promise API) made it return a Promise, which the interlinker plugin silently drops inside deeply-nested includes (base→header→main-nav) — blanking the whole nav. Keep this sync.
 export const svgShortcode = (svgName, ariaName = '', className = '', styleName = '') => {
   const svgData = readFileSync(`./src/assets/svg/${svgName}.svg`, 'utf8');
 

@@ -168,9 +168,7 @@ function fluidMaxToPx(v) {
 	return v;
 }
 
-// Resolve a "{color.foo.bar}" reference against colors.json. Tries nested
-// lookup first (gray.900), then falls back to a hyphen-joined top-level key
-// (base.lightest → base-lightest).
+// Resolve a "{color.foo.bar}" reference against colors.json. Tries nested lookup first (gray.900), then falls back to a hyphen-joined top-level key (base.lightest → base-lightest).
 function resolveColorRef(ref, colors) {
 	const m = String(ref).match(/^\{([^}]+)\}$/);
 	if (!m) return ref;

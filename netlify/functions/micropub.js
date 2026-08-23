@@ -2,10 +2,7 @@
 //
 // One endpoint at /api/micropub that turns an incoming h-entry (from any Micropub client: Sparkles, Quill, iA Writer…) into a shape-correct .md committed to the repo via the GitHub Contents API. A Micropub post lands as the *same* kind of .md, in the *same* src/posts/<type>/ folder, as an Obsidian Web Clipper clip — the two are complementary authoring paths over one content layer. See the `micropub` skill and _local/project_docs/micropub-pattern.html.
 //
-// Engine: @benjifs/micropub (auth, routing, frontmatter, CRUD) +
-// @benjifs/github-store (the GitHub backend). We "vendor-but-patch": the engine
-// (v2.0.1) exposes its conventions only through constructor options, so we steer
-// it through those documented seams rather than editing its source —
+// Engine: @benjifs/micropub (auth, routing, frontmatter, CRUD) + @benjifs/github-store (the GitHub backend). We "vendor-but-patch": the engine (v2.0.1) exposes its conventions only through constructor options, so we steer it through those documented seams rather than editing its source —
 //   • contentDir  -> src/posts
 //   • formatSlug  -> map the engine post-type to this site's folder, and strip
 //                    the engine's leading unix-timestamp prefix (patch points 1+2)
@@ -37,11 +34,7 @@ const {
 export const CONTENT_DIR = 'src/posts'
 const FIREHOSE_TAG = 'posts' // every post carries tags:"posts" via its folder JSON
 
-// Engine post-type -> destination folder under CONTENT_DIR. The post `category`
-// (the post *type* that drives byCategory() collections) is inherited from each
-// folder's directory-data JSON, so the Function never writes it — routing a post
-// is purely choosing its folder, and `category` falls out of the data cascade.
-// Note the asymmetries: listen -> jams, watch -> watching, read -> reading.
+// Engine post-type -> destination folder under CONTENT_DIR. The post `category` (the post *type* that drives byCategory() collections) is inherited from each folder's directory-data JSON, so the Function never writes it — routing a post is purely choosing its folder, and `category` falls out of the data cascade. Note the asymmetries: listen -> jams, watch -> watching, read -> reading.
 export const TYPE_DIR = {
   note: 'notes',
   reply: 'replies',
@@ -147,10 +140,7 @@ export const upgradeCoverUrl = (url = '') => {
   return url
 }
 
-// folder/slug for the engine; strips the leading unix-timestamp prefix it adds
-// to titled posts (e.g. `1733436000-anna-karenina` -> `anna-karenina`). A bare
-// timestamp (title-less post) has no trailing `-`, so it passes through here and
-// is upgraded later in the store.
+// folder/slug for the engine; strips the leading unix-timestamp prefix it adds to titled posts (e.g. `1733436000-anna-karenina` -> `anna-karenina`). A bare timestamp (title-less post) has no trailing `-`, so it passes through here and is upgraded later in the store.
 export const formatSlug = (type = 'note', slug = '') =>
   `${TYPE_DIR[type] || type}/${slug.replace(/^\d+-/, '')}`
 
@@ -173,8 +163,7 @@ export const rewriteFrontmatter = (data = {}) => {
       continue
     }
     if (key === 'visibility') {
-      // Micropub `visibility` -> JEDEE's native vocabulary, interpreted at build
-      // time (see src/_config/plugins/drafts.js):
+      // Micropub `visibility` -> JEDEE's native vocabulary, interpreted at build time (see src/_config/plugins/drafts.js):
       //   unlisted -> keep the native key; the build drops it from every
       //               collection/feed + the sitemap and emits `noindex`, while
       //               its permalink still resolves.
@@ -218,8 +207,7 @@ export const rewriteFrontmatter = (data = {}) => {
         if (isListen && cite.name && !('album' in out)) out.album = flatten(cite.name)
         if (cite.photo && !out.cover) out.cover = flatten(cite.photo)
         if (cite.published && !('year' in out)) out.year = flatten(cite.published)
-        // The cite's creator is the performer on a jam -> `artist` (matching the
-        // clippers + the jam layout), but the director/author on a film/book -> `author`.
+        // The cite's creator is the performer on a jam -> `artist` (matching the clippers + the jam layout), but the director/author on a film/book -> `author`.
         const creatorKey = isListen ? 'artist' : 'author'
         if (cite.author && !(creatorKey in out)) out[creatorKey] = flatten(cite.author)
         if (cite.content && !('plot' in out)) out.plot = flatten(cite.content)
@@ -242,10 +230,7 @@ export const rewriteFrontmatter = (data = {}) => {
   // A custom `mp-slug` on a TITLED post becomes a `slug` URL field — the titled-type permalinks honor it (`(slug or page.fileSlug) | slugify`), so the file keeps its Obsidian Title-Case name while the slug drives the URL. On a title-less post the engine already used the mp-slug as the filename, so don't duplicate it here.
   if (out.title && data['mp-slug']) out.slug = flatten(data['mp-slug'])
 
-  // tags: the folder JSON's tags:"posts" is added by Eleventy's data cascade
-  // (deep merge concatenates `tags`), so front matter carries ONLY the user tags
-  // (engine mapped Micropub `category` -> `tags`). Re-adding the firehose tag here
-  // would double it — folder "posts" + this "posts" — so strip it out instead.
+  // tags: the folder JSON's tags:"posts" is added by Eleventy's data cascade (deep merge concatenates `tags`), so front matter carries ONLY the user tags (engine mapped Micropub `category` -> `tags`). Re-adding the firehose tag here would double it — folder "posts" + this "posts" — so strip it out instead.
   if ('tags' in out) {
     const user = (Array.isArray(out.tags) ? out.tags : [out.tags]).filter(Boolean)
     const userTags = [...new Set(user)].filter((tag) => tag !== FIREHOSE_TAG)
@@ -277,9 +262,7 @@ export const titleToFilename = (title = '') =>
 //      title, so the filename, URL, and <h1> all match), falling back to a
 //      content/target slug. A title-less `mp-slug` already named the file (not a
 //      bare timestamp), so it passes straight through untouched.
-// Pure (no I/O). `data` is the already-rewritten frontmatter; `derivedTitle` is the
-// guaranteed title (from ensureTitle). Returns the path and the public URL it
-// implies (null when unchanged / ME unset).
+// Pure (no I/O). `data` is the already-rewritten frontmatter; `derivedTitle` is the guaranteed title (from ensureTitle). Returns the path and the public URL it implies (null when unchanged / ME unset).
 export const resolveFilename = (filename, data = {}, content = '', derivedTitle = '') => {
   const unchanged = { finalName: filename, location: null }
   const m = filename.match(/^(.*)\/([^/]+)\/([^/]+)\.md$/)
