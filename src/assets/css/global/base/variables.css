@@ -9,7 +9,7 @@
   --tracking: -0.04ch;
   --tracking-s: -0.075ch;
   --tracking-wide: 0.09ch;
-  /* The site's one border width. `button.css` and `code.css` referenced --border-thickness (the Every Layout / EE name for it) but nothing ever defined it, so their border-width fell back to the CSS initial value `medium` — an unintended 3px on every button and code block. The value now comes from borderWidth.json, so the stylesheet and Penpot's border.thin token share a source. */
+  /* The site's one border width. button.css and code.css already referenced --border-thickness, but nothing defined it, so they fell back to `medium` — 3px. Sourced from borderWidth.json, shared with Penpot's border.thin. */
   --border-thickness: var(--border-width-thin);
   --stroke: var(--border-thickness) solid var(--color-bg-accent);
 

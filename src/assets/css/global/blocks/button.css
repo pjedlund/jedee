@@ -91,7 +91,7 @@
   color: var(--button-color);
 }
 
-/* Shares its geometry and type with `.menu-toggle` in main-nav.css — same padding, radius, border width, size, weight, uppercase and tracking — so the small button and the nav trigger read as one family. Color is deliberately NOT copied across: the toggle is transparent with a faint hairline, while this keeps the .button colors so `data-button-variant` still works (the draft badge is a small tertiary button). Keep the two in step if either changes. */
+/* Geometry and type match `.menu-toggle` in main-nav.css, so the small button and the nav trigger read as one family — keep the two in step. Color is deliberately not copied: this keeps the .button colors so `data-button-variant` still works. */
 .button[data-small-button] {
   --button-border-width: var(--border-thickness);
   --button-radius: var(--border-radius-medium);

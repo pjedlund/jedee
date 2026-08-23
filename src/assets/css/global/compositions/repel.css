@@ -10,10 +10,7 @@ between each item.
 --repel-vertical-alignment How items should align vertically.
 Can be any acceptable flexbox alignment value.
 
---repel-wrap (wrap) Whether the row may stack. Mirrors --cluster-wrap on the
-cluster composition, so a block that shares a row with a repel can pin or relax
-the stacking through the composition's own API instead of overriding flex-wrap
-from outside. The [data-nowrap] exception below is sugar over the same property.
+--repel-wrap (wrap) Whether the row may stack. Mirrors --cluster-wrap, so a block sharing the row can pin or relax stacking without overriding flex-wrap from outside. [data-nowrap] is sugar over the same property.
 */
 
 .repel {

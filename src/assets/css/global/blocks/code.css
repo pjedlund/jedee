@@ -60,7 +60,7 @@ pre {
   padding: var(--space-l) var(--space-l);
 
   border-radius: var(--border-radius-medium);
-  /* Was `border-size: var(--button-border-size)` — neither the property nor the variable exists, so the declaration was dropped and --code-border-size (defined in all three theme blocks above) was never consumed. */
+  /* Was `border-size: var(--button-border-size)` — no such property or variable, so --code-border-size above was never consumed. */
   border-width: var(--code-border-size);
   border-style: var(--code-border-style);
   border-color: var(--code-border-color);

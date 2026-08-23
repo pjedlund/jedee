@@ -14,9 +14,7 @@
  * Mapping rules:
  *   - JSON nesting becomes dot-separated token names (e.g. gray.100 → color.gray.100).
  *   - Fluid Utopia values { min, max } collapse to the max as "<n>px".
- *   - Border radii convert rem → px (base 16px). Penpot's border-radius binding
- *     validator rejects rem-unit strings — a bound token shows "Reference … is not
- *     valid or is not in any active set" — even though it imports and resolves fine.
+ *   - Border radii convert rem → px (base 16px): Penpot's border-radius binding validator rejects rem strings, even though they import fine.
  *   - Bare numbers in viewports.json become "<n>px" dimension tokens.
  *   - The three light_dark colors (red, blue, green) are split:
  *       primary value   → theme/light
@@ -76,8 +74,7 @@ function fluidMaxToPx(v) {
 	return v;
 }
 
-// Penpot's border-radius binding validator rejects rem-unit strings, so convert
-// rem → px at the 16px root base. Pass px/unitless values through untouched.
+// rem → px at the 16px root base; px/unitless pass through.
 function remToPx(v) {
 	if (typeof v === 'string' && v.trim().endsWith('rem')) {
 		return `${parseFloat(v) * 16}px`;
@@ -150,7 +147,7 @@ async function build() {
 	for (const [name, value] of Object.entries(semanticColors.themes?.dark ?? {})) {
 		setLeaf(themeDark, `color.${name}`, token(value, semanticType));
 	}
-	// Component colors (buttons, mega-menu). Emitted with their names verbatim (no color.* prefix) so they match the bindings the Penpot components already carry. Without this the import would delete them — see buttonColors.json / megamenuColors.json. A file's `core` block goes to its own core set (values there are plain references, so one copy serves both themes); its `themes` block holds the color-mix() results, which have to be flattened per theme.
+	// Component colors (buttons, mega-menu). Names emitted verbatim — no color.* prefix — to match the bindings the Penpot components already carry. `core` goes to its own core set, `themes` holds the color-mix() results, flattened per theme.
 	for (const componentColors of [buttonColors, megamenuColors]) {
 		const componentType = componentColors.$type ?? 'color';
 		const coreSetName = componentColors.$penpotCoreSet;
@@ -167,10 +164,7 @@ async function build() {
 			setLeaf(themeDark, name, token(value, componentType));
 		}
 	}
-	// Shadows. Stored per recipe with a `-dark` sibling because tailwind emits one flat
-	// :root and the blocks pick the right one under [data-theme='dark']; Penpot instead
-	// wants the same token name in both theme sets, so the pairs are split back apart here.
-	// Layers pass through as-is — the JSON already holds Penpot's own shadow shape.
+	// Shadows. The JSON pairs each recipe with a `-dark` sibling for tailwind's flat :root; Penpot wants one name in both theme sets, so the pairs are split apart again here. Layers pass through as-is.
 	const shadowType = shadows.$type ?? 'shadow';
 	for (const [k, v] of Object.entries(shadows)) {
 		if (k.startsWith('$')) continue;
