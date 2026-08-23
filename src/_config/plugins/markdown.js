@@ -18,6 +18,14 @@ export const markdownLib = markdownIt({
 })
   .disable('code')
   .use(markdownItAttrs)
+  // Prism has no Nunjucks grammar, so ````njk` fences are rendered as jinja2 — close enough, and it highlights the surrounding HTML too. Must run before markdown-it-prism.
+  .use(md => {
+    md.core.ruler.push('njk_as_jinja2', state => {
+      for (const token of state.tokens) {
+        if (token.type === 'fence' && token.info.trim() === 'njk') token.info = 'jinja2';
+      }
+    });
+  })
   .use(markdownItPrism, {
     defaultLanguage: 'plaintext'
   })
