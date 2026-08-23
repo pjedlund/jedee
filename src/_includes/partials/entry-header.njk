@@ -1,20 +1,12 @@
-{# Shared chrome header for post-type layouts (post, note, reading, jam, watching, ...).
-   The per-type layout wraps this inside <div class="region"><div class="wrapper flow prose">,
-   so this partial only renders the title/image/meta block. Tags moved to entry-footer.njk. #}
+{# Shared chrome header for post-type layouts (post, note, reading, jam, watching, ...). The per-type layout wraps this inside <div class="region"><div class="wrapper flow prose">, so this partial only renders the title/image/meta block. Tags moved to entry-footer.njk. #}
 
-{# The page heading is always shown: it's the document outline / SEO / microformats
-   `p-name`. With the breadcrumb on it sits just below the trail (the standard
-   breadcrumb + heading pattern); with the breadcrumb off it's the page's only title. #}
-{# titleLang is set (to "sv") only for Swedish activity titles — see eleventyComputed.js.
-   Other post types leave it undefined, so the h1 stays at the page's language. #}
+{# The page heading is always shown: it's the document outline / SEO / microformats `p-name`. With the breadcrumb on it sits just below the trail (the standard breadcrumb + heading pattern); with the breadcrumb off it's the page's only title. #}
+{# titleLang is set (to "sv") only for Swedish activity titles — see eleventyComputed.js. Other post types leave it undefined, so the h1 stays at the page's language. #}
 {% if title %}
   <h1 class="p-name"{% if titleLang %} lang="{{ titleLang }}"{% endif %}>{{ title }}</h1>
 {% endif %}
 
-{# The featured image is always a lightbox. credit renders as the figcaption,
-   outside the clickable area ("credit" was never a shortcode option — the old
-   pass-through silently dropped it). sizes matches the .feature breakout
-   width, same as the photo layout's hero. #}
+{# The featured image is always a lightbox. credit renders as the figcaption, outside the clickable area ("credit" was never a shortcode option — the old pass-through silently dropped it). sizes matches the .feature breakout width, same as the photo layout's hero. #}
 {% if image %}
   {%
     imageKeys {
@@ -33,9 +25,7 @@
   {%- if draft -%}
     <span class="button" data-small-button data-button-variant="tertiary">draft</span>
   {%- endif %}
-  {# Activity pages only: the activity type with its own glyph, to the left of the date.
-     activityType is set only on activity posts, so this block never renders on other types.
-     Small local icon+label map — Johan's four types ("Gym" is the weight-training label). #}
+  {# Activity pages only: the activity type with its own glyph, to the left of the date. activityType is set only on activity posts, so this block never renders on other types. Small local icon+label map — Johan's four types ("Gym" is the weight-training label). #}
   {%- if activityType %}
     {%- set activityMeta = {
       "orienteering": {"icon": "compass", "label": "Orienteering"},
@@ -48,8 +38,7 @@
       <span class="meta-item">{% svg 'posts/' + at.icon, '', 'meta-icon' %}{{ at.label }}</span>
     {%- endif %}
   {%- endif %}
-  {# The date, with a calendar glyph, on every post type. Kept here (not in date.njk) so it
-     rides only the post meta line — date.njk is shared by every archive card too. #}
+  {# The date, with a calendar glyph, on every post type. Kept here (not in date.njk) so it rides only the post meta line — date.njk is shared by every archive card too. #}
   {% if date %}
     <span class="meta-item">{% svg 'posts/calendar', '', 'meta-icon' %}{% set definedDate = date %}{% include "partials/date.njk" %}</span>
   {% endif %}

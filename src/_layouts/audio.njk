@@ -3,27 +3,14 @@ layout: base
 schema: BlogPosting
 ---
 
-{# The audio type carries two flavours from one layout: podcast episodes (episode/season/
-   transcript, file in src/assets/audio) and field recordings (lat/lon, recorder/mic,
-   file on R2). Every block below is guarded on the field that distinguishes them, so a
-   post of either kind renders only what it actually has. #}
+{# The audio type carries two flavours from one layout: podcast episodes (episode/season/ transcript, file in src/assets/audio) and field recordings (lat/lon, recorder/mic, file on R2). Every block below is guarded on the field that distinguishes them, so a post of either kind renders only what it actually has. #}
 
 <div class="region" style="--region-space-top: var(--space-xl-2xl)">
   <article class="wrapper flow prose h-entry">
     {% include 'partials/entry-header.njk' %}
 
-    {# Artwork is a LOCAL asset → {% image %} (the Photo poster pattern, not the
-       remote-cover plain <img> of reading/watching). Breaks out to .feature width:
-       square podcast art and a landscape field-recording frame both read better
-       wider than the prose column. Called directly in the layout, so the interlinker's
-       {% if %}-wrapped-include trap doesn't apply.
-       imageKeys' own lightbox mode zooms to the 2000w JPEG it generates, with the smaller
-       derivatives as a srcset behind it. It sets widths to [650, 960, 1400, 2000] itself,
-       hence none here. The <photo-lightbox> it emits carries its own PhotoSwipe CSS/JS on
-       the island — nothing needs adding to the {% css "local" %} block below.
-       photo.njk has a second route for zooming past the page derivatives, to a full-size
-       original on R2. Deliberately not carried over: no poster here has needed that much
-       zoom, and one route is easier to reason about than two. #}
+    {# Artwork is a LOCAL asset → {% image %} (the Photo poster pattern, not the remote-cover plain <img> of reading/watching). Breaks out to .feature width:
+       square podcast art and a landscape field-recording frame both read better wider than the prose column. imageKeys sets its own widths and carries its own PhotoSwipe CSS/JS on the island, so nothing is needed here or in the {% css "local" %} block below. photo.njk's second route — zooming past the page derivatives to a full-size original on R2 — is deliberately not carried over; no poster here has needed it. #}
     {% if poster %}
       {%
         imageKeys {
@@ -37,9 +24,7 @@ schema: BlogPosting
       %}
     {% endif %}
 
-    {# The recording IS the content, so u-audio rides the visible <audio>.
-       audio.src is either "./src/assets/audio/…" (passthrough-copied — Eleventy Image
-       doesn't move .mp3) or a full R2 URL; stripping "./src" is a no-op on the latter. #}
+    {# The recording IS the content, so u-audio rides the visible <audio>. audio.src is either "./src/assets/audio/…" (passthrough-copied — Eleventy Image doesn't move .mp3) or a full R2 URL; stripping "./src" is a no-op on the latter. #}
     {% if audio.src %}
       <audio class="u-audio" controls preload="metadata" src="{{ audio.src | replace('./src', '') }}"></audio>
     {% endif %}
@@ -48,8 +33,7 @@ schema: BlogPosting
       {{ content | safe }}
     </div>
 
-    {# Transcript: native <details> (EE favours it over a JS accordion); v1
-       links the WebVTT for download, inline rendering is a later add (spec §10). #}
+    {# Transcript: native <details> (EE favours it over a JS accordion); v1 links the WebVTT for download, inline rendering is a later add (spec §10). #}
     {% if transcript %}
       <details class="transcript">
         <summary>Transcript</summary>
@@ -57,10 +41,7 @@ schema: BlogPosting
       </details>
     {% endif %}
 
-    {# Recording metadata + downloads + licence. Inline rather than a partial: it has
-       exactly one caller, and audio.njk already inlines the transcript block the same
-       way. Shares media-meta.css with photo-meta.njk. Microformats: p-location (+ nested
-       h-adr) on the place, h-geo on the coordinates — same markup as the photo type. #}
+    {# Recording metadata + downloads + licence. Inline rather than a partial: it has exactly one caller, and audio.njk already inlines the transcript block the same way. Shares media-meta.css with photo-meta.njk. Microformats: p-location (+ nested h-adr) on the place, h-geo on the coordinates — same markup as the photo type. #}
     {% if recorder or mic or audio.duration or place or audio.downloads %}
       <section class="media-meta | flow" aria-label="Recording details">
 
@@ -68,14 +49,9 @@ schema: BlogPosting
         <dl>
           {% if recorder %}<dt>Recorder</dt><dd>{{ recorder }}</dd>{% endif %}
           {% if mic %}<dt>Microphone</dt><dd>{{ mic }}</dd>{% endif %}
-          {# A list: wind protection stacks (a basket inside a furry, say), so the field takes
-             several. Joined into ONE <dd> rather than emitting one each — the <dl> above is a
-             two-column grid that dt/dd flow straight into, so a second <dd> would land in the
-             label column. #}
+          {# A list: wind protection stacks (a basket inside a furry, say), so the field takes several. Joined into ONE <dd> rather than emitting one each — the <dl> above is a two-column grid that dt/dd flow straight into, so a second <dd> would land in the label column. #}
           {% if windProtection %}<dt>Wind protection</dt><dd>{{ windProtection | join(", ") }}</dd>{% endif %}
-          {# Length only when the player is the whole recording. Once `downloads` exists the
-             files carry their own lengths in their labels, and a lone "Length" row reads as
-             the length of the download rather than of the clip above it. #}
+          {# Length only when the player is the whole recording. Once `downloads` exists the files carry their own lengths in their labels, and a lone "Length" row reads as the length of the download rather than of the clip above it. #}
           {% if audio.duration and not audio.downloads %}<dt>Length</dt><dd>{{ audio.duration | itunesDuration }}</dd>{% endif %}
           {% if place %}<dt>Place</dt>
             <dd class="p-location h-adr">
@@ -103,9 +79,7 @@ schema: BlogPosting
         </ul>
         {% endif %}
 
-        {# Tied to `downloads`, not to the block as a whole: the CC0 offer only makes sense
-           where the file is actually being handed over for reuse. A podcast episode has a
-           player and no downloads, and must not claim a licence it wasn't given. #}
+        {# Tied to `downloads`, not to the block as a whole: the CC0 offer only makes sense where the file is actually being handed over for reuse. A podcast episode has a player and no downloads, and must not claim a licence it wasn't given. #}
         {% if audio.downloads %}
         <p class="text-step-min-1 media-license">
           <a rel="license" href="https://creativecommons.org/publicdomain/zero/1.0/">Public domain (CC0)</a> &mdash; download and reuse freely.
@@ -115,9 +89,7 @@ schema: BlogPosting
       </section>
     {% endif %}
 
-    {# Location map — a popout <place-map>, same as the photo layout. The slotted static
-       <a><img> is the no-JS fallback; <place-map> upgrades it to a live, maximizable map
-       on idle. Coordinates come from front matter here (audio has no EXIF to read). #}
+    {# Location map — a popout <place-map>, same as the photo layout. The slotted static <a><img> is the no-JS fallback; <place-map> upgrades it to a live, maximizable map on idle. Coordinates come from front matter here (audio has no EXIF to read). #}
     {% if lat and lon and meta.mapApiKey and not hideMap %}
       {% set mapLat = lat %}
       {% set mapLon = lon %}

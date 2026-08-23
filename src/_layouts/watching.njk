@@ -7,10 +7,7 @@ schema: BlogPosting
   <article class="wrapper flow prose h-entry">
     {% include 'partials/entry-header.njk' %}
 
-    {# Poster is a remote Letterboxd URL — plain <img>, not the local-only {% image %} shortcode.
-       Alt text comes from `coverAlt` when the post writes one. `default` substitutes only on
-       UNDEFINED, so `coverAlt: ""` is honoured as empty — the right answer for a poster that just
-       repeats the title beside it. #}
+    {# Poster is a remote Letterboxd URL — plain <img>, not the local-only {% image %} shortcode. Alt text comes from `coverAlt` when the post writes one. `default` substitutes only on UNDEFINED, so `coverAlt: ""` is honoured as empty — the right answer for a poster that just repeats the title beside it. #}
     {% if cover %}
       <img class="cover" eleventy:optional="placeholder" src="{{ cover | safe }}" alt="{{ coverAlt | default('Poster for ' + title) }}" loading="lazy" eleventy:widths="160,224,448" sizes="auto">
     {% endif %}

@@ -1,9 +1,5 @@
 {#-
-  Photo-aware Atom feed body. Identical to atom-body.njk except it renders the
-  frontmatter photo (photo: { src, alt, caption }) as an absolute-URL <img>
-  ahead of post.content. The shared atom-body emits ONLY post.content, so a
-  Photo (whose image lives in frontmatter, not the body) would feed with the
-  image missing. Set the same vars as atom-body.njk before including:
+  Photo-aware Atom feed body. Identical to atom-body.njk except it renders the frontmatter photo (photo: { src, alt, caption }) as an absolute-URL <img> ahead of post.content. The shared atom-body emits ONLY post.content, so a Photo (whose image lives in frontmatter, not the body) would feed with the image missing. Set the same vars as atom-body.njk before including:
     feedCollection, feedTitle, feedDescription, feedSelfUrl
 -#}
 <?xml version="1.0" encoding="utf-8"?>
@@ -19,10 +15,7 @@
   </author>
   {%- for post in feedCollection | reverse -%}
   {%- set absolutePostUrl = post.url | absoluteUrl(meta.url) -%}
-  {# Inject the frontmatter photo as a plain <img> (sync — async shortcodes
-     render empty inside {% set %} capture). renderTransforms then runs the
-     eleventy-img transform to optimize it and rewrites every URL to absolute,
-     the same path body images take into the other feeds. #}
+  {# Inject the frontmatter photo as a plain <img> (sync — async shortcodes render empty inside {% set %} capture). renderTransforms then runs the eleventy-img transform to optimize it and rewrites every URL to absolute, the same path body images take into the other feeds. #}
   {%- set photoImg %}<img src="{{ post.data.photo.src | replace('./src', '') }}" alt="{{ post.data.photo.alt }}">{% endset -%}
     <entry>
       <title>{{ post.data.title or "Photo" }}</title>

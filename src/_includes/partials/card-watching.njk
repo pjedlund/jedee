@@ -1,7 +1,4 @@
-{# Archive card for the Watching type. Like card-blog.njk but the poster is a
-   plain remote <img> from `cover` (a Letterboxd URL). The {% image %} shortcode
-   is local-only — it prepends ./src and runs eleventy-img against the
-   filesystem, so it can't process a remote poster URL. #}
+{# Archive card for the Watching type. Like card-blog.njk but the poster is a plain remote <img> from `cover` (a Letterboxd URL). The {% image %} shortcode is local-only — it prepends ./src and runs eleventy-img against the filesystem, so it can't process a remote poster URL. #}
 
 {% set headingLevel = headingLevel | default("h2") %}
 {% set definedDate = definedDate | default(item.date) %}

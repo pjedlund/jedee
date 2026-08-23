@@ -1,12 +1,4 @@
-{#- Real schema.org/Event JSON-LD (spec §10). Event is the strongest
-    rich-results candidate (startDate/endDate/location/eventStatus), so it
-    commits to a real schema now — breaking the BlogPosting v1 pattern
-    Photo/Audio/Video keep. Ships WITH `schema: Event` in event.njk, because
-    head/schema.njk includes "schemas/" + schema + ".njk" and THROWS on a
-    missing template. String values go through `| dump` so quotes/apostrophes
-    in event text can't break the JSON — more robust than BlogPosting.njk's bare
-    interpolation. Location is v1-simple: a url with no location → VirtualLocation;
-    otherwise Place { name } (spec §10, finer Place/hybrid modeling deferred). -#}
+{#- Real schema.org/Event JSON-LD (spec §10) — the strongest rich-results candidate, so it breaks the BlogPosting v1 pattern the other media types keep. ⚠ Ships WITH `schema: Event` in event.njk: head/schema.njk includes "schemas/" + schema + ".njk" and THROWS on a missing template. String values go through `| dump` so quotes in event text can't break the JSON. Location is v1-simple: url and no location → VirtualLocation, else Place { name }. -#}
 {%- set eventStatusMap = {
   "scheduled": "EventScheduled",
   "cancelled": "EventCancelled",

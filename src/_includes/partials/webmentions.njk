@@ -1,22 +1,11 @@
-{# Webmention render slot — build-time static render of received webmentions
-   (replies, likes, reposts, mentions) fetched into _data/webmentions.js.
+{# Webmention render slot — build-time static render of received webmentions (replies, likes, reposts, mentions) fetched into _data/webmentions.js.
 
-   Wired PER-LAYOUT (article/note/photo only) via a BARE include — the layout sets
-   `webmentionUrl` first (its absolute URL, matching the hidden h-entry's u-url so
-   it equals each mention's `wm-target`). A bare include keeps it clear of the
-   interlinker async-shortcode trap; this partial (and the webmention.njk card it
-   pulls in) call ZERO shortcodes — only filters + plain <img> — so the inner
-   {% if %}/{% for %} blocks are safe.
+   Wired PER-LAYOUT (article/note/photo only) via a BARE include — the layout sets `webmentionUrl` first (its absolute URL, matching the hidden h-entry's u-url so it equals each mention's `wm-target`). A bare include keeps it clear of the interlinker async-shortcode trap; this partial (and the webmention.njk card it pulls in) call ZERO shortcodes — only filters + plain <img> — so the inner {% if %}/{% for %} blocks are safe.
 
-   Empty state renders NOTHING (the whole <aside> is gated). Partition: mentions
-   with `content.text` render as reply CARDS; pure reactions (likes/reposts/
-   bookmarks, no text) render as a facepile of overlapping avatars. Own mentions
-   are excluded via the `webmentionisOwn` filter.
+   Empty state renders NOTHING (the whole <aside> is gated). Partition: mentions with `content.text` render as reply CARDS; pure reactions (likes/reposts/ bookmarks, no text) render as a facepile of overlapping avatars. Own mentions are excluded via the `webmentionisOwn` filter.
 
    Avatars are hotlinked plain <img eleventy:ignore> (webmention.io proxies them):
-   the {% image %} shortcode is avoided on purpose — it breaks on remote URLs and
-   is async (interlinker trap), and `eleventy:ignore` keeps the eleventy-img HTML
-   Transform from trying to fetch/optimize them, so they stay zero-build-cost. #}
+   the {% image %} shortcode is avoided on purpose — it breaks on remote URLs and is async (interlinker trap), and `eleventy:ignore` keeps the eleventy-img HTML Transform from trying to fetch/optimize them, so they stay zero-build-cost. #}
 
 {% set allMentions = webmentions | webmentionGetForUrl(webmentionUrl) %}
 

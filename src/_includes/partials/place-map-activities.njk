@@ -1,25 +1,11 @@
 {#
-  The activity index: a map of every located activity, and under it every activity
-  as a plain link, newest first, all types mixed. The lat/lon frontmatter is
-  backfilled from Eventor arena positions (script: _local/generated/eventor-coords.py)
-  and, for the rest, the Strava export.
+  The activity index: a map of every located activity, and under it every activity as a plain link, newest first, all types mixed. The lat/lon frontmatter is backfilled from Eventor arena positions (script: _local/generated/eventor-coords.py) and, for the rest, the Strava export.
 
-  The list is BOTH the page's index and the map's data source. <place-map>
-  (place-map.js, places mode) reads the <li data-lat data-lon> items on idle and drops
-  one dot per located activity above the list. Activities without coordinates (indoor
-  sessions) are in the list with no data-lat — indexed, just not mapped. Without JS
-  this is the complete, browsable index it looks like, by design and not as a degraded
-  state: Leaflet's markers have broken keyboard and screen-reader handling upstream, so
-  nobody is routed through the map to reach a post.
+  The list is BOTH the page's index and the map's data source: <place-map> reads the <li data-lat data-lon> items on idle and drops one dot per located activity above it. Items without coordinates (indoor sessions) stay listed, just unmapped. Without JS this is the complete index by design, not a degraded state — Leaflet's markers have broken keyboard and screen-reader handling upstream, so nobody is routed through the map to reach a post.
 
-  Iterate collections.activity DIRECTLY, not through | located. `byCategory` already
-  reverses the collection to newest-first, and `located` reverses again — the two
-  cancelled out and the list ran oldest-first for months.
+  Iterate collections.activity DIRECTLY, not through | located. `byCategory` already reverses the collection to newest-first, and `located` reverses again — the two cancelled out and the list ran oldest-first for months.
 
-  The empty .place-map-live box is rendered here on purpose. place-map.js used to
-  create and prepend it after idle, which shoved the whole list down on every load;
-  its 16:9 aspect-ratio now holds the space from first paint and the JS adopts this
-  box instead of building one.
+  The empty .place-map-live box is rendered here on purpose. place-map.js used to create and prepend it after idle, which shoved the whole list down on every load; its 16:9 aspect-ratio now holds the space from first paint and the JS adopts this box instead of building one.
 
   No async shortcodes here, so the interlinker {% if %}-include trap doesn't apply.
 #}

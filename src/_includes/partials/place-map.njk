@@ -1,9 +1,5 @@
 {#
-  Static map for a post's location, linked to OpenStreetMap. A plain <img> (NOT the
-  local-only {% image %} shortcode, and NOT a WebC component): the eleventy-img
-  HTML transform runs BEFORE the WebC transform, so only a Nunjucks-emitted <img>
-  gets fetched + self-hosted — a WebC-emitted one would ship the raw keyed URL.
-  Same remote-cover pattern as reading/watching/jam.
+  Static map for a post's location, linked to OpenStreetMap. A plain <img> (NOT the local-only {% image %} shortcode, and NOT a WebC component): the eleventy-img HTML transform runs BEFORE the WebC transform, so only a Nunjucks-emitted <img> gets fetched + self-hosted — a WebC-emitted one would ship the raw keyed URL. Same remote-cover pattern as reading/watching/jam.
 
   - `src | safe`                       keeps the multi-param URL's literal '&' (an
                                        escaped '&amp;' makes eleventy-img fetch a
@@ -13,15 +9,9 @@
                                        a placeholder, so the keyed URL is never left
                                        in the HTML.
 
-  Bare-include-friendly: no async shortcode, so the interlinker {% if %}-blank trap
-  doesn't apply even though photo.njk wraps this include in {% if showMap %}.
-  This is the no-JS fallback for the <place-map> element — 16:9 to match the live map
-  that replaces it on idle; zoom matches place-map.js's default.
+  Bare-include-friendly: no async shortcode, so the interlinker {% if %}-blank trap doesn't apply even though photo.njk wraps this include in {% if showMap %}. This is the no-JS fallback for the <place-map> element — 16:9 to match the live map that replaces it on idle; zoom matches place-map.js's default.
 
-  The CALLER supplies the coordinates, so the same partial serves any post type that knows
-  where it happened — photo.njk passes them from EXIF, audio.njk from front matter.
-  Expects in context: mapLat, mapLon, meta.mapApiKey; optionally mapZoom, mapPlace, and
-  mapSubject (the "where this ___" clause in the alt text).
+  The CALLER supplies the coordinates, so the same partial serves any post type that knows where it happened — photo.njk passes them from EXIF, audio.njk from front matter. Expects in context: mapLat, mapLon, meta.mapApiKey; optionally mapZoom, mapPlace, and mapSubject (the "where this ___" clause in the alt text).
 #}
 {%- set mz = mapZoom or 13 -%}
 {%- set mapSubject = mapSubject or "this was recorded" -%}

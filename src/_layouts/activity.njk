@@ -7,19 +7,12 @@ schema: BlogPosting
   <article class="wrapper flow prose h-entry">
     {% include 'partials/entry-header.njk' %}
 
-    {# Recorded route line. The .geojson sibling (from _local/generated/extract-route.py)
-       is inlined into <place-map> route mode as a slotted JSON script; place-map.js draws
-       the track + start/finish markers on idle. No-JS visitors get no map here, which is
-       fine: the stats and the "View on Strava" link below carry the route. #}
+    {# Recorded route line. The .geojson sibling (from _local/generated/extract-route.py) is inlined into <place-map> route mode as a slotted JSON script; place-map.js draws the track + start/finish markers on idle. No-JS visitors get no map here, which is fine: the stats and the "View on Strava" link below carry the route. #}
     {% set routeJson = page.inputPath | routeGeoJSON %}
     {% if routeJson %}
-      {#- @breakout puts the .popout class on the component's <is-land> root (the real grid
-          child), so the route map breaks out one step wider than the prose column. A class
-          here would land on the inner <place-map> (webc:root), a grid grandchild, and do nothing. #}
+      {#- @breakout puts the .popout class on the component's <is-land> root (the real grid child), so the route map breaks out one step wider than the prose column. A class here would land on the inner <place-map> (webc:root), a grid grandchild, and do nothing. #}
       <place-map @breakout="popout" @place="this route">
-        {#- Empty 16:9 box rendered server-side so its aspect-ratio holds the space from first
-            paint; place-map.js adopts it instead of building + prepending one on idle, which
-            is what shoved the stats below down (the same shift the activity index had). #}
+        {#- Empty 16:9 box rendered server-side so its aspect-ratio holds the space from first paint; place-map.js adopts it instead of building + prepending one on idle, which is what shoved the stats below down (the same shift the activity index had). #}
         <div class="place-map-live" data-place-map-box>
           <p class="place-map-pending">Map of this route</p>
         </div>
@@ -27,20 +20,9 @@ schema: BlogPosting
       </place-map>
     {% endif %}
 
-    {# An activity's cover is the race map, printed small beside the stats — too small to read,
-       so it opens in the PhotoSwipe lightbox. Unlike the other cover-carrying types (reading,
-       watching, jam, recipe), these covers are always LOCAL scans under
-       /assets/images/activities/, so the local-only {% imageKeys %} shortcode is safe here where
-       those layouts need a plain <img> for their remote URLs. Alt text comes from `coverAlt` when
-       the post writes one; `default` substitutes only on UNDEFINED, so `coverAlt: ""` is honoured
-       as empty.
+    {# An activity's cover is the race map, printed small beside the stats and opened in the lightbox to be readable. These covers are always LOCAL scans, so the local-only {% imageKeys %} is safe here where the other cover types need a plain <img> for their remote URLs. `default` substitutes only on UNDEFINED, so `coverAlt: ""` is honoured as empty.
 
-       The widths are three page candidates plus the zoom target. 224 is the displayed size, 448
-       covers a 2x screen, 900 keeps the first frame of an opened lightbox cheap on a laptop — and
-       `null` means the ORIGINAL, whatever that is: eleventy-img never upscales, so each map tops
-       out at its own scan (up to 4032px) rather than a shared 1600px ceiling. That top candidate
-       is what PhotoSwipe zooms into, and reading a control description off a 1:7500 map wants
-       every pixel the scan has. #}
+       The widths are three page candidates plus the zoom target. 224 is the displayed size, 448 covers a 2x screen, 900 keeps the first frame of an opened lightbox cheap on a laptop — and `null` means the ORIGINAL, whatever that is: eleventy-img never upscales, so each map tops out at its own scan (up to 4032px) rather than a shared 1600px ceiling. That top candidate is what PhotoSwipe zooms into, and reading a control description off a 1:7500 map wants every pixel the scan has. #}
     {% if cover %}
       {%
         imageKeys {
@@ -55,11 +37,7 @@ schema: BlogPosting
       %}
     {% endif %}
 
-    {# Recorded data for /activities/. No standard mf2 property exists for an activity's
-       stats, so this is plain semantic markup (a description list) — the entry stays
-       a valid h-entry on title (p-name) + date (dt-published) + commentary (e-content).
-       Pace/speed is DERIVED here from the stored raw numbers; duration is seconds ->
-       clock via the shared itunesDuration filter. #}
+    {# Recorded data for /activities/. No standard mf2 property exists for an activity's stats, so this is plain semantic markup (a description list) — the entry stays a valid h-entry on title (p-name) + date (dt-published) + commentary (e-content). Pace/speed is DERIVED here from the stored raw numbers; duration is seconds -> clock via the shared itunesDuration filter. #}
     <dl class="activity-stats | cluster">
       {% if distanceKm %}
         <div><dt>Distance</dt><dd>{{ distanceKm | withMiles }}</dd></div>
@@ -88,9 +66,7 @@ schema: BlogPosting
       </p>
     {% endif %}
 
-    {# Captions are free prose Johan writes — almost always Swedish for orienteering
-       events, so activities.json defaults captionLang to "sv"; a rare English caption
-       sets `captionLang: en` in its own front matter. #}
+    {# Captions are free prose Johan writes — almost always Swedish for orienteering events, so activities.json defaults captionLang to "sv"; a rare English caption sets `captionLang: en` in its own front matter. #}
     {% if content %}
       <div class="e-content | flow"{% if captionLang %} lang="{{ captionLang }}"{% endif %}>
         {{ content | safe }}

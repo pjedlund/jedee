@@ -1,11 +1,4 @@
-{# Archive card for the Recipe type. Image-led: the dish photo fills
-   <custom-card>'s image slot. `cover` is a remote URL (clipped) or a local
-   passthrough path (hand-authored), so — like card-watching — it's a plain
-   <img> (the {% image %} shortcode is local-only and breaks on a remote URL).
-   Degrades to a text-led card when no dish photo is set — the headline is
-   always present (title-required type). A small duration/yield badge sits in
-   the content slot. The default 16/9 image ratio suits dish photos, so — unlike
-   card-watching's data-poster — no aspect override is needed. #}
+{# Archive card for the Recipe type. Image-led: the dish photo fills <custom-card>'s image slot as a plain <img>, since `cover` may be remote and the {% image %} shortcode is local-only. Degrades to a text-led card without one. Default 16/9 suits dish photos, so no aspect override. #}
 
 {% set headingLevel = headingLevel | default("h2") %}
 {% set definedDate = definedDate | default(item.date) %}

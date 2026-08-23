@@ -1,15 +1,11 @@
-{# BREADCRUMB — replaces the site logo in the top-left.
-   The trail comes from the global `breadcrumbs` computed data (src/_data/eleventyComputed.js),
-   shared with schemas/BreadcrumbList.njk so the visible trail and the structured data
-   never drift. Standalone: it does NOT depend on the main nav existing.
+{# BREADCRUMB — replaces the site logo in the top-left. The trail comes from the global `breadcrumbs` computed data (src/_data/eleventyComputed.js), shared with schemas/BreadcrumbList.njk so the visible trail and the structured data never drift. Standalone: it does NOT depend on the main nav existing.
 
    - Home crumb = the logomark (orange loop SVG) linking to /, with a visually-hidden
      name for screen readers and crawlers.
    - Intermediate crumbs = section archives, plain links.
    - Final crumb = the current page, plain text, aria-current="page", never a link.
      Its label is rendered through partials/breadcrumb-leaf.njk (per-type, e.g. the
-     Jam "song by artist" treatment).
-   Separators are drawn in CSS (breadcrumb.css), so assistive tech never reads them. #}
+     Jam "song by artist" treatment). Separators are drawn in CSS (breadcrumb.css), so assistive tech never reads them. #}
 
 <nav aria-label="Breadcrumb" class="breadcrumb">
   <ol class="cluster" role="list">

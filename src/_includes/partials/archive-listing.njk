@@ -1,5 +1,4 @@
-{# Shared archive page template. Called from per-type wrappers in src/pages/.
-   The wrapper sets the following variables before including this partial:
+{# Shared archive page template. Called from per-type wrappers in src/pages/. The wrapper sets the following variables before including this partial:
      - archiveTitle      (string)   page heading
      - archiveDescription(string)   intro paragraph copy
      - cardPartial       (string)   filename in partials/, e.g. "card-blog.njk"
@@ -10,9 +9,7 @@
                                     archive that lists its own way (see activities.njk).
                                     A direct .wrapper child, so breakout classes
                                     (.feature etc.) work on its root element. A page
-                                    that sets this needs no `pagination:` frontmatter.
-   `pagination.size`, `pagination.items`, and `pagination.pageNumber` come from
-   the wrapper's `pagination:` frontmatter, which Eleventy resolves per page. #}
+                                    that sets this needs no `pagination:` frontmatter. `pagination.size`, `pagination.items`, and `pagination.pageNumber` come from the wrapper's `pagination:` frontmatter, which Eleventy resolves per page. #}
 
 <div class="wrapper">
   <header class="full | section" style="--spot-color: var(--color-accent-blue)">

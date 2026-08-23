@@ -1,16 +1,7 @@
-{# POST-TYPE MEGA-MENU — the main nav.
-   A single disclosure: the "Menu ⌄" button (injected by JS from #menu-template)
-   drops a two-column, table-of-contents-style panel of all post types
-   (icon · name · leader dots · count). Built on Manuel Matuzović's progressive-
-   enhancement pattern (see the nav-accessible skill):
-     plain <a> list → <ul role="list"> → <nav> landmark → JS-injected toggle button.
-   Without JS no button exists and the panel is a plain, visible list of links.
+{# POST-TYPE MEGA-MENU — the main nav. A single disclosure: the "Menu ⌄" button (injected by JS from #menu-template) drops a two-column, table-of-contents-style panel of all post types (icon · name · leader dots · count). Built on Manuel Matuzović's progressive- enhancement pattern (see the nav-accessible skill):
+     plain <a> list → <ul role="list"> → <nav> landmark → JS-injected toggle button. Without JS no button exists and the panel is a plain, visible list of links.
 
-   ⚠ {% svg %} MUST stay synchronous — an async shortcode reached through this
-   {% if %}-wrapped include (header.njk) renders to zero bytes via the interlinker
-   plugin (see the eleventy-excellent skill).
-   ⚠ Nav scripts target #mainnav explicitly — the breadcrumb is a second <nav>
-   before this one. #}
+   ⚠ {% svg %} MUST stay synchronous — an async shortcode reached through this {% if %}-wrapped include (header.njk) renders to zero bytes via the interlinker plugin (see the eleventy-excellent skill). ⚠ Nav scripts target #mainnav explicitly — the breadcrumb is a second <nav> before this one. #}
 
 <nav id="mainnav" class="mainnav" aria-label="{{ meta.navigation.ariaTop }}">
   <ul id="megamenu" class="megamenu | cluster" role="list" data-no-flash>
@@ -33,9 +24,7 @@
   </ul>
 </nav>
 
-{# The disclosure button only exists when JS can clone it — so the no-JS fallback
-   is "panel already visible". Inserted before the list so Tab order is button →
-   first link. Based on Manuel Matuzović / the Web Accessibility Cookbook. #}
+{# The disclosure button only exists when JS can clone it — so the no-JS fallback is "panel already visible". Inserted before the list so Tab order is button → first link. Based on Manuel Matuzović / the Web Accessibility Cookbook. #}
 <template id="menu-template">
   <button data-menu-toggle class="menu-toggle" type="button" aria-expanded="false" aria-controls="megamenu">
     <span>{{ meta.navigation.navLabel }}</span>

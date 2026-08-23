@@ -9,13 +9,7 @@ schema: BlogPosting
 
     {% if description %}<p>{{ description }}</p>{% endif %}
 
-    {# Dish photo is cover-style: a remote URL (clipped) or a local passthrough
-       path (hand-authored). A plain <img> lets eleventy-img's HTML Transform
-       self-host a remote src and optimize a local one — the {% image %}
-       shortcode is local-only (it prepends ./src and breaks on a remote URL).
-       Alt text comes from `coverAlt` when the post writes one. `default` substitutes only on
-       UNDEFINED, so `coverAlt: ""` is honoured as empty. Worth writing here more than on the
-       other cover types: a photo of the finished dish carries information the title doesn't. #}
+    {# Dish photo is cover-style: a remote URL (clipped) or a local passthrough path. A plain <img> lets eleventy-img's HTML Transform handle either — the {% image %} shortcode is local-only and breaks on a remote URL. `default` substitutes only on UNDEFINED, so `coverAlt: ""` is honoured as empty. #}
     {% if cover %}
       <img class="cover" eleventy:optional="placeholder" src="{{ cover | safe }}" alt="{{ coverAlt | default(title) }}" loading="lazy" eleventy:widths="320,640,960" sizes="auto">
     {% endif %}
@@ -27,9 +21,7 @@ schema: BlogPosting
       </dl>
     {% endif %}
 
-    {# Ingredients + instructions live in the note body as markdown (kepano
-       shape) — the Obsidian Web Clipper can't emit a nested `recipe:` object,
-       so a recipe is a body-driven post like every other type. #}
+    {# Ingredients + instructions live in the note body as markdown (kepano shape) — the Obsidian Web Clipper can't emit a nested `recipe:` object, so a recipe is a body-driven post like every other type. #}
     <div class="e-content | flow">
       {{ content | safe }}
     </div>

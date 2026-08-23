@@ -1,10 +1,4 @@
-{# Archive card for the Audio type (audio spec §6). Media-led: episode artwork
-   fills <custom-card>'s image slot via the {% image %} shortcode (poster is a
-   local asset). img-square suits square podcast art. Degrades to a text-led
-   card when no artwork is set. A duration (+ episode) badge sits in the content
-   slot — wrapped in a single <p class="media-badge | cluster"> so webc:nokeep
-   doesn't hoist a styled child straight into the card grid (the Event lesson).
-   The card links through to the post; no per-card player (heavy). #}
+{# Archive card for the Audio type (audio spec §6). Media-led: episode artwork fills <custom-card>'s image slot via {% image %} (a local asset), img-square for square podcast art. ⚠ The duration badge is wrapped in a single <p> so webc:nokeep doesn't hoist a styled child straight into the card grid. Links through to the post; no per-card player. #}
 
 {% set headingLevel = headingLevel | default("h2") %}
 {% set definedDate = definedDate | default(item.date) %}

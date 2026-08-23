@@ -1,10 +1,4 @@
-{# Archive card for the Video type (video spec §7). Media-led: the poster fills
-   <custom-card>'s image slot via the {% image %} shortcode (default 16/9 suits
-   video thumbnails). data-video adds a CSS play-icon overlay over the poster
-   (a grid pseudo-element — no extra hoisted child, so it sidesteps the
-   webc:nokeep grid trap). Degrades to a text-led card when no poster is set
-   (e.g. a YouTube embed left to auto-derive its thumbnail). A duration badge
-   sits in the content slot. The card links through; no per-card player. #}
+{# Archive card for the Video type (video spec §7). Media-led: the poster fills <custom-card>'s image slot via {% image %}, default 16/9. data-video draws the play icon as a grid pseudo-element — no hoisted child, so it sidesteps the webc:nokeep grid trap. Degrades to a text-led card without a poster. #}
 
 {% set headingLevel = headingLevel | default("h2") %}
 {% set definedDate = definedDate | default(item.date) %}
