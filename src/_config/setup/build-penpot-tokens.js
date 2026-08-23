@@ -127,9 +127,7 @@ async function build() {
 			setLeaf(themeDark, `color.semantic.${name}`, token(data.subdued.$value, 'color'));
 		}
 	}
-	// Semantic functional colors (bg, text, headline, etc.) — names mirror the
-	// --color-* CSS variables. Values are references to palette tokens, kept in
-	// sync via the {curly.brackets} DTCG reference syntax.
+	// Semantic functional colors (bg, text, headline, etc.) — names mirror the --color-* CSS variables. Values are references to palette tokens, kept in sync via the {curly.brackets} DTCG reference syntax.
 	const semanticType = semanticColors.$type ?? 'color';
 	for (const [name, value] of Object.entries(semanticColors.themes?.light ?? {})) {
 		setLeaf(themeLight, `color.${name}`, token(value, semanticType));

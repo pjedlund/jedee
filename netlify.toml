@@ -54,9 +54,6 @@ for = "/assets/scripts/components/*.js"
 [build.environment]
   SECRETS_SCAN_OMIT_PATHS = ".cache/**"
 
-# Micropub server lives in netlify/functions/micropub.js and self-routes to
-# /api/micropub via its `export const config = { path }` (Functions v2). esbuild
-# bundles the function with its npm deps (@benjifs/micropub, github-store,
-# gray-matter). The Eleventy build ignores netlify/ (input dir is src/).
+# Micropub server lives in netlify/functions/micropub.js and self-routes to /api/micropub via its `export const config = { path }` (Functions v2). esbuild bundles the function with its npm deps (@benjifs/micropub, github-store, gray-matter). The Eleventy build ignores netlify/ (input dir is src/).
 [functions]
   node_bundler = "esbuild"
