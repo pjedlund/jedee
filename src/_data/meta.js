@@ -60,6 +60,10 @@ export const blog = {
   tagSingle: 'Tag',
   tagPlural: 'Tags',
   tagMore: 'More tags:',
+  // Genres — the jam-only index at /genres/, deliberately separate from tags
+  genreSingle: 'Genre',
+  genrePlural: 'Genres',
+  genreMore: 'More genres:',
   // pagination
   paginationLabel: 'Articles',
   paginationPage: 'Page',

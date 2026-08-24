@@ -23,6 +23,23 @@ schema: BlogPosting
       {{ content | safe }}
     </div>
 
+    {# Genre chips link into the /genres/ index, which is built from this same
+       `genre` field and stays out of /tags/ on purpose (see genreList in
+       src/_config/collections.js). Slugged the same way the collection groups,
+       so a chip can't point at a page that doesn't exist. #}
+    {% if genre %}
+      {# A clipper template set to `text` rather than `multitext` yields a single
+         string here, which a bare {% for %} would walk character by character. #}
+      {% set genres = [genre] if genre is string else genre %}
+      <ul class="my-s-m cluster gutter-s" role="list">
+        {% for name in genres | unwikilink %}
+          <li>
+            <a href="/genres/{{ name | slugify }}/" class="button" data-small-button>{{ name }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
     {% include 'partials/backlinks.njk' %}
     {% include 'partials/entry-footer.njk' %}
     {% include 'partials/hidden-author.njk' %}

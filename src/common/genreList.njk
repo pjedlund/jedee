@@ -1,0 +1,42 @@
+---
+layout: tags
+pagination:
+  data: collections.genreList
+  size: 1
+  alias: genre
+permalink: /genres/{{ genre.slug }}/
+eleventyComputed:
+  title: '{{ meta.blog.genreSingle }}: {{ genre.name }}'
+---
+
+{# Slug comes precomputed from the genreList collection rather than a `| slugify`
+   here, so the grouping key and the URL can never drift apart. #}
+
+<custom-masonry layout="50-50">
+  {% for item in genre.items %}
+
+		{% include "partials/card-tag.njk" %}
+  {% endfor %}
+</custom-masonry>
+
+<h2 class="text-step-2">{{ meta.blog.genreMore }}</h2>
+
+<ul class="my-s-m cluster gutter-s" role="list">
+  {% for genre in collections.genreList %}
+    <li>
+      <a
+        href="/genres/{{ genre.slug }}/"
+        class="button"
+        data-small-button
+        {{
+          helpers.getLinkActiveState('/genres/' + genre.slug + '/',
+          page.url)
+          |
+          safe
+        }}
+      >
+        {{ genre.name }}
+      </a>
+    </li>
+  {% endfor %}
+</ul>

@@ -1,0 +1,20 @@
+---
+layout: tags
+permalink: /genres/index.html
+eleventyComputed:
+  title: '{{ meta.blog.genrePlural }}'
+---
+
+<div class="mt-s-m cluster">
+  {% for genre in collections.genreList %}
+    <a href="/genres/{{ genre.slug }}/" class="button" data-small-button> {{ genre.name }} </a>
+  {% endfor %}
+</div>
+
+<custom-masonry layout="50-50">
+  {% set itemlist = collections.jam %}
+  {% for item in itemlist %}
+
+		{% include "partials/card-tag.njk" %}
+  {% endfor %}
+</custom-masonry>
