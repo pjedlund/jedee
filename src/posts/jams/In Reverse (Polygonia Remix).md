@@ -13,7 +13,6 @@ genre:
   - "[[contemporary]]"
   - "[[newmusic]]"
   - "[[symphony]]"
-  - "[[London]]"
 year: 2026
 favoriteTrack: In Reverse (Polygonia Remix)
 favoriteTrackUrl: https://rivalconsoles.bandcamp.com/track/in-reverse-polygonia-remix

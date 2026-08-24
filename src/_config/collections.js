@@ -55,16 +55,23 @@ export const genreList = collection => {
       const slug = slugifyString(name);
       if (!slug) return;
 
-      // First spelling encountered wins the display name for the whole group.
-      if (!groups.has(slug)) groups.set(slug, {name, slug, items: []});
-      groups.get(slug).items.push(item);
+      if (!groups.has(slug)) groups.set(slug, {slug, spellings: new Map(), items: []});
+      const group = groups.get(slug);
+      group.spellings.set(name, (group.spellings.get(name) ?? 0) + 1);
+      group.items.push(item);
     });
   });
 
   return Array.from(groups.values())
-    .map(genre => ({
-      ...genre,
-      items: genre.items.sort((a, b) => (b.date ?? 0) - (a.date ?? 0))
+    .map(({slug, spellings, items}) => ({
+      // Case drift means one genre can arrive spelled several ways. The most
+      // common spelling wins the label, ties broken alphabetically — otherwise
+      // the label would depend on which jam the build happened to read first.
+      name: Array.from(spellings.entries()).sort(
+        (a, b) => b[1] - a[1] || a[0].localeCompare(b[0])
+      )[0][0],
+      slug,
+      items: items.sort((a, b) => (b.date ?? 0) - (a.date ?? 0))
     }))
     .sort((a, b) => a.name.localeCompare(b.name));
 };

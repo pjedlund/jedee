@@ -9,9 +9,8 @@ cover: https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/dd/59/3f/dd593f69-4b
 description: Soft rolling beats with lots of texture.
 genre:
   - "[[Techno]]"
-  - "[[Musik]]"
   - "[[Dance]]"
-  - "[[Elektroniskt]]"
+  - "[[Electronic]]"
 year: 2018
 favoriteTrack: Walking Along The Rainbow
 favoriteTrackUrl: https://music.apple.com/se/song/walk-along-the-rainbow/1716473667

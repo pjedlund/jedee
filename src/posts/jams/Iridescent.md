@@ -15,7 +15,6 @@ genre:
   - "[[post-metal]]"
   - "[[post-rock]]"
   - "[[soundtrack]]"
-  - "[[Reading]]"
 year: 2024
 favoriteTrack: Belonging
 favoriteTrackUrl: https://mountainscapeuk.bandcamp.com/track/belonging-2

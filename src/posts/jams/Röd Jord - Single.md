@@ -9,7 +9,6 @@ cover: https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/f8/2d/d4/f82dd472-7d
 description:
 genre:
   - "[[Reggae]]"
-  - "[[Musik]]"
 year: 2026
 favoriteTrack: Röd Jord
 favoriteTrackUrl:

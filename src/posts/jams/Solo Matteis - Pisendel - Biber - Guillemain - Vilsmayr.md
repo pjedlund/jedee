@@ -10,7 +10,6 @@ description: |-
   J.S. Bach’s sonatas and partitas for solo violin are towering masterpieces, and tend to overshadow other works written by Baroque composers for the solo instrument. In Solo, the German violinist Isabelle Faust goes hunting for these “lost” pieces, and makes intriguing discoveries. One of these is the Fantasia for Solo Violin in A Minor by Nicola Matteis Jr., whose side-shifting arpeggios Faust floats with featherlight delicacy.
 genre:
   - "[[Classical]]"
-  - "[[Music]]"
   - "[[Baroque Era]]"
   - "[[Violin]]"
   - "[[Solo Instrumental]]"
