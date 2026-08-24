@@ -8,8 +8,7 @@ source: https://music.apple.com/se/album/r%C3%B6d-jord-single/6770527848
 cover: https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/f8/2d/d4/f82dd472-7db5-9359-7334-ddcc0aa43d4b/820233447522.jpg/1200x630bb.jpg
 description:
 genre:
-  - "[[Reggae]]"
-  - "[[Musik]]"
+  - "[[reggae]]"
 year: 2026
 favoriteTrack: Röd Jord
 favoriteTrackUrl:

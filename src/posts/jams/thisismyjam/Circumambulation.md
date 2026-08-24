@@ -7,9 +7,9 @@ album: "Circumambulation"
 source: https://truewidow.bandcamp.com/album/circumambulation
 cover: https://f4.bcbits.com/img/a1967349275_5.jpg
 genre:
-  - "[[Rock]]"
-  - "[[Post-Rock]]"
-  - "[[Psychedelic]]"
+  - "[[rock]]"
+  - "[[post-rock]]"
+  - "[[psychedelic]]"
 year: 2013
 tags:
   - posts

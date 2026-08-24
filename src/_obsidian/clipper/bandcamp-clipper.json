@@ -46,7 +46,7 @@
 		},
 		{
 			"name": "genre",
-			"value": "{{schema:@MusicAlbum:keywords|wikilink}}",
+			"value": "{{schema:@MusicAlbum:keywords|slice:0,-1|wikilink}}",
 			"type": "multitext"
 		},
 		{
