@@ -7,7 +7,7 @@ album: "Rid of Me"
 source: https://music.apple.com/us/album/50ft-queenie/1440923277
 cover: https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/27/62/47/276247bf-c8c4-8590-47c2-48b053c0c62a/00731451469626.rgb.jpg/1000x1000bb.jpg
 genre:
-  - "[[Rock]]"
+  - "[[rock]]"
 year: 1993
 odesliUrl: https://song.link/i/1440923579
 youtubeSlug: "6-rWAs7gQpc"

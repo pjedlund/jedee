@@ -7,9 +7,9 @@ album: "Winter 2014 Demo 7\""
 source: https://ruinenyc.bandcamp.com/track/regression-3
 cover: https://f4.bcbits.com/img/a0504522935_5.jpg
 genre:
-  - "[[Metal]]"
-  - "[[Doom]]"
-  - "[[Filth]]"
+  - "[[metal]]"
+  - "[[doom]]"
+  - "[[filth]]"
 year: 2014
 tags:
   - posts

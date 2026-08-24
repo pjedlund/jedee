@@ -7,7 +7,7 @@ album: "Mattias Alkbergs Begravning"
 source: https://mattiasalkberg.bandcamp.com/track/sk-nda-flaggan
 cover: https://f4.bcbits.com/img/a2743205010_5.jpg
 genre:
-  - "[[Rock]]"
+  - "[[rock]]"
 year: 2013
 youtubeSlug: "VHbglUiob8w"
 tags:

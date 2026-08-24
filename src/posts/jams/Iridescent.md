@@ -8,8 +8,8 @@ source: https://mountainscapeuk.bandcamp.com/album/iridescent-2
 cover: https://f4.bcbits.com/img/a3884773018_10.jpg
 description: The third album from the UK instrumental post-metal trio. ‘Iridescent’ contains a collection of Mountainscape’s most accomplished compositions so far. Exploring further the pairing of dreamlike shoegaze with earth shattering heaviness, unexpected twists and a strong emphasis on memorable songwriting.
 genre:
-  - "[[Blackgaze]]"
-  - "[[Metal]]"
+  - "[[blackgaze]]"
+  - "[[metal]]"
   - "[[instrumental]]"
   - "[[post-blackmetal]]"
   - "[[post-metal]]"

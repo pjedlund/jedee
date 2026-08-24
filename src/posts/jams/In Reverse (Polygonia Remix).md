@@ -8,10 +8,9 @@ source: https://rivalconsoles.bandcamp.com/album/in-reverse-polygonia-remix
 cover: https://f4.bcbits.com/img/a1611910734_10.jpg
 description: "In Reverse (Polygonia Remix) by Rival Consoles, released 08 April 20261. In Reverse (Polygonia Remix)“Even before I started producing, I often listened to Rival Consoles, whose music always carried a sense of openness, quiet hope, and a deeply sentimental feeling of looking toward what lies ahead. In my remix, I tried to follow that emotion in my own language, letting the violin and the voice bring out its emotional quality while a more driving pulse rooted in my own signature moves beneath it.” - PolygoniaRival Consoles, aka Ryan Lee West, will continue to tour his latest album Landscape from Memory throughout 2026. Dates here: rivalconsoles.net/tour"
 genre:
-  - "[[Electronic]]"
+  - "[[electronic]]"
   - "[[ambient]]"
   - "[[contemporary]]"
-  - "[[newmusic]]"
   - "[[symphony]]"
 year: 2026
 favoriteTrack: In Reverse (Polygonia Remix)

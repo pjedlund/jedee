@@ -7,7 +7,7 @@ album: "The Letting Go"
 source: https://music.apple.com/us/album/cursed-sleep/187085290
 cover: https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/65/83/5d/65835d3b-5fd1-c4d6-5264-77cb12c13f12/mzi.ebmyqbpc.jpg/1000x1000bb.jpg
 genre:
-  - "[[Alternative]]"
+  - "[[alternative]]"
 year: 2006
 odesliUrl: https://song.link/i/187085535
 tags:

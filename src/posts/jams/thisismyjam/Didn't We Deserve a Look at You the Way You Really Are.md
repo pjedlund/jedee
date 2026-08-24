@@ -7,8 +7,8 @@ album: "Terraform"
 source: https://shellac.bandcamp.com/track/didnt-we-deserve-a-look-at-you-the-way-you-really-are
 cover: https://f4.bcbits.com/img/a0710910012_5.jpg
 genre:
-  - "[[Alternative]]"
-  - "[[Alternative Rock]]"
+  - "[[alternative]]"
+  - "[[alternative rock]]"
 year: 1998
 youtubeSlug: "bn2IjYXVmuw"
 tags:
