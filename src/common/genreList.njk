@@ -4,13 +4,24 @@ pagination:
   data: collections.genreList
   size: 1
   alias: genre
-permalink: /genres/{{ genre.slug }}/
+permalink: /jams/genres/{{ genre.slug }}/
 eleventyComputed:
   title: '{{ meta.blog.genreSingle }}: {{ genre.name }}'
 ---
 
 {# Slug comes precomputed from the genreList collection rather than a `| slugify`
    here, so the grouping key and the URL can never drift apart. #}
+
+{# Descriptions come from Wikipedia via src/_config/setup/genre-descriptions.js. ⚠ The text is CC BY-SA: the link is the attribution the licence requires, so it must stay visible — not a title attribute, not removed. Genres deliberately without a description (junk values, and instruments like `violin`) are simply absent from the data file. #}
+{% set genreInfo = genreDescriptions[genre.slug] %}
+{% if genreInfo %}
+  <div class="flow prose">
+    <p>
+      {{ genreInfo.description }}
+      <a href="{{ genreInfo.source }}" rel="external">{{ genreInfo.sourceTitle }} on Wikipedia</a>
+    </p>
+  </div>
+{% endif %}
 
 <custom-masonry layout="50-50">
   {% for item in genre.items %}
@@ -25,11 +36,11 @@ eleventyComputed:
   {% for genre in collections.genreList %}
     <li>
       <a
-        href="/genres/{{ genre.slug }}/"
+        href="/jams/genres/{{ genre.slug }}/"
         class="button"
         data-small-button
         {{
-          helpers.getLinkActiveState('/genres/' + genre.slug + '/',
+          helpers.getLinkActiveState('/jams/genres/' + genre.slug + '/',
           page.url)
           |
           safe

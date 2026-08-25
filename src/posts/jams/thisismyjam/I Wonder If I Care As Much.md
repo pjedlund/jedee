@@ -7,4 +7,8 @@ cover: /assets/images/listening/2012-09-07-i-wonder-if-i-care-as-much.jpg
 tags:
   - posts
   - thisismyjam
+genre:
+  - "[[folk]]"
+  - "[[americana]]"
+  - "[[singer-songwriter]]"
 ---

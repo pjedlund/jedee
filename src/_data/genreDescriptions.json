@@ -1,0 +1,452 @@
+{
+  "rock": {
+    "description": "Rock music is a genre of popular music that originated in the United States as \"rock and roll\" in the late 1940s and early 1950s, developing into a range of styles from the late 50s to mid-1960s, primarily in the United States and United Kingdom.",
+    "source": "https://en.wikipedia.org/wiki/Rock_music",
+    "sourceTitle": "Rock music"
+  },
+  "alternative": {
+    "description": "Alternative rock is a category of rock music that evolved from the independent music underground of the 1970s.",
+    "source": "https://en.wikipedia.org/wiki/Alternative_rock",
+    "sourceTitle": "Alternative rock"
+  },
+  "indie-rock": {
+    "description": "Indie rock is a subgenre of rock music that originated in the United Kingdom, United States and New Zealand in the early to mid-1980s.",
+    "source": "https://en.wikipedia.org/wiki/Indie_rock",
+    "sourceTitle": "Indie rock"
+  },
+  "alternative-rock": {
+    "description": "Alternative rock is a category of rock music that evolved from the independent music underground of the 1970s.",
+    "source": "https://en.wikipedia.org/wiki/Alternative_rock",
+    "sourceTitle": "Alternative rock"
+  },
+  "metal": {
+    "description": "A metal is a material that, when polished or fractured, shows a lustrous appearance, and conducts electricity and heat relatively well.",
+    "source": "https://en.wikipedia.org/wiki/Metal",
+    "sourceTitle": "Metal"
+  },
+  "electronic": {
+    "description": "Electronic music broadly is a group of music genres that employ electronic musical instruments, circuitry-based music technology and software, or general-purpose electronics in its creation.",
+    "source": "https://en.wikipedia.org/wiki/Electronic_music",
+    "sourceTitle": "Electronic music"
+  },
+  "folk": {
+    "description": "Folk music is a music genre that includes traditional folk music and the contemporary genre that evolved from the former during the 20th-century folk revival.",
+    "source": "https://en.wikipedia.org/wiki/Folk_music",
+    "sourceTitle": "Folk music"
+  },
+  "post-rock": {
+    "description": "Post-rock is a subgenre of experimental rock that emphasizes texture, atmosphere, and non-traditional song structures over conventional rock techniques.",
+    "source": "https://en.wikipedia.org/wiki/Post-rock",
+    "sourceTitle": "Post-rock"
+  },
+  "stoner-rock": {
+    "description": "Stoner rock, also known as stoner metal or stoner doom, is a rock music fusion genre that combines elements of doom metal with psychedelic rock and acid rock.",
+    "source": "https://en.wikipedia.org/wiki/Stoner_rock",
+    "sourceTitle": "Stoner rock"
+  },
+  "post-hardcore": {
+    "description": "Post-hardcore is a punk rock music genre that maintains the aggression and intensity of hardcore punk but emphasizes a greater degree of creative expression.",
+    "source": "https://en.wikipedia.org/wiki/Post-hardcore",
+    "sourceTitle": "Post-hardcore"
+  },
+  "hard-rock": {
+    "description": "Hard rock or heavy rock is a heavier subgenre of rock music typified by vocals and electric guitars that are aggressive and distorted relative to traditional rock music.",
+    "source": "https://en.wikipedia.org/wiki/Hard_rock",
+    "sourceTitle": "Hard rock"
+  },
+  "experimental": {
+    "description": "Experimental music is a general label for any music or music genre that pushes existing boundaries and genre definitions.",
+    "source": "https://en.wikipedia.org/wiki/Experimental_music",
+    "sourceTitle": "Experimental music"
+  },
+  "doom-metal": {
+    "description": "Doom metal is an extreme subgenre of heavy metal music that typically uses slower tempos, low-tuned guitars and a much \"thicker\" or \"heavier\" sound than other heavy metal genres.",
+    "source": "https://en.wikipedia.org/wiki/Doom_metal",
+    "sourceTitle": "Doom metal"
+  },
+  "stoner-metal": {
+    "description": "Stoner rock, also known as stoner metal or stoner doom, is a rock music fusion genre that combines elements of doom metal with psychedelic rock and acid rock.",
+    "source": "https://en.wikipedia.org/wiki/Stoner_rock",
+    "sourceTitle": "Stoner rock"
+  },
+  "punk": {
+    "description": "Punk rock is a genre of rock music that emerged in the mid-1970s.",
+    "source": "https://en.wikipedia.org/wiki/Punk_rock",
+    "sourceTitle": "Punk rock"
+  },
+  "death-metal": {
+    "description": "Death metal is an extreme subgenre of heavy metal music. It typically employs heavily distorted and low-tuned guitars, played with techniques such as palm muting and tremolo picking; deep growling vocals; aggressive, powerful drumming, featuring double kick and blast beat techniques; minor keys or atonality; abrupt tempo, key, and time signature changes; and chromatic chord progressions.",
+    "source": "https://en.wikipedia.org/wiki/Death_metal",
+    "sourceTitle": "Death metal"
+  },
+  "indie-pop": {
+    "description": "Indie pop is a music genre and subculture that combines guitar pop with a DIY ethic in opposition to the style and tone of mainstream pop music.",
+    "source": "https://en.wikipedia.org/wiki/Indie_pop",
+    "sourceTitle": "Indie pop"
+  },
+  "post-metal": {
+    "description": "Post-metal is a music genre rooted in heavy metal but exploring approaches beyond metal conventions.",
+    "source": "https://en.wikipedia.org/wiki/Post-metal",
+    "sourceTitle": "Post-metal"
+  },
+  "hardcore-punk": {
+    "description": "Hardcore punk is a punk rock subgenre and subculture that originated in the late 1970s.",
+    "source": "https://en.wikipedia.org/wiki/Hardcore_punk",
+    "sourceTitle": "Hardcore punk"
+  },
+  "pop": {
+    "description": "Pop music, or simply pop, is a genre of popular music that originated in its modern form during the mid-1950s in the United States and the United Kingdom.",
+    "source": "https://en.wikipedia.org/wiki/Pop_music",
+    "sourceTitle": "Pop music"
+  },
+  "shoegaze": {
+    "description": "Shoegaze is a subgenre of indie and alternative rock characterised by ethereal soundscapes, obscured vocals, and extensive use of guitar effects and distortion.",
+    "source": "https://en.wikipedia.org/wiki/Shoegaze",
+    "sourceTitle": "Shoegaze"
+  },
+  "hip-hop": {
+    "description": "Hip-hop is a genre of popular music that emerged in the early 1970s alongside an associated subculture created by African-American and Afro-Caribbean communities in New York City.",
+    "source": "https://en.wikipedia.org/wiki/Hip-hop",
+    "sourceTitle": "Hip-hop"
+  },
+  "math-rock": {
+    "description": "Math rock is a style of alternative and indie rock with roots in bands such as King Crimson, Yes, and Rush.",
+    "source": "https://en.wikipedia.org/wiki/Math_rock",
+    "sourceTitle": "Math rock"
+  },
+  "dream-pop": {
+    "description": "Dream pop is a subgenre of alternative rock and neo-psychedelia that emphasizes atmosphere and sonic texture as strongly as it does pop melody.",
+    "source": "https://en.wikipedia.org/wiki/Dream_pop",
+    "sourceTitle": "Dream pop"
+  },
+  "soundtrack": {
+    "description": "A soundtrack is a recorded audio signal accompanying and synchronised to the images of a book, drama, motion picture, radio program, television program, or video game; colloquially, a commercially released soundtrack album of music as featured in the soundtrack of a film, video, or television presentation; or the physical area of a film that contains the synchronised recorded sound.",
+    "source": "https://en.wikipedia.org/wiki/Soundtrack",
+    "sourceTitle": "Soundtrack"
+  },
+  "reggae": {
+    "description": "Reggae is a music genre that originated in Jamaica in the late 1960s.",
+    "source": "https://en.wikipedia.org/wiki/Reggae",
+    "sourceTitle": "Reggae"
+  },
+  "indie-folk": {
+    "description": "Indie folk is an alternative genre of music that arose in the 1990s among musicians from indie rock scenes influenced by folk music.",
+    "source": "https://en.wikipedia.org/wiki/Indie_folk",
+    "sourceTitle": "Indie folk"
+  },
+  "technical-death-metal": {
+    "description": "Technical death metal is a musical subgenre of death metal with particular focus on instrumental skill and complex songwriting.",
+    "source": "https://en.wikipedia.org/wiki/Technical_death_metal",
+    "sourceTitle": "Technical death metal"
+  },
+  "singer-songwriter": {
+    "description": "A singer-songwriter is a musician who writes, composes, and performs their own musical material, including lyrics and melodies.",
+    "source": "https://en.wikipedia.org/wiki/Singer-songwriter",
+    "sourceTitle": "Singer-songwriter"
+  },
+  "country": {
+    "description": "Country music, also known as country and western or simply country, is a music genre originating from the United States.",
+    "source": "https://en.wikipedia.org/wiki/Country_music",
+    "sourceTitle": "Country music"
+  },
+  "alternative-r-b": {
+    "description": "Alternative R&B is a term used by music journalists to describe a stylistic alternative to contemporary R&B that began in the mid 2000s and came to prominence with musical artists such as Frank Ocean, Khalid, SZA, Summer Walker, Jhené Aiko, Brent Faiyaz, Zayn Malik, Tyler, the Creator, Steve Lacy, Childish Gambino, Miguel, Drake, The Weeknd, Kehlani, Tinashe, Bryson Tiller, PartyNextDoor, Tory Lanez, 6lack, and others.",
+    "source": "https://en.wikipedia.org/wiki/Alternative_R%26B",
+    "sourceTitle": "Alternative R&B"
+  },
+  "americana": {
+    "description": "Americana is a general term for roots or traditional music formed by the confluence of the shared and varied traditions that make up the musical ethos of the United States, with particular emphasis on music historically developed in the American South.",
+    "source": "https://en.wikipedia.org/wiki/Americana_music",
+    "sourceTitle": "Americana music"
+  },
+  "jangle-pop": {
+    "description": "Jangle pop is a subgenre of pop rock and indie rock that emphasizes jangly guitars and 1960s-style pop melodies.",
+    "source": "https://en.wikipedia.org/wiki/Jangle_pop",
+    "sourceTitle": "Jangle pop"
+  },
+  "post-punk": {
+    "description": "Post-punk is a loosely defined music genre and period that emerged in the late 1970s in the wake of punk rock.",
+    "source": "https://en.wikipedia.org/wiki/Post-punk",
+    "sourceTitle": "Post-punk"
+  },
+  "downtempo": {
+    "description": "Downtempo is a broad label for electronic music that features an atmospheric sound and slower beats than would typically be found in dance music.",
+    "source": "https://en.wikipedia.org/wiki/Downtempo",
+    "sourceTitle": "Downtempo"
+  },
+  "folk-rock": {
+    "description": "Folk rock is a fusion genre of rock music with heavy influences from English and American folk music.",
+    "source": "https://en.wikipedia.org/wiki/Folk_rock",
+    "sourceTitle": "Folk rock"
+  },
+  "classical": {
+    "description": "Classical music is a tradition of art music in the Western world, considered to be distinct from Western folk music or popular music.",
+    "source": "https://en.wikipedia.org/wiki/Classical_music",
+    "sourceTitle": "Classical music"
+  },
+  "dance": {
+    "description": "Dance is an art form, consisting of sequences of body movements with aesthetic and often symbolic value, either improvised or purposefully selected.",
+    "source": "https://en.wikipedia.org/wiki/Dance",
+    "sourceTitle": "Dance"
+  },
+  "ambient": {
+    "description": "Ambient music is a genre of music that emphasizes tone and atmosphere over traditional musical structure or rhythm.",
+    "source": "https://en.wikipedia.org/wiki/Ambient_music",
+    "sourceTitle": "Ambient music"
+  },
+  "blackgaze": {
+    "description": "Blackgaze is a fusion genre combining elements of black metal and shoegaze.",
+    "source": "https://en.wikipedia.org/wiki/Blackgaze",
+    "sourceTitle": "Blackgaze"
+  },
+  "instrumental": {
+    "description": "An instrumental, instrumental music, or sometimes \"instrumental song\" is music without any vocals, although it might include some inarticulate vocals, such as shouted backup vocals in a big band setting.",
+    "source": "https://en.wikipedia.org/wiki/Instrumental",
+    "sourceTitle": "Instrumental"
+  },
+  "atmospheric-sludge-metal": {
+    "description": "Sludge metal is an extreme subgenre of heavy metal music that combines elements of doom metal and hardcore punk.",
+    "source": "https://en.wikipedia.org/wiki/Sludge_metal",
+    "sourceTitle": "Sludge metal"
+  },
+  "psychedelic": {
+    "description": "Psychedelic music is a wide range of popular music styles and genres influenced by 1960s psychedelia, a subculture of people who used psychedelic drugs such as DMT, LSD, mescaline, and psilocybin mushrooms, to experience synesthesia and altered states of consciousness.",
+    "source": "https://en.wikipedia.org/wiki/Psychedelic_music",
+    "sourceTitle": "Psychedelic music"
+  },
+  "bluegrass": {
+    "description": "Bluegrass music is a genre of American roots music that developed in the 1940s in the Appalachian region of the United States.",
+    "source": "https://en.wikipedia.org/wiki/Bluegrass_music",
+    "sourceTitle": "Bluegrass music"
+  },
+  "c86": {
+    "description": "C86 is a cassette compilation released by the British music magazine NME in 1986, featuring new bands licensed from British independent record labels of the time.",
+    "source": "https://en.wikipedia.org/wiki/C86",
+    "sourceTitle": "C86"
+  },
+  "noise-rock": {
+    "description": "Noise rock is a subgenre of rock music that originally emerged in the late 1970s and early 1980s.",
+    "source": "https://en.wikipedia.org/wiki/Noise_rock",
+    "sourceTitle": "Noise rock"
+  },
+  "experimental-rock": {
+    "description": "Experimental rock is a subgenre of rock music that emerged in the 1960s.",
+    "source": "https://en.wikipedia.org/wiki/Experimental_rock",
+    "sourceTitle": "Experimental rock"
+  },
+  "country-rock": {
+    "description": "Country rock is a music genre that fuses rock and country. It was developed by rock musicians who began to record country-flavored records and country musicians who implemented rock flavor into country records in the mid 1960s and early 1970s.",
+    "source": "https://en.wikipedia.org/wiki/Country_rock",
+    "sourceTitle": "Country rock"
+  },
+  "art-rock": {
+    "description": "Art rock is rock music that aims to distinguish the genre from popular entertainment, with the term typically being applied as the middle ground between mainstream and experimental rock.",
+    "source": "https://en.wikipedia.org/wiki/Art_rock",
+    "sourceTitle": "Art rock"
+  },
+  "alternative-metal": {
+    "description": "Alternative metal is a genre of heavy metal music that combines heavy metal with influences from alternative rock and other genres not normally associated with metal.",
+    "source": "https://en.wikipedia.org/wiki/Alternative_metal",
+    "sourceTitle": "Alternative metal"
+  },
+  "idm": {
+    "description": "Intelligent dance music (IDM) is a loose label used to describe experimental forms of electronic music associated with early-1990s ambient techno, \"electronic listening music\" and related forms of electronica.",
+    "source": "https://en.wikipedia.org/wiki/Intelligent_dance_music",
+    "sourceTitle": "Intelligent dance music"
+  },
+  "black-metal": {
+    "description": "Black metal is an extreme subgenre of heavy metal music. Common traits include fast tempos, a shrieking vocal style, heavily distorted guitars played with tremolo picking, raw (lo-fi) recording, unconventional song structures, and an emphasis on atmosphere.",
+    "source": "https://en.wikipedia.org/wiki/Black_metal",
+    "sourceTitle": "Black metal"
+  },
+  "sludge-metal": {
+    "description": "Sludge metal is an extreme subgenre of heavy metal music that combines elements of doom metal and hardcore punk.",
+    "source": "https://en.wikipedia.org/wiki/Sludge_metal",
+    "sourceTitle": "Sludge metal"
+  },
+  "art-pop": {
+    "description": "Art pop is a loosely defined style of pop music that emerged in the mid-1960s, influenced by art theories as well as ideas from other art mediums, such as fashion, fine art, cinema, contemporary art and avant-garde literature.",
+    "source": "https://en.wikipedia.org/wiki/Art_pop",
+    "sourceTitle": "Art pop"
+  },
+  "contemporary-r-b": {
+    "description": "Contemporary R&B is a popular music genre, originating from African-American musicians in the 1970s that combines rhythm and blues with elements of pop, disco, funk, soul, jazz, blues, electronic, and hip-hop.",
+    "source": "https://en.wikipedia.org/wiki/Contemporary_R%26B",
+    "sourceTitle": "Contemporary R&B"
+  },
+  "jazz": {
+    "description": "Jazz is a music genre that originated in the African-American communities of New Orleans, Louisiana, in the late 19th and early 20th centuries.",
+    "source": "https://en.wikipedia.org/wiki/Jazz",
+    "sourceTitle": "Jazz"
+  },
+  "romantic-era": {
+    "description": "Romantic music is a stylistic movement in Western Classical music associated with the period of the 19th century commonly referred to as the Romantic era.",
+    "source": "https://en.wikipedia.org/wiki/Romantic_music",
+    "sourceTitle": "Romantic music"
+  },
+  "orchestral": {
+    "description": "An orchestra is a large instrumental ensemble typical of classical music or jazz, which combines instruments from different families.",
+    "source": "https://en.wikipedia.org/wiki/Orchestra",
+    "sourceTitle": "Orchestra"
+  },
+  "techno": {
+    "description": "Techno is a genre of electronic music which is generally produced for use in a continuous DJ set, with tempos being in the range from 120 to 150 beats per minute (bpm).",
+    "source": "https://en.wikipedia.org/wiki/Techno",
+    "sourceTitle": "Techno"
+  },
+  "symphony": {
+    "description": "A symphony is an extended musical composition in Western classical music, most often for orchestra.",
+    "source": "https://en.wikipedia.org/wiki/Symphony",
+    "sourceTitle": "Symphony"
+  },
+  "post-blackmetal": {
+    "description": "Blackgaze is a fusion genre combining elements of black metal and shoegaze.",
+    "source": "https://en.wikipedia.org/wiki/Blackgaze",
+    "sourceTitle": "Blackgaze"
+  },
+  "baroque-era": {
+    "description": "Baroque music refers to the period or dominant style of Western classical music composed from about 1600 to 1750.",
+    "source": "https://en.wikipedia.org/wiki/Baroque_music",
+    "sourceTitle": "Baroque music"
+  },
+  "lo-fi": {
+    "description": "Low fidelity is a music or production quality in which elements usually regarded as imperfections in the context of a recording or performance are present, sometimes as a deliberate stylistic choice.",
+    "source": "https://en.wikipedia.org/wiki/Lo-fi_music",
+    "sourceTitle": "Lo-fi music"
+  },
+  "modern-dancehall": {
+    "description": "Dancehall is a genre of Jamaican popular music that originated in the late 1970s.",
+    "source": "https://en.wikipedia.org/wiki/Dancehall",
+    "sourceTitle": "Dancehall"
+  },
+  "dancehall": {
+    "description": "Dancehall is a genre of Jamaican popular music that originated in the late 1970s.",
+    "source": "https://en.wikipedia.org/wiki/Dancehall",
+    "sourceTitle": "Dancehall"
+  },
+  "folk-punk": {
+    "description": "Folk punk is a fusion of folk music and punk rock, particularly characterized by a folk-inspired sound blended with punk-inspired lyrics.",
+    "source": "https://en.wikipedia.org/wiki/Folk_punk",
+    "sourceTitle": "Folk punk"
+  },
+  "drone": {
+    "description": "Drone music is a minimalist genre of music that emphasizes the use of sustained sounds, notes, or tone clusters called drones.",
+    "source": "https://en.wikipedia.org/wiki/Drone_music",
+    "sourceTitle": "Drone music"
+  },
+  "mathcore": {
+    "description": "Mathcore is a subgenre of hardcore punk and metalcore that developed during the 1990s, influenced by post-hardcore, extreme metal and math rock.",
+    "source": "https://en.wikipedia.org/wiki/Mathcore",
+    "sourceTitle": "Mathcore"
+  },
+  "metalcore": {
+    "description": "Metalcore is a broadly defined music genre combining elements of heavy metal and hardcore punk, originating in the 1990s United States and becoming popular in the 2000s.",
+    "source": "https://en.wikipedia.org/wiki/Metalcore",
+    "sourceTitle": "Metalcore"
+  },
+  "progressive-metal": {
+    "description": "Progressive metal is a broad fusion music genre melding heavy metal and progressive rock, combining the loud aggression and amplified distorted guitar-driven sound of the former with the more experimental, cerebral or quasi-classical compositions of the latter.",
+    "source": "https://en.wikipedia.org/wiki/Progressive_metal",
+    "sourceTitle": "Progressive metal"
+  },
+  "alternative-hip-hop": {
+    "description": "Alternative hip-hop is a subgenre of hip-hop defined by artists who reject the genre's traditional stereotypes, particularly those popularized by old-school hip-hop and gangsta rap.",
+    "source": "https://en.wikipedia.org/wiki/Alternative_hip-hop",
+    "sourceTitle": "Alternative hip-hop"
+  },
+  "grindcore": {
+    "description": "Grindcore is an extreme fusion genre of heavy metal and hardcore punk that originated in the mid-1980s, drawing inspiration from abrasive-sounding musical styles, such as thrashcore, crust punk, hardcore punk, extreme metal, and industrial.",
+    "source": "https://en.wikipedia.org/wiki/Grindcore",
+    "sourceTitle": "Grindcore"
+  },
+  "noise": {
+    "description": "Noise music is a subgenre of experimental music that is characterised by its use of unwanted noise as a primary musical element.",
+    "source": "https://en.wikipedia.org/wiki/Noise_music",
+    "sourceTitle": "Noise music"
+  },
+  "electro": {
+    "description": "Electro is a genre of electronic dance music that emerged in the early 1980s.",
+    "source": "https://en.wikipedia.org/wiki/Electro_(music)",
+    "sourceTitle": "Electro (music)"
+  },
+  "emo": {
+    "description": "Emo is a genre of rock music that combines musical characteristics of hardcore punk with emotional, often confessional lyrics.",
+    "source": "https://en.wikipedia.org/wiki/Emo",
+    "sourceTitle": "Emo"
+  },
+  "electropop": {
+    "description": "Electropop is a popular music fusion genre combining elements of the electronic and pop styles.",
+    "source": "https://en.wikipedia.org/wiki/Electropop",
+    "sourceTitle": "Electropop"
+  },
+  "experimental-hip-hop": {
+    "description": "Alternative hip-hop is a subgenre of hip-hop defined by artists who reject the genre's traditional stereotypes, particularly those popularized by old-school hip-hop and gangsta rap.",
+    "source": "https://en.wikipedia.org/wiki/Alternative_hip-hop",
+    "sourceTitle": "Alternative hip-hop"
+  },
+  "industrial": {
+    "description": "Industrial music is a subgenre of experimental music that emerged in the mid-to late 1970s, primarily inspired by industrial society, while drawing influences from avant-garde and early electronic music genres such as musique concrète, tape music, noise and sound collage.",
+    "source": "https://en.wikipedia.org/wiki/Industrial_music",
+    "sourceTitle": "Industrial music"
+  },
+  "death-n-roll": {
+    "description": "Death 'n' roll is a subgenre of death metal music that incorporates hard rock-inspired elements.",
+    "source": "https://en.wikipedia.org/wiki/Death_'n'_roll",
+    "sourceTitle": "Death 'n' roll"
+  },
+  "art-punk": {
+    "description": "Art punk is a subgenre of punk rock influenced by art school culture in which artists go beyond the genre's rudimentary three-chord garage rock conventions, incorporating more complex song structures, esoteric influences and a more sophisticated sound and image.",
+    "source": "https://en.wikipedia.org/wiki/Art_punk",
+    "sourceTitle": "Art punk"
+  },
+  "d-beat": {
+    "description": "D-beat is a style of hardcore punk, developed in the early 1980s by Discharge, after whom the genre is named, as well as a drum beat characteristic of this subgenre.",
+    "source": "https://en.wikipedia.org/wiki/D-beat",
+    "sourceTitle": "D-beat"
+  },
+  "crust-punk": {
+    "description": "Crust punk is a fusion genre of anarcho-punk and extreme metal that originated in the early to mid-1980s in England.",
+    "source": "https://en.wikipedia.org/wiki/Crust_punk",
+    "sourceTitle": "Crust punk"
+  },
+  "doom": {
+    "description": "Doom metal is an extreme subgenre of heavy metal music that typically uses slower tempos, low-tuned guitars and a much \"thicker\" or \"heavier\" sound than other heavy metal genres.",
+    "source": "https://en.wikipedia.org/wiki/Doom_metal",
+    "sourceTitle": "Doom metal"
+  },
+  "psychedelic-folk": {
+    "description": "Psychedelic folk is a loosely defined form of psychedelic music that originated in the 1960s.",
+    "source": "https://en.wikipedia.org/wiki/Psychedelic_folk",
+    "sourceTitle": "Psychedelic folk"
+  },
+  "electronica": {
+    "description": "Electronica is both a broad group of electronic-based music styles intended for listening rather than strictly for dancing and a music scene that came to prominence in the early 1990s in the United Kingdom which incorporated various musical styles.",
+    "source": "https://en.wikipedia.org/wiki/Electronica",
+    "sourceTitle": "Electronica"
+  },
+  "noise-pop": {
+    "description": "Noise pop is a subgenre of alternative and indie rock that emerged in the mid-1980s in the United Kingdom, originally pioneered by the Jesus and Mary Chain on their debut album Psychocandy.",
+    "source": "https://en.wikipedia.org/wiki/Noise_pop",
+    "sourceTitle": "Noise pop"
+  },
+  "dixieland": {
+    "description": "Dixieland jazz, also referred to as traditional jazz, hot jazz, or simply Dixieland, is a style of jazz based on the music that developed in New Orleans at the start of the 20th century.",
+    "source": "https://en.wikipedia.org/wiki/Dixieland_jazz",
+    "sourceTitle": "Dixieland jazz"
+  },
+  "alternative-country": {
+    "description": "Alternative country is a loosely defined subgenre of country music that includes acts that differ significantly in style from mainstream country music, mainstream country rock, and country pop.",
+    "source": "https://en.wikipedia.org/wiki/Alternative_country",
+    "sourceTitle": "Alternative country"
+  },
+  "dark-ambient": {
+    "description": "Dark ambient is a subgenre of post-industrial music, that originally emerged in the mid-1980s.",
+    "source": "https://en.wikipedia.org/wiki/Dark_ambient",
+    "sourceTitle": "Dark ambient"
+  },
+  "contemporary-folk": {
+    "description": "Contemporary folk music refers to a wide variety of genres that emerged in the mid-20th century and afterwards which were associated with traditional folk music.",
+    "source": "https://en.wikipedia.org/wiki/Contemporary_folk_music",
+    "sourceTitle": "Contemporary folk music"
+  }
+}

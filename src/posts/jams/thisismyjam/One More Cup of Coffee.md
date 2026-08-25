@@ -9,4 +9,8 @@ youtubeSlug: "w4eGXo2cLEM"
 tags:
   - posts
   - thisismyjam
+genre:
+  - "[[indie folk]]"
+  - "[[folk]]"
+  - "[[folk rock]]"
 ---

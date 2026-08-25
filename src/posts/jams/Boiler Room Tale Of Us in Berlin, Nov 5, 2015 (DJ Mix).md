@@ -7,5 +7,7 @@ cover: >-
 year: '2015'
 artist: Tale Of Us
 youtubeSlug: 8v_3k-94n30
+genre:
+  - "[[electronic]]"
 ---
 Listening to more and more electronic dance music.

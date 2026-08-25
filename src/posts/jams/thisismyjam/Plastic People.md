@@ -8,6 +8,8 @@ source: https://music.apple.com/us/album/plastic-people/1537809701
 cover: https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/b5/09/30/b50930fc-c3e6-93ea-d146-de291b3e101a/3663729136985_cover.jpg/1000x1000bb.jpg
 genre:
   - "[[electronic]]"
+  - "[[downtempo]]"
+  - "[[idm]]"
 year: 2010
 odesliUrl: https://song.link/i/1537811010
 tags:

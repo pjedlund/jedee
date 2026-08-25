@@ -9,4 +9,8 @@ youtubeSlug: "q-o3l8uKloM"
 tags:
   - posts
   - thisismyjam
+genre:
+  - "[[post-rock]]"
+  - "[[math rock]]"
+  - "[[post-hardcore]]"
 ---

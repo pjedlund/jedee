@@ -8,6 +8,8 @@ source: https://music.apple.com/us/album/balladen-om-fredrik-%C3%A5kare-och-den-
 cover: https://is1-ssl.mzstatic.com/image/thumb/Music6/v4/00/0e/89/000e892e-60cb-c9f3-3e50-75a2e10febea/cover.jpg/1000x1000bb.jpg
 genre:
   - "[[pop]]"
+  - "[[folk]]"
+  - "[[singer-songwriter]]"
 year: 2013
 odesliUrl: https://song.link/i/692822716
 youtubeSlug: "o8FD1gdyxa0"

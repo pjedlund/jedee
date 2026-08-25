@@ -8,6 +8,8 @@ source: https://music.apple.com/us/album/bathyalpelagic-iii-disequilibrated/6168
 cover: https://is1-ssl.mzstatic.com/image/thumb/Music2/v4/8e/89/5d/8e895db4-6d47-f4bc-b6c2-0381af8e39fe/039841519020.jpg/1000x1000bb.jpg
 genre:
   - "[[metal]]"
+  - "[[post-metal]]"
+  - "[[progressive metal]]"
 year: 2013
 odesliUrl: https://song.link/i/616886790
 youtubeSlug: "Ocq2sWK6CzM"

@@ -7,4 +7,8 @@ cover: /assets/images/listening/2013-01-13-get-got.jpg
 tags:
   - posts
   - thisismyjam
+genre:
+  - "[[experimental]]"
+  - "[[experimental hip hop]]"
+  - "[[industrial]]"
 ---
