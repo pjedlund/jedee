@@ -29,7 +29,7 @@
   {# Tag archive pages: show the bare tag, not the page title "Tag: <x>". #}
   {{ tag }}
 {%- elif genre.name -%}
-  {# Genre archive pages: the bare genre, not "Genre: <x>" — the parent crumb already says Genre. ⚠ `.name` is the guard: a jam post's own `genre` field is a string or list, and must not land here. #}
+  {# Genre archive pages: the bare genre, not "Genre: <x>" — the parent crumb already says Genres. ⚠ `.name` is the guard: a jam post's own `genre` field is a string or list, and must not land here. #}
   {{ genre.name }}
 {%- else -%}
   {{ title }}

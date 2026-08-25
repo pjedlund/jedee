@@ -15,6 +15,8 @@
     "favicons": "node ./src/_config/setup/generate-favicons.js",
     "colors": "node ./src/_config/setup/create-colors.js",
     "design:md": "node ./src/_config/setup/build-design-md.js",
+    "genres:fetch": "node ./src/_config/setup/enrich-genres.js fetch",
+    "genres:apply": "node ./src/_config/setup/enrich-genres.js apply",
     "penpot:tokens": "node ./src/_config/setup/build-penpot-tokens.js && node ./src/_config/setup/build-design-md.js",
     "dev:11ty": "cross-env ELEVENTY_ENV=development NODE_OPTIONS=--max-old-space-size=8192 eleventy --serve --incremental",
     "build:11ty": "cross-env ELEVENTY_ENV=production eleventy",

@@ -4,7 +4,7 @@ pagination:
   data: collections.genreList
   size: 1
   alias: genre
-permalink: /jams/genre/{{ genre.slug }}/
+permalink: /jams/genres/{{ genre.slug }}/
 eleventyComputed:
   title: '{{ meta.blog.genreSingle }}: {{ genre.name }}'
 ---
@@ -25,11 +25,11 @@ eleventyComputed:
   {% for genre in collections.genreList %}
     <li>
       <a
-        href="/jams/genre/{{ genre.slug }}/"
+        href="/jams/genres/{{ genre.slug }}/"
         class="button"
         data-small-button
         {{
-          helpers.getLinkActiveState('/jams/genre/' + genre.slug + '/',
+          helpers.getLinkActiveState('/jams/genres/' + genre.slug + '/',
           page.url)
           |
           safe

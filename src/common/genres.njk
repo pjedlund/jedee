@@ -1,13 +1,13 @@
 ---
 layout: tags
-permalink: /jams/genre/index.html
+permalink: /jams/genres/index.html
 eleventyComputed:
   title: '{{ meta.blog.genrePlural }}'
 ---
 
 <div class="mt-s-m cluster">
   {% for genre in collections.genreList %}
-    <a href="/jams/genre/{{ genre.slug }}/" class="button" data-small-button> {{ genre.name }} </a>
+    <a href="/jams/genres/{{ genre.slug }}/" class="button" data-small-button> {{ genre.name }} </a>
   {% endfor %}
 </div>
 
