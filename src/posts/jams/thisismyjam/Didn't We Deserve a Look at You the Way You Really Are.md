@@ -9,6 +9,7 @@ cover: https://f4.bcbits.com/img/a0710910012_5.jpg
 genre:
   - "[[alternative]]"
   - "[[alternative rock]]"
+  - "[[math rock]]"
 year: 1998
 youtubeSlug: "bn2IjYXVmuw"
 tags:

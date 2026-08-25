@@ -73,51 +73,71 @@ const readCache = () => (fs.existsSync(CACHE) ? JSON.parse(fs.readFileSync(CACHE
 const genresOf = doc =>
   (doc.genres || []).map(g => ({name: g.name, count: g.count})).sort((a, b) => b.count - a.count);
 
-async function mb(endpoint, params) {
+// ⚠ A 503 here means throttling, not a broken request — MusicBrainz returns it whenever the 1 req/s budget is exceeded, including when something *else* on this machine is querying it at the same time. Without the backoff a busy minute silently skips dozens of posts; they stay uncached, so the damage is only a re-run, but you have to notice first.
+async function mb(endpoint, params, attempt = 1) {
   const url = new URL(`https://musicbrainz.org/ws/2/${endpoint}`);
   Object.entries({fmt: 'json', ...params}).forEach(([k, v]) => url.searchParams.set(k, v));
-  await sleep(RATE_MS);
+  await sleep(RATE_MS * attempt);
   const response = await fetch(url, {headers: {'User-Agent': UA}});
+  if (response.status === 503 && attempt < 4) return mb(endpoint, params, attempt + 1);
   if (!response.ok) throw new Error(`${response.status} ${url}`);
   return response.json();
 }
 
-async function lookupArtist(name, artistCache) {
-  if (artistCache[name]) return artistCache[name];
+// ⚠ Searching an artist by bare name is the weak join in this script: MusicBrainz `score` is string similarity, so a *different* act with the same name scores 100. Jakob's "Solace" is post-rock, but a classical "Jakob" won the name search and put `classical` on the post. Only used when there is no release to credit the artist for us.
+async function findArtistId(name, byName) {
+  if (name in byName) return byName[name];
   const found = await mb('artist', {query: `artist:"${name}"`, limit: 1});
   const hit = found.artists?.[0];
-  // A weak search hit is a different act with a similar name — worse than no genre at all.
-  if (!hit || hit.score < 90) return (artistCache[name] = {id: null, genres: []});
-  const full = await mb(`artist/${hit.id}`, {inc: 'genres'});
-  return (artistCache[name] = {id: hit.id, name: full.name, genres: genresOf(full)});
+  return (byName[name] = hit && hit.score >= 90 ? hit.id : null);
 }
 
+async function artistGenres(mbid, byMbid) {
+  if (!mbid) return {name: null, genres: []};
+  if (mbid in byMbid) return byMbid[mbid];
+  const full = await mb(`artist/${mbid}`, {inc: 'genres'});
+  return (byMbid[mbid] = {name: full.name, genres: genresOf(full)});
+}
+
+// Returns the credited artist alongside the genres — that MBID is authoritative, unlike a name search.
 async function lookupRelease(artist, album) {
   const found = await mb('release-group', {
     query: `artist:"${artist}" AND releasegroup:"${album}"`,
     limit: 1,
   });
   const hit = found['release-groups']?.[0];
-  if (!hit || hit.score < 90) return {id: null, genres: []};
+  if (!hit || hit.score < 90) return {id: null, artistMbid: null, genres: []};
   const full = await mb(`release-group/${hit.id}`, {inc: 'genres'});
-  return {id: hit.id, title: full.title, genres: genresOf(full)};
+  return {
+    id: hit.id,
+    title: full.title,
+    artistMbid: hit['artist-credit']?.[0]?.artist?.id || null,
+    genres: genresOf(full),
+  };
 }
 
 async function runFetch(posts) {
   const cache = readCache();
-  const artistCache = {};
+  const byName = {};
+  const byMbid = {};
   let requests = 0;
 
   for (const post of posts) {
     if (cache[post.file]) continue;
     try {
-      const artist = await lookupArtist(post.artist, artistCache);
-      // 20 posts (live sessions, one-off videos) have no album — the artist's own genres are all MusicBrainz can offer them.
-      const release = post.album ? await lookupRelease(post.artist, post.album) : {id: null, genres: []};
+      // 20 posts (live sessions, one-off videos) have no album — the artist's own genres are all MusicBrainz can offer them, and a name search is then the only way in.
+      const release = post.album
+        ? await lookupRelease(post.artist, post.album)
+        : {id: null, artistMbid: null, genres: []};
+      const artistMbid = release.artistMbid || (await findArtistId(post.artist, byName));
+      const artist = await artistGenres(artistMbid, byMbid);
       cache[post.file] = {
         artist: post.artist,
         album: post.album || null,
-        artistMbid: artist.id,
+        // Kept so a wrong match is visible in the cache rather than only in the resulting front matter.
+        matchedArtist: artist.name,
+        matchedVia: release.artistMbid ? 'release-credit' : artistMbid ? 'name-search' : null,
+        artistMbid,
         releaseMbid: release.id,
         artistGenres: artist.genres,
         releaseGenres: release.genres,

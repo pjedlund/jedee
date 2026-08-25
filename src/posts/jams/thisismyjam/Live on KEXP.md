@@ -9,4 +9,6 @@ youtubeSlug: "Hz7zVNKRkAs"
 tags:
   - posts
   - thisismyjam
+genre:
+  - "[[indie rock]]"
 ---

@@ -9,4 +9,8 @@ youtubeSlug: "JQ6qbBrKmW0"
 tags:
   - posts
   - thisismyjam
+genre:
+  - "[[punk]]"
+  - "[[hardcore punk]]"
+  - "[[post-hardcore]]"
 ---

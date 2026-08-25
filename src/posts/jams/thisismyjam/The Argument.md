@@ -8,6 +8,8 @@ source: https://music.apple.com/us/album/the-argument/308227941
 cover: https://is1-ssl.mzstatic.com/image/thumb/Music/27/e2/03/mzi.qhgpkvft.jpg/1000x1000bb.jpg
 genre:
   - "[[alternative]]"
+  - "[[indie rock]]"
+  - "[[alternative rock]]"
 year: 1997
 odesliUrl: https://song.link/i/308227952
 youtubeSlug: "VMRnxtGYk1E"

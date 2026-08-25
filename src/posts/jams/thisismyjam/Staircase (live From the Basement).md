@@ -9,5 +9,9 @@ youtubeSlug: "BhzQzyJUJTQ"
 tags:
   - posts
   - thisismyjam
+genre:
+  - "[[alternative rock]]"
+  - "[[art rock]]"
+  - "[[rock]]"
 ---
 Easy to forget how good Radiohead is.

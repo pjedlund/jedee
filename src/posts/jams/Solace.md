@@ -9,6 +9,7 @@ cover: "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/1f/0c/7b/1f0c7b00-6
 description:
 genre:
   - "[[rock]]"
+  - "[[post-rock]]"
 year: 2006
 favoriteTrack: "Everything All of the Time"
 favoriteTrackUrl: "https://music.apple.com/se/song/everything-all-of-the-time/1774380712"

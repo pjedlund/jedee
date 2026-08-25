@@ -9,4 +9,8 @@ youtubeSlug: "vE2JM31wnm0"
 tags:
   - posts
   - thisismyjam
+genre:
+  - "[[shoegaze]]"
+  - "[[dream pop]]"
+  - "[[noise pop]]"
 ---

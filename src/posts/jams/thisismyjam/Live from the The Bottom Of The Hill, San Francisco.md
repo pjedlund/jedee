@@ -7,5 +7,9 @@ cover: /assets/images/listening/2014-07-02-live-from-the-the-bottom-of-the-hill-
 tags:
   - posts
   - thisismyjam
+genre:
+  - "[[indie rock]]"
+  - "[[c86]]"
+  - "[[post-punk]]"
 ---
 I was there!

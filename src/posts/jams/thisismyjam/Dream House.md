@@ -9,6 +9,7 @@ cover: https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/67/52/b2/6752b2b0-43
 genre:
   - "[[metal]]"
   - "[[blackgaze]]"
+  - "[[post-metal]]"
 year: 2013
 odesliUrl: https://song.link/i/652039247
 youtubeSlug: umNuNpSB0Kc
