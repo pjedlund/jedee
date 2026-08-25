@@ -33,7 +33,7 @@ export const tagList = collection => {
 
 /** Jam genres as a browsable index, kept deliberately OUT of `tags`.
  * Same reasoning as `byCategory` above: `genre` is its own field, so genre pages
- * live at /genres/ and never enter the user-facing /tags/ index. Values are
+ * live at /jams/genre/ and never enter the user-facing /tags/ index. Values are
  * authored as Obsidian [[wikilinks]] for the graph, so the brackets are stripped
  * here — they must never reach a URL or a label. Grouping is BY SLUG, which
  * collapses the vocabulary's case drift ("Soundtrack" / "soundtrack") onto one
