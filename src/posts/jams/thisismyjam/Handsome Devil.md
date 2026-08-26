@@ -21,4 +21,6 @@ tags:
   - posts
   - thisismyjam
 ---
-[#K](/tagged/K)ämpaShowan
+Why beat around the bush/reel around the fountain, John Peel was the man to bring out the full flavor from the Smiths.
+
+#KämpaShowan
