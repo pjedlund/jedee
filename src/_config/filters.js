@@ -11,6 +11,7 @@ import { hostname } from './filters/hostname.js';
 import { located } from './filters/located.js';
 import { routeGeoJSON } from './filters/route-geojson.js';
 import { youtubePoster } from './filters/youtube-poster.js';
+import { youtubeTitle } from './filters/youtube-title.js';
 import { toISODuration, formatDuration, itunesDuration } from './filters/duration.js';
 import { paceOrSpeed } from './filters/pace.js';
 import { withMiles } from './filters/distance.js';
@@ -37,6 +38,7 @@ export default {
   located,
   routeGeoJSON,
   youtubePoster,
+  youtubeTitle,
   toISODuration,
   formatDuration,
   itunesDuration,

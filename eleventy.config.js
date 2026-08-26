@@ -137,6 +137,7 @@ export default async function(eleventyConfig) {
   eleventyConfig.addFilter('located', filters.located);
   eleventyConfig.addFilter('routeGeoJSON', filters.routeGeoJSON);
   eleventyConfig.addFilter('youtubePoster', filters.youtubePoster);
+  eleventyConfig.addFilter('youtubeTitle', filters.youtubeTitle);
   eleventyConfig.addFilter('dtcgItems', filters.dtcgItems);
   // Recipe durations (§9): integer minutes OR PT…M → normalized PT…M + human-readable.
   eleventyConfig.addFilter('toISODuration', filters.toISODuration);
