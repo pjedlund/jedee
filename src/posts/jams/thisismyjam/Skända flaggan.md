@@ -1,8 +1,8 @@
 ---
-title: "Mattias Alkbergs Begravning"
+title: "Skända flaggan"
 draft: false
 date: 2014-06-05
-artist: "[[Skända flaggan]]"
+artist: "[[Mattias Alkbergs Begravning]]"
 album: "Mattias Alkbergs Begravning"
 source: https://mattiasalkberg.bandcamp.com/track/sk-nda-flaggan
 cover: https://f4.bcbits.com/img/a2743205010_5.jpg
