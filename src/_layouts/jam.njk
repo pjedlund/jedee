@@ -14,7 +14,7 @@ schema: BlogPosting
 
     {# Optional embedded performance (e.g. an archived This Is My Jam YouTube link). Reuses the shipped custom-youtube WebC component, which renders here because the WebC plugin runs with useTransform:true (same pattern as video.njk). #}
     {% if youtubeSlug %}
-      <custom-youtube @slug="{{ youtubeSlug }}" @poster="{{ youtubeSlug | youtubePoster }}" @label="{{ title }}"></custom-youtube>
+      <custom-youtube @slug="{{ youtubeSlug }}" @poster="{{ youtubeSlug | youtubePoster }}" @label="{{ youtubeSlug | youtubeTitle(title) }}"></custom-youtube>
     {% endif %}
 
     {% if source %}<data hidden class="u-listen-of" value="{{ source }}"></data>{% endif %}
