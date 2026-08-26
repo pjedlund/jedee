@@ -18,7 +18,7 @@ youtubeSlug: fkZk9kk3sZk
 ---
 This is the last (unfinished) symphony by Anton Bruckner. The last movement he composed is the Adagio.
 
-I have a pair of AirPods Max and to be able to listen to the studio recording of a full orchestra in a Dolby Atmos a fantastic experience.
+I have a pair of AirPods Max and to be able to listen to a studio recording of a full orchestra in a Dolby Atmos is a fantastic experience.
 
 ## Movements
 
