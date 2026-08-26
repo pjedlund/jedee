@@ -6,20 +6,17 @@ export const showInSitemap = collection => {
   return collection.getFilteredByGlob('./src/**/*.{md,njk}');
 };
 
-/** Per-type collections — filter posts by their `category` field, set in each
- * src/posts/<type>/<type>.json. eleventy.config.js loops over POST_TYPES to register each collection. Avoids dragging `category` into the `tags` field (which would pollute the user-facing /tags/ index and force `.11tydata.js` for the data file). */
+/** Per-type collections — filter posts by the `category` field (set in each src/posts/<type>/<type>.json). Kept out of `tags` so it never pollutes the /tags/ index. */
 export const byCategory = cat => collection =>
   collection
     .getFilteredByGlob('./src/posts/**/*.md')
     .filter(item => item.data.category === cat)
     .reverse();
 
-/** Every per-type collection name. Drives `addCollection` registration in
- * eleventy.config.js. Add a new type's category here to register its collection. NB: layout aliases stay explicit in eleventy.config.js — `article` has no article.njk (it uses layout: post), so a generic alias loop would break. */
+/** Every per-type collection name; add a type here to register its collection. Layout aliases stay explicit in eleventy.config.js — `article` uses layout: post (no article.njk), so an alias loop would break. */
 export const POST_TYPES = ['article', 'note', 'reading', 'jam', 'watching', 'bookmark', 'reply', 'rsvp', 'like', 'repost', 'photo', 'recipe', 'event', 'audio', 'video', 'activity'];
 
-/** All user-facing tags across all posts, excluding system tags. Per-type
- * category names (article, note, …) never enter `tags`; they live in `category` only. Keep this list minimal — only the firehose + EE built-ins. */
+/** All user-facing tags, excluding system tags. Per-type category names live in `category`, never in `tags`. Keep SYSTEM_TAGS minimal — firehose + EE built-ins only. */
 const SYSTEM_TAGS = ['posts', 'docs', 'all'];
 
 export const tagList = collection => {
@@ -31,14 +28,9 @@ export const tagList = collection => {
   return Array.from(tagsSet).sort();
 };
 
-/** Jam genres as a browsable index, kept deliberately OUT of `tags`.
- * Same reasoning as `byCategory` above: `genre` is its own field, so genre pages
- * live at /jams/genres/ and never enter the user-facing /tags/ index. Values are
- * authored as Obsidian [[wikilinks]] for the graph, so the brackets are stripped
- * here — they must never reach a URL or a label. Grouping is BY SLUG, which
- * collapses the vocabulary's case drift ("Soundtrack" / "soundtrack") onto one
- * page instead of splitting it into two near-empty ones.
- * Returns [{name, slug, items}] sorted by name, newest jam first within a genre. */
+/** Jam genres as a browsable index, kept out of `tags` (like `byCategory`): `genre` is its own field, so pages live at /jams/genres/, never in /tags/.
+ * Values are authored as [[wikilinks]] for the graph — brackets are stripped here and must never reach a URL or label.
+ * Grouping is BY SLUG, collapsing case drift ("Soundtrack"/"soundtrack") onto one page. Returns [{name, slug, items}] sorted by name, newest jam first within a genre. */
 export const genreList = collection => {
   const groups = new Map();
 

@@ -6,11 +6,10 @@ pagination:
   alias: genre
 permalink: /jams/genres/{{ genre.slug }}/
 eleventyComputed:
-  title: '{{ meta.blog.genreSingle }}: {{ genre.name }}'
+  title: '{{ meta.blog.genreSingle }}: {{ genre.name | safe }}'
 ---
 
-{# Slug comes precomputed from the genreList collection rather than a `| slugify`
-   here, so the grouping key and the URL can never drift apart. #}
+{# Slug comes precomputed from the genreList collection rather than a `| slugify` here, so the grouping key and the URL can never drift apart. #}
 
 {# Descriptions come from Wikipedia via src/_config/setup/genre-descriptions.js. ⚠ The text is CC BY-SA: the link is the attribution the licence requires, so it must stay visible — not a title attribute, not removed. Genres deliberately without a description (junk values, and instruments like `violin`) are simply absent from the data file. #}
 {% set genreInfo = genreDescriptions[genre.slug] %}

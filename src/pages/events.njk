@@ -5,13 +5,7 @@ description: Events I'm hosting — upcoming and past.
 permalink: '/events/index.html'
 ---
 
-{# Two-section archive (spec §7). Unlike the other types this does NOT reuse the
-   single-list archive-listing.njk: the collection is partitioned at build time
-   into Upcoming (soonest event first) and Past (most-recent event first) via the
-   events.js date filters. "Now" is frozen at build (static site). Cancelled
-   events are NOT filtered out — status drives the badge, date drives the
-   section. No pagination for v1 (if Past grows long, paginate it, not Upcoming).
-   No feed (spec §8). Section headings are <h2>, so cards render <h3>. #}
+{# Two-section archive (spec §7). Unlike other types this does NOT reuse archive-listing.njk: the collection is partitioned at build time into Upcoming (soonest first) and Past (most-recent first) via the events.js date filters. "Now" is frozen at build (static site). Cancelled events are NOT filtered out — status drives the badge, date drives the section. No pagination for v1 (if Past grows long, paginate it, not Upcoming). No feed (spec §8). Section headings are <h2>, so cards render <h3>. #}
 
 {%- set upcoming = collections.event | filterUpcoming | sortByStartAsc -%}
 {%- set past = collections.event | filterPast | sortByStartDesc -%}

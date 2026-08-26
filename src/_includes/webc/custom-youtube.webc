@@ -37,14 +37,8 @@
           background-size: cover;
         }
 
-        /* The steady placeholder lives on the WRAPPER so the poster (on
-           lite-youtube) can fade in over it without the placeholder flashing.
-           Surface = the mega-menu overlay sheet (main-nav.css), so the box reads
-           as the same header chrome — light per theme. The faint mid-gray
-           logomark at 0.1 alpha darkens the light sheet and lightens the dark
-           one, so one mark works in both modes. Corners are rounded with
-           border-radius on both layers (NOT overflow:hidden — that would clip
-           the play button's focus ring, which is drawn outside the box). */
+        /* Steady placeholder on the WRAPPER so the poster (on lite-youtube) fades in over it without the placeholder flashing. Surface = the mega-menu overlay sheet (main-nav.css), so the box reads as header chrome, light per theme.
+           The mid-gray logomark at 0.1 alpha darkens the light sheet and lightens the dark one, so one mark works in both modes. Corners use border-radius on both layers, NOT overflow:hidden — that would clip the play button's focus ring, drawn outside the box. */
         is-land.video-wrapper {
           display: block;
           position: relative;
@@ -64,19 +58,12 @@
           --yt-surface: color-mix(in oklab, white 7%, var(--color-bg));
         }
 
-        /* lite-youtube carries just the poster, transparent so the wrapper's
-           placeholder shows through until it's ready — then it fades in. Uses a
-           one-shot keyframe (not a default opacity:0) so a stalled hydration
-           can't strand the play button invisible: no [ready] → opacity stays 1. */
+        /* lite-youtube carries just the poster, transparent so the wrapper's placeholder shows through until it's ready, then fades in. A one-shot keyframe (not a default opacity:0) so a stalled hydration can't strand the play button invisible: no [ready] → opacity stays 1. */
         is-land lite-youtube {
           background-color: transparent;
           border-radius: 0.2em;
         }
-        /* Keyboard focus ring for the play button: it fills the whole box, and
-           lite-yt-embed's `contain: content` paint-clips anything drawn outside
-           that box — including the site's OUTSET focus ring (outline-offset:
-           0.3ch), leaving keyboard focus invisible. Inset the ring (negative
-           offset) so it lands inside the box and stays visible. */
+        /* Keyboard focus ring for the play button: lite-yt-embed's `contain: content` paint-clips anything outside the box — including the site's OUTSET focus ring (outline-offset: 0.3ch), leaving focus invisible. Inset the ring (negative offset) so it lands inside the box and stays visible. */
         is-land lite-youtube .lyt-playbtn {
           --focus-offset: -4px;
         }

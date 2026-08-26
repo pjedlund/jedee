@@ -1,13 +1,8 @@
 {#
   Static map for a post's location, linked to OpenStreetMap. A plain <img> (NOT the local-only {% image %} shortcode, and NOT a WebC component): the eleventy-img HTML transform runs BEFORE the WebC transform, so only a Nunjucks-emitted <img> gets fetched + self-hosted — a WebC-emitted one would ship the raw keyed URL. Same remote-cover pattern as reading/watching/jam.
 
-  - `src | safe`                       keeps the multi-param URL's literal '&' (an
-                                       escaped '&amp;' makes eleventy-img fetch a
-                                       404 → fatal build — see the eleventy-excellent
-                                       remote-image note).
-  - `eleventy:optional="placeholder"`  a failed fetch (bad key, quota, outage) becomes
-                                       a placeholder, so the keyed URL is never left
-                                       in the HTML.
+  - `src | safe`                       keeps the multi-param URL's literal '&' (an escaped '&amp;' makes eleventy-img fetch a 404 → fatal build — see the eleventy-excellent remote-image note).
+  - `eleventy:optional="placeholder"`  a failed fetch (bad key, quota, outage) becomes a placeholder, so the keyed URL is never left in the HTML.
 
   Bare-include-friendly: no async shortcode, so the interlinker {% if %}-blank trap doesn't apply even though photo.njk wraps this include in {% if showMap %}. This is the no-JS fallback for the <place-map> element — 16:9 to match the live map that replaces it on idle; zoom matches place-map.js's default.
 

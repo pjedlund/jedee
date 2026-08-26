@@ -5,24 +5,15 @@
  *   https://github.com/anthropic-ai (see DESIGN.md and spec.md)
  *
  * Workflow:
- *   1. Edit any file in src/_data/designTokens/
- *      (if you edited colorsBase.json, run `npm run colors` first)
+ *   1. Edit any file in src/_data/designTokens/ (if you edited colorsBase.json, run `npm run colors` first)
  *   2. Run `npm run design:md`  (or `npm run penpot:tokens` which chains both)
  *   3. Review the diff. The markdown body below the second `---` is untouched.
  *
  * Mapping rules:
- *   - Semantic roles (primary/secondary/tertiary/neutral) follow the
- *     SEMANTIC_ROLES map at the top of this file. Edit it to rebrand.
- *   - Surface / on-surface tokens are resolved from semanticColors.json
- *     (which itself references palette tokens). The dark theme is emitted
- *     with a `-dark` suffix (the spec has no native theming concept; this
- *     uses the spec's "unknown token name → accept if value is valid" rule).
- *   - Typography composites are resolved from typography.json by following
- *     the {font.*} references into fonts/textWeights/textSizes/textLeading.
- *     Font sizes collapse the Utopia {min,max} pair to the max in px,
- *     matching how Penpot tokens are emitted.
- *   - Components are defined inline in the COMPONENTS map below — they
- *     wire up token references rather than being inferred from JSON.
+ *   - Semantic roles (primary/secondary/tertiary/neutral) follow the SEMANTIC_ROLES map at the top of this file. Edit it to rebrand.
+ *   - Surface / on-surface tokens resolve from semanticColors.json (→ palette tokens). Dark theme is emitted with a `-dark` suffix (the spec has no theming concept; relies on its "unknown token name → accept if valid" rule).
+ *   - Typography composites resolve from typography.json via the {font.*} references into fonts/textWeights/textSizes/textLeading. Font sizes collapse the Utopia {min,max} pair to the max in px, matching Penpot's tokens.
+ *   - Components are defined inline in the COMPONENTS map below — token references, not inferred from JSON.
  */
 
 import {mkdir, readFile, writeFile} from 'node:fs/promises';

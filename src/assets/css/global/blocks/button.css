@@ -70,9 +70,7 @@
 }
 
 .button[data-button-variant='tertiary'] {
-  /* Draft badge. Tint the page bg with the accent green so it reads as a soft
-     green in light mode and a dark green in dark mode; --color-text flips to
-     match, keeping AA contrast in both (was near-black text on dark olive). */
+  /* Draft badge. Tint the page bg with accent green — soft green in light, dark green in dark; --color-text flips to match, keeping AA contrast in both. */
   --button-bg: color-mix(in oklab, var(--color-accent-green) 20%, var(--color-bg));
   --button-color: var(--color-text);
 }
@@ -107,9 +105,7 @@
 }
 
 .button[data-icon] {
-  /* Minimum tap target: the icon glyph stays small, but the hit area is
-     held at 48×48px to satisfy WCAG 2.5.5 / Lighthouse. Override per
-     context, e.g. --button-icon-min-size: 0 to opt out. */
+  /* Minimum tap target: glyph stays small, hit area held at 48×48px for WCAG 2.5.5. Override per context, e.g. --button-icon-min-size: 0 to opt out. */
   --button-icon-min-size: 3rem;
   --button-padding: var(--space-2xs);
   --button-bg: var(--color-bg);
