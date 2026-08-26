@@ -1,9 +1,10 @@
 <style>
   custom-youtube-link {
     /* Tighten the flow gap from the player above (default 1em) — the caption is a listen credit, not its own section. */
-    --flow-space: var(--space-xs);
+    --flow-space: var(--space-s);
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: var(--space-xs);
     font-size: var(--size-step-min-1);
   }
