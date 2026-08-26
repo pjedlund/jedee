@@ -9,6 +9,7 @@ cover: https://is1-ssl.mzstatic.com/image/thumb/Music/v4/7f/13/e0/7f13e0fb-4113-
 description:
 genre:
   - "[[jazz]]"
+  - "[[folk]]"
 year: 2005
 favoriteTrack:
 favoriteTrackUrl:
