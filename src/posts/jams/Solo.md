@@ -1,9 +1,9 @@
 ---
-title: "Solo: Matteis - Pisendel - Biber - Guillemain - Vilsmayr"
-draft: true
+title: "Solo"
+draft: false
 date: 2026-05-25T20:32:20+02:00
 artist: "[[Isabelle Faust]]"
-album: "Solo: Matteis - Pisendel - Biber - Guillemain - Vilsmayr"
+album: "Solo"
 source: https://music.apple.com/us/album/solo-matteis-pisendel-biber-guillemain-vilsmayr/1694231241
 cover: https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/7a/f0/25/7af025d1-3f86-3332-186a-8d160cd36460/3149020949306_cover.jpg/1200x630bb.jpg
 description: |-
@@ -17,6 +17,8 @@ similar:
 odesliUrl: https://song.link/i/1694231242
 youtubeSlug: Eo0xoFnYwNs
 ---
+Solo instrument works by composers from the Baroque era (less known than Bach) masterfully played by Isabella Faust.
+
 - [Fantasia for Solo Violin in A Minor "Alia Fantasia"](https://music.apple.com/us/song/fantasia-for-solo-violin-in-a-minor-alia-fantasia/1694231242)
 - [Ayres for the Violin: Preludio](https://music.apple.com/us/song/ayres-for-the-violin-preludio/1694231247)
 - [Ayres for the Violin: Passaggio rotto - Andamento veloce](https://music.apple.com/us/song/ayres-for-the-violin-passaggio-rotto-andamento-veloce/1694231255)

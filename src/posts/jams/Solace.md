@@ -1,6 +1,6 @@
 ---
 title: "Solace"
-draft: true
+draft: false
 date: "2026-07-06T21:19:09+02:00"
 artist: "[[Jakob]]"
 album: "Solace"
@@ -17,9 +17,9 @@ similar:
 odesliUrl:
 youtubeSlug: uixEOC5ieC8
 ---
-I keep coming back to this album more and more. Jacob is instrumental post/math-rock of the finest variant.
+I keep coming back to this album again and again. Jakob is instrumental post/math-rock of the finest variant.
 
-Tracklist:
+## Tracklist
 
 - [Malachite](https://music.apple.com/se/song/malachite/1774380145)
 - [Pneumonic](https://music.apple.com/se/song/pneumonic/1774380159)
