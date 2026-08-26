@@ -1,8 +1,8 @@
 ---
-title: "Hard 'n Phirm"
+title: "Rodeohead"
 draft: false
 date: 2012-12-20
-artist: "[[Rodeohead]]"
+artist: "[[Hard 'n Phirm]]"
 album:
 source: https://www.youtube.com/watch?v=-BGFAP6JJrk
 cover: /assets/images/listening/2012-12-20-hard-n-phirm.jpg
