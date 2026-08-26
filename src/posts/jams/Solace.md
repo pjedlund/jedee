@@ -13,6 +13,7 @@ genre:
 year: 2006
 favoriteTrack: "Everything All of the Time"
 favoriteTrackUrl: "https://music.apple.com/se/song/everything-all-of-the-time/1774380712"
+similar:
 odesliUrl:
 youtubeSlug: uixEOC5ieC8
 ---

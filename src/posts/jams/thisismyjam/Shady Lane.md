@@ -6,11 +6,15 @@ artist: "[[Pavement]]"
 album: "Brighten the Corners"
 source: https://music.apple.com/us/album/shady-lane/1589189406
 cover: https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/0a/bb/d4/0abbd464-aa08-f28b-760f-94963d6011df/744861019732.png/1000x1000bb.jpg
+description:
 genre:
   - "[[alternative]]"
   - "[[indie rock]]"
   - "[[rock]]"
 year: 1997
+favoriteTrack:
+favoriteTrackUrl:
+similar:
 odesliUrl: https://song.link/i/1589189408
 youtubeSlug: "iY91hVZqhHY"
 tags:

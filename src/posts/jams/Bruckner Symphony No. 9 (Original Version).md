@@ -14,7 +14,9 @@ genre:
 year: 2024
 favoriteTrack: III. Adagio. Langsam, feierlich
 favoriteTrackUrl: https://music.apple.com/us/song/symphony-no-9-in-d-minor-wab-109-original-version-iii/1761084107
+similar:
 odesliUrl:
+youtubeSlug:
 ---
 Been listening a lot to Bruckner lately. This is his last Symphony and the last movement he composed is the Adagio. 
 

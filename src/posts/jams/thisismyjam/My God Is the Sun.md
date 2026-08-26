@@ -6,11 +6,15 @@ artist: "[[Queens of the Stone Age]]"
 album: "...Like Clockwork"
 source: https://music.apple.com/us/album/my-god-is-the-sun/1586476451
 cover: https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/0c/73/3c/0c733c12-fc9a-bb06-da19-9f25d7c99050/744861104063.png/1000x1000bb.jpg
+description:
 genre:
   - "[[alternative]]"
   - "[[stoner rock]]"
   - "[[hard rock]]"
 year: 2013
+favoriteTrack:
+favoriteTrackUrl:
+similar:
 odesliUrl: https://song.link/i/1586476458
 youtubeSlug: "-90obSa1Az4"
 tags:

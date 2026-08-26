@@ -6,9 +6,13 @@ artist: "[[Svenska Akademien]]"
 album: "Tändstickor För Mörkrädda"
 source: https://music.apple.com/us/album/vetande/420512586
 cover: https://is1-ssl.mzstatic.com/image/thumb/Music/af/06/5b/mzi.qpxqtbzs.jpg/1000x1000bb.jpg
+description:
 genre:
   - "[[reggae]]"
 year: 2004
+favoriteTrack:
+favoriteTrackUrl:
+similar:
 odesliUrl: https://song.link/i/420512631
 youtubeSlug: "TYEBeQIMjO8"
 tags:

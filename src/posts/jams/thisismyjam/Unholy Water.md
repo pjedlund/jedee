@@ -6,12 +6,17 @@ artist: "[[Kongh]]"
 album: "Shadows of the Shapeless"
 source: https://music.apple.com/us/album/unholy-water/1892497426
 cover: https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/4a/1b/24/4a1b24c7-557d-fe0b-dbbb-bc801bc8968c/artwork.jpg/1000x1000bb.jpg
+description:
 genre:
   - "[[metal]]"
   - "[[doom metal]]"
   - "[[rock]]"
 year: 2009
+favoriteTrack:
+favoriteTrackUrl:
+similar:
 odesliUrl: https://song.link/i/1892497427
+youtubeSlug:
 tags:
   - posts
   - thisismyjam

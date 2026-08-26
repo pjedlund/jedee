@@ -6,10 +6,15 @@ artist: "[[Ray Miller]]"
 album: "The Muggsy Spanier Collection 1924-49"
 source: https://music.apple.com/us/album/thats-a-plenty/933304626
 cover: https://is1-ssl.mzstatic.com/image/thumb/Music1/v4/4f/1b/13/4f1b133c-2205-b74e-0e22-1b8decd64f21/888831963745.jpg/1000x1000bb.jpg
+description:
 genre:
   - "[[dixieland]]"
 year: 2000
+favoriteTrack:
+favoriteTrackUrl:
+similar:
 odesliUrl: https://song.link/i/933304717
+youtubeSlug:
 tags:
   - posts
   - thisismyjam

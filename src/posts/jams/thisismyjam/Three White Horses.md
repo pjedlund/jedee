@@ -6,12 +6,17 @@ artist: "[[Andrew Bird]]"
 album: "Hands of Glory"
 source: https://music.apple.com/us/album/three-white-horses/1774565695
 cover: https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/2b/bc/03/2bbc03cd-ccfd-9b3d-325c-1f899bd1ae31/49228.jpg/1000x1000bb.jpg
+description:
 genre:
   - "[[folk]]"
   - "[[indie folk]]"
   - "[[folk rock]]"
 year: 2012
+favoriteTrack:
+favoriteTrackUrl:
+similar:
 odesliUrl: https://song.link/i/1774565698
+youtubeSlug:
 tags:
   - posts
   - thisismyjam

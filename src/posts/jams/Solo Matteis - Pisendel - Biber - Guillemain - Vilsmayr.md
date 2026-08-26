@@ -16,7 +16,9 @@ genre:
 year: 2023
 favoriteTrack: Fantasia for Solo Violin in A Minor "Alia Fantasia"
 favoriteTrackUrl: https://music.apple.com/us/song/fantasia-for-solo-violin-in-a-minor-alia-fantasia/1694231242
+similar:
 odesliUrl:
+youtubeSlug:
 ---
 - [Fantasia for Solo Violin in A Minor "Alia Fantasia"](https://music.apple.com/us/song/fantasia-for-solo-violin-in-a-minor-alia-fantasia/1694231242)
 - [Ayres for the Violin: Preludio](https://music.apple.com/us/song/ayres-for-the-violin-preludio/1694231247)
