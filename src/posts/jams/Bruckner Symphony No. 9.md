@@ -16,9 +16,11 @@ similar:
 odesliUrl:
 youtubeSlug: fkZk9kk3sZk
 ---
-This is the last (unfinished) symphony that Anton Bruckner composed. The last movement he composed is the Adagio.
+This is the last (unfinished) symphony by Anton Bruckner. The last movement he composed is the Adagio.
 
 I have a pair of AirPods Max and to be able to listen to the studio recording of a full orchestra in a Dolby Atmos a fantastic experience.
+
+## Movements
 
 - [Symphony No. 9 in D Minor, WAB 109 (Original Version): I. Feierlich, misterioso](https://music.apple.com/us/song/symphony-no-9-in-d-minor-wab-109-original-version-i/1761084103)
 - [Symphony No. 9 in D Minor, WAB 109 (Original Version): II. Scherzo. Bewegt, lebhaft - Trio. Schnell](https://music.apple.com/us/song/symphony-no-9-in-d-minor-wab-109-original-version-ii/1761084105)
