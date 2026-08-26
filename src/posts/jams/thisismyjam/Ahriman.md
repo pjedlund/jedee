@@ -16,7 +16,7 @@ favoriteTrack:
 favoriteTrackUrl:
 similar:
 odesliUrl: https://song.link/i/516343185
-youtubeSlug:
+youtubeSlug: "okj2Y_GHRBs"
 tags:
   - posts
   - thisismyjam

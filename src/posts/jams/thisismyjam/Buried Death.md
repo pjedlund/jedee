@@ -16,7 +16,7 @@ favoriteTrack:
 favoriteTrackUrl:
 similar:
 odesliUrl: https://song.link/i/373729537
-youtubeSlug:
+youtubeSlug: "-RdQ7-q1_Pc"
 tags:
   - posts
   - thisismyjam

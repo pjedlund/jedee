@@ -16,7 +16,7 @@ favoriteTrack:
 favoriteTrackUrl:
 similar:
 odesliUrl:
-youtubeSlug:
+youtubeSlug: "0XCQNpjWmRE"
 tags:
   - posts
   - thisismyjam

@@ -16,7 +16,7 @@ favoriteTrack:
 favoriteTrackUrl:
 similar:
 odesliUrl: https://song.link/i/537777355
-youtubeSlug:
+youtubeSlug: "la-H6BVZhSU"
 tags:
   - posts
   - thisismyjam
