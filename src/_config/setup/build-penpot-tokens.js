@@ -2,12 +2,9 @@
  * Build a DTCG (Design Tokens Community Group) JSON file from the JEDEE design tokens in `src/_data/designTokens/*.json`, ready to import into the JEDEE - design tokens file on design.penpot.app.
  *
  * Workflow:
- *   1. Edit any file in src/_data/designTokens/
- *      (if you edited colorsBase.json, run `npm run colors` first to
- *      regenerate colors.json)
+ *   1. Edit any file in src/_data/designTokens/ (if you edited colorsBase.json, run `npm run colors` first to regenerate colors.json)
  *   2. Run `npm run penpot:tokens`
- *   3. In Penpot, open the design file → Tokens panel → import the
- *      generated `_local/penpot/penpot-tokens.dtcg.json`.
+ *   3. In Penpot, open the design file → Tokens panel → import the generated `_local/penpot/penpot-tokens.dtcg.json`.
  *
  * Mapping rules:
  *   - JSON nesting becomes dot-separated token names (e.g. gray.100 → color.gray.100).

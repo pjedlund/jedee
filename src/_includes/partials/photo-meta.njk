@@ -3,9 +3,7 @@
 
   - `photoExif`        build-time extracted, render-safe (src/_config/utils/exif.js)
   - `photo.format` / `photo.exposure` / `photo.film` / `photo.development`   authored capture facts
-  - `photo.downloads`  authored list; the FIRST entry is the full-size raster
-    (carries width/height) and drives both the lightbox (photo.njk) and the
-    Resolution row below.
+  - `photo.downloads`  authored list; the FIRST entry is the full-size raster (carries width/height) and drives both the lightbox (photo.njk) and the Resolution row below.
 
   Bare include from photo.njk (no async shortcodes here), so the interlinker async-blank trap doesn't apply and internal {% if %} guards are safe. The <place-map> custom element is expanded by the WebC transform, then its remote <img> is fetched + self-hosted by the eleventy-img transform — no async shortcode. Microformats: p-location (+ nested h-adr) on the place; h-geo on the coords.
 #}

@@ -49,8 +49,7 @@
 
 .prose mark {
   background-color: var(--color-accent-green);
-  /* Light text keeps the highlight bold and saturated while passing AA on the
-     dark-olive green in both themes (was near-black text → ~2.77:1). */
+  /* Light text keeps the highlight bold and saturated while passing AA on the dark-olive green in both themes. */
   color: var(--color-light);
 }
 
@@ -82,15 +81,8 @@
   border-radius: var(--border-radius-medium);
 }
 
-/* External-link icon: a small ↗ after any outbound link in prose. Internal links are
-   relative (/about/) so they never match href^='http'; the own-domain / localhost
-   exclusions cover the rare absolute self-link. Decorative — links open in the same tab,
-   so no extra announcement. Reuses the static external.svg (its #888 stroke reads in both
-   themes; a background image can't inherit currentColor anyway).
-   `.no-indicator` opts a link out. Templates have marked links with it since the footer
-   was written, but nothing ever defined it, so an image-only outbound link (the photo
-   lightbox, the static map) drew a stray arrow on its own line under the picture with no
-   text to follow. The class is the opt-out for any link whose content isn't words. */
+/* External-link icon: a small ↗ after any outbound link in prose. Internal links are relative (/about/) so they never match href^='http'; the own-domain / localhost exclusions cover the rare absolute self-link. Decorative — links open in the same tab, so no extra announcement. Reuses the static external.svg (its #888 stroke reads in both themes; a background image can't inherit currentColor).
+   `.no-indicator` opts a link out — use it for any link whose content isn't words (an image-only outbound link like the photo lightbox or static map, which would otherwise draw a stray arrow under the picture). */
 .prose a[href^='http']:not([href*='johanedlund.se']):not([href*='localhost']):not(.no-indicator)::after {
   content: '';
   display: inline-block;

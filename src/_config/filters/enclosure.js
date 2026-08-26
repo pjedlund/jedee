@@ -1,7 +1,6 @@
-/** RSS 2.0 <enclosure> derivation for the Audio + Video podcast feed (audio
- * spec §9, video spec §10). An <enclosure> needs a byte `length` and a MIME `type`, and the only honest source for both is the real file on disk — so these stat the source media at build time. Shared by both media types (Video uses them only for the `file` provider; embeds carry no enclosure).
+/** RSS 2.0 <enclosure> derivation for the Audio + Video podcast feed (audio spec §9, video spec §10). An <enclosure> needs a byte `length` and MIME `type`, both statted from the real file on disk at build time. Shared by both types (Video only for the `file` provider; embeds carry no enclosure).
  *
- * Path convention follows Photo/Recipe, not the spec's page-bundle framing: media lives under src/assets/ and is referenced as "./src/assets/…", which is already disk-relative from the project root, so statSync reads it directly and the public URL is the same path minus "./src". */
+ * Media lives under src/assets/ and is referenced as "./src/assets/…" — disk-relative from the project root, so statSync reads it directly and the public URL is that path minus "./src". */
 
 import { statSync } from 'node:fs';
 import path from 'node:path';

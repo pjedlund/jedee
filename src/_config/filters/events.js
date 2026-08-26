@@ -1,11 +1,6 @@
-/** Event date helpers (spec §9). The upcoming/past archive split (events.njk)
- * needs a build-time date comparison — "is this event still upcoming as of
- * now?" — that dates.js lacks (it holds only toISOString / formatDate). "Now"
- * is frozen at build time on a static site: an event only moves Upcoming → Past
- * when the site is rebuilt. Boundary rule: an in-progress event (started, not
- * ended) counts as upcoming until its `end`; an event with no `end` uses its
- * `start`. Status never enters here — a cancelled event still partitions by
- * date (spec §7); the badge is a presentation concern, not a filter. */
+/** Event date helpers (spec §9). "Now" is frozen at build time — an event only moves Upcoming → Past on rebuild.
+ * Boundary rule: an in-progress event (started, not ended) counts as upcoming until its `end`; with no `end`, its `start`.
+ * Status never enters here — a cancelled event still partitions by date (spec §7); the badge is presentation, not a filter. */
 
 /** True while event.end (or event.start, if no end) is at/after build time. */
 export const isUpcoming = event => {

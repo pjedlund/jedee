@@ -12,8 +12,7 @@
 <meta name="theme-color" content="{{ meta.themeDark }}" media="(prefers-color-scheme: dark)" />
 <meta name="theme-color" content="{{ meta.themeLight }}" media="(prefers-color-scheme: light)" />
 <!-- Search Engines -->
-{# Site-wide noindex during the soft-launch (meta.noindexSite); per-post noindex for `visibility: unlisted` posts (computed in _config/plugins/drafts.js). At
-   1.0.0, flip meta.noindexSite to false — unlisted posts keep their noindex. #}
+{# Site-wide noindex during the soft-launch (meta.noindexSite); per-post noindex for `visibility: unlisted` posts (computed in _config/plugins/drafts.js). At 1.0.0, flip meta.noindexSite to false — unlisted posts keep their noindex. #}
 {% if meta.noindexSite or noindex %}
   <meta name="robots" content="noindex,nofollow" />
   <meta name="googlebot" content="noindex,nofollow" />

@@ -152,8 +152,4 @@ html:has(dialog[open]:modal) {
   }
 }
 
-/* View transition: the @view-transition opt-in that EE ships here (4.5+) moved
-   to base/global-styles.css, wrapped in prefers-reduced-motion: no-preference —
-   the reduce clamp above can't reach ::view-transition-* pseudos, so an ungated
-   opt-in here would run the page crossfade for reduce users. (Expect a keep-ours
-   conflict on this block at the next EE upgrade.) */
+/* View transition: the @view-transition opt-in EE ships here (4.5+) moved to base/global-styles.css, wrapped in prefers-reduced-motion: no-preference — the reduce clamp above can't reach ::view-transition-* pseudos, so an ungated opt-in here would run the crossfade for reduce users. (Expect a keep-ours conflict on this block at the next EE upgrade.) */

@@ -17,9 +17,7 @@
   font-size: var(--size-step-2);
 }
 
-/* make featured image alwyays 16/9
-   (second selector: the featured image is a lightbox now, so the element
-   after the h1 is its div.feature wrapper, not a bare picture/figure) */
+/* Featured image always 16/9. Second selector: the featured image is a lightbox now, so the element after the h1 is its div.feature wrapper, not a bare picture/figure. */
 .post h1 + :is(picture, figure) img,
 .post h1 + .feature picture img {
   max-inline-size: var(--max-img-width, 100%);
@@ -48,8 +46,7 @@
   font-size: var(--size-step-min-1);
 }
 
-/* An icon + its label on the meta line (activity type, date). The cluster gap keeps the
-   items apart; this keeps each glyph tight to its own text. */
+/* An icon + its label on the meta line (activity type, date). The cluster gap keeps the items apart; this keeps each glyph tight to its own text. */
 .post .meta-item {
   display: inline-flex;
   align-items: center;

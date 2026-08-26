@@ -5,11 +5,8 @@
      - masonryLayout     (string)   "thirds" | "50-50"
      - collectionToPaginate (array) the source collection, used for the count + pagination gate
      - paginationMetaKey (string)   meta.js pagination key, e.g. "blog"
-     - archiveBody       (html, optional) rendered INSTEAD of the card grid — for an
-                                    archive that lists its own way (see activities.njk).
-                                    A direct .wrapper child, so breakout classes
-                                    (.feature etc.) work on its root element. A page
-                                    that sets this needs no `pagination:` frontmatter. `pagination.size`, `pagination.items`, and `pagination.pageNumber` come from the wrapper's `pagination:` frontmatter, which Eleventy resolves per page. #}
+     - archiveBody       (html, optional) rendered INSTEAD of the card grid — for an archive that lists its own way (see activities.njk). A direct .wrapper child, so breakout classes (.feature etc.) work on its root. A page that sets this needs no `pagination:` frontmatter.
+   `pagination.size`/`.items`/`.pageNumber` come from the wrapper's `pagination:` frontmatter, resolved per page. #}
 
 <div class="wrapper">
   <header class="full | section" style="--spot-color: var(--color-accent-blue)">
