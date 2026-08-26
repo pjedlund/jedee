@@ -10,15 +10,12 @@ description: |-
   J.S. Bach’s sonatas and partitas for solo violin are towering masterpieces, and tend to overshadow other works written by Baroque composers for the solo instrument. In Solo, the German violinist Isabelle Faust goes hunting for these “lost” pieces, and makes intriguing discoveries. One of these is the Fantasia for Solo Violin in A Minor by Nicola Matteis Jr., whose side-shifting arpeggios Faust floats with featherlight delicacy.
 genre:
   - "[[classical]]"
-  - "[[baroque era]]"
-  - "[[violin]]"
-  - "[[solo instrumental]]"
 year: 2023
 favoriteTrack: Fantasia for Solo Violin in A Minor "Alia Fantasia"
 favoriteTrackUrl: https://music.apple.com/us/song/fantasia-for-solo-violin-in-a-minor-alia-fantasia/1694231242
 similar:
-odesliUrl:
-youtubeSlug:
+odesliUrl: https://song.link/i/1694231242
+youtubeSlug: Eo0xoFnYwNs
 ---
 - [Fantasia for Solo Violin in A Minor "Alia Fantasia"](https://music.apple.com/us/song/fantasia-for-solo-violin-in-a-minor-alia-fantasia/1694231242)
 - [Ayres for the Violin: Preludio](https://music.apple.com/us/song/ayres-for-the-violin-preludio/1694231247)
