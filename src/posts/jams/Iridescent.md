@@ -22,9 +22,9 @@ similar:
 odesliUrl:
 youtubeSlug: PaY-ybT5g4o
 ---
-Been searching for heavy blast beats infused instrumental music for a while now, so really glad I found out about the genre of *Blackgaze* that merges Post-metal, Shoegaze and Black Metal together. And without any overtly satanic symbolism as well.
+I've been searching for heavy blast beat infused instrumental music for a while now, so really glad I found out about the genre of *blackgaze* that merges post-metal, shoegaze and black metal together. And without overtly satanic symbolism as well.
 
-Apparently Deafheaven, that I had as a Jam back in 2014 ([[Dream House]]), is listed as another _Blackgaze_ band but I'm not sure I agree on that.
+Apparently Deafheaven, that I had as a Jam back in 2014 ([[Dream House]]), is listed as another _blackgaze_ band but I'm not sure I agree on that.
 
 [Mountainscape](https://www.metal-archives.com/bands/Mountainscape) is a trio from Reading, England that describe themselves like this:
 
