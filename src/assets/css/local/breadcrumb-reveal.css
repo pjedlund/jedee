@@ -1,33 +1,23 @@
 /*
 BREADCRUMB NAME REVEAL — start page only
-The home crumb's logomark stays put; the wordmark beside it types itself in behind a
-cursor, the cursor blinks twice, then backspaces the name away again. Local bundle:
-breadcrumb.njk only pulls it in on the page whose trail is just the home crumb.
-Resting state (no motion, reduced motion, unsupporting browser) is the bare logomark —
-the name is hidden by default and only the animation ever shows it.
+The wordmark types itself in beside the logomark, the caret blinks twice, then backspaces it away.
 */
 
 .breadcrumb-reveal {
   --reveal-in: 0.65s;
-  --reveal-blink: 0.65s; /* one on/off cycle; two of them = the double blink */
+  --reveal-blink: 0.65s; /* one on/off cycle — it runs twice */
   --reveal-out: 0.5s;
   --reveal-caret-width: 0.1em;
   --reveal-caret-gap: 0.22em;
 
   position: relative;
   margin-inline-start: var(--breadcrumb-gap);
-  /* Padding, not a margin on the caret: the caret is pinned to this box's inline end, so
-     widening the box is what opens a gap after the last glyph — and it keeps the caret
-     inside the travelling clip, where a nudge past the edge would clip it mid-type.
-     ⚠ The caret's own width counts against this: `inset-inline-start: 100%` resolves
-     against the PADDING box, so the padding has to cover the caret plus the gap. */
+  /* ⚠ The caret is pinned to this box's inline end, and its `100%` resolves against the PADDING box — so the gap after the last glyph has to carry the caret's width too. */
   padding-inline-end: calc(var(--reveal-caret-gap) + var(--reveal-caret-width));
   color: var(--color-text);
-  /* Hidden at rest; the reveal animation is what opens it. Negative block insets keep
-     the caret's full height unclipped. */
+  /* Hidden at rest, so no-motion and unsupporting browsers get the bare logomark. Negative block insets keep the caret unclipped. */
   clip-path: inset(-15% 100% -15% 0);
-  /* Reserves its width for the whole page life, so nothing shifts mid-animation. */
-  pointer-events: none;
+  pointer-events: none; /* it keeps its width once hidden — don't let it swallow clicks */
 }
 
 .breadcrumb-caret {
@@ -36,8 +26,7 @@ the name is hidden by default and only the animation ever shows it.
   inset-inline-start: 0;
   inline-size: var(--reveal-caret-width);
   background: var(--color-text);
-  /* Sits just inside the travelling clip edge rather than straddling it. */
-  translate: -100% 0;
+  translate: -100% 0; /* sits inside the clip edge, not straddling it */
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -47,9 +36,7 @@ the name is hidden by default and only the animation ever shows it.
       reveal-backspace var(--reveal-out) ease-in calc(var(--reveal-in) + var(--reveal-blink) * 2) forwards;
   }
 
-  /* The caret's travel mirrors the clip edge (same durations + easings), so it reads as
-     the thing doing the typing. `inset-inline-start` in % is a percentage of this span —
-     the one length CSS can resolve without knowing how wide the name renders. */
+  /* Same durations and easings as the clip above, so the caret rides its edge. A % inset is the one length that tracks the name's width without CSS knowing it. */
   .breadcrumb-caret {
     animation:
       reveal-caret-forward var(--reveal-in) ease-out forwards,
