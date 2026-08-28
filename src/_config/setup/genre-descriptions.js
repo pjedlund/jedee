@@ -39,7 +39,7 @@ const OVERRIDES = {
   'post-black-metal': 'Blackgaze',
   // Written here because Wikipedia's lead sentence is a list of ancestors, not a description of the sound.
   'math-rock': {
-    text: 'Math rock builds its songs out of odd time signatures and interlocking, counted-out rhythms — clean and angular where its metal cousins are heavy.',
+    text: 'Math-rock deconstructs traditional rhythmic patterns with odd time signatures and polyrhythms.',
   },
   // Not genres at all — leftovers from the Apple Music and Bandcamp imports, kept only because posts still carry them.
   contemporary: null,
