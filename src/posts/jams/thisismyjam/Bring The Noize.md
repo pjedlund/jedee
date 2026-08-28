@@ -9,7 +9,7 @@ cover: https://is1-ssl.mzstatic.com/image/thumb/Music128/v4/34/9a/4c/349a4c2e-2a
 description:
 genre:
   - "[[electronic]]"
-  - "[[hip hop]]"
+  - "[[hip-hop]]"
   - "[[alternative hip hop]]"
 year: 2013
 favoriteTrack:

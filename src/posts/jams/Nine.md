@@ -8,7 +8,7 @@ source: https://russiancircles.bandcamp.com/album/nine
 cover: https://f4.bcbits.com/img/a1666412586_10.jpg
 description: Nine by Russian Circles, released 28 August 2026.
 genre:
-  - "[[Rock]]"
+  - "[[rock]]"
   - "[[instrumental]]"
   - "[[metal]]"
   - "[[post-metal]]"
