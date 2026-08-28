@@ -8,13 +8,20 @@ the name is hidden by default and only the animation ever shows it.
 */
 
 .breadcrumb-reveal {
-  --reveal-in: 0.55s;
-  --reveal-blink: 0.45s; /* one on/off cycle; two of them = the double blink */
-  --reveal-out: 0.45s;
-  --reveal-caret-width: 0.09em;
+  --reveal-in: 0.65s;
+  --reveal-blink: 0.65s; /* one on/off cycle; two of them = the double blink */
+  --reveal-out: 0.5s;
+  --reveal-caret-width: 0.19em;
+  --reveal-caret-gap: 0.22em;
 
   position: relative;
   margin-inline-start: var(--breadcrumb-gap);
+  /* Padding, not a margin on the caret: the caret is pinned to this box's inline end, so
+     widening the box is what opens a gap after the last glyph — and it keeps the caret
+     inside the travelling clip, where a nudge past the edge would clip it mid-type.
+     ⚠ The caret's own width counts against this: `inset-inline-start: 100%` resolves
+     against the PADDING box, so the padding has to cover the caret plus the gap. */
+  padding-inline-end: calc(var(--reveal-caret-gap) + var(--reveal-caret-width));
   color: var(--color-text);
   /* Hidden at rest; the reveal animation is what opens it. Negative block insets keep
      the caret's full height unclipped. */
