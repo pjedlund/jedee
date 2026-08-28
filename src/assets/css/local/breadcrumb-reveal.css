@@ -5,11 +5,11 @@ The wordmark types itself in beside the logomark, the caret blinks twice, then b
 
 .breadcrumb-reveal {
   --reveal-in: 0.65s;
-  --reveal-blink: 0.65s; /* one on/off cycle — it runs twice */
+  --reveal-blink: 0.75s; /* one on/off cycle — it runs twice */
   --reveal-out: 0.5s;
   --reveal-caret-width: 0.1em;
   --reveal-caret-gap: 0.22em;
-  --reveal-delay: 0.4s; /* dead time before the first glyph appears */
+  --reveal-delay: 1s; /* dead time before the first glyph appears */
 
   /* Start of each step, so retiming never means re-adding delays by hand. */
   --reveal-at-blink: calc(var(--reveal-delay) + var(--reveal-in));
