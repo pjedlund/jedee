@@ -10,7 +10,7 @@ description:
 genre:
   - "[[rock]]"
   - "[[death metal]]"
-  - "[[doom metal]]"
+  - "[[doom]]"
 year: 2008
 favoriteTrack:
 favoriteTrackUrl:

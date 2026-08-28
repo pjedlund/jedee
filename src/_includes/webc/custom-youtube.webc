@@ -15,11 +15,63 @@
   }
 </script>
 <style>
-  /* Hide without JS */
-  is-land:not(:defined).video-wrapper {
-    display: none;
+  /* ⚠ These rules must stay OUT of the island's <template data-island>: inside it they only land on hydration, and the box collapses to 0 height until then — a layout shift. */
+  lite-youtube {
+    max-inline-size: 100% !important;
+    background-size: cover;
+  }
+
+  /* Steady placeholder on the WRAPPER so the poster (on lite-youtube) fades in over it without the placeholder flashing. Surface = the mega-menu overlay sheet (main-nav.css), so the box reads as header chrome, light per theme.
+     The mid-gray logomark at 0.1 alpha darkens the light sheet and lightens the dark one, so one mark works in both modes. Corners use border-radius on both layers, NOT overflow:hidden — that would clip the play button's focus ring, drawn outside the box. */
+  is-land.video-wrapper {
+    display: block;
+    position: relative;
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    border-radius: 0.2em;
+    --yt-surface: color-mix(in oklab, white 45%, var(--color-bg));
+    --yt-logo-mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%23808080' fill-opacity='.1'%3E%3Cpath d='m50 0 .588.003V0h9.706v30.882h-9.706v.009a19 19 0 0 0-.588-.009c-10.558 0-19.118 8.559-19.118 19.118S39.441 69.118 50 69.118 69.118 60.559 69.118 50V30.882C69.118 13.826 82.945 0 100 0v50c0 27.614-22.386 50-50 50S0 77.614 0 50 22.386 0 50 0'/%3E%3C/svg%3E");
+    background-color: var(--yt-surface);
+    background-image: var(--yt-logo-mark);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: clamp(2.5rem, 15%, 5rem);
+  }
+  /* dark mega-menu sheet — mirrors main-nav.css's [data-theme='dark'] override */
+  :root[data-theme='dark'] is-land.video-wrapper {
+    --yt-surface: color-mix(in oklab, white 7%, var(--color-bg));
+  }
+
+  /* lite-youtube carries just the poster, transparent so the wrapper's placeholder shows through until it's ready, then fades in. A one-shot keyframe (not a default opacity:0) so a stalled hydration can't strand the play button invisible: no [ready] → opacity stays 1. */
+  is-land lite-youtube {
+    background-color: transparent;
+    border-radius: 0.2em;
+  }
+  /* Keyboard focus ring for the play button: lite-yt-embed's `contain: content` paint-clips anything outside the box — including the site's OUTSET focus ring (outline-offset: 0.3ch), leaving focus invisible. Inset the ring (negative offset) so it lands inside the box and stays visible. */
+  is-land lite-youtube .lyt-playbtn {
+    --focus-offset: -4px;
+  }
+  is-land[ready] lite-youtube {
+    /* gotta set in `style` to override the 480w image from lite-youtube */
+    --yt-poster-img-url: var(--yt-poster-img-url-lazy);
+    animation: yt-poster-fade var(--yt-poster-fade, 350ms) ease-out;
+  }
+  @keyframes yt-poster-fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    is-land[ready] lite-youtube {
+      animation: none;
+    }
   }
 </style>
+<!-- Hide without JS; the YouTube link below the player is the no-JS path. -->
+<noscript><style>is-land.video-wrapper{display:none}</style></noscript>
 <custom-youtube webc:root class="flow">
   <is-land on:visible class="video-wrapper">
     <lite-youtube
@@ -31,61 +83,6 @@
     ></lite-youtube>
 
     <template data-island="once" webc:raw>
-      <style>
-        lite-youtube {
-          max-inline-size: 100% !important;
-          background-size: cover;
-        }
-
-        /* Steady placeholder on the WRAPPER so the poster (on lite-youtube) fades in over it without the placeholder flashing. Surface = the mega-menu overlay sheet (main-nav.css), so the box reads as header chrome, light per theme.
-           The mid-gray logomark at 0.1 alpha darkens the light sheet and lightens the dark one, so one mark works in both modes. Corners use border-radius on both layers, NOT overflow:hidden — that would clip the play button's focus ring, drawn outside the box. */
-        is-land.video-wrapper {
-          display: block;
-          position: relative;
-          aspect-ratio: 16 / 9;
-          width: 100%;
-          border-radius: 0.2em;
-          --yt-surface: color-mix(in oklab, white 45%, var(--color-bg));
-          --yt-logo-mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%23808080' fill-opacity='.1'%3E%3Cpath d='m50 0 .588.003V0h9.706v30.882h-9.706v.009a19 19 0 0 0-.588-.009c-10.558 0-19.118 8.559-19.118 19.118S39.441 69.118 50 69.118 69.118 60.559 69.118 50V30.882C69.118 13.826 82.945 0 100 0v50c0 27.614-22.386 50-50 50S0 77.614 0 50 22.386 0 50 0'/%3E%3C/svg%3E");
-          background-color: var(--yt-surface);
-          background-image: var(--yt-logo-mark);
-          background-repeat: no-repeat;
-          background-position: center;
-          background-size: clamp(2.5rem, 15%, 5rem);
-        }
-        /* dark mega-menu sheet — mirrors main-nav.css's [data-theme='dark'] override */
-        :root[data-theme='dark'] is-land.video-wrapper {
-          --yt-surface: color-mix(in oklab, white 7%, var(--color-bg));
-        }
-
-        /* lite-youtube carries just the poster, transparent so the wrapper's placeholder shows through until it's ready, then fades in. A one-shot keyframe (not a default opacity:0) so a stalled hydration can't strand the play button invisible: no [ready] → opacity stays 1. */
-        is-land lite-youtube {
-          background-color: transparent;
-          border-radius: 0.2em;
-        }
-        /* Keyboard focus ring for the play button: lite-yt-embed's `contain: content` paint-clips anything outside the box — including the site's OUTSET focus ring (outline-offset: 0.3ch), leaving focus invisible. Inset the ring (negative offset) so it lands inside the box and stays visible. */
-        is-land lite-youtube .lyt-playbtn {
-          --focus-offset: -4px;
-        }
-        is-land[ready] lite-youtube {
-          /* gotta set in `style` to override the 480w image from lite-youtube */
-          --yt-poster-img-url: var(--yt-poster-img-url-lazy);
-          animation: yt-poster-fade var(--yt-poster-fade, 350ms) ease-out;
-        }
-        @keyframes yt-poster-fade {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          is-land[ready] lite-youtube {
-            animation: none;
-          }
-        }
-      </style>
       <link rel="stylesheet" href="/assets/components/lite-yt-embed.css" />
       <script type="module" src="/assets/components/lite-yt-embed.js"></script>
     </template>

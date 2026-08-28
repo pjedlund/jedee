@@ -10,7 +10,6 @@ description:
 genre:
   - "[[electronic]]"
   - "[[downtempo]]"
-  - "[[electronica]]"
 year: 2013
 favoriteTrack:
 favoriteTrackUrl:

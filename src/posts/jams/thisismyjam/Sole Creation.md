@@ -9,7 +9,7 @@ cover: https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/0a/90/86/0a9086a7-88
 description:
 genre:
   - "[[metal]]"
-  - "[[doom metal]]"
+  - "[[doom]]"
   - "[[rock]]"
 year: 2013
 favoriteTrack:

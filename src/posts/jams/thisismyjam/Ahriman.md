@@ -9,7 +9,7 @@ cover: https://is1-ssl.mzstatic.com/image/thumb/Music/v4/f2/46/ff/f246ff1a-e344-
 description:
 genre:
   - "[[rock]]"
-  - "[[doom metal]]"
+  - "[[doom]]"
   - "[[drone]]"
 year: 2012
 favoriteTrack:
