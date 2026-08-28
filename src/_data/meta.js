@@ -86,8 +86,9 @@ export const navigation = {
   ariaTop: 'Main',
   ariaBottom: 'Complementary',
   ariaPlatforms: 'Platforms',
-  // Header chrome — two independent toggles (header.njk). breadcrumb: true = trail, false = logomark + wordmark. hideNav: see below.
+  // Header chrome — three independent toggles (header.njk). breadcrumb: true = trail, false = logomark + wordmark. hideNav: see below.
   breadcrumb: true,
+  nameReveal: true, // start page only: the wordmark types in beside the logomark, blinks twice, backspaces away (breadcrumb-reveal.css)
   hideNav: true // @until 1.0.0 — soft-launch: hides the main nav in PRODUCTION only — header.njk still shows it in `eleventy --serve`.
 };
 // Static label for the header light/dark toggle; aria-pressed carries the state.

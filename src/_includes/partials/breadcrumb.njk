@@ -17,6 +17,10 @@
           >
             {% svg "misc/logo" %}
             <span class="visually-hidden">{{ meta.siteName }}, home</span>
+            {# Decorative copy of the name — the real one is the visually-hidden label above, so this is aria-hidden. Switched off with meta.navigation.nameReveal. #}
+            {% if crumb.current and meta.navigation.nameReveal %}
+              <span class="breadcrumb-reveal" aria-hidden="true">{{ meta.siteName }}<span class="breadcrumb-caret"></span></span>
+            {% endif %}
           </a>
         {% elif crumb.current %}
           <span class="breadcrumb-current" aria-current="page">
@@ -29,3 +33,9 @@
     {% endfor %}
   </ol>
 </nav>
+
+{% if page.url == "/" and meta.navigation.nameReveal %}
+  {% css "local" %}
+    {% include "css/breadcrumb-reveal.css" %}
+  {% endcss %}
+{% endif %}

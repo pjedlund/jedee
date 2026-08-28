@@ -1,0 +1,81 @@
+/*
+BREADCRUMB NAME REVEAL — start page only
+The wordmark types itself in beside the logomark, the caret blinks twice, then backspaces it away.
+*/
+
+.breadcrumb-reveal {
+  --reveal-in: 0.65s;
+  --reveal-blink: 0.75s; /* one on/off cycle — it runs twice */
+  --reveal-out: 0.5s;
+  --reveal-caret-width: 0.1em;
+  --reveal-caret-gap: 0.22em;
+  --reveal-delay: 1s; /* dead time before the first glyph appears */
+
+  /* Start of each step, so retiming never means re-adding delays by hand. */
+  --reveal-at-blink: calc(var(--reveal-delay) + var(--reveal-in));
+  --reveal-at-out: calc(var(--reveal-at-blink) + var(--reveal-blink) * 2);
+  --reveal-at-end: calc(var(--reveal-at-out) + var(--reveal-out));
+
+  position: relative;
+  margin-inline-start: var(--breadcrumb-gap);
+  /* ⚠ The caret is pinned to this box's inline end, and its `100%` resolves against the PADDING box — so the gap after the last glyph has to carry the caret's width too. */
+  padding-inline-end: calc(var(--reveal-caret-gap) + var(--reveal-caret-width));
+  color: var(--color-text);
+  /* Hidden at rest, so no-motion and unsupporting browsers get the bare logomark. Negative block insets keep the caret unclipped. */
+  clip-path: inset(-15% 100% -15% 0);
+  pointer-events: none; /* it keeps its width once hidden — don't let it swallow clicks */
+}
+
+.breadcrumb-caret {
+  position: absolute;
+  inset-block: -5%;
+  inset-inline-start: 0;
+  inline-size: var(--reveal-caret-width);
+  background: var(--color-text);
+  translate: -100% 0; /* sits inside the clip edge, not straddling it */
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .breadcrumb-reveal {
+    animation:
+      reveal-type var(--reveal-in) ease-out var(--reveal-delay) both,
+      reveal-backspace var(--reveal-out) ease-in var(--reveal-at-out) forwards;
+  }
+
+  /* Same durations and easings as the clip above, so the caret rides its edge. A % inset is the one length that tracks the name's width without CSS knowing it. */
+  .breadcrumb-caret {
+    animation:
+      reveal-caret-forward var(--reveal-in) ease-out var(--reveal-delay) forwards,
+      reveal-blink var(--reveal-blink) step-end var(--reveal-at-blink) 2,
+      reveal-caret-back var(--reveal-out) ease-in var(--reveal-at-out) forwards,
+      reveal-caret-hide 0.01s linear var(--reveal-at-end) forwards;
+  }
+}
+
+@keyframes reveal-type {
+  from { clip-path: inset(-15% 100% -15% 0); }
+  to   { clip-path: inset(-15% 0 -15% 0); }
+}
+
+@keyframes reveal-backspace {
+  from { clip-path: inset(-15% 0 -15% 0); }
+  to   { clip-path: inset(-15% 100% -15% 0); }
+}
+
+@keyframes reveal-caret-forward {
+  from { inset-inline-start: 0; }
+  to   { inset-inline-start: 100%; }
+}
+
+@keyframes reveal-caret-back {
+  from { inset-inline-start: 100%; }
+  to   { inset-inline-start: 0; }
+}
+
+@keyframes reveal-blink {
+  50% { opacity: 0; }
+}
+
+@keyframes reveal-caret-hide {
+  to { opacity: 0; }
+}
