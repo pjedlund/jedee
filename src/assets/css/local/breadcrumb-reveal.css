@@ -11,7 +11,7 @@ the name is hidden by default and only the animation ever shows it.
   --reveal-in: 0.65s;
   --reveal-blink: 0.65s; /* one on/off cycle; two of them = the double blink */
   --reveal-out: 0.5s;
-  --reveal-caret-width: 0.19em;
+  --reveal-caret-width: 0.1em;
   --reveal-caret-gap: 0.22em;
 
   position: relative;
