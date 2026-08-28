@@ -9,6 +9,12 @@ The wordmark types itself in beside the logomark, the caret blinks twice, then b
   --reveal-out: 0.5s;
   --reveal-caret-width: 0.1em;
   --reveal-caret-gap: 0.22em;
+  --reveal-delay: 0s; /* dead time before the first glyph appears */
+
+  /* Start of each step, so retiming never means re-adding delays by hand. */
+  --reveal-at-blink: calc(var(--reveal-delay) + var(--reveal-in));
+  --reveal-at-out: calc(var(--reveal-at-blink) + var(--reveal-blink) * 2);
+  --reveal-at-end: calc(var(--reveal-at-out) + var(--reveal-out));
 
   position: relative;
   margin-inline-start: var(--breadcrumb-gap);
@@ -32,17 +38,17 @@ The wordmark types itself in beside the logomark, the caret blinks twice, then b
 @media (prefers-reduced-motion: no-preference) {
   .breadcrumb-reveal {
     animation:
-      reveal-type var(--reveal-in) ease-out both,
-      reveal-backspace var(--reveal-out) ease-in calc(var(--reveal-in) + var(--reveal-blink) * 2) forwards;
+      reveal-type var(--reveal-in) ease-out var(--reveal-delay) both,
+      reveal-backspace var(--reveal-out) ease-in var(--reveal-at-out) forwards;
   }
 
   /* Same durations and easings as the clip above, so the caret rides its edge. A % inset is the one length that tracks the name's width without CSS knowing it. */
   .breadcrumb-caret {
     animation:
-      reveal-caret-forward var(--reveal-in) ease-out forwards,
-      reveal-blink var(--reveal-blink) step-end var(--reveal-in) 2,
-      reveal-caret-back var(--reveal-out) ease-in calc(var(--reveal-in) + var(--reveal-blink) * 2) forwards,
-      reveal-caret-hide 0.01s linear calc(var(--reveal-in) + var(--reveal-blink) * 2 + var(--reveal-out)) forwards;
+      reveal-caret-forward var(--reveal-in) ease-out var(--reveal-delay) forwards,
+      reveal-blink var(--reveal-blink) step-end var(--reveal-at-blink) 2,
+      reveal-caret-back var(--reveal-out) ease-in var(--reveal-at-out) forwards,
+      reveal-caret-hide 0.01s linear var(--reveal-at-end) forwards;
   }
 }
 
