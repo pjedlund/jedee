@@ -11,7 +11,7 @@ genre:
   - "[[blackgaze]]"
   - "[[metal]]"
   - "[[instrumental]]"
-  - "[[post-blackmetal]]"
+  - "[[post-black metal]]"
   - "[[post-metal]]"
   - "[[post-rock]]"
   - "[[soundtrack]]"

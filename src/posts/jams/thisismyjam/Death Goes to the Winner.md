@@ -8,7 +8,7 @@ source: https://www.youtube.com/watch?v=eZiB66BraPo
 cover: /assets/images/listening/2014-01-03-death-goes-to-the-winner-mb.jpg
 description:
 genre:
-  - "[[doom metal]]"
+  - "[[doom]]"
   - "[[noise]]"
   - "[[rock]]"
 year:
