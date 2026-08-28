@@ -17,6 +17,10 @@
           >
             {% svg "misc/logo" %}
             <span class="visually-hidden">{{ meta.siteName }}, home</span>
+            {# Start page only: the wordmark types itself in beside the logomark, blinks twice and backspaces away (breadcrumb-reveal.css). Decorative — the name is already in the visually-hidden label above, so this copy is aria-hidden. #}
+            {% if crumb.current %}
+              <span class="breadcrumb-reveal" aria-hidden="true">{{ meta.siteName }}<span class="breadcrumb-caret"></span></span>
+            {% endif %}
           </a>
         {% elif crumb.current %}
           <span class="breadcrumb-current" aria-current="page">
@@ -29,3 +33,9 @@
     {% endfor %}
   </ol>
 </nav>
+
+{% if page.url == "/" %}
+  {% css "local" %}
+    {% include "css/breadcrumb-reveal.css" %}
+  {% endcss %}
+{% endif %}
