@@ -14,7 +14,11 @@ schema: BlogPosting
 
     {# Optional embedded performance (e.g. an archived This Is My Jam YouTube link). Reuses the shipped custom-youtube WebC component, which renders here because the WebC plugin runs with useTransform:true (same pattern as video.njk). #}
     {% if youtubeSlug %}
-      <custom-youtube @slug="{{ youtubeSlug }}" @poster="{{ youtubeSlug | youtubePoster }}" @label="{{ youtubeSlug | youtubeTitle(title) }}"></custom-youtube>
+      {# One slug or a list of them; a bare {% for %} over a string would walk it character by character, same as `genre` below. #}
+      {% set slugs = [youtubeSlug] if youtubeSlug is string else youtubeSlug %}
+      {% for slug in slugs %}
+        <custom-youtube @slug="{{ slug }}" @poster="{{ slug | youtubePoster }}" @label="{{ slug | youtubeTitle(title) }}"></custom-youtube>
+      {% endfor %}
     {% endif %}
 
     {% if source %}<data hidden class="u-listen-of" value="{{ source }}"></data>{% endif %}
