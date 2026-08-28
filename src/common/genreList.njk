@@ -17,7 +17,8 @@ eleventyComputed:
   <div class="flow prose">
     <p>
       {{ genreInfo.description }}
-      <a href="{{ genreInfo.source }}" rel="external">{{ genreInfo.sourceTitle }} on Wikipedia</a>
+      {# ⚠ Wikipedia text is CC BY-SA: this credit is the licence, not politeness. Descriptions written in-house carry no `source` and so no link. #}
+      {% if genreInfo.source %}<a href="{{ genreInfo.source }}" rel="external">{{ genreInfo.sourceTitle }} on Wikipedia</a>{% endif %}
     </p>
   </div>
 {% endif %}
