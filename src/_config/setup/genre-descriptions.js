@@ -24,7 +24,7 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 const unwikilink = value => String(value).replace(/\[\[([^\]|]+)(\|[^\]]*)?\]\]/g, '$1').trim();
 const slug = value => value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
-// The curated half of this script — a genre name is not a Wikipedia title, and the gap is not guessable. A string forces the article to use; `null` means the value deliberately gets no description. ⚠ Without these, `country` describes a political entity, `americana` describes historical artifacts and `noise` describes unwanted sound. Delete a slug here and re-run `fetch` to reconsider it.
+// The curated half of this script — a genre name is not a Wikipedia title, and the gap is not guessable. A string forces the article to use; `{text}` is a description written here instead of taken from Wikipedia (no source link, so keep the words your own); `null` means the value deliberately gets no description. ⚠ Without these, `country` describes a political entity, `americana` describes historical artifacts and `noise` describes unwanted sound. Delete a slug here and re-run `fetch` to reconsider it.
 const OVERRIDES = {
   country: 'Country music',
   americana: 'Americana music',
@@ -36,7 +36,11 @@ const OVERRIDES = {
   'romantic-era': 'Romantic music',
   'baroque-era': 'Baroque music',
   'modern-dancehall': 'Dancehall',
-  'post-blackmetal': 'Blackgaze',
+  'post-black-metal': 'Blackgaze',
+  // Written here because Wikipedia's lead sentence is a list of ancestors, not a description of the sound.
+  'math-rock': {
+    text: 'Math rock builds its songs out of odd time signatures and interlocking, counted-out rhythms — clean and angular where its metal cousins are heavy.',
+  },
   // Not genres at all — leftovers from the Apple Music and Bandcamp imports, kept only because posts still carry them.
   contemporary: null,
   worldwide: null,
@@ -126,6 +130,13 @@ async function runFetch(genres) {
     let result = null;
     const tried = [];
 
+    if (OVERRIDES[genre.slug]?.text) {
+      cache[genre.slug] = {name: genre.name, count: genre.count, exact: true, own: true, description: OVERRIDES[genre.slug].text};
+      fs.writeFileSync(CACHE, JSON.stringify(cache, null, 2));
+      console.log(`✎ ${genre.name} (described here, not from Wikipedia)`);
+      continue;
+    }
+
     if (genre.slug in OVERRIDES && OVERRIDES[genre.slug] === null) {
       cache[genre.slug] = {name: genre.name, count: genre.count, skipped: true};
       fs.writeFileSync(CACHE, JSON.stringify(cache, null, 2));
@@ -174,7 +185,9 @@ function runBuild(genres, write) {
       if (!entry?.skipped) missing.push(genre);
       continue;
     }
-    data[genre.slug] = {description: entry.description, source: entry.url, sourceTitle: entry.title};
+    data[genre.slug] = entry.own
+      ? {description: entry.description}
+      : {description: entry.description, source: entry.url, sourceTitle: entry.title};
     // Two independent ways a description can be about the wrong subject: a redirect took us elsewhere, or the title matched but the article isn't musical. Either one wants eyes.
     if (!entry.exact || !looksMusical(entry.description)) review.push({genre, entry});
   }
