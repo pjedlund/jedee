@@ -29,7 +29,7 @@ You can recognise a DTCG file by its reserved keys: `$type`, `$value`, `$descrip
 
 That is it. The specification is deliberately silent on whether you should use `kebab-case`, `camelCase`, flat hyphenated names, or hierarchical nesting. Its examples use kebab-case (`color-text-primary`) and nested groups (`color.brand.primary`), but those are illustrative, not normative.
 
-> "The specification provides no prescriptive guidance on naming conventions."
+> The specification provides no prescriptive guidance on naming conventions.
 
 In other words: the *format* is standardised, the *vocabulary* is not. Everything past those three rules is convention, and the conventions come from the design systems that wrote them down first.
 

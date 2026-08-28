@@ -26,6 +26,10 @@ Russian Circles hits it out of the park for the ninth time. Despite deceptively 
 
 The engineering is fantastic and I don't think I ever heard a better sound. The album was produced by Kurt Ballou and recorded at the late legendary Steve Albini's [Electrical Audio](https://www.electricalaudio.com/) in Chicago.
 
+> Without vocals, we can share an emotion, but not a context or a lyrical theme. Anger is an authentic emotion, and if you can resonate with that, great—because it's not fake. It's not like, oh, we're trying to be intense.
+>
+> — [Mike Sullivan](https://newnoisemagazine.com/interviews/interview-russian-circles-journey-through-the-unspoken/)
+
 ## Tracks
 
 1. [Borehole](https://russiancircles.bandcamp.com/track/borehole)
