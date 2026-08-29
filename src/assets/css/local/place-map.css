@@ -159,6 +159,15 @@ place-map[data-map-ready] > .place-map-static {
 [data-place-map-canvas] .leaflet-tile {
   border: 0;
 }
+/* Dark mode for the OSM default layer only — CARTO's ready-made dark basemap needs an API key now. The class comes from the layer's `className` option, so satellite/topographic stay untouched. */
+[data-theme='dark'] [data-place-map-canvas] .tiles-themed {
+  filter: invert(1) hue-rotate(180deg) brightness(0.92) contrast(0.9);
+}
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme='light']) [data-place-map-canvas] .tiles-themed {
+    filter: invert(1) hue-rotate(180deg) brightness(0.92) contrast(0.9);
+  }
+}
 /* the global `svg { block-size: 0.6lh }` would collapse Leaflet's overlay <svg> (the circleMarker) to nothing */
 [data-place-map-canvas] .leaflet-overlay-pane svg {
   block-size: auto;

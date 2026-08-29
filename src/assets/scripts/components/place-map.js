@@ -7,12 +7,9 @@
 //  - route (an activity post): a slotted GeoJSON LineString.
 import L from 'leaflet';
 
-const TILES = {
-  light: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-  dark: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-};
-const ATTRIB =
-  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>';
+// ⚠ CARTO's basemaps now demand an API key, so the default layer is plain OSM and dark mode is a CSS filter on this layer alone (.tiles-themed in place-map.css).
+const TILES = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+const ATTRIB = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 // Alternate base layers offered by the tile switch (the themed "Map" default is built per-map in makeMap). All free to use WITH attribution — Leaflet shows the active layer's automatically. Esri's World Imagery URL is {z}/{y}/{x} (row before column).
 const BASE_LAYERS = [
   [
@@ -29,7 +26,6 @@ const BASE_LAYERS = [
         'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
     },
   ],
-  ['Streets', 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 20, attribution: ATTRIB }],
 ];
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 // Marker keeps the site's orange; read the token so it tracks the palette.
@@ -109,8 +105,8 @@ function makeMap(el, { center, zoom, bounds, place, defaultBase = 'Map', fitPadd
   el.setAttribute('aria-label', place ? `Map of ${place}` : 'Map of this location');
   L.control.zoom({ position: 'bottomleft' }).addTo(map);
 
-  // "Map" = the themed CARTO basemap (its light/dark tracks the page theme; see onTheme). Satellite / Topographic / Streets are fixed styles. Each layer carries its own attribution option, so the single attribution control shows whichever base is active.
-  const mapTiles = L.tileLayer(TILES[theme], { maxZoom: 19, attribution: ATTRIB });
+  // "Map" = OSM, darkened by CSS when the page theme is dark (see .tiles-themed). Satellite / Topographic are fixed styles. Each layer carries its own attribution option, so the single attribution control shows whichever base is active.
+  const mapTiles = L.tileLayer(TILES, { maxZoom: 19, attribution: ATTRIB, className: 'tiles-themed' });
   const bases = { Map: mapTiles };
   for (const [name, url, opts] of BASE_LAYERS) bases[name] = L.tileLayer(url, opts);
 
@@ -152,13 +148,11 @@ function makeMap(el, { center, zoom, bounds, place, defaultBase = 'Map', fitPadd
     dots.forEach((d) => d.setRadius(r));
   });
 
-  // Re-tile + re-stroke when the site theme flips, so the map never keeps stale light/dark tiles after a toggle (old inline-map bug).
+  // Re-stroke the dots when the site theme flips (the tiles follow via CSS).
   const onTheme = () => {
     const next = pageTheme();
     if (next === theme) return;
     theme = next;
-    // Redraws in place when "Map" is the shown layer; a no-op on the theme-agnostic alternates (setUrl on a detached layer just stores the URL for next time it's shown), so a theme flip never overrides a manual Satellite/Topo/Streets choice.
-    mapTiles.setUrl(TILES[theme]);
     dots.forEach((d) => d.setStyle({ color: markerStroke(theme) }));
   };
   new MutationObserver(onTheme).observe(document.documentElement, {
