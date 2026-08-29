@@ -1,18 +1,19 @@
 ---
-title: "Solace"
+title: Solace
 draft: false
-date: "2026-07-06T21:19:09+02:00"
+date: 2026-07-06T21:19:09+02:00
 artist: "[[Jakob]]"
-album: "Solace"
-source: "https://music.apple.com/se/album/solace/1774379919"
-cover: "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/1f/0c/7b/1f0c7b00-610a-a908-17bf-0737fa9ed2ed/9420058716974.jpg/1200x630bb.jpg"
+album: Solace
+source: https://music.apple.com/se/album/solace/1774379919
+cover: https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/1f/0c/7b/1f0c7b00-610a-a908-17bf-0737fa9ed2ed/9420058716974.jpg/1200x630bb.jpg
 description:
 genre:
   - "[[rock]]"
   - "[[post-rock]]"
+  - "[[instrumental]]"
 year: 2006
-favoriteTrack: "Everything All of the Time"
-favoriteTrackUrl: "https://music.apple.com/se/song/everything-all-of-the-time/1774380712"
+favoriteTrack: Everything All of the Time
+favoriteTrackUrl: https://music.apple.com/se/song/everything-all-of-the-time/1774380712
 similar:
 odesliUrl:
 youtubeSlug: uixEOC5ieC8

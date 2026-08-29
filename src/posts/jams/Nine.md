@@ -14,21 +14,25 @@ genre:
   - "[[post-metal]]"
   - "[[math-rock]]"
 year: 2026
-favoriteTrack: Empath
-favoriteTrackUrl: https://russiancircles.bandcamp.com/track/empath
+favoriteTrack: Eluvial
+favoriteTrackUrl: https://russiancircles.bandcamp.com/track/eluvial
 odesliUrl:
 youtubeSlug:
+  - mlqjZnVxew8
   - qrb64_QFetU
   - pnpZswkdI94
 ---
+Russian Circles hits it out of the park for the ninth time. Despite deceptively simple compositions in line with earlier themes and structures, every track manages to feel brand new in the best possible way: like a discovery.
 
-Russian Circles hits it out of the park for the ninth time. Despite deceptively simple compositions fully in line with earlier themes and structures, every track manages to feel brand new in the best possible way: like a discovery.
+The engineering is fantastic and I don't think I ever heard a better sound. The album was recorded by [[Aimless Arrow|Kurt Ballou]] at the late legendary [[Didn't We Deserve a Look at You the Way You Really Are|Steve Albini]]'s [Electrical Audio](https://www.electricalaudio.com/) in Chicago.
 
-The engineering is fantastic and I don't think I ever heard a better sound. The album was produced by Kurt Ballou and recorded at the late legendary Steve Albini's [Electrical Audio](https://www.electricalaudio.com/) in Chicago.
+Russian Circles has a humble and sympathetic attitude that shines through in interviews. They have stated that they avoid lyrics since it is a way to force a narrative on the listener. 
 
 > Without vocals, we can share an emotion, but not a context or a lyrical theme. Anger is an authentic emotion, and if you can resonate with that, great—because it's not fake. It's not like, oh, we're trying to be intense.
 >
 > — [Mike Sullivan](https://newnoisemagazine.com/interviews/interview-russian-circles-journey-through-the-unspoken/)
+
+My favorite track is [Eluvial](https://russiancircles.bandcamp.com/track/eluvial), but all tracks are solid.
 
 ## Tracks
 
