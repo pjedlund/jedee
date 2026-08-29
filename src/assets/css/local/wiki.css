@@ -12,3 +12,17 @@ The "part of the AI wiki" banner at the top of every wiki page. Reads like a cod
   border: 1px solid var(--wiki-eyebrow-border);
   border-radius: var(--border-radius-medium);
 }
+
+/*
+WIKI LOG ENTRIES
+_log.md is a run of dated records whose h2 is the whole record — "[2026-08-29] ingest | The PhotoSwipe lightbox" — not a chapter title. At the global h2 size each one wraps to two lines and the page reads as forty chapters. Scoped by data-wiki-log (set in wiki.njk) so ordinary wiki headings keep the display size.
+*/
+.prose[data-wiki-log] h2 {
+  --flow-space: var(--space-xl);
+
+  font-size: var(--size-step-1);
+  line-height: var(--leading-standard);
+  padding-block-start: var(--space-m);
+  /* ⚠ Not var(--stroke): that resolves to --color-bg-accent, a surface token that is white in the light theme and vanishes as a line on the page. --color-bg-accent-2 is what the site's own <hr> uses. */
+  border-block-start: var(--border-thickness) solid var(--color-bg-accent-2);
+}
