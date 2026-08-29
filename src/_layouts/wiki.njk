@@ -4,7 +4,8 @@ layout: base
 
 {# Private LLM wiki page with the full site chrome (header/nav/breadcrumb, footer, theme toggle — all from base.njk). Unlike post.njk this is NOT an h-entry: no microformats, no webmentions, no feed, no entry-footer — so the posts' IndieWeb machinery never sees it. See the spec, _local/design/Plan - Wiki as a real post type.md. The eyebrow's /wiki/ link doubles as the way back to the index; on the index page it's a harmless self-link. #}
 <div class="region" style="--region-space-top: var(--space-xl-2xl)">
-  <article class="wrapper flow prose">
+  {# _log is ~40 dated entries rather than an essay, so its h2s get the compact entry treatment in wiki.css. #}
+  <article class="wrapper flow prose"{% if page.fileSlug == "_log" %} data-wiki-log{% endif %}>
     <p class="wiki-eyebrow | popout">
       Part of the <a href="/wiki/">JEDEE wiki</a> — pages written by an AI (Claude Code), supervised by Johan.
     </p>
