@@ -18,7 +18,7 @@ cast:
   - "Danny Huston"
   - "Lauren Bacall"
   - "Alison Elliott"
-cover: "https://a.ltrbxd.com/resized/sm/upload/47/69/xz/jf/8iYcbxHwArwiqtPSU0aeuGawGrP-0-230-0-345-crop.jpg?v=76abf7d9b0"
+cover: "https://a.ltrbxd.com/resized/sm/upload/47/69/xz/jf/8iYcbxHwArwiqtPSU0aeuGawGrP-0-1000-0-1500-crop.jpg?v=76abf7d9b0"
 plot: "It took Anna 10 years to recover from the death of her husband, Sean, but now she's on the verge of marrying her boyfriend, Joseph, and finally moving on. However, on the night of her engagement party, a young boy named Sean turns up, saying he is her dead husband reincarnated. At first she ignores the child, but his knowledge of her former husband's life is uncanny, leading her to believe that he might be telling the truth."
 year: 2004
 ---

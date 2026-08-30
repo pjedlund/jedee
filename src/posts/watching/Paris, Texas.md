@@ -16,7 +16,7 @@ cast:
   - "[[Dean Stockwell]]"
   - "[[Hunter Carson]]"
   - "[[Aurore Clément]]"
-cover: "https://a.ltrbxd.com/resized/film-poster/5/1/4/6/9/51469-paris-texas-0-230-0-345-crop.jpg?v=c8f2743612"
+cover: "https://a.ltrbxd.com/resized/film-poster/5/1/4/6/9/51469-paris-texas-0-1000-0-1500-crop.jpg?v=c8f2743612"
 plot: "A man wanders out of the desert not knowing who he is. His brother finds him, and helps to pull his memory back of the life he led before he walked out on his family and disappeared four years earlier."
 year: 1984
 ---

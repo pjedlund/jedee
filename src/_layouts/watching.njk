@@ -9,7 +9,19 @@ schema: BlogPosting
 
     {# Poster is a remote Letterboxd URL — plain <img>, not the local-only {% image %} shortcode. Alt text comes from `coverAlt` when the post writes one. `default` substitutes only on UNDEFINED, so `coverAlt: ""` is honoured as empty — the right answer for a poster that just repeats the title beside it. #}
     {% if cover %}
-      <img class="cover" eleventy:optional="placeholder" src="{{ cover | safe }}" alt="{{ coverAlt | default('Poster for ' + title) }}" loading="lazy" eleventy:widths="160,224,448" sizes="auto">
+      {# `coverZoom` is computed in watching.11tydata.js and is null when the poster is missing, unreachable, or no bigger than the displayed cover — so a post only gets the lightbox when there is genuinely more to see. The .cover-zoom wrapper caps the component's display:block <a>, which would otherwise make the whole column width clickable. #}
+      {% if coverZoom %}
+        <div class="cover-zoom">
+          <photo-lightbox @href="{{ coverZoom.url }}" @width="{{ coverZoom.width }}" @height="{{ coverZoom.height }}">
+            {# ⚠ The slot="image" must sit on a wrapper, not on the <img> itself: WebC drops a slotted node carrying eleventy:-namespaced attributes, and the cover silently renders as an empty link. #}
+            <div slot="image">
+              <img class="cover" eleventy:optional="placeholder" src="{{ cover | safe }}" alt="{{ coverAlt | default('Poster for ' + title) }}" loading="lazy" eleventy:widths="160,224,448" sizes="auto">
+            </div>
+          </photo-lightbox>
+        </div>
+      {% else %}
+        <img class="cover" eleventy:optional="placeholder" src="{{ cover | safe }}" alt="{{ coverAlt | default('Poster for ' + title) }}" loading="lazy" eleventy:widths="160,224,448" sizes="auto">
+      {% endif %}
     {% endif %}
 
     {% if url %}<data hidden class="u-watch-of" value="{{ url }}"></data>{% endif %}
