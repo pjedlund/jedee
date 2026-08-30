@@ -19,7 +19,7 @@ cast:
   - "[[Felicia Farr]]"
   - "[[Leora Dana]]"
   - "[[Henry Jones]]"
-cover: "https://a.ltrbxd.com/resized/film-poster/4/3/2/9/4/43294-3-10-to-yuma-0-230-0-345-crop.jpg?v=032f473bbf"
+cover: "https://a.ltrbxd.com/resized/film-poster/4/3/2/9/4/43294-3-10-to-yuma-0-1000-0-1500-crop.jpg?v=032f473bbf"
 plot: "Dan Evans, a small time farmer, is hired to escort Ben Wade, a dangerous outlaw, to Yuma. As Evans and Wade wait for the 3:10 train to Yuma, Wade's gang is racing to free him."
 year: 1957
 ---

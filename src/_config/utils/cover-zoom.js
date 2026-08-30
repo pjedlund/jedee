@@ -10,8 +10,10 @@ import Image from '@11ty/eleventy-img';
 
 export const coverZoom = async cover => {
   if (!cover) return null;
+  // A site-absolute cover (/assets/…) is a local file: eleventy-img needs the path on disk, not the URL.
+  const source = cover.startsWith('/') ? `./src${cover}` : cover;
   try {
-    const metadata = await Image(cover, {
+    const metadata = await Image(source, {
       widths: [null],
       formats: ['jpeg'],
       urlPath: '/assets/images/covers/',
