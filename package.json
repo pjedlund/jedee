@@ -29,7 +29,8 @@
     "pa11y:serve": "cross-env ELEVENTY_ENV=test BUILD_DRAFTS=1 eleventy --serve --ignore-initial",
     "test:a11y": "npm run pa11y:build && (npm run pa11y:serve &) && sleep 5 && npm run pa11y:test",
     "flags": "grep -rn \"@until\" src netlify eleventy.config.js || echo 'No expiring comments.'",
-    "test:unit": "node --test _local/tests/*.test.js"
+    "test:unit": "node --test _local/tests/*.test.js",
+    "sketch:tokens": "node src/_config/setup/build-sketch-tokens.js"
   },
   "keywords": [],
   "repository": {
