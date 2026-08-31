@@ -29,7 +29,7 @@ async function readJSON(file) {
 const titleCase = (s) => s.replace(/(^|[-.])([a-z0-9])/g, (_, sep, ch) => (sep === '-' ? ' ' : sep === '.' ? '/' : '') + ch.toUpperCase());
 
 async function build() {
-	const [colors, fonts, textSizes, textLeading, textWeights, typography, semanticColors] = await Promise.all([readJSON('colors.json'), readJSON('fonts.json'), readJSON('textSizes.json'), readJSON('textLeading.json'), readJSON('textWeights.json'), readJSON('typography.json'), readJSON('semanticColors.json')]);
+	const [colors, fonts, textSizes, textLeading, textWeights, typography, semanticColors, buttonColors, megamenuColors] = await Promise.all([readJSON('colors.json'), readJSON('fonts.json'), readJSON('textSizes.json'), readJSON('textLeading.json'), readJSON('textWeights.json'), readJSON('typography.json'), readJSON('semanticColors.json'), readJSON('buttonColors.json'), readJSON('megamenuColors.json')]);
 
 	// Flat lookup keyed the way the {curly.brackets} address tokens: color.gray.900, color.base.darkest, font.size.step-0, …
 	const refs = new Map();
@@ -53,13 +53,29 @@ async function build() {
 
 	const resolveRef = (v) => (typeof v === 'string' && v.startsWith('{') ? (refs.get(v.slice(1, -1)) ?? v) : v);
 
+	// The component colors reference theme-dependent names like {color.text}, so each theme resolves against its own map rather than the shared palette one.
 	for (const [theme, group] of [['light', 'Light'], ['dark', 'Dark']]) {
+		const themeRefs = new Map(refs);
 		for (const [name, value] of Object.entries(semanticColors.themes?.[theme] ?? {})) {
-			swatches.push({name: `${group}/${titleCase(name)}`, color: resolveRef(value)});
+			const hex = resolveRef(value);
+			themeRefs.set(`color.${name}`, hex);
+			swatches.push({name: `${group}/${titleCase(name)}`, color: hex});
 		}
 		for (const name of LIGHT_DARK_COLOR_NAMES) {
 			const value = theme === 'light' ? colors[name]?.$value : colors[name]?.subdued?.$value;
-			if (value) swatches.push({name: `${group}/${titleCase(name)}`, color: value});
+			if (!value) continue;
+			themeRefs.set(`color.semantic.${name}`, value);
+			swatches.push({name: `${group}/${titleCase(name)}`, color: value});
+		}
+		const resolveThemed = (v) => (typeof v === 'string' && v.startsWith('{') ? (themeRefs.get(v.slice(1, -1)) ?? v) : v);
+		// buttonColors/megamenuColors mirror the color-mix() results in the stylesheet as flat hexes; `core` still holds references and needs resolving per theme.
+		for (const componentColors of [buttonColors, megamenuColors]) {
+			for (const [name, value] of Object.entries(componentColors.core ?? {})) {
+				swatches.push({name: `${group}/${titleCase(name)}`, color: resolveThemed(value)});
+			}
+			for (const [name, value] of Object.entries(componentColors.themes?.[theme] ?? {})) {
+				swatches.push({name: `${group}/${titleCase(name)}`, color: resolveThemed(value)});
+			}
 		}
 	}
 
