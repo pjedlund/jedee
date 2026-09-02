@@ -1,0 +1,60 @@
+{# SITE SEARCH — a disclosure panel that drops from the header row, built like the mega-menu (partials/main-nav.njk) and sharing its surface. The magnifier lives inside <is-land> so a control that cannot work never appears; there is no no-JS fallback by design.
+   The result rows are built client-side, so their icons cannot be rendered per result — one <template> per searchable type is emitted here instead and cloned by search.js.
+   ⚠ header.njk wraps this include in an {% if %}. That shape blanks a partial to zero bytes if any shortcode it calls is async — keep {% svg %} synchronous. #}
+
+<is-land on:idle>
+  <div class="site-search">
+    <button type="button" id="search-toggle" class="search-toggle" aria-expanded="false" aria-controls="search-panel" data-tooltip="{{ meta.search.toggleTooltip }}">
+      {% svg "misc/search" %}
+      <span class="visually-hidden">{{ meta.search.toggleLabel }}</span>
+    </button>
+
+    <div id="search-panel" class="search-panel | flow">
+      <search>
+        <label for="search-input" class="visually-hidden">{{ meta.search.inputLabel }}</label>
+        <div class="search-field | cluster">
+          {% svg "misc/search" %}
+          <input
+            type="search"
+            id="search-input"
+            class="search-input"
+            role="combobox"
+            autocomplete="off"
+            spellcheck="false"
+            aria-expanded="false"
+            aria-controls="search-results"
+            aria-autocomplete="list"
+            placeholder="{{ meta.search.placeholder }}"
+          />
+          <button type="button" id="search-clear" class="search-clear" hidden>
+            {% svg "misc/x" %}
+            <span class="visually-hidden">{{ meta.search.clearLabel }}</span>
+          </button>
+        </div>
+      </search>
+
+      <ul id="search-results" class="search-results" role="listbox" aria-label="{{ meta.search.resultsLabel }}"></ul>
+      {# The two result-count strings ride on data attributes so meta.js stays the single source of truth — search.js reads them rather than carrying its own copy. #}
+      <p id="search-more" class="search-more" aria-live="polite" data-more="{{ meta.search.more }}" data-empty="{{ meta.search.empty }}"></p>
+    </div>
+
+    {# Icon templates, cloned per result row by search.js. Only the searchable types are emitted, plus `page` for the standalone prose pages. #}
+    <div hidden>
+      {% for item in navigation.postTypes %}
+        {% if item.collection in features.search.types %}
+          {% set iconName = "posts/" + item.icon %}
+          <template data-search-icon="{{ item.collection }}">{% svg iconName %}</template>
+        {% endif %}
+      {% endfor %}
+      <template data-search-icon="page">{% svg "posts/file-text" %}</template>
+    </div>
+  </div>
+</is-land>
+
+{% css "local" %}
+  {% include "css/search.css" %}
+{% endcss %}
+
+{% js "defer" %}
+  {% include "scripts/search.js" %}
+{% endjs %}

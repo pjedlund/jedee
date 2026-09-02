@@ -4,6 +4,7 @@ description: 'Commitment to digital accessibility and how to report accessibilit
 date: 2026-05-31 # last substantive content change (de-EE'd the statement); bump only when the text changes
 permalink: /accessibility/index.html
 layout: page
+tags: ["searchable"]
 ---
 
 Accessibility design is about ensuring equal access for people with disabilities. It is about removing barriers to access.

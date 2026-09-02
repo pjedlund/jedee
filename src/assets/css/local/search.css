@@ -1,0 +1,266 @@
+/*
+SITE SEARCH
+A disclosure panel dropping from the header row, sharing the mega-menu's surface and shadow so the two read as one system. Local bundle: it only ships when partials/search.njk is included, which is what the features.yaml dial switches.
+*/
+
+.site-search {
+  /* Same lifted-off-the-page surface as the mega-menu. Redeclared rather than inherited: main-nav.css declares it on .mainnav, which is absent while the nav is hidden. */
+  --search-surface: color-mix(in oklab, white 45%, var(--color-bg));
+
+  display: flex;
+  align-items: center;
+}
+
+:root[data-theme='dark'] .site-search {
+  --search-surface: color-mix(in oklab, white 7%, var(--color-bg));
+}
+
+/* no JS / before hydration: hide the control entirely */
+is-land:not(:defined) .site-search {
+  display: none;
+}
+
+/* The header is-land inherits the body's tall line-height (~34px), which would sit the button on an oversized text baseline. Flex-center the wrapper so the magnifier lands level with the MENU trigger and the moon. */
+is-land:has(> .site-search) {
+  display: flex;
+  align-items: center;
+}
+
+/* ---------- the magnifier ---------- */
+
+.search-toggle {
+  /* Same token, padding and radius as .theme-toggle beside it, so the two icon controls are one size and sit at the MENU trigger's height. ⚠ Size the glyph from this token, not from `em` — the header's inherited font-size is ~27px, which rendered the magnifier half again as big as the sun. */
+  --search-toggle-size: var(--size-step-min-1);
+  --search-toggle-color: var(--color-text);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* WCAG 2.5.8 (AA) target of 24px, matching .theme-toggle. border-box so the min covers the whole button. */
+  box-sizing: border-box;
+  min-block-size: 24px;
+  min-inline-size: 24px;
+  padding: var(--space-2xs);
+  background: transparent;
+  border: none;
+  border-radius: var(--border-radius-small);
+  color: var(--search-toggle-color);
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.search-toggle svg {
+  inline-size: var(--search-toggle-size);
+  block-size: var(--search-toggle-size);
+}
+
+.search-toggle:hover {
+  --search-toggle-color: var(--color-accent-orange);
+}
+
+.search-toggle[aria-expanded='true'] {
+  background: var(--search-surface);
+}
+
+/* Open panel: the tooltip has served its purpose and would sit on top of the panel it just opened. ⚠ [data-tooltip] is repeated to outweigh tooltip.css's own :hover rule, which is otherwise an exact specificity tie. */
+.search-toggle[data-tooltip][aria-expanded='true']::after {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* ---------- the panel ---------- */
+
+.search-panel {
+  --search-panel-width: min(40rem, 100%);
+  --search-panel-shadow: var(--box-shadow-panel);
+  --flow-space: var(--space-xs);
+
+  position: absolute;
+  /* Matches the mega-menu: 100% drops to the header row's bottom edge, then pull back up by the space the short button leaves. */
+  inset-block-start: calc(100% - var(--space-m) - var(--space-2xs));
+  inset-inline-end: 0;
+  z-index: 5;
+
+  inline-size: var(--search-panel-width);
+  padding: var(--space-s);
+  background: var(--search-surface);
+  border-radius: var(--border-radius-medium);
+  box-shadow: var(--search-panel-shadow);
+}
+
+:root[data-theme='dark'] .search-panel {
+  --search-panel-shadow: var(--box-shadow-panel-dark);
+}
+
+@media (forced-colors: active) {
+  .search-panel {
+    border: 1px solid CanvasText;
+  }
+}
+
+/* visibility, not opacity alone, so a closed panel's links are not Tab-focusable */
+.search-toggle[aria-expanded='false'] + .search-panel {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.search-toggle[aria-expanded='true'] + .search-panel {
+  visibility: visible;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .search-panel {
+    transform: translateY(-0.5rem);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s linear;
+  }
+
+  .search-toggle[aria-expanded='true'] + .search-panel {
+    transform: translateY(0);
+  }
+}
+
+/* ---------- the input row ---------- */
+
+.search-field {
+  --gutter: var(--space-2xs);
+  --cluster-wrap: nowrap;
+
+  /* The whole panel keys off the mega-menu's step, not the header's inherited --size-step-0. */
+  font-size: var(--size-step-min-1);
+}
+
+.search-field > svg {
+  flex: none;
+  inline-size: 0.95em;
+  block-size: 0.95em;
+  color: color-mix(in oklab, var(--color-text) 60%, var(--search-surface));
+}
+
+.search-input {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  padding: var(--space-2xs);
+  background: transparent;
+  border: none;
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.search-input:focus {
+  outline: none;
+}
+
+/* The UA default measured 4.37:1 in light and 3.42:1 in dark. Placeholder text is text — same 80/72 pair as .search-more. */
+.search-input::placeholder {
+  color: color-mix(in oklab, var(--color-text) 80%, var(--search-surface));
+  opacity: 1;
+}
+
+:root[data-theme='dark'] .search-input::placeholder {
+  color: color-mix(in oklab, var(--color-text) 72%, var(--search-surface));
+}
+
+.search-clear {
+  flex: none;
+  display: inline-flex;
+  font-size: inherit;
+  padding: var(--space-3xs);
+  background: transparent;
+  border: none;
+  border-radius: var(--border-radius-medium);
+  color: color-mix(in oklab, var(--color-text) 60%, var(--search-surface));
+  cursor: pointer;
+}
+
+.search-clear svg {
+  inline-size: 0.95em;
+  block-size: 0.95em;
+}
+
+.search-clear:hover {
+  color: var(--color-text);
+}
+
+/* ---------- results ---------- */
+
+.search-results {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.search-result a {
+  --search-result-icon: color-mix(in oklab, var(--color-accent-blue) 40%, var(--search-surface));
+  /* Measured against the PANEL surface, not the page — a color-mix is only valid on the surface it was tuned on. 84%, not 80%: the highlighted row's own tint darkens the ground under it and 80% fell to 4.31:1 there. */
+  --search-result-text-color: color-mix(in oklab, var(--color-text) 84%, var(--search-surface));
+  --search-result-bg: transparent;
+
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-3xs) var(--space-2xs);
+  padding: var(--space-xs) var(--space-s);
+  background: var(--search-result-bg);
+  border-radius: var(--border-radius-medium);
+  color: var(--color-text);
+  font-size: var(--size-step-min-1);
+  text-decoration: none;
+}
+
+:root[data-theme='dark'] .search-result a {
+  --search-result-icon: oklch(from var(--color-accent-blue) 0.5 calc(c * 1.6) h);
+  --search-result-text-color: color-mix(in oklab, var(--color-text) 72%, var(--search-surface));
+}
+
+.search-result svg {
+  grid-row: 1;
+  align-self: center;
+  flex: none;
+  inline-size: 0.95em;
+  block-size: 0.95em;
+  color: var(--search-result-icon);
+}
+
+.search-result-title {
+  grid-column: 2;
+  font-weight: var(--font-bold);
+}
+
+.search-result-text {
+  grid-column: 2;
+  /* Two lines, then an ellipsis — 140 characters runs to three on a wide panel. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color: var(--search-result-text-color);
+  font-size: var(--size-step-min-2);
+}
+
+.search-result a:hover,
+.search-result[aria-selected='true'] a,
+.search-result a:focus-visible {
+  --search-result-icon: var(--color-accent-orange);
+  --search-result-bg: color-mix(in oklab, var(--color-text) 4%, var(--search-surface));
+}
+
+.search-more {
+  /* 70% measured 3.68:1 in light. Light and dark run out of headroom at different points — 80/72 is the pair the mega-menu's count already proved. */
+  --search-more-color: color-mix(in oklab, var(--color-text) 80%, var(--search-surface));
+
+  margin: 0;
+  padding-inline: var(--space-s);
+  color: var(--search-more-color);
+  font-size: var(--size-step-min-2);
+}
+
+:root[data-theme='dark'] .search-more {
+  --search-more-color: color-mix(in oklab, var(--color-text) 72%, var(--search-surface));
+}
+
+.search-more:empty {
+  display: none;
+}

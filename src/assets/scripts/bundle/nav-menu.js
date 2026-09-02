@@ -12,6 +12,8 @@ list.style.setProperty('display', 'grid');
 buttonMenu.addEventListener('click', () => {
   const isOpen = buttonMenu.getAttribute('aria-expanded') === 'true';
   buttonMenu.setAttribute('aria-expanded', String(!isOpen));
+  // Both panels anchor to the same header row with the same alignment, so open together they overlap.
+  if (!isOpen) document.querySelector('#search-toggle')?.setAttribute('aria-expanded', 'false');
 });
 
 const closeMenu = () => {
