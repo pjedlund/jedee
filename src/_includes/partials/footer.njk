@@ -38,9 +38,18 @@
 
         {% for key, value in personal.platforms %}
           {% if value != "" %}
+            {# `capitalize` lowercases the rest of the word, which only GitHub minds — and now that the name is shown, not just announced. #}
+            {% set platformName = key | capitalize | replace("Github", "GitHub") %}
             <!-- regular platforms -->
-            <a class="no-indicator button" data-icon href="{{ value }}" rel="me">
-              <span class="visually-hidden">{{ key | capitalize }}</span>
+            <a
+              class="no-indicator button"
+              data-icon
+              href="{{ value }}"
+              rel="me"
+              data-tooltip="{{ platformName }}"
+              data-tooltip-position="top"
+            >
+              <span class="visually-hidden">{{ platformName }}</span>
               {% svg 'platform/' + key %}
             </a>
           {% endif %}
