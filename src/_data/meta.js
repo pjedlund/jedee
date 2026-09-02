@@ -92,8 +92,13 @@ export const navigation = {
   nameReveal: true, // start page only: the wordmark types in beside the logomark, blinks twice, backspaces away (breadcrumb-reveal.css)
   hideNav: true // @until 1.0.0 — soft-launch: hides the main nav in PRODUCTION only — header.njk still shows it in `eleventy --serve`.
 };
-// Static label for the header light/dark toggle; aria-pressed carries the state.
+// Static ACCESSIBLE NAME for the header light/dark toggle; aria-pressed carries the state. ⚠ Don't make this change with the theme — a toggle button's name must stay put, or screen readers announce the state twice and disagree with themselves.
 export const themeToggleLabel = 'Toggle dark mode';
+// Visible tooltip only, so it may say what a click WILL do. Swapped by theme-toggle.js on every theme change.
+export const themeToggleTooltip = {
+  toDark: 'Show dark mode',
+  toLight: 'Show light mode'
+};
 // IndieWeb endpoints, discovered via <link rel> in the <head>. Auth is delegated to hosted IndieAuth — this site runs no auth server, it only verifies the bearer token.
 export const indieweb = {
   micropub: `${url}/api/micropub`,

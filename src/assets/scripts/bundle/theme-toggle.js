@@ -4,6 +4,12 @@ const themeColors = {
   light: '{{ meta.themeDark }}'
 };
 
+// The tooltip says what a click WILL do; the accessible name stays put and aria-pressed carries the state.
+const toggleTooltips = {
+  dark: '{{ meta.themeToggleTooltip.toLight }}',
+  light: '{{ meta.themeToggleTooltip.toDark }}'
+};
+
 const theme = {
   value: getColorPreference()
 };
@@ -45,6 +51,7 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', ({m
 // aria-pressed === "dark is active" (the button toggles dark mode on/off)
 function reflectToggleState(toggle) {
   toggle.setAttribute('aria-pressed', theme.value === 'dark');
+  toggle.dataset.tooltip = toggleTooltips[theme.value];
 }
 
 function getColorPreference() {
