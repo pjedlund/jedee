@@ -20,6 +20,9 @@
       {% if (not meta.navigation.hideNav) or (eleventy.env.runMode === "serve") %}
         {% include "partials/main-nav.njk" %}
       {% endif %}
+      {% if features.search.enabled %}
+        {% include "partials/search.njk" %}
+      {% endif %}
       {% include "partials/theme-toggle.njk" %}
     </div>
   </div>

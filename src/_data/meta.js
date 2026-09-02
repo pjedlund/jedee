@@ -99,6 +99,16 @@ export const themeToggleTooltip = {
   toDark: 'Show dark mode',
   toLight: 'Show light mode'
 };
+// Site search copy. The magnifier is icon-only, so `toggleLabel` is its accessible name.
+export const search = {
+  toggleLabel: 'Search this site',
+  inputLabel: 'Search',
+  placeholder: 'Search…',
+  clearLabel: 'Clear search',
+  resultsLabel: 'Search results',
+  more: 'more matches',
+  empty: 'Nothing found.'
+};
 // IndieWeb endpoints, discovered via <link rel> in the <head>. Auth is delegated to hosted IndieAuth — this site runs no auth server, it only verifies the bearer token.
 export const indieweb = {
   micropub: `${url}/api/micropub`,
