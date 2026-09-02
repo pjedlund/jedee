@@ -13,6 +13,8 @@
           <a
             href="/"
             class="breadcrumb-home"
+            data-tooltip="{{ meta.navigation.homeTooltip }}"
+            data-tooltip-align="start"
             {%- if crumb.current %} aria-current="page"{% endif %}
           >
             {% svg "misc/logo" %}

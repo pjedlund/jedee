@@ -1,6 +1,6 @@
-{# Single light/dark toggle for the header. Shows the CURRENT theme: sun in light, moon in dark, animated in theme-toggle.css (adapted from Adam Argyle's web.dev theme switch, MIT). Wrapped in <is-land> so it only appears once JS upgrades it — a toggle that can't run shouldn't show; the no-flash theme itself is set by the inline theme-toggle.js, independent of this button. A11y: the SVG is decorative, the accessible name is the visually-hidden label, and the state is carried by aria-pressed. #}
+{# Single light/dark toggle for the header. Shows the CURRENT theme: sun in light, moon in dark, animated in theme-toggle.css (adapted from Adam Argyle's web.dev theme switch, MIT). Wrapped in <is-land> so it only appears once JS upgrades it — a toggle that can't run shouldn't show; the no-flash theme itself is set by the inline theme-toggle.js, independent of this button. A11y: the SVG is decorative, the accessible name is the visually-hidden label, and the state is carried by aria-pressed. data-tooltip replaces title so the styled tooltip (tooltip.css) is the only one shown. #}
 <is-land on:idle>
-  <button type="button" id="theme-toggle" class="theme-toggle" data-theme-toggle aria-pressed="false" title="{{ meta.themeToggleLabel }}">
+  <button type="button" id="theme-toggle" class="theme-toggle" data-theme-toggle aria-pressed="false" data-tooltip="{{ meta.themeToggleLabel }}" data-tooltip-align="end">
     <svg class="sun-and-moon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
       <mask class="moon" id="theme-toggle-moon-mask">
         <rect x="0" y="0" width="100%" height="100%" fill="white" />
