@@ -6,7 +6,7 @@ Progressive enhancement: hidden until <is-land> upgrades — a toggle that can't
 .theme-toggle {
   /* sized to sit alongside the wordmark logo in the header */
   --theme-toggle-size: var(--size-step-min-1);
-  /* Warm at rest, so hover is a nudge rather than a jump. Mixing hover toward --color-text deepens it in light and lightens it in dark, which is the direction that keeps contrast in both. */
+  /* The sun is orange, matching the logomark at the other end of the header; the moon is plain text color (dark override below). Hover deepens the sun by mixing toward the text color — a nudge, not a jump. */
   --theme-toggle-color: var(--color-accent-orange);
   --theme-toggle-color-hover: color-mix(in oklab, var(--color-accent-orange) 82%, var(--color-text));
 
@@ -51,6 +51,12 @@ Progressive enhancement: hidden until <is-land> upgrades — a toggle that can't
 .sun-and-moon > .sun-beams {
   stroke: currentColor;
   stroke-width: 2px;
+}
+
+/* The moon is a night-sky object, not a warm one: plain text color, with the accent orange kept for hover. */
+:root[data-theme='dark'] .theme-toggle {
+  --theme-toggle-color: var(--color-text);
+  --theme-toggle-color-hover: var(--color-accent-orange);
 }
 
 /* DARK = moon: the disc grows, the beams fade, and the mask circle slides in to bite the crescent (cx where supported, translateX as a fallback). */

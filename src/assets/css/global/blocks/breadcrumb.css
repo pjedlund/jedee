@@ -94,10 +94,10 @@ Top-left wayfinding that replaces the old site logo: the home crumb is the logom
   /* no fill transition — see the note on `.breadcrumb a` */
 }
 
+/* The resting fill is already the accent orange on every page, so hover deepens it the same way the theme toggle does rather than switching color. aria-current dropped: home no longer differs from anywhere else. */
 .breadcrumb-home:hover svg,
-.breadcrumb-home:focus-visible svg,
-.breadcrumb-home[aria-current="page"] svg {
-  fill: var(--color-orange-500);
+.breadcrumb-home:focus-visible svg {
+  fill: color-mix(in oklab, var(--color-accent-orange) 82%, var(--color-text));
 }
 
 /* CSS-drawn chevron before every crumb except the first. Empty content keeps it out of the accessibility tree; a rotated open border is the "›" shape. */
