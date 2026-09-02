@@ -29,6 +29,8 @@
           type="{{ meta.blog.feedLinks[0].type }}"
           class="button"
           data-icon
+          data-tooltip="{{ meta.blog.feedLinks[0].title }}"
+          data-tooltip-position="top"
         >
           <span class="visually-hidden">{{ meta.blog.feedLinks[0].title }}</span>
           {% svg "misc/rss" %}

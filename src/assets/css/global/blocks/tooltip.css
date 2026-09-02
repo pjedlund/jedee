@@ -8,6 +8,9 @@ Adapted from arielsalminen.com's header tooltip, retokenized and given a focus-v
   --tooltip-color: var(--color-bg);
   --tooltip-offset: var(--space-2xs);
   --tooltip-shadow: var(--box-shadow-popup);
+  /* Placement is two nudges the exceptions below rewrite, so an align and a position can be combined on one control. */
+  --tooltip-nudge-inline: -50%;
+  --tooltip-nudge-block: var(--tooltip-offset);
 
   position: relative;
 }
@@ -18,7 +21,7 @@ Adapted from arielsalminen.com's header tooltip, retokenized and given a focus-v
   z-index: 10;
   inset-block-start: 100%;
   inset-inline-start: 50%;
-  translate: -50% var(--tooltip-offset);
+  translate: var(--tooltip-nudge-inline) var(--tooltip-nudge-block);
   padding: var(--space-xs) var(--space-s);
   border-radius: var(--border-radius-small);
   background: var(--tooltip-bg);
@@ -69,12 +72,22 @@ Adapted from arielsalminen.com's header tooltip, retokenized and given a focus-v
 
 /* ⚠ A centred tooltip on a control at either page edge overflows the viewport; anchor it to that edge of the control instead. */
 [data-tooltip][data-tooltip-align='start']::after {
+  --tooltip-nudge-inline: 0;
+
   inset-inline-start: 0;
-  translate: 0 var(--tooltip-offset);
 }
 
 [data-tooltip][data-tooltip-align='end']::after {
+  --tooltip-nudge-inline: 0;
+
   inset-inline-start: auto;
   inset-inline-end: 0;
-  translate: 0 var(--tooltip-offset);
+}
+
+/* ⚠ The same overflow, vertically: a tooltip below a control near the foot of the page adds dead scroll, since a hidden element still takes part in layout. Open upwards there. */
+[data-tooltip][data-tooltip-position='top']::after {
+  --tooltip-nudge-block: calc(var(--tooltip-offset) * -1);
+
+  inset-block-start: auto;
+  inset-block-end: 100%;
 }
