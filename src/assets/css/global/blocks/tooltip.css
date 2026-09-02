@@ -1,0 +1,66 @@
+/*
+TOOLTIP
+Label that appears under an icon-only control on hover or keyboard focus. Content comes from data-tooltip; the accessible name still has to be a real .visually-hidden label, because generated content is not a reliable accessible name.
+Adapted from arielsalminen.com's header tooltip, retokenized and given a focus-visible trigger.
+*/
+[data-tooltip] {
+  --tooltip-bg: var(--color-text);
+  --tooltip-color: var(--color-bg);
+  --tooltip-offset: var(--space-2xs);
+  --tooltip-shadow: var(--box-shadow-popup);
+
+  position: relative;
+}
+
+[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  z-index: 10;
+  inset-block-start: 100%;
+  inset-inline-start: 50%;
+  translate: -50% var(--tooltip-offset);
+  padding: var(--space-3xs) var(--space-xs);
+  border-radius: var(--border-radius-small);
+  background: var(--tooltip-bg);
+  box-shadow: var(--tooltip-shadow);
+  color: var(--tooltip-color);
+  font-family: var(--font-base);
+  font-size: var(--size-step-min-2);
+  font-weight: var(--font-normal);
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+[data-tooltip]:is(:hover, :focus-visible)::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Pressing the control dismisses its own tooltip — it has served its purpose and would otherwise sit under the cursor. */
+[data-tooltip]:active::after {
+  opacity: 0;
+  visibility: hidden;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-tooltip]::after {
+    transition:
+      opacity var(--transition-duration) var(--transition-timing) 100ms,
+      visibility var(--transition-duration) var(--transition-timing) 100ms;
+  }
+}
+
+:root[data-theme='dark'] [data-tooltip] {
+  --tooltip-shadow: var(--box-shadow-popup-dark);
+}
+
+/* ⚠ A centred tooltip on a control at the page edge overflows the viewport; anchor it to the control's trailing edge instead. */
+[data-tooltip][data-tooltip-align='end']::after {
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+  translate: 0 var(--tooltip-offset);
+}
