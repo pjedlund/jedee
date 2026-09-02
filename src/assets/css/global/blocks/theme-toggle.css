@@ -53,9 +53,9 @@ Progressive enhancement: hidden until <is-land> upgrades — a toggle that can't
   stroke-width: 2px;
 }
 
-/* The moon is a night-sky object, not a warm one: plain text color, with the accent orange kept for hover. */
+/* Moon: pale silver cooled by a whisper of blue, hover keeps the accent orange. ⚠ Mixed from blue-VIVID — accent-blue is desaturated enough that 12% of it barely tints. Why 12%: wiki, "The theme toggle". */
 :root[data-theme='dark'] .theme-toggle {
-  --theme-toggle-color: var(--color-text);
+  --theme-toggle-color: color-mix(in oklab, var(--color-text) 88%, var(--color-blue-vivid));
   --theme-toggle-color-hover: var(--color-accent-orange);
 }
 
