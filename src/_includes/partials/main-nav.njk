@@ -26,7 +26,7 @@
 
 {# The disclosure button only exists when JS can clone it — so the no-JS fallback is "panel already visible". Inserted before the list so Tab order is button → first link. Based on Manuel Matuzović / the Web Accessibility Cookbook. #}
 <template id="menu-template">
-  <button data-menu-toggle class="menu-toggle" type="button" aria-expanded="false" aria-controls="megamenu">
+  <button data-menu-toggle class="menu-toggle" type="button" aria-expanded="false" aria-controls="megamenu" data-tooltip="{{ meta.navigation.navTooltip }}">
     <span>{{ meta.navigation.navLabel }}</span>
     {% svg "misc/chev-down" %}
   </button>

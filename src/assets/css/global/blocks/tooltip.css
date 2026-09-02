@@ -19,14 +19,16 @@ Adapted from arielsalminen.com's header tooltip, retokenized and given a focus-v
   inset-block-start: 100%;
   inset-inline-start: 50%;
   translate: -50% var(--tooltip-offset);
-  padding: var(--space-3xs) var(--space-xs);
+  padding: var(--space-xs) var(--space-s);
   border-radius: var(--border-radius-small);
   background: var(--tooltip-bg);
   box-shadow: var(--tooltip-shadow);
   color: var(--tooltip-color);
   font-family: var(--font-base);
   font-size: var(--size-step-min-2);
-  font-weight: var(--font-normal);
+  font-weight: var(--font-regular);
+  /* Host controls set their own weight, case, tracking and leading — a tooltip reads the same on all of them. */
+  line-height: var(--leading-fine);
   letter-spacing: normal;
   text-transform: none;
   white-space: nowrap;
@@ -38,6 +40,12 @@ Adapted from arielsalminen.com's header tooltip, retokenized and given a focus-v
 [data-tooltip]:is(:hover, :focus-visible)::after {
   opacity: 1;
   visibility: visible;
+}
+
+/* An open disclosure drops its panel exactly where the tooltip sits, so the tooltip gets out of the way. */
+[data-tooltip][aria-expanded='true']::after {
+  opacity: 0;
+  visibility: hidden;
 }
 
 /* Pressing the control dismisses its own tooltip — it has served its purpose and would otherwise sit under the cursor. */
