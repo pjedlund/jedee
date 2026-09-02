@@ -4,6 +4,7 @@
 export const stripMarkdown = text => {
   if (!text) return '';
   return String(text)
+    .replace(/<!--[\s\S]*?-->/g, ' ')
     .replace(/```[\s\S]*?```/g, ' ')
     .replace(/`[^`]*`/g, ' ')
     .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')
