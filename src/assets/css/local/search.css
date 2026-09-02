@@ -127,14 +127,14 @@ is-land:has(> .site-search) {
   --gutter: var(--space-2xs);
   --cluster-wrap: nowrap;
 
-  padding-block-end: var(--space-xs);
-  border-block-end: var(--border-thickness) solid color-mix(in oklab, var(--color-text) 15%, var(--search-surface));
+  /* The whole panel keys off the mega-menu's step, not the header's inherited --size-step-0. */
+  font-size: var(--size-step-min-1);
 }
 
 .search-field > svg {
   flex: none;
-  inline-size: 1.1em;
-  block-size: 1.1em;
+  inline-size: 0.95em;
+  block-size: 0.95em;
   color: color-mix(in oklab, var(--color-text) 60%, var(--search-surface));
 }
 
@@ -146,22 +146,38 @@ is-land:has(> .site-search) {
   border: none;
   color: var(--color-text);
   font-family: inherit;
-  font-size: var(--size-step-0);
+  font-size: inherit;
 }
 
 .search-input:focus {
   outline: none;
 }
 
+/* The UA default measured 4.37:1 in light and 3.42:1 in dark. Placeholder text is text — same 80/72 pair as .search-more. */
+.search-input::placeholder {
+  color: color-mix(in oklab, var(--color-text) 80%, var(--search-surface));
+  opacity: 1;
+}
+
+:root[data-theme='dark'] .search-input::placeholder {
+  color: color-mix(in oklab, var(--color-text) 72%, var(--search-surface));
+}
+
 .search-clear {
   flex: none;
   display: inline-flex;
+  font-size: inherit;
   padding: var(--space-3xs);
   background: transparent;
   border: none;
   border-radius: var(--border-radius-medium);
   color: color-mix(in oklab, var(--color-text) 60%, var(--search-surface));
   cursor: pointer;
+}
+
+.search-clear svg {
+  inline-size: 0.95em;
+  block-size: 0.95em;
 }
 
 .search-clear:hover {
@@ -189,6 +205,7 @@ is-land:has(> .site-search) {
   background: var(--search-result-bg);
   border-radius: var(--border-radius-medium);
   color: var(--color-text);
+  font-size: var(--size-step-min-1);
   text-decoration: none;
 }
 
@@ -220,7 +237,7 @@ is-land:has(> .site-search) {
   -webkit-box-orient: vertical;
   overflow: hidden;
   color: var(--search-result-text-color);
-  font-size: var(--size-step-min-1);
+  font-size: var(--size-step-min-2);
 }
 
 .search-result a:hover,
@@ -237,7 +254,7 @@ is-land:has(> .site-search) {
   margin: 0;
   padding-inline: var(--space-s);
   color: var(--search-more-color);
-  font-size: var(--size-step-min-1);
+  font-size: var(--size-step-min-2);
 }
 
 :root[data-theme='dark'] .search-more {
