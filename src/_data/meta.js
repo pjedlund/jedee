@@ -83,7 +83,6 @@ export const dialog = {
 };
 export const navigation = {
   navLabel: 'Menu',
-  navTooltip: 'Browse everything',
   homeTooltip: 'Home',
   ariaTop: 'Main',
   ariaBottom: 'Complementary',

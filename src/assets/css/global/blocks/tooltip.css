@@ -48,12 +48,6 @@ Adapted from arielsalminen.com's header tooltip, retokenized and given a focus-v
   visibility: hidden;
 }
 
-/* An open disclosure drops its panel exactly where the tooltip sits, so the tooltip gets out of the way. */
-[data-tooltip][aria-expanded='true']::after {
-  opacity: 0;
-  visibility: hidden;
-}
-
 /* Pressing the control dismisses its own tooltip — it has served its purpose and would otherwise sit under the cursor. */
 [data-tooltip]:active::after {
   opacity: 0;
