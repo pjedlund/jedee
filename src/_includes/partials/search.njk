@@ -4,7 +4,7 @@
 
 <is-land on:idle>
   <div class="site-search">
-    <button type="button" id="search-toggle" class="search-toggle" aria-expanded="false" aria-controls="search-panel">
+    <button type="button" id="search-toggle" class="search-toggle" aria-expanded="false" aria-controls="search-panel" data-tooltip="{{ meta.search.toggleTooltip }}">
       {% svg "misc/search" %}
       <span class="visually-hidden">{{ meta.search.toggleLabel }}</span>
     </button>

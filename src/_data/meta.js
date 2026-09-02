@@ -102,6 +102,8 @@ export const themeToggleTooltip = {
 // Site search copy. The magnifier is icon-only, so `toggleLabel` is its accessible name.
 export const search = {
   toggleLabel: 'Search this site',
+  // Visible tooltip only. Shorter than the accessible name, which stays specific.
+  toggleTooltip: 'Search',
   inputLabel: 'Search',
   placeholder: 'Search…',
   clearLabel: 'Clear search',

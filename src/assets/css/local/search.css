@@ -29,19 +29,21 @@ is-land:has(> .site-search) {
 /* ---------- the magnifier ---------- */
 
 .search-toggle {
+  /* Same token, padding and radius as .theme-toggle beside it, so the two icon controls are one size and sit at the MENU trigger's height. ⚠ Size the glyph from this token, not from `em` — the header's inherited font-size is ~27px, which rendered the magnifier half again as big as the sun. */
+  --search-toggle-size: var(--size-step-min-1);
   --search-toggle-color: var(--color-text);
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  /* WCAG 2.5.8 (AA) target of 24px, matching .theme-toggle beside it. border-box so the min covers the whole button. */
+  /* WCAG 2.5.8 (AA) target of 24px, matching .theme-toggle. border-box so the min covers the whole button. */
   box-sizing: border-box;
   min-block-size: 24px;
   min-inline-size: 24px;
   padding: var(--space-2xs);
   background: transparent;
   border: none;
-  border-radius: var(--border-radius-medium);
+  border-radius: var(--border-radius-small);
   color: var(--search-toggle-color);
   cursor: pointer;
   touch-action: manipulation;
@@ -49,8 +51,8 @@ is-land:has(> .site-search) {
 }
 
 .search-toggle svg {
-  inline-size: 1.25em;
-  block-size: 1.25em;
+  inline-size: var(--search-toggle-size);
+  block-size: var(--search-toggle-size);
 }
 
 .search-toggle:hover {
@@ -59,6 +61,12 @@ is-land:has(> .site-search) {
 
 .search-toggle[aria-expanded='true'] {
   background: var(--search-surface);
+}
+
+/* Open panel: the tooltip has served its purpose and would sit on top of the panel it just opened. ⚠ [data-tooltip] is repeated to outweigh tooltip.css's own :hover rule, which is otherwise an exact specificity tie. */
+.search-toggle[data-tooltip][aria-expanded='true']::after {
+  opacity: 0;
+  visibility: hidden;
 }
 
 /* ---------- the panel ---------- */
