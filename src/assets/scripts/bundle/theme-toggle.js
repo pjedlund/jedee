@@ -23,7 +23,13 @@ window.addEventListener('load', () => {
     theme.value = theme.value === 'dark' ? 'light' : 'dark';
     setPreference();
     reflectToggleState(toggle);
+    // Dismiss the tooltip once the button has been used — CSS alone can only hide it for the length of the press. Cleared below.
+    toggle.dataset.tooltipDismissed = '';
   });
+
+  ['pointerleave', 'blur'].forEach((event) =>
+    toggle.addEventListener(event, () => delete toggle.dataset.tooltipDismissed)
+  );
 });
 
 // sync with system changes

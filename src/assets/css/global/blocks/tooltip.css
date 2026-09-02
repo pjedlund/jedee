@@ -48,8 +48,9 @@ Adapted from arielsalminen.com's header tooltip, retokenized and given a focus-v
   visibility: hidden;
 }
 
-/* Pressing the control dismisses its own tooltip — it has served its purpose and would otherwise sit under the cursor. */
-[data-tooltip]:active::after {
+/* Pressing the control dismisses its own tooltip — it has served its purpose and would otherwise sit under the cursor. `:active` covers the press itself; the attribute keeps it dismissed afterwards and is cleared by the control's own script when the pointer or focus leaves. */
+[data-tooltip]:active::after,
+[data-tooltip][data-tooltip-dismissed]::after {
   opacity: 0;
   visibility: hidden;
 }
