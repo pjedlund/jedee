@@ -5,6 +5,7 @@ export const stripMarkdown = text => {
   if (!text) return '';
   return String(text)
     .replace(/<!--[\s\S]*?-->/g, ' ')
+    .replace(/\{[{%][\s\S]*?[}%]\}/g, ' ')
     .replace(/```[\s\S]*?```/g, ' ')
     .replace(/`[^`]*`/g, ' ')
     .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')
@@ -18,7 +19,13 @@ export const stripMarkdown = text => {
     .trim();
 };
 
-export const excerpt = (text, limit = 140) => stripMarkdown(text).substring(0, limit).trim();
+export const excerpt = (text, limit = 140) => {
+  const plain = stripMarkdown(text);
+  if (plain.length <= limit) return plain;
+  const cut = plain.substring(0, limit);
+  const lastSpace = cut.lastIndexOf(' ');
+  return (lastSpace > 0 ? cut.substring(0, lastSpace) : cut).trim();
+};
 
 // Every key in the `only` map for a type has to match that item's frontmatter, or the item is dropped.
 const matchesOnly = (item, rules) =>
