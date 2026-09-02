@@ -6,7 +6,9 @@ Progressive enhancement: hidden until <is-land> upgrades — a toggle that can't
 .theme-toggle {
   /* sized to sit alongside the wordmark logo in the header */
   --theme-toggle-size: var(--size-step-min-1);
-  --theme-toggle-color: var(--color-text);
+  /* Warm at rest, so hover is a nudge rather than a jump. Mixing hover toward --color-text deepens it in light and lightens it in dark, which is the direction that keeps contrast in both. */
+  --theme-toggle-color: var(--color-accent-orange);
+  --theme-toggle-color-hover: color-mix(in oklab, var(--color-accent-orange) 82%, var(--color-text));
 
   /* Open Props elastic/standard easings, inlined to avoid a runtime @import */
   --ease-3: cubic-bezier(0.25, 0, 0.3, 1);
@@ -32,7 +34,7 @@ Progressive enhancement: hidden until <is-land> upgrades — a toggle that can't
 }
 
 .theme-toggle:is(:hover, :focus-visible) {
-  --theme-toggle-color: var(--color-accent-orange);
+  --theme-toggle-color: var(--theme-toggle-color-hover);
 }
 
 .theme-toggle svg {
