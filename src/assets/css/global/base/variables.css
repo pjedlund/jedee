@@ -43,7 +43,8 @@
   /* Orienteering course (line + start/finish symbols) on the activity map. The site's accent orange — same color as the map's location markers — because it reads on every tile set (topo green, satellite, light and dark), where a purple vanished on some. */
   --color-route-line: var(--color-accent-orange);
 
-  --color-logo-icon: var(--color-orange-500);
+  /* One value for every page and both themes: the pale grey it used to take in light (1.67:1) and the deep brown in dark (2.01:1) both failed the 3:1 a graphic needs to be legible. */
+  --color-logo-icon: var(--color-accent-orange);
   --color-border-height: 1rem;
 }
 
@@ -63,7 +64,6 @@
   --color-bg-accent-2: var(--color-gray-300);
   /* border top for body */
   --color-border-top: var(--color-base-light);
-  --color-logo-icon: var(--color-base-dark);
 
   --color-code-bg: color-mix(in oklab, var(--color-bg) 97%, rgb(0, 0, 0));
   --code-border-color: color-mix(in oklab, var(--color-bg) 96%, rgb(0, 0, 0));
@@ -88,7 +88,6 @@
     --color-bg-accent-2: var(--color-gray-600);
     /* border top for body */
     --color-border-top: var(--color-orange-900);
-    --color-logo-icon: var(--color-orange-700);
 
     --color-code-bg: color-mix(in oklab, var(--color-bg) 80%, rgb(0, 0, 0));
     --code-border-color: color-mix(in oklab, var(--color-bg) 95%, rgb(255, 255, 255));
@@ -112,7 +111,6 @@
   --color-bg-accent-2: var(--color-gray-600);
   /* border top for body */
   --color-border-top: var(--color-orange-900);
-  --color-logo-icon: var(--color-orange-700);
 
   --color-link-text: var(--color-orange-500);
   --color-link-underline-hover: var(--color-red-subdued);
