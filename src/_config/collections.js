@@ -17,7 +17,7 @@ export const byCategory = cat => collection =>
 export const POST_TYPES = ['article', 'note', 'reading', 'jam', 'watching', 'bookmark', 'reply', 'rsvp', 'like', 'repost', 'photo', 'recipe', 'event', 'audio', 'video', 'activity'];
 
 /** All user-facing tags, excluding system tags. Per-type category names live in `category`, never in `tags`. Keep SYSTEM_TAGS minimal — firehose + EE built-ins only. */
-const SYSTEM_TAGS = ['posts', 'docs', 'all'];
+const SYSTEM_TAGS = ['posts', 'docs', 'all', 'searchable'];
 
 export const tagList = collection => {
   const tagsSet = new Set();

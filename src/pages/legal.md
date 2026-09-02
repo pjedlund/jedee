@@ -5,6 +5,7 @@ discover:
 permalink: /imprint/index.html
 description: Imprint infos
 layout: page
+tags: ["searchable"]
 ---
 
 {{ personal.address }}

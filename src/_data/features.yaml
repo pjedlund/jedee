@@ -6,3 +6,13 @@
 # Netlify footnote: the wiki's content lives in its own inner git repo that the public JEDEE repo on GitHub never sees. So "public" only produces a wiki-bearing site for builds made from Johan's machine — Netlify's build from the public repo has no wiki source to include.
 wiki:
   visibility: local   # private | local | public   (hidden reserved)
+
+# The search dial. `enabled: false` removes /search.json, the header magnifier, and the CSS and JS that ride along with the partial.
+search:
+  enabled: true
+  # Collection keys, SINGULAR — `article`, not `articles`. Plurals are archive URLs and produce an empty index with a green build.
+  types: [article, note, reading, watching, jam, photo, recipe, event, audio, video, activity, searchable]
+  # Optional per-type narrowing: frontmatter key -> required value. A type absent here is indexed whole.
+  only:
+    activity:
+      activityType: orienteering
