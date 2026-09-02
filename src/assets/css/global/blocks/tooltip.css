@@ -42,6 +42,12 @@ Adapted from arielsalminen.com's header tooltip, retokenized and given a focus-v
   visibility: visible;
 }
 
+/* No tooltip on the page you are already on — the control is inert there, and the reference design suppresses it the same way. */
+[data-tooltip][aria-current]::after {
+  opacity: 0;
+  visibility: hidden;
+}
+
 /* An open disclosure drops its panel exactly where the tooltip sits, so the tooltip gets out of the way. */
 [data-tooltip][aria-expanded='true']::after {
   opacity: 0;
@@ -66,7 +72,12 @@ Adapted from arielsalminen.com's header tooltip, retokenized and given a focus-v
   --tooltip-shadow: var(--box-shadow-popup-dark);
 }
 
-/* ⚠ A centred tooltip on a control at the page edge overflows the viewport; anchor it to the control's trailing edge instead. */
+/* ⚠ A centred tooltip on a control at either page edge overflows the viewport; anchor it to that edge of the control instead. */
+[data-tooltip][data-tooltip-align='start']::after {
+  inset-inline-start: 0;
+  translate: 0 var(--tooltip-offset);
+}
+
 [data-tooltip][data-tooltip-align='end']::after {
   inset-inline-start: auto;
   inset-inline-end: 0;
