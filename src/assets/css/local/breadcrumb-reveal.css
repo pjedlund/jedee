@@ -26,7 +26,8 @@ The wordmark types itself in beside the logomark, the caret blinks twice, then b
   inset-inline-start: 100%;
   /* ⚠ Out of flow, the name shrink-to-fits against the narrow logomark box and wraps onto two lines — max-content is what keeps it on one. */
   inline-size: max-content;
-  margin-inline-start: var(--breadcrumb-gap);
+  /* Anchored to the square's edge, so the gap has to drop the slack the square adds past the mark. */
+  margin-inline-start: calc(var(--breadcrumb-gap) - var(--breadcrumb-mark-slack));
   /* ⚠ The caret is pinned to this box's inline end, and its `100%` resolves against the PADDING box — so the gap after the last glyph has to carry the caret's width too. */
   padding-inline-end: calc(var(--reveal-caret-gap) + var(--reveal-caret-width));
   color: var(--color-text);

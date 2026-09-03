@@ -8,6 +8,9 @@ Top-left wayfinding that replaces the old site logo: the home crumb is the logom
   --breadcrumb-gap: var(--space-xs);
   /* The crumb links' box, and so their focus ring: the MENU trigger's block padding around one line. The home crumb uses it on BOTH axes to ring the logomark in a square. */
   --breadcrumb-box: calc(1em + var(--space-xs) * 2 + var(--border-thickness) * 2);
+  --breadcrumb-mark: 0.96em;
+  /* How far the square stands out past the mark on each side — handed back as negative margin so the square rings the logo without spacing the trail off it. */
+  --breadcrumb-mark-slack: calc((var(--breadcrumb-box) - var(--breadcrumb-mark)) / 2);
   /* 85% keeps the muted ancestor links + "by" above 4.5:1 (~5:1 in light); 60% rendered at 2.92:1. */
   --breadcrumb-color-ancestor: color-mix(in oklab, var(--color-text) 85%, var(--color-bg));
   --breadcrumb-color-current: var(--color-text);
@@ -97,11 +100,13 @@ Top-left wayfinding that replaces the old site logo: the home crumb is the logom
 .breadcrumb-home {
   inline-size: var(--breadcrumb-box);
   justify-content: center;
+  /* ⚠ Give the square's extra width back, or every crumb after the mark — and the home page's name reveal — sits a slack's worth too far out. The mark keeps the content edge; only the ring reaches past it. */
+  margin-inline: calc(var(--breadcrumb-mark-slack) * -1);
 }
 
 /* Sized to the trail's cap height rather than a little above it, so every crumb rings up identically. */
 .breadcrumb-home svg {
-  inline-size: 0.96em;
+  inline-size: var(--breadcrumb-mark);
   block-size: 1em;
   fill: var(--color-logo-icon);
   /* no fill transition — see the note on `.breadcrumb a` */
