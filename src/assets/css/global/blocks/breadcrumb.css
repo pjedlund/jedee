@@ -10,6 +10,9 @@ Top-left wayfinding that replaces the old site logo: the home crumb is the logom
   --breadcrumb-color-ancestor: color-mix(in oklab, var(--color-text) 85%, var(--color-bg));
   --breadcrumb-color-current: var(--color-text);
   --breadcrumb-color-separator: color-mix(in oklab, var(--color-text) 38%, var(--color-bg));
+  /* The leaf's taller line box is what sets the header row's height, and the home page has no leaf — hence one shared line so the row doesn't jump between home and everywhere else. */
+  --breadcrumb-leaf-leading: 1.35;
+  --breadcrumb-line: calc(1em * var(--breadcrumb-leaf-leading));
 
   /* let the trail shrink inside the header's repel so the leaf can truncate */
   min-inline-size: 0;
@@ -40,6 +43,7 @@ Top-left wayfinding that replaces the old site logo: the home crumb is the logom
   --gutter: var(--breadcrumb-gap);
   --cluster-wrap: nowrap;
   min-inline-size: 0;
+  min-block-size: var(--breadcrumb-line);
 }
 
 .breadcrumb li {
@@ -63,8 +67,9 @@ Top-left wayfinding that replaces the old site logo: the home crumb is the logom
   overflow: hidden;
   min-inline-size: 0;
   color: var(--breadcrumb-color-current);
-  /* The trail's `line-height: 1` is fine for the uppercase ancestors (no descenders) but clips a lowercase leaf — most visibly the italic "y" in a Jam's "by". */
-  line-height: 1.35;
+  /* The trail's `line-height: 1` is fine for the uppercase ancestors (no descenders) but clips a lowercase leaf — most visibly the italic "y" in a Jam's "by". ⚠ Pinned to the same line: a -webkit-box rounds its own box up half a pixel, which is enough to leave the row a hair taller here than on the home page. */
+  line-height: var(--breadcrumb-leaf-leading);
+  block-size: var(--breadcrumb-line);
 }
 
 /* links: muted, underline only on hover/keyboard focus (focus ring is global) */
