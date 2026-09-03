@@ -13,11 +13,17 @@ async function createFavicons() {
 
   // Get the SVG logo
   const svgBuffer = fs.readFileSync(pathToSvgLogo);
+  const svgSource = svgBuffer.toString();
+
+  // The mark's own fill is the single source of truth for the brand color — the tiles invert it into their ground. ⚠
+  const markColor = svgSource.match(/<svg[^>]*\sfill="([^"]+)"/)?.[1];
+  if (!markColor) throw new Error(`${pathToSvgLogo}: no fill on the root <svg> — the tile colors are derived from it.`);
+  const knockout = Buffer.from(svgSource.replaceAll(markColor, themeLight));
 
   // Render the mark at `size` with `pad` on every side; opaque `background` for tiles that get cropped or sat on black.
-  const padded = (size, pad, background = TRANSPARENT) => {
+  const padded = (source, size, pad, background = TRANSPARENT) => {
     const p = Math.round(size * pad);
-    const image = sharp(svgBuffer)
+    const image = sharp(source)
       .resize(size - p * 2, size - p * 2)
       .extend({ top: p, bottom: p, left: p, right: p, background });
     return background === TRANSPARENT ? image : image.flatten({ background });
@@ -26,20 +32,19 @@ async function createFavicons() {
   // SVG icon: same inset done in the viewBox, since there's nothing to resize.
   const box = 100 / (1 - TAB_PAD * 2);
   const offset = -(box - 100) / 2;
-  const svgSource = svgBuffer.toString();
   if (!/viewBox="0 0 100 100"/.test(svgSource)) throw new Error(`${pathToSvgLogo}: expected viewBox="0 0 100 100" to pad — check the logo before trusting the favicons.`);
   fs.writeFileSync(`${outputDir}/favicon.svg`, svgSource.replace('viewBox="0 0 100 100"', `viewBox="${offset.toFixed(3)} ${offset.toFixed(3)} ${box.toFixed(3)} ${box.toFixed(3)}"`));
 
   // PNG icons
-  await padded(192, TILE_PAD).toFile(`${outputDir}/icon-192x192.png`);
-  await padded(512, TILE_PAD).toFile(`${outputDir}/icon-512x512.png`);
+  await padded(svgBuffer, 192, TILE_PAD).toFile(`${outputDir}/icon-192x192.png`);
+  await padded(svgBuffer, 512, TILE_PAD).toFile(`${outputDir}/icon-512x512.png`);
 
-  // apple-touch-icon + maskable: opaque light ground so the orange mark reads, and so iOS/Android launchers don't mask through transparency.
-  await padded(180, TILE_PAD, themeLight).toFile(`${outputDir}/apple-touch-icon.png`);
-  await padded(512, TILE_PAD, themeLight).toFile(`${outputDir}/maskable-icon.png`);
+  // apple-touch-icon + maskable: the mark knocked out of a solid brand ground, so the tile reads as a logo and launchers have no transparency to mask through.
+  await padded(knockout, 180, TILE_PAD, markColor).toFile(`${outputDir}/apple-touch-icon.png`);
+  await padded(knockout, 512, TILE_PAD, markColor).toFile(`${outputDir}/maskable-icon.png`);
 
   // ICO icon — hand sharpsToIco a finished buffer, not a pending pipeline: its own resize() overrides ours and the extend() then pads on top of that. ⚠
-  const icoBuffer = await padded(32, TAB_PAD).png().toBuffer();
+  const icoBuffer = await padded(svgBuffer, 32, TAB_PAD).png().toBuffer();
   await sharpsToIco([sharp(icoBuffer)], `${outputDir}/favicon.ico`, { sizes: [32] });
 
   console.log('All favicons generated.');
