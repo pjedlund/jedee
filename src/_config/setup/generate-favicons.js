@@ -3,6 +3,8 @@ import sharp from 'sharp';
 import { sharpsToIco } from 'sharp-ico';
 import { pathToSvgLogo, themeLight } from '../../_data/meta.js';
 
+const { 'base-light': iconGround } = JSON.parse(fs.readFileSync('src/_data/designTokens/colors.json', 'utf8')); // the manifest icons' plate — a token, so it moves with the palette
+
 const TAB_PAD = 1 / 16; // browser tab: a 14px mark in a 16px box — there's no room to be generous at that size
 const TILE_PAD = 0.222; // app icons and home-screen tiles: the roomier inset, since the OS frames them anyway
 const TRANSPARENT = { r: 0, g: 0, b: 0, alpha: 0 };
@@ -35,9 +37,9 @@ async function createFavicons() {
   if (!/viewBox="0 0 100 100"/.test(svgSource)) throw new Error(`${pathToSvgLogo}: expected viewBox="0 0 100 100" to pad — check the logo before trusting the favicons.`);
   fs.writeFileSync(`${outputDir}/favicon.svg`, svgSource.replace('viewBox="0 0 100 100"', `viewBox="${offset.toFixed(3)} ${offset.toFixed(3)} ${box.toFixed(3)} ${box.toFixed(3)}"`));
 
-  // PNG icons
-  await padded(svgBuffer, 192, TILE_PAD).toFile(`${outputDir}/icon-192x192.png`);
-  await padded(svgBuffer, 512, TILE_PAD).toFile(`${outputDir}/icon-512x512.png`);
+  // PNG icons: opaque base-light plate, so the mark reads as a tile on the install sheet and the splash rather than floating on whatever is behind it.
+  await padded(svgBuffer, 192, TILE_PAD, iconGround.$value).toFile(`${outputDir}/icon-192x192.png`);
+  await padded(svgBuffer, 512, TILE_PAD, iconGround.$value).toFile(`${outputDir}/icon-512x512.png`);
 
   // apple-touch-icon + maskable: the mark knocked out of a solid brand ground, so the tile reads as a logo and launchers have no transparency to mask through.
   await padded(knockout, 180, TILE_PAD, markColor).toFile(`${outputDir}/apple-touch-icon.png`);
