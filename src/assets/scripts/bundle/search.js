@@ -100,8 +100,8 @@ const open = async () => {
   toggle.setAttribute('aria-expanded', 'true');
   // Close the mega-menu: both panels anchor to the same header row with the same alignment, so open together they sit on top of each other.
   document.querySelector('[data-menu-toggle]')?.setAttribute('aria-expanded', 'false');
-  await loadIndex();
   input.focus();
+  await loadIndex();
 };
 
 toggle.addEventListener('click', () => {

@@ -4,8 +4,9 @@ Single icon button in the header, showing the CURRENT theme: sun in light, moon 
 Progressive enhancement: hidden until <is-land> upgrades — a toggle that can't run shouldn't show. The no-flash theme itself is set by the inline theme-toggle.js.
 */
 .theme-toggle {
-  /* sized to sit alongside the wordmark logo in the header */
-  --theme-toggle-size: var(--size-step-min-1);
+  /* Outer box sized to sit alongside the wordmark logo in the header; the glyph is one step smaller than that box, and the padding takes up the difference. */
+  --theme-toggle-box: calc(var(--size-step-min-1) + var(--space-2xs) * 2);
+  --theme-toggle-size: var(--size-step-min-2);
   /* The sun is orange, matching the logomark at the other end of the header; the moon is plain text color (dark override below). Hover deepens the sun by mixing toward the text color — a nudge, not a jump. */
   --theme-toggle-color: var(--color-accent-orange);
   --theme-toggle-color-hover: color-mix(in oklab, var(--color-accent-orange) 82%, var(--color-text));
@@ -23,7 +24,7 @@ Progressive enhancement: hidden until <is-land> upgrades — a toggle that can't
   box-sizing: border-box;
   min-block-size: 24px;
   min-inline-size: 24px;
-  padding: var(--space-2xs);
+  padding: calc((var(--theme-toggle-box) - var(--theme-toggle-size)) / 2);
   color: var(--theme-toggle-color);
   background: none;
   border: none;

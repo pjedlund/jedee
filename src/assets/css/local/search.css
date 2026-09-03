@@ -29,9 +29,11 @@ is-land:has(> .site-search) {
 /* ---------- the magnifier ---------- */
 
 .search-toggle {
-  /* Same token, padding and radius as .theme-toggle beside it, so the two icon controls are one size and sit at the MENU trigger's height. ⚠ Size the glyph from this token, not from `em` — the header's inherited font-size is ~27px, which rendered the magnifier half again as big as the sun. */
-  --search-toggle-size: var(--size-step-min-1);
+  /* Outer box matches .theme-toggle beside it; the glyph is one step smaller than the box was built for, so the padding takes up the difference. ⚠ Size the glyph from a token, not from `em` — the header's inherited font-size is ~27px, which rendered the magnifier half again as big as the sun. */
+  --search-toggle-box: calc(var(--size-step-min-1) + var(--space-2xs) * 2);
+  --search-toggle-size: var(--size-step-min-2);
   --search-toggle-color: var(--color-text);
+  --search-toggle-border-color: transparent;
 
   display: inline-flex;
   align-items: center;
@@ -40,10 +42,11 @@ is-land:has(> .site-search) {
   box-sizing: border-box;
   min-block-size: 24px;
   min-inline-size: 24px;
-  padding: var(--space-2xs);
+  /* Padding absorbs both the smaller glyph and the always-present hairline, so the outer box is unchanged. */
+  padding: calc((var(--search-toggle-box) - var(--search-toggle-size)) / 2 - var(--border-thickness));
   background: transparent;
-  border: none;
-  border-radius: var(--border-radius-small);
+  border: var(--border-thickness) solid var(--search-toggle-border-color);
+  border-radius: var(--border-radius-medium);
   color: var(--search-toggle-color);
   cursor: pointer;
   touch-action: manipulation;
@@ -59,7 +62,10 @@ is-land:has(> .site-search) {
   --search-toggle-color: var(--color-accent-orange);
 }
 
+/* open: the same fill + hairline the MENU trigger takes when the mega-menu is open, so the two read as one control set */
 .search-toggle[aria-expanded='true'] {
+  --search-toggle-border-color: color-mix(in oklab, var(--color-text) 18%, var(--color-bg));
+
   background: var(--search-surface);
 }
 
@@ -111,9 +117,14 @@ is-land:has(> .site-search) {
 }
 
 @media (prefers-reduced-motion: no-preference) {
+  /* ⚠ visibility flips instantly on the way OPEN and only waits out the fade on the way closed — a transitioned `visibility` is still `hidden` for the first frame, and focus() on a hidden input silently does nothing. */
   .search-panel {
     transform: translateY(-0.5rem);
-    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s linear;
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear;
+  }
+
+  .search-toggle[aria-expanded='false'] + .search-panel {
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
   }
 
   .search-toggle[aria-expanded='true'] + .search-panel {
@@ -153,6 +164,11 @@ is-land:has(> .site-search) {
   outline: none;
 }
 
+/* WebKit's own cancel button is drawn at a fixed pixel size, so it stops matching the row the moment the page is zoomed — .search-clear is the one that scales. */
+.search-input::-webkit-search-cancel-button {
+  display: none;
+}
+
 /* The UA default measured 4.37:1 in light and 3.42:1 in dark. Placeholder text is text — same 80/72 pair as .search-more. */
 .search-input::placeholder {
   color: color-mix(in oklab, var(--color-text) 80%, var(--search-surface));
@@ -161,6 +177,11 @@ is-land:has(> .site-search) {
 
 :root[data-theme='dark'] .search-input::placeholder {
   color: color-mix(in oklab, var(--color-text) 72%, var(--search-surface));
+}
+
+/* ⚠ `display` on the class outranks the UA's [hidden] rule, so the empty-field state needs saying explicitly — without it a dead X sits in the field from the moment the panel opens. */
+.search-clear[hidden] {
+  display: none;
 }
 
 .search-clear {
