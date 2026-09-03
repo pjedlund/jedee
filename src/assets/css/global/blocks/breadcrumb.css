@@ -72,7 +72,7 @@ Top-left wayfinding that replaces the old site logo: the home crumb is the logom
   block-size: var(--breadcrumb-line);
 }
 
-/* links: muted, underline only on hover/keyboard focus (focus ring is global) */
+/* links: muted, brightening to full contrast on hover/keyboard focus (focus ring is global) */
 .breadcrumb a {
   /* The focus ring is drawn on the box, so the box carries the MENU trigger's block padding + radius and every crumb rings up the same shape and height as the header buttons. The negative margin hands the extra height straight back, so the header row is unchanged. */
   display: inline-flex;
@@ -85,11 +85,10 @@ Top-left wayfinding that replaces the old site logo: the home crumb is the logom
   /* No `transition: color` on purpose: transitioning a color that resolves from color-mix(var(--color-text)…) sticks on the pre-toggle value when the theme flips (Chromium), leaving the link at a failing contrast. */
 }
 
+/* Contrast alone carries the hover — no underline. Every item in a breadcrumb is a link, so position says what's clickable and WCAG 1.4.1's in-body-text case doesn't apply; keyboard focus still gets the ring. */
 .breadcrumb a:hover,
 .breadcrumb a:focus-visible {
   color: var(--breadcrumb-color-current);
-  text-decoration: underline;
-  text-underline-offset: 0.25em;
 }
 
 /* home crumb = the logomark. Sized to the trail's cap height rather than a little above it: the mark shares the crumb links' ring box, and at its old 1.2em the ring came wide enough to crowd the first chevron. */
