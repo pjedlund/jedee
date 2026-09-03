@@ -5,11 +5,13 @@ Top-left wayfinding that replaces the old site logo: the home crumb is the logom
 
 .breadcrumb {
   --breadcrumb-size: var(--size-step-min-2);
-  --breadcrumb-gap: var(--space-2xs, var(--space-xs));
+  --breadcrumb-gap: var(--space-xs);
+  /* Side padding on every crumb, matching the MENU trigger's, so a focus ring has the same room around its content as the header buttons do. */
+  --breadcrumb-pad: var(--space-s);
   /* 85% keeps the muted ancestor links + "by" above 4.5:1 (~5:1 in light); 60% rendered at 2.92:1. */
   --breadcrumb-color-ancestor: color-mix(in oklab, var(--color-text) 85%, var(--color-bg));
   --breadcrumb-color-current: var(--color-text);
-  --breadcrumb-color-separator: color-mix(in oklab, var(--color-text) 38%, var(--color-bg));
+  --breadcrumb-color-separator: color-mix(in oklab, var(--color-text) 28%, var(--color-bg));
   /* The leaf's taller line box is what sets the header row's height, and the home page has no leaf — hence one shared line so the row doesn't jump between home and everywhere else. */
   --breadcrumb-leaf-leading: 1.35;
   --breadcrumb-line: calc(1em * var(--breadcrumb-leaf-leading));
@@ -70,6 +72,8 @@ Top-left wayfinding that replaces the old site logo: the home crumb is the logom
   /* The trail's `line-height: 1` is fine for the uppercase ancestors (no descenders) but clips a lowercase leaf — most visibly the italic "y" in a Jam's "by". ⚠ Pinned to the same line: a -webkit-box rounds its own box up half a pixel, which is enough to leave the row a hair taller here than on the home page. */
   line-height: var(--breadcrumb-leaf-leading);
   block-size: var(--breadcrumb-line);
+  /* Start only: it matches the previous crumb's trailing padding so the separator stays centred, and nothing follows the leaf that a trailing one would balance. */
+  padding-inline-start: var(--breadcrumb-pad);
 }
 
 /* links: muted, brightening to full contrast on hover/keyboard focus (focus ring is global) */
@@ -79,6 +83,7 @@ Top-left wayfinding that replaces the old site logo: the home crumb is the logom
   align-items: center;
   block-size: calc(1em + var(--space-xs) * 2 + var(--border-thickness) * 2);
   margin-block: calc((var(--space-xs) + var(--border-thickness)) * -1);
+  padding-inline: var(--breadcrumb-pad);
   border-radius: var(--border-radius-medium);
   color: var(--breadcrumb-color-ancestor);
   text-decoration: none;
@@ -114,8 +119,8 @@ Top-left wayfinding that replaces the old site logo: the home crumb is the logom
   border: solid var(--breadcrumb-color-separator);
   border-width: 0.1em 0.1em 0 0;
   rotate: 45deg;
-  /* nudge the rotated box onto the optical center of the cap height */
-  translate: 0 -0.05em;
+  /* Nudge onto the cap height's optical centre, and left onto the box's: rotating a square 45deg leaves the two drawn borders entirely in the box's RIGHT half, which reads as the chevron sitting closer to the crumb after it. */
+  translate: -0.08em -0.05em;
 }
 
 /* Connector words in a leaf — the Jam "by", the Like "on": a quiet italic against the uppercase trail. Uses the body face on purpose; it's the only family with a real italic loaded, so the display serif would give a faux slant instead of true italic glyphs. */
