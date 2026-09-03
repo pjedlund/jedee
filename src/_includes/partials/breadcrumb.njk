@@ -5,11 +5,12 @@
    - Final crumb = the current page, plain text, aria-current="page", never a link. Its label is rendered through partials/breadcrumb-leaf.njk (per-type, e.g. the Jam "song by artist" treatment).
    Separators are drawn in CSS (breadcrumb.css), so assistive tech never reads them. #}
 
+{# ⚠ The `{%-` trims are load-bearing: an untrimmed `<li>` leaves whitespace text nodes either side of the crumb, which drag-selection paints as a stray block past the link. #}
 <nav aria-label="Breadcrumb" class="breadcrumb">
   <ol class="cluster" role="list">
     {% for crumb in breadcrumbs %}
       <li>
-        {% if crumb.isHome %}
+        {%- if crumb.isHome -%}
           <a
             href="/"
             class="breadcrumb-home"
@@ -24,13 +25,11 @@
               <span class="breadcrumb-reveal" aria-hidden="true">{{ meta.siteName }}<span class="breadcrumb-caret"></span></span>
             {% endif %}
           </a>
-        {% elif crumb.current %}
-          <span class="breadcrumb-current" aria-current="page">
-            {% include "partials/breadcrumb-leaf.njk" %}
-          </span>
-        {% else %}
+        {%- elif crumb.current -%}
+          <span class="breadcrumb-current" aria-current="page">{%- include "partials/breadcrumb-leaf.njk" -%}</span>
+        {%- else -%}
           <a href="{{ crumb.url }}">{{ crumb.label }}</a>
-        {% endif %}
+        {%- endif -%}
       </li>
     {% endfor %}
   </ol>

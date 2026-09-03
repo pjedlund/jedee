@@ -3,6 +3,11 @@ BREADCRUMB NAME REVEAL — start page only
 The wordmark types itself in beside the logomark, the caret blinks twice, then backspaces it away.
 */
 
+/* Positioning context for the out-of-flow name below. Scoped with :has so it only applies where the reveal actually renders. */
+.breadcrumb-home:has(> .breadcrumb-reveal) {
+  position: relative;
+}
+
 .breadcrumb-reveal {
   --reveal-in: 0.65s;
   --reveal-blink: 0.75s; /* one on/off cycle — it runs twice */
@@ -16,8 +21,13 @@ The wordmark types itself in beside the logomark, the caret blinks twice, then b
   --reveal-at-out: calc(var(--reveal-at-blink) + var(--reveal-blink) * 2);
   --reveal-at-end: calc(var(--reveal-at-out) + var(--reveal-out));
 
-  position: relative;
-  margin-inline-start: var(--breadcrumb-gap);
+  /* Out of flow: the name keeps its width once hidden, which left the logomark's focus ring wrapped around a wide empty box. It is pointer-events: none, so it was never part of the click target and loses nothing by leaving the flow. */
+  position: absolute;
+  inset-inline-start: 100%;
+  /* ⚠ Out of flow, the name shrink-to-fits against the narrow logomark box and wraps onto two lines — max-content is what keeps it on one. */
+  inline-size: max-content;
+  /* Anchored to the square's edge, so the gap has to drop the slack the square adds past the mark. */
+  margin-inline-start: calc(var(--breadcrumb-gap) - var(--breadcrumb-mark-slack));
   /* ⚠ The caret is pinned to this box's inline end, and its `100%` resolves against the PADDING box — so the gap after the last glyph has to carry the caret's width too. */
   padding-inline-end: calc(var(--reveal-caret-gap) + var(--reveal-caret-width));
   color: var(--color-text);
