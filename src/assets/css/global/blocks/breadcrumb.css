@@ -6,8 +6,8 @@ Top-left wayfinding that replaces the old site logo: the home crumb is the logom
 .breadcrumb {
   --breadcrumb-size: var(--size-step-min-2);
   --breadcrumb-gap: var(--space-xs);
-  /* Side padding on every crumb, matching the MENU trigger's, so a focus ring has the same room around its content as the header buttons do. */
-  --breadcrumb-pad: var(--space-s);
+  /* The crumb links' box, and so their focus ring: the MENU trigger's block padding around one line. The home crumb uses it on BOTH axes to ring the logomark in a square. */
+  --breadcrumb-box: calc(1em + var(--space-xs) * 2 + var(--border-thickness) * 2);
   /* 85% keeps the muted ancestor links + "by" above 4.5:1 (~5:1 in light); 60% rendered at 2.92:1. */
   --breadcrumb-color-ancestor: color-mix(in oklab, var(--color-text) 85%, var(--color-bg));
   --breadcrumb-color-current: var(--color-text);
@@ -72,8 +72,6 @@ Top-left wayfinding that replaces the old site logo: the home crumb is the logom
   /* The trail's `line-height: 1` is fine for the uppercase ancestors (no descenders) but clips a lowercase leaf — most visibly the italic "y" in a Jam's "by". ⚠ Pinned to the same line: a -webkit-box rounds its own box up half a pixel, which is enough to leave the row a hair taller here than on the home page. */
   line-height: var(--breadcrumb-leaf-leading);
   block-size: var(--breadcrumb-line);
-  /* Start only: it matches the previous crumb's trailing padding so the separator stays centred, and nothing follows the leaf that a trailing one would balance. */
-  padding-inline-start: var(--breadcrumb-pad);
 }
 
 /* links: muted, brightening to full contrast on hover/keyboard focus (focus ring is global) */
@@ -81,9 +79,8 @@ Top-left wayfinding that replaces the old site logo: the home crumb is the logom
   /* The focus ring is drawn on the box, so the box carries the MENU trigger's block padding + radius and every crumb rings up the same shape and height as the header buttons. The negative margin hands the extra height straight back, so the header row is unchanged. */
   display: inline-flex;
   align-items: center;
-  block-size: calc(1em + var(--space-xs) * 2 + var(--border-thickness) * 2);
+  block-size: var(--breadcrumb-box);
   margin-block: calc((var(--space-xs) + var(--border-thickness)) * -1);
-  padding-inline: var(--breadcrumb-pad);
   border-radius: var(--border-radius-medium);
   color: var(--breadcrumb-color-ancestor);
   text-decoration: none;
@@ -96,7 +93,13 @@ Top-left wayfinding that replaces the old site logo: the home crumb is the logom
   color: var(--breadcrumb-color-current);
 }
 
-/* home crumb = the logomark. Sized to the trail's cap height rather than a little above it: the mark shares the crumb links' ring box, and at its old 1.2em the ring came wide enough to crowd the first chevron. */
+/* home crumb = the logomark, in a square: the ring is already the box's height, so matching the width rings the mark evenly on all four sides instead of hugging its 15px width. */
+.breadcrumb-home {
+  inline-size: var(--breadcrumb-box);
+  justify-content: center;
+}
+
+/* Sized to the trail's cap height rather than a little above it, so every crumb rings up identically. */
 .breadcrumb-home svg {
   inline-size: 0.96em;
   block-size: 1em;
