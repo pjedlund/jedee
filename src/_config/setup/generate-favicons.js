@@ -3,7 +3,7 @@ import sharp from 'sharp';
 import { sharpsToIco } from 'sharp-ico';
 import { pathToSvgLogo, themeLight } from '../../_data/meta.js';
 
-const { 'base-light': iconGround } = JSON.parse(fs.readFileSync('src/_data/designTokens/colors.json', 'utf8')); // the manifest icons' plate — a token, so it moves with the palette
+const { 'base-lightest': iconGround } = JSON.parse(fs.readFileSync('src/_data/designTokens/colors.json', 'utf8')); // the manifest icons' plate — a token, so it moves with the palette
 
 const TAB_PAD = 1 / 16; // browser tab: a 14px mark in a 16px box — there's no room to be generous at that size
 const TILE_PAD = 0.222; // app icons and home-screen tiles: the roomier inset, since the OS frames them anyway
