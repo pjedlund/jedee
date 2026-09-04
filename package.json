@@ -31,7 +31,8 @@
     "flags": "grep -rn \"@until\" src netlify eleventy.config.js || echo 'No expiring comments.'",
     "test:unit": "node --test _local/tests/*.test.js",
     "sketch:tokens": "node src/_config/setup/build-sketch-tokens.js",
-    "devices": "node src/wiki/_sources/shoot-device-frames.js"
+    "mockups": "node src/wiki/_sources/shoot-mockups.js",
+    "mockups:check": "node src/wiki/_sources/check-mockups.js"
   },
   "keywords": [],
   "repository": {
