@@ -26,3 +26,12 @@ _log.md is a run of dated records whose h2 is the whole record — "[2026-08-29]
   /* ⚠ Not var(--stroke): that resolves to --color-bg-accent, a surface token that is white in the light theme and vanishes as a line on the page. --color-bg-accent-2 is what the site's own <hr> uses. */
   border-block-start: var(--border-thickness) solid var(--color-bg-accent-2);
 }
+
+/*
+DEVICE FRAMES
+Screenshots whose subject is a rounded, transparent-cornered device — prose's image hairline and radius draw a rectangle around one. Opt out per figure group with data-wiki-devices.
+*/
+[data-wiki-devices] img {
+  border: none;
+  border-radius: 0;
+}
