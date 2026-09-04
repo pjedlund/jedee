@@ -2,3 +2,6 @@
 # (.gitignore already hides most of it, but the clipper/ subfolder is
 # git-tracked, so this keeps Eleventy from ever discovering it regardless.)
 src/_obsidian/
+
+# The wiki's own source artifacts (the device-frame preview page) — tracked in the wiki's inner repo, never a page.
+src/wiki/_sources/
