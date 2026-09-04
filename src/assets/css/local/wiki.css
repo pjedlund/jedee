@@ -28,10 +28,10 @@ _log.md is a run of dated records whose h2 is the whole record — "[2026-08-29]
 }
 
 /*
-DEVICE FRAMES
-Screenshots whose subject is a rounded, transparent-cornered device — prose's image hairline and radius draw a rectangle around one. Opt out per figure group with data-wiki-devices.
+MOCKUP SHOTS
+Shots whose subject has its own rounded, transparent corners — a device frame, a specimen card. Prose's image hairline and radius trace the PNG's bounding box and draw a second, squared box around it. Opt out per figure or figure group with data-wiki-mockup.
 */
-[data-wiki-devices] img {
+[data-wiki-mockup] img {
   border: none;
   border-radius: 0;
 }
