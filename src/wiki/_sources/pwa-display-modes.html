@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Progressive web apps — wiki mockup</title>
+<style>
+  @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../assets/fonts/source-sans/source-sans.woff2') format('woff2'); }
+  @font-face { font-family: 'Source Code Pro'; src: url('../../assets/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }
+
+  /* ⚠ Both status bars are meta.themeLight. The browser tints its own bar from the same <meta name="theme-color">, so giving the left frame a browser gray would have drawn a difference that does not exist. */
+  :root {
+    --ink: #23292F;
+    --paper: #F4F4F2;   /* meta.themeLight — <meta name="theme-color"> in light mode */
+    --rule: #cbcdd2;
+    --muted: #68727F;
+  }
+
+  body { margin: 0; padding: 40px; background: #ddd; font: 14px/1.5 'Source Sans', system-ui, sans-serif; color: var(--ink); }
+
+  /* A specimen carries its own paper the way a device frame carries its own bezel — so one shot reads deliberately on either theme of the wiki page. */
+  .specimen {
+    inline-size: fit-content;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 22px 26px 26px;
+  }
+
+  /* ⚠ Equal columns and identical page content in both: the chrome is the only thing that may differ. */
+  .pair { display: grid; grid-template-columns: 262px 262px; gap: 36px; }
+
+  .label {
+    font-family: 'Source Code Pro', ui-monospace, monospace;
+    font-size: 12px; color: var(--ink); opacity: 0.55; margin: 0 0 12px; text-align: center;
+  }
+
+  .phone { inline-size: 262px; block-size: 470px; border-radius: 26px; background: #39404a; padding: 6px; }
+  .screen { inline-size: 100%; block-size: 100%; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; }
+  .status { block-size: 26px; flex: none; display: flex; align-items: center; justify-content: space-between; padding: 0 12px; font-size: 10px; font-weight: 600; }
+  .status .dots { letter-spacing: 2px; opacity: 0.85; }
+
+  /* Browser chrome: a URL bar above and a toolbar below, both of which the page never gets back. */
+  .urlbar { flex: none; background: #e8e8e6; border-block-end: 1px solid #d3d3d0; padding: 7px 10px; display: flex; align-items: center; gap: 8px; }
+  .urlbar .pill { flex: 1; background: #fff; border-radius: 999px; padding: 4px 10px; font-size: 10px; color: var(--muted); display: flex; align-items: center; gap: 5px; }
+  .urlbar .ic { color: var(--muted); font-size: 12px; }
+  .toolbar { flex: none; background: #e8e8e6; border-block-start: 1px solid #d3d3d0; padding: 9px 16px; display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: var(--muted); }
+
+  /* The page itself — identical markup in both frames. */
+  .app-body { flex: 1; background: var(--paper); padding: 14px; }
+  .crumb { display: flex; align-items: center; gap: 6px; font-size: 9px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); padding-block-end: 12px; border-block-end: 1px solid #dfdfdb; }
+  .crumb svg { inline-size: 13px; block-size: 13px; fill: #d0621e; }
+  .hl { block-size: 9px; border-radius: 3px; background: #d8d8d4; margin-block-start: 12px; }
+  .hl.t { block-size: 13px; inline-size: 75%; background: #c3c3bd; }
+  .hl.s { inline-size: 88%; }
+  .hl.u { inline-size: 62%; }
+</style>
+</head>
+<body>
+
+<div class="specimen" data-shot="pwa-display-modes">
+  <div class="pair">
+    <div>
+      <p class="label">in the browser</p>
+      <div class="phone"><div class="screen" data-compare="display-mode">
+        <div class="status" style="background:#F4F4F2; color:#23292F"><span>9:41</span><span class="dots">▮▮▮ ▰</span></div>
+        <div class="urlbar">
+          <span class="ic">‹</span>
+          <span class="pill">🔒 johanedlund.se</span>
+          <span class="ic">⋯</span>
+        </div>
+        <div class="app-body">
+          <div class="crumb"><svg viewBox="0 0 100 100"><path d="m50 0 .588.003V0h9.706v30.882h-9.706v.009a19 19 0 0 0-.588-.009c-10.558 0-19.118 8.559-19.118 19.118S39.441 69.118 50 69.118 69.118 60.559 69.118 50V30.882C69.118 13.826 82.945 0 100 0v50c0 27.614-22.386 50-50 50S0 77.614 0 50 22.386 0 50 0"/></svg><span>Johan Edlund</span></div>
+          <div class="hl t"></div><div class="hl"></div><div class="hl s"></div><div class="hl"></div><div class="hl u"></div><div class="hl"></div><div class="hl s"></div>
+        </div>
+        <div class="toolbar"><span>‹</span><span>›</span><span>↑</span><span>▣</span><span>⋯</span></div>
+      </div></div>
+    </div>
+
+    <div>
+      <p class="label">display: standalone</p>
+      <div class="phone"><div class="screen" data-compare="display-mode">
+        <div class="status" style="background:#F4F4F2; color:#23292F"><span>9:41</span><span class="dots">▮▮▮ ▰</span></div>
+        <div class="app-body">
+          <div class="crumb"><svg viewBox="0 0 100 100"><path d="m50 0 .588.003V0h9.706v30.882h-9.706v.009a19 19 0 0 0-.588-.009c-10.558 0-19.118 8.559-19.118 19.118S39.441 69.118 50 69.118 69.118 60.559 69.118 50V30.882C69.118 13.826 82.945 0 100 0v50c0 27.614-22.386 50-50 50S0 77.614 0 50 22.386 0 50 0"/></svg><span>Johan Edlund</span></div>
+          <div class="hl t"></div><div class="hl"></div><div class="hl s"></div><div class="hl"></div><div class="hl u"></div><div class="hl"></div><div class="hl s"></div>
+        </div>
+      </div></div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -3,9 +3,8 @@
 #   local — the wiki builds to /wiki/… pages, but ONLY in the dev server (npm start). A production build (npm run build) always ignores it, so the published site stays wiki-free whatever this says. Flip here to read it.
 #   public — the wiki builds everywhere, production included: this is how it goes fully live.
 #   hidden — reserved (_local/design/Plan - LLM wiki (private-first).md §6); flipping to it stops the build with a clear message instead of half-working.
-# Netlify footnote: the wiki's content lives in its own inner git repo that the public jedee repo on GitHub never sees. So "public" only produces a wiki-bearing site for builds made from Johan's machine — Netlify's build from the public repo has no wiki source to include.
 wiki:
-  visibility: local   # private | local | public   (hidden reserved)
+  visibility: public   # private | local | public   (hidden reserved)
 
 # The search dial. `enabled: false` removes /search.json, the header magnifier, and the CSS and JS that ride along with the partial.
 search:

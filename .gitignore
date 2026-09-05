@@ -37,8 +37,6 @@ src/_obsidian/*
 # Raw import source texts, not site content
 /src/_raw/
 
-# Private LLM wiki — own inner git repo, never in this one (see _local/design/Plan - LLM wiki (private-first).md)
-/src/wiki/
 
 # Body images the Obsidian local-images plugin pulls down from a raw wiki clip — third-party
 # media that belongs to the source, not to this site. Post clips have empty bodies and have

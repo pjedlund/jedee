@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The main menu — wiki mockup</title>
+
+<style>
+  @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../assets/fonts/source-sans/source-sans.woff2') format('woff2'); }
+  @font-face { font-family: 'Source Code Pro'; src: url('../../assets/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }
+
+  :root { --ink: #23292F; --paper: #F4F4F2; --rule: #cbcdd2; --chrome: #e8e8e6; --chrome-rule: #d3d3d0; --muted: #68727F; }
+
+  body { margin: 0; padding: 40px; background: #ddd; font: 14px/1.5 'Source Sans', system-ui, sans-serif; color: var(--ink); }
+
+  /* A specimen carries its own paper the way a device frame carries its own bezel — so one shot reads deliberately on either theme of the wiki page. */
+  .specimen { inline-size: fit-content; background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 22px 26px 26px; margin-block-end: 44px; }
+
+  .label { font-family: 'Source Code Pro', ui-monospace, monospace; font-size: 12px; color: var(--ink); opacity: 0.55; margin: 0 0 12px; }
+
+  /* Browser chrome drawn OUTSIDE the scaled iframe, so it stays crisp while the page inside is scaled. */
+  .browser { border: 1px solid var(--chrome-rule); border-radius: 7px; overflow: hidden; background: var(--chrome); inline-size: fit-content; }
+  .bar { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-block-end: 1px solid var(--chrome-rule); }
+  .bar .dot { inline-size: 8px; block-size: 8px; border-radius: 50%; background: #c8c8c4; flex: none; }
+  .bar .pill { flex: 1; background: #fff; border-radius: 999px; padding: 3px 10px; font-size: 10px; color: var(--muted); margin-inline-start: 4px; }
+
+  /* The frame renders at its true width and is scaled down here — scaling, not resizing, is what keeps a 1280px page a 1280px page. */
+  .viewport { overflow: hidden; }
+  .viewport iframe { border: 0; display: block; transform: scale(0.5); transform-origin: top left; }
+
+  .pair { display: flex; align-items: flex-start; gap: 30px; }
+  /* Two 1280px frames side by side come to 1368 CSS px — twice the figure column. Stacked, the two breadcrumbs also line up vertically, which is what the eye needs here. */
+  .stack { display: grid; gap: 22px; }
+  .pair .cap { font-family: 'Source Code Pro', ui-monospace, monospace; font-size: 11px; opacity: 0.55; margin: 0 0 8px; }
+</style>
+</head>
+<body>
+
+<!-- ⚠ Every frame below is built by CLONING one header string, so the markup is identical by construction and only the named variable can differ. -->
+<div class="specimen" data-shot="main-menu-open">
+  <p class="label">with JavaScript · 1280px</p>
+  <div class="browser">
+    <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="pill">johanedlund.se/photos/pier-4-ribersborg/</span></div>
+    <div class="viewport" data-frame="open"></div>
+  </div>
+</div>
+
+<div class="specimen" data-shot="main-menu-no-js">
+  <p class="label">without JavaScript · the same panel, in normal flow</p>
+  <div class="pair">
+    <div>
+      <p class="cap">1280px — two rows</p>
+      <div class="browser">
+        <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="pill">johanedlund.se</span></div>
+        <div class="viewport" data-frame="nojs-wide"></div>
+      </div>
+    </div>
+    <div>
+      <p class="cap">375px — six rows</p>
+      <div class="browser">
+        <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="pill">johanedlund.se</span></div>
+        <div class="viewport" data-frame="nojs-narrow"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="specimen" data-shot="main-menu-breadcrumb-crush">
+  <p class="label">the flexbox trap · both frames 1280px, no JavaScript, same markup</p>
+  <div class="stack">
+    <div>
+      <p class="cap">the pin relaxed to flex: 1 1 auto, row still nowrap</p>
+      <div class="browser">
+        <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="pill">johanedlund.se/photos/pier-4-ribersborg/</span></div>
+        <div class="viewport" data-frame="crush"></div>
+      </div>
+    </div>
+    <div>
+      <p class="cap">shipped: flex: 1 1 22rem, and the row may wrap</p>
+      <div class="browser">
+        <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="pill">johanedlund.se/photos/pier-4-ribersborg/</span></div>
+        <div class="viewport" data-frame="fixed"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="site-header.js"></script>
+<script>
+  // The frames load asynchronously, so the shooters must wait rather than race networkidle0.
+  window.__mockupReady = false;
+
+  // A file:// mockup always has scripting ENABLED, so nav-menu-cls.css's guard hides the panel in the fallback frames too. Re-assert the display .cluster would give it with scripting off — the one thing this mockup cannot reproduce for real.
+  const AS_IF_NO_JS = '.mainnav > ul { display: flex; }';
+
+  // The state before the fix: breadcrumb.css's row pin left in place, and only the cluster's `flex: none` relaxed to auto. Both of main-nav.css's no-JS declarations are overridden, because both are the fix — relaxing just the basis lets the row wrap and the trail survives. Everything else in this frame is the live stylesheet.
+  const BEFORE_FIX = `
+    .site-header .repel:has(.mainnav):not(:has(.menu-toggle)) { --repel-wrap: nowrap; }
+    .site-header .repel > .cluster:has(.mainnav):not(:has(.menu-toggle)) { flex: 1 1 auto; }`;
+
+  // The theme toggle and the search control hide behind `is-land:not(:defined)` — a control that cannot run should not show. Defining the element is what the real page's is-land script does, and it is the difference between the enhanced frame and the fallback ones.
+  const defineIsland = (doc, win) => win.customElements.define('is-land', class extends win.HTMLElement {});
+
+  // The three lines nav-menu.js runs, so the enhanced frame is enhanced the way the site is.
+  const enhance = (doc, win) => {
+    defineIsland(doc, win);
+    const nav = doc.querySelector('#mainnav');
+    const list = nav.querySelector('ul');
+    const clone = doc.querySelector('#menu-template').content.cloneNode(true);
+    const button = clone.querySelector('button[data-menu-toggle]');
+    list.style.setProperty('display', 'grid');
+    list.removeAttribute('data-no-flash');
+    nav.insertBefore(clone, list);
+    button.setAttribute('aria-expanded', 'true');
+  };
+
+  const frame = (name, width, opts) =>
+    window.mountFrame({ mount: document.querySelector(`[data-frame="${name}"]`), width, ...opts })
+      .then(() => {
+        const holder = document.querySelector(`[data-frame="${name}"]`);
+        const iframe = holder.querySelector('iframe');
+        const doc = iframe.contentDocument;
+        // The open panel is absolutely positioned, so the frame is sized to whatever the document actually reaches.
+        iframe.height = Math.ceil(doc.documentElement.scrollHeight);
+        holder.style.inlineSize = `${width * 0.5}px`;
+        holder.style.blockSize = `${iframe.height * 0.5}px`;
+      });
+
+  Promise.all([
+    frame('open', 1280, { locals: ['nav-menu-cls', 'search'], onLoad: enhance }),
+    frame('nojs-wide', 1280, { locals: ['nav-menu-cls', 'search'], css: AS_IF_NO_JS }),
+    frame('nojs-narrow', 375, { locals: ['nav-menu-cls', 'search'], css: AS_IF_NO_JS }),
+    frame('crush', 1280, { locals: ['nav-menu-cls', 'search'], css: AS_IF_NO_JS + BEFORE_FIX }),
+    frame('fixed', 1280, { locals: ['nav-menu-cls', 'search'], css: AS_IF_NO_JS })
+  ]).then(() => {
+    // The gate compares the breadcrumb alone: it is the smallest element that isolates the variable, and the pill row beside it differs by construction.
+    ['crush', 'fixed'].forEach(name => {
+      const trail = document.querySelector(`[data-frame="${name}"] iframe`).contentDocument.querySelector('.breadcrumb');
+      trail.dataset.compare = 'breadcrumb-crush';
+    });
+    requestAnimationFrame(() => requestAnimationFrame(() => (window.__mockupReady = true)));
+  });
+</script>
+
+</body>
+</html>

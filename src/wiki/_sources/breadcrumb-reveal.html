@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<title>Choreographing CSS animations — wiki mockup</title>
+
+<!-- ⚠ The site's compiled bundle plus the reveal's own local source, so the type, the logomark and every step time here ARE the shipped ones. global.css is a build artifact: run `npm start` or `npm run build` once if it is missing. -->
+<link rel="stylesheet" href="../../_includes/css/global.css">
+<link rel="stylesheet" href="../../assets/css/local/breadcrumb-reveal.css">
+
+<style>
+  /* The bundle's own @font-face rules point at absolute /assets paths, which resolve to nothing under file://. */
+  @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../assets/fonts/source-sans/source-sans.woff2') format('woff2'); }
+  @font-face { font-family: 'Source Code Pro'; src: url('../../assets/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }
+
+  body { margin: 0; padding: 40px; background: #ddd; }
+
+  /* A specimen carries its own paper the way a device frame carries its own bezel — so one shot reads deliberately on either theme of the wiki page. */
+  .specimen {
+    inline-size: fit-content;
+    background: var(--color-bg);
+    border: 1px solid var(--color-bg-accent-2);
+    border-radius: 6px;
+    padding: 22px 24px 26px;
+  }
+
+  /* One row per frame: the time on the left, the frozen header on the right. A column strip would set each frame at a different measure, and the name's width is part of what the caret is tracking. */
+  .strip { display: grid; grid-template-columns: 270px 360px; align-items: center; row-gap: 2px; }
+
+  .at {
+    font-family: 'Source Code Pro', ui-monospace, monospace;
+    font-size: 12px; color: var(--color-text); opacity: 0.55;
+    padding-inline-end: 18px; text-align: end;
+  }
+  .at b { display: block; font-weight: 400; opacity: 0.75; font-size: 11px; }
+
+  /* ⚠ Every frame is the same box: only the animation clock may differ between them. A frame sized to its own content would grow with the name and read as part of the reveal. */
+  .frame {
+    padding: 2px 16px;
+    border-inline-start: 1px solid var(--color-bg-accent-2);
+  }
+  .frame .breadcrumb { padding-block: 8px; }
+</style>
+</head>
+<body>
+
+<div class="specimen" data-shot="reveal-filmstrip">
+  <div class="strip" id="strip"></div>
+</div>
+
+<script>
+  // Freeze this page before anything is shot: the frames are built, seeked, and only then declared ready.
+  window.__mockupReady = false;
+
+  const logo = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="16" height="16"><path d="m50 0 .588.003V0h9.706v30.882h-9.706v.009a19 19 0 0 0-.588-.009c-10.558 0-19.118 8.559-19.118 19.118S39.441 69.118 50 69.118 69.118 60.559 69.118 50V30.882C69.118 13.826 82.945 0 100 0v50c0 27.614-22.386 50-50 50S0 77.614 0 50 22.386 0 50 0"/></svg>`;
+
+  // The chain is 1s dead, 0.65s typing, two 0.75s blinks, 0.5s backspace — so these are the six instants that say something different about it.
+  const frames = [
+    // ⚠ Not t=1000: at the instant the wipe starts the frame is blank, and so is the one past the end — mockups:check rejected the pair as identical, which is the correct answer. The 1s of dead time before this is prose, not a frame.
+    [1080, 'the wipe has just begun, 80ms in'],
+    [1325, 'halfway through the wipe, caret on its edge'],
+    [1650, 'the name is complete, caret parked at the end'],
+    [2100, 'first blink, caret off (step-end, no fade)'],
+    [3400, 'backspacing — the caret rides the edge back'],
+    [3700, 'past the end: the bare logomark every other page shows'],
+  ];
+
+  const strip = document.getElementById('strip');
+  for (const [t, note] of frames) {
+    const row = document.createElement('div');
+    row.className = 'at';
+    row.innerHTML = `${(t / 1000).toFixed(3)}s<b>${note}</b>`;
+    const frame = document.createElement('div');
+    frame.className = 'frame';
+    frame.dataset.at = t;
+    frame.dataset.compare = 'reveal';
+    frame.innerHTML = `<nav class="breadcrumb"><ol class="cluster" role="list"><li><a href="/" class="breadcrumb-home">${logo}<span class="breadcrumb-reveal" aria-hidden="true">Johan Edlund<span class="breadcrumb-caret"></span></span></a></li></ol></nav>`;
+    strip.append(row, frame);
+  }
+
+  // The technique this page documents, applied to itself: pause every animation in the frame and seek it. Nothing is left running, so the shot cannot catch a stale frame.
+  requestAnimationFrame(() => {
+    for (const frame of strip.querySelectorAll('.frame')) {
+      for (const a of frame.getAnimations({ subtree: true })) {
+        a.pause();
+        a.currentTime = Number(frame.dataset.at);
+      }
+    }
+    // ⚠ Two frames after seeking, not zero: the page's own warning is that a shot taken in the same batch as the pause can still show the previous frame.
+    requestAnimationFrame(() => requestAnimationFrame(() => { window.__mockupReady = true; }));
+  });
+</script>
+
+</body>
+</html>

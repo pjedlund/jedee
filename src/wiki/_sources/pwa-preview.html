@@ -1,0 +1,155 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>PWA preview</title>
+<style>
+  body { margin:0; padding:32px; font:14px/1.5 -apple-system, system-ui, sans-serif; background:#ececea; color:#23292F; }
+  h1 { font-size:18px; margin:0 0 4px; }
+  .lede { color:#68727F; margin:0 0 28px; max-width:62ch; }
+  .row { display:flex; gap:28px; flex-wrap:wrap; }
+  .item { width:240px; }
+  .cap { font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:#68727F; font-weight:700; margin:10px 0 2px; }
+  .note { font-size:12px; color:#8a939c; line-height:1.4; }
+
+  .phone { width:240px; height:460px; border-radius:26px; background:#39404a; padding:6px; box-shadow:0 8px 24px rgb(0 0 0 / .2); }
+  .screen { width:100%; height:100%; border-radius:20px; overflow:hidden; display:flex; flex-direction:column; position:relative; }
+  .status { height:26px; flex:none; display:flex; align-items:center; justify-content:space-between; padding:0 12px; font-size:10px; font-weight:600; color:#fff; }
+  .status .dots { letter-spacing:2px; opacity:.85; }
+
+  /* home screen */
+  .wall { flex:1; background:linear-gradient(160deg,#5a6a7a,#2b333d); padding:16px; }
+  .apps { display:grid; grid-template-columns:repeat(4,1fr); gap:14px 10px; }
+  .app { text-align:center; }
+  .app img, .app .ph { width:42px; height:42px; border-radius:12px; display:block; margin:0 auto 4px; }
+  .app .ph { background:rgb(255 255 255 / .16); }
+  .app span { font-size:8px; color:#fff; text-shadow:0 1px 2px rgb(0 0 0 / .4); }
+
+  /* splash */
+  .splash { flex:1; background:#F4F4F2; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; }
+  .splash img { width:88px; height:88px; }
+  .splash b { font-size:13px; font-weight:600; color:#23292F; }
+
+  /* running */
+  .app-body { flex:1; background:#F4F4F2; padding:14px; }
+  .crumb { display:flex; align-items:center; gap:6px; font-size:9px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:#68727F; padding-bottom:12px; border-bottom:1px solid #dfdfdb; }
+  .crumb img { width:13px; height:13px; }
+  .hl { height:9px; border-radius:3px; background:#d8d8d4; margin-top:12px; }
+  .hl.t { height:13px; width:75%; background:#c3c3bd; }
+
+  /* recents */
+  .recents { flex:1; background:#2b333d; padding:22px 14px; display:flex; flex-direction:column; align-items:center; }
+  .card { width:100%; border-radius:12px; overflow:hidden; box-shadow:0 6px 16px rgb(0 0 0 / .35); }
+  .card-bar { display:flex; align-items:center; gap:7px; padding:7px 9px; font-size:10px; font-weight:600; color:#fff; }
+  .card-bar img { width:15px; height:15px; border-radius:4px; }
+  .card-body { background:#F4F4F2; height:180px; padding:12px; }
+
+  /* install sheet */
+  .dim { flex:1; background:#5a6a7a; position:relative; }
+  .sheet { position:absolute; left:0; right:0; bottom:0; background:#fff; border-radius:16px 16px 0 0; padding:16px; }
+  .sheet-top { display:flex; gap:11px; align-items:center; }
+  .sheet-top img { width:42px; height:42px; }
+  .sheet-name { font-size:13px; font-weight:600; }
+  .sheet-url { font-size:11px; color:#68727F; }
+  .btns { display:flex; justify-content:flex-end; gap:16px; margin-top:16px; font-size:12px; font-weight:600; }
+  .btns .a { color:#68727F; }
+  .btns .b { color:#d0621e; }
+</style>
+
+<h1>What the installed app looks like</h1>
+<p class="lede">Rendered from the real generated icons and the values the site actually emits. Two different colors drive the chrome: the manifest’s <code>theme_color</code> (#495464 slate) paints the splash and the recents card, but once a page loads the <code>&lt;meta name="theme-color"&gt;</code> tags in <code>meta-info.njk</code> take over — #F4F4F2 in light, #495464 in dark (was #bbbfca).</p>
+<p class="lede"><b>Every app icon is now the same orange tile.</b> The manifest icons carry their own 22% corners because nothing masks them; apple-touch and maskable stay square edge to edge, since iOS and Android apply their own mask and baked corners would punch holes through it. Only the browser tab keeps the bare transparent mark.</p>
+
+<div class="row">
+
+  <div class="item">
+    <div class="phone" data-shot="pwa-home-screen"><div class="screen">
+      <div class="status" style="background:#3c4653"><span>9:41</span><span class="dots">▮▮▮ ▰</span></div>
+      <div class="wall">
+        <div class="apps">
+          <div class="app"><span class="ph"></span><span>Mail</span></div>
+          <div class="app"><span class="ph"></span><span>Maps</span></div>
+          <div class="app"><img src="../../assets/images/favicon/maskable-icon.png" style="border-radius:50%" alt=""><span>Johan Edlund</span></div>
+          <div class="app"><span class="ph"></span><span>Photos</span></div>
+          <div class="app"><span class="ph"></span><span>Notes</span></div>
+          <div class="app"><span class="ph"></span><span>Music</span></div>
+          <div class="app"><span class="ph"></span><span>Files</span></div>
+          <div class="app"><span class="ph"></span><span>Clock</span></div>
+        </div>
+      </div>
+    </div></div>
+    <p class="cap">Home screen</p>
+    <p class="note">The maskable icon under Android&rsquo;s circular crop.</p>
+  </div>
+
+  <div class="item">
+    <div class="phone" data-shot="pwa-install-prompt"><div class="screen">
+      <div class="status" style="background:#5a6a7a"><span>9:41</span><span class="dots">▮▮▮ ▰</span></div>
+      <div class="dim">
+        <div class="sheet">
+          <div class="sheet-top">
+            <img src="../../assets/images/favicon/icon-192x192.png" alt="">
+            <div><div class="sheet-name">Johan Edlund</div><div class="sheet-url">johanedlund.se</div></div>
+          </div>
+          <div class="btns"><span class="a">Cancel</span><span class="b">Install</span></div>
+        </div>
+      </div>
+    </div></div>
+    <p class="cap">Install prompt</p>
+    <p class="note">The same tile the user will see on their home screen.</p>
+  </div>
+
+  <div class="item">
+    <div class="phone" data-shot="pwa-splash-screen"><div class="screen">
+      <div class="status" style="background:#495464"><span>9:41</span><span class="dots">▮▮▮ ▰</span></div>
+      <div class="splash">
+        <img src="../../assets/images/favicon/icon-512x512.png" alt="">
+        <b>Johan Edlund</b>
+      </div>
+    </div></div>
+    <p class="cap">Splash screen</p>
+    <p class="note">The tile reads as a distinct object on the #F4F4F2 splash.</p>
+  </div>
+
+  <div class="item">
+    <div class="phone" data-shot="pwa-running-light"><div class="screen">
+      <div class="status" style="background:#F4F4F2; color:#23292F"><span>9:41</span><span class="dots">▮▮▮ ▰</span></div>
+      <div class="app-body">
+        <div class="crumb"><img src="../../assets/images/favicon/favicon.svg" alt=""><span>&rsaquo; Jams &rsaquo; Genres</span></div>
+        <div class="hl t"></div><div class="hl"></div><div class="hl" style="width:92%"></div><div class="hl" style="width:70%"></div>
+        <div class="hl t" style="margin-top:22px"></div><div class="hl"></div><div class="hl" style="width:84%"></div>
+      </div>
+    </div></div>
+    <p class="cap">Running &mdash; light</p>
+    <p class="note">Status bar is #F4F4F2 from the meta tag, not the manifest slate. Chrome and page are one surface.</p>
+  </div>
+
+  <div class="item">
+    <div class="phone" data-shot="pwa-running-dark"><div class="screen">
+      <div class="status" style="background:#495464; color:#fff"><span>9:41</span><span class="dots">▮▮▮ ▰</span></div>
+      <div class="app-body" style="background:#141619">
+        <div class="crumb" style="color:#9aa0a6; border-color:#383b3f"><img src="../../assets/images/favicon/favicon.svg" alt=""><span>&rsaquo; Jams &rsaquo; Genres</span></div>
+        <div class="hl t" style="background:#383b3f"></div><div class="hl" style="background:#2a2d31"></div><div class="hl" style="width:92%; background:#2a2d31"></div><div class="hl" style="width:70%; background:#2a2d31"></div>
+        <div class="hl t" style="margin-top:22px; background:#383b3f"></div><div class="hl" style="background:#2a2d31"></div><div class="hl" style="width:84%; background:#2a2d31"></div>
+      </div>
+    </div></div>
+    <p class="cap">Running &mdash; dark</p>
+    <p class="note">themeDark is now #495464 &mdash; the brand tone, reading as a dark band over the near-black page.</p>
+  </div>
+
+  <div class="item">
+    <div class="phone" data-shot="pwa-recent-apps"><div class="screen">
+      <div class="status" style="background:#2b333d"><span>9:41</span><span class="dots">▮▮▮ ▰</span></div>
+      <div class="recents">
+        <div class="card">
+          <div class="card-bar" style="background:#495464"><img src="../../assets/images/favicon/maskable-icon.png" alt=""><span>Johan Edlund</span></div>
+          <div class="card-body">
+            <div class="hl t"></div><div class="hl"></div><div class="hl" style="width:88%"></div>
+          </div>
+        </div>
+      </div>
+    </div></div>
+    <p class="cap">Recent apps</p>
+    <p class="note">Android tints the card header with theme_color.</p>
+  </div>
+
+
+</div>

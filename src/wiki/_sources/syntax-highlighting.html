@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<title>Syntax highlighting — wiki mockup</title>
+
+<!-- ⚠ The site's compiled bundle, so the token colors here ARE code.css's and cannot drift from it. It is a build artifact: run `npm start` or `npm run build` once if this file is missing. -->
+<link rel="stylesheet" href="../../_includes/css/global.css">
+
+<style>
+  /* The bundle's own @font-face rules point at absolute /assets paths, which resolve to nothing under file:// — re-declare the two faces this specimen uses by relative path. */
+  @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../assets/fonts/source-sans/source-sans.woff2') format('woff2'); }
+  @font-face { font-family: 'Source Code Pro'; src: url('../../assets/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }
+
+  body { margin: 0; padding: 40px; background: #ddd; }
+
+  /* A specimen carries its own paper the way a device frame carries its own bezel — so one shot reads deliberately on either theme of the wiki page. */
+  .specimen {
+    inline-size: 700px;
+    background: var(--color-bg);
+    border: 1px solid var(--color-bg-accent-2);
+    border-radius: 6px;
+    padding: 22px 24px 26px;
+  }
+
+  .label {
+    font-family: 'Source Code Pro', ui-monospace, monospace;
+    font-size: 12px; color: var(--color-text); opacity: 0.55; margin: 0 0 12px;
+  }
+
+  /* ⚠ Equal widths, the SAME source string, and white-space pinned on both: the language tag is the only thing that may differ. Left to themselves the two blocks broke at different points, and a difference in wrapping is not the finding. */
+  .specimen pre { margin: 0 0 26px; padding: 18px 20px; overflow: visible; }
+  /* ⚠ The size and the white-space must be forced onto every descendant: code.css sizes `code` as well as `pre`, and the token spans of the highlighted half wrap where the flat half does not. */
+  .specimen pre, .specimen pre * { font-size: 13px; white-space: pre; }
+  .specimen pre:last-child { margin-block-end: 0; }
+</style>
+</head>
+<body>
+
+<div class="specimen" data-shot="syntax-njk-vs-jinja2">
+  <p class="label">```njk &nbsp;—&nbsp; no Prism grammar, so plaintext</p>
+  <!-- Both blocks below are the real output of src/_config/plugins/markdown.js, not hand-written. Regenerate with the one-liner on the wiki page "Syntax highlighting". -->
+  <pre data-compare="highlighting"><code class="language-plaintext">{% if webmentions.length %}
+  &lt;h2 class="webmentions-title">{{ webmentions.length }} responses&lt;/h2>
+{% endif %}
+</code></pre>
+
+  <p class="label">```jinja2 &nbsp;—&nbsp; what the njk fence is rewritten to</p>
+  <pre data-compare="highlighting"><code class="language-jinja2"><span class="token jinja2 language-jinja2"><span class="token delimiter punctuation">{%</span> <span class="token tag keyword">if</span> <span class="token variable">webmentions</span><span class="token punctuation">.</span><span class="token variable">length</span> <span class="token delimiter punctuation">%}</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h2</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>webmentions-title<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token jinja2 language-jinja2"><span class="token delimiter punctuation">{{</span> <span class="token variable">webmentions</span><span class="token punctuation">.</span><span class="token variable">length</span> <span class="token delimiter punctuation">}}</span></span> responses<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h2</span><span class="token punctuation">></span></span>
+<span class="token jinja2 language-jinja2"><span class="token delimiter punctuation">{%</span> <span class="token tag keyword">endif</span> <span class="token delimiter punctuation">%}</span></span>
+</code></pre>
+</div>
+
+</body>
+</html>

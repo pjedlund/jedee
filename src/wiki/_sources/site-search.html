@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Site search — wiki mockup</title>
+
+<style>
+  @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../assets/fonts/source-sans/source-sans.woff2') format('woff2'); }
+  @font-face { font-family: 'Source Code Pro'; src: url('../../assets/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }
+
+  :root { --ink: #23292F; --paper: #F4F4F2; --rule: #cbcdd2; --chrome: #e8e8e6; --chrome-rule: #d3d3d0; --muted: #68727F; }
+
+  body { margin: 0; padding: 40px; background: #ddd; font: 14px/1.5 'Source Sans', system-ui, sans-serif; color: var(--ink); }
+
+  /* A specimen carries its own paper the way a device frame carries its own bezel — so one shot reads deliberately on either theme of the wiki page. */
+  .specimen { inline-size: fit-content; background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 22px 26px 26px; }
+
+  .label { font-family: 'Source Code Pro', ui-monospace, monospace; font-size: 12px; color: var(--ink); opacity: 0.55; margin: 0 0 12px; }
+
+  /* Browser chrome drawn OUTSIDE the scaled iframe, so it stays crisp while the page inside is scaled. */
+  .browser { border: 1px solid var(--chrome-rule); border-radius: 7px; overflow: hidden; background: var(--chrome); inline-size: fit-content; }
+  .bar { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-block-end: 1px solid var(--chrome-rule); }
+  .bar .dot { inline-size: 8px; block-size: 8px; border-radius: 50%; background: #c8c8c4; flex: none; }
+  .bar .pill { flex: 1; background: #fff; border-radius: 999px; padding: 3px 10px; font-size: 10px; color: var(--muted); margin-inline-start: 4px; }
+
+  /* The frame renders at its true width and is scaled down here — scaling, not resizing, is what keeps a 1280px page a 1280px page. */
+  .viewport { overflow: hidden; }
+  .viewport iframe { border: 0; display: block; transform: scale(0.5); transform-origin: top left; }
+</style>
+</head>
+<body>
+
+<div class="specimen" data-shot="site-search-panel">
+  <p class="label">the panel open on "night" · 1280px</p>
+  <div class="browser">
+    <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="pill">johanedlund.se</span></div>
+    <div class="viewport" data-frame="search"></div>
+  </div>
+</div>
+
+<script src="site-header.js"></script>
+<script>
+  window.__mockupReady = false;
+
+  // The real top hits for "night", taken from a built /search.json — two of the six carry no body at all, which is the row shape the page is about.
+  const HITS = [
+    {
+      "url": "/activities/2024-11-15-dalbyskogen-by-night/",
+      "title": "Dalbyskogen by night",
+      "type": "activity",
+      "text": ""
+    },
+    {
+      "url": "/activities/2022-10-14-revinge-by-night/",
+      "title": "Revinge by night",
+      "type": "activity",
+      "text": ""
+    },
+    {
+      "url": "/notes/the-races-the-watch-forgot/",
+      "title": "The races the watch forgot",
+      "type": "note",
+      "text": "I wanted something simple: finish a run, and have it show up on my own site, no phone unlocked, no button pressed. It turns out this is"
+    },
+    {
+      "url": "/notes/a-shadow-crosses-the-sun/",
+      "title": "A shadow crosses the sun",
+      "type": "note",
+      "text": "For a long time the little light/dark button in the corner was two icons pretending to be one. A sun and a moon, stacked in the same spot,"
+    },
+    {
+      "url": "/recipes/sourdough-focaccia/",
+      "title": "Sourdough focaccia",
+      "type": "recipe",
+      "text": "A weekend loaf that rewards patience — most of the four hours is the dough proofing while you do something else. The long, cool ferment is"
+    },
+    {
+      "url": "/jams/dalliance/",
+      "title": "Dalliance",
+      "type": "jam",
+      "text": "Looking forward to Wedding Present playing Seamonsters tonight in Malmö. http://www.debaser.se/kalender/8317/"
+    }
+  ];
+
+  // iconFor and row are lifted VERBATIM from scripts/bundle/search.js, so the row markup in the shot is the row markup the site builds.
+  const build = doc => {
+    const iconFor = type => {
+      const template = doc.querySelector(`[data-search-icon="${type}"]`) || doc.querySelector('[data-search-icon="page"]');
+      return template ? template.content.cloneNode(true) : doc.createDocumentFragment();
+    };
+    const row = (entry, position) => {
+      const li = doc.createElement('li');
+      li.className = 'search-result';
+      li.id = `search-result-${position}`;
+      li.setAttribute('role', 'option');
+      li.setAttribute('aria-selected', 'false');
+      const link = doc.createElement('a');
+      link.href = entry.url;
+      link.appendChild(iconFor(entry.type));
+      const title = doc.createElement('span');
+      title.className = 'search-result-title';
+      title.textContent = entry.title;
+      link.appendChild(title);
+      if (entry.text) {
+        const text = doc.createElement('span');
+        text.className = 'search-result-text';
+        text.textContent = entry.text;
+        link.appendChild(text);
+      }
+      li.appendChild(link);
+      return li;
+    };
+    HITS.forEach((entry, i) => doc.querySelector('#search-results').appendChild(row(entry, i)));
+  };
+
+  window.mountFrame({
+    mount: document.querySelector('[data-frame="search"]'),
+    width: 1280,
+    locals: ['nav-menu-cls', 'search'],
+    onLoad: (doc, win) => {
+      // The magnifier and the theme toggle hide behind `is-land:not(:defined)` — a control that cannot run should not show. Defining it is what the real page's is-land script does.
+      win.customElements.define('is-land', class extends win.HTMLElement {});
+      // The search panel only exists with JavaScript, so the MENU trigger beside it must be there too — closed. These are nav-menu.js's own lines.
+      const nav = doc.querySelector('#mainnav');
+      const list = nav.querySelector('ul');
+      list.style.setProperty('display', 'grid');
+      list.removeAttribute('data-no-flash');
+      nav.insertBefore(doc.querySelector('#menu-template').content.cloneNode(true), list);
+      // The three pieces of state search.js sets on an open panel with a query in it.
+      doc.querySelector('#search-toggle').setAttribute('aria-expanded', 'true');
+      doc.querySelector('#search-input').value = 'night';
+      doc.querySelector('#search-input').setAttribute('aria-expanded', 'true');
+      doc.querySelector('#search-clear').hidden = false;
+      build(doc);
+    }
+  }).then(() => {
+    const holder = document.querySelector('[data-frame="search"]');
+    const iframe = holder.querySelector('iframe');
+    // The open panel is absolutely positioned, so the frame is sized to whatever the document actually reaches.
+    iframe.height = Math.ceil(iframe.contentDocument.documentElement.scrollHeight);
+    holder.style.inlineSize = '640px';
+    holder.style.blockSize = `${iframe.height * 0.5}px`;
+    requestAnimationFrame(() => requestAnimationFrame(() => (window.__mockupReady = true)));
+  });
+</script>
+
+</body>
+</html>
