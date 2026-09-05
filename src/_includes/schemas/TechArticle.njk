@@ -1,0 +1,36 @@
+{# TechArticle for the LLM wiki, whose pages are written by Claude Code and supervised by Johan. The split is the whole reason this template exists instead of BlogPosting: `author` is the AI, `editor` is the human, matching the visible byline in wiki.njk. #}
+{# ⚠ Unlike BlogPosting.njk this uses `page.url`: a bare `{{ url }}` is undefined, which is why every post type emits an empty `@id`. #}
+{# ⚠ `author` accepts only Person or Organization (schema.org, checked 2026-09-05), so the AI is marked up as an Organization — the vocabulary has no type for a model. `editor` is Person-only, which is exactly right for the supervisor. #}
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "mainEntityOfPage": {
+      "@type": "WebPage"
+    },
+    "isPartOf": {
+      "@id": "{{ meta.url }}#website"
+    },
+    "@id": "{{ meta.url }}{{ page.url }}",
+    "headline": "{{ title or meta.siteName }}",
+    "description": "{{ description or meta.siteDescription }}",
+    "image": "{{ meta.url }}{{ meta.opengraph_default }}",
+    "inLanguage": "{{ meta.locale }}",
+    "publisher": {
+      "@type": "{{ meta.siteType }}",
+      "name": "{{ meta.author.name }}",
+      "url": "{{ meta.url }}"
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "Claude Code",
+      "url": "https://claude.com/product/claude-code"
+    },
+    "editor": {
+      "@type": "Person",
+      "name": "{{ meta.author.name }}",
+      "url": "{{ meta.author.website }}"
+    },
+    "datePublished": "{{ date | toIsoString }}"
+  }
+</script>
