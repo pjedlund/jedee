@@ -31,7 +31,7 @@ const OUTPUT_PATH = resolve(REPO_ROOT, 'DESIGN.md');
 
 const META = {
 	version: 'alpha',
-	name: 'JEDEE',
+	name: 'jedee',
 	description:
 		'Design system for johanedlund.se — a personal indieweb site by Johan Edlund. ' +
 		'Editorial in tone, fluid by construction (Utopia type and space scales), ' +

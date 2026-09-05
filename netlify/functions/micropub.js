@@ -1,4 +1,4 @@
-// JEDEE's Micropub server — the site's first Netlify Function.
+// jedee's Micropub server — the site's first Netlify Function.
 //
 // One endpoint at /api/micropub that turns an incoming h-entry (from any Micropub client: Sparkles, Quill, iA Writer…) into a shape-correct .md committed to the repo via the GitHub Contents API. A Micropub post lands as the *same* kind of .md, in the *same* src/posts/<type>/ folder, as an Obsidian Web Clipper clip — the two are complementary authoring paths over one content layer. See the `micropub` skill and _local/project_docs/micropub-pattern.html.
 //
@@ -148,7 +148,7 @@ export const formatSlug = (type = 'note', slug = '') =>
 export const deriveWorkoutTitle = (activityType, distanceKm) =>
   distanceKm ? `${activityType} · ${distanceKm} km` : activityType
 
-// Rewrite the engine's frontmatter to JEDEE conventions. Pure: returns the new frontmatter object; the body is left untouched.
+// Rewrite the engine's frontmatter to jedee conventions. Pure: returns the new frontmatter object; the body is left untouched.
 export const rewriteFrontmatter = (data = {}) => {
   const out = {}
   let mediaSeen = false
@@ -163,7 +163,7 @@ export const rewriteFrontmatter = (data = {}) => {
       continue
     }
     if (key === 'visibility') {
-      // Micropub `visibility` -> JEDEE's native vocabulary, interpreted at build time (see src/_config/plugins/drafts.js):
+      // Micropub `visibility` -> jedee's native vocabulary, interpreted at build time (see src/_config/plugins/drafts.js):
       //   unlisted -> keep the native key; the build drops it from every
       //               collection/feed + the sitemap and emits `noindex`, while
       //               its permalink still resolves.
@@ -374,7 +374,7 @@ export const ensureTitle = (data = {}, content = '') => {
 
 // --- store ----------------------------------------------------------------
 
-// A GitHubStore that rewrites frontmatter to JEDEE conventions and upgrades a title-less post's timestamp slug to a content/target-derived one, just before the commit. `onLocation` reports the final public URL so the handler can keep the Location header (the client's "view post" link) in sync with any re-slug.
+// A GitHubStore that rewrites frontmatter to jedee conventions and upgrades a title-less post's timestamp slug to a content/target-derived one, just before the commit. `onLocation` reports the final public URL so the handler can keep the Location header (the client's "view post" link) in sync with any re-slug.
 class JedeeStore {
   constructor(opts, onLocation) {
     this.inner = new GitHubStore(opts)
