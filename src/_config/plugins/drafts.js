@@ -1,4 +1,4 @@
-// Interprets JEDEE's post-status / visibility vocabulary centrally — the single place the `draft` and `visibility` frontmatter keys take effect, so all three authoring paths (hand-written · Obsidian Web Clipper · Micropub) share one contract. The Micropub endpoint translates the Micropub-extension fields into these native keys at the edge (see netlify/functions/micropub.js); everything downstream only ever sees `draft` / `visibility`.
+// Interprets jedee's post-status / visibility vocabulary centrally — the single place the `draft` and `visibility` frontmatter keys take effect, so all three authoring paths (hand-written · Obsidian Web Clipper · Micropub) share one contract. The Micropub endpoint translates the Micropub-extension fields into these native keys at the edge (see netlify/functions/micropub.js); everything downstream only ever sees `draft` / `visibility`.
 //
 //   draft: true            -> no public output at all (permalink:false + excluded
 //                             from collections), except in serve/watch builds.

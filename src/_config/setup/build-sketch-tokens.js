@@ -1,5 +1,5 @@
 /**
- * Build a flat Sketch payload from the JEDEE design tokens in `src/_data/designTokens/*.json`, ready to paste into a Sketch `run_code` script that creates Color Variables (swatches) and Text Styles.
+ * Build a flat Sketch payload from the jedee design tokens in `src/_data/designTokens/*.json`, ready to paste into a Sketch `run_code` script that creates Color Variables (swatches) and Text Styles.
  *
  * Workflow:
  *   1. Edit any file in src/_data/designTokens/ (if you edited colorsBase.json, run `npm run colors` first to regenerate colors.json)
