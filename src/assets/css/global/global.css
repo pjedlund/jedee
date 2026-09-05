@@ -11,7 +11,8 @@
 
 @import-glob 'compositions/*.css' layer(compositions);
 @import-glob 'blocks/*.css' layer(blocks);
-@import-glob 'utilities/*.css' layer(utilities);
+/* ⚠ cubeUtilities, not utilities: Tailwind 3 claims @layer utilities as its own directive and hoists these rules into tailwindUtilities. See the wiki, "Tailwind". */
+@import-glob 'utilities/*.css' layer(cubeUtilities);
 
 /* debugging */
 /* @import-glob 'tests/*.css' layer(test); */
