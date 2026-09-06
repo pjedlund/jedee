@@ -53,11 +53,6 @@
 			"name": "wordCount",
 			"value": "{{meta:property:schema:wordCount}}",
 			"type": "number"
-		},
-		{
-			"name": "note",
-			"value": "",
-			"type": "text"
 		}
 	],
 	"triggers": [

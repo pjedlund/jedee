@@ -68,11 +68,6 @@
 			"name": "year",
 			"value": "{{schema:releasedEvent[*].startDate|date:\"YYYY\"}}",
 			"type": "number"
-		},
-		{
-			"name": "note",
-			"value": "",
-			"type": "text"
 		}
 	],
 	"triggers": [

@@ -73,11 +73,6 @@
 			"name": "youtubeSlug",
 			"value": "",
 			"type": "text"
-		},
-		{
-			"name": "note",
-			"value": "",
-			"type": "text"
 		}
 	],
 	"triggers": [

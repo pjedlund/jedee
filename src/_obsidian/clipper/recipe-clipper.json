@@ -48,11 +48,6 @@
 			"name": "tags",
 			"value": "",
 			"type": "multitext"
-		},
-		{
-			"name": "note",
-			"value": "",
-			"type": "text"
 		}
 	],
 	"triggers": [
