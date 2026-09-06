@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<title>The PhotoSwipe lightbox — wiki mockup</title>
+
+<!-- ⚠ Build artifacts: the site bundle, the cover cap's local bundle, PhotoSwipe's own stylesheet. Run `npm start` or a build once if any is missing. -->
+<link rel="stylesheet" href="../../_includes/css/global.css">
+<link rel="stylesheet" href="../../_includes/css/cover.css">
+<link rel="stylesheet" href="../../../dist/assets/components/photoswipe.css">
+
+<style>
+  @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../assets/fonts/source-sans/source-sans.woff2') format('woff2'); }
+  @font-face { font-family: 'Source Code Pro'; src: url('../../assets/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }
+
+  body { margin: 0; padding: 40px; background: #ddd; font-family: 'Source Sans', system-ui, sans-serif; }
+
+  /* A specimen carries its own paper the way a device frame carries its own bezel — so one shot reads deliberately on either theme of the wiki page. */
+  .specimen { inline-size: fit-content; background: var(--color-bg); border: 1px solid var(--color-bg-accent-2); border-radius: 6px; padding: 22px 24px 26px; margin-block-end: 44px; }
+
+  .label { font-family: 'Source Code Pro', ui-monospace, monospace; font-size: 12px; color: var(--color-text); opacity: 0.55; margin: 0 0 12px; }
+  .cap { font-family: 'Source Code Pro', ui-monospace, monospace; font-size: 11px; color: var(--color-text); opacity: 0.55; margin: 0 0 10px; }
+
+  /* ⚠ Equal columns, both wider than the 14rem cap: whether the WRAPPER carries the cap is the only thing that may differ. */
+  .pair { display: grid; grid-template-columns: 320px 320px; gap: 40px; }
+
+  /* The hit area is the <a>'s own box, so it is tinted rather than drawn — nothing here invents a rectangle, it just colours the one that is already there. The image paints over the tint, so only the clickable strip beside it shows. */
+  photo-lightbox a {
+    background: color-mix(in oklab, var(--color-accent-orange) 30%, transparent);
+    outline: 1px dashed var(--color-accent-orange);
+  }
+
+  photo-lightbox figure { margin: 0; }
+
+  /* Whole-viewport UI, so it gets its own frame rather than escaping the specimen. */
+  .viewport { inline-size: 700px; }
+  .viewport iframe { border: 0; display: block; inline-size: 1280px; block-size: 800px; transform: scale(0.546875); transform-origin: top left; }
+  .viewport { block-size: 437.5px; overflow: hidden; }
+</style>
+</head>
+<body>
+
+<div class="specimen" data-shot="photoswipe-hit-area">
+  <p class="label">the clickable area is the wrapper's job — the tint is the &lt;a&gt;'s own box</p>
+  <div class="pair">
+    <div>
+      <p class="cap">cap on the &lt;img&gt; only</p>
+      <div>
+        <photo-lightbox>
+          <figure>
+            <a class="no-indicator" style="display: block" href="#" data-compare="hit-area">
+              <img class="cover" src="../../../dist/assets/images/2023-07-11-gotland-dag-8-gotland-3-dagars-etapp-1-448w.jpeg" alt="" width="448" height="597">
+            </a>
+          </figure>
+        </photo-lightbox>
+      </div>
+    </div>
+    <div>
+      <p class="cap">cap on the wrapper too — .cover-zoom</p>
+      <div class="cover-zoom">
+        <photo-lightbox>
+          <figure>
+            <a class="no-indicator" style="display: block" href="#" data-compare="hit-area">
+              <img class="cover" src="../../../dist/assets/images/2023-07-11-gotland-dag-8-gotland-3-dagars-etapp-1-448w.jpeg" alt="" width="448" height="597">
+            </a>
+          </figure>
+        </photo-lightbox>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="specimen" data-shot="photoswipe-overlay">
+  <p class="label">the overlay open, in its own frame — it is whole-viewport UI</p>
+  <div class="viewport" data-frame="overlay"></div>
+</div>
+
+<script>
+  // PhotoSwipe hydrates and plays an open animation, so the shooters must wait for it rather than race networkidle0.
+  window.__mockupReady = false;
+</script>
+<script type="module">
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+
+  const IMG = '../../../dist/assets/images/2023-07-11-gotland-dag-8-gotland-3-dagars-etapp-1';
+  // The real component's markup, and the real bundle. ⚠ No type="module" on the script: a FETCHED module script is blocked from file:// as a cross-origin request (origin null); the esbuild bundle is an IIFE, so a classic script loads it.
+  const frame = document.createElement('iframe');
+  frame.srcdoc = `<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8">
+    <link rel="stylesheet" href="../../_includes/css/global.css">
+    <link rel="stylesheet" href="../../../dist/assets/components/photoswipe.css">
+    <style>
+      @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../assets/fonts/source-sans/source-sans.woff2') format('woff2'); }
+      body { margin: 0; background: var(--color-bg); font-family: 'Source Sans', system-ui, sans-serif; }
+      .page { padding: 40px; display: grid; gap: 22px; justify-items: start; }
+      .cover { max-inline-size: 14rem; block-size: auto; border-radius: 6px; }
+      /* Neutral bars standing in for the page under the overlay, so the 80% scrim reads as covering a page rather than an empty frame. */
+      .stub { display: grid; gap: 12px; inline-size: 100%; }
+      .stub i { block-size: 12px; border-radius: 3px; background: color-mix(in oklab, var(--color-text) 12%, var(--color-bg)); }
+      .stub i.h { block-size: 26px; inline-size: 46%; background: color-mix(in oklab, var(--color-text) 20%, var(--color-bg)); }
+      .stub i.s { inline-size: 78%; }
+      .stub i.u { inline-size: 54%; }
+    </style></head><body>
+    <div class="page"><div class="stub"><i class="h"></i></div><photo-lightbox><figure><a style="display:block" href="${IMG}-3024w.jpeg" data-pswp-width="3024" data-pswp-height="4032" data-pswp-srcset="${IMG}-448w.jpeg 448w, ${IMG}-900w.jpeg 900w, ${IMG}-3024w.jpeg 3024w" target="_blank" rel="noopener">
+      <img class="cover" src="${IMG}-448w.jpeg" alt="" width="448" height="597"></a></figure></photo-lightbox><div class="stub"><i></i><i class="s"></i><i></i><i class="u"></i></div></div>
+    <script src="../../../dist/assets/scripts/components/photo-lightbox.js"><\/script>
+    </body></html>`;
+  document.querySelector('[data-frame="overlay"]').append(frame);
+
+  await new Promise(r => frame.addEventListener('load', r));
+  await wait(600);
+  // Opening it is just operating the real component — the same click a reader makes.
+  frame.contentDocument.querySelector('photo-lightbox a').click();
+  // Let PhotoSwipe decode the large image and finish its open animation.
+  await wait(2500);
+
+  requestAnimationFrame(() => requestAnimationFrame(() => (window.__mockupReady = true)));
+</script>
+
+</body>
+</html>

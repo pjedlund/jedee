@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<title>The YouTube embed — wiki mockup</title>
+
+<!-- ⚠ The site's compiled bundle, so --color-bg and --color-text here ARE the site's and cannot drift. It is a build artifact: run `npm start` or a build once if this file is missing. -->
+<link rel="stylesheet" href="../../_includes/css/global.css">
+
+<style>
+  /* The bundle's own @font-face rules point at absolute /assets paths, dead under file:// — redeclare the faces this specimen uses by relative path. */
+  @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../assets/fonts/source-sans/source-sans.woff2') format('woff2'); }
+  @font-face { font-family: 'Source Code Pro'; src: url('../../assets/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }
+
+  body { margin: 0; padding: 40px; background: #ddd; font-family: 'Source Sans', system-ui, sans-serif; }
+
+  /* A specimen carries its own paper the way a device frame carries its own bezel — so one shot reads deliberately on either theme of the wiki page. */
+  .specimen {
+    inline-size: fit-content;
+    background: var(--color-bg);
+    border: 1px solid var(--color-bg-accent-2);
+    border-radius: 6px;
+    padding: 22px 24px 26px;
+    /* 19px is what the embed sits at inside prose; the placeholder mark is sized in rem and the corners in em, so the size is part of the subject. */
+    font-size: 19px;
+  }
+
+  /* ⚠ Equal columns: the frame's position along the fade is the ONLY thing that may differ. */
+  .strip { display: grid; grid-template-columns: repeat(3, 214px); gap: 18px; }
+
+  .label { font-family: 'Source Code Pro', ui-monospace, monospace; font-size: 12px; color: var(--color-text); opacity: 0.55; margin: 0 0 10px; }
+
+  /* ---- copied VERBATIM from src/_includes/webc/custom-youtube.webc, whose <style> is inline in the component and so cannot be linked like a bundle ---- */
+
+  lite-youtube { max-inline-size: 100% !important; background-size: cover; }
+
+  is-land.video-wrapper {
+    display: block;
+    position: relative;
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    border-radius: 0.2em;
+    --yt-surface: color-mix(in oklab, white 45%, var(--color-bg));
+    --yt-logo-mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%23808080' fill-opacity='.1'%3E%3Cpath d='m50 0 .588.003V0h9.706v30.882h-9.706v.009a19 19 0 0 0-.588-.009c-10.558 0-19.118 8.559-19.118 19.118S39.441 69.118 50 69.118 69.118 60.559 69.118 50V30.882C69.118 13.826 82.945 0 100 0v50c0 27.614-22.386 50-50 50S0 77.614 0 50 22.386 0 50 0'/%3E%3C/svg%3E");
+    background-color: var(--yt-surface);
+    background-image: var(--yt-logo-mark);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: clamp(2.5rem, 15%, 5rem);
+  }
+
+  is-land lite-youtube { background-color: transparent; border-radius: 0.2em; }
+
+  is-land[ready] lite-youtube { animation: yt-poster-fade var(--yt-poster-fade, 350ms) ease-out; }
+  @keyframes yt-poster-fade { from { opacity: 0 } to { opacity: 1 } }
+
+  /* ---- lite-yt-embed's own rules, enough of them to draw the box and the button ---- */
+
+  lite-youtube { position: relative; display: block; contain: content; }
+  lite-youtube::after { content: ''; display: block; padding-bottom: calc(100% / (16 / 9)); }
+  .lyt-playbtn {
+    position: absolute; inset: 0; inline-size: 100%; block-size: 100%; border: 0; color: inherit;
+    background: no-repeat center/48px 34px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55c-2.93.78-4.63 3.26-5.42 6.19C.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="red"/><path d="M45 24 27 14v20" fill="white"/></svg>');
+  }
+</style>
+</head>
+<body>
+
+<div class="specimen" data-shot="youtube-poster-fade">
+  <div class="strip">
+    <div>
+      <p class="label">0ms — the placeholder</p>
+      <is-land class="video-wrapper" data-at="0" data-compare="poster-fade">
+        <lite-youtube><button class="lyt-playbtn" aria-label="Play"></button></lite-youtube>
+      </is-land>
+    </div>
+    <div>
+      <p class="label">175ms — mid fade</p>
+      <is-land class="video-wrapper" data-at="175" data-compare="poster-fade">
+        <lite-youtube><button class="lyt-playbtn" aria-label="Play"></button></lite-youtube>
+      </is-land>
+    </div>
+    <div>
+      <p class="label">350ms — the poster</p>
+      <is-land class="video-wrapper" data-at="350" data-compare="poster-fade">
+        <lite-youtube><button class="lyt-playbtn" aria-label="Play"></button></lite-youtube>
+      </is-land>
+    </div>
+  </div>
+</div>
+
+<script>
+  // The frames are frozen at three instants of the real keyframe, so nothing is running when the shot is taken.
+  window.__mockupReady = false;
+
+  // The build-time, self-hosted poster the `youtubePoster` filter writes — a real hqdefault at 480×360, letterbox bars and all, which is what `background-size: cover` is there to trim. Another build artifact: re-run a build if it is missing.
+  const POSTER = '../../../dist/assets/images/youtube/C-X9UQwxThw-480w.jpeg';
+
+  const image = new Image();
+  image.src = POSTER;
+  image.decode().then(() => {
+    document.querySelectorAll('is-land.video-wrapper').forEach(island => {
+      island.querySelector('lite-youtube').style.backgroundImage = `url('${POSTER}')`;
+      // `ready` is what the island runtime sets, and what starts the fade — the animation does not exist to be seeked until it does.
+      island.setAttribute('ready', '');
+    });
+    // Force the recalc that actually creates the animations before asking for them.
+    getComputedStyle(document.querySelector('lite-youtube')).opacity;
+
+    document.querySelectorAll('is-land.video-wrapper').forEach(island => {
+      const player = island.querySelector('lite-youtube');
+      player.getAnimations().forEach(a => {
+        a.pause();
+        a.currentTime = Number(island.dataset.at);
+      });
+    });
+    requestAnimationFrame(() => requestAnimationFrame(() => (window.__mockupReady = true)));
+  });
+</script>
+
+</body>
+</html>

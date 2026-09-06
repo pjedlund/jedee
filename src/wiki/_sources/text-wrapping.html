@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Text wrapping specimens — wiki mockup</title>
+<style>
+  /* The site's own faces, read straight from the repo so the specimen is the real typography and not an approximation. */
+  @font-face { font-family: 'Source Serif'; font-weight: 700; src: url('../../assets/fonts/source-serif/source-serif.woff2') format('woff2'); }
+  @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../assets/fonts/source-sans/source-sans.woff2') format('woff2'); }
+  @font-face { font-family: 'Source Code Pro'; src: url('../../assets/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }
+
+  :root {
+    --ink: #495464;          /* --color-text, light theme */
+    --paper: #f4f4f2;        /* --color-bg, light theme */
+    --rule: #cbcdd2;
+    --flag: #d0621e;         /* --color-accent-orange */
+  }
+
+  body { margin: 0; padding: 40px; background: #ddd; font-family: 'Source Sans', system-ui, sans-serif; }
+
+  /* A specimen carries its own paper, the way the device frames carry their own bezel — so it reads deliberately on either theme of the wiki page. */
+  .specimen {
+    inline-size: fit-content;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 22px 24px 26px;
+    margin-block-end: 40px;
+  }
+
+  /* ⚠ The two columns MUST be identical widths or the comparison is worthless — so the divider is its own track, never padding on one side. An asymmetric padding here once faked a difference that was purely the narrower column. */
+  /* ⚠ 300px is measured, not chosen: swept 200-520px, and this is where greedy and the value beside it actually diverge for these two strings. Change the text and the width has to be re-swept. */
+  .pair { display: grid; grid-template-columns: 300px 1px 300px; gap: 24px; }
+  .rule { background: var(--rule); }
+
+  .label {
+    font-family: 'Source Code Pro', ui-monospace, monospace;
+    font-size: 12px; color: var(--ink); opacity: 0.55; margin-block-end: 14px;
+  }
+
+  /* Headings: Source Serif 700, --tracking -0.04ch, --leading-fine 1.2 — the site's real h2 treatment. */
+  .heading {
+    font-family: 'Source Serif', Georgia, serif; font-weight: 700;
+    font-size: 30px; line-height: 1.2; letter-spacing: -0.04ch;
+    color: var(--ink); margin: 0;
+  }
+
+  /* Body: Source Sans at --size-step-min-1's upper end. */
+  .body {
+    font-family: 'Source Sans', Arial, sans-serif;
+    font-size: 17px; line-height: 1.5; color: var(--ink); margin: 0;
+  }
+
+  .greedy  { text-wrap: wrap; }
+  .balance { text-wrap: balance; }
+  .pretty  { text-wrap: pretty; }
+
+</style>
+</head>
+<body>
+
+<div class="specimen" data-shot="textwrap-balance">
+  <div class="pair">
+    <div>
+      <p class="label">text-wrap: wrap</p>
+      <h2 class="heading greedy" data-compare="balance">Rebuilding an archive from the Wayback Machine</h2>
+    </div>
+    <div class="rule"></div>
+    <div>
+      <p class="label">text-wrap: balance</p>
+      <h2 class="heading balance" data-compare="balance">Rebuilding an archive from the Wayback Machine</h2>
+    </div>
+  </div>
+</div>
+
+<div class="specimen" data-shot="textwrap-pretty">
+  <div class="pair">
+    <div>
+      <p class="label">text-wrap: wrap</p>
+      <p class="body greedy" data-compare="pretty">The standard fix for a widow was JavaScript that swapped the last space in the heading for a non-breaking space entity.</p>
+    </div>
+    <div class="rule"></div>
+    <div>
+      <p class="label">text-wrap: pretty</p>
+      <p class="body pretty" data-compare="pretty">The standard fix for a widow was JavaScript that swapped the last space in the heading for a non-breaking space entity.</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

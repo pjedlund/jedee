@@ -212,12 +212,7 @@ export default async function(eleventyConfig) {
   const buildWiki =
     wikiVisibility === 'public' ||
     (wikiVisibility === 'local' && process.env.ELEVENTY_ENV !== 'production');
-  if (buildWiki) {
-    // src/wiki/ is gitignored (its own inner repo), and Eleventy honours .gitignore — so to build it we must stop honouring .gitignore, then re-add the other src/ paths it was hiding (raw sources, draft articles). src/_obsidian stays covered by .eleventyignore.
-    eleventyConfig.setUseGitIgnore(false);
-    eleventyConfig.ignores.add('src/_raw/**');
-    eleventyConfig.ignores.add('src/posts/articles/-drafts/**');
-  } else {
+  if (!buildWiki) {
     eleventyConfig.ignores.add('src/wiki/**');
   }
 

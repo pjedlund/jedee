@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Focus rings and paint containment — wiki mockup</title>
+<style>
+  /* The site's own face, read straight from the repo so the specimen is the real typography and not an approximation. */
+  @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../assets/fonts/source-sans/source-sans.woff2') format('woff2'); }
+  @font-face { font-family: 'Source Code Pro'; src: url('../../assets/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }
+
+  /* Light-theme values, copied from the built global.css so --yt-surface mixes exactly as it does on the site. */
+  :root {
+    --color-text: #495464;
+    --color-bg: #f4f4f2;
+    --rule: #cbcdd2;
+  }
+
+  body { margin: 0; padding: 40px; background: #ddd; font-family: 'Source Sans', system-ui, sans-serif; }
+
+  /* A specimen carries its own paper the way a device frame carries its own bezel — so one shot reads deliberately on either theme of the wiki page. */
+  .specimen {
+    inline-size: fit-content;
+    background: var(--color-bg);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 22px 24px 26px;
+    /* ⚠ 19px is what the embed sits at inside prose, and 0.3ch of it is what the outset ring's offset resolves to — change this and you change the thing being measured. */
+    font-size: 19px;
+  }
+
+  /* ⚠ Equal columns: the focus offset is the ONLY thing that may differ between the two halves. */
+  .pair { display: grid; grid-template-columns: 318px 318px; gap: 20px; }
+
+  .label {
+    font-family: 'Source Code Pro', ui-monospace, monospace;
+    font-size: 12px; color: var(--color-text); opacity: 0.55; margin: 0 0 12px;
+  }
+
+  /* custom-youtube.webc's wrapper: the placeholder surface and faint logo mark that show through the transparent lite-youtube. */
+  .video-wrapper {
+    --yt-surface: color-mix(in oklab, white 45%, var(--color-bg));
+    --yt-logo-mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%23808080' fill-opacity='.1'%3E%3Cpath d='m50 0 .588.003V0h9.706v30.882h-9.706v.009a19 19 0 0 0-.588-.009c-10.558 0-19.118 8.559-19.118 19.118S39.441 69.118 50 69.118 69.118 60.559 69.118 50V30.882C69.118 13.826 82.945 0 100 0v50c0 27.614-22.386 50-50 50S0 77.614 0 50 22.386 0 50 0'/%3E%3C/svg%3E");
+    display: block;
+    border-radius: 0.2em;
+    background-color: var(--yt-surface);
+    background-image: var(--yt-logo-mark);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: clamp(2.5rem, 15%, 5rem);
+  }
+
+  /* lite-yt-embed's own rule. `contain: content` is the whole subject of the page: it paint-clips anything drawn outside this box. */
+  .lite-youtube {
+    position: relative;
+    display: block;
+    contain: content;
+    background-color: transparent;
+    border-radius: 0.2em;
+    color: var(--color-text);
+  }
+  .lite-youtube::after { content: ''; display: block; padding-bottom: calc(100% / (16 / 9)); }
+
+  /* The play button fills the whole embed — which is why its ring lands exactly on the clip edge. */
+  .lyt-playbtn {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    border: 0;
+    /* The reset's `all: unset` + `color: inherit` is what makes currentColor the page's text color here, not the UA's ButtonText. */
+    color: inherit;
+    background: no-repeat center/68px 48px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55c-2.93.78-4.63 3.26-5.42 6.19C.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="red"/><path d="M45 24 27 14v20" fill="white"/></svg>');
+  }
+
+  /* global-styles.css's :focus-visible rule written out — a screenshot has no keyboard, so the state is applied rather than triggered. */
+  .lyt-playbtn {
+    outline: 3px solid var(--focus-color, currentColor);
+    outline-offset: var(--focus-offset, 0.3ch);
+  }
+
+  /* The one-property fix: pull the ring inside the box so the containment has nothing to clip. */
+  [data-inset] .lyt-playbtn { --focus-offset: -4px; }
+</style>
+</head>
+<body>
+
+<div class="specimen" data-shot="focus-ring-contained">
+  <div class="pair">
+    <div>
+      <p class="label">outline-offset: 0.3ch</p>
+      <div class="video-wrapper" data-compare="focus-ring">
+        <div class="lite-youtube"><button class="lyt-playbtn"></button></div>
+      </div>
+    </div>
+    <div data-inset>
+      <p class="label">--focus-offset: -4px</p>
+      <div class="video-wrapper" data-compare="focus-ring">
+        <div class="lite-youtube"><button class="lyt-playbtn"></button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

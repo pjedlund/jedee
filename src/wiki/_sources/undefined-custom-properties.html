@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Undefined custom properties — wiki mockup</title>
+<style>
+  /* The site's own face, read straight from the repo so the buttons are the real typography and not an approximation. */
+  @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../assets/fonts/source-sans/source-sans.woff2') format('woff2'); }
+  @font-face { font-family: 'Source Code Pro'; src: url('../../assets/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }
+
+  /* Light-theme palette, copied from the built global.css so every color-mix() below resolves exactly as it does on the site. */
+  :root {
+    --color-text: #495464;
+    --color-bg: #f4f4f2;
+    --color-light: #f7f8fb;
+    --color-dark: #141619;
+    --color-accent-orange: #d0621e;
+    --color-accent-blue: #245375;
+    --color-accent-green: #626449;
+    --rule: #cbcdd2;
+  }
+
+  body { margin: 0; padding: 40px; background: #ddd; font-family: 'Source Sans', system-ui, sans-serif; }
+
+  /* A specimen carries its own paper the way a device frame carries its own bezel — so one shot reads deliberately on either theme of the wiki page. */
+  .specimen {
+    inline-size: fit-content;
+    background: var(--color-bg);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 22px 24px 26px;
+  }
+
+  .label {
+    font-family: 'Source Code Pro', ui-monospace, monospace;
+    font-size: 12px; color: var(--color-text); opacity: 0.55; margin: 0 0 14px;
+  }
+  .row[data-unset] { margin-block-end: 28px; }
+
+  /* ⚠ Equal columns, buttons stretched: the border width is the ONLY thing that may differ between the two rows. Sizing the buttons to their own content would let the 3px row grow 4px per button and pass that off as part of the finding. */
+  .row { display: grid; grid-template-columns: repeat(5, 120px); gap: 12px; }
+
+  /* button.css, verbatim minus the parts that do not show in a still: the token names resolved to the values they carry at the narrow end of their clamps. */
+  .button {
+    --button-bg: var(--color-text);
+    --button-color: color-mix(in oklab, var(--button-bg) 10%, var(--color-bg));
+    --button-border-width: 1px;
+    --button-border-color: color-mix(in oklab, var(--button-bg) 80%, var(--color-text));
+    --button-radius: 999px;
+    --button-padding: 5px 14px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: var(--button-padding);
+    background: var(--button-bg);
+    color: var(--button-color);
+    border-width: var(--button-border-width);
+    border-style: solid;
+    border-color: var(--button-border-color);
+    border-radius: var(--button-radius);
+    /* --button-font-family: var(--font-body) is itself one of the undefined references, so the real button inherits its face — as this one does. */
+    font-weight: 400;
+    font-size: 19px;
+    line-height: 1;
+  }
+
+  .button[data-button-variant='primary'] {
+    --button-bg: var(--color-accent-orange);
+    --button-color: color-mix(in oklab, var(--color-accent-orange) 5%, var(--color-light));
+  }
+  .button[data-button-variant='secondary'] {
+    --button-bg: var(--color-accent-blue);
+    --button-color: color-mix(in oklab, var(--color-accent-blue) 5%, var(--color-light));
+  }
+  .button[data-button-variant='tertiary'] {
+    --button-bg: color-mix(in oklab, var(--color-accent-green) 20%, var(--color-bg));
+    --button-color: var(--color-text);
+  }
+  .button[data-ghost-button] {
+    --button-bg: var(--color-bg);
+    --button-border-color: var(--color-text);
+    --button-color: var(--color-text);
+  }
+
+  /* The accident: var(--border-thickness) referenced nothing, so border-width fell to its initial value, the keyword `medium`. */
+  .row[data-unset] .button { --button-border-width: medium; }
+</style>
+</head>
+<body>
+
+<div class="specimen" data-shot="undefined-border-width">
+  <p class="label">border-width: var(--border-thickness) &nbsp;—&nbsp; undefined, so medium</p>
+  <div class="row" data-unset data-compare="border-width">
+    <a class="button">Default</a>
+    <a class="button" data-button-variant="primary">Primary</a>
+    <a class="button" data-button-variant="secondary">Secondary</a>
+    <a class="button" data-button-variant="tertiary">Tertiary</a>
+    <a class="button" data-ghost-button>Ghost</a>
+  </div>
+
+  <p class="label">border-width: 1px</p>
+  <div class="row" data-compare="border-width">
+    <a class="button">Default</a>
+    <a class="button" data-button-variant="primary">Primary</a>
+    <a class="button" data-button-variant="secondary">Secondary</a>
+    <a class="button" data-button-variant="tertiary">Tertiary</a>
+    <a class="button" data-ghost-button>Ghost</a>
+  </div>
+</div>
+
+</body>
+</html>
