@@ -26,7 +26,7 @@
 		},
 		{
 			"name": "published",
-			"value": "",
+			"value": "{{meta:property:article:published_time|slice:0,10}}",
 			"type": "text"
 		},
 		{
