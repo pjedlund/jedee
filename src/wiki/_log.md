@@ -5,6 +5,64 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-06] fix | font-display: optional, and the landing page hits 100
+
+The end of the CLS thread. `font-display: swap` → `optional` on all four web `@font-face` blocks in `base/fonts.css`, one word each. **Landing page: 100 / 100 / 100 / 66, CLS 0** — the 66 is the soft-launch `noindex` and clears at 1.0.0.
+
+The measured path, all local with devtools throttling: masonry grid + `swap` was 0.197 at performance 91; grid removed, still `swap`, 0.180 at 92; grid removed plus `optional`, **0 at 100**. So the grid was worth 0.017 and the font swap was worth the rest.
+
+⚠ **The general finding, and it is not about this site: `size-adjust` is silently ignored in Chromium.** A `@font-face` over `local('Arial')` with `size-adjust: 200%` renders at exactly 1.000× Arial; so does one at 50%. The same face with `ascent-override: 200%` visibly doubles the line box, so descriptors *are* being applied — just not that one. The `FontFace` object even reports `sizeAdjust: "50%"` back, parsed and stored and unused. Confirmed in Chrome 148 headful, Chrome 152 headless and Helium. Consequence for any site using the screenspan.net recipe: the fallback matches vertically, so line-height holds, and keeps its own advance widths, so text can still rewrap on swap. Eleventy Excellent ships exactly that recipe, correctly written; it is half-inert through no fault of the CSS. Re-test before relying on it — this is the kind of thing that gets fixed silently.
+
+⚠ **Second general finding: Lighthouse's per-shift culprit is a heuristic**, naming the network request that finished nearest the shift. Two static tests built on that guess both exonerated the font — forcing the whole page onto the fallback families moved the footer 0 px at every width from 360 to 1728, and a line-count sweep over 58 widths found the intro wrapping identically either way. A `PerformanceObserver` installed *before* navigation under 3G + 4× CPU found the truth: 0.0922 of the 0.0993 in one event at 4.2 s, text moving up 46 px, a paragraph losing a line as the real font replaced the fallback. Forcing a family after load is not the same sequence as a real load, where first paint precedes even the local fallback face resolving.
+
+The trade-off was verified, not assumed, cold cache both ways: unthrottled, the real font applies (`Source Sans` at its own 488.8 px width); on 3G with 4× CPU the fallback holds for the whole pageview at exactly Arial's width, with the font cached for the next navigation. A first visit on a genuinely slow connection now reads in Arial and Georgia, which is the honest cost of `optional` and Johan's call to accept.
+
+Method note for anyone repeating this: the harness is a puppeteer script driving the system Chrome with `Network.emulateNetworkConditions` and `Emulation.setCPUThrottlingRate`, three runs per state — spread across runs was under 0.002, so a single run is trustworthy here.
+
+## [2026-09-06] fix | The masonry grid is gone, and it was not the cause
+
+Johan's call, acting on the entry below. `custom-masonry.webc` lost its `<is-land>`, its `<template data-island>` and its script; the tag and `class="grid"` stayed so that all ~20 call sites and every stylesheet were untouched, and `src/assets/scripts/components/custom-masonry.js` was deleted. The landing page's twenty demo blocks, which existed only to illustrate the grid, went with it.
+
+⚠ **First, a correction to the entry below, which was wrong about something important.** It says a local build cannot see this shift and that only production can. Not true — the cause was Lighthouse's *default* `--throttling-method=simulate`, which loads at full speed and models a slow connection arithmetically afterwards. A layout shift is a real event during a real load; if the font arrives before anything can reflow, there is nothing to model. The identical local build run with `--throttling-method=devtools` reproduces the live number exactly: **CLS 0.197, same element, same named cause.** Use devtools throttling for anything about layout shift.
+
+**The A/B, both runs local with devtools throttling.** `/` went **0.197 → 0.180** and performance 91 → 92. `/notes/` is now **100 / 100 / 100 / 66** with CLS 0.003, though with no matched baseline — the earlier `/notes/` run used simulated throttling and cannot be compared.
+
+⚠ **The finding is what happened to the blame.** The 0.196 that had sat on the masonry grid is now **0.179 sitting on `<footer class="site-footer">`**, a 190 px element, with the identical cause: `source-sans.woff2` loaded. The grid was never the cause — it was the largest thing standing downstream of the font swap, and removing it just promoted the next-largest thing. Worth 0.017.
+
+So the open question moves to the fonts, and it is a genuine puzzle rather than an oversight: every recommended mitigation is correctly in place, including the fallback families actually appearing in the `font-family` stacks where the metric overrides take effect (`fonts.json` emits `["Source Sans", "Source Sans Fallback", "sans-serif"]`). The swap still moves the page far enough to score 0.18. Next measurement named on the page rather than guessed at here: a run with web fonts blocked outright, which settles whether the `size-adjust` triple is mistuned or something other than text metrics is resizing.
+
+Best Practices and Accessibility are at 100 on both pages. SEO 66 remains the soft-launch `noindex`.
+
+## [2026-09-06] ingest | Layout shift
+
+Johan's request, after the is-land work turned into a conversation about the landing page's masonry grid and a Lighthouse 4×100 target. He wanted the page written from a real production measurement rather than from the guidance, which changed what it says twice over.
+
+The general half is CLS: the impact × distance formula, the `hadRecentInput` exclusion, the 0.1 and 0.25 thresholds, and the one instruction all the mitigations are versions of — reserve the space before you know what goes in it. Fonts get their own paragraph because the fix is the least obvious: a metric-matched fallback `@font-face` with `size-adjust` and the two override properties, so the `swap` is invisible in layout terms.
+
+Four Lighthouse 12 runs, saved to `src/_raw/lighthouse-2026-09-06/`. **The live landing page is 90 / 100 / 100 / 66 on mobile, and the entire performance deduction is CLS 0.197.** Accessibility and Best Practices are already at 100; the SEO 66 is the soft-launch `noindex` and clears at 1.0.0.
+
+⚠ **The same commit measures CLS 0 served locally and 0.197 live.** The local run is unloaded — everything arrives instantly from a local static server, so the font is in place before there is anything to reflow. This is the keeper: a local Lighthouse run cannot see a shift that needs network latency to exist, and it is 100% of the score gap here.
+
+⚠ **0.196 of the 0.197 sits on one element**, `<div class="region feature">`, the landing page's masonry grid, 7,093 px tall — with the cause reported as `source-sans.woff2` loading. The same font swap moves the "Hej hej!" greeting at 0.0013 and the breadcrumb caret at 0.0000: one trigger, a 150× spread by area. Which makes the page's actual argument that the element that moves is a poor guide to what to fix.
+
+The mechanism is left genuinely open rather than guessed at, having already been guessed wrong twice today. Every standard font mitigation is in place (both faces preloaded, `font-display: swap`, metric-matched fallbacks over Georgia and Arial — all EE stock, unmodified). What is unusual about the block is that `custom-masonry` computes its layout in JavaScript, setting an explicit `margin-top` on each child from measured `offsetTop`/`offsetHeight` a frame after hydration, and recomputing only on `resize` — never on font load. So either the font swap reflows a very large block, or the masonry pass moves it after first paint, or both. Removing the grid is planned anyway and is the clean A/B.
+
+⚠ Third finding, on measuring rather than on shift: **a normal browser profile scored Best Practices 96** on the live site, on one console error — `cloud.umami.is/script.js — net::ERR_BLOCKED_BY_CLIENT`, a content blocker in the *auditing* browser. From a clean headless profile the same page is **100** with no console errors. Recorded with its real-world corollary, that a visitor with a blocker does hit that error and is simply not counted.
+
+Earned links to [[The YouTube embed]], [[The lang attribute]] and [[is-land]].
+
+## [2026-09-06] fix | The autoinit import is gone
+
+Acting on the finding in the entry below, which was written up as a measurement and left alone. Johan's call to drop it.
+
+`src/assets/scripts/bundle/is-land.js` is one `import` line now instead of two, and the bundle inlined into the head of every page is **4,054 bytes instead of 4,592**. The removed import, `@11ty/is-land/is-land-autoinit.js`, mounts petite-vue / vue / svelte / preact components for an island carrying an `import=` attribute; nothing here has one and the site has none of those frameworks, so it was never reachable code.
+
+Verified in a browser and not only by byte count, because a runtime that fails to hydrate looks exactly like a page with nothing on it: both `on:idle` islands on the homepage reach `ready` on load, and the theme toggle switches `data-theme` on click. The served page carries no trace of the framework mount table.
+
+⚠ Two things worth carrying forward. The first reload measured the *old* page — the bundle file had already been rewritten on disk while the pages that inline it had not been re-rendered, so a byte count on disk and a `grep` of the served HTML can disagree for several seconds; check the served HTML. The second is unrelated to this change and wants a look on its own: the homepage's `on:visible` masonry island did not hydrate on scroll in **either** version, before or after, which is why the A/B was worth running rather than assuming the failure was new.
+
+Both import lines were Eleventy Excellent stock, so this is now a small deliberate divergence — noted on [[is-land]] rather than only here, since an EE upgrade that restores the line will look like a regression to whoever meets it next.
+
 ## [2026-09-06] ingest | is-land
 
 The last finding from the day's checkup, which named `is-land` as the strongest un-written page: mentioned on eight pages, each carrying a piece of it, with nowhere to point. Written from the code and from the package at 4.0.1 rather than from the docs, so the counts and the byte figures are measured here rather than quoted.

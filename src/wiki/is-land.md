@@ -34,7 +34,7 @@ The honest limit is that the technique costs a decision per component and gives 
 
 ## In jedee
 
-The dependency (`@11ty/is-land` 4.0.1), the bundle entry, and the inlining are all Eleventy Excellent stock. `src/assets/scripts/bundle/is-land.js` is two `import` lines; esbuild bundles and minifies it to `src/_includes/scripts/is-land.js`, and `head/js-inline.njk` inlines that into the head of **every page**, so the runtime is never a request. It is 4,592 bytes minified.
+The dependency (`@11ty/is-land` 4.0.1), the bundle entry, and the inlining are all Eleventy Excellent stock. `src/assets/scripts/bundle/is-land.js` is a single `import` line — EE ships two, and the second was dropped here for a measured reason (below); esbuild bundles and minifies it to `src/_includes/scripts/is-land.js`, and `head/js-inline.njk` inlines that into the head of **every page**, so the runtime is never a request. It is 4,054 bytes minified.
 
 Eight elements use it, all with one of two conditions — `on:idle` for anything in the page chrome, `on:visible` for anything embedded in a post's body.
 
@@ -65,8 +65,19 @@ Anything inside `<template data-island>` does not exist until hydration — whic
 
 A WebC component whose template is `<is-land …><my-thing webc:root>` puts the island between the grid and the component, so `webc:root` merging a class onto the invocation lands it on a grid *grand*child. [[Layout breakouts]] only work on a direct child. `place-map.webc` routes the class onto the `<is-land>` through a prop instead; the full trap, including why the fallback has to be `|| ''` and not `|| false`, is on [[The place map]].
 
-### One measured piece of dead weight
+### The autoinit import, measured and then dropped
 
-The bundle entry imports `is-land-autoinit.js` alongside the element itself. Autoinit exists to mount a framework component — its type table holds `petite-vue`, `vue`, `svelte`, `svelte-ssr` and `preact` — and it only does anything for an island carrying an `import=` attribute. **No island here has one**, and the site has none of those frameworks. Dropping the import takes the inlined bundle from 4,592 to 4,054 bytes, so it is 538 bytes on every page for a code path that cannot run. Both import lines are Eleventy Excellent stock, and the saving is small enough that this is a finding rather than a fix.
+Eleventy Excellent's bundle entry imports `is-land-autoinit.js` alongside the element itself. Autoinit exists to mount a framework component — its type table holds `petite-vue`, `vue`, `svelte`, `svelte-ssr` and `preact` — and it only does anything for an island carrying an `import=` attribute. No island here has one, and the site uses none of those frameworks, so the code path could never run.
+
+The entry is one line now, and the inlined bundle went **4,592 → 4,054 bytes**: 538 bytes off the head of every page. This is a small deliberate divergence from EE stock, not a fix to anything broken — the measurement is the reason, and if a future EE upgrade restores the second import line, nothing breaks by leaving it.
+
+```js
+// src/assets/scripts/bundle/is-land.js
+import '@11ty/is-land/is-land';
+```
+
+Checked in the browser rather than by byte count alone: both `on:idle` islands still reach `ready` on load, and the theme toggle still switches.
+
+⚠ A note on checking `on:visible` at all, because it cost two false findings here: an automated browser pane can report `innerHeight` as **0**, and an IntersectionObserver in a zero-height viewport never fires, so every `on:visible` island looks permanently un-hydrated while every `on:idle` one looks fine. Set a real viewport size and re-read before believing it. The second false finding was pure timing — the island had hydrated a moment after the check ran. Both the masonry and the YouTube islands do reach `ready` on scroll in a production build, verified at 1280×900.
 
 Raw source: `src/assets/scripts/bundle/is-land.js`, `src/_config/events/build-js.js`, the five `webc/` and three `partials/` files above, and `node_modules/@11ty/is-land/` at 4.0.1, read on 2026-09-06.
