@@ -5,6 +5,18 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-06] fix | The autoinit import is gone
+
+Acting on the finding in the entry below, which was written up as a measurement and left alone. Johan's call to drop it.
+
+`src/assets/scripts/bundle/is-land.js` is one `import` line now instead of two, and the bundle inlined into the head of every page is **4,054 bytes instead of 4,592**. The removed import, `@11ty/is-land/is-land-autoinit.js`, mounts petite-vue / vue / svelte / preact components for an island carrying an `import=` attribute; nothing here has one and the site has none of those frameworks, so it was never reachable code.
+
+Verified in a browser and not only by byte count, because a runtime that fails to hydrate looks exactly like a page with nothing on it: both `on:idle` islands on the homepage reach `ready` on load, and the theme toggle switches `data-theme` on click. The served page carries no trace of the framework mount table.
+
+⚠ Two things worth carrying forward. The first reload measured the *old* page — the bundle file had already been rewritten on disk while the pages that inline it had not been re-rendered, so a byte count on disk and a `grep` of the served HTML can disagree for several seconds; check the served HTML. The second is unrelated to this change and wants a look on its own: the homepage's `on:visible` masonry island did not hydrate on scroll in **either** version, before or after, which is why the A/B was worth running rather than assuming the failure was new.
+
+Both import lines were Eleventy Excellent stock, so this is now a small deliberate divergence — noted on [[is-land]] rather than only here, since an EE upgrade that restores the line will look like a regression to whoever meets it next.
+
 ## [2026-09-06] ingest | is-land
 
 The last finding from the day's checkup, which named `is-land` as the strongest un-written page: mentioned on eight pages, each carrying a piece of it, with nowhere to point. Written from the code and from the package at 4.0.1 rather than from the docs, so the counts and the byte figures are measured here rather than quoted.
