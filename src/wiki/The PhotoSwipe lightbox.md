@@ -77,7 +77,7 @@ A lightbox trigger that is narrower than its column needs the **width cap on the
 
 ### The component
 
-`photo-lightbox.webc` wraps everything in `<is-land on:idle>`, so PhotoSwipe's CSS and JS load only after the browser goes idle — until then the markup is a working link. `<template data-island="once">` holds the assets inert until hydration, and `once` deduplicates: a post with ten lightbox images loads the stylesheet and script exactly once.
+`photo-lightbox.webc` wraps everything in an [[is-land]] island set to `on:idle`, so PhotoSwipe's CSS and JS load only after the browser goes idle — until then the markup is a working link. `<template data-island="once">` holds the assets inert until hydration, and `once` deduplicates: a post with ten lightbox images loads the stylesheet and script exactly once.
 
 - **`@`-prefixed attributes are WebC props**, consumed at build time and never shipped; the `:data-pswp-*` bindings are what reach the browser. An omitted prop simply drops the attribute — the photo pages pass no `@srcset` because their zoom target is a single off-site original.
 - **The zoom cursor is gated on `is-land[ready]`**, so the cursor only advertises zooming once the JS is actually there. Before hydration it stays an honest link pointer.

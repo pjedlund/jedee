@@ -74,7 +74,7 @@ The choice lives in `localStorage` under `theme-preference` and is applied as `d
 ### Accessibility details worth copying
 
 - **The accessible name is a visually-hidden label**; the SVG is `aria-hidden`. State rides on `aria-pressed`, where pressed = dark mode active.
-- **The button is wrapped in `<is-land on:idle>`** and hidden by CSS until the island upgrades (`is-land:not(:defined) .theme-toggle { display: none; }`) — a toggle that can't run shouldn't show. The theme itself doesn't depend on the button; the inline script sets it.
+- **The button is wrapped in an [[is-land]] island, `on:idle`** and hidden by CSS until the island upgrades (`is-land:not(:defined) .theme-toggle { display: none; }`) — a toggle that can't run shouldn't show. The theme itself doesn't depend on the button; the inline script sets it.
 - **The hit area stays at the WCAG 2.5.8 minimum of 24×24px on purpose.** A bigger target would be empty space pushing the icon away from the nav. Sized with `--theme-toggle-size: var(--size-step-min-1)` to sit alongside the wordmark.
 
 ### Why the icon can't be yellow

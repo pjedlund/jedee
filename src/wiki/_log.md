@@ -5,6 +5,20 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-06] ingest | is-land
+
+The last finding from the day's checkup, which named `is-land` as the strongest un-written page: mentioned on eight pages, each carrying a piece of it, with nowhere to point. Written from the code and from the package at 4.0.1 rather than from the docs, so the counts and the byte figures are measured here rather than quoted.
+
+The general half is partial hydration — why it exists, and the honest limit that it costs a decision per component and gives nothing automatically. Then is-land as one framework-agnostic custom element: the five loading conditions, `data-island="once"`, the `ready` attribute, and `:not(:defined)`.
+
+*In jedee* is a table of the eight islands with their condition and their origin, which is a cleaner split than expected — `on:idle` for everything in the page chrome, `on:visible` for everything embedded in a post's body, and nothing using `on:interaction`, `on:media` or `on:save-data` at all. Four are jedee's own, four are Eleventy Excellent stock, and one of the stock four (`partials/gallery.njk`) is dead source nothing includes, which is already known from the TODO but had never been written down beside the others.
+
+Three traps that existed on separate pages are collected here because they are all the same boundary seen from different sides: a sizing rule inside `<template data-island>` collapses the box until hydration ([[The YouTube embed]] carries the warning in a code comment); `is-land:not(:defined)` and `<noscript>` are different questions, and the embed had to move from the first to the second precisely because the island selector matches during the window a space reservation exists to cover; and a breakout class has to land on the `<is-land>` rather than the WebC root, since the island sits between the grid and the component ([[The place map]]).
+
+⚠ **One new measurement.** The stock bundle entry imports `is-land-autoinit.js` beside the element. Autoinit mounts framework components — its type table is `petite-vue`, `vue`, `svelte`, `svelte-ssr`, `preact` — and it only runs for an island with an `import=` attribute. No island here has one and the site uses none of those frameworks, so the code path cannot run. Rebuilt without it, the bundle goes 4,592 → 4,054 bytes: **538 bytes inlined into the head of every page for nothing**. Both import lines are EE stock and the amount is small, so it is recorded as a finding rather than fixed.
+
+Earned inbound links from [[The PhotoSwipe lightbox]], [[The theme toggle]] and [[The YouTube embed]], the three pages whose first mention was a plain sentence a link fits into. The other five say it inside a code span or a selector, where a wikilink cannot go without rewriting the sentence around it, and were left alone — the point of the exercise above was that a new page should not be born an orphan, not that every mention becomes a link.
+
 ## [2026-09-06] lint | The five orphan pages, linked
 
 The follow-up to the checkup above, which found five pages with no inbound wikilink from any other page and left them as findings. All five now have one, and each went where the subject was already being discussed rather than into a "see also" list bolted on the end.

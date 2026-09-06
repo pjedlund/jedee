@@ -42,7 +42,7 @@ export const youtubePoster = async slug => {
 
 ### Fading a background image you can't transition
 
-Before the thumbnail paints you see the site's logomark as a faint whisper on the same lifted sheet the mega-menu uses, tinted per theme. `background-image` isn't animatable and CSS has no "image loaded" hook, so the fade separates the two layers: the steady placeholder lives on the `is-land` wrapper, and `lite-youtube` carries only the poster and fades in on top.
+Before the thumbnail paints you see the site's logomark as a faint whisper on the same lifted sheet the mega-menu uses, tinted per theme. `background-image` isn't animatable and CSS has no "image loaded" hook, so the fade separates the two layers: the steady placeholder lives on the [[is-land]] wrapper, and `lite-youtube` carries only the poster and fades in on top.
 
 ```css
 is-land[ready] lite-youtube { animation: yt-poster-fade var(--yt-poster-fade, 350ms) ease-out; }
