@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-06] enrichment | Watch loops
+
+[[Watch loops]] gets a second section, *The second loop: a writer that is not the build*. The page had described one mechanism, the build rewriting its own watched tree; this one is another program — Obsidian, whose vault is `src/` — writing `src/.obsidian/workspace.json` on every click, and Eleventy reading the `.gitignore` line `.obsidian` as `./.obsidian` at the repo root, so the folder was never hidden from the watcher. The stale standing rule about `setUseGitIgnore(false)` is amended, since that call left on 2026-09-05 and the two `watchIgnores` lines stay regardless. The section records the measurement that separated the real trigger from the apparent one (images generated on scroll go to `dist/`, unwatched) and the general rule: a gitignore line without a leading slash hides nothing inside the input directory from Eleventy's watcher. Links to [[The dev server's memory]] for the per-rebuild cost. Source of record is a new dev note, `src/_raw/dev-notes/How the Obsidian watch loop was found.md`.
+
 ## [2026-09-05] public | The wiki is reachable, and the inner repo is gone
 
 The wiki left its private inner git repo and became ordinary tracked files in the jedee repo, `features.yaml` went to `public`, and the 48 pages now build on Netlify like everything else. Johan chose a clean start over preserving the inner repo's 86 commits — this log is the readable version of that history anyway. Two of the three "how far does public go" questions are answered yes: the pages are in the site search (via the existing `searchable` tag, no new machinery) and in the sitemap (which globs all of `src/`, so it needed nothing). No feed, deliberately — a feed is the thing that would make the wiki featured, which is the opposite of the point.
