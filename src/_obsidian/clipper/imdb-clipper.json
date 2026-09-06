@@ -68,6 +68,11 @@
 			"name": "year",
 			"value": "{{schema:datePublished|date:\"YYYY\"}}",
 			"type": "number"
+		},
+		{
+			"name": "note",
+			"value": "",
+			"type": "text"
 		}
 	],
 	"triggers": [

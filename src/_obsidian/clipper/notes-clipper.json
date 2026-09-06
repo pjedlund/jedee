@@ -28,6 +28,11 @@
 			"name": "draft",
 			"value": "true",
 			"type": "checkbox"
+		},
+		{
+			"name": "note",
+			"value": "",
+			"type": "text"
 		}
 	],
 	"triggers": [],
