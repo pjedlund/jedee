@@ -76,6 +76,6 @@ The entry is one line now, and the inlined bundle went **4,592 → 4,054 bytes**
 import '@11ty/is-land/is-land';
 ```
 
-Checked in the browser rather than by byte count alone: both `on:idle` islands still reach `ready` on load, and the theme toggle still switches. ⚠ Worth knowing separately — the homepage's `on:visible` masonry island did **not** hydrate on scroll in either version, before or after this change, so something there is worth a look on its own terms.
+Checked in the browser rather than by byte count alone: both `on:idle` islands still reach `ready` on load, and the theme toggle still switches. Unresolved and unrelated to this change, recorded so the next person does not re-derive it: the homepage's `on:visible` masonry island did not reach `ready` on scroll in either version. What it wraps there is Eleventy Excellent's demo content — twenty empty `<div>`s with accent-color backgrounds — and that grid is due to leave the landing page anyway, but `custom-masonry` also carries real content on the articles, notes, bookmarks and events indexes, so the observation is worth keeping rather than dismissing with the placeholder blocks.
 
 Raw source: `src/assets/scripts/bundle/is-land.js`, `src/_config/events/build-js.js`, the five `webc/` and three `partials/` files above, and `node_modules/@11ty/is-land/` at 4.0.1, read on 2026-09-06.
