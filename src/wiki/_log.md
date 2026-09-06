@@ -5,6 +5,20 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-06] fix | The masonry grid is gone, and it was not the cause
+
+Johan's call, acting on the entry below. `custom-masonry.webc` lost its `<is-land>`, its `<template data-island>` and its script; the tag and `class="grid"` stayed so that all ~20 call sites and every stylesheet were untouched, and `src/assets/scripts/components/custom-masonry.js` was deleted. The landing page's twenty demo blocks, which existed only to illustrate the grid, went with it.
+
+⚠ **First, a correction to the entry below, which was wrong about something important.** It says a local build cannot see this shift and that only production can. Not true — the cause was Lighthouse's *default* `--throttling-method=simulate`, which loads at full speed and models a slow connection arithmetically afterwards. A layout shift is a real event during a real load; if the font arrives before anything can reflow, there is nothing to model. The identical local build run with `--throttling-method=devtools` reproduces the live number exactly: **CLS 0.197, same element, same named cause.** Use devtools throttling for anything about layout shift.
+
+**The A/B, both runs local with devtools throttling.** `/` went **0.197 → 0.180** and performance 91 → 92. `/notes/` is now **100 / 100 / 100 / 66** with CLS 0.003, though with no matched baseline — the earlier `/notes/` run used simulated throttling and cannot be compared.
+
+⚠ **The finding is what happened to the blame.** The 0.196 that had sat on the masonry grid is now **0.179 sitting on `<footer class="site-footer">`**, a 190 px element, with the identical cause: `source-sans.woff2` loaded. The grid was never the cause — it was the largest thing standing downstream of the font swap, and removing it just promoted the next-largest thing. Worth 0.017.
+
+So the open question moves to the fonts, and it is a genuine puzzle rather than an oversight: every recommended mitigation is correctly in place, including the fallback families actually appearing in the `font-family` stacks where the metric overrides take effect (`fonts.json` emits `["Source Sans", "Source Sans Fallback", "sans-serif"]`). The swap still moves the page far enough to score 0.18. Next measurement named on the page rather than guessed at here: a run with web fonts blocked outright, which settles whether the `size-adjust` triple is mistuned or something other than text metrics is resizing.
+
+Best Practices and Accessibility are at 100 on both pages. SEO 66 remains the soft-launch `noindex`.
+
 ## [2026-09-06] ingest | Layout shift
 
 Johan's request, after the is-land work turned into a conversation about the landing page's masonry grid and a Lighthouse 4×100 target. He wanted the page written from a real production measurement rather than from the guidance, which changed what it says twice over.

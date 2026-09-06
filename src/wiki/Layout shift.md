@@ -29,11 +29,14 @@ Lighthouse 12, mobile preset, run on 2026-09-06 against the production build ser
 | Run | Perf | A11y | Best practices | SEO | CLS |
 | --- | --- | --- | --- | --- | --- |
 | `/` local `dist/`, desktop | 100 | 100 | 100 | 66 | 0.004 |
-| `/` local `dist/`, mobile | 99 | 100 | 100 | 66 | **0** |
+| `/` local `dist/`, mobile, *simulated* throttling | 99 | 100 | 100 | 66 | **0** |
+| `/` local `dist/`, mobile, *devtools* throttling | 91 | 100 | 100 | 66 | **0.197** |
 | `/notes/` local `dist/`, mobile | 99 | 100 | 100 | 66 | **0** |
 | `/` live, mobile | 90 | 100 | 100 | 66 | **0.197** |
 
-Same commit, same markup. The local run is not wrong, it is *unloaded* — everything arrives instantly from `python3 -m http.server` on the same machine, so the font is there before there is anything to reflow. Production has real latency, the fallback paints first, and the swap lands after. **A local Lighthouse run cannot see a shift that needs network latency to exist.** The gap here is the whole score: 0.197 is what holds performance at 90 instead of 100.
+Same commit, same markup. The gap is the whole score — 0.197 is what holds performance at 90 instead of 100.
+
+⚠ **The cause turned out to be a Lighthouse setting, not the local server.** Lighthouse's default `--throttling-method=simulate` loads the page at full speed and then models what a slow connection *would* have done, arithmetically, after the fact. A layout shift is a real event in a real load: if the font arrives before there is anything to reflow, no shift happens, and no amount of post-hoc modelling invents one. Re-running the identical local build with `--throttling-method=devtools`, which throttles the actual load in the browser, reproduces the live figure exactly — **CLS 0.197, the same 0.196 on the same element, the same named cause**. So a local build can measure this; the default preset simply cannot. Use `devtools` throttling for anything about layout shift.
 
 The SEO 66 is `is-crawlable` failing on the site-wide `noindex` of the soft launch, expected, and it will clear at 1.0.0.
 
@@ -67,7 +70,24 @@ item.style.marginTop = `${previousItemBottom - item.offsetTop}px`;
 
 That is a real layout change applied after first paint, to a 7,000 px block, and it is recomputed only on `resize` — not when a font finishes loading. So there are two candidate mechanisms and the report cannot tell them apart: the font swap reflowing a very large block, or the masonry pass applying its margins a frame after hydration. They are also not exclusive.
 
-Both point the same way, which is convenient: **remove the grid and re-measure.** That is planned anyway, and it is the clean A/B — if CLS drops to near zero the grid was the mover, and if it does not, the font is, and the fallback metrics want another look.
+Both point the same way, which is convenient: **remove the grid and re-measure.** That was done the same day, and the answer is below.
+
+### The A/B: the grid was the biggest mover, not the cause
+
+The masonry JavaScript came out on 2026-09-06 — `custom-masonry.webc` lost its `<is-land>`, its `<template>` and its script, keeping the tag and `class="grid"` so every call site and stylesheet stayed put, and `custom-masonry.js` was deleted. The landing page's demo blocks, which existed only to illustrate the grid, went with it.
+
+| Page | CLS before | CLS after | Perf before | Perf after |
+| --- | --- | --- | --- | --- |
+| `/` | 0.197 | **0.180** | 91 | 92 |
+| `/notes/` | (no matched baseline) | **0.003** | — | **100** |
+
+The landing page moved by 0.017. What changed is *which element Lighthouse blames*: the 0.196 that sat on the masonry grid is now **0.179 sitting on `<footer class="site-footer">`**, a 190 px element, with the same cause — `source-sans.woff2` loaded.
+
+That is the answer, and it is the opposite of the obvious reading of the first report. **The grid was never the cause; it was the largest thing standing downstream of the font swap.** Remove it and the swap moves the next-largest thing instead, for almost exactly the same score. The font is the whole story, and it always was — the grid was just where the damage showed up.
+
+Which leaves an open question worth stating plainly rather than guessing at, since guessing has been expensive on this page: every recommended font mitigation *is* correctly in place, including the fallback families being present in the `font-family` stacks where they actually take effect (`["Source Sans", "Source Sans Fallback", "sans-serif"]` in `fonts.json`), and the swap still moves the page far enough to score 0.18. Either the `size-adjust` / override triple is mistuned for this text, or something other than text metrics is resizing on swap. The next measurement is a run with the web fonts blocked entirely: if CLS goes to zero, the metrics want retuning against the real rendered sizes.
+
+`/notes/` is a clean 100 either way. ⚠ It has no matched before-number — the earlier `/notes/` run used simulated throttling, which cannot be compared with these — so read it as the current state and not as an improvement this change caused.
 
 ### Measuring it honestly
 

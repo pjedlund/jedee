@@ -1,9 +1,4 @@
-<is-land on:visible>
-  <custom-masonry class="grid" data-rows="masonry" :data-layout="layout" webc:root webc:keep>
-    <slot></slot>
-
-    <template data-island="once" webc:raw>
-      <script src="/assets/scripts/components/custom-masonry.js" type="module"></script>
-    </template>
-  </custom-masonry>
-</is-land>
+<!-- ⚠ Not a custom element any more: the masonry JS was removed 2026-09-06 over CLS, tag kept so call sites and CSS stay put. See the wiki "Layout shift". -->
+<custom-masonry class="grid" :data-layout="layout" webc:root webc:keep>
+  <slot></slot>
+</custom-masonry>
