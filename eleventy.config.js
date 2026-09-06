@@ -49,6 +49,9 @@ export default async function(eleventyConfig) {
   // `eleventy.before` rewrites both these dirs every build. .gitignore used to hide them from the watcher; the wiki dial below turns .gitignore off, so without these two lines each build retriggers itself — one CSS edit measured 18 rebuilds and climbing.
   eleventyConfig.watchIgnores.add('src/_includes/css/**');
   eleventyConfig.watchIgnores.add('src/_includes/scripts/**');
+  // ⚠ The Obsidian vault is src/, and Eleventy reads the .gitignore line `.obsidian` as ./.obsidian at the repo root, so without this every Obsidian click (workspace.json) triggers a full rebuild. See the wiki "Watch loops".
+  eleventyConfig.watchIgnores.add('src/.obsidian/**');
+  eleventyConfig.ignores.add('src/.obsidian/**');
 
   // --------------------- layout aliases
   eleventyConfig.addLayoutAlias('base', 'base.njk');
