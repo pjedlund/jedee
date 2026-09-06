@@ -14,7 +14,11 @@ Two properties of that formula matter more than the definition:
 
 The mitigations are all versions of one instruction — reserve the space before you know what goes in it. Put `width` and `height` on every image so the browser can compute the box from the aspect ratio before a byte of image arrives. Give embeds and ads a fixed reserved box. Never insert content above content that is already on screen. And for fonts, either accept the fallback or make the fallback the same size as the real thing.
 
-That last one is worth spelling out, because it is the subtlest. `font-display: swap` renders text immediately in a fallback and swaps the web font in when it arrives — good for reading, but the swap reflows every line if the two faces have different metrics. The fix is a `@font-face` block that describes the *fallback* with `size-adjust`, `ascent-override` and `descent-override` tuned so it occupies the same space as the real font ([the generator at screenspan.net/fallback](https://screenspan.net/fallback) computes them). Done properly the swap is invisible in layout terms.
+That last one is worth spelling out, because it is the subtlest. `font-display: swap` renders text immediately in a fallback and swaps the web font in when it arrives — good for reading, but the swap reflows every line if the two faces have different metrics. The usual fix is a `@font-face` block describing the *fallback* with `size-adjust`, `ascent-override` and `descent-override` tuned so it occupies the same space as the real font ([the generator at screenspan.net/fallback](https://screenspan.net/fallback) computes them).
+
+⚠ **`size-adjust` does not work in Chromium, as of Chrome 148 and 152 (2026-09).** Measured with a control — a `@font-face` over `local('Arial')` with `size-adjust: 200%` renders at exactly 1.000× Arial, and so does one at 50% — while `ascent-override: 200%` on the same face visibly doubles the line box. The descriptor is parsed and stored (the `FontFace` object reports `sizeAdjust: "50%"` back) and then not applied. Confirmed independently in three browsers: Chrome 148 headful, Chrome 152 headless, and Helium. So the *vertical* half of metric matching works and the *horizontal* half silently does not, which means a fallback keeps its own advance widths and text can still rewrap on swap. Re-test before relying on it; this is the kind of thing that gets fixed without announcement.
+
+The stronger option, when the fallback cannot be made to match, is `font-display: optional`. The browser uses the web font only if it is ready within roughly 100 ms; otherwise it keeps the fallback for that entire pageview and quietly caches the font for the next navigation. No swap can happen, so swap-induced shift is zero by construction — at the cost of some first-time visitors on slow connections reading the fallback.
 
 ## In jedee
 
@@ -88,6 +92,37 @@ That is the answer, and it is the opposite of the obvious reading of the first r
 Which leaves an open question worth stating plainly rather than guessing at, since guessing has been expensive on this page: every recommended font mitigation *is* correctly in place, including the fallback families being present in the `font-family` stacks where they actually take effect (`["Source Sans", "Source Sans Fallback", "sans-serif"]` in `fonts.json`), and the swap still moves the page far enough to score 0.18. Either the `size-adjust` / override triple is mistuned for this text, or something other than text metrics is resizing on swap. The next measurement is a run with the web fonts blocked entirely: if CLS goes to zero, the metrics want retuning against the real rendered sizes.
 
 `/notes/` is a clean 100 either way. ⚠ It has no matched before-number — the earlier `/notes/` run used simulated throttling, which cannot be compared with these — so read it as the current state and not as an improvement this change caused.
+
+### Lighthouse names a culprit; a PerformanceObserver names the event
+
+Both readings above take Lighthouse's word for *what caused* each shift, and that field is a heuristic — it reports the network request that finished nearest the shift, which is a guess dressed as a finding. Two static tests built on that guess were wrong: forcing the whole page onto the fallback families after load moved the footer by **0 px at every viewport width from 360 to 1728**, and a line-count sweep across 58 widths found the intro paragraph wrapping identically in both fonts. On that evidence the font looked innocent.
+
+The measurement that settled it installs the observer *before* navigation, under real throttling, and records what actually moves:
+
+```js
+await page.evaluateOnNewDocument(() => {
+  window.__shifts = [];
+  new PerformanceObserver(l => { for (const e of l.getEntries()) if (!e.hadRecentInput)
+    window.__shifts.push({v: e.value, t: e.startTime, src: e.sources.map(s => s.node)});
+  }).observe({type: 'layout-shift', buffered: true});
+});
+```
+
+At 3G with 4× CPU throttling that reports **CLS 0.0993, of which 0.0922 lands in a single event at 4.2 s** — text nodes nudging down 3–4 px and one moving *up 46 px*, which at a 49 px line-height is a paragraph losing a line as the real font finally replaces the fallback. The font was the cause after all; the static tests could not see it because forcing a family after load is not the same sequence as a real load, where first paint happens before even the local fallback face has resolved.
+
+### The fix, measured
+
+All four web `@font-face` blocks went from `font-display: swap` to `optional` — one word each, no other change.
+
+| | CLS (observer, 3G + 4× CPU) | Lighthouse CLS | Lighthouse performance |
+| --- | --- | --- | --- |
+| masonry grid + `swap` | — | 0.197 | 91 |
+| grid removed, still `swap` | 0.0993 | 0.180 | 92 |
+| grid removed + `optional` | **0.007** | **0** | **100** |
+
+The 0.0922 event is simply gone; what remains is sub-0.005 of early nav and footer jitter. The landing page now scores **100 / 100 / 100** with SEO 66 for the soft-launch `noindex`.
+
+The trade-off was verified rather than assumed, cold cache both times: on an unthrottled load the real font is applied (`Source Sans` measured at its own width, 488.8), and on 3G with 4× CPU the fallback holds for the whole pageview (the stack measures exactly Arial's width) with the font cached for the next navigation. That is `optional` working as designed, and it is the honest cost — a first visit on a genuinely slow connection reads the page in Arial and Georgia.
 
 ### Measuring it honestly
 

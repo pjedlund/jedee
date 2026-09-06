@@ -5,6 +5,20 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-06] fix | font-display: optional, and the landing page hits 100
+
+The end of the CLS thread. `font-display: swap` → `optional` on all four web `@font-face` blocks in `base/fonts.css`, one word each. **Landing page: 100 / 100 / 100 / 66, CLS 0** — the 66 is the soft-launch `noindex` and clears at 1.0.0.
+
+The measured path, all local with devtools throttling: masonry grid + `swap` was 0.197 at performance 91; grid removed, still `swap`, 0.180 at 92; grid removed plus `optional`, **0 at 100**. So the grid was worth 0.017 and the font swap was worth the rest.
+
+⚠ **The general finding, and it is not about this site: `size-adjust` is silently ignored in Chromium.** A `@font-face` over `local('Arial')` with `size-adjust: 200%` renders at exactly 1.000× Arial; so does one at 50%. The same face with `ascent-override: 200%` visibly doubles the line box, so descriptors *are* being applied — just not that one. The `FontFace` object even reports `sizeAdjust: "50%"` back, parsed and stored and unused. Confirmed in Chrome 148 headful, Chrome 152 headless and Helium. Consequence for any site using the screenspan.net recipe: the fallback matches vertically, so line-height holds, and keeps its own advance widths, so text can still rewrap on swap. Eleventy Excellent ships exactly that recipe, correctly written; it is half-inert through no fault of the CSS. Re-test before relying on it — this is the kind of thing that gets fixed silently.
+
+⚠ **Second general finding: Lighthouse's per-shift culprit is a heuristic**, naming the network request that finished nearest the shift. Two static tests built on that guess both exonerated the font — forcing the whole page onto the fallback families moved the footer 0 px at every width from 360 to 1728, and a line-count sweep over 58 widths found the intro wrapping identically either way. A `PerformanceObserver` installed *before* navigation under 3G + 4× CPU found the truth: 0.0922 of the 0.0993 in one event at 4.2 s, text moving up 46 px, a paragraph losing a line as the real font replaced the fallback. Forcing a family after load is not the same sequence as a real load, where first paint precedes even the local fallback face resolving.
+
+The trade-off was verified, not assumed, cold cache both ways: unthrottled, the real font applies (`Source Sans` at its own 488.8 px width); on 3G with 4× CPU the fallback holds for the whole pageview at exactly Arial's width, with the font cached for the next navigation. A first visit on a genuinely slow connection now reads in Arial and Georgia, which is the honest cost of `optional` and Johan's call to accept.
+
+Method note for anyone repeating this: the harness is a puppeteer script driving the system Chrome with `Network.emulateNetworkConditions` and `Emulation.setCPUThrottlingRate`, three runs per state — spread across runs was under 0.002, so a single run is trustworthy here.
+
 ## [2026-09-06] fix | The masonry grid is gone, and it was not the cause
 
 Johan's call, acting on the entry below. `custom-masonry.webc` lost its `<is-land>`, its `<template data-island>` and its script; the tag and `class="grid"` stayed so that all ~20 call sites and every stylesheet were untouched, and `src/assets/scripts/components/custom-masonry.js` was deleted. The landing page's twenty demo blocks, which existed only to illustrate the grid, went with it.
