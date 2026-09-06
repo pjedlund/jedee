@@ -36,7 +36,7 @@ The activities archive was imported in bulk from a Strava export, so its front m
 ### The same force from other tools
 
 - **Nunjucks reads a hyphen as subtraction**, so the IndieWeb `bookmark-of` becomes `bookmarkOf` in front matter and survives as the microformats class only on the rendered element — see [[The title-less post types]].
-- **Micropub's payload uses the hyphenated names**, so the endpoint has to map across on the way in. The consumer absorbs the mismatch rather than the data model bending again.
+- **Micropub's payload uses the hyphenated names**, so the endpoint has to map across on the way in ([[Micropub]]). The consumer absorbs the mismatch rather than the data model bending again.
 
 ### The escape hatch: compute it at build
 

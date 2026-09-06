@@ -58,16 +58,18 @@ The four steps behind the one command: clean and build in test mode → start `e
 export const tests = {
   pa11y: {
     // keep customPaths empty if you want to test all pages
-    customPaths: ['/', '/about/', '/articles/', '/styleguide/', '/audio/nybrostrand-beach/', '/activities/'],
+    customPaths: ['/', '/about/', '/articles/', '/styleguide/', '/audio/nybrostrand-beach/', '/activities/', '/jams/50ft-queenie/', '/reading/what-is-art/', '/watching/paris-texas/'],
     globalIgnore: [],
     chromePath: process.env.PA11Y_CHROME || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
   }
 };
 ```
 
-`pa11y.njk` branches on that array: **non-empty means only those paths are tested**; empty means it sweeps every page in `collections.showInSitemap`. jedee's is non-empty, so a green run covers six URLs.
+`pa11y.njk` branches on that array: **non-empty means only those paths are tested**; empty means it sweeps every page in `collections.showInSitemap`. jedee's is non-empty, so a green run covers nine URLs.
 
-The first four are EE's own default list with `/blog/` swapped for `/articles/` — chrome and prose. The fifth was added 2026-08-05 to cover a media *post* layout, which none of the others render: the `<audio>` player, the capture-metadata `<dl>`, the download buttons and the `<place-map>`. The sixth was added 2026-08-15 for a third shape again — a very long index (180 links) inside a custom element, with [[The place map]] in places mode above it. jedee has sixteen post types (see [[Anatomy of a post type]]), so two layouts are still a sample rather than coverage — no note, photo, jam, reading or event page is tested, nor a tag page or anything the lightbox touches. Emptying the array is a one-line change if a full sweep is wanted; the reason not to is runtime, since the sitemap is in the hundreds of pages.
+The first four are EE's own default list with `/blog/` swapped for `/articles/` — chrome and prose. The fifth was added 2026-08-05 to cover a media *post* layout, which none of the others render: the `<audio>` player, the capture-metadata `<dl>`, the download buttons and the `<place-map>`. The sixth was added 2026-08-15 for a third shape again — a very long index (180 links) inside a custom element, with [[The place map]] in places mode above it. Three more followed — a jam, a reading post and a watching post — each a different [[The title-less post types|title-less or link-post]] shape.
+
+jedee has sixteen post types (see [[Anatomy of a post type]]), so nine URLs are still a sample rather than coverage: no note, photo, event, recipe or response-type page is tested, nor a tag page or anything the lightbox touches. Emptying the array is a one-line change if a full sweep is wanted; the reason not to is runtime, since the sitemap is in the hundreds of pages.
 
 ### ⚠ A path that no longer exists passes, it does not fail
 
@@ -158,6 +160,6 @@ Two levels, both stock:
 
 An automated WCAG2AA pass is a floor. The failure documented in [[Focus rings and paint containment]] — an outset focus ring rendered invisible by a clipping ancestor — is valid HTML with correct contrast and a real focus style, so pa11y reports nothing. Anything that depends on what a control looks like *while being operated* is outside what this test observes.
 
-The no-JS section was added 2026-08-04 from a session that built the check; everything in it was measured, not inferred. The two warnings above it — the dead path that passes, and the missing browser that fails — were added 2026-08-08 after both were hit in one run, and the path list was corrected to five at the same time.
+The no-JS section was added 2026-08-04 from a session that built the check; everything in it was measured, not inferred. The two warnings above it — the dead path that passes, and the missing browser that fails — were added 2026-08-08 after both were hit in one run, and the path list was corrected to five at the same time. It has grown since — six by 2026-08-15, nine by 2026-09-06 — so the count in this page's prose is the one thing here worth re-checking against `meta.js` rather than trusting.
 
 Source: `tests.md` in `/Users/johanedlund/Projects/eleventy-excellent/src/docs/` (tag `4.6.1`, dated 2026-03-30), checked against jedee's `src/common/pa11y.njk`, `src/_data/meta.js` and `eleventy.config.js` on 2026-07-31. See [[What jedee kept from Eleventy Excellent]] for the full stock-versus-fork inventory.

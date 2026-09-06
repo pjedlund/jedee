@@ -36,7 +36,7 @@ Right-click a source page and the clipper writes a frontmatter-complete markdown
 }
 ```
 
-- **`path` decides the post type.** `category`, `layout`, and `permalink` are inherited from that folder's data file — the template never emits them. (Note the terminology collision: Micropub's `category` means *tags*, while this stack's `category` is the post *type*.)
+- **`path` decides the post type.** `category`, `layout`, and `permalink` are inherited from that folder's data file — the template never emits them. (Note the terminology collision: Micropub's `category` means *tags*, while this stack's `category` is the post *type* — see [[Micropub]].)
 - **`noteNameFormat` is the filename — title only, through `|safe_name`**, because the filename is both the Obsidian wikilink target and the Eleventy slug. No author or year suffix. `safe_name` strips filesystem-illegal characters, nothing more.
 - **`cover` is a remote URL as plain `text`** — the build self-hosts it ([[Self-hosting remote images at build time]]).
 

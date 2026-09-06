@@ -44,7 +44,7 @@ With no title to put in the headline slot, the card's headline becomes **a verb 
 <p>Bookmarked <a class="u-bookmark-of" href="{{ bookmarkOf }}">{{ bookmarkOf }}</a></p>
 ```
 
-This also sets a trap at the Micropub end, where the incoming payload uses the hyphenated IndieWeb names and has to be mapped across — see the `micropub` skill.
+This also sets a trap at the Micropub end, where the incoming payload uses the hyphenated IndieWeb names and has to be mapped across — see [[Micropub]].
 
 ## Visible anchor, not hidden data
 

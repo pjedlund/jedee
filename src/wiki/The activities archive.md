@@ -1,15 +1,15 @@
 ---
-description: "How the 157-workout activities archive was built backward from Strava exports, and why its layout is activity.njk rather than workout.njk."
+description: "How the activities archive was built backward from Strava exports, and why its layout is activity.njk rather than workout.njk."
 date: 2026-07-31
 ---
 
-`/activities/` holds 157 workout posts, 112 of them orienteering races from 2020–2026. Almost none were written as posts — the archive was built backward: imported from Strava, enriched by matching scripts, and only then opened for new posts.
+`/activities/` holds 180 workout posts (2026-09-06), 112 of them orienteering races from 2020–2026 — the count grows, the orienteering figure is the closed set the original import recovered. Almost none were written as posts — the archive was built backward: imported from Strava, enriched by matching scripts, and only then opened for new posts.
 
 ⚠ The layout is `activity.njk` and the folder data sets `category: activity` — **not** `workout.njk`, despite "workout post" being the natural phrase.
 
 ## The goal that failed first
 
-The plan was auto-publishing: finish a run on an Apple Watch and have it appear on the site the moment it ends, no phone unlocked, no button pressed. **Apple's design blocks this.** Health data is inaccessible while the phone is locked — no app, shortcut, or background process can read a finished workout until unlock. There is no workaround; the restriction is the platform working as intended. So the project turned from automating the future to recovering the past. New posts now arrive through the Micropub endpoint instead.
+The plan was auto-publishing: finish a run on an Apple Watch and have it appear on the site the moment it ends, no phone unlocked, no button pressed. **Apple's design blocks this.** Health data is inaccessible while the phone is locked — no app, shortcut, or background process can read a finished workout until unlock. There is no workaround; the restriction is the platform working as intended. So the project turned from automating the future to recovering the past. New posts now arrive through the Micropub endpoint instead ([[Micropub]] — a workout has no engine post-type, so it is routed as a note and rerouted here on its `activity` property).
 
 ## Frontmatter stores recorded numbers only
 

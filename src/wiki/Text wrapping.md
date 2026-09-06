@@ -3,7 +3,7 @@ description: "The two CSS text-wrap values that prevent widows in headings and p
 date: 2026-08-01
 ---
 
-A **widow** (typography's term, loosely used) is a very short last line — usually one lone word — at the end of a paragraph or, most visibly, a heading. For most of the web's history there was no CSS for this; the standard fix was JavaScript that swapped the last space for a `&nbsp;` (the approach in [css-tricks' 2013 article](https://css-tricks.com/preventing-widows-in-post-titles/)). Two values of the CSS `text-wrap` property now solve it natively:
+A **widow** (typography's term, loosely used) is a very short last line — usually one lone word — at the end of a paragraph or, most visibly, a heading. For most of the web's history there was no CSS for this; the standard fix was JavaScript that swapped the last space for a `&nbsp;` (the approach in [css-tricks' 2013 article](https://css-tricks.com/preventing-widows-in-post-titles/), which [Josh Crain](https://joshcrain.io/notes/2024/prevent-widows-in-post-titles/) cites as the state of things before `text-wrap`). Two values of the CSS `text-wrap` property now solve it natively:
 
 ```css
 h1 { text-wrap: balance; } /* even line lengths — headings, short blocks */

@@ -24,7 +24,7 @@ Most of these went through the W3C, which is why they interoperate across indepe
 
 - **[microformats2](https://microformats.org/wiki/microformats2)** — the class vocabulary that makes an ordinary HTML page machine-readable, so no separate data format is needed. The parsing layer everything else sits on. See [[Microformats]].
 - **[Webmention](https://www.w3.org/TR/webmention/)** (W3C Recommendation, 2017) — a cross-site notification: this page over here links to that page over there. The open-web replacement for comments and likes living on someone else's server. See [[Webmentions]].
-- **[Micropub](https://www.w3.org/TR/micropub/)** (W3C Recommendation, 2017) — a publishing API, so any client can post to any site that implements it. This is what decouples the writing app from the site.
+- **[Micropub](https://www.w3.org/TR/micropub/)** (W3C Recommendation, 2017) — a publishing API, so any client can post to any site that implements it. This is what decouples the writing app from the site. See [[Micropub]].
 - **[IndieAuth](https://indieauth.spec.indieweb.org/)** (W3C Note, 2022) — signing in with your domain instead of an account, built on OAuth 2.
 - **`rel="me"`** — bidirectional links between your domain and your profiles elsewhere, which is how a parser establishes that both are the same person. Mastodon's verified-link checkmark is this and nothing more.
 - **POSSE / PESOS** — the two syndication directions. Publish on your own site and syndicate out, or publish to a platform and pull a copy home.
@@ -48,7 +48,7 @@ Every block above is wired, which places this site squarely on the far side of e
 
 - **microformats2** on all sixteen post-type layouts, including the response types that carry `u-like-of` and `in-reply-to`.
 - **Webmentions received** through a hosted endpoint and fetched at build time, with Bridgy backfeed — see [[Webmentions]].
-- **Micropub live** at `/api/micropub`, a Netlify Function that turns an incoming `h-entry` into a shape-correct markdown file committed to the repo. Posting from a phone with the laptop off, which is the one thing a static site otherwise cannot do.
+- **Micropub live** at `/api/micropub`, a Netlify Function that turns an incoming `h-entry` into a shape-correct markdown file committed to the repo — see [[Micropub]]. Posting from a phone with the laptop off, which is the one thing a static site otherwise cannot do.
 - **IndieAuth** via a hosted provider, with `authorization_endpoint` and `token_endpoint` discovery links in the head next to `rel="micropub"`.
 - **`rel="me"`** on all seven platform links in the footer.
 - **Feeds** per post type — see [[Per-type feeds]]. **POSSE** exists as the `syndication:` field and is used by one post.
