@@ -28,6 +28,11 @@
 			"name": "published",
 			"value": "",
 			"type": "text"
+		},
+		{
+			"name": "note",
+			"value": "",
+			"type": "text"
 		}
 	],
 	"triggers": [],
