@@ -23,7 +23,9 @@ One honest measurement fell out of the writing: `syndication:` is set on exactly
 
 No page was named after a person, though four of the six sources are strongly authored — the arguments are cited with ordinary external links, per the standing rule.
 
-Raw sources are the six clips in `src/_raw/`, all clipped 2026-09-06, all with their `published:` dates already filled: Böck 2022-01-25 and 2022-11-12, Mara 2024-07-20, the Jolly Teapot 2024-10-15 (the clip's front matter says 2024-10-24; the URL date is what the pages cite), Tai 2026-06-10, Zeldman 2026-07-06. The date spread is load-bearing on both pages — Böck's Mastodon onboarding complaint is the November 2022 exodus and has partly aged out, while his barrier axis has not.
+Corrected on review: the first draft of both pages linked the *research* sources (Carr, Pew, Doctorow, the specs) but named the six clipped articles without linking them, which broke the convention every existing page follows — the clipped source gets an ordinary inline link to its live URL, not just a `Raw source:` path that no reader can open. All six now link out.
+
+Raw sources are the six clips in `src/_raw/`, all clipped 2026-09-06, all with their `published:` dates already filled: Böck 2022-01-25 and 2022-11-12, Mara 2024-07-20, the Jolly Teapot 2024-10-15 (the clip's front matter said 2024-10-24; corrected in the clip after checking the article, which displays "15 Oct 2024", matching its URL), Tai 2026-06-10, Zeldman 2026-07-06. The date spread is load-bearing on both pages — Böck's Mastodon onboarding complaint is the November 2022 exodus and has partly aged out, while his barrier axis has not.
 
 ## [2026-09-06] enrichment | Watch loops
 
