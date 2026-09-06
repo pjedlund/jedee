@@ -21,7 +21,7 @@ The fallback that a hidden menu falls back *to* should not be the hidden layout 
 
 ## In jedee
 
-One disclosure: a `MENU ⌄` button drops a two-column, table-of-contents-style panel of every post type — icon, name, leader dots, count. It replaced a burger drawer. The markup is `partials/main-nav.njk`; the button lives in a `<template id="menu-template">` and is cloned by `scripts/bundle/nav-menu.js`, which inserts it **before** the list so tab order matches visual order.
+One disclosure: a `MENU ⌄` button drops a two-column, table-of-contents-style panel of every post type — icon, name, leader dots, count. It replaced a burger drawer. The markup is `partials/main-nav.njk`; the button lives in a `<template id="menu-template">` and is cloned by `scripts/bundle/nav-menu.js`, which inserts it **before** the list so tab order matches visual order. [[Site search]]'s panel anchors to the same header row, so each trigger closes the other.
 
 <figure class="popout" data-wiki-mockup>
   <img eleventy:formats="webp,png" src="/assets/images/wiki/main-menu-open.png" alt="A browser window at 1280 pixels. In the header, a breadcrumb trail on the left and a MENU button on the right; below the button, an open panel listing sixteen post types in two columns, each row an icon, a name, a row of leader dots and a count." width="1392" height="718">

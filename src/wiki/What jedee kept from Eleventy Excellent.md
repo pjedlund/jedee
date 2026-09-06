@@ -31,7 +31,7 @@ These are EE's, unchanged, and this wiki should not describe them as jedee inven
 
   Including the consequence Lene spells out in `css.md`: the "local" bundle uses no layers, so a per-page stylesheet outranks the whole global bundle regardless of selector specificity.
 - **Two CSS streams, not three.** `css.md` documents a third destination, `src/assets/css/components/`, for stylesheets a WebC component references from the output folder — and `_config/events/build-css.js` does glob it, identically in both repos. But the folder exists in **neither** checkout: not in jedee, and not in vanilla 4.6.1 either. It is a wired-up route with nothing routed through it, on both sides.
-- **Tailwind as a token pipeline, not a utility framework.** No utility classes in the markup on either side.
+- **[[Tailwind]] as a token pipeline, not a utility framework.** No utility classes in the markup on either side.
 - **The two JS bundles** (`js-inline.njk`, `js-defer.njk`) and the two source folders behind them — `scripts/components/` ships to the output folder for custom elements to load directly, `scripts/bundle/` ships to `_includes/scripts/` for the `{% js %}` shortcode.
 - **The three image routes** (HTML Transform, markdown syntax, `{% image %}` / `{% imageKeys %}`) — see [[Self-hosting remote images at build time]] for the one place jedee leans on a route Lene documents but does not use much.
 - **OG image generation, favicon generation, the pa11y config generator, the `_redirects` template** — all four still the stock pipelines. See [[The accessibility test]] for what jedee changed in how pa11y is *run*.
@@ -66,7 +66,7 @@ The design-token divergence is narrower than it looks from the file count: jedee
 | `src/assets/images/screenshots` | deleted |
 | all files in `src/posts` | replaced wholesale |
 | all pages in `src/pages` | replaced wholesale |
-| `blocks/code.css` (syntax highlighting) | kept |
+| `blocks/code.css` ([[Syntax highlighting]]) | kept |
 | `src/assets/images/blog`, `gallery`, `template` | kept |
 
 So jedee removed almost exactly the set Lene marks as optional, and nothing beyond it. The starter's own structure survived the fork intact.

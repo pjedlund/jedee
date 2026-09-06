@@ -44,7 +44,7 @@ One related trap: a manifest's `background_color` paints the splash screen. An i
 
 ## In jedee
 
-The whole set is generated from one file, `src/assets/svg/misc/logo.svg`, by `src/_config/setup/generate-favicons.js`, run by hand with `npm run favicons`. The outputs are committed to the repo, not built on deploy. A passthrough in `eleventy.config.js` copies the folder to the site root; the `<link>` tags are in `src/_includes/head/meta-info.njk` and the manifest is `src/common/site-manifest.njk`.
+The whole set is generated from one file, `src/assets/svg/misc/logo.svg`, by `src/_config/setup/generate-favicons.js`, run by hand with `npm run favicons`. The outputs are committed to the repo, not built on deploy. [[Open Graph images]] are committed for the same kind of reason — their generator names a font a build server does not have. A passthrough in `eleventy.config.js` copies the folder to the site root; the `<link>` tags are in `src/_includes/head/meta-info.njk` and the manifest is `src/common/site-manifest.njk`.
 
 The script, the file names, the npm script and the Evil Martians reference are Eleventy Excellent stock. The treatment is not.
 
