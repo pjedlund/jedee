@@ -5,6 +5,24 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-06] ingest | Layout shift
+
+Johan's request, after the is-land work turned into a conversation about the landing page's masonry grid and a Lighthouse 4×100 target. He wanted the page written from a real production measurement rather than from the guidance, which changed what it says twice over.
+
+The general half is CLS: the impact × distance formula, the `hadRecentInput` exclusion, the 0.1 and 0.25 thresholds, and the one instruction all the mitigations are versions of — reserve the space before you know what goes in it. Fonts get their own paragraph because the fix is the least obvious: a metric-matched fallback `@font-face` with `size-adjust` and the two override properties, so the `swap` is invisible in layout terms.
+
+Four Lighthouse 12 runs, saved to `src/_raw/lighthouse-2026-09-06/`. **The live landing page is 90 / 100 / 100 / 66 on mobile, and the entire performance deduction is CLS 0.197.** Accessibility and Best Practices are already at 100; the SEO 66 is the soft-launch `noindex` and clears at 1.0.0.
+
+⚠ **The same commit measures CLS 0 served locally and 0.197 live.** The local run is unloaded — everything arrives instantly from a local static server, so the font is in place before there is anything to reflow. This is the keeper: a local Lighthouse run cannot see a shift that needs network latency to exist, and it is 100% of the score gap here.
+
+⚠ **0.196 of the 0.197 sits on one element**, `<div class="region feature">`, the landing page's masonry grid, 7,093 px tall — with the cause reported as `source-sans.woff2` loading. The same font swap moves the "Hej hej!" greeting at 0.0013 and the breadcrumb caret at 0.0000: one trigger, a 150× spread by area. Which makes the page's actual argument that the element that moves is a poor guide to what to fix.
+
+The mechanism is left genuinely open rather than guessed at, having already been guessed wrong twice today. Every standard font mitigation is in place (both faces preloaded, `font-display: swap`, metric-matched fallbacks over Georgia and Arial — all EE stock, unmodified). What is unusual about the block is that `custom-masonry` computes its layout in JavaScript, setting an explicit `margin-top` on each child from measured `offsetTop`/`offsetHeight` a frame after hydration, and recomputing only on `resize` — never on font load. So either the font swap reflows a very large block, or the masonry pass moves it after first paint, or both. Removing the grid is planned anyway and is the clean A/B.
+
+⚠ Third finding, on measuring rather than on shift: **a normal browser profile scored Best Practices 96** on the live site, on one console error — `cloud.umami.is/script.js — net::ERR_BLOCKED_BY_CLIENT`, a content blocker in the *auditing* browser. From a clean headless profile the same page is **100** with no console errors. Recorded with its real-world corollary, that a visitor with a blocker does hit that error and is simply not counted.
+
+Earned links to [[The YouTube embed]], [[The lang attribute]] and [[is-land]].
+
 ## [2026-09-06] fix | The autoinit import is gone
 
 Acting on the finding in the entry below, which was written up as a measurement and left alone. Johan's call to drop it.
