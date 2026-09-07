@@ -9,16 +9,13 @@
   src: local('Source Serif'), url('/assets/fonts/source-serif/source-serif.woff2') format('woff2');
 }
 
+/* ⚠ size-adjust measured against the shipped subset, not Capsize — its sourceSerif4/700 average width (0.494em) does not describe our 0.4316em subset. 100.8% scored 17/17 viewport widths where the old 110.8118% scored 12. The overrides are Capsize's, rescaled so the vertical box is byte-identical: only the horizontal match changed. */
 @font-face {
   font-family: 'Source Serif Fallback';
   src: local('Georgia');
-  ascent-override: 93.4918%;
-  descent-override: 30.2314%;
-  size-adjust: 110.8118%;
-  /* https://screenspan.net/fallback */
-  /* size-adjust: 118%;
-  ascent-override: 103%;
-  descent-override: 30%; */
+  ascent-override: 102.7777%;
+  descent-override: 33.2341%;
+  size-adjust: 100.8%;
 }
 
 /* Source sans with Arial as fallback for body text */
@@ -30,18 +27,14 @@
   src: local('Source Sans'), url('/assets/fonts/source-sans/source-sans.woff2') format('woff2');
 }
 
+/* ⚠ Same treatment as the serif: 92.5% scored 12/13 viewport widths against Capsize's 93.7639% at 10/13, overrides rescaled to keep the vertical box identical. */
 @font-face {
   font-family: 'Source Sans Fallback';
   src: local('Arial'), local('ArialMT');
-  size-adjust: 93.7639%;
-  ascent-override: 109.2105%;
-  descent-override: 42.6604%;
+  size-adjust: 92.5%;
+  ascent-override: 110.7027%;
+  descent-override: 43.2433%;
   line-gap-override: 0%;
-  /* https://screenspan.net/fallback */
-  /* size-adjust: 93.7639%;
-  size-adjust: 93%;
-  ascent-override: 106%;
-  descent-override: 32%; */
 }
 
 @font-face {
