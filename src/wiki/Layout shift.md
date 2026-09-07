@@ -184,7 +184,26 @@ So `prose.css`'s `max-inline-size: 60ch` and the `--tracking` values in `ch` all
 
 ### The shift no descriptor can reach
 
-On the landing page at around 412 px the footer's link cluster wraps to **three rows in the fallback and two in the web font**, moving the footer 34 px and scoring **CLS 0.16**. No `size-adjust` fixes it: tested down to 91.5%, 2.4% narrower than Capsize's own value, the row count never flips. A row of short uppercase link labels has a glyph mix nothing like the average the descriptor was fitted to, and the wrap sits right on a boundary at that width. It wants a layout answer — a stable row count for that cluster — not a metrics one.
+On the landing page at around 412 px the footer's link cluster wraps to **three rows in the fallback and two in the web font**, moving the footer 34 px and scoring **CLS 0.173**. No `size-adjust` fixes it: tested down to 91.5%, 2.4% narrower than Capsize's own value, the row count never flips. A row of short uppercase link labels has a glyph mix nothing like the average the descriptor was fitted to, and the wrap sits right on a boundary at that width.
+
+The page is short, so the footer is bottom-anchored — its top is `viewportHeight − footerHeight`, which makes the nav's height *its position*. The fix is to reserve the taller state across the band where the fonts disagree:
+
+```css
+@media (width < 27rem) {
+  .site-footer .footer-links {
+    min-block-size: var(--footer-links-reserve); /* 6rem */
+    align-content: flex-start;
+  }
+}
+```
+
+`align-content` earns its line: centring the rows inside a taller box moves *every* row by half the slack when the row count changes, which is a shift of its own. Pinned to the top, only the links that actually change row move.
+
+⚠ **Reserve in `rem`.** An earlier version used `lh` and did nothing, because `lh` is font-dependent — it grows and shrinks with the very thing being compensated for, exactly like the `ch` units above. Any reservation meant to absorb a font difference has to be written in a unit the font cannot move.
+
+⚠ **This halves the shift, it does not remove it** — 0.1726 → 0.079. The box is stable now, but the seven links still redistribute between three rows and two when the font lands, and that redistribution is itself a layout shift. Only an identical row count in both fonts would remove it, and no CSS achieves that across every width: shrinking the link padding makes 412 px agree and 380 px disagree instead.
+
+⚠ **Stacking the nav into a column measures worse, at 0.1055.** It was the option that looked cleanest, because it gives six rows in both fonts and the footer's *top* is then identical at every width. But impact fraction is area, and a much taller footer scores higher on the small per-row metric differences that remain. Both of these misjudgements came from the same mistake — comparing element *positions* between the two font states instead of measuring CLS. Position equality is necessary, not sufficient; the score counts every element that moved, not just the container.
 
 ### Can an animation hide the swap?
 
@@ -211,7 +230,24 @@ A common pattern is a hero that fades and slides in on load, and on sites using 
 
 The ceiling has to outlast the font download before the shift disappears, and by then first paint has doubled. Below that you pay the FCP *and* still take the shift. That is the same trade `font-display: optional` made — hiding the problem rather than fixing it — just paid in blank screen instead of typography. Not adopted here.
 
-For the record, the established techniques in this area are Zach Leatherman's, in [A Comprehensive Guide to Font Loading Strategies](https://www.zachleat.com/web/comprehensive-webfonts/): **FOUT with a class** (apply the web font only under a class set from the Font Loading API) and **Critical FOFT** (load a tiny A–Z subset first, the full family second). Both control *when* the swap happens; neither makes a mismatched fallback stop reflowing.
+### The established strategies, and where this site sits among them
+
+The reference work here is Zach Leatherman's [A Comprehensive Guide to Font Loading Strategies](https://www.zachleat.com/web/comprehensive-webfonts/) — he also wrote [[is-land]] — which ranks eleven approaches. The ones worth knowing, roughly in order of effort:
+
+| Strategy | What it does | JS? |
+| --- | --- | --- |
+| Unceremonious `@font-face` | A naked block and hope. Up to three seconds of invisible text. | no |
+| `font-display` | Opt into a defined behaviour: `swap`, `fallback` or `optional`. Kills FOIT. | no |
+| Preload | `<link rel="preload">` starts the fetch sooner. Delays first render slightly if you preload several. | no |
+| Don't use web fonts | Eliminates both FOIT and FOUT outright. | no |
+| Inline Data URI | Font embedded in blocking CSS. No flash of any kind, at the cost of a much later first render and one format only. | no |
+| **FOUT with a class** | The web font is applied only under a class that JavaScript adds once the Font Loading API reports it loaded. Puts the swap under your control instead of the browser's. Demands discipline: every web-font rule must sit behind the class or text goes invisible. | yes |
+| FOFT | Two stages — roman first, other weights after, with synthesised bold/italic in between. Less jumping than one big swap. | yes |
+| **Critical FOFT** | Stage one is a tiny A–Z subset, stage two the full family. The subset arrives fast, so the reflow is small. Variants inline that subset as a Data URI or preload it. | yes |
+
+**Every one of these controls *when* the swap happens. None of them makes a mismatched fallback stop reflowing** — that is what the `size-adjust` work above is for, and the two are complementary rather than alternatives.
+
+**Where this site sits:** `font-display: swap` + preload + metric-matched fallback faces, all of it CSS, no JavaScript. That is the third and fifth rows of the table combined, and it is where Eleventy Excellent starts. Moving up to FOUT-with-a-class would let the swap be timed deliberately, but it makes the fonts JavaScript-dependent, which is a large concession for a site built on progressive enhancement. Critical FOFT would genuinely help — the subset is what makes its reflow small — but it needs a second build-time subsetting step per family and a two-stage loader. Neither is on the cards; recorded so the option is a decision rather than an oversight.
 
 ### Measuring it honestly
 

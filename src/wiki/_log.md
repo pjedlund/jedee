@@ -5,6 +5,18 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-07] fix | The footer reservation, and position equality is not CLS
+
+The 412 px footer shift from the entry below is now reserved away: `min-block-size: 6rem` plus `align-content: flex-start` on `.footer-links` under 27 rem, with a new class so the rule does not hang off an `aria-label` that is content. **0.1726 → 0.079.**
+
+⚠ **It halves the shift rather than removing it**, and two claims made a few hours earlier were wrong in the same way. Reserving the box stops the *footer* moving, but the seven links still redistribute between three rows and two when the font lands, and that is a shift in itself. And stacking the nav into a column — which had looked like the clean fix — measures **worse, 0.1055**, because impact fraction is area and a much taller footer amplifies the small per-row differences that remain.
+
+Both errors came from one mistake: comparing element **positions** between the two font states instead of measuring CLS. Position equality is necessary but not sufficient — the score counts every element that moved, not just the container. The general lesson to carry: when the question is CLS, measure CLS.
+
+⚠ Also worth keeping: `align-content` mattered as much as the reservation. Centring rows inside a taller box moves every row by half the slack whenever the row count changes. And the reservation has to be in `rem` — an `lh` version did nothing, because `lh` is font-dependent and moves with the thing it is compensating for, exactly like `ch`.
+
+Not addressed: 360 px carries a separate pre-existing 0.045 from a different wrap boundary.
+
 ## [2026-09-07] fix | Both fallback size-adjust values re-derived, and what an animation can't do
 
 Follow-up to the entry below, after Johan deployed it and saw the heading still jumping. Both fallback faces were tuned by Capsize to fonts this site does not ship, so both `size-adjust` values were re-derived by scoring line counts and element positions against the real page across viewport widths: serif 110.8118% → **100.8%** (17/17 widths, was 12), sans 93.7639% → **92.5%** (12/13, was 10). Only `size-adjust` moved — the vertical overrides are Capsize's rescaled by the inverse ratio, so the line box is byte-identical. Worth **0.0997 → 0.0020 at 720 px**, where the h1 took two Georgia lines against one in Source Serif.
