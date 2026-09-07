@@ -23,6 +23,7 @@
   color: var(--color-accent-orange);
 }
 
+/* @until final-footer — PROVISIONAL, and the only width media query in global/blocks/. Delete and re-measure when the footer is redesigned (feat/mega-footer); 27rem and 6rem were found against the CURRENT link list and go stale with it. */
 /* ⚠ The page is short, so the footer is bottom-anchored and its height IS its position — the link row wrapping 2→3 in the fallback font moved it 34px. Reserve the three-row height across the band where the two fonts disagree. See the wiki "Layout shift". */
 /* ⚠ Reserve in rem. `lh` and `ch` are font-dependent, so they shrink and grow with the very thing being compensated for — a reservation in `lh` fails here. */
 @media (width < 27rem) {

@@ -7,7 +7,7 @@ Most JavaScript on a page is not needed when the page arrives. A lightbox matter
 
 **Partial hydration** is the general answer: ship the markup, and attach the behavior later, per component rather than per page. The word comes from the framework world, where "hydration" means a server-rendered page being taken over by client-side JavaScript, and "partial" means only some of it, only when warranted. The idea does not require a framework, though. It requires a way to say *this piece of the page, under this condition*.
 
-[is-land](https://github.com/11ty/is-land) is that, as one custom element. It comes from the [Eleventy](https://www.11ty.dev/) project ([Zach Leatherman](https://www.zachleatherman.com/), MIT), but it depends on nothing — no build step, no Eleventy, no framework. You wrap a region in `<is-land>`, give it a condition, and the element holds back whatever you put inside a nested `<template data-island>` until that condition is met.
+[is-land](https://github.com/11ty/is-land) is that, as one custom element. It comes from the [Eleventy](https://www.11ty.dev/) project ([Zach Leatherman](https://www.zachleat.com/), MIT), but it depends on nothing — no build step, no Eleventy, no framework. You wrap a region in `<is-land>`, give it a condition, and the element holds back whatever you put inside a nested `<template data-island>` until that condition is met.
 
 ```html
 <is-land on:visible>
