@@ -5,7 +5,7 @@ date: 2026-09-02
 
 A tooltip is a small label that appears when a pointer rests on a control or the control takes keyboard focus. On the web it comes in three forms, and they are not interchangeable.
 
-**The `title` attribute** is the native one. It costs nothing, works with no CSS and no JavaScript, and is contributed to the accessible name — but it is [widely discouraged](https://www.tpgi.com/using-the-html-title-attribute-updated/) for anything that matters: it never appears on touch, most browsers never show it to keyboard users, its delay and styling are the operating system's, and it is truncated without warning. Treat it as a fallback of last resort rather than a feature.
+**The `title` attribute** is the native one. It costs nothing, works with no CSS and no JavaScript, and is contributed to the accessible name — but it is [widely discouraged](https://www.tpgi.com/using-the-html-title-attribute-updated/) for anything that matters: it never appears on touch, most browsers never show it to keyboard users, its delay and styling are the operating system's, and it is truncated without warning. Treat it as a fallback of last resort rather than a feature. [[Abbreviations]] is the one place on this site where it is used deliberately anyway — an `<abbr>` has nowhere else to put its expansion, and there the `title` is a bonus for pointer users rather than the mechanism anything depends on.
 
 **A CSS-generated tooltip** — a `::after` on the control, with `content: attr(data-tooltip)` — is the lightweight custom version. It needs no script, positions itself in the control's own coordinate space, and can be styled to match the design. Its limit is that generated content is not dependable as an accessible name.
 
