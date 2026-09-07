@@ -1,5 +1,6 @@
 .site-footer {
   --cluster-horizontal-alignment: center;
+  --footer-links-reserve: 6rem;
     font-weight: var(--font-bold);
     font-size: var(--size-step-min-2);
     text-transform: uppercase;
@@ -20,4 +21,14 @@
 
 .site-footer .creator a:hover svg {
   color: var(--color-accent-orange);
+}
+
+/* ⚠ The page is short, so the footer is bottom-anchored and its height IS its position — the link row wrapping 2→3 in the fallback font moved it 34px. Reserve the three-row height across the band where the two fonts disagree. See the wiki "Layout shift". */
+/* ⚠ Reserve in rem. `lh` and `ch` are font-dependent, so they shrink and grow with the very thing being compensated for — a reservation in `lh` fails here. */
+@media (width < 27rem) {
+  .site-footer .footer-links {
+    min-block-size: var(--footer-links-reserve);
+    /* ⚠ Pin the rows to the top of the reserved box — centring them makes every row move when the row count changes, which is a shift in itself. */
+    align-content: flex-start;
+  }
 }
