@@ -5,6 +5,20 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-07] fix | Two retractions: `optional` never applied, and `size-adjust` works fine
+
+Back to `font-display: swap` on all four blocks, and `font-size-adjust: from-font` deleted from `global-styles.css` — the one thing jedee now changes about EE's font kit.
+
+Yesterday's `optional` bought CLS 0 by never using the web fonts. Its ~100 ms block period runs from the font *request*, which cannot start until the inlined-CSS HTML arrives at 250–350 ms; the fonts then take 170–350 ms. Five cold unthrottled loads of the live site painted the fallback every time, detected by cloning the live element and forcing each family. Yesterday's trade-off check missed this because it ran on a browser that had already cached the fonts.
+
+`size-adjust` is not ignored in Chromium either. Declared in the initial document, `local('Arial')` at 50% measures 0.5000× and at 200% measures 2.0000×; the shipped fallback measures 0.9375× raw Arial in situ, exactly its 93.7639%. The earlier control had injected the face with JavaScript after load, where a `local()` face does not re-resolve.
+
+The actual cause was EE's `font-size-adjust: from-font` (upstream `8536672`, 2024-08-24) fighting the `@font-face` `size-adjust`. One matches by x-height, the other by average character width; Arial's x-height ratio is 0.5186 against Source Sans's 0.4861, so the fallback was scaled back up and the landing paragraph took four lines instead of three. Measured on a local production build, cold cache, 3G + 4× CPU, observer before navigation: `swap` + fsa 0.1345 / `swap` no fsa **0.0041** at 1440 px; 0.0589 / **0.0012** at 390 px; 0.0303 / **0.0022** on `/wiki/layout-shift/`; 0.0544 / **0.0008** on `/notes/`.
+
+⚠ Left alone on purpose: the `Source Serif Fallback` overrides really are mis-derived (Georgia 13.9% too wide, 17.6% too tall against the shipped Source Serif Bold, because Capsize's `sourceSerif4/700` width does not describe the subset shipped), but re-deriving them changed no line count at any width from 360 to 1600 px.
+
+⚠ Method note worth more than the fix: three harnesses gave confident wrong answers before one worked. `all: initial` probes strip the declaration under test; cloning with `cssText` reported identical numbers in both font states; and a width sweep reusing one browser shared the font cache across cases and inverted the results. What worked was one fresh browser per case with the cache off, the page's own HTML rewritten in flight, and the painted family verified in every run rather than inferred from the label.
+
 ## [2026-09-06] fix | font-display: optional, and the landing page hits 100
 
 The end of the CLS thread. `font-display: swap` → `optional` on all four web `@font-face` blocks in `base/fonts.css`, one word each. **Landing page: 100 / 100 / 100 / 66, CLS 0** — the 66 is the soft-launch `noindex` and clears at 1.0.0.

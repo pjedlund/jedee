@@ -1,5 +1,5 @@
 ---
-description: "Cumulative Layout Shift: what it measures, why the element that moves is rarely the element at fault, and the 0.197 measured on this site's landing page."
+description: "Cumulative Layout Shift: what it measures, why the element that moves is rarely the element at fault, and how a font-size-adjust fighting a size-adjust cost this site 0.18."
 date: 2026-09-06
 ---
 
@@ -16,13 +16,15 @@ The mitigations are all versions of one instruction — reserve the space before
 
 That last one is worth spelling out, because it is the subtlest. `font-display: swap` renders text immediately in a fallback and swaps the web font in when it arrives — good for reading, but the swap reflows every line if the two faces have different metrics. The usual fix is a `@font-face` block describing the *fallback* with `size-adjust`, `ascent-override` and `descent-override` tuned so it occupies the same space as the real font ([the generator at screenspan.net/fallback](https://screenspan.net/fallback) computes them).
 
-⚠ **`size-adjust` does not work in Chromium, as of Chrome 148 and 152 (2026-09).** Measured with a control — a `@font-face` over `local('Arial')` with `size-adjust: 200%` renders at exactly 1.000× Arial, and so does one at 50% — while `ascent-override: 200%` on the same face visibly doubles the line box. The descriptor is parsed and stored (the `FontFace` object reports `sizeAdjust: "50%"` back) and then not applied. Confirmed independently in three browsers: Chrome 148 headful, Chrome 152 headless, and Helium. So the *vertical* half of metric matching works and the *horizontal* half silently does not, which means a fallback keeps its own advance widths and text can still rewrap on swap. Re-test before relying on it; this is the kind of thing that gets fixed without announcement.
+⚠ **A `@font-face` inserted with JavaScript *after* load does not honour `size-adjust`** — which is easy to mistake for the descriptor being broken, and this page made exactly that mistake. It previously claimed `size-adjust` was silently ignored in Chromium, on the strength of a control that injected `local('Arial')` faces at 200% and 50% into an already-parsed document and measured both at exactly 1.000× Arial. Declared in the *initial* document instead, the same faces measure 2.0000× and 0.5000× — exact, in the same Chrome 152. The shipped fallback proves it in situ without any synthetic test: `Source Sans Fallback` measures 594.11 px against raw Arial's 633.72 px on the live page, a ratio of 0.9375, which is precisely its declared `size-adjust: 93.7639%`. Measure a font descriptor in a document that was parsed with it, never in one you added it to afterwards.
 
-The stronger option, when the fallback cannot be made to match, is `font-display: optional`. The browser uses the web font only if it is ready within roughly 100 ms; otherwise it keeps the fallback for that entire pageview and quietly caches the font for the next navigation. No swap can happen, so swap-induced shift is zero by construction — at the cost of some first-time visitors on slow connections reading the fallback.
+The other option is `font-display: optional`: the browser uses the web font only if it is ready within roughly 100 ms, otherwise it keeps the fallback for that entire pageview and quietly caches the font for the next navigation. No swap can happen, so swap-induced shift is zero by construction.
+
+⚠ **That 100 ms is almost never met on a real network, so `optional` is a worse trade than it looks.** The window is counted from when the *font request starts*, and the font cannot be requested until the HTML referencing it has arrived. On this site's live pages that is 250–350 ms in, after which the fonts take a further 170–350 ms to land. Measured over five cold loads, unthrottled, the fallback painted every single time. So `optional` does not trade "some visitors on slow connections see the fallback" for zero shift — it trades *every first visit, on any connection*. The web font only ever appears from the second navigation onward, off the cache.
 
 ## In jedee
 
-Eleventy Excellent ships the whole standard kit and jedee has not changed it: both fonts are `rel="preload"`ed in `head/preloads.njk`, both `@font-face` blocks set `font-display: swap`, and `base/fonts.css` carries a metric-matched fallback face for each — `Source Serif Fallback` over Georgia, `Source Sans Fallback` over Arial, with the `size-adjust` / `ascent-override` / `descent-override` triple filled in. Images go through eleventy-img, which writes `width` and `height`. [[The YouTube embed]] reserves its box with a steady placeholder rather than letting the poster arrive into nothing.
+Eleventy Excellent ships the whole standard kit: both fonts are `rel="preload"`ed in `head/preloads.njk`, all four web `@font-face` blocks set `font-display: swap`, and `base/fonts.css` carries a metric-matched fallback face for each — `Source Serif Fallback` over Georgia, `Source Sans Fallback` over Arial, with the `size-adjust` / `ascent-override` / `descent-override` triple filled in by [Capsize](https://github.com/seek-oss/capsize). Images go through eleventy-img, which writes `width` and `height`. [[The YouTube embed]] reserves its box with a steady placeholder rather than letting the poster arrive into nothing. jedee has changed exactly one thing about the kit, and it is a *removal* — see below.
 
 All of which makes the measured result more interesting, not less.
 
@@ -89,7 +91,7 @@ The landing page moved by 0.017. What changed is *which element Lighthouse blame
 
 That is the answer, and it is the opposite of the obvious reading of the first report. **The grid was never the cause; it was the largest thing standing downstream of the font swap.** Remove it and the swap moves the next-largest thing instead, for almost exactly the same score. The font is the whole story, and it always was — the grid was just where the damage showed up.
 
-Which leaves an open question worth stating plainly rather than guessing at, since guessing has been expensive on this page: every recommended font mitigation *is* correctly in place, including the fallback families being present in the `font-family` stacks where they actually take effect (`["Source Sans", "Source Sans Fallback", "sans-serif"]` in `fonts.json`), and the swap still moves the page far enough to score 0.18. Either the `size-adjust` / override triple is mistuned for this text, or something other than text metrics is resizing on swap. The next measurement is a run with the web fonts blocked entirely: if CLS goes to zero, the metrics want retuning against the real rendered sizes.
+Which left an open question, stated plainly at the time rather than guessed at: every recommended font mitigation *is* correctly in place, including the fallback families being present in the `font-family` stacks where they actually take effect (`["Source Sans", "Source Sans Fallback", "sans-serif"]` in `fonts.json`), and the swap still moved the page far enough to score 0.18. So either the `size-adjust` / override triple was mistuned for this text, or something other than text metrics was resizing on swap. **It was the second, and the answer is in the next section.**
 
 `/notes/` is a clean 100 either way. ⚠ It has no matched before-number — the earlier `/notes/` run used simulated throttling, which cannot be compared with these — so read it as the current state and not as an improvement this change caused.
 
@@ -110,7 +112,7 @@ await page.evaluateOnNewDocument(() => {
 
 At 3G with 4× CPU throttling that reports **CLS 0.0993, of which 0.0922 lands in a single event at 4.2 s** — text nodes nudging down 3–4 px and one moving *up 46 px*, which at a 49 px line-height is a paragraph losing a line as the real font finally replaces the fallback. The font was the cause after all; the static tests could not see it because forcing a family after load is not the same sequence as a real load, where first paint happens before even the local fallback face has resolved.
 
-### The fix, measured
+### The first fix, and why it was withdrawn
 
 All four web `@font-face` blocks went from `font-display: swap` to `optional` — one word each, no other change.
 
@@ -120,9 +122,31 @@ All four web `@font-face` blocks went from `font-display: swap` to `optional` �
 | grid removed, still `swap` | 0.0993 | 0.180 | 92 |
 | grid removed + `optional` | **0.007** | **0** | **100** |
 
-The 0.0922 event is simply gone; what remains is sub-0.005 of early nav and footer jitter. The landing page now scores **100 / 100 / 100** with SEO 66 for the soft-launch `noindex`.
+The 0.0922 event was simply gone, and the landing page scored 100 / 100 / 100 with SEO 66 for the soft-launch `noindex`.
 
-The trade-off was verified rather than assumed, cold cache both times: on an unthrottled load the real font is applied (`Source Sans` measured at its own width, 488.8), and on 3G with 4× CPU the fallback holds for the whole pageview (the stack measures exactly Arial's width) with the font cached for the next navigation. That is `optional` working as designed, and it is the honest cost — a first visit on a genuinely slow connection reads the page in Arial and Georgia.
+⚠ **It was the wrong fix, and the number that proved it was never taken.** The trade-off was checked as "does the real font apply on a fast connection", unthrottled, on a browser that had already cached the fonts from the previous run. The question that mattered is what a *first* visitor sees, and the answer, over five cold loads of the live site with no throttling at all, is the fallback — every time, for the reason in the `optional` warning above. `optional` had not reduced the shift so much as removed the thing that shifts: the web fonts were no longer being used.
+
+### The real fix: `font-size-adjust` was fighting `size-adjust`
+
+The shift never came from the fallback metrics. It came from one declaration Eleventy Excellent sets on `body`, added upstream in [`8536672`](https://github.com/madrilene/eleventy-excellent) (2024-08-24):
+
+```css
+font-size-adjust: from-font;
+```
+
+The two mechanisms in play match the fallback to the web font along *different axes*, and they disagree. The `@font-face` fallbacks are tuned by **average character width** (`size-adjust: 93.7639%`, from Capsize). `font-size-adjust: from-font` then re-matches the rendered text by **x-height** — and Arial's x-height ratio is 0.5186 against Source Sans's 0.4861, some 6.7% larger. So the fallback is scaled back up, the width match is undone, and the landing-page paragraph wraps to four lines where the web font takes three. Delete the line and the two faces occupy the same space again.
+
+Measured on a local production build, cold cache, 3G + 4× CPU, observer installed before navigation:
+
+| | landing, 1440 px | landing, 390 px | `/wiki/layout-shift/` | `/notes/` |
+| --- | --- | --- | --- | --- |
+| `optional` + `font-size-adjust` | 0 *(fallback painted)* | 0 *(fallback)* | 0 *(fallback)* | 0 *(fallback)* |
+| `swap` + `font-size-adjust` | 0.1345 | 0.0589 | 0.0303 | 0.0544 |
+| **`swap`, no `font-size-adjust`** | **0.0041** | **0.0012** | **0.0022** | **0.0008** |
+
+So the site is back on `swap`, with `font-size-adjust: from-font` removed from `global-styles.css` — a deliberate divergence from Eleventy Excellent, and the only change jedee makes to Lene's font kit. Readers get the real typography on their first visit *and* a CLS an order of magnitude under the 0.1 "good" threshold. `base/fonts.css` carries a one-line warning against re-adding the declaration on the next upstream merge.
+
+⚠ **A second mis-derivation exists and was deliberately left alone.** The `Source Serif Fallback` overrides are wrong: Georgia under them measures 13.9% too wide and 17.6% too tall against the shipped Source Serif Bold, because Capsize's `sourceSerif4/700` average character width (0.494 em) does not describe the subset this site actually ships (0.4316 em). Re-deriving them from the real font files changed **no line count at any viewport width from 360 to 1600 px**, so the fix buys nothing measurable. Noted here so the next person does not rediscover it and assume it matters; fix it only if a heading is ever seen to reflow.
 
 ### Measuring it honestly
 
@@ -132,4 +156,4 @@ The trade-off was verified rather than assumed, cold cache both times: on an unt
 
 **An automated browser pane can report a zero-height viewport,** in which an `IntersectionObserver` never fires — so every [[is-land]] `on:visible` island looks permanently un-hydrated while the `on:idle` ones look fine. That produced two confident and completely false findings before the viewport was checked. See the same warning on [[is-land]].
 
-Raw source: four Lighthouse 12 JSON reports in `src/_raw/lighthouse-2026-09-06/`, run 2026-09-06 against `dist/` on `python3 -m http.server` and against the live site.
+Raw source: four Lighthouse 12 JSON reports in `src/_raw/lighthouse-2026-09-06/`, run 2026-09-06 against `dist/` on `python3 -m http.server` and against the live site, plus `src/_raw/dev-notes/How the font fallback metrics were corrected.md` (2026-09-07).
