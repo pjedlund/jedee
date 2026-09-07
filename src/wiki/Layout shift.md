@@ -146,7 +146,72 @@ Measured on a local production build, cold cache, 3G + 4× CPU, observer install
 
 So the site is back on `swap`, with `font-size-adjust: from-font` removed from `global-styles.css` — a deliberate divergence from Eleventy Excellent, and the only change jedee makes to Lene's font kit. Readers get the real typography on their first visit *and* a CLS an order of magnitude under the 0.1 "good" threshold. `base/fonts.css` carries a one-line warning against re-adding the declaration on the next upstream merge.
 
-⚠ **A second mis-derivation exists and was deliberately left alone.** The `Source Serif Fallback` overrides are wrong: Georgia under them measures 13.9% too wide and 17.6% too tall against the shipped Source Serif Bold, because Capsize's `sourceSerif4/700` average character width (0.494 em) does not describe the subset this site actually ships (0.4316 em). Re-deriving them from the real font files changed **no line count at any viewport width from 360 to 1600 px**, so the fix buys nothing measurable. Noted here so the next person does not rediscover it and assume it matters; fix it only if a heading is ever seen to reflow.
+⚠ **A second mis-derivation existed and was fixed a day later, after an initial "leave it alone" call that a bad measurement had supported.** Both fallback faces were tuned to fonts this site does not ship, so both `size-adjust` values were re-derived by scoring the real page across viewport widths — `Source Serif Fallback` 110.8118% → **100.8%** (17/17 widths, was 12) and `Source Sans Fallback` 93.7639% → **92.5%** (12/13, was 10). Only `size-adjust` moved; the ascent and descent overrides are Capsize's, rescaled by the inverse ratio so the vertical box is byte-identical, since this site uses unitless line-heights and the vertical overrides are largely inert. The serif value is worth **CLS 0.0997 → 0.0020 at 720 px**, where the heading took two lines in Georgia against one in Source Serif.
+
+The reason it was first waved off is worth keeping: a sweep reported no line-count change at any width from 360 to 1600 px, and that sweep reused one browser across 32 navigations, so every case after the first was served fonts from cache. **A measurement that says "no difference" deserves the same scrutiny as one that says "big difference"** — a broken harness returns "no difference" by default.
+
+### Why fallback-metric tools never quite land it
+
+The generators — [screenspan.net/fallback](https://screenspan.net/fallback), [Capsize](https://github.com/seek-oss/capsize), Malte Ubl's original — all do the same thing: pick one scalar from each font and set `size-adjust` to their ratio. That is genuinely the best a single descriptor can do, and it is why the output is never quite right.
+
+**Three reasons, measured on this site.**
+
+**1. One number, several requirements.** `size-adjust` matches an *average*, but any given line of text has its own letter mix. Deriving the value the heading actually needs from four different samples gives four different answers:
+
+| sample | required `size-adjust` |
+| --- | --- |
+| the real `h1`, "Hej hej! I'm Johan." | 100.09% |
+| an alphabet run | 100.12% |
+| a heading-length title | 102.44% |
+| a prose paragraph | 103.71% |
+
+Nearly four points of spread. Whichever you pick is wrong for the other three.
+
+**2. The metrics may not describe the font you ship.** Capsize's `sourceSerif4/700` records an average character width of 0.494 em. The subset actually served here measures **0.4316 em**. Subsetting does not change advance widths, so this is a version or instance difference — but the generated `size-adjust: 110.8118%` was tuned to a font that is not on the site. Scored against the real page it matched 12 viewport widths out of 17, where a re-derived 100.8% matches all 17.
+
+**3. `ch` is font-dependent, and so is anything built on it.** `1ch` is the advance of the "0" glyph, which differs per family even after `size-adjust` scales it:
+
+| | `1ch`, in em | vs its web font |
+| --- | --- | --- |
+| Source Sans | 0.49688 | — |
+| Source Sans Fallback | 0.52141 | +4.94% |
+| Source Serif | 0.54187 | — |
+| Source Serif Fallback | 0.68000 | +25.49% |
+
+So `prose.css`'s `max-inline-size: 60ch` and the `--tracking` values in `ch` all resolve differently while the fallback shows. ⚠ **This turned out not to be the cause of any shift measured here** — converting every `ch` tracking value to `em` made letter-spacing identical between the two states and the footer still wrapped the same way, because the difference is around 1% of a sub-pixel value. Recorded because it is real and easy to assume is the culprit; it was measured and it is not.
+
+**What is *not* a factor: font size.** `size-adjust` is a pure ratio, so it is scale-invariant — the required value for the heading is 100.119% at 32 px, 100.103% at 64 px and 100.100% at 107 px. Fluid `clamp()` type does not weaken metric matching.
+
+### The shift no descriptor can reach
+
+On the landing page at around 412 px the footer's link cluster wraps to **three rows in the fallback and two in the web font**, moving the footer 34 px and scoring **CLS 0.16**. No `size-adjust` fixes it: tested down to 91.5%, 2.4% narrower than Capsize's own value, the row count never flips. A row of short uppercase link labels has a glyph mix nothing like the average the descriptor was fitted to, and the wrap sits right on a boundary at that width. It wants a layout answer — a stable row count for that cluster — not a metrics one.
+
+### Can an animation hide the swap?
+
+A common pattern is a hero that fades and slides in on load, and on sites using it you rarely catch the font changing. Measured at 412 px on 3G with 4× CPU, cold cache:
+
+| | CLS | FCP |
+| --- | --- | --- |
+| as built, no masking | 0.1614 | 568 ms |
+| ungated hero fade, 0.6 s | **0.16** | 572 ms |
+| reveal gated on `document.fonts.ready` (1.5 s ceiling) | **0** | 1544 ms |
+| gated reveal + hero fade | **0** | 1168 ms |
+
+⚠ **The decorative fade does nothing for the score.** A layout shift is counted whether or not the moving element is mid-animation, and here the fade had finished long before the font arrived at ~1.4 s. If those sites look smooth it is because the reader's eye is elsewhere, not because the technique fixed anything.
+
+**Gating the reveal does zero the score** — an element at `opacity: 0` generates no `layout-shift` entry at all, which is worth knowing on its own. But it pays for that in first paint, and there is no usable middle:
+
+| gate ceiling | CLS | FCP |
+| --- | --- | --- |
+| none | 0.1614 | 568 ms |
+| 200 ms | 0.16 | 740 ms |
+| 400 ms | 0.16 | 1060 ms |
+| 700 ms | **0** | 1156 ms |
+| 1000 ms | **0** | 1540 ms |
+
+The ceiling has to outlast the font download before the shift disappears, and by then first paint has doubled. Below that you pay the FCP *and* still take the shift. That is the same trade `font-display: optional` made — hiding the problem rather than fixing it — just paid in blank screen instead of typography. Not adopted here.
+
+For the record, the established techniques in this area are Zach Leatherman's, in [A Comprehensive Guide to Font Loading Strategies](https://www.zachleat.com/web/comprehensive-webfonts/): **FOUT with a class** (apply the web font only under a class set from the Font Loading API) and **Critical FOFT** (load a tiny A–Z subset first, the full family second). Both control *when* the swap happens; neither makes a mismatched fallback stop reflowing.
 
 ### Measuring it honestly
 

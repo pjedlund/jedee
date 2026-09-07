@@ -5,6 +5,18 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-07] fix | Both fallback size-adjust values re-derived, and what an animation can't do
+
+Follow-up to the entry below, after Johan deployed it and saw the heading still jumping. Both fallback faces were tuned by Capsize to fonts this site does not ship, so both `size-adjust` values were re-derived by scoring line counts and element positions against the real page across viewport widths: serif 110.8118% → **100.8%** (17/17 widths, was 12), sans 93.7639% → **92.5%** (12/13, was 10). Only `size-adjust` moved — the vertical overrides are Capsize's rescaled by the inverse ratio, so the line box is byte-identical. Worth **0.0997 → 0.0020 at 720 px**, where the h1 took two Georgia lines against one in Source Serif.
+
+⚠ **One shift no descriptor reaches.** The landing page at ~412 px scores 0.16 because the footer link cluster wraps to three rows in the fallback and two in the web font. Tested down to `size-adjust: 91.5%` — 2.4% narrower than Capsize's — and the row count never flips. Short uppercase link labels have a glyph mix nothing like the average the descriptor fits. Layout problem, not a metrics one.
+
+⚠ **The hero fade-in does not hide a font swap**, which was the session's question. Measured: an ungated 0.6 s fade leaves CLS at 0.16, unchanged — a layout shift counts whether or not the element is mid-animation. Gating the reveal on `document.fonts.ready` *does* score 0, because an `opacity: 0` element generates no `layout-shift` entry at all, but the gate has to outlast the font download to work and first paint doubles (568 ms → 1156 ms at a 700 ms ceiling). Same trade as `optional`, paid in blank screen. Not adopted.
+
+Also settled, against expectation: **fluid type is not the problem.** `size-adjust` is a pure ratio, so the required value for the heading is 100.119% / 100.103% / 100.100% at 32 / 64 / 107 px. And the `ch`-unit finding — `1ch` differs 4.94% (sans) and 25.49% (serif) between web font and fallback, so `60ch` measures and `ch` trackings both move — is real but was **measured not to be the cause** of any shift here; converting every tracking to `em` changed no wrap.
+
+⚠ And the method note again: the sweep that said "no line-count change anywhere", which is why the serif was left alone yesterday, reused one browser across 32 navigations and shared the font cache. A broken harness returns "no difference" by default, so a null result needs the same scrutiny as a positive one.
+
 ## [2026-09-07] fix | Two retractions: `optional` never applied, and `size-adjust` works fine
 
 Back to `font-display: swap` on all four blocks, and `font-size-adjust: from-font` deleted from `global-styles.css` — the one thing jedee now changes about EE's font kit.
