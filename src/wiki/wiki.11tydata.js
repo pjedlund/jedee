@@ -23,6 +23,41 @@ export default {
       ? '/wiki/index.html'
       : `/wiki/${slugify(data.page.fileSlug)}/index.html`,
 
+  // Expanded into markdown-it-abbr definitions by the `glossary` preprocessor in eleventy.config.js, so every wiki page gets <abbr> for free. Only opaque jargon belongs here; CSS/HTML/JSON etc. would just be dotted-underline noise. ⚠ Do not rename this key to `abbreviations` — see the preprocessor's warning.
+  glossary: {
+    ARIA: 'Accessible Rich Internet Applications',
+    BCP: 'Best Current Practice',
+    CDN: 'content delivery network',
+    CEST: 'Central European Summer Time',
+    CLS: 'Cumulative Layout Shift',
+    CUBE: 'Composition, Utility, Block, Exception',
+    DTCG: 'Design Tokens Community Group',
+    ES: 'ECMAScript',
+    EXIF: 'Exchangeable Image File Format',
+    FCP: 'First Contentful Paint',
+    FIT: 'Flexible and Interoperable Data Transfer',
+    FOFT: 'Flash of Faux Text',
+    FOIT: 'Flash of Invisible Text',
+    FOUT: 'Flash of Unstyled Text',
+    GC: 'garbage collection',
+    GPX: 'GPS Exchange Format',
+    'JSON-LD': 'JSON for Linking Data',
+    LFS: 'Large File Storage',
+    LLM: 'large language model',
+    OG: 'Open Graph',
+    OOM: 'out of memory',
+    PESOS: 'Publish Elsewhere, Syndicate to your Own Site',
+    POSSE: 'Publish on your Own Site, Syndicate Elsewhere',
+    PWA: 'progressive web app',
+    RDFa: 'Resource Description Framework in Attributes',
+    SR: 'screen reader',
+    TZ: 'time zone',
+    UA: 'user agent',
+    UTC: 'Coordinated Universal Time',
+    W3C: 'World Wide Web Consortium',
+    WCAG: 'Web Content Accessibility Guidelines'
+  },
+
   eleventyComputed: {
     // The interlinker skips any page whose `data.title` is undefined (it needs a title to
     // register the page's [[links]]), and these pages carry no front matter — so derive one

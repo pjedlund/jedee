@@ -5,6 +5,16 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-07] ingest | Abbreviations
+
+New page, written from the session that put `<abbr>` on the wiki — prompted by reading [[Layout shift]] and not remembering what FOFT stood for. The page covers the element in general (and the honest limit: the expansion lives in a `title`, which is the least dependable attribute on the web, so WCAG 3.1.4's real mechanism is expanding on first use in the prose), the PHP Markdown Extra `*[X]: …` syntax that `markdown-it-abbr` adds, and the two plugin properties that decide how to use it — it skips code tokens, and it wraps every occurrence rather than the first.
+
+In jedee: no dependency and no CSS were needed, both being EE stock and both unused by the wiki. One `glossary` map in the wiki's directory data plus a preprocessor gated on that key does all fifty-odd pages and every page written after. 31 opaque terms only; CSS, HTML, JSON and EE are deliberately excluded, since 192 dotted underlines for "CSS" is noise.
+
+⚠ **The trap, and the reason this is a page rather than a commit message: the data key must not be called `abbreviations`.** Eleventy calls `md.render(str, data)`, so a page's data object is markdown-it's `env` — and `env.abbreviations` is markdown-it-abbr's own store, keyed with a leading `:`. The plugin builds its match pattern with `x.substr(1)` and looks results back up with `':' + match`, so an unprefixed glossary is read one character short: `UA` → the pattern `A`, `TZ` → `Z`, fifteen `<abbr title="undefined">A</abbr>` on one page. The site's own definitions kept working throughout, which is what hid it. Renaming the key is the fix; the lesson is to check which `env.*` keys a plugin claims before naming a data key.
+
+Earned links to [[Tooltips]] (the `title` attribute) and [[The interlinker's second render pass]] (the same class of markdown-it plugin reaching past its own syntax).
+
 ## [2026-09-07] fix | The footer reservation, and position equality is not CLS
 
 The 412 px footer shift from the entry below is now reserved away: `min-block-size: 6rem` plus `align-content: flex-start` on `.footer-links` under 27 rem, with a new class so the rule does not hang off an `aria-label` that is content. **0.1726 → 0.079.**

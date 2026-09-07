@@ -123,6 +123,15 @@ export default async function(eleventyConfig) {
 
   // 	--------------------- Library and Data
   eleventyConfig.setLibrary('md', plugins.markdownLib);
+
+  // Appends markdown-it-abbr definitions from a `glossary` data key, so <abbr> comes from one list instead of per-page markup. Only src/wiki/ sets the key.
+  // ⚠ The key must NOT be called `abbreviations`: Eleventy hands the whole data object to markdown-it as its `env`, and markdown-it-abbr reads `env.abbreviations` as its own store — a same-named data key poisons it, and every abbreviation renders one character short with title="undefined".
+  eleventyConfig.addPreprocessor('glossary', 'md', (data, content) => {
+    if (!data.glossary) return;
+    const defs = Object.entries(data.glossary).map(([short, long]) => `*[${short}]: ${long}`);
+    return `${content}\n\n${defs.join('\n')}`;
+  });
+
   eleventyConfig.addDataExtension('yaml', contents => yamlLoad(contents));
 
   // --------------------- Filters
