@@ -1,8 +1,10 @@
+/* ⚠ Don't re-add EE's `font-size-adjust: from-font` on body — it re-scales these fallbacks by x-height and cancels the size-adjust width match. See the wiki "Layout shift". */
+
 /* Source serif 700 with Georgia Bold as fallback for headlines*/
 @font-face {
   font-family: 'Source Serif';
   font-style: normal;
-  font-display: optional;
+  font-display: swap;
   font-weight: 700;
   src: local('Source Serif'), url('/assets/fonts/source-serif/source-serif.woff2') format('woff2');
 }
@@ -23,7 +25,7 @@
 @font-face {
   font-family: 'Source Sans';
   font-style: normal;
-  font-display: optional;
+  font-display: swap;
   font-weight: 100 1000;
   src: local('Source Sans'), url('/assets/fonts/source-sans/source-sans.woff2') format('woff2');
 }
@@ -45,7 +47,7 @@
 @font-face {
   font-family: 'Source Sans';
   font-style: italic;
-  font-display: optional;
+  font-display: swap;
   font-weight: 100 1000;
   src: url('/assets/fonts/source-sans/source-sans-italic.woff2') format('woff2');
 }
@@ -53,7 +55,7 @@
 /* Source code pro with no fallback */
 @font-face {
   font-family: 'Source Code Pro';
-  font-display: optional;
+  font-display: swap;
   src: local('Source Code Pro'), url('/assets/fonts/source-code-pro/source-code-pro.woff2') format('woff2');
 }
 
