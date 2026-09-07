@@ -184,7 +184,7 @@ So `prose.css`'s `max-inline-size: 60ch` and the `--tracking` values in `ch` all
 
 ### The shift no descriptor can reach
 
-On the landing page at around 412 px the footer's link cluster wraps to **three rows in the fallback and two in the web font**, moving the footer 34 px and scoring **CLS 0.173**. No `size-adjust` fixes it: tested down to 91.5%, 2.4% narrower than Capsize's own value, the row count never flips. A row of short uppercase link labels has a glyph mix nothing like the average the descriptor was fitted to, and the wrap sits right on a boundary at that width.
+On the landing page at around 412 px the footer's link cluster wraps to **three rows in the fallback and two in the web font**, moving the footer 34 px and scoring **CLS 0.173**. That width is not arbitrary and the band is narrow — measured below. No `size-adjust` fixes it: tested down to 91.5%, 2.4% narrower than Capsize's own value, the row count never flips. A row of short uppercase link labels has a glyph mix nothing like the average the descriptor was fitted to, and the wrap sits right on a boundary at that width.
 
 The page is short, so the footer is bottom-anchored — its top is `viewportHeight − footerHeight`, which makes the nav's height *its position*. The fix is to reserve the taller state across the band where the fonts disagree:
 
@@ -204,6 +204,38 @@ The page is short, so the footer is bottom-anchored — its top is `viewportHeig
 ⚠ **This halves the shift, it does not remove it** — 0.1726 → 0.079. The box is stable now, but the seven links still redistribute between three rows and two when the font lands, and that redistribution is itself a layout shift. Only an identical row count in both fonts would remove it, and no CSS achieves that across every width: shrinking the link padding makes 412 px agree and 380 px disagree instead.
 
 ⚠ **Stacking the nav into a column measures worse, at 0.1055.** It was the option that looked cleanest, because it gives six rows in both fonts and the footer's *top* is then identical at every width. But impact fraction is area, and a much taller footer scores higher on the small per-row metric differences that remain. Both of these misjudgements came from the same mistake — comparing element *positions* between the two font states instead of measuring CLS. Position equality is necessary, not sufficient; the score counts every element that moved, not just the container.
+
+### The band is 22 px wide, and Lighthouse sits inside it
+
+Everything above measures the shift where it happens. The complementary question is where it *doesn't*, which turns out to be almost everywhere. Sweeping the landing page and forcing the fallback state directly — dropping the web family from each element's stack, leaving the rest of the declaration alone — gives this:
+
+| viewport | `h1` lines | intro lines | intro height Δ | footer rows, web / fallback |
+| --- | --- | --- | --- | --- |
+| 360 | 2 / 2 | 7 / 7 | 0 | 3 / 3 |
+| 390 | 2 / 2 | 7 / 7 | 0 | 3 / 3 |
+| 408 | — | — | — | 3 / 3 |
+| **410** | — | — | — | **2 / 3** |
+| **412** | 2 / 2 | 6 / 6 | 0.09 px | **2 / 3** |
+| **425** | — | — | — | **2 / 3** |
+| 432 | — | — | — | 2 / 2 |
+| 720 | 1 / 1 | 4 / 4 | 0 | 2 / 2 |
+| 1100 | 1 / 1 | 3 / 3 | 0.01 px | 1 / 1 |
+| 1280 | 1 / 1 | 3 / 3 | 0 | — |
+
+**Document height was identical in both font states at every width tested.** The heading and the intro paragraph never change line count anywhere in the range — the two fonts disagree about the footer and nothing else.
+
+⚠ **The disagreement is a band roughly 409–430 px wide, and Lighthouse's mobile preset emulates 412 px** — inside it, near the lower edge. That is the whole reason the landing page carries a residual CLS on the mobile audit while measuring clean at 360, 390, 720 and up. It is not a mobile problem; it is a 22-pixel problem that the standard audit width happens to fall into. Anyone reproducing this at their own browser width will find nothing wrong.
+
+The residual metric error after the re-derived descriptors, measured as pure advance width on one unwrapped string:
+
+| | vs. its web font | without `size-adjust` |
+| --- | --- | --- |
+| Source Sans Fallback, the 207-character intro | **−1.75%** | Arial alone: +6.55% |
+| Source Serif Fallback, "Hej hej! I'm Johan." | **+0.74%** | Georgia alone: +16.36% |
+
+So `92.5%` overshoots slightly and `100.8%` undershoots slightly, which is the one-number limit from the section above, now stated as what is left rather than as what is required.
+
+⚠ **Do not read a layout shift off two overlaid screenshots.** Superimposing the fallback and web-font states shows the words in the intro landing in visibly different places — line 1 runs 44 px longer in the fallback, line 3 runs 149 px shorter — which looks like a serious problem and costs exactly nothing, because the line *count* and the block height are the same. Narrower glyphs fit more words before the wrap, so the early lines fill closer to the edge and the last line empties out. The only thing worth reading off such a comparison is whether the number of lines changed; everything else is word-level jitter that moves nothing below it.
 
 ### Can an animation hide the swap?
 

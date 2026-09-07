@@ -5,6 +5,16 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-07] enrich | Layout shift — the band is 22 px wide
+
+Johan brought two Helium screenshots of the landing page, one in each font state, plus an overlay at 50% alpha, and asked whether that is what Lighthouse sees. It is not — different viewport, no CPU throttling, a content blocker in the profile — but the better answer came from measuring rather than looking.
+
+A width sweep with the fallback forced directly (dropping the web family from each element's stack, which is valid because the fallback `@font-face` is in the initial document) finds the disagreement is far narrower than "around 412 px" suggested. The `h1` and the intro paragraph **never change line count** at 360, 390, 412, 720, 1100 or 1280, and **document height is identical in both states at every one of them**. The footer is the only element that differs, across a band of roughly **409–430 px**.
+
+⚠ **Lighthouse's mobile preset emulates 412 px, which is inside that band.** That is the whole explanation for a residual mobile CLS on a page that measures clean at every other width — a 22-pixel problem the standard audit width happens to land in, not a mobile problem. Worth knowing before anyone tries to reproduce it at their own browser width and concludes it is fixed.
+
+Two smaller things recorded. The residual metric error after the re-derived descriptors, as pure advance width on one unwrapped string: sans **−1.75%**, serif **+0.74%**, against Arial's +6.55% and Georgia's +16.36% with no `size-adjust` at all — so 92.5% overshoots slightly and 100.8% undershoots, which restates the one-number limit as what is *left* rather than what is *required*. And a reading warning that generalizes past this site: ⚠ **an overlay of two screenshots cannot show a layout shift.** The intro's first line runs 44 px longer in the fallback and its last line 149 px shorter — alarming to look at, costing nothing, because the line count and block height are unchanged. Narrower glyphs fit more words before the wrap. The only thing worth reading off such a comparison is whether the number of lines changed.
+
 ## [2026-09-07] ingest | Abbreviations
 
 New page, written from the session that put `<abbr>` on the wiki — prompted by reading [[Layout shift]] and not remembering what FOFT stood for. The page covers the element in general (and the honest limit: the expansion lives in a `title`, which is the least dependable attribute on the web, so WCAG 3.1.4's real mechanism is expanding on first use in the prose), the PHP Markdown Extra `*[X]: …` syntax that `markdown-it-abbr` adds, and the two plugin properties that decide how to use it — it skips code tokens, and it wraps every occurrence rather than the first.
