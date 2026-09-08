@@ -281,6 +281,32 @@ The reference work here is Zach Leatherman's [A Comprehensive Guide to Font Load
 
 **Where this site sits:** `font-display: swap` + preload + metric-matched fallback faces, all of it CSS, no JavaScript. That is the third and fifth rows of the table combined, and it is where Eleventy Excellent starts. Moving up to FOUT-with-a-class would let the swap be timed deliberately, but it makes the fonts JavaScript-dependent, which is a large concession for a site built on progressive enhancement. Critical FOFT would genuinely help — the subset is what makes its reflow small — but it needs a second build-time subsetting step per family and a two-stage loader. Neither is on the cards; recorded so the option is a decision rather than an oversight.
 
+### A lab runner's CLS is only as real as its installed fonts
+
+The next morning, Netlify's own Lighthouse run on the deploy that carried all of the above reported **CLS 0.305** — "poor", against 0.079 measured locally on the same build — and its first filmstrip frame showed the landing heading on **three lines**. No font state explains that from this machine: Source Serif, the matched fallback and even raw Georgia all set "Hej hej! I'm Johan." on two lines at 360 px, the width the plugin's pinned Lighthouse 9.6.8 emulates.
+
+The fallback faces are `local()`-only — `local('Georgia')`, `local('Arial')`, `local('Courier New')` — and those are Microsoft fonts. Where one is absent the `@font-face` resolves to nothing, the family falls through to the platform generic, and every descriptor on it applies to nothing. Two platforms lack all three: **Android**, which is most real mobile traffic, and **Linux**, which is every Lighthouse runner. Netlify's build image ships only the DejaVu family ([netlify/build-image#327](https://github.com/netlify/build-image/issues/327) quotes its `fc-list`), and the audit runs in that image after the build.
+
+So the reproduction fetched the candidate fonts *into the browser* rather than installing anything — Roboto and Noto Serif from Google Fonts, DejaVu from jsDelivr — declared each as its own family, and re-rendered the heading and the intro paragraph under every one at five widths:
+
+| fallback for the heading / intro at 360 px | `h1` lines | intro lines |
+| --- | --- | --- |
+| Source Serif / Source Sans (the web fonts) | 2 | 7 |
+| Georgia / Arial, matched (the shipped descriptors) | 2 | 7 |
+| Noto Serif Bold / Roboto, raw (Android's generics, no `size-adjust`) | 2 | 7 |
+| **DejaVu Serif Bold / DejaVu Sans (the build image)** | **3** | **8** |
+
+DejaVu Serif Bold is the three-line heading — it sets "Hej hej! I'm" at 239 px against Source Serif's 197 — and DejaVu Sans adds a line to the intro. **The 0.305 measures the build container's font set.** No phone ships DejaVu as its serif, so the number describes a device that does not exist in the audience. The same caveat applies to any Linux-hosted lab run, PageSpeed Insights included; only field data ([CrUX](https://developer.chrome.com/docs/crux)) says what visitors experienced, and a `noindex` site has none yet.
+
+The matching layer *is* inert on Android, exactly as feared — and it does not matter there. At 360, 390, 412, 720 and 1100 px, Noto Serif Bold and Roboto with no `size-adjust` at all land on the same line counts as the web fonts, for both elements. Noto Serif Bold's advance width comes out within 0.1% of the face the serif descriptor was tuned against, which is luck rather than design, but it is measured luck.
+
+Two things worth knowing if the layer is ever extended:
+
+- **`local('Georgia')` resolves Georgia Regular only.** The 700-weight heading fallback is Chrome's synthesised bold, and the 100.8% was tuned against that: Georgia Regular faux-bold sets the sample at 193 px, real Georgia Bold at 222. Adding `local('Georgia Bold')` for authenticity would make the fallback 14% too wide unless the descriptor is re-derived.
+- **Per-platform matching has an established shape.** Capsize's [`createFontStack`](https://github.com/seek-oss/capsize) takes several fallbacks and emits one `@font-face` per fallback, each with its own `size-adjust`, chained as `'Source Serif', 'Source Serif Fallback: Georgia', 'Source Serif Fallback: Noto Serif', serif`; the browser skips any family whose `local()` finds nothing, so each platform gets its own tuned face. Liberation Sans and Liberation Mono are metric-identical to Arial and Courier New and could share the existing descriptors as extra `local()` candidates. Nothing metric-compatible with Georgia ships anywhere by default.
+
+The decision was to change nothing: the CSS is right for the platforms that have the fonts, harmless on the one that does not, and the only "bad" number comes from a machine with neither. What changed is how the audit is read.
+
 ### Measuring it honestly
 
 ⚠ Two ways to get a wrong number, both met on the day this page was written.
@@ -289,4 +315,4 @@ The reference work here is Zach Leatherman's [A Comprehensive Guide to Font Load
 
 **An automated browser pane can report a zero-height viewport,** in which an `IntersectionObserver` never fires — so every [[is-land]] `on:visible` island looks permanently un-hydrated while the `on:idle` ones look fine. That produced two confident and completely false findings before the viewport was checked. See the same warning on [[is-land]].
 
-Raw source: four Lighthouse 12 JSON reports in `src/_raw/lighthouse-2026-09-06/`, run 2026-09-06 against `dist/` on `python3 -m http.server` and against the live site, plus `src/_raw/dev-notes/How the font fallback metrics were corrected.md` (2026-09-07).
+Raw source: four Lighthouse 12 JSON reports in `src/_raw/lighthouse-2026-09-06/`, run 2026-09-06 against `dist/` on `python3 -m http.server` and against the live site, plus `src/_raw/dev-notes/How the font fallback metrics were corrected.md` (2026-09-07) and `src/_raw/dev-notes/How the Netlify Lighthouse CLS was traced to DejaVu.md` (2026-09-08).

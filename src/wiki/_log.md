@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-08] enrich | Layout shift — a lab runner's CLS is only as real as its installed fonts
+
+TODO §28 reproduced. Netlify's Lighthouse reported CLS 0.305 with a three-line `h1` on the deploy that measures 0.079 locally. The `local()`-only fallback faces (Georgia, Arial, Courier New) resolve to nothing on Android and Linux, and Netlify's build image ships only DejaVu. A sweep that fetched Roboto, Noto Serif and DejaVu into the browser and re-rendered the heading and intro under each at 360–1100 px found DejaVu Serif Bold to be the only face that takes a third line, and DejaVu Sans the only one that adds an intro line — so the number measures the audit container. Android's raw Noto Serif Bold and Roboto agree with the web fonts on line count everywhere tested, which is why the inert matching layer costs nothing there. Also recorded: `local('Georgia')` gives faux bold and the serif descriptor was tuned against it; Capsize's `createFontStack` as the shape for per-platform fallbacks. Decision: no CSS change. New raw source `src/_raw/dev-notes/How the Netlify Lighthouse CLS was traced to DejaVu.md`; the catalog line for the page was also brought up to date (it still carried the retracted "`size-adjust` does nothing" claim). No new links.
+
 ## [2026-09-07] enrich | Layout shift — the band is 22 px wide
 
 Johan brought two Helium screenshots of the landing page, one in each font state, plus an overlay at 50% alpha, and asked whether that is what Lighthouse sees. It is not — different viewport, no CPU throttling, a content blocker in the profile — but the better answer came from measuring rather than looking.
