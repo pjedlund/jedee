@@ -1,7 +1,7 @@
 // Directory data for the jam post type. Ported from jams.json so the cover's lightbox target can be computed at build time (see src/_config/utils/cover-zoom.js).
 import { coverZoom } from '../../_config/utils/cover-zoom.js';
 import { ogImage } from '../../_config/utils/og-image.js';
-import { jamOgCard, jamDescription } from '../../_config/utils/jam-og-card.js';
+import { ogCard, autoDescription } from '../../_config/utils/og-card.js';
 
 export default {
   layout: 'jam',
@@ -11,7 +11,7 @@ export default {
   eleventyComputed: {
     coverZoom: async data => await coverZoom(data.cover),
     ogImage: async data => await ogImage(data.cover),
-    ogCard: data => jamOgCard(data.slug || data.page.fileSlug),
-    autoDescription: data => jamDescription(data)
+    ogCard: data => ogCard('jam', data.slug || data.page.fileSlug),
+    autoDescription: data => autoDescription.jam(data)
   }
 };

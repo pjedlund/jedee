@@ -79,7 +79,7 @@
 <meta
   property="og:image:alt"
   content="{%- if ogCard -%}
-    {{- title -}}{% if artist %} by {{ artist | unwikilink }}{% endif %}, on a card beside its album cover
+    {{- title -}}, on a card beside its cover artwork
   {%- elif ogImage -%}
     {{- photo.alt | default(coverAlt | default('Cover for ' + title)) -}}
   {%- elif layout == 'post' -%}
