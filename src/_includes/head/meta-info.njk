@@ -61,9 +61,12 @@
     {{- meta.siteName -}}
   {%- endif -%}"
 />
+{# `ogImage` is the post's own artwork, self-hosted at build time (src/_config/utils/og-image.js) — set by the photo and jam directory data files, null everywhere else. It wins over the generated card because artwork beats a title, and it commits no file. #}
 <meta
   property="og:image"
-  content="{%- if layout == 'post' -%}
+  content="{%- if ogImage -%}
+    {{- meta.url -}}{{- ogImage.url -}}
+  {%- elif layout == 'post' -%}
     {{- meta.url -}}/assets/og-images/{{ title | slugify }}-preview.jpeg
   {%- else -%}
     {{- meta.url -}}{{- meta.opengraph_default -}}
@@ -71,14 +74,17 @@
 />
 <meta
   property="og:image:alt"
-  content="{%- if layout == 'post' -%}
+  content="{%- if ogImage -%}
+    {{- photo.alt | default(coverAlt | default('Cover for ' + title)) -}}
+  {%- elif layout == 'post' -%}
     {{- title -}}
   {%- else -%}
     {{- meta.opengraph_default_alt -}}
   {%- endif -%}"
 />
-<meta property="og:image:width" content="1200" />
-<meta property="og:image:height" content="630" />
+{# ⚠ These must match the file actually served: with no twitter:card tag to say so, the declared ratio is the only thing telling a platform whether to draw a wide card or a small square one. #}
+<meta property="og:image:width" content="{{ ogImage.width if ogImage else 1200 }}" />
+<meta property="og:image:height" content="{{ ogImage.height if ogImage else 630 }}" />
 <meta property="og:description" content="{{ metaDescription }}" />
 <meta property="og:site_name" content="{{ meta.siteName }}" />
 <meta property="og:locale" content="{{ meta.locale }}" />
