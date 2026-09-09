@@ -76,9 +76,8 @@
     {{- meta.url -}}{{- meta.opengraph_default -}}
   {%- endif -%}"
 />
-<meta
-  property="og:image:alt"
-  content="{%- if ogCard -%}
+{% set ogImageAlt %}
+  {%- if ogCard -%}
     {{- title -}}, on a card beside its cover artwork
   {%- elif ogImage -%}
     {{- photo.alt | default(coverAlt | default('Cover for ' + title)) -}}
@@ -86,9 +85,10 @@
     {{- title -}}
   {%- else -%}
     {{- meta.opengraph_default_alt -}}
-  {%- endif -%}"
-/>
-{# ⚠ These must match the file actually served: with no twitter:card tag to say so, the declared ratio is the only thing telling a platform whether to draw a wide card or a small square one. #}
+  {%- endif -%}
+{% endset %}
+<meta property="og:image:alt" content="{{ ogImageAlt }}" />
+{# ⚠ These must match the file actually served: a platform that reads no twitter:card has only the declared ratio to tell it whether to draw a wide card or a small square one. #}
 <meta property="og:image:width" content="{{ ogImage.width if (ogImage and not ogCard) else 1200 }}" />
 <meta property="og:image:height" content="{{ ogImage.height if (ogImage and not ogCard) else 630 }}" />
 <meta property="og:description" content="{{ metaDescription }}" />
@@ -96,7 +96,10 @@
 <meta property="og:locale" content="{{ meta.locale }}" />
 <meta property="article:author" content="{{ meta.author.name }}" />
 
-<!-- Twitter specific head data was removed in v2 -->
+{# Eleventy Excellent removed the Twitter tags in v2 and X reads the og: ones for title, description and image — but NOT for the card's shape or its alt text, which is why these two came back. #}
+{# ⚠ `twitter:card` picks the layout: without it X draws the small square summary card, which is the whole thing the 1200x630 cards exist to avoid. `summary` is correct only when the image really is a bare square or portrait cover — a post with artwork but no composited card. #}
+<meta name="twitter:card" content="{{ 'summary' if (ogImage and not ogCard and ogImage.width < (ogImage.height * 1.6)) else 'summary_large_image' }}" />
+<meta name="twitter:image:alt" content="{{ ogImageAlt }}" />
 
 <!-- RSS Autodiscovery. Loops over meta.blog.feedLinks -->
 {% for feedLink in meta.blog.feedLinks %}
