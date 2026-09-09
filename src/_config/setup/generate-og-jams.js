@@ -8,6 +8,7 @@ import puppeteer from 'puppeteer';
 import matter from 'gray-matter';
 import { author, pathToSvgLogo } from '../../_data/meta.js';
 import { unwikilink } from '../filters/unwikilink.js';
+import { slugifyString } from '../filters/slugify.js';
 
 const JAMS_DIR = 'src/posts/jams';
 const OUT_DIR = 'src/assets/og-images/jams';
@@ -30,8 +31,7 @@ const mark = (size, color, opacity = 1) =>
 
 const escape = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
 
-// The site's own slugify rule, mirrored: the filename (or an explicit `slug:`) is the key on both sides, as it is for the permalink.
-const slugify = s => String(s).normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/['’]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+// ⚠ The site's own slugify filter, not a mirror of it: the filename is the key on both sides, and a hand-rolled copy drifts the moment a title contains a colon or an ampersand.
 
 // ⚠ Inlined as a data: URI, never a file:// or remote src. A setContent document has no origin, so a file:// image fails silently and the card ships with a blank square — the same trap as the fonts.
 const coverUri = async cover => {
@@ -77,7 +77,7 @@ const only = process.argv.slice(2);
 const jams = files
   .map(file => {
     const {data} = matter(fs.readFileSync(file, 'utf8'));
-    return {file, ...data, slug: slugify(data.slug || path.basename(file, '.md'))};
+    return {file, ...data, slug: slugifyString(data.slug || path.basename(file, '.md'))};
   })
   .filter(jam => jam.cover && (!only.length || only.includes(jam.slug)));
 
