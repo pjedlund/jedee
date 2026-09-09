@@ -5,6 +5,7 @@ background: '#F4F4F2'
 textColor: '#495464'
 colorMediumDark: '#bbbfca'
 colorLightGrey: '#e8e8e8'
+accentColor: '#d0621e' # --color-accent-orange, the mark's own fill in src/assets/svg/misc/logo.svg
 siteUrl: 'johanedlund.se'
 pagination:
   data: collections.article
@@ -37,9 +38,9 @@ eleventyExcludeFromCollections: true
   {% endif %}
 
   <rect id="bg" width="100%" height="100%" opacity="1" fill="{{ background }}" />
-  <!-- star -->
-  <g width="1096" height="1056" viewBox="0 0 1096 1056" fill="none" transform="translate(0, -150)">
-    <path d="M235.048 2.31017L565.808 192.455L910.285 28.026L831.43 401.258L1094.33 677.671L714.848 718.199L533.127 1053.8L377.382 705.568L2.18875 636.646L285.207 380.519L235.048 2.31017Z" stroke="{{ textColor }}" stroke-opacity="0.1" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- ground: the site's own mark where Eleventy Excellent's template put its star. Same size, position and 10% as the fallback card in generate-og-default.js, so the two read as one set. -->
+  <g transform="translate(666,96) scale(4.38,4.38)">
+    <path fill="{{ accentColor }}" opacity="0.1" d="m50 0 .588.003V0h9.706v30.882h-9.706v.009a19 19 0 0 0-.588-.009c-10.558 0-19.118 8.559-19.118 19.118S39.441 69.118 50 69.118 69.118 60.559 69.118 50V30.882C69.118 13.826 82.945 0 100 0v50c0 27.614-22.386 50-50 50S0 77.614 0 50 22.386 0 50 0" />
   </g>
 
   <!-- date -->
@@ -89,8 +90,8 @@ eleventyExcludeFromCollections: true
     <tspan x="950" y="580">{{ siteUrl }}</tspan>
   </text>
 
-	<!-- JED logo graphic -->
-  <g transform="translate(916,559) scale (0.06, 0.06) ">
-    <path fill="#bbbfca" d="M254,93C254.648,93 255.295,93.004 255.941,93.011L255.941,93L287.971,93L287.971,194.912L255.941,194.912L255.941,194.941C255.296,194.922 254.649,194.912 254,194.912C219.157,194.912 190.912,223.157 190.912,258C190.912,292.843 219.157,321.088 254,321.088C288.843,321.088 317.088,292.843 317.088,258L317.088,194.912C317.088,138.627 362.716,93 419,93L419,258C419,349.127 345.127,423 254,423C162.873,423 89,349.127 89,258C89,166.873 162.873,93 254,93Z"/>
+  <!-- signature mark, in the accent orange. ⚠ It was the base-dark grey #bbbfca here, the value that measured 1.67 on the light page and was fixed everywhere else on the site. -->
+  <g transform="translate(916,560) scale(0.2,0.2)">
+    <path fill="{{ accentColor }}" d="m50 0 .588.003V0h9.706v30.882h-9.706v.009a19 19 0 0 0-.588-.009c-10.558 0-19.118 8.559-19.118 19.118S39.441 69.118 50 69.118 69.118 60.559 69.118 50V30.882C69.118 13.826 82.945 0 100 0v50c0 27.614-22.386 50-50 50S0 77.614 0 50 22.386 0 50 0" />
   </g>
 </svg>

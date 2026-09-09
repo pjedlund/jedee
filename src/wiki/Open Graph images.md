@@ -47,6 +47,8 @@ content="{%- if layout == 'post' -%}
 
 `npm run clean:og` deletes `src/assets/og-images/` so the next build regenerates everything. It is the only way to refresh an image, because of that `existsSync` guard.
 
+⚠ **"The next build" means `npm start`, not `npm run build`.** The event is registered inside `if (process.env.ELEVENTY_RUN_MODE === 'serve')`, so a production build never converts anything — which is the point (the build server has no fonts) but is easy to miss when a `clean:og` is followed by a build that reports success and writes no images.
+
 ## In jedee
 
 The pipeline itself is Eleventy Excellent stock, unmodified — template, event and script. The **fallback image** is not, as of 2026-09-09; that and the content around the pipeline are where the findings are.
@@ -70,11 +72,17 @@ Three things the generator does differently from the per-post template, all of t
 
 ⚠ **So the generator asserts both faces loaded and throws if not.** This is the one place the silent-fallback failure can be made loud, and it earned its four lines the first time it ran.
 
+The per-post template was aligned to match on the same day: Eleventy Excellent's star came out for the site's own mark at the same size, position and 10%, and the signature logomark went from the base-dark grey `#bbbfca` to the accent orange — the same value, and the same fix, as the breadcrumb logomark. Measured over the watermark, the 80px title reads 6.20:1 against 6.97:1 on bare paper, so the overlap on a long title costs nothing.
+
+⚠ **An XML comment may not contain a double hyphen**, so a CSS custom property name cannot be written inside one. `<!-- … --color-base-dark … -->` in the SVG template made every card fail to rasterize with `Input file has corrupt header: XML parse error … Comment must not contain '--'`. The template is Nunjucks but the output is XML, and the comment syntax belongs to the output.
+
 ⚠ **Not `meta.domain`.** That is derived from `meta.url`, which is `http://localhost:8080` unless the environment sets `URL` — so the first card was stamped **localhost**. `author.website` is the hardcoded canonical and is what the signature reads. Anything generated on a laptop that wants the live domain has to reach past `meta.url` for it.
+
+⚠ **Right now the fallback is the card for the entire site.** Every one of the seven files in `src/posts/articles/` is `draft: true`, so `collections.article` holds two posts and neither is published. Zero pages on the live site use a generated card. That is a content accident rather than a design one, and it will unwind itself the moment an article ships — but it is worth knowing when weighing how much the fallback matters.
 
 ⚠ **Only articles get one.** Both the generator (`data: collections.article`) and the reference (`layout == 'post'`) are scoped to articles, and `articles` is the only post type whose data file sets `layout: post` — every other type has its own layout name (`note`, `photo`, `audio`, `activity`, `bookmark`, and so on). So every note, photo, jam, reading entry and response post shares one static fallback image, `meta.opengraph_default`. On vanilla EE, where articles and notes are nearly the whole site, that is a small gap; on a site with sixteen post types it means the generated-image feature covers a small minority of the pages people actually share. Widening it is not a template edit — it needs a second pagination source and a different condition in the head. See [[Anatomy of a post type]] for the other places a type has to be wired, and [[One JSON-LD envelope for sixteen types]] for the sibling problem solved the other way round.
 
-⚠ **Nothing ever deletes an image.** The `existsSync` guard only ever adds, so a retitled or deleted article leaves its JPEG behind — committed, shipped in the build, referenced by nothing. When this page was written the folder held 17 JPEGs against 13 article files, seven of them belonging to Eleventy Excellent demo articles long since deleted. A `npm run clean:og` has run since: as of 2026-09-06 it holds **6 JPEGs against 5 article files**, with one orphan left (`what-is-web-accessibility-preview.jpeg`). The mechanism is unchanged — only the backlog was cleared, and it will accumulate again.
+⚠ **Nothing ever deletes an image.** The `existsSync` guard only ever adds, so a retitled or deleted article leaves its JPEG behind — committed, shipped in the build, referenced by nothing. When this page was written the folder held 17 JPEGs against 13 article files, seven of them belonging to Eleventy Excellent demo articles long since deleted. A second `clean:og` on 2026-09-09, forced by the template change below, took it to **2 JPEGs against a 2-post `collections.article`** — no orphans at all, the four that went being two Eleventy Excellent demo articles, `a-draft`, and the `what-is-web-accessibility` orphan this page had been carrying. The mechanism is unchanged; only the backlog was cleared, and it will accumulate again.
 
 ⚠ **The filename is derived from the title, so retitling strands the old image.** `{{ title | slugify }}` is the key on both sides. Change a published title and the next build writes a new JPEG under the new slug while the old one stays committed forever; the page itself is fine, because the head is computed from the same title. This is the same shape as the deleted-article orphans, and `clean:og` is the answer to both.
 
