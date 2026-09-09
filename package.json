@@ -13,6 +13,8 @@
     "clean:og": "rimraf src/assets/og-images",
     "fallback-font-style": "node ./src/_config/setup/fallback-font-style.js",
     "favicons": "node ./src/_config/setup/generate-favicons.js",
+    "og:default": "node ./src/_config/setup/generate-og-default.js",
+    "og:cards": "node ./src/_config/setup/generate-og-cards.js",
     "colors": "node ./src/_config/setup/create-colors.js",
     "design:md": "node ./src/_config/setup/build-design-md.js",
     "genres:fetch": "node ./src/_config/setup/enrich-genres.js fetch",

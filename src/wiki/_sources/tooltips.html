@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<title>Tooltips — wiki mockup</title>
+
+<!-- ⚠ The site's compiled bundle, so every tooltip drawn here IS blocks/tooltip.css — the offsets, the two nudge properties and the three placement exceptions are not redrawn. It is a build artifact: run `npm start` or `npm run build` once if it is missing. -->
+<link rel="stylesheet" href="../../_includes/css/global.css">
+
+<style>
+  @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../assets/fonts/source-sans/source-sans.woff2') format('woff2'); }
+  @font-face { font-family: 'Source Code Pro'; src: url('../../assets/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }
+
+  body { margin: 0; padding: 24px; background: #ddd; font-family: 'Source Sans', system-ui, sans-serif; }
+
+  /* A specimen carries its own paper the way a device frame carries its own bezel — so one shot reads deliberately on either theme of the wiki page. */
+  .specimen {
+    inline-size: fit-content;
+    background: var(--color-bg);
+    border: 1px solid var(--color-bg-accent-2);
+    border-radius: 6px;
+    padding: 20px;
+    margin-block-end: 40px;
+  }
+
+  /* A tooltip only exists on :hover / :focus-visible, neither of which a screenshot has. Forcing visibility is the ONLY thing this file overrides — every offset and nudge below still comes from the block. */
+  .show[data-tooltip]::after { opacity: 1; visibility: visible; transition: none; }
+
+  /* ⚠ The frame stands in for the VIEWPORT, and overflow: hidden is what makes the failure visible. On a real page the label is not clipped — it lands outside the viewport and the document grows a scrollbar, on every page rather than only while the tooltip shows. */
+  .page {
+    position: relative;
+    inline-size: 520px;
+    block-size: 208px;
+    overflow: hidden;
+    background: var(--color-bg);
+    border: 1px solid var(--color-text);
+    border-radius: 5px;
+  }
+
+  .page-header { display: flex; justify-content: space-between; padding: 12px 14px; }
+  .page-footer { position: absolute; inset-inline: 0; inset-block-end: 30px; display: flex; justify-content: center; }
+
+  /* Icon-only controls, sized and centred like the real header cluster; the tooltip block only needs position: relative from its host, which it sets itself. */
+  .control {
+    display: inline-flex; align-items: center; justify-content: center;
+    inline-size: 24px; block-size: 24px; padding: 0;
+    color: var(--color-accent-blue); background: none; border: none;
+  }
+  .control svg { inline-size: 20px; block-size: 20px; }
+
+  .caption {
+    font-family: 'Source Code Pro', ui-monospace, monospace;
+    font-size: 15px; color: var(--color-text); opacity: 0.6; margin: 0 0 10px;
+  }
+  .caption b { font-weight: 400; opacity: 1; color: var(--color-accent-green); }
+  .panel + .panel { margin-block-start: 26px; }
+</style>
+</head>
+<body>
+
+<div class="specimen" data-shot="tooltip-edge-anchors">
+
+  <div class="panel">
+    <p class="caption">centred and below on every control — <b>three labels outside the page</b></p>
+    <div class="page" data-compare="anchors">
+      <div class="page-header">
+        <button class="control show" data-tooltip="Home">
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 3 2 12h3v9h6v-6h2v6h6v-9h3z"/></svg>
+          <span class="visually-hidden">Home</span>
+        </button>
+        <button class="control show" data-tooltip="Show dark mode">
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><circle cx="12" cy="12" r="5"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></g></svg>
+          <span class="visually-hidden">Toggle dark mode</span>
+        </button>
+      </div>
+      <div class="page-footer">
+        <button class="control show" data-tooltip="Atom feed">
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><circle cx="6" cy="18" r="2.5"/><path d="M4 11a9 9 0 0 1 9 9h3A12 12 0 0 0 4 8zM4 4a16 16 0 0 1 16 16h3A19 19 0 0 0 4 1z"/></svg>
+          <span class="visually-hidden">Atom feed</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <p class="caption">align=start, align=end, position=top — <b>all three contained</b></p>
+    <div class="page" data-compare="anchors">
+      <div class="page-header">
+        <button class="control show" data-tooltip="Home" data-tooltip-align="start">
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 3 2 12h3v9h6v-6h2v6h6v-9h3z"/></svg>
+          <span class="visually-hidden">Home</span>
+        </button>
+        <button class="control show" data-tooltip="Show dark mode" data-tooltip-align="end">
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><circle cx="12" cy="12" r="5"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></g></svg>
+          <span class="visually-hidden">Toggle dark mode</span>
+        </button>
+      </div>
+      <div class="page-footer">
+        <button class="control show" data-tooltip="Atom feed" data-tooltip-position="top">
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><circle cx="6" cy="18" r="2.5"/><path d="M4 11a9 9 0 0 1 9 9h3A12 12 0 0 0 4 8zM4 4a16 16 0 0 1 16 16h3A19 19 0 0 0 4 1z"/></svg>
+          <span class="visually-hidden">Atom feed</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

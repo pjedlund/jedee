@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<title>Layout shift — wiki mockup</title>
+
+<!-- ⚠ The site's compiled bundle, so the cluster inside every frame IS site-footer.css plus the cluster composition — including the `@media (width < 27rem)` reserve. It is a build artifact: run `npm start` or `npm run build` once if it is missing. -->
+<link rel="stylesheet" href="../../_includes/css/global.css">
+<script src="site-footer.js"></script>
+
+<style>
+  @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../assets/fonts/source-sans/source-sans.woff2') format('woff2'); }
+  @font-face { font-family: 'Source Code Pro'; src: url('../../assets/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }
+
+  body { margin: 0; padding: 24px; background: #ddd; font-family: 'Source Sans', system-ui, sans-serif; }
+
+  /* A specimen carries its own paper the way a device frame carries its own bezel — so one shot reads deliberately on either theme of the wiki page. */
+  .specimen {
+    inline-size: fit-content;
+    background: var(--color-bg);
+    border: 1px solid var(--color-bg-accent-2);
+    border-radius: 6px;
+    padding: 20px;
+    margin-block-end: 40px;
+  }
+
+  .grid { display: grid; grid-template-columns: repeat(3, max-content); gap: 22px; align-items: start; }
+
+  .col-head {
+    font-family: 'Source Code Pro', ui-monospace, monospace;
+    font-size: 16px; color: var(--color-text); margin: 0 0 12px; text-align: center;
+  }
+  .col-head b { display: block; font-weight: 400; font-size: 13px; opacity: 0.55; margin-block-start: 3px; }
+  /* The one width the standard mobile audit emulates — the whole finding, so it is the one heading that is not grey. */
+  .col-head.inband b { color: var(--color-accent-blue); opacity: 1; }
+
+  .state {
+    font-family: 'Source Code Pro', ui-monospace, monospace;
+    font-size: 13px; color: color-mix(in oklab, var(--color-text) 55%, var(--color-bg)); margin: 14px 0 5px;
+  }
+  .rows { font-weight: 700; }
+  /* Green where the two font states agree, blue where they disagree — the disagreement IS the shift. */
+  .agree .rows { color: var(--color-accent-green); }
+  .differ .rows { color: var(--color-accent-blue); }
+
+  /* ⚠ An iframe, not a copy: the reserve is a `@media (width < 27rem)` query and a media query reads the VIEWPORT, so a fixed-width div inside this 1400px page would never match it. Every space and type token is vw-based for the same reason. */
+  iframe { display: block; border: 1px solid var(--color-bg-accent-2); border-radius: 4px; background: var(--color-bg); }
+</style>
+</head>
+<body>
+
+<div class="specimen" data-shot="layout-shift-font-band">
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
+  window.__mockupReady = false;
+
+  // ⚠ The WHOLE footer, lifted verbatim (site-footer.js) rather than a hand-built link row. A first attempt used just the <nav>, and every column agreed: the real cluster sits inside .wrapper, whose gutter is 6vw a side, and shares a flex container with the platform-icon nav. That ~26px of gutter is the difference between wrapping at two rows and three, so a copy without it measures the wrong element.
+
+  // ⚠ srcdoc, not src: a srcdoc frame inherits this document's origin, so its geometry can be read back. A separate file:// document is an opaque origin and contentDocument comes back null.
+  // ⚠ The bundle's own @font-face points at an absolute /assets path, dead under file://, and its src starts with local('Source Sans') — so without this redeclaration the "web font" column would quietly render in whatever the system had, and the figure would be worthless.
+  const frameDoc = font => `<!doctype html><html lang="en" data-theme="light" data-font="${font}"><head><meta charset="utf-8">
+    <link rel="stylesheet" href="../../_includes/css/global.css">
+    <style>
+      @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../assets/fonts/source-sans/source-sans.woff2') format('woff2'); }
+      body { margin: 0; background: var(--color-bg); }
+      /* Only the top margin is dropped — the footer's own p-s-m padding and the wrapper gutter inside it are what decide the wrap. */
+      .site-footer { margin-block-start: 0; }
+      /* The fallback state forced the way the page's own sweep forces it: drop the web family from the stack, leave the rest of the declaration alone. 'Source Sans Fallback' is the SHIPPED metric-matched face from base/fonts.css, not raw Arial, so this is the state a first visit actually paints. */
+      html[data-font='fallback'] .footer-links, html[data-font='fallback'] .footer-links * { font-family: 'Source Sans Fallback', arial, sans-serif; }
+    </style></head><body>${window.SITE_FOOTER}</body></html>`;
+
+  // 390 sits below the band, 412 inside it and is what Lighthouse's mobile preset emulates, 432 is 27rem — where the reserve stops applying.
+  const widths = [[390, 'below the band'], [412, 'Lighthouse mobile — in the band'], [432, 'above the band (27rem)']];
+  const states = [['web', 'web font'], ['fallback', 'fallback']];
+
+  const grid = document.getElementById('grid');
+  const frames = [];
+
+  widths.forEach(([w, note], i) => {
+    const col = document.createElement('div');
+    col.innerHTML = `<p class="col-head${i === 1 ? ' inband' : ''}">${w}px<b>${note}</b></p>`;
+    states.forEach(([font, label]) => {
+      const p = document.createElement('p');
+      p.className = 'state';
+      const f = document.createElement('iframe');
+      f.width = w;
+      f.setAttribute('scrolling', 'no');
+      f.srcdoc = frameDoc(font);
+      // ⚠ data-compare goes on the IFRAME, not the column: the column also carries a heading that differs per width, so the gate would pass on the heading even if both frames rendered the same.
+      f.dataset.compare = `band-${w}`;
+      col.append(p, f);
+      frames.push({ f, p, label, w });
+    });
+    grid.append(col);
+  });
+
+  (async () => {
+    await Promise.all(frames.map(({ f }) => new Promise(r => f.addEventListener('load', r, { once: true }))));
+    // ⚠ Each frame's OWN fonts.ready. The parent's says nothing about a child document, and a row count read before the web font lands is the fallback's — which would make every column agree.
+    await Promise.all(frames.map(({ f }) => f.contentDocument.fonts.ready));
+
+    const byWidth = {};
+    for (const fr of frames) {
+      const win = fr.f.contentWindow;
+      const links = [...win.document.querySelectorAll('.footer-links a')];
+      // Distinct top offsets IS the row count — measured from the rendered geometry rather than assumed from the table on the wiki page.
+      fr.rows = new Set(links.map(a => Math.round(a.getBoundingClientRect().top))).size;
+      fr.height = Math.round(win.document.querySelector('.footer-links').getBoundingClientRect().height);
+      fr.f.height = win.document.documentElement.scrollHeight;
+      (byWidth[fr.w] ??= []).push(fr);
+    }
+
+    for (const fr of frames) {
+      const differs = new Set(byWidth[fr.w].map(x => x.rows)).size > 1;
+      fr.p.className = `state ${differs ? 'differ' : 'agree'}`;
+      fr.p.innerHTML = `${fr.label} — <span class="rows">${fr.rows} rows, ${fr.height}px</span>`;
+    }
+
+    requestAnimationFrame(() => requestAnimationFrame(() => { window.__mockupReady = true; }));
+  })();
+</script>
+
+</body>
+</html>

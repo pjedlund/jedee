@@ -52,6 +52,11 @@ A tooltip centred under its control is `inset-inline-start: 50%` plus a `-50%` t
 
 The vertical version of the same thing is easier to miss: a tooltip *below* a control near the foot of the page extends past the document, adding dead scroll under the footer that nothing visible accounts for. Both are worth measuring rather than eyeballing — compare `documentElement.scrollWidth` / `scrollHeight` against `clientWidth` / `clientHeight` with the tooltip hidden.
 
+<figure class="popout" data-wiki-mockup>
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/tooltip-edge-anchors.png" alt="Two frames standing in for a page, one above the other. In the upper frame, labelled &quot;centred and below on every control&quot;, three dark tooltips are cut off by the frame edges: a Home label clipped at the left, a &quot;Show dark mode&quot; label clipped mid-word at the right, and an Atom feed label clipped at the bottom. In the lower frame, labelled &quot;align=start, align=end, position=top&quot;, the same three labels sit fully inside the frame — the first two anchored to the controls' own edges, the third opening upwards above its control." width="1198" height="1092">
+  <figcaption>The three exceptions, and what they exist for. ⚠ The frame clips here so the failure is visible in a still; on a real page nothing is clipped — the label lands outside the viewport and the document grows a scrollbar instead, on every page rather than only while the tooltip shows.</figcaption>
+</figure>
+
 Without the CSS Anchor Positioning API (not yet broadly available) the cheap fix is explicit placement exceptions, chosen in the markup by whoever places the control: anchor the label to the control's leading or trailing edge instead of its centre, and flip it above the control instead of below.
 
 Keeping the two axes independent is worth a little care, or a control that needs both gets one and loses the other. Expressing the placement as two custom properties the exceptions rewrite — one inline nudge, one block nudge — lets an alignment and a position combine, where two rules each rewriting the whole `translate` cannot.
@@ -101,5 +106,7 @@ Instead the control's own script sets a `data-tooltip-dismissed` attribute on cl
 No `bottom`/`left`/`right` placements beyond the three that a real control needed, no arrow, no delay knob, no JS repositioning — nothing measures the viewport, so placement is the author's call rather than automatic. The MENU button briefly had a tooltip and lost it — it already carries a visible label, so the tooltip was pure decoration there. It left the padding behind (`var(--space-xs) var(--space-s)`, taken from `.menu-toggle`) so the label reads at the same density as the header's one bordered control.
 
 Related: [[The theme toggle]] — the other half of the header's right-hand cluster, and the control the first tooltip was built for. [[Focus rings and paint containment]] — the other case where a decoration positioned outside a control's box gets clipped or overflows by surprise.
+
+The figure is `src/wiki/_sources/tooltips.html`, drawn with real controls against the site's compiled `global.css` — the offsets, the two nudge properties and all three placement exceptions are the block's rather than a redrawing. The one thing the mockup overrides is visibility: a tooltip exists only on `:hover` / `:focus-visible`, and a screenshot has neither.
 
 Raw source: `src/_raw/dev-notes/How the header tooltips work.md`
