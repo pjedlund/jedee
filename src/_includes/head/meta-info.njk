@@ -97,8 +97,9 @@
 <meta property="article:author" content="{{ meta.author.name }}" />
 
 {# Eleventy Excellent removed the Twitter tags in v2 and X reads the og: ones for title, description and image — but NOT for the card's shape or its alt text, which is why these two came back. #}
-{# ⚠ `twitter:card` picks the layout: without it X draws the small square summary card, which is the whole thing the 1200x630 cards exist to avoid. `summary` is correct only when the image really is a bare square or portrait cover — a post with artwork but no composited card. #}
-<meta name="twitter:card" content="{{ 'summary' if (ogImage and not ogCard and ogImage.width < (ogImage.height * 1.6)) else 'summary_large_image' }}" />
+{# ⚠ `twitter:card` picks the layout: without it X draws the small square summary card, which is the whole thing the 1200x630 cards exist to avoid. #}
+{# X crops a large card to 2:1, so `summary` is the kinder answer only for a square or portrait image, where that crop would cut the subject away. 1.2 puts a 4:3 photograph on the large card and an album cover on the small one. #}
+<meta name="twitter:card" content="{{ 'summary' if (ogImage and not ogCard and ogImage.width < (ogImage.height * 1.2)) else 'summary_large_image' }}" />
 <meta name="twitter:image:alt" content="{{ ogImageAlt }}" />
 
 <!-- RSS Autodiscovery. Loops over meta.blog.feedLinks -->
