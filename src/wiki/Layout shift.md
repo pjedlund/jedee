@@ -224,6 +224,11 @@ Everything above measures the shift where it happens. The complementary question
 
 **Document height was identical in both font states at every width tested.** The heading and the intro paragraph never change line count anywhere in the range — the two fonts disagree about the footer and nothing else.
 
+<figure class="popout" data-wiki-mockup>
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/layout-shift-font-band.png" alt="The site footer rendered six times in a three-by-two grid: at 390, 412 and 432 pixels wide, each in the web font and in the metric-matched fallback. At 390 both states take three rows of links; at 432 both take two. Only at 412 do they disagree — two rows in the web font, three in the fallback — and every one of the six reports the same 96-pixel cluster height." width="2640" height="1280">
+  <figcaption>The band, re-measured rather than redrawn: each panel is the real footer in its own iframe at that viewport width, and the row counts are read back off the rendered geometry. Only the middle column disagrees. Note that all six report the same 96 px height — that is the reserve holding the box still while the links redistribute inside it, which is why the fix halves the shift instead of removing it.</figcaption>
+</figure>
+
 ⚠ **The disagreement is a band roughly 409–430 px wide, and Lighthouse's mobile preset emulates 412 px** — inside it, near the lower edge. That is the whole reason the landing page carries a residual CLS on the mobile audit while measuring clean at 360, 390, 720 and up. It is not a mobile problem; it is a 22-pixel problem that the standard audit width happens to fall into. Anyone reproducing this at their own browser width will find nothing wrong.
 
 The residual metric error after the re-derived descriptors, measured as pure advance width on one unwrapped string:
@@ -306,6 +311,16 @@ Two things worth knowing if the layer is ever extended:
 - **Per-platform matching has an established shape.** Capsize's [`createFontStack`](https://github.com/seek-oss/capsize) takes several fallbacks and emits one `@font-face` per fallback, each with its own `size-adjust`, chained as `'Source Serif', 'Source Serif Fallback: Georgia', 'Source Serif Fallback: Noto Serif', serif`; the browser skips any family whose `local()` finds nothing, so each platform gets its own tuned face. Liberation Sans and Liberation Mono are metric-identical to Arial and Courier New and could share the existing descriptors as extra `local()` candidates. Nothing metric-compatible with Georgia ships anywhere by default.
 
 The decision was to change nothing: the CSS is right for the platforms that have the fonts, harmless on the one that does not, and the only "bad" number comes from a machine with neither. What changed is how the audit is read.
+
+### The figure
+
+`src/wiki/_sources/layout-shift.html` draws the band above. Six `srcdoc` iframes, one per width and font state, each loading the compiled `global.css` and the real footer lifted verbatim into `site-footer.js`; the row counts and heights in the labels are read out of each frame's own geometry after its fonts settle, so the picture states what it measured rather than repeating the table.
+
+⚠ **An iframe, not a copy.** The reserve is a `@media (width < 27rem)` query and a media query reads the *viewport*, so a fixed-width `div` inside the 1400 px shooter page would never match it — and every space and type token here is `vw`-based for the same reason. `srcdoc` rather than `src`: a `srcdoc` frame inherits the parent's origin so its geometry can be read back, where a separate `file://` document is an opaque origin and `contentDocument` comes back `null`.
+
+⚠ **The first attempt built the link row by hand, and all six columns agreed.** The real cluster sits inside `.wrapper`, whose gutter is `6vw` a side, and shares a flex container with the platform-icon nav — about 26 px of width that is the whole difference between wrapping at two rows and three. A simplified copy measures a different element and quietly reports no problem. Lift the markup.
+
+⚠ **The bundle's own `@font-face` is unusable here**: it points at an absolute `/assets` path, dead under `file://`, and its `src` list starts with `local('Source Sans')`. Without redeclaring the face by relative path, the "web font" column renders in whatever the machine happens to have installed — which is the same class of mistake as the Netlify finding two sections up, in miniature.
 
 ### Measuring it honestly
 

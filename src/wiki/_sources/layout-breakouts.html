@@ -48,11 +48,11 @@
   .bar {
     font-family: 'Source Code Pro', ui-monospace, monospace;
     font-size: 17px; text-align: center; color: var(--color-bg);
-    background: var(--color-text); border-radius: 4px; padding-block: 9px;
+    background: var(--color-accent-green); border-radius: 4px; padding-block: 9px;
     margin-block-start: 8px;
   }
-  /* Orange marks the bars that stepped outside the text column — the whole point of the technique. */
-  .bar.popout, .bar.feature, .bar.full { background: var(--color-accent-orange); }
+  /* Blue marks the bars that stepped outside the text column — the whole point of the technique; green is the baseline they are measured against. */
+  .bar.popout, .bar.feature, .bar.full { background: var(--color-accent-blue); }
 
   .caption {
     font-family: 'Source Code Pro', ui-monospace, monospace;
@@ -60,7 +60,7 @@
   }
   .panel + .panel { margin-block-start: 26px; }
   /* The failing panel's own wrapper is a plain div — no class, so nothing here can accidentally rescue it. */
-  .panel .verdict { color: var(--color-accent-orange); opacity: 1; }
+  .panel .verdict { color: var(--color-accent-blue); opacity: 1; }
 </style>
 </head>
 <body>
