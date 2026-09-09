@@ -25,17 +25,19 @@
 
   .label {
     font-family: 'Source Code Pro', ui-monospace, monospace;
-    font-size: 12px; color: var(--color-text); opacity: 0.55; text-align: center; margin: 12px 0 0;
+    font-size: 12px; color: inherit; opacity: 0.55; text-align: center; margin: 12px 0 0;
   }
   .label b { display: block; font-weight: 400; opacity: 0.8; }
 
   /* ⚠ Equal columns: the animation clock is the only thing that may differ between frames. */
-  .strip { display: grid; grid-template-columns: repeat(5, 116px); gap: 8px; }
+  .strip { display: grid; grid-template-columns: repeat(5, 132px); gap: 6px; }
   /* align-content start, or a cell with a shorter caption centres its whole stack in the stretched row and the labels step out of line. */
+  /* Each frame carries its own paper: the theme's background snaps at the click, so a shared ground would hide the very thing this strip is about. */
   .cell { display: grid; justify-items: center; align-content: start; }
+  .strip .cell { padding: 14px 8px 12px; border-radius: 5px; }
 
   /* The glyph blown up well past its 24px shipped size — the mask circle's travel is three pixels there, and the page's claim is about the geometry. */
-  .glyph { inline-size: 78px; block-size: 78px; color: var(--color-accent-orange); }
+  .glyph { inline-size: 78px; block-size: 78px; }
   .glyph svg { inline-size: 100%; block-size: 100%; stroke-linecap: round; }
 
   /* Four sun glyphs at the four oranges, on the one background the sun is ever shown against. */
@@ -77,22 +79,41 @@
       </g>
     </svg>`;
 
+  // ⚠ Read BEFORE the strip exists — flipping the root theme here would otherwise start every glyph's transitions early.
+  // The glyph color and the page ground carry no transition at all: they snap when data-theme flips, and only the shape animates. Both palettes come off the real stylesheet via a throwaway .theme-toggle rather than copied-in hexes.
+  const probe = Object.assign(document.createElement('span'), { className: 'theme-toggle' });
+  document.body.append(probe);
+  const palette = theme => {
+    document.documentElement.dataset.theme = theme;
+    const root = getComputedStyle(document.documentElement);
+    return { glyph: getComputedStyle(probe).color, bg: root.getPropertyValue('--color-bg'), text: root.getPropertyValue('--color-text'), edge: root.getPropertyValue('--color-bg-accent-2') };
+  };
+  const dark = palette('dark');
+  const light = palette('light');
+  probe.remove();
+
   // Beams fade in 0.15s, the disc grows in 0.25s, the mask circle waits 0.25s and then slides for 0.5s — so the interesting instants are bunched at the front and at the handover.
+  // Frame 0 is the light resting state — the tile before the click. The other four are past it, so they wear the dark ground and the moon's color from their first millisecond.
   const frames = [
-    [0, 'cx = 24, outside the disc'],
-    [80, 'beams folding away, disc growing'],
-    [260, 'a plain disc — the mask has not bitten'],
-    [420, 'the mask circle sliding in'],
-    [750, 'cx = 17, the moon'],
+    [0, 'light', 'the sun at rest, cx = 24'],
+    [80, '80 ms', 'beams folding away, disc growing'],
+    [260, '260 ms', 'a plain disc — the mask has not bitten'],
+    [420, '420 ms', 'the mask circle sliding in'],
+    [750, '750 ms', 'cx = 17, the moon'],
   ];
 
   const strip = document.getElementById('strip');
-  frames.forEach(([t, note], i) => {
+  frames.forEach(([t, stamp, note], i) => {
     const cell = document.createElement('div');
     cell.className = 'cell';
+    const p = i === 0 ? light : dark;
+    cell.style.background = p.bg;
+    cell.style.color = p.text;
+    // The light tile shares the specimen's own paper, so without an edge it reads as a gap rather than a frame.
+    cell.style.border = `1px solid ${p.edge}`;
     // ⚠ data-compare goes on the GLYPH, not the cell: the cell also holds a label that differs per frame, so the gate would pass on the caption even if every glyph were identical.
     // ⚠ Built in the LIGHT state. A transition only exists where a value changes, so a frame rendered dark from the start has nothing to seek — every glyph came out as the finished moon.
-    cell.innerHTML = `<div class="glyph" data-compare="morph">${icon(i)}</div><p class="label">${t} ms<b>${note}</b></p>`;
+    cell.innerHTML = `<div class="glyph" data-compare="morph" style="color:${p.glyph}">${icon(i)}</div><p class="label">${stamp}<b>${note}</b></p>`;
     strip.append(cell);
   });
 
@@ -116,7 +137,8 @@
 
   // The morph is built from TRANSITIONS, not animations — but a CSSTransition is an Animation, so the same pause-and-seek works.
   requestAnimationFrame(() => {
-    const glyphs = [...strip.querySelectorAll('.glyph')];
+    // Frame 0 is the light resting state and is never flipped — it has no transitions to seek.
+    const glyphs = [...strip.querySelectorAll('.glyph')].slice(1);
     // data-theme goes on the frame rather than the root: every rule in the morph is a descendant selector, so each frame carries its own theme and five of them can sit side by side.
     glyphs.forEach(g => { getComputedStyle(g.querySelector('.sun')).transform; g.dataset.theme = 'dark'; });
     glyphs.forEach((g, i) => {
@@ -124,7 +146,7 @@
       getComputedStyle(g.querySelector('.sun')).transform;
       for (const a of g.getAnimations({ subtree: true })) {
         a.pause();
-        a.currentTime = frames[i][0];
+        a.currentTime = frames[i + 1][0];
       }
     });
     // ⚠ Two frames after seeking, not zero: a shot taken in the same batch as the pause can still show the previous frame.

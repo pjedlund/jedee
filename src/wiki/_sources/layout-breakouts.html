@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<title>Layout breakouts — wiki mockup</title>
+
+<!-- ⚠ The site's compiled bundle, so the .wrapper drawn here IS compositions/wrapper.css — the tracks, the gap clamp and the subgrid pass-through are not redrawn. It is a build artifact: run `npm start` or `npm run build` once if it is missing. -->
+<link rel="stylesheet" href="../../_includes/css/global.css">
+
+<style>
+  @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../assets/fonts/source-sans/source-sans.woff2') format('woff2'); }
+  @font-face { font-family: 'Source Code Pro'; src: url('../../assets/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }
+
+  /* ⚠ --gap is clamp(1rem, 6vw, 3rem), so the gutter here is the VIEWPORT's, not the specimen's. At the shooter's 1400px it clamps to its 3rem maximum — the same gutter a desktop reader gets. A narrower viewport would draw a different picture. */
+  body { margin: 0; padding: 24px; background: #ddd; font-family: 'Source Sans', system-ui, sans-serif; }
+
+  /* A specimen carries its own paper the way a device frame carries its own bezel — so one shot reads deliberately on either theme of the wiki page. */
+  .specimen {
+    inline-size: fit-content;
+    background: var(--color-bg);
+    border: 1px solid var(--color-bg-accent-2);
+    border-radius: 6px;
+    padding: 20px;
+    margin-block-end: 40px;
+  }
+
+  /* ⚠ Two constraints at once. Wide enough that every fixed track gets its real size — content + 2×popout + 2×feature + 2×gap is the minimum, and below it the minmax(0, …) tracks silently collapse instead of overflowing. Narrow enough that the shot lands near 1:1 in the page's 1088px popout column, or the labels downscale into illegibility. --wrapper-width is the knob that reconciles them; the fixed tracks stay at their real sizes. */
+  .stage { inline-size: 1040px; }
+  .stage-narrow { inline-size: 760px; }
+
+  .mono { font-family: 'Source Code Pro', ui-monospace, monospace; }
+
+  /* The ruler is placed on the SAME grid as the bars, one cell per track, so it can only ever show the tracks that actually resolved. */
+  .ruler > * {
+    font-family: 'Source Code Pro', ui-monospace, monospace;
+    font-size: 11px; text-align: center; color: var(--color-text); opacity: 0.5;
+    padding-block: 4px; border: 1px dashed var(--color-bg-accent-2); border-radius: 3px;
+    overflow: hidden;
+  }
+  .ruler > :nth-child(1) { grid-column: 1; }
+  .ruler > :nth-child(2) { grid-column: 2; }
+  .ruler > :nth-child(3) { grid-column: 3; }
+  .ruler > :nth-child(4) { grid-column: 4; }
+  .ruler > :nth-child(5) { grid-column: 5; }
+  .ruler > :nth-child(6) { grid-column: 6; }
+  .ruler > :nth-child(7) { grid-column: 7; }
+
+  .bar {
+    font-family: 'Source Code Pro', ui-monospace, monospace;
+    font-size: 17px; text-align: center; color: var(--color-bg);
+    background: var(--color-text); border-radius: 4px; padding-block: 9px;
+    margin-block-start: 8px;
+  }
+  /* Orange marks the bars that stepped outside the text column — the whole point of the technique. */
+  .bar.popout, .bar.feature, .bar.full { background: var(--color-accent-orange); }
+
+  .caption {
+    font-family: 'Source Code Pro', ui-monospace, monospace;
+    font-size: 15px; color: var(--color-text); opacity: 0.6; margin: 0 0 8px;
+  }
+  .panel + .panel { margin-block-start: 26px; }
+  /* The failing panel's own wrapper is a plain div — no class, so nothing here can accidentally rescue it. */
+  .panel .verdict { color: var(--color-accent-orange); opacity: 1; }
+</style>
+</head>
+<body>
+
+<div class="specimen" data-shot="layout-breakouts-tracks">
+  <div class="stage">
+    <div class="wrapper ruler" style="--wrapper-width: 40rem">
+      <div>1fr</div><div>5rem</div><div>2rem</div><div>--wrapper-width</div><div>2rem</div><div>5rem</div><div>1fr</div>
+    </div>
+    <div class="wrapper" style="--wrapper-width: 40rem">
+      <div class="bar">grid-column: content &nbsp;(the default)</div>
+      <div class="bar popout">.popout</div>
+      <div class="bar feature">.feature</div>
+      <div class="bar full">.full</div>
+    </div>
+  </div>
+</div>
+
+<div class="specimen" data-shot="layout-breakouts-direct-child">
+  <div class="stage-narrow">
+
+    <div class="panel">
+      <p class="caption">.wrapper &gt; .popout — <span class="verdict">steps out</span></p>
+      <div class="wrapper" style="--wrapper-width: 24rem">
+        <div class="bar">content</div>
+        <div class="bar popout">.popout</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <p class="caption">.wrapper &gt; div &gt; .popout — <span class="verdict">silently content width</span></p>
+      <div class="wrapper" style="--wrapper-width: 24rem">
+        <div>
+          <div class="bar">content</div>
+          <div class="bar popout" data-compare="nesting">.popout</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <p class="caption">.wrapper &gt; .wrapper-pass &gt; .popout — <span class="verdict">steps out again</span></p>
+      <div class="wrapper" style="--wrapper-width: 24rem">
+        <div class="wrapper-pass">
+          <div class="bar">content</div>
+          <div class="bar popout" data-compare="nesting">.popout</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
