@@ -5,6 +5,18 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-09] enrich | Open Graph images — artwork beats a generated card, where a type has artwork
+
+Started from a leftover: `meta.opengraph_default` was still Eleventy Excellent's promo image, so the great majority of the site's shareable pages advertised the starter. Replacing it exposed the wider gap — only articles ever got a generated card, and every article is currently `draft: true`, so no live page used one at all.
+
+Photo now previews as the photograph (nothing generated, nothing committed). Jam, watching and reading get a composited 1200×630 card from `npm run og:cards` — one generator with a three-row TYPES table, since only the eyebrow and the credit field differ — 138 files rendered by Chrome and committed, a trade taken after comparing both versions as real output rather than in the abstract.
+
+Findings: the site-wide hardcoded `og:image:width`/`height`; Apple's `1200x630bb` being a bounding box around square art; the art needing to be sized by height so portrait covers do not letterbox; eleventy-img flooring a height sharp rounds; and `clean:og` no longer being sufficient, since it deletes the composited set that only `og:cards` rebuilds. `og:description` stopped falling through to the site description on types that can say something specific, via a per-type `autoDescription` that sits below any authored one.
+
+`twitter:card` and `twitter:image:alt` came back — X reads the `og:` tags for title, description and image but not for the card's shape or its alt. ⚠ The threshold picking large-versus-small was wrong on the first guess and was caught by counting the built output: at 1.6 a 4:3 photograph fell to the small card. 1.2 is right, because the question is whether X's 2:1 crop cuts the subject away, not whether the image is wide.
+
+No new pages and no new links; the existing page absorbed all of it.
+
 ## [2026-09-08] enrich | Layout shift — a lab runner's CLS is only as real as its installed fonts
 
 TODO §28 reproduced. Netlify's Lighthouse reported CLS 0.305 with a three-line `h1` on the deploy that measures 0.079 locally. The `local()`-only fallback faces (Georgia, Arial, Courier New) resolve to nothing on Android and Linux, and Netlify's build image ships only DejaVu. A sweep that fetched Roboto, Noto Serif and DejaVu into the browser and re-rendered the heading and intro under each at 360–1100 px found DejaVu Serif Bold to be the only face that takes a third line, and DejaVu Sans the only one that adds an intro line — so the number measures the audit container. Android's raw Noto Serif Bold and Roboto agree with the web fonts on line count everywhere tested, which is why the inert matching layer costs nothing there. Also recorded: `local('Georgia')` gives faux bold and the serif descriptor was tuned against it; Capsize's `createFontStack` as the shape for per-platform fallbacks. Decision: no CSS change. New raw source `src/_raw/dev-notes/How the Netlify Lighthouse CLS was traced to DejaVu.md`; the catalog line for the page was also brought up to date (it still carried the retracted "`size-adjust` does nothing" claim). No new links.
