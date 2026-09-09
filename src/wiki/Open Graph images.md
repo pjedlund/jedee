@@ -98,7 +98,15 @@ The three share one generator rather than three copies, because only two things 
 
 `src/_config/utils/og-image.js` takes either shape of source — a photo's local `./src/…` path or a jam's remote cover URL — and returns `{url, width, height}` for a 1200px JPEG, or `null` when there is nothing usable, in which case the head falls through to the generated card and then to the default. It is **computed data, not a filter**: Nunjucks cannot await an async filter inside the `{% if %}` that picks the tag's value, and a `<meta>` needs a plain string. It is deliberately *not* shared with `coverZoom`, which computes the same artwork for the lightbox — that one returns `null` below 448px, a rule about whether zooming is worth it that has nothing to say about a social card.
 
-⚠ **`og:image:width` and `og:image:height` were hardcoded to 1200×630 for every page on the site**, generated card or not. That was already wrong for anything non-landscape, and it matters more on this theme than most because the Twitter-specific tags were removed — with no `twitter:card` value, the declared ratio is the only thing telling a platform whether to draw a wide card or a small square one. They now follow the actual file.
+⚠ **`og:image:width` and `og:image:height` were hardcoded to 1200×630 for every page on the site**, generated card or not. That was already wrong for anything non-landscape, and it mattered more on this theme than most, because for a platform reading no `twitter:card` the declared ratio is the only thing saying whether to draw a wide card or a small square one. They now follow the actual file.
+
+### The one Twitter tag that had to come back
+
+Eleventy Excellent removed the Twitter-specific tags in v2, and mostly that is right: X reads the `og:` tags for title, description and image, so duplicating them buys nothing. But it does **not** read them for two things, and a social-preview debugger flags the first as a missing required tag.
+
+⚠ **`twitter:card` picks the layout.** Without it X draws the small square summary card — the exact outcome the 1200×630 cards exist to avoid, so the whole composited-card effort was invisible on that one platform. It is emitted as `summary_large_image`, dropping to `summary` only when the image really is a bare square or portrait cover, which is a post with artwork but no composited card. No page hits that branch today; both photos are landscape and every jam, film and book has a card. It is there for the first portrait photo.
+
+**`twitter:image:alt` is the other.** X does not read `og:image:alt`, so without it a screen-reader user on X gets nothing. The alt is hoisted into an `ogImageAlt` variable — the same idiom the file already uses for `metaDescription` — rather than repeating its four branches in two tags.
 
 ⚠ **An Apple Music cover URL ending `1200x630bb` is not a 1200×630 image.** That segment is a bounding box, and the art is square, so what comes back is 630×630 — which is exactly the case the hardcoded dimensions were lying about. Read the file, don't read the URL.
 
