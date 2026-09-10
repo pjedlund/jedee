@@ -1,5 +1,5 @@
 ---
-description: "The book-typography rules for figures, small caps, capitals, captions, line breaks and superscripts, where they come from, and what each costs in accessibility."
+description: "The book-typography rules for figures, small caps, capitals, captions, line breaks, superscripts and ordinals, where they come from, and what each costs in accessibility."
 date: 2026-09-10
 ---
 
@@ -52,6 +52,17 @@ A footnote marker is conventionally a bare superscript figure. The browser's `<s
 
 ⚠ Chrome and Safari draw nothing fake when the font has no superscript form for a character: it shows at full size on the baseline. So every character in the marker has to be covered. A font with superscript digits but no superscript brackets cannot set `[1]`.
 
+## Ordinals
+
+Ordinals (first, 9th, twenty-ninth) raise two questions: words or figures, and whether to raise the suffix. The raised "th" is a word-processor default, not a typesetting convention. Butterick ([superscripted ordinals](https://practicaltypography.com/ordinals.html)): they are "tiny and hard to read", so avoid them and switch off the autocorrect that makes them. A figure ordinal sits on the baseline: 9th, 101st.
+
+When to use words is a house-style choice, and ordinals follow the same rule as cardinal numbers:
+- **Chicago** (books and essays) spells out zero through one hundred, and round multiples of them ([CMOS Q&A on numbers](https://www.chicagomanualofstyle.org/qanda/data/faq/topics/Numbers.html), sections 9.2–9.4). So "ninth", "twenty-ninth" and "three hundredth", but "101st".
+- **AP** (news) spells out first through ninth and uses figures from 10th ([NIU's AP summary](https://web.news.niu.edu/2019/02/25/numbers-in-ap-style/), 2019).
+- **Swedish** usually spells out numbers up to twelve (*Myndigheternas skrivregler*, [Ds 2004:45](https://www.riksdagen.se/sv/dokument-och-lagar/dokument/departementsserien/myndigheternas-skrivregler_gsb445/html/)). A figure ordinal takes a colon and the word's last letter: 1:a, 3:e, 29:e, never raised ([Språkrådet's Frågelådan](https://frageladan.isof.se/faqs/24030)).
+
+⚠ In CSS, `font-variant-numeric: ordinal` switches on the font's `ordn` feature. In some fonts that feature is contextual and raises only letters that follow a digit. In others it is a plain substitution that raises every lowercase letter in its span. Check the font before putting it on more than the suffix.
+
 ## Accessibility
 
 WCAG says little here directly. [1.4.8](https://www.w3.org/WAI/WCAG22/Understanding/visual-presentation.html) (level AAA) limits lines to 80 characters and rules out text justified to both margins, and says nothing about italic or capitals. The guidance comes from plain-language style guides and reading research instead:
@@ -82,6 +93,10 @@ Set on 2026-09-10, after a research pass and an audit of the site. The decisions
 - **Footnote markers** are bare superscript figures.
   - `markdown.js` overrides markdown-it-footnote's `footnote_caption` rule to drop the brackets. The Source Sans subset has superscript digits, parentheses and colons, but no square brackets. `footnotes.css` then uses `font-variant-position: super`.
   - ⚠ The link inside the marker had `padding: 0.3ch`, sized for the old, smaller number. At full size it opened a visible gap on either side, so the padding is now top and bottom only (`padding-block`).
+- **Ordinals follow Chicago**, so words up to one hundred ("for the ninth time") and figures on the baseline above that. There is no `.ordinal` class, on purpose.
+  - If a raised suffix is ever wanted, put `font-variant-position: super` on a span around the suffix only. The Source Sans subset has superscript forms of a–z, and this route leaves the `--nums-*` slots alone.
+  - ⚠ Source Sans' `ordn` is the plain kind: all 28 lowercase letters, with no check for a preceding digit. `font-variant-numeric: ordinal` on a sentence would raise every letter in it. This is the same trap as `frac`.
+  - Content was not swept for older figure ordinals. At the time of writing there were four: two dates ("the 14th of July", "the 22nd of July"), "16th century" in a film's clipped plot, and "45th Anniversary" in an album title.
 - **Not done:**
   - no `.figures` or `.balance` class, since the defaults cover them;
   - never `dlig`, which rewrites "he" and "she";

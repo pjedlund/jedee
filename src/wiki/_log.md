@@ -7,6 +7,10 @@ Append-only. One entry per ingest / query-filed / lint, newest first. Entry form
 
 ## [2026-09-10] enrich | Typographic conventions
 
+Ordinals, prompted by Johan trying "9th" in the Nine jam. The general half now has an Ordinals section. Figures stay on the baseline (Butterick). Spelling out follows the house style: Chicago to one hundred, AP to ninth, Swedish usually to twelve, where figure ordinals take a colon (29:e). In jedee: Chicago, and no `.ordinal` class on purpose. ⚠ fontTools shows Source Sans' `ordn` is a plain substitution over all 28 lowercase glyphs, not contextual, so `font-variant-numeric: ordinal` on a sentence would raise every letter in it. A raised suffix, if ever wanted, goes through `font-variant-position: super` on the suffix only. The four figure ordinals already in content are listed and left alone. No new links. The source is an added section in `How the typographic defaults were chosen`.
+
+## [2026-09-10] enrich | Typographic conventions
+
 Four figure classes added at Johan's request: `.fraction`, `.slashed-zero`, `.lining-nums` and `.tabular-nums`. They are built to combine: each fills a custom-property slot and one rule joins the slots, and `.prose`'s old-style default moved onto the same slots. Three traps, each caught by checking the rendered page rather than the CSS:
 - ⚠ Three of the names are also Tailwind classes. The content scan generated Tailwind's versions into the later `tailwindUtilities` layer, where they replaced the value. Tailwind's `fontVariantNumeric` plugin is now off, and [[Tailwind]] records it.
 - ⚠ Source Sans' `frac` changes every digit, full stop, comma and parenthesis it covers.
