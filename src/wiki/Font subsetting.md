@@ -7,6 +7,11 @@ date: 2026-09-10
 
 The cost is a failure that never announces itself. When a character is not in the font, the browser does not show an error or an empty box: it draws **that one character** in the next family of the `font-family` stack that has it, and the rest of the word in the web font. The result is a letter or a quote mark that looks slightly off, in a slightly different weight, on pages where nobody is looking for it.
 
+<figure class="popout" data-wiki-mockup>
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/subsetting-fallback.png" alt="The same heading, I’m in “Düsseldorf” – again…, set twice in Source Serif Bold. In the upper line, from the old subset, six characters are underlined in orange: the apostrophe, both curly quotes, the ü, the en dash and the ellipsis. They are drawn in Georgia and look slightly heavier and differently shaped. The lower line, from the current subset, is uniform." width="1422" height="528">
+  <figcaption>This site's heading font before and after the 2026-09-10 fix, from the two real font files. The underlined characters were missing from the old subset and were drawn in the fallback, Georgia.</figcaption>
+</figure>
+
 The characters most likely to go missing are the ones an author never types:
 
 - **Typographer output.** A Markdown setting like markdown-it's `typographer` turns `'` into `’`, `"…"` into `“…”`, `--` into `–`. The source file only holds the straight versions, so a subset built from the source text misses every curly one the build creates.
@@ -40,7 +45,7 @@ Rebuild the subset from the full font, keeping everything the current file has p
 pyftsubset Full-Font.otf.woff2 --unicodes-file=targets.txt --flavor=woff2 --layout-features='*' --output-file=new.woff2
 ```
 
-Then check before replacing the file: nothing the old cmap had is gone, the new characters are present, and a variable font still has its `fvar` table. Don't pass `--instance`, which would flatten the weight axis. ⚠ A variable subset cannot be extended from static per-weight files: the glyphs have to come from a variable source, or the axis is lost.
+Then check before replacing the file: nothing the old cmap had is gone, the new characters are present, and a variable font still has its `fvar` table. Don't pass `--instance`, which would flatten the weight axis. `--layout-features='*'` keeps the font's ligatures, small caps and other switches; without it they're stripped (see [[OpenType features]] for what these subsets keep). ⚠ A variable subset cannot be extended from static per-weight files: the glyphs have to come from a variable source, or the axis is lost.
 
 ⚠ Every character added is paid for on every page that loads the file. Whole blocks are tempting ("add all of Latin-1") and expensive: the full Latin-1 Supplement took this site's heading font from 33 KB to 45 KB, for letters no heading used. Add characters as pages need them.
 

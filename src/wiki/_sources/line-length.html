@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Line length — wiki mockup</title>
+<style>
+  @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../assets/fonts/source-sans/source-sans.woff2') format('woff2'); }
+  @font-face { font-family: 'Source Code Pro'; src: url('../../assets/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }
+
+  :root { --ink: #495464; --paper: #f4f4f2; --rule: #cbcdd2; --flag: #d0621e; }
+  body { margin: 0; padding: 40px; background: #ddd; }
+  .specimen { inline-size: fit-content; background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 22px 28px 26px; }
+  .label { font-family: 'Source Code Pro', ui-monospace, monospace; font-size: 13px; color: var(--ink); opacity: 0.6; margin: 0 0 8px; }
+  /* Body text as the site sets it: Source Sans, --leading 1.5, the prose rule's 60ch. Size is irrelevant to the count — ch scales with the font. */
+  .measure { font-family: 'Source Sans', sans-serif; font-size: 20px; line-height: 1.5; color: var(--ink); max-inline-size: 60ch; margin: 0; }
+  .ruler { white-space: nowrap; border-inline-end: 2px solid var(--flag); inline-size: 60ch; letter-spacing: 0; }
+  .wrap { display: grid; grid-template-columns: 60ch auto; column-gap: 20px; font-size: 20px; }
+  .counts { font-family: 'Source Code Pro', ui-monospace, monospace; font-size: 13px; color: var(--flag); line-height: 30px; margin: 0; }
+  .para { border-inline-end: 2px solid var(--flag); }
+  .gap { block-size: 18px; }
+</style>
+</head>
+<body>
+
+<div class="specimen" data-shot="line-length-ch">
+  <p class="label">60 × the width of “0” — what 60ch measures</p>
+  <div class="wrap">
+    <p class="measure ruler">000000000000000000000000000000000000000000000000000000000000</p>
+    <p class="counts">60</p>
+  </div>
+  <div class="gap"></div>
+  <p class="label">the same 60ch box holding running text — characters per line, spaces included</p>
+  <div class="wrap">
+    <p class="measure para" id="para">Line length is the number of characters on one line of running text, spaces included. Too long, and the eye loses its place on the way back to the start of the next line; too short, and it has to jump back so often that the reading rhythm breaks. A max-width in ch does not set that number directly, because running text is full of narrow letters and spaces.</p>
+    <p class="counts" id="counts"></p>
+  </div>
+</div>
+
+<script>
+  // Counts are measured from the rendered lines, not typed in, so the figure cannot state a number the font does not produce.
+  window.__mockupReady = false;
+  document.fonts.ready.then(() => {
+    const p = document.getElementById('para');
+    const lh = parseFloat(getComputedStyle(p).lineHeight);
+    const lines = []; let cur = 0, top = null;
+    const tw = document.createTreeWalker(p, NodeFilter.SHOW_TEXT);
+    for (let n; (n = tw.nextNode()); ) for (let i = 0; i < n.data.length; i++) {
+      const r = document.createRange(); r.setStart(n, i); r.setEnd(n, i + 1);
+      const b = r.getClientRects()[0]; if (!b || !b.width) continue;
+      if (top === null) top = b.top;
+      if (b.top > top + lh / 2) { lines.push(cur); cur = 0; top = b.top; }
+      cur++;
+    }
+    lines.push(cur);
+    document.getElementById('counts').innerHTML = lines.map((c, i) => i === lines.length - 1 ? `${c} <span style="opacity:.6">(last)</span>` : c).join('<br>');
+    requestAnimationFrame(() => requestAnimationFrame(() => { window.__mockupReady = true; }));
+  });
+</script>
+
+</body>
+</html>

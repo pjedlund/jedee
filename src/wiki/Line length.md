@@ -23,7 +23,12 @@ Line length is set with a maximum width in a font-relative unit, so it scales wi
 p { max-inline-size: 60ch; }
 ```
 
-⚠ **`60ch` is not 60 characters.** `1ch` is the advance width of the "0" glyph, and digits are wider than the average character in running text, which is full of narrow `i`, `l`, `t` and spaces. A `ch` measure therefore holds *more* characters than its number. How many more depends on the face: measure it rather than assume it. Baymard suggests `70ch`; in this site's face that would set lines of about 84 characters, over WCAG's 80.
+⚠ **`60ch` is not 60 characters.** `1ch` is the advance width of the "0" glyph, and digits are wider than the average character in running text, which is full of narrow `i`, `l`, `t` and spaces. A `ch` measure therefore holds *more* characters than its number. How many more depends on the face: measure it rather than assume it.
+
+<figure class="popout" data-wiki-mockup>
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/line-length-ch.png" alt="Above, a row of sixty zeros in Source Sans exactly fills a box 60ch wide, marked with an orange rule. Below, a paragraph set in a box of the same width, with the character count of each line in orange beside it: 68, 70, 74, 67, 67, and a last line of 7." width="1480" height="656">
+  <figcaption>Sixty zeros are exactly <code>60ch</code>; the same box holds 67–74 characters of running text in Source Sans. The counts are measured from the rendered lines, not typed in.</figcaption>
+</figure> Baymard suggests `70ch`; in this site's face that would set lines of about 84 characters, over WCAG's 80.
 
 `ch` also changes with the font: while a fallback face shows, the same `60ch` resolves to a different width (see [[Layout shift]], where Arial's `ch` runs about 5% wider than Source Sans's even after metric matching).
 

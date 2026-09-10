@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>OpenType features — wiki mockup</title>
+<style>
+  /* The site's own subsets, so every row shows what the shipped files can do, not what the full family can. */
+  @font-face { font-family: 'Source Serif'; font-weight: 700; src: url('../../assets/fonts/source-serif/source-serif.woff2') format('woff2'); }
+  @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../assets/fonts/source-sans/source-sans.woff2') format('woff2'); }
+  @font-face { font-family: 'Source Code Pro'; src: url('../../assets/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }
+
+  :root { --ink: #495464; --paper: #f4f4f2; --rule: #cbcdd2; }
+  body { margin: 0; padding: 40px; background: #ddd; }
+  .specimen { inline-size: fit-content; background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 18px 28px 22px; margin-block-end: 40px; }
+  /* ⚠ Off and on cells are one fixed width each, so a pair differs only by the feature. */
+  .grid { display: grid; grid-template-columns: 330px 290px 290px; column-gap: 28px; align-items: baseline; }
+  .grid > * { padding-block: 9px; border-block-end: 1px solid var(--rule); margin: 0; white-space: nowrap; }
+  .grid > :nth-last-child(-n+3) { border-block-end: 0; }
+  .head { font-family: 'Source Code Pro', ui-monospace, monospace; font-size: 12px; color: var(--ink); opacity: 0.55; }
+  code { font-family: 'Source Code Pro', ui-monospace, monospace; font-size: 13px; color: var(--ink); }
+  code b { font-weight: 600; }
+  .serif { font-family: 'Source Serif', serif; font-weight: 700; font-size: 32px; color: var(--ink); }
+  .sans { font-family: 'Source Sans', sans-serif; font-weight: 400; font-size: 32px; color: var(--ink); }
+</style>
+</head>
+<body>
+
+<div class="specimen" data-shot="opentype-serif">
+  <div class="grid">
+    <span class="head">Source Serif 700 — feature</span><span class="head">off</span><span class="head">on</span>
+
+    <code><b>liga</b> — on by default</code>
+    <span class="serif" style="font-variant-ligatures: no-common-ligatures" data-compare="s-liga">office affine fjord</span>
+    <span class="serif" data-compare="s-liga">office affine fjord</span>
+
+    <code><b>smcp</b> font-variant-caps: small-caps</code>
+    <span class="serif" data-compare="s-smcp">Small Caps</span>
+    <span class="serif" style="font-variant-caps: small-caps" data-compare="s-smcp">Small Caps</span>
+
+    <code><b>onum</b> oldstyle-nums</code>
+    <span class="serif" data-compare="s-onum">1984 · 2026</span>
+    <span class="serif" style="font-variant-numeric: oldstyle-nums" data-compare="s-onum">1984 · 2026</span>
+
+    <code><b>pnum</b> proportional-nums</code>
+    <span class="serif" data-compare="s-pnum">1111 · 7000</span>
+    <span class="serif" style="font-variant-numeric: proportional-nums" data-compare="s-pnum">1111 · 7000</span>
+
+    <code><b>frac</b> diagonal-fractions</code>
+    <span class="serif" data-compare="s-frac">1/2 · 3/4 · 7/8</span>
+    <span class="serif" style="font-variant-numeric: diagonal-fractions" data-compare="s-frac">1/2 · 3/4 · 7/8</span>
+
+    <code><b>ordn</b> ordinal</code>
+    <span class="serif" data-compare="s-ordn">1a · 2o</span>
+    <span class="serif" style="font-variant-numeric: ordinal" data-compare="s-ordn">1a · 2o</span>
+
+    <code><b>zero</b> slashed-zero</code>
+    <span class="serif" data-compare="s-zero">2020 · O0</span>
+    <span class="serif" style="font-variant-numeric: slashed-zero" data-compare="s-zero">2020 · O0</span>
+  </div>
+</div>
+
+<div class="specimen" data-shot="opentype-sans">
+  <div class="grid">
+    <span class="head">Source Sans — feature</span><span class="head">off</span><span class="head">on</span>
+
+    <code><b>liga</b> — on by default</code>
+    <span class="sans" style="font-variant-ligatures: no-common-ligatures" data-compare="a-liga">affect · after · often</span>
+    <span class="sans" data-compare="a-liga">affect · after · often</span>
+
+    <code><b>smcp</b> font-variant-caps: small-caps</code>
+    <span class="sans" data-compare="a-smcp">Small Caps</span>
+    <span class="sans" style="font-variant-caps: small-caps" data-compare="a-smcp">Small Caps</span>
+
+    <code><b>onum</b> oldstyle-nums</code>
+    <span class="sans" data-compare="a-onum">1984 · 2026</span>
+    <span class="sans" style="font-variant-numeric: oldstyle-nums" data-compare="a-onum">1984 · 2026</span>
+
+    <code><b>frac</b> diagonal-fractions</code>
+    <span class="sans" data-compare="a-frac">1/2 · 3/4 · 7/8</span>
+    <span class="sans" style="font-variant-numeric: diagonal-fractions" data-compare="a-frac">1/2 · 3/4 · 7/8</span>
+
+    <code><b>zero</b> slashed-zero</code>
+    <span class="sans" data-compare="a-zero">2020 · O0</span>
+    <span class="sans" style="font-variant-numeric: slashed-zero" data-compare="a-zero">2020 · O0</span>
+
+    <code><b>ss01</b> serifed I</code>
+    <span class="sans" data-compare="a-ss01">Illinois · Il</span>
+    <span class="sans" style="font-feature-settings: 'ss01'" data-compare="a-ss01">Illinois · Il</span>
+
+    <code><b>ss02</b> simple a g l</code>
+    <span class="sans" data-compare="a-ss02">a g l · glad</span>
+    <span class="sans" style="font-feature-settings: 'ss02'" data-compare="a-ss02">a g l · glad</span>
+
+    <code><b>ss06</b> serifed a</code>
+    <span class="sans" data-compare="a-ss06">a · banana</span>
+    <span class="sans" style="font-feature-settings: 'ss06'" data-compare="a-ss06">a · banana</span>
+
+    <code><b>ss10</b> dotted zero</code>
+    <span class="sans" data-compare="a-ss10">2020 · O0</span>
+    <span class="sans" style="font-feature-settings: 'ss10'" data-compare="a-ss10">2020 · O0</span>
+
+    <code><b>dlig</b> þat → ꝥ</code>
+    <span class="sans" data-compare="a-dlig-thorn">þat · Þat</span>
+    <span class="sans" style="font-variant-ligatures: discretionary-ligatures" data-compare="a-dlig-thorn">þat · Þat</span>
+
+    <code><b>dlig</b> pronouns</code>
+    <span class="sans" data-compare="a-dlig-pron">she · he · her · his</span>
+    <span class="sans" style="font-variant-ligatures: discretionary-ligatures" data-compare="a-dlig-pron">she · he · her · his</span>
+  </div>
+</div>
+
+</body>
+</html>

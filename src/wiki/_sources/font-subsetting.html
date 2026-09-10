@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Font subsetting — wiki mockup</title>
+<style>
+  /* ⚠ "Before" is the real pre-2026-09-10 subset kept in fonts-before/, not a simulation — its missing characters fall back exactly as they did on the site. */
+  @font-face { font-family: 'Serif Before'; font-weight: 700; src: url('fonts-before/source-serif.woff2') format('woff2'); }
+  @font-face { font-family: 'Source Serif'; font-weight: 700; src: url('../../assets/fonts/source-serif/source-serif.woff2') format('woff2'); }
+  @font-face { font-family: 'Source Code Pro'; src: url('../../assets/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }
+  /* The shipped metric-matched fallback from base/fonts.css, so the fallen-back characters are the ones a visitor saw. */
+  @font-face { font-family: 'Source Serif Fallback'; src: local('Georgia'); ascent-override: 102.7777%; descent-override: 33.2341%; size-adjust: 100.8%; }
+
+  :root { --ink: #495464; --paper: #f4f4f2; --rule: #cbcdd2; --flag: #d0621e; }
+  body { margin: 0; padding: 40px; background: #ddd; }
+  .specimen { inline-size: fit-content; background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 22px 28px 28px; margin-block-end: 40px; }
+  .label { font-family: 'Source Code Pro', ui-monospace, monospace; font-size: 13px; color: var(--ink); opacity: 0.6; margin: 0 0 6px; }
+  .row + .row { margin-block-start: 22px; padding-block-start: 18px; border-block-start: 1px solid var(--rule); }
+  .heading { font-weight: 700; font-size: 52px; line-height: 1.2; letter-spacing: -0.04ch; color: var(--ink); margin: 0; white-space: nowrap; }
+  .before { font-family: 'Serif Before', 'Source Serif Fallback', serif; }
+  .after { font-family: 'Source Serif', 'Source Serif Fallback', serif; }
+  /* The orange mark only points; which font draws the character is decided by the cmap, not by this span. */
+  .fb { text-decoration: underline 3px var(--flag); text-underline-offset: 10px; }
+</style>
+</head>
+<body>
+
+<div class="specimen" data-shot="subsetting-fallback">
+  <div class="row">
+    <p class="label">before — 101 characters, no curly quotes, no ü</p>
+    <p class="heading before" data-compare="fallback">I<span class="fb">’</span>m in <span class="fb">“</span>D<span class="fb">ü</span>sseldorf<span class="fb">”</span> <span class="fb">–</span> again<span class="fb">…</span></p>
+  </div>
+  <div class="row">
+    <p class="label">after — 109 characters</p>
+    <p class="heading after" data-compare="fallback">I’m in “Düsseldorf” – again…</p>
+  </div>
+</div>
+
+</body>
+</html>
