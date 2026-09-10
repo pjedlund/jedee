@@ -35,7 +35,9 @@ CSS has two levels. The **`font-variant-*` properties** name the effect, and are
 
 ## In jedee
 
-The site sets **no OpenType features of its own** beyond the browser defaults, apart from `font-variant-numeric: tabular-nums` in two places: the menu's post counts (`global/blocks/main-nav.css:204`) and the activity figures (`local/activity.css:21`). ⚠ **Both are no-ops in these fonts:** Source Serif and Source Sans already have tabular figures by default, every digit the same advance width (542 units in Serif, 472 in Sans upright, 456 italic). The rules cost nothing and say what the numbers need, so they stay.
+Since 2026-09-10 the site sets a few features of its own: old-style proportional figures in `.prose`, small caps through one `.small-caps` class, and real superscripts for footnote markers (`font-variant-position: super`). The rules, and the conventions behind them, are on [[Typographic conventions]].
+
+`font-variant-numeric: tabular-nums` sits in two places: the menu's post counts (`global/blocks/main-nav.css:204`) and the activity figures (`local/activity.css:21`). Source Serif and Source Sans already have tabular figures by default: every digit is the same width (542 units in Serif, 472 in Sans upright, 456 in italic). So the menu's rule changes nothing. ⚠ The activity rule did nothing either until `.prose` set old-style figures. Inside an activity post, `tabular-nums` now replaces the inherited value and puts the stats back to lining figures.
 
 What the shipped subsets can do, checked by rendering each feature on and off from the site's own files (every pair verified by `npm run mockups:check` to render differently) and by comparing glyph outlines:
 

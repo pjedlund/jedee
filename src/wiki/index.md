@@ -17,6 +17,7 @@ The private wiki documenting web techniques and how jedee is designed and built.
 
 - [[Text wrapping]] — `text-wrap: balance` and `pretty`, the end of JavaScript widow-fixes; ⚠ the global `pretty` reset overrides an explicit `white-space: nowrap` (the breadcrumb fight).
 - [[OpenType features]] — ligatures, small caps, figure styles and stylistic sets, and which of them the site's Source Serif and Source Sans subsets actually carry; ⚠ `font-feature-settings` replaces its whole list on every declaration, and ⚠ Source Sans italic has no small caps, so asking for them gets fakes.
+- [[Typographic conventions]] — Bringhurst's and Butterick's rules for figures, small caps, capitals, captions and superscripts, and what each costs in accessibility; in jedee, old-style figures in running text, one `.small-caps` class, and real superscript footnote markers. ⚠ A font with superscript digits but no superscript brackets cannot set `[1]`, and Chrome draws no fakes.
 - [[Line length]] — 50–75 characters per line, and WCAG's AAA ceiling of 80; ⚠ `60ch` is not 60 characters — in Source Sans it sets about 72, because `ch` is the width of "0".
 - [[The theme toggle]] — one SVG sun masked into a moon, the reduced-motion split, and the inline script that prevents a flash of the wrong theme.
 - [[Focus rings and paint containment]] — ⚠ an outset focus ring is invisible inside anything that clips paint. A silent accessibility failure.
@@ -82,6 +83,15 @@ The private wiki documenting web techniques and how jedee is designed and built.
 - [[Site search]] — a JSON index written at build time, fetched once and filtered in the browser; no search library at a few hundred entries. ⚠ `page.rawInput` reaches a page's body at collection time where `templateContent` throws, but it is the source *before* rendering, so template expressions and HTML comments land in the index unless stripped. ⚠ A transitioned `visibility` is still `hidden` on the frame `focus()` runs, and `[hidden]` is a UA rule any author `display` outranks.
 
 ## Recent additions
+
+**2026-09-10** — ingest: **[[Typographic conventions]]**, from the session that turned the OpenType inventory into site defaults. Bringhurst's and Butterick's rules for figures, small caps, capitals, captions and superscripts, dated, with the accessibility cost of each. In jedee:
+- old-style figures in running text, with lining figures kept in tables, acronyms and code (⚠ Source Code Pro has old-style figures too);
+- one `.small-caps` class;
+- wider tracking on the capital labels;
+- balanced captions and quotes, with upright, left-aligned wiki captions;
+- real superscript footnote markers. ⚠ Their brackets had to go, since the Source Sans subset has no superscript brackets and Chrome draws no fakes.
+
+[[OpenType features]] and [[Text wrapping]] updated. See `_log.md`.
 
 **2026-09-10** — ingest: **[[OpenType features]]**, an inventory of what the site's Source Serif and Source Sans subsets can do, read from the files, checked outline by outline, and rendered off/on in two new figures. Finds that both families already have tabular figures, so the site's two `tabular-nums` rules are no-ops, that Source Sans italic has no small caps, and that Source Sans' `dlig` replaces "she"/"he" and "her"/"his" with single invented glyphs. Also: figures added to [[Font subsetting]] (the heading before and after, from the real old file) and [[Line length]] (60 zeros against 60ch of running text). See `_log.md`.
 
