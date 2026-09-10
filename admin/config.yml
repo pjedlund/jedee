@@ -34,7 +34,8 @@ collections:
       - &draft { name: draft, label: Draft, widget: boolean, required: false }
       - &body { name: body, label: Body, widget: markdown, modes: [raw], required: false }
 
-  - { name: articles, label: Articles, label_singular: Article, folder: src/posts/articles, create: true, sortable_fields: *by_date, fields: *post_fields }
+  # Depth 2 = top level (where Micropub writes) plus year folders; skips the ignored `-drafts/` and the starter's pheasant demo, both one level deeper.
+  - { name: articles, label: Articles, label_singular: Article, folder: src/posts/articles, nested: { depth: 2, subfolders: false }, create: true, sortable_fields: *by_date, fields: *post_fields }
   - name: photos
     label: Photos
     label_singular: Photo
