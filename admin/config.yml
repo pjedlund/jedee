@@ -1,10 +1,10 @@
 # yaml-language-server: $schema=https://unpkg.com/@sveltia/cms@0.209.1/schema/sveltia-cms.json
-# Trial config — see _local/design/Reference - Sveltia CMS as the edit layer.md. ⚠ Never add a `category` field: it's inherited from each folder's .json.
+# Sveltia CMS at /admin/ — see _local/design/Reference - Sveltia CMS as the edit layer.md. ⚠ Never add a `category` field: it's inherited from each folder's .json.
 
 backend:
   name: github
   repo: pjedlund/jedee
-  branch: feat/sveltia-trial # @until sveltia-trial — point back at main before merging
+  branch: main
 
 media_folder: src/assets/images
 public_folder: /assets/images
