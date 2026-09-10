@@ -5,6 +5,14 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-10] ingest | Line length
+
+New page from Edward Scott's Baymard article (2022-05-10) — ⚠ the clip in `src/_raw/` captured only Baymard's navigation, so the page was written from the live article and the clip's `published:` filled in. Carries the 50–75 range with its lineage (Ruder's 50–60, Bringhurst's 45–75 and 66, WCAG 1.4.8's AAA ceiling of 80), and corrects one thing in the source: Baymard's 0.12 em / 0.16 em / 2× spacing values are WCAG 1.4.12, a tolerance content must survive, not values to set. The measured part is the site's own: EE's `max-inline-size: 60ch` sets a median **72 characters per line** in Source Sans at 1280 and 1920 px (10th–90th percentile 67–75), about 1.2 characters per `ch`, because `ch` is the width of "0" and running text averages narrower. 70 at 768 px, 39 at 390. No CSS change. Earned links to [[Text wrapping]] (the other half of the same prose rule) and [[Layout shift]] (the `ch` difference between web font and fallback).
+
+## [2026-09-10] ingest | Font subsetting
+
+New page from a session that began with an apostrophe looking different in Sketch than on the homepage — Sketch's smart quotes had made it a different character. The real find was that the Source Serif subset had **no curly quotes at all**, so every typographer `’` in a heading drew in Georgia. A scan of all 641 built pages, testing each text node's characters against the cmap of its computed first font family, found 34 characters falling back. Filled from the bundled full sources: curly quotes, dashes, `…` and `ü` in Serif; `~`, arrows and `Δ` in Sans. ⚠ Serif's full Latin-1 block was added and removed the same day, at 12 KB on every page. YouTube titles with NFD accents are now NFC-normalized in `youtubeTitle`. Earned links to [[Layout shift]] (the fallback faces a missing character lands in) and [[The YouTube embed]]. Source is a new dev note, `How missing glyphs were found and filled`.
+
 ## [2026-09-09] enrich | Open Graph images — artwork beats a generated card, where a type has artwork
 
 Started from a leftover: `meta.opengraph_default` was still Eleventy Excellent's promo image, so the great majority of the site's shareable pages advertised the starter. Replacing it exposed the wider gap — only articles ever got a generated card, and every article is currently `draft: true`, so no live page used one at all.

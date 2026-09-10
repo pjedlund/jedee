@@ -34,7 +34,7 @@ Both, rendered in the site's own faces at the same measure. Each pair is one str
 Both values are shipped, at four places in the cascade:
 
 - `global/base/reset.css` — the broad defaults, in the `reset` layer: `* { text-wrap: pretty }` and `h1, h2, h3, h4 { text-wrap: balance }`. This is the whole site's baseline.
-- `global/blocks/prose.css:39` — `.prose :is(p, li, dl, blockquote)` repeats `text-wrap: pretty` alongside the `60ch` measure. Redundant with the reset in effect, but it keeps the prose block's typographic decisions self-contained.
+- `global/blocks/prose.css:39` — `.prose :is(p, li, dl, blockquote)` repeats `text-wrap: pretty` alongside the `60ch` measure (what that measure actually sets is on [[Line length]]). Redundant with the reset in effect, but it keeps the prose block's typographic decisions self-contained.
 - `local/post.css:9` — `.intro` (the lede under a post title) gets `text-wrap: balance`: a short, display-adjacent block, so it takes the heading treatment rather than the paragraph one.
 - `global/blocks/breadcrumb.css:68` — **the gotcha.** The current-page crumb must stay on one line, but the global `* { text-wrap: pretty }` reset re-enables wrapping *even against an explicit `white-space: nowrap`*. The block clamps with `-webkit-line-clamp: 1` instead, which wins where `nowrap` loses. Any future single-line truncation on this site has the same fight ahead of it — the reset's universal selector reaches everything.
 

@@ -1,0 +1,73 @@
+---
+description: "Shipping only the characters a site needs from a web font, and how a missing character silently falls back to another font."
+date: 2026-09-10
+---
+
+**Subsetting** a font means keeping only the characters a site needs and dropping the rest, so the file is a fraction of the full family's size. A complete Source Sans 3 carries Latin, Greek, Cyrillic, arrows and much more; a site written in English and Swedish needs about two hundred characters of it. The standard tool is fontTools' [`pyftsubset`](https://fonttools.readthedocs.io/en/latest/subset/), which glyphhanger and most build-time subsetting wrap. The other half of the technique is CSS [`unicode-range`](https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/unicode-range), which tells the browser which characters a face covers, so it can skip downloading a file the page has no characters for.
+
+The cost is a failure that never announces itself. When a character is not in the font, the browser does not show an error or an empty box: it draws **that one character** in the next family of the `font-family` stack that has it, and the rest of the word in the web font. The result is a letter or a quote mark that looks slightly off, in a slightly different weight, on pages where nobody is looking for it.
+
+The characters most likely to go missing are the ones an author never types:
+
+- **Typographer output.** A Markdown setting like markdown-it's `typographer` turns `'` into `’`, `"…"` into `“…”`, `--` into `–`. The source file only holds the straight versions, so a subset built from the source text misses every curly one the build creates.
+- **Names.** A subset cut for English and Swedish has å, ä, ö and nothing else; the first "Düsseldorf" in a heading falls back.
+- **Fetched text.** Anything pulled in at build time (a video title, a book title) brings characters the author never saw.
+- **Decomposed accents.** Unicode can write "ö" as one code point (NFC) or as `o` plus U+0308 COMBINING DIAERESIS (NFD); both render the same ([Unicode normalization, UAX #15](https://unicode.org/reports/tr15/)). A subset holds the precomposed letters but almost never the combining marks, so NFD text draws its accents in the fallback. [`String.prototype.normalize('NFC')`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/normalize) on the incoming string rejoins them.
+
+Design tools add a trap of their own: they swap quotes as you type (macOS "smart quotes"), so a mockup can show `’` where the page has `'`, and the two look like a font difference when they are different characters.
+
+## Finding fallbacks
+
+Grepping the source cannot find them, for the reasons above: the characters that fall back are mostly created by the build. The reliable check is against the rendered pages: for every text node, the first family in its computed `font-family` names the file that should draw it, and each character is tested against that file's character map (its *cmap*, exported with fontTools).
+
+```js
+// per page, loaded in a same-origin iframe; `sets` maps a family name to its cmap as a Set of code points
+const tw = doc.createTreeWalker(doc.body, NodeFilter.SHOW_TEXT);
+for (let n; (n = tw.nextNode()); ) {
+  const cs = win.getComputedStyle(n.parentElement);
+  const family = cs.fontFamily.split(',')[0].trim().replace(/["']/g, '');
+  for (const ch of n.data) if (ch.codePointAt(0) > 0x20 && !sets[family].has(ch.codePointAt(0))) report(family, ch);
+}
+```
+
+Two additions matter: an italic that is its own file needs its own cmap (check `cs.fontStyle`), and `::before`, `::after` and `::marker` string content is text too.
+
+## Filling a gap
+
+Rebuild the subset from the full font, keeping everything the current file has plus the additions:
+
+```bash
+pyftsubset Full-Font.otf.woff2 --unicodes-file=targets.txt --flavor=woff2 --layout-features='*' --output-file=new.woff2
+```
+
+Then check before replacing the file: nothing the old cmap had is gone, the new characters are present, and a variable font still has its `fvar` table. Don't pass `--instance`, which would flatten the weight axis. ⚠ A variable subset cannot be extended from static per-weight files: the glyphs have to come from a variable source, or the axis is lost.
+
+⚠ Every character added is paid for on every page that loads the file. Whole blocks are tempting ("add all of Latin-1") and expensive: the full Latin-1 Supplement took this site's heading font from 33 KB to 45 KB, for letters no heading used. Add characters as pages need them.
+
+## In jedee
+
+Eleventy Excellent ships **static, pre-subset `woff2` files** and has no subsetting step in the build. Its `@font-face` blocks have no `unicode-range`, so adding a character to a file is the whole fix: no CSS change. The full source fonts are bundled beside the subsets.
+
+| file | kind | characters | source in the repo |
+| --- | --- | --- | --- |
+| `source-serif/source-serif.woff2` | static, Bold 700 only | 109 | `SourceSerif4-Bold.otf.woff2` |
+| `source-sans/source-sans.woff2` | variable | 206 | `_source/VF/SourceSans3VF-Upright.otf.woff2` |
+| `source-sans/source-sans-italic.woff2` | variable | 207 | `_source/VF/SourceSans3VF-Italic.otf.woff2` |
+| `source-code-pro/source-code-pro.woff2` | variable | 241 | none bundled |
+
+The fallback faces behind each are the metric-matched Georgia, Arial and Courier New described on [[Layout shift]], so a fallen-back character is at least the right size.
+
+**The 2026-09-10 scan.** All 641 built pages, 34 characters falling back. The biggest was Source Serif having **no curly quotes at all**: with `typographer: true` in `src/_config/plugins/markdown.js`, every heading with an apostrophe drew its `’` in Georgia. Filled since: ‘ ’ “ ” – — … and `ü` in Source Serif; `~ ← ↑ → ↓ ↔ Δ` in Source Sans upright and italic. The YouTube captions on two jam pages had NFD accents from YouTube's own titles; `youtubeTitle` in `src/_config/filters/youtube-title.js` now normalizes to NFC (see [[The YouTube embed]]).
+
+Left falling back on purpose:
+
+- **Emoji.** No text font has them, and the system emoji font is the right one.
+- **`⚠`**, on 36 wiki pages. It is in no Source font, so the wiki's own warning marker always comes from a system font. Decorative; left.
+- **`⁂`, `❖`, `↩︎`** (the last is the footnote back-link). Also in no Source font.
+- **Code-block symbols** (`→ ← │ ⌄ ⚠`). The code font is a trimmed variable subset with no full variable source bundled; fixing it means downloading Source Code Pro's variable release first.
+
+⚠ Source Serif was deliberately kept small: the Latin-1 block was added and taken back out the same day. Add accented letters to it one at a time, when a heading actually needs one.
+
+The recipe itself needs a Python with fontTools and brotli; on this machine that is the python.org framework install, not the default `python3`.
+
+Raw source: `src/_raw/dev-notes/How missing glyphs were found and filled.md`

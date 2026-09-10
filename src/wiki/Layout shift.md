@@ -167,7 +167,7 @@ The generators — [screenspan.net/fallback](https://screenspan.net/fallback), [
 
 Nearly four points of spread. Whichever you pick is wrong for the other three.
 
-**2. The metrics may not describe the font you ship.** Capsize's `sourceSerif4/700` records an average character width of 0.494 em. The subset actually served here measures **0.4316 em**. Subsetting does not change advance widths, so this is a version or instance difference — but the generated `size-adjust: 110.8118%` was tuned to a font that is not on the site. Scored against the real page it matched 12 viewport widths out of 17, where a re-derived 100.8% matches all 17.
+**2. The metrics may not describe the font you ship.** Capsize's `sourceSerif4/700` records an average character width of 0.494 em. The subset actually served here measures **0.4316 em**. [[Font subsetting|Subsetting]] does not change advance widths, so this is a version or instance difference — but the generated `size-adjust: 110.8118%` was tuned to a font that is not on the site. Scored against the real page it matched 12 viewport widths out of 17, where a re-derived 100.8% matches all 17.
 
 **3. `ch` is font-dependent, and so is anything built on it.** `1ch` is the advance of the "0" glyph, which differs per family even after `size-adjust` scales it:
 
@@ -178,7 +178,7 @@ Nearly four points of spread. Whichever you pick is wrong for the other three.
 | Source Serif | 0.54187 | — |
 | Source Serif Fallback | 0.68000 | +25.49% |
 
-So `prose.css`'s `max-inline-size: 60ch` and the `--tracking` values in `ch` all resolve differently while the fallback shows. ⚠ **This turned out not to be the cause of any shift measured here** — converting every `ch` tracking value to `em` made letter-spacing identical between the two states and the footer still wrapped the same way, because the difference is around 1% of a sub-pixel value. Recorded because it is real and easy to assume is the culprit; it was measured and it is not.
+So `prose.css`'s `max-inline-size: 60ch` (about 72 characters in the web font, see [[Line length]]) and the `--tracking` values in `ch` all resolve differently while the fallback shows. ⚠ **This turned out not to be the cause of any shift measured here** — converting every `ch` tracking value to `em` made letter-spacing identical between the two states and the footer still wrapped the same way, because the difference is around 1% of a sub-pixel value. Recorded because it is real and easy to assume is the culprit; it was measured and it is not.
 
 **What is *not* a factor: font size.** `size-adjust` is a pure ratio, so it is scale-invariant — the required value for the heading is 100.119% at 32 px, 100.103% at 64 px and 100.100% at 107 px. Fluid `clamp()` type does not weaken metric matching.
 
