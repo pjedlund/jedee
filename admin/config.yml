@@ -5,6 +5,8 @@ backend:
   name: github
   repo: pjedlund/jedee
   branch: main
+  # "Sign In with GitHub" asks for write access to public repos only (the default `repo` covers private ones too). ⚠ Needs the GitHub OAuth provider installed in Netlify.
+  auth_scope: public_repo
 
 media_folder: src/assets/images
 public_folder: /assets/images
