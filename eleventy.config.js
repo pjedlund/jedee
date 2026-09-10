@@ -194,6 +194,9 @@ export default async function(eleventyConfig) {
     'src/assets/images/favicon/*': '/',
     'src/assets/images/avatar/*': '/',
 
+    // -- Sveltia CMS, served at /admin/
+    admin: 'admin',
+
     // -- node_modules
     'node_modules/lite-youtube-embed/src/lite-yt-embed.{css,js}': `assets/components/`,
     // Single-file (non-glob) source: must name the destination file explicitly. A trailing-slash dir target writes a file literally named `components`, clobbering the lite-youtube glob's directory (Eleventy 3.x behaviour).

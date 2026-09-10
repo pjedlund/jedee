@@ -1,0 +1,41 @@
+# yaml-language-server: $schema=https://unpkg.com/@sveltia/cms@0.209.1/schema/sveltia-cms.json
+# Trial config — see _local/design/Reference - Sveltia CMS as the edit layer.md. ⚠ Never add a `category` field: it's inherited from each folder's .json.
+
+backend:
+  name: github
+  repo: pjedlund/jedee
+  branch: feat/sveltia-trial # @until sveltia-trial — point back at main before merging
+
+media_folder: src/assets/images
+public_folder: /assets/images
+
+output:
+  omit_empty_optional_fields: true
+
+# Keep Title-Case filenames for Obsidian; punctuation still becomes a space.
+slug:
+  lowercase: false
+  sanitize_replacement: ' '
+
+collections:
+  - name: notes
+    label: Notes
+    label_singular: Note
+    folder: src/posts/notes
+    create: true
+    # Field order matches the files, so a save doesn't shuffle keys.
+    fields: &post_fields
+      - { name: title, label: Title, widget: string }
+      - { name: description, label: Description, widget: text, required: false }
+      # ⚠ Plain text on purpose: Sveltia's datetime field drops seconds on open (21:02:11 → 21:02:00), whatever its options.
+      - { name: date, label: Date, widget: string, hint: 'YYYY-MM-DD, or YYYY-MM-DDTHH:mm:ss+02:00', pattern: ['^\d{4}-\d{2}-\d{2}', 'Start with YYYY-MM-DD'] }
+      - { name: tags, label: Tags, widget: list, required: false }
+      - { name: draft, label: Draft, widget: boolean, required: false }
+      - { name: body, label: Body, widget: markdown, modes: [raw] }
+
+  - name: articles
+    label: Articles
+    label_singular: Article
+    folder: src/posts/articles
+    create: true
+    fields: *post_fields
