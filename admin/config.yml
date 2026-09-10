@@ -32,7 +32,7 @@ collections:
       - &date { name: date, label: Date, widget: string, hint: 'YYYY-MM-DD, or YYYY-MM-DDTHH:mm:ss+02:00', pattern: ['^\d{4}-\d{2}-\d{2}', 'Start with YYYY-MM-DD'] }
       - &tags { name: tags, label: Tags, widget: list, required: false }
       - &draft { name: draft, label: Draft, widget: boolean, required: false }
-      - &body { name: body, label: Body, widget: markdown, modes: [raw] }
+      - &body { name: body, label: Body, widget: markdown, modes: [raw], required: false }
 
   - { name: articles, label: Articles, label_singular: Article, folder: src/posts/articles, create: true, sortable_fields: *by_date, fields: *post_fields }
   - name: photos
