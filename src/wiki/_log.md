@@ -5,6 +5,15 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-10] enrich | Typographic conventions
+
+Four figure classes added at Johan's request: `.fraction`, `.slashed-zero`, `.lining-nums` and `.tabular-nums`. They are built to combine: each fills a custom-property slot and one rule joins the slots, and `.prose`'s old-style default moved onto the same slots. Three traps, each caught by checking the rendered page rather than the CSS:
+- ⚠ Three of the names are also Tailwind classes. The content scan generated Tailwind's versions into the later `tailwindUtilities` layer, where they replaced the value. Tailwind's `fontVariantNumeric` plugin is now off, and [[Tailwind]] records it.
+- ⚠ Source Sans' `frac` changes every digit, full stop, comma and parenthesis it covers.
+- ⚠ Its old-style zero has no slashed form.
+
+The style guide also gained a Blockquotes section. `blockquote :last-child` became `blockquote > :last-child`, because the old form also matched the last element *inside* the source line and removed the italic from a closing title.
+
 ## [2026-09-10] ingest | Typographic conventions
 
 A new page, from the session that turned the [[OpenType features]] inventory into site defaults. The general half covers Bringhurst's rules (2.1.6, 3.2.1, 3.2.2, via webtypography.net) and Butterick's milder versions for figures, small caps, capitals and letterspacing, plus captions and italic, line breaks, superscripts and accessibility. Every source is dated, and the unread dyslexia paper is marked unconfirmed. In jedee:

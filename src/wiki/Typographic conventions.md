@@ -66,9 +66,15 @@ Set on 2026-09-10, after a research pass and an audit of the site. The decisions
 - **Old-style figures in running text.** `.prose` sets `oldstyle-nums proportional-nums`. Inside it, `table`, `abbr`, and `code, kbd, samp, pre` set lining figures back. ⚠ Source Code Pro ships with old-style figures too, so without that reset code would inherit them. Outside `.prose` nothing changes: the breadcrumb, the menu's counts and the footer keep lining figures.
   - Inside an activity post, the stats' `tabular-nums` (`local/activity.css`) replaces the inherited value and keeps them lining. That is the rule [[OpenType features]] had recorded as doing nothing.
   - A photo's capture metadata ("6×17", "3:30 @ 38 °C") takes old-style figures, as running text does.
-- **One class, `.small-caps`** (`global/utilities/small-caps.css`), for the opening words of an article or a name. It sets small caps, `--tracking-wide` letterspacing, and `font-synthesis-small-caps: none`.
+- **`.small-caps`** (`global/utilities/small-caps.css`), for the opening words of an article or a name. It sets small caps, `--tracking-wide` letterspacing, and `font-synthesis-small-caps: none`.
   - Write it as `<span class="small-caps">…</span>`, or as `{.small-caps}` at the end of a markdown paragraph.
   - ⚠ Not `*text*{.small-caps}`: that is italic, and Source Sans italic has no small caps.
+- **Four figure classes** in `global/utilities/numerals.css`: `.fraction`, `.slashed-zero`, `.lining-nums` and `.tabular-nums`. None is on by default: the OpenType registry says `frac` "should be off by default", because it turns every digit–slash–digit into a fraction. On the built site that would hit 9 sequences, none of them a fraction ("12/13" meaning 12 of 13 widths, "206/207" characters).
+  - The classes combine. Each one fills a slot (`--nums-figure`, `--nums-spacing`, `--nums-fraction` or `--nums-zero`), and one rule joins the slots into `font-variant-numeric`. So `lining-nums tabular-nums` keeps both, and a class inside `.prose` keeps its old-style figures. `.prose` sets its own default through the same slots.
+  - ⚠ Any element that changes a slot must repeat the joining rule. Otherwise it inherits the value its parent already worked out, and the change does nothing.
+  - ⚠ Three of the names are also Tailwind classes. Tailwind's content scan generated them, and because its `tailwindUtilities` layer comes after `cubeUtilities`, its versions replaced the whole value. Tailwind's `fontVariantNumeric` plugin is now switched off (see [[Tailwind]]).
+  - ⚠ In Source Sans, `frac` changes every digit, full stop, comma and parenthesis it covers, not only the fraction. So `.fraction` goes on the fraction itself (`<span class="fraction">3/4</span>`). Put on a whole sentence, it turned the closing full stop into a small raised dot.
+  - ⚠ The old-style zero has no slashed form, so `slashed-zero` over old-style figures does nothing. `.slashed-zero` therefore sets lining figures as well, which is what a code or serial number wants anyway.
 - **No small caps on `abbr`**, for two reasons. The glossary ([[Abbreviations]]) marks only its 31 terms (it has CLS but not CSS), so styled acronyms would sit beside unstyled ones. And `all-small-caps` would flatten RDFa.
 - **Capital labels** (site logo, breadcrumb, menu button, footer, buttons) share `--tracking-wide`, raised from 0.09ch to 0.12ch. That is about 5.7% of the size, since a Source Sans digit is 0.472 em wide.
 - **Captions** stay italic and centred, and are now balanced. The wiki's captions run long (a median of about 100 characters, up to 400), so `local/wiki.css` sets them upright, left-aligned and `pretty`, at 60ch.
@@ -77,7 +83,6 @@ Set on 2026-09-10, after a research pass and an audit of the site. The decisions
   - `markdown.js` overrides markdown-it-footnote's `footnote_caption` rule to drop the brackets. The Source Sans subset has superscript digits, parentheses and colons, but no square brackets. `footnotes.css` then uses `font-variant-position: super`.
   - ⚠ The link inside the marker had `padding: 0.3ch`, sized for the old, smaller number. At full size it opened a visible gap on either side, so the padding is now top and bottom only (`padding-block`).
 - **Not done:**
-  - no fraction class, since there are no fractions in the content;
   - no `.figures` or `.balance` class, since the defaults cover them;
   - never `dlig`, which rewrites "he" and "she";
   - a VoiceOver check of the `uppercase` labels is on the backlog.
