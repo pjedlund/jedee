@@ -79,6 +79,7 @@ colorGroups:
   <div class="full colors | section">
     <section class="section__inner wrapper flow region">
       <h2 class="heading-line">Colors</h2>
+      <p>The colors are based on GitHub's colorblind theme.</p>
 
       {%- for group in colorGroups -%}
         {%- if group.description -%}<p{% if not loop.first %} class="mt-l-xl"{% endif %}>{{ group.description }}</p>{%- endif -%}
@@ -160,7 +161,7 @@ colorGroups:
           <p class="type-sample-label">Plain</p>
           <p>Founded in 1994, the W3C made CSS 2.1 a Recommendation in 2011. Code keeps its own figures: <code>--tracking-wide: 0.12ch</code>.</p>
         </div>
-        <div class="type-sample | flow prose">
+        <div class="type-sample prose | flow">
           <p class="type-sample-label">Site</p>
           <p>Founded in 1994, the <abbr title="World Wide Web Consortium">W3C</abbr> made CSS 2.1 a Recommendation in 2011. Code keeps its own figures: <code>--tracking-wide: 0.12ch</code>.</p>
         </div>
@@ -178,6 +179,33 @@ colorGroups:
         <div class="type-sample | flow">
           <p class="type-sample-label">Site</p>
           <p><span class="small-caps">The opening words</span> of an article, or a name such as <span class="small-caps">Robert Bringhurst</span>.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow">
+      <h3>Figure classes</h3>
+      <p>Four classes for figures, used by hand. They combine with each other and with the running-text default, so <code>class="lining-nums tabular-nums"</code> keeps both. Samples are set in running text (<code>.prose</code>). Put <code>.fraction</code> on the fraction itself: in Source Sans it changes every digit, full stop, comma and parenthesis it covers. <code>.slashed-zero</code> brings lining figures with it, because the old-style zero has no slashed form.</p>
+      <div class="grid" data-layout="50-50">
+        <div class="type-sample prose | flow">
+          <p class="type-sample-label">Without, then with <code>.fraction</code></p>
+          <p>Add 3/4 cup of water and 1/2 teaspoon of salt.</p>
+          <p>Add <span class="fraction">3/4</span> cup of water and <span class="fraction">1/2</span> teaspoon of salt.</p>
+        </div>
+        <div class="type-sample prose | flow">
+          <p class="type-sample-label">Without, then with <code>.slashed-zero</code></p>
+          <p>Serial number O0O-2020-0O.</p>
+          <p class="slashed-zero">Serial number O0O-2020-0O.</p>
+        </div>
+        <div class="type-sample prose | flow">
+          <p class="type-sample-label">Without, then with <code>.lining-nums</code></p>
+          <p>The 1990s, the 2020s, and 1,380 metres.</p>
+          <p class="lining-nums">The 1990s, the 2020s, and 1,380 metres.</p>
+        </div>
+        <div class="type-sample prose | flow">
+          <p class="type-sample-label">Without, then with <code>.tabular-nums</code></p>
+          <p>1,111.11<br />8,888.88</p>
+          <p class="tabular-nums">1,111.11<br />8,888.88</p>
         </div>
       </div>
     </div>
@@ -226,6 +254,27 @@ colorGroups:
           <p class="type-sample-label">Site</p>
           <p>A claim that needs a source.<sup class="footnote-ref">1</sup> The next line keeps its spacing, or doesn't.</p>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="blockquotes | flow region">
+    <h2 class="heading-line">Blockquotes</h2>
+    <p>A quotation set off from the text: a rule on the start edge, a larger size, balanced lines, and no quote marks. The source goes inside the quote as its last paragraph, which the site sets one step smaller.</p>
+
+    <div class="grid" data-layout="50-50">
+      <div class="prose | flow">
+        <p class="type-sample-label">With a source</p>
+        <blockquote>
+          <p>Typography exists to honor content.</p>
+          <p>— <span class="small-caps">Robert Bringhurst</span>, <cite>The Elements of Typographic Style</cite></p>
+        </blockquote>
+      </div>
+      <div class="flow">
+        <p class="type-sample-label">Written in markdown</p>
+        <pre><code>&gt; Typography exists to honor content.
+&gt;
+&gt; — &lt;span class="small-caps"&gt;Robert Bringhurst&lt;/span&gt;, *The Elements of Typographic Style*</code></pre>
       </div>
     </div>
   </section>

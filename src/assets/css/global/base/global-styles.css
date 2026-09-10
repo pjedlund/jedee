@@ -74,7 +74,8 @@ blockquote > * + * {
   margin-block-start: var(--space-m-l);
 }
 
-blockquote :last-child {
+/* The source line. ⚠ `>` keeps it off the line's own last child, which unset the italic of a closing *Title*. */
+blockquote > :last-child {
   font-family: var(--font-base);
   font-style: normal;
   font-size: var(--size-step-1);

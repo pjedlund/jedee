@@ -4,16 +4,25 @@
   --flow-space: var(--space-m-l);
   --wrapper-width: 64rem;
 
-  /* Old-style figures in running text (Bringhurst 3.2.1); the three rules below put lining figures back where digits meet columns, capitals or code. */
-  font-variant-numeric: oldstyle-nums proportional-nums;
+  /* Old-style figures in running text (Bringhurst 3.2.1), set as slots so the numerals utilities add to them rather than replace them. */
+  --nums-figure: oldstyle-nums;
+  --nums-spacing: proportional-nums;
 }
 
+/* ⚠ Same slot list as utilities/numerals.css; every element that changes a slot must redeclare it, or it inherits .prose's value. */
+.prose,
+.prose :is(table, abbr) {
+  font-variant-numeric: var(--nums-figure,) var(--nums-spacing,) var(--nums-fraction,) var(--nums-zero,);
+}
+
+/* Lining figures back where digits meet columns or capitals. */
 .prose table {
-  font-variant-numeric: lining-nums tabular-nums;
+  --nums-figure: lining-nums;
+  --nums-spacing: tabular-nums;
 }
 
 .prose abbr {
-  font-variant-numeric: lining-nums proportional-nums;
+  --nums-figure: lining-nums;
 }
 
 /* ⚠ Source Code Pro has old-style figures too, so code would inherit them. */

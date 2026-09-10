@@ -81,7 +81,9 @@ export default {
     preflight: false,
     textOpacity: false,
     backgroundOpacity: false,
-    borderOpacity: false
+    borderOpacity: false,
+    // ⚠ Its classes share names with utilities/numerals.css and, layered later, would override them.
+    fontVariantNumeric: false
   },
 
   // Prevents Tailwind's core components
