@@ -30,7 +30,7 @@ Russian Circles has a humble and sympathetic attitude that shines through in int
 
 > Without vocals, we can share an emotion, but not a context or a lyrical theme. Anger is an authentic emotion, and if you can resonate with that, great—because it's not fake. It's not like, oh, we're trying to be intense.
 >
-> — [Mike Sullivan](https://newnoisemagazine.com/interviews/interview-russian-circles-journey-through-the-unspoken/)
+> — <span class="small-caps">Mike Sullivan</span>, <cite>[Interview: Russian Circles' Journey Through the Unspoken](https://newnoisemagazine.com/interviews/interview-russian-circles-journey-through-the-unspoken/)</cite>, New Noise Magazine
 
 My favorite track is [Eluvial](https://russiancircles.bandcamp.com/track/eluvial), but all tracks are solid.
 
