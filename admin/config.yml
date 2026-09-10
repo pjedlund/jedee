@@ -35,7 +35,32 @@ collections:
       - &body { name: body, label: Body, widget: markdown, modes: [raw] }
 
   - { name: articles, label: Articles, label_singular: Article, folder: src/posts/articles, create: true, sortable_fields: *by_date, fields: *post_fields }
-  - { name: photos, label: Photos, label_singular: Photo, folder: src/posts/photos, create: false, sortable_fields: *by_date, fields: *post_fields }
+  - name: photos
+    label: Photos
+    label_singular: Photo
+    folder: src/posts/photos
+    create: false
+    sortable_fields: *by_date
+    fields:
+      - *title
+      # ⚠ Leave photo.src and photo.downloads undeclared: they're kept as-is on save, and a field would rewrite src's path or retype the R2 byte counts.
+      - name: photo
+        label: Photo
+        widget: object
+        fields:
+          - { name: alt, label: Alt text, widget: text }
+          - { name: caption, label: Caption, widget: string, required: false }
+          - { name: format, label: Format, widget: string, required: false, hint: 'e.g. 6×17' }
+          - { name: exposure, label: Exposure, widget: string, required: false }
+          - { name: film, label: Film, widget: string, required: false }
+          - { name: development, label: Development, widget: string, required: false }
+          - { name: scanner, label: Scanner, widget: string, required: false }
+      - *description
+      - *date
+      - *tags
+      - { name: syndication, label: Also on (URLs), widget: list, required: false }
+      - *draft
+      - *body
   - { name: jams, label: Jams, label_singular: Jam, folder: src/posts/jams, create: false, sortable_fields: *by_date, fields: *post_fields }
   - { name: watching, label: Watching, label_singular: Film, folder: src/posts/watching, create: false, sortable_fields: *by_date, fields: *post_fields }
   - { name: reading, label: Reading, label_singular: Book, folder: src/posts/reading, create: false, sortable_fields: *by_date, fields: *post_fields }
