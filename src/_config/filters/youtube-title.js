@@ -9,7 +9,8 @@ export const youtubeTitle = async (slug, fallback = '') => {
   const url = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${slug}&format=json`;
   try {
     const data = await EleventyFetch(url, { duration: '1w', type: 'json' });
-    return data.title || fallback;
+    // ⚠ Some YouTube titles store å/ä/ö as letter + separate accent mark, which our font subsets lack — NFC joins them back.
+    return data.title?.normalize('NFC') || fallback;
   } catch {
     return fallback;
   }
