@@ -27,7 +27,8 @@ collections:
     fields: &post_fields
       - { name: title, label: Title, widget: string }
       - { name: description, label: Description, widget: text, required: false }
-      - { name: date, label: Date, widget: datetime, format: 'YYYY-MM-DDTHH:mm:ssZ' }
+      # ⚠ step: 1 keeps seconds — the default (60) rewrites 21:02:11 as 21:02:00.
+      - { name: date, label: Date, widget: datetime, format: 'YYYY-MM-DDTHH:mm:ssZ', step: 1 }
       - { name: tags, label: Tags, widget: list, required: false }
       - { name: draft, label: Draft, widget: boolean, required: false }
       - { name: body, label: Body, widget: markdown, modes: [raw] }
