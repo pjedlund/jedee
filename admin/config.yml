@@ -1,5 +1,5 @@
 # yaml-language-server: $schema=https://unpkg.com/@sveltia/cms@0.209.1/schema/sveltia-cms.json
-# Sveltia CMS at /admin/ — see _local/design/Reference - Sveltia CMS as the edit layer.md. ⚠ Never add a `category` field: it's inherited from each folder's .json.
+# Sveltia CMS at /admin/ — see _local/design/Reference - Sveltia CMS as the edit layer.md. ⚠ Never add a `category` field: it's inherited from each folder's data file.
 
 backend:
   name: github
@@ -17,25 +17,67 @@ slug:
   lowercase: false
   sanitize_replacement: ' '
 
+# Each type shows only the fields worth editing on a phone; every other key in a post is kept as-is on save. New posts only in notes and articles — the rest come from Micropub or the Web Clipper.
 collections:
   - name: notes
     label: Notes
     label_singular: Note
     folder: src/posts/notes
     create: true
-    # Field order matches the files, so a save doesn't shuffle keys.
+    sortable_fields: &by_date { fields: [date, title], default: { field: date, direction: descending } }
     fields: &post_fields
-      - { name: title, label: Title, widget: string }
-      - { name: description, label: Description, widget: text, required: false }
+      - &title { name: title, label: Title, widget: string }
+      - &description { name: description, label: Description, widget: text, required: false }
       # ⚠ Plain text on purpose: Sveltia's datetime field drops seconds on open (21:02:11 → 21:02:00), whatever its options.
-      - { name: date, label: Date, widget: string, hint: 'YYYY-MM-DD, or YYYY-MM-DDTHH:mm:ss+02:00', pattern: ['^\d{4}-\d{2}-\d{2}', 'Start with YYYY-MM-DD'] }
-      - { name: tags, label: Tags, widget: list, required: false }
-      - { name: draft, label: Draft, widget: boolean, required: false }
-      - { name: body, label: Body, widget: markdown, modes: [raw] }
+      - &date { name: date, label: Date, widget: string, hint: 'YYYY-MM-DD, or YYYY-MM-DDTHH:mm:ss+02:00', pattern: ['^\d{4}-\d{2}-\d{2}', 'Start with YYYY-MM-DD'] }
+      - &tags { name: tags, label: Tags, widget: list, required: false }
+      - &draft { name: draft, label: Draft, widget: boolean, required: false }
+      - &body { name: body, label: Body, widget: markdown, modes: [raw] }
 
-  - name: articles
-    label: Articles
-    label_singular: Article
-    folder: src/posts/articles
-    create: true
-    fields: *post_fields
+  - { name: articles, label: Articles, label_singular: Article, folder: src/posts/articles, create: true, sortable_fields: *by_date, fields: *post_fields }
+  - { name: photos, label: Photos, label_singular: Photo, folder: src/posts/photos, create: false, sortable_fields: *by_date, fields: *post_fields }
+  - { name: jams, label: Jams, label_singular: Jam, folder: src/posts/jams, create: false, sortable_fields: *by_date, fields: *post_fields }
+  - { name: watching, label: Watching, label_singular: Film, folder: src/posts/watching, create: false, sortable_fields: *by_date, fields: *post_fields }
+  - { name: reading, label: Reading, label_singular: Book, folder: src/posts/reading, create: false, sortable_fields: *by_date, fields: *post_fields }
+  - { name: activities, label: Activities, label_singular: Activity, folder: src/posts/activities, create: false, sortable_fields: *by_date, fields: *post_fields }
+  - { name: audio, label: Audio, label_singular: Recording, folder: src/posts/audio, create: false, sortable_fields: *by_date, fields: *post_fields }
+  - { name: videos, label: Videos, label_singular: Video, folder: src/posts/videos, create: false, sortable_fields: *by_date, fields: *post_fields }
+  - { name: events, label: Events, label_singular: Event, folder: src/posts/events, create: false, sortable_fields: *by_date, fields: *post_fields }
+  - { name: recipes, label: Recipes, label_singular: Recipe, folder: src/posts/recipes, create: false, sortable_fields: *by_date, fields: *post_fields }
+
+  # Response types: the shared fields plus the link each one answers.
+  - name: bookmarks
+    label: Bookmarks
+    label_singular: Bookmark
+    folder: src/posts/bookmarks
+    create: false
+    sortable_fields: *by_date
+    fields: [*title, { name: bookmarkOf, label: Bookmarked URL, widget: string }, *description, *date, *tags, *draft, *body]
+  - name: likes
+    label: Likes
+    label_singular: Like
+    folder: src/posts/likes
+    create: false
+    sortable_fields: *by_date
+    fields: [*title, { name: likeOf, label: Liked URL, widget: string }, *description, *date, *tags, *draft, *body]
+  - name: replies
+    label: Replies
+    label_singular: Reply
+    folder: src/posts/replies
+    create: false
+    sortable_fields: *by_date
+    fields: [*title, { name: inReplyTo, label: In reply to (URL), widget: string }, *description, *date, *tags, *draft, *body]
+  - name: reposts
+    label: Reposts
+    label_singular: Repost
+    folder: src/posts/reposts
+    create: false
+    sortable_fields: *by_date
+    fields: [*title, { name: repostOf, label: Reposted URL, widget: string }, *description, *date, *tags, *draft, *body]
+  - name: rsvps
+    label: RSVPs
+    label_singular: RSVP
+    folder: src/posts/rsvps
+    create: false
+    sortable_fields: *by_date
+    fields: [*title, { name: inReplyTo, label: Event URL, widget: string }, { name: rsvp, label: RSVP, widget: select, options: ['yes', 'no', 'maybe', 'interested'], required: false }, *description, *date, *tags, *draft, *body]
