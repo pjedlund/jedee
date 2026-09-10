@@ -1,6 +1,6 @@
 ---
 title: Nine
-draft: true
+draft: false
 date: 2026-08-28T20:07:58+02:00
 artist: "[[Russian Circles]]"
 album: Nine
@@ -26,7 +26,7 @@ Russian Circles hits it out of the park for the ninth time. Despite deceptively 
 
 The engineering is fantastic and I don't think I ever heard a better sound. The album was recorded by [[Aimless Arrow|Kurt Ballou]] at the late legendary [[Didn't We Deserve a Look at You the Way You Really Are|Steve Albini]]'s [Electrical Audio](https://www.electricalaudio.com/) in Chicago.
 
-Russian Circles has a humble and sympathetic attitude that shines through in interviews. They have stated that they avoid lyrics since it is a way to force a narrative on the listener. 
+Russian Circles has a humble and sympathetic attitude that shines through in interviews. They have stated that they avoid lyrics since it is a way to force a narrative on the listener.
 
 > Without vocals, we can share an emotion, but not a context or a lyrical theme. Anger is an authentic emotion, and if you can resonate with that, great—because it's not fake. It's not like, oh, we're trying to be intense.
 >
