@@ -148,6 +148,88 @@ colorGroups:
     </ul>
   </section>
 
+  <section class="type-features | flow region">
+    <h2 class="heading-line">Type features</h2>
+    <p>Typographic defaults from Bringhurst's <cite>The Elements of Typographic Style</cite> and Butterick's <cite>Practical Typography</cite>. Each pair shows the plain setting, then the site's.</p>
+
+    <div class="flow">
+      <h3>Old-style figures</h3>
+      <p>Running text (<code>.prose</code>) sets old-style, proportional figures, which sit with lowercase letters. Tables, acronyms and code keep lining figures.</p>
+      <div class="grid" data-layout="50-50">
+        <div class="type-sample | flow">
+          <p class="type-sample-label">Plain</p>
+          <p>Founded in 1994, the W3C made CSS 2.1 a Recommendation in 2011. Code keeps its own figures: <code>--tracking-wide: 0.12ch</code>.</p>
+        </div>
+        <div class="type-sample | flow prose">
+          <p class="type-sample-label">Site</p>
+          <p>Founded in 1994, the <abbr title="World Wide Web Consortium">W3C</abbr> made CSS 2.1 a Recommendation in 2011. Code keeps its own figures: <code>--tracking-wide: 0.12ch</code>.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow">
+      <h3>Small caps</h3>
+      <p>The <code>.small-caps</code> class, by hand, for the opening words of an article or a name. Letterspaced, and never faked in italic, which has no small caps.</p>
+      <div class="grid" data-layout="50-50">
+        <div class="type-sample | flow">
+          <p class="type-sample-label">Plain</p>
+          <p>The opening words of an article, or a name such as Robert Bringhurst.</p>
+        </div>
+        <div class="type-sample | flow">
+          <p class="type-sample-label">Site</p>
+          <p><span class="small-caps">The opening words</span> of an article, or a name such as <span class="small-caps">Robert Bringhurst</span>.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow">
+      <h3>Captions and quotes</h3>
+      <p>Captions and quotes are balanced so their lines come out even, not ending on one word. Short captions are italic and centred; long wiki captions are upright and left-aligned.</p>
+      <div class="grid" data-layout="50-50">
+        <div class="type-sample | flow">
+          <p class="type-sample-label">Plain</p>
+          <figure><figcaption style="text-wrap: pretty">A caption long enough to run onto a second line under its picture, where the last word used to sit on its own.</figcaption></figure>
+          <blockquote style="text-wrap: pretty">Simple is almost always more effective than complex, and short.</blockquote>
+        </div>
+        <div class="type-sample | flow">
+          <p class="type-sample-label">Site</p>
+          <figure><figcaption>A caption long enough to run onto a second line under its picture, where the last word used to sit on its own.</figcaption></figure>
+          <blockquote>Simple is almost always more effective than complex, and short.</blockquote>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow">
+      <h3>Capital labels</h3>
+      <p>Strings of capitals are letterspaced 5–10% of the size: <code>--tracking-wide</code> is 0.12ch, about 5.7%.</p>
+      <div class="grid" data-layout="50-50">
+        <div class="type-sample | flow">
+          <p class="type-sample-label">Before (0.09ch)</p>
+          <p class="type-caps" style="letter-spacing: 0.09ch">Articles · Notes · Photos</p>
+        </div>
+        <div class="type-sample | flow">
+          <p class="type-sample-label">Site</p>
+          <p class="type-caps">Articles · Notes · Photos</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow">
+      <h3>Footnote numbers</h3>
+      <p>The font's own superscript figures, bare, rather than a shrunken, raised number in brackets. They don't push the lines apart.</p>
+      <div class="grid" data-layout="50-50">
+        <div class="type-sample | flow">
+          <p class="type-sample-label">Plain</p>
+          <p>A claim that needs a source.<sup>[1]</sup> The next line keeps its spacing, or doesn't.</p>
+        </div>
+        <div class="type-sample | flow">
+          <p class="type-sample-label">Site</p>
+          <p>A claim that needs a source.<sup class="footnote-ref">1</sup> The next line keeps its spacing, or doesn't.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <div class="full sizes | section">
     <section class="section__inner wrapper flow region">
       <h2 class="heading-line">Sizes</h2>
@@ -213,4 +295,5 @@ colorGroups:
 {%- css "local" -%}
   {%- include 'css/styleguide.css' -%}
   {%- include 'css/table.css' -%}
+  {%- include 'css/footnotes.css' -%}
 {%- endcss -%}

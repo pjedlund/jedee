@@ -56,6 +56,25 @@
   border: var(--stroke);
 }
 
+.styleguide .type-sample {
+  padding: var(--space-s-m);
+  background-color: var(--spot-color);
+  border-radius: var(--border-radius-medium);
+}
+
+.styleguide .type-sample-label {
+  font-size: var(--size-step-min-2);
+  color: var(--color-text-accent);
+}
+
+/* Mirrors the site's capital labels (site-logo, breadcrumb, buttons). */
+.styleguide .type-caps {
+  font-size: var(--size-step-min-2);
+  font-weight: var(--font-bold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
 .styleguide .space {
   background-color: var(--color-text);
   display: block;

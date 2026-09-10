@@ -27,6 +27,14 @@ _log.md is a run of dated records whose h2 is the whole record — "[2026-08-29]
   border-block-start: var(--border-thickness) solid var(--color-bg-accent-2);
 }
 
+/* Wiki captions run to 400 characters, so they are set upright, left-aligned and held to a measure; the site's short captions stay italic and centred. */
+.prose figcaption {
+  font-style: normal;
+  text-align: start;
+  text-wrap: pretty;
+  max-inline-size: 60ch;
+}
+
 /*
 MOCKUP SHOTS
 Shots whose subject has its own rounded, transparent corners — a device frame, a specimen card. Prose's image hairline and radius trace the PNG's bounding box and draw a second, squared box around it. Opt out per figure or figure group with data-wiki-mockup.

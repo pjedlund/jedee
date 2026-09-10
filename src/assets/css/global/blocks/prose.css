@@ -3,6 +3,22 @@
 .prose {
   --flow-space: var(--space-m-l);
   --wrapper-width: 64rem;
+
+  /* Old-style figures in running text (Bringhurst 3.2.1); the three rules below put lining figures back where digits meet columns, capitals or code. */
+  font-variant-numeric: oldstyle-nums proportional-nums;
+}
+
+.prose table {
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.prose abbr {
+  font-variant-numeric: lining-nums proportional-nums;
+}
+
+/* ⚠ Source Code Pro has old-style figures too, so code would inherit them. */
+.prose :is(code, kbd, samp, pre) {
+  font-variant-numeric: normal;
 }
 
 .prose :is(pre, pre + *, figure, picture) {
@@ -37,6 +53,11 @@
 .prose :is(p, li, dl, blockquote) {
   max-inline-size: 60ch;
   text-wrap: pretty;
+}
+
+/* Quotes balance, as in global-styles; this outranks the pretty rule above. */
+.prose :is(blockquote, blockquote p) {
+  text-wrap: balance;
 }
 
 .prose .heading-anchor:where(:hover, :focus) {

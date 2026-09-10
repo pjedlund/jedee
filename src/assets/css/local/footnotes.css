@@ -2,16 +2,18 @@
   font-size: var(--size-step-min-1);
 }
 
+/* The font's own superscript figures, so the line spacing stays even; markdown.js drops the brackets they don't cover. ⚠ Chrome and Safari draw no fakes, so while Arial shows the number sits full size. */
 .footnote-ref {
-  font-size: var(--size-step-min-2);
-  vertical-align: super;
+  font-variant-position: super;
+  font-size: inherit;
+  vertical-align: baseline;
   margin-inline-start: 0.1ch;
   color: var(--color-text-accent);
 }
 
 .footnote-ref a {
   text-decoration: none;
-  padding: 0.3ch;
+  padding-block: 0.3ch;
 }
 
 .footnote-backref {

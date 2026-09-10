@@ -64,6 +64,12 @@ blockquote {
   font-size: var(--size-step-2);
 }
 
+/* Quotes are short blocks of big text: even out their lines (Chrome stops balancing above six). */
+blockquote,
+blockquote p {
+  text-wrap: balance;
+}
+
 blockquote > * + * {
   margin-block-start: var(--space-m-l);
 }
@@ -113,6 +119,8 @@ figcaption {
   padding-block-end: var(--space-xs);
   /* text-emphasis: dot closed; */
   font-style: italic;
+  /* Centred lines of even length, so a two-line caption doesn't end on one word. */
+  text-wrap: balance;
 }
 
 /* figcaption:after {
