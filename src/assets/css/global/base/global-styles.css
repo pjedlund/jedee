@@ -64,11 +64,18 @@ blockquote {
   font-size: var(--size-step-2);
 }
 
+/* Quotes are short blocks of big text: even out their lines (Chrome stops balancing above six). */
+blockquote,
+blockquote p {
+  text-wrap: balance;
+}
+
 blockquote > * + * {
   margin-block-start: var(--space-m-l);
 }
 
-blockquote :last-child {
+/* The source line. ⚠ `>` keeps it off the line's own last child, which unset the italic of a closing *Title*. */
+blockquote > :last-child {
   font-family: var(--font-base);
   font-style: normal;
   font-size: var(--size-step-1);
@@ -113,6 +120,8 @@ figcaption {
   padding-block-end: var(--space-xs);
   /* text-emphasis: dot closed; */
   font-style: italic;
+  /* Centred lines of even length, so a two-line caption doesn't end on one word. */
+  text-wrap: balance;
 }
 
 /* figcaption:after {

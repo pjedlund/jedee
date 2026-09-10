@@ -5,6 +5,26 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-10] enrich | Typographic conventions
+
+Four figure classes added at Johan's request: `.fraction`, `.slashed-zero`, `.lining-nums` and `.tabular-nums`. They are built to combine: each fills a custom-property slot and one rule joins the slots, and `.prose`'s old-style default moved onto the same slots. Three traps, each caught by checking the rendered page rather than the CSS:
+- ⚠ Three of the names are also Tailwind classes. The content scan generated Tailwind's versions into the later `tailwindUtilities` layer, where they replaced the value. Tailwind's `fontVariantNumeric` plugin is now off, and [[Tailwind]] records it.
+- ⚠ Source Sans' `frac` changes every digit, full stop, comma and parenthesis it covers.
+- ⚠ Its old-style zero has no slashed form.
+
+The style guide also gained a Blockquotes section. `blockquote :last-child` became `blockquote > :last-child`, because the old form also matched the last element *inside* the source line and removed the italic from a closing title.
+
+## [2026-09-10] ingest | Typographic conventions
+
+A new page, from the session that turned the [[OpenType features]] inventory into site defaults. The general half covers Bringhurst's rules (2.1.6, 3.2.1, 3.2.2, via webtypography.net) and Butterick's milder versions for figures, small caps, capitals and letterspacing, plus captions and italic, line breaks, superscripts and accessibility. Every source is dated, and the unread dyslexia paper is marked unconfirmed. In jedee:
+- old-style proportional figures in `.prose`, with lining figures set back in tables, `abbr` and code (⚠ Source Code Pro has `onum` too);
+- one `.small-caps` class;
+- `--tracking-wide` raised to Bringhurst's range;
+- balanced captions and quotes, with upright, left-aligned wiki captions;
+- bare footnote markers drawn with the font's own superscripts. ⚠ The Source Sans subset has superscript digits but no superscript brackets, so `[1]` had to lose its brackets.
+
+Two measured corrections along the way: the planned lining reset on the event date badge did nothing (the cards sit outside `.prose`) and was removed, and the footnote link's `0.3ch` padding, sized for the old smaller number, opened a gap at full size. [[OpenType features]] updated (the activity stats' `tabular-nums` now does work) and [[Text wrapping]] extended. Earned links to [[Abbreviations]] and [[Text wrapping]]. Source is a new dev note, `How the typographic defaults were chosen`.
+
 ## [2026-09-10] ingest | OpenType features
 
 New page, plus the first figures for [[Font subsetting]] and [[Line length]]. The inventory is of the shipped subsets, not the families, in three passes: GSUB features and the characters each acts on, read with fontTools; source and target outlines compared, so "the feature exists" and "it changes the shape" are separate claims; and every feature rendered off and on in `_sources/opentype-features.html`, with `mockups:check` confirming all 18 pairs differ. ⚠ **Both families have tabular figures by default**, so the site's two `tabular-nums` rules change nothing. ⚠ Source Sans italic has no small caps anywhere, and asking gets synthesized ones. Source Serif's full-font stylistic sets are Cyrillic, correctly dropped. Source Sans' `dlig` carries thorn abbreviations and a pronoun substitution (`she`/`he` → a glyph named `t_h_e_y`): Sarah Gephart's 2018 gender-neutral pronoun glyph, added to the family by Paul Hunt, the written-only counterpart of Swedish *hen*. The subsetting figure uses the real pre-fix file, kept in `_sources/fonts-before/`; the line-length figure counts its own rendered lines. ⚠ Re-running `npm run mockups` rewrote 13 unrelated figures; they were restored, not committed. Earned links to [[Font subsetting]] and [[Layout shift]]. Source is a new dev note, `How the fonts' OpenType features were inventoried`.

@@ -53,6 +53,12 @@ export const markdownLib = markdownIt({
   .use(markdownitMark)
   .use(markdownitAbbr)
   .use(md => {
+    // Bare footnote numbers: the fonts' superscript figures have no brackets (see footnotes.css).
+    md.renderer.rules.footnote_caption = (tokens, idx) => {
+      const {id, subId} = tokens[idx].meta;
+      return `${id + 1}${subId > 0 ? `:${subId}` : ''}`;
+    };
+
     md.renderer.rules.image = (tokens, idx) => {
       const token = tokens[idx];
       const src = token.attrGet('src');

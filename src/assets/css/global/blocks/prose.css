@@ -3,6 +3,31 @@
 .prose {
   --flow-space: var(--space-m-l);
   --wrapper-width: 64rem;
+
+  /* Old-style figures in running text (Bringhurst 3.2.1), set as slots so the numerals utilities add to them rather than replace them. */
+  --nums-figure: oldstyle-nums;
+  --nums-spacing: proportional-nums;
+}
+
+/* ⚠ Same slot list as utilities/numerals.css; every element that changes a slot must redeclare it, or it inherits .prose's value. */
+.prose,
+.prose :is(table, abbr) {
+  font-variant-numeric: var(--nums-figure,) var(--nums-spacing,) var(--nums-fraction,) var(--nums-zero,);
+}
+
+/* Lining figures back where digits meet columns or capitals. */
+.prose table {
+  --nums-figure: lining-nums;
+  --nums-spacing: tabular-nums;
+}
+
+.prose abbr {
+  --nums-figure: lining-nums;
+}
+
+/* ⚠ Source Code Pro has old-style figures too, so code would inherit them. */
+.prose :is(code, kbd, samp, pre) {
+  font-variant-numeric: normal;
 }
 
 .prose :is(pre, pre + *, figure, picture) {
@@ -37,6 +62,11 @@
 .prose :is(p, li, dl, blockquote) {
   max-inline-size: 60ch;
   text-wrap: pretty;
+}
+
+/* Quotes balance, as in global-styles; this outranks the pretty rule above. */
+.prose :is(blockquote, blockquote p) {
+  text-wrap: balance;
 }
 
 .prose .heading-anchor:where(:hover, :focus) {
