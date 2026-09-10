@@ -45,14 +45,14 @@ The sixteenth type is the only one whose URL is not the slug alone. Its filename
 
 A post that carries its own images can live in a folder of its own, EE's page-bundle layout. **The slug still comes from the `.md` filename** — Eleventy's `page.fileSlug` is the file's, not the folder's.
 
-`src/posts/reading/` has exactly one, and it shows the difference clearly:
+`src/posts/reading/` had exactly one, and it showed the difference clearly:
 
 ```
 Drottningar i Kungahalla/                        ← folder, ASCII
   Drottningar i Kungahälla - Selma Lagerlöf.md   ← file, umlauts + author
 ```
 
-The URL comes out of the file: `/reading/drottningar-i-kungahalla-selma-lagerlof/`. The folder name is free to differ, and here it does. Worth knowing before renaming a folder in the hope of changing a URL — it won't.
+The URL came out of the file: `/reading/drottningar-i-kungahalla-selma-lagerlof/`. The folder name was free to differ, and did. On 2026-09-10 the file moved up into `reading/` so Sveltia CMS could list it, and the URL stayed the same, which confirms the rule. Worth knowing before renaming a folder in the hope of changing a URL — it won't. ⚠ Sveltia only lists files directly in a collection's folder unless the collection sets `nested`, so a bundle folder hides its post from the phone editor.
 
 ## Redirects when a URL does change
 
