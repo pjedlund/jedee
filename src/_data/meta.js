@@ -157,3 +157,4 @@ export const viewRepo = {
   issuesPage: 'Report accessibility issues'
 };
 export const easteregg = switches.easteregg;
+export const eastereggKeyword = switches.eastereggKeyword; // empty = the starter's "eleventy" and "excellent"

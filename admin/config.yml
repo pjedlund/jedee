@@ -176,7 +176,8 @@ singletons:
         fields:
           - { name: breadcrumb, label: Breadcrumb, widget: boolean, hint: 'On: the trail in the header. Off: logomark + wordmark' }
           - { name: nameReveal, label: Name reveal, widget: boolean, hint: 'Start page only: the wordmark types in beside the logomark, blinks twice, backspaces away' }
-          - { name: easteregg, label: Easter egg, widget: boolean }
+          - { name: easteregg, label: Easter egg, widget: boolean, hint: 'Typing the trigger word anywhere on a page (not in a field) sets off confetti; never for visitors who ask for reduced motion' }
+          - { name: eastereggKeyword, label: Easter egg trigger word, widget: string, required: false, hint: 'Letters and spaces; case does not matter. Empty = "eleventy" and "excellent"' }
           - { name: viewRepo, label: View on GitHub link, widget: boolean }
       - name: wiki
         label: Wiki

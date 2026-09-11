@@ -56,7 +56,7 @@
     {% include "partials/footer.njk" %}
     {%- if meta.easteregg -%}
       <script type="module" src="/assets/scripts/components/custom-easteregg.js"></script>
-      <custom-easteregg></custom-easteregg>
+      <custom-easteregg{% if meta.eastereggKeyword %} keyword="{{ meta.eastereggKeyword }}"{% endif %}></custom-easteregg>
     {%- endif -%}
     <script>
       if ('serviceWorker' in navigator) {
