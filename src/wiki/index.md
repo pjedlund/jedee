@@ -85,6 +85,8 @@ The private wiki documenting web techniques and how jedee is designed and built.
 
 ## Recent additions
 
+**2026-09-11** — enrich: **[[Sveltia CMS]]** gains "Single files, pickers and filters": ⚠ a single-file entry drops every comment on save (so `settings.yaml` has none), two entries must not share a file, and a picker reaches one collection only, so Featured asks for the type first. What a pick saves for a post in a subfolder, and the `filter` option behind the Pages list.
+
 **2026-09-11** — ingest: **[[Sveltia CMS]]**, from the setup record of the edit layer. The general part: a git-based CMS, and why keeping undeclared front matter keys is the property that decides whether one can be used. In jedee: all 16 types, the five traps found by real saves, the two sign-in routes, and the round-trip script that checks a config change before anything is saved.
 
 **2026-09-10** — enrich: **[[Typographic conventions]]** gains an Ordinals section. Figures on the baseline (Butterick), and when to spell out under Chicago, AP and Swedish rules. jedee follows Chicago and has no `.ordinal` class. ⚠ Source Sans' `ordn` raises every lowercase letter it covers, so a raised suffix would go through `font-variant-position: super` on the suffix only.

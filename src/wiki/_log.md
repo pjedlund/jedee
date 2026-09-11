@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-11] enrich | Sveltia CMS
+
+A new subsection from the afternoon's work on Site settings, Featured, Now and Pages: singletons drop every comment on save (checked in `file/parse.js` and `file/format.js`), two entries sharing one file would re-sort each other, a relation field reaches one collection so Featured uses a list with `types:`, a relation saves a subfolder post as its path inside the folder (`getSlug` falls back to the sub-path), `resolvePicks` stops the build on a missing pick, and `filter` limits Pages to `layout: page`. No new links. Source: this session, and the reference doc in `_local/design/`.
+
 ## [2026-09-11] ingest | Sveltia CMS
 
 A new page on the edit layer, set up on 2026-09-10. General part: what a git-based CMS is (Netlify → Decap → Sveltia) and why keeping undeclared front matter keys is the deciding property, checked in the source because the docs rarely say. In jedee: the config shape, then five traps each found by a real save (datetime drops seconds, subfolders need `nested`, body required by default, object fields keep undeclared subkeys, punctuation in new filenames), GitHub sign-in through Netlify with `public_repo`, and `_local/tests/sveltia-roundtrip.mjs`. Links to Micropub, Web Clipper templates, The authoring tool decides the data model, Permalinks and Obsidian-friendly filenames, and Hosting large originals off-repo. Sources: the Sveltia clip in `src/_raw/` and the reference doc in `_local/design/`.
