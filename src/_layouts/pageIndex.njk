@@ -6,3 +6,23 @@ layout: base
   <h1><span lang="sv">Hej hej!</span> I’m Johan.</h1>
   {{ content | safe }}
 </div>
+
+{# Featured: the first post of settings.yaml → featured, drawn with its own archive's card. Activities have no archive card, so they borrow the article card. #}
+{% set featuredCards = {
+  article: "card-blog.njk", note: "card-note.njk", photo: "card-photo.njk", jam: "card-jam.njk",
+  watching: "card-watching.njk", reading: "card-reading.njk", audio: "card-audio.njk", video: "card-video.njk",
+  event: "card-event.njk", recipe: "card-recipe.njk", activity: "card-blog.njk",
+  bookmark: "card-response.njk", like: "card-response.njk", reply: "card-response.njk", repost: "card-response.njk", rsvp: "card-response.njk"
+} %}
+{# Soft-launch: hidden in production (settings.yaml → switches.hideFeatured), always shown in `eleventy --serve`, like the main nav. #}
+{% if collections.featured.length and ((not settings.switches.hideFeatured) or (eleventy.env.runMode === "serve")) %}
+  <section class="region wrapper prose-wrapper flow" aria-labelledby="featured-heading">
+    <h2 id="featured-heading">Featured</h2>
+    <custom-masonry layout="33-33-33">
+      {% asyncEach item in collections.featured.slice(0, 1) %}
+        {% set headingLevel = "h3" %}
+        {% include "partials/" + featuredCards[item.data.category] %}
+      {% endeach %}
+    </custom-masonry>
+  </section>
+{% endif %}
