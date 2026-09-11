@@ -33,6 +33,7 @@ collections:
       # ⚠ Plain text on purpose: Sveltia's datetime field drops seconds on open (21:02:11 → 21:02:00), whatever its options.
       - &date { name: date, label: Date, widget: string, hint: 'YYYY-MM-DD, or YYYY-MM-DDTHH:mm:ss+02:00', pattern: ['^\d{4}-\d{2}-\d{2}', 'Start with YYYY-MM-DD'] }
       - &tags { name: tags, label: Tags, widget: list, required: false }
+      - &syndication { name: syndication, label: Also on (URLs), widget: list, required: false, hint: 'One URL per line — shown as "Also on" at the foot of the post' }
       - &draft { name: draft, label: Draft, widget: boolean, required: false }
       - &body { name: body, label: Body, widget: markdown, modes: [raw], required: false }
 
@@ -62,7 +63,7 @@ collections:
       - *description
       - *date
       - *tags
-      - { name: syndication, label: Also on (URLs), widget: list, required: false }
+      - *syndication
       - *draft
       - *body
   # Depth 2 = new jams plus the This Is My Jam archive in `thisismyjam/`, shown as a folder tree.
@@ -83,14 +84,69 @@ collections:
       - { name: cover, label: Cover, widget: image, required: false, media_folder: /src/assets/images/listening, public_folder: /assets/images/listening }
       - { name: coverAlt, label: Cover alt text, widget: string, required: false, hint: 'Leave empty for "Cover for <title>"' }
       - { name: genre, label: Genre, widget: list, required: false, hint: 'One per line, as [[post-rock]] so Obsidian links it; reuse a genre from /jams/genres/ where one fits' }
+      - *syndication
       - *draft
       - *body
-  - { name: watching, label: Watching, label_singular: Film, folder: src/posts/watching, thumbnail: cover, create: false, sortable_fields: *by_date, fields: *post_fields }
-  - { name: reading, label: Reading, label_singular: Book, folder: src/posts/reading, thumbnail: cover, create: false, sortable_fields: *by_date, fields: *post_fields }
+  - name: watching
+    label: Watching
+    label_singular: Film
+    folder: src/posts/watching
+    thumbnail: cover
+    create: false
+    sortable_fields: *by_date
+    fields:
+      - *title
+      - { name: scoreMy, label: My rating, widget: number, value_type: float, min: 0.5, max: 5, step: 0.5, required: false, hint: 'Out of 5, halves allowed (like Letterboxd)' }
+      - *description
+      - *date
+      - *tags
+      - { name: cover, label: Cover, widget: image, required: false, media_folder: /src/assets/images/watching, public_folder: /assets/images/watching }
+      - *syndication
+      - *draft
+      - *body
+  - name: reading
+    label: Reading
+    label_singular: Book
+    folder: src/posts/reading
+    thumbnail: cover
+    create: false
+    sortable_fields: *by_date
+    fields:
+      - *title
+      - *description
+      - *date
+      - *tags
+      - { name: cover, label: Cover, widget: image, required: false, media_folder: /src/assets/images/reading, public_folder: /assets/images/reading }
+      - *syndication
+      - *draft
+      - *body
   - { name: activities, label: Activities, label_singular: Activity, folder: src/posts/activities, thumbnail: cover, create: false, sortable_fields: *by_date, fields: *post_fields }
   - { name: audio, label: Audio, label_singular: Recording, folder: src/posts/audio, create: false, sortable_fields: *by_date, fields: *post_fields }
   - { name: videos, label: Videos, label_singular: Video, folder: src/posts/videos, create: false, sortable_fields: *by_date, fields: *post_fields }
-  - { name: events, label: Events, label_singular: Event, folder: src/posts/events, create: false, sortable_fields: *by_date, fields: *post_fields }
+  - name: events
+    label: Events
+    label_singular: Event
+    folder: src/posts/events
+    create: false
+    sortable_fields: *by_date
+    fields:
+      - *title
+      # ⚠ start/end are plain text for the same reason as `date`: the datetime field drops seconds.
+      - name: event
+        label: Event
+        widget: object
+        fields:
+          - { name: start, label: Starts, widget: string, hint: 'YYYY-MM-DDTHH:mm:ss+02:00', pattern: ['^\d{4}-\d{2}-\d{2}', 'Start with YYYY-MM-DD'] }
+          - { name: end, label: Ends, widget: string, required: false, hint: 'YYYY-MM-DDTHH:mm:ss+02:00', pattern: ['^\d{4}-\d{2}-\d{2}', 'Start with YYYY-MM-DD'] }
+          - { name: location, label: Location, widget: string, required: false }
+          - { name: url, label: Event page (URL), widget: string, required: false }
+          - { name: status, label: Status, widget: select, required: false, hint: 'Anything but scheduled shows as a badge', options: [scheduled, cancelled, postponed, rescheduled, moved-online] }
+      - *description
+      - *date
+      - *tags
+      - *syndication
+      - *draft
+      - *body
   - { name: recipes, label: Recipes, label_singular: Recipe, folder: src/posts/recipes, thumbnail: cover, create: false, sortable_fields: *by_date, fields: *post_fields }
 
   # Response types: the shared fields plus the link each one answers.
@@ -100,35 +156,35 @@ collections:
     folder: src/posts/bookmarks
     create: false
     sortable_fields: *by_date
-    fields: [*title, { name: bookmarkOf, label: Bookmarked URL, widget: string }, *description, *date, *tags, *draft, *body]
+    fields: [*title, { name: bookmarkOf, label: Bookmarked URL, widget: string }, *description, *date, *tags, *syndication, *draft, *body]
   - name: likes
     label: Likes
     label_singular: Like
     folder: src/posts/likes
     create: false
     sortable_fields: *by_date
-    fields: [*title, { name: likeOf, label: Liked URL, widget: string }, *description, *date, *tags, *draft, *body]
+    fields: [*title, { name: likeOf, label: Liked URL, widget: string }, *description, *date, *tags, *syndication, *draft, *body]
   - name: replies
     label: Replies
     label_singular: Reply
     folder: src/posts/replies
     create: false
     sortable_fields: *by_date
-    fields: [*title, { name: inReplyTo, label: In reply to (URL), widget: string }, *description, *date, *tags, *draft, *body]
+    fields: [*title, { name: inReplyTo, label: In reply to (URL), widget: string }, *description, *date, *tags, *syndication, *draft, *body]
   - name: reposts
     label: Reposts
     label_singular: Repost
     folder: src/posts/reposts
     create: false
     sortable_fields: *by_date
-    fields: [*title, { name: repostOf, label: Reposted URL, widget: string }, *description, *date, *tags, *draft, *body]
+    fields: [*title, { name: repostOf, label: Reposted URL, widget: string }, *description, *date, *tags, *syndication, *draft, *body]
   - name: rsvps
     label: RSVPs
     label_singular: RSVP
     folder: src/posts/rsvps
     create: false
     sortable_fields: *by_date
-    fields: [*title, { name: inReplyTo, label: Event URL, widget: string }, { name: rsvp, label: RSVP, widget: select, options: ['yes', 'no', 'maybe', 'interested'], required: false }, *description, *date, *tags, *draft, *body]
+    fields: [*title, { name: inReplyTo, label: Event URL, widget: string }, { name: rsvp, label: RSVP, widget: select, options: ['yes', 'no', 'maybe', 'interested'], required: false }, *description, *date, *tags, *syndication, *draft, *body]
 
   # Pages with layout: page (About, Accessibility, …). ⚠ Their Nunjucks tags (e.g. {{ personal.address }}) are kept as typed in the plain markdown body; new pages are made on the laptop, since they need a permalink.
   - name: pages

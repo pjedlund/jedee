@@ -10,7 +10,7 @@ myUrl:
 director:
   - "[[Mauritz Stiller]]"
 scoreImdb: 7.1
-scoreMy: "8"
+scoreMy: 4
 cast:
   - "[[Erik Stocklassa]]"
   - "[[Bror Berger]]"
