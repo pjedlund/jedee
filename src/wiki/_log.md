@@ -7,6 +7,10 @@ Append-only. One entry per ingest / query-filed / lint, newest first. Entry form
 
 ## [2026-09-11] enrich | Sveltia CMS
 
+"Fields for one type": a `select` with number values saves real numbers (the film star rating, checked with Johan's test save), make stored values agree before adding a number field, nested event dates stay plain text for the seconds, per-type image folders for covers, and an empty undeclared key saves as `null`. The shared fields gained "Also on". One new link, [[Self-hosting remote images at build time]]. Source: this session.
+
+## [2026-09-11] enrich | Sveltia CMS
+
 A new subsection from the afternoon's work on Site settings, Featured, Now and Pages: singletons drop every comment on save (checked in `file/parse.js` and `file/format.js`), two entries sharing one file would re-sort each other, a relation field reaches one collection so Featured uses a list with `types:`, a relation saves a subfolder post as its path inside the folder (`getSlug` falls back to the sub-path), `resolvePicks` stops the build on a missing pick, and `filter` limits Pages to `layout: page`. No new links. Source: this session, and the reference doc in `_local/design/`.
 
 ## [2026-09-11] ingest | Sveltia CMS

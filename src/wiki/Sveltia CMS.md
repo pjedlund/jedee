@@ -31,7 +31,7 @@ Declaring fields in the order most files already use keeps the first diff small.
 
 Live at `/admin/` since 2026-09-10 (`admin/index.html` and `admin/config.yml`, copied through unchanged, `noindex`), pinned to `@sveltia/cms@0.209.1`, saving straight to `main`. It is the third way content gets into the site: [[Micropub]] creates posts from a phone, the [[Web Clipper templates|Web Clipper]] captures them from a source page, and Sveltia edits existing ones. It is also the only phone route for the post types Micropub doesn't handle (audio, video, event, recipe). Neither Eleventy Excellent nor indiee ships a CMS, so all of this is jedee's own.
 
-All 16 post types are configured. Each shows a shared set of fields (title, description, date, tags, draft, body), response types add their link field, and photos and jams have a few more. New posts can only be created in notes and articles; everything else starts from Micropub or the clipper, which already know each type's shape (see [[The authoring tool decides the data model]]). `category` is never declared, because each folder's data file sets it and posts don't carry it.
+All 16 post types are configured. Each shows a shared set of fields (title, description, date, tags, "Also on" links, draft, body), response types add their link field, and photos, jams, films, books and events have a few more (see "Fields for one type" below). New posts can only be created in notes and articles; everything else starts from Micropub or the clipper, which already know each type's shape (see [[The authoring tool decides the data model]]). `category` is never declared, because each folder's data file sets it and posts don't carry it.
 
 ```yaml
 backend:
@@ -68,6 +68,21 @@ Besides the post folders, the sidebar has three single-file entries, which Svelt
 - **What a relation saves for a post in a subfolder** is its path inside the collection's folder, without `.md`: `thisismyjam/BBC Live Session`, or `2024/<title>` for an article. When the collection has no `path` template, Sveltia's `getSlug` falls back to the whole sub-path, so the build can find the file as `src/posts/<type>/<post>.md`. One function, `resolvePicks` in `collections.js`, turns picks into posts for both pages. ⚠ It stops the build when a pick's file is missing, so a renamed post can't quietly disappear, and it leaves drafts out of production.
 - **`filter: { field: layout, value: page }`** limits the Pages collection to ordinary pages, so `now.md` (layout `now`) only appears under its own entry.
 
+### Fields for one type
+
+The shared fields are YAML anchors (`&title`, `&syndication`, …), so a type with extra fields lists the shared ones by name (`*title`) and adds its own between them. Three things came up adding a film rating, covers and event details:
+
+- **A dropdown can save numbers.** Sveltia has no star-rating field, but a `select` whose option values are numbers saves the number itself, while the labels can be anything. The film rating (`scoreMy`) shows ½ to ★★★★★ and writes `scoreMy: 3.5`, unquoted (checked with a real save on 2026-09-11). A `number` field would work too, but it shows a bare box to type in.
+  ```yaml
+  - { name: scoreMy, label: My rating, widget: select, required: false,
+      options: [{ label: '★★★', value: 3 }, { label: '★★★½', value: 3.5 }, …] }
+  ```
+  ⚠ Before adding a number field, make the stored values agree. The films had `7`, `"4"` and `"3.5"` side by side, a 10-point and a 5-point scale mixed, and a quoted number is text to YAML. They were brought onto one scale first.
+- ⚠ **A nested date needs the same plain text field as `date`.** An event's `event.start` and `event.end` are `string` fields inside an `object` field, with the same pattern as `date`, because the datetime field would drop their seconds too. The status is a `select` of the values the status badge's CSS already knows.
+- **An image field per type.** Film and book covers use `widget: image` with their own `media_folder`/`public_folder`, so an upload lands beside that type's other local covers. A pasted remote URL is kept as it is and self-hosted at build (see [[Self-hosting remote images at build time]]).
+
+An empty undeclared key (`myUrl:`) comes back from a save as `myUrl: null`. Eleventy reads both as `null`, so nothing on the site changes.
+
 ### Signing in
 
 There are two ways in, both through GitHub:
@@ -77,6 +92,6 @@ There are two ways in, both through GitHub:
 
 ### How changes are checked
 
-Adding a field is checked before anything is saved for real. `_local/tests/sveltia-roundtrip.mjs` reproduces Sveltia's first save for every post, using the same YAML library and settings and reading the field lists from `admin/config.yml`. It then checks what Eleventy reads back. It matched real saves from the admin byte for byte: a note, a photo, an RSVP, a jam and a year-folder article. Its `--write-all` mode rewrites every post for a full before/after build, and on the first run no page changed. Rerun it after adding any field. It still only warns on `number`, `image` and lists of objects, which the config doesn't use yet.
+Adding a field is checked before anything is saved for real. `_local/tests/sveltia-roundtrip.mjs` reproduces Sveltia's first save for every post, using the same YAML library and settings and reading the field lists from `admin/config.yml`. It then checks what Eleventy reads back. It matched real saves from the admin byte for byte: a note, a photo, an RSVP, a jam and a year-folder article. Its `--write-all` mode rewrites every post for a full before/after build, and on the first run no page changed. Rerun it after adding any field. It handles `number` fields and number-valued dropdowns, and still only warns on lists of objects.
 
 Raw source: `src/_raw/Getting Started  Sveltia CMS.md`, and the setup record `_local/design/Reference - Sveltia CMS as the edit layer.md` (§2, §4, §6), read on 2026-09-11.
