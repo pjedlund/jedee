@@ -10,7 +10,7 @@ watching:
 reading:
   - A Confession
   - The Kingdom of God is Within You
-draft: true
+draft: false
 layout: now
 permalink: /now/index.html
 tags:
