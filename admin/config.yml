@@ -96,8 +96,9 @@ collections:
     sortable_fields: *by_date
     fields:
       - *title
-      - { name: scoreMy, label: My rating, widget: number, value_type: float, min: 0.5, max: 5, step: 0.5, required: false, hint: 'Out of 5, halves allowed (like Letterboxd)' }
-      - *description
+      - { name: scoreMy, label: My rating, widget: select, required: false, hint: 'Out of 5, like Letterboxd; saved as a number', options: [{ label: '½', value: 0.5 }, { label: '★', value: 1 }, { label: '★½', value: 1.5 }, { label: '★★', value: 2 }, { label: '★★½', value: 2.5 }, { label: '★★★', value: 3 }, { label: '★★★½', value: 3.5 }, { label: '★★★★', value: 4 }, { label: '★★★★½', value: 4.5 }, { label: '★★★★★', value: 5 }] }
+      - { name: plot, label: Plot, widget: text, required: false, hint: 'The synopsis, usually from the Web Clipper; the card shows it when Description is empty' }
+      - { name: description, label: Description, widget: text, required: false, hint: 'Your own one-liner; replaces the plot on the card' }
       - *date
       - *tags
       - { name: cover, label: Cover, widget: image, required: false, media_folder: /src/assets/images/watching, public_folder: /assets/images/watching }
