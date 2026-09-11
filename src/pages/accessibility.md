@@ -1,7 +1,7 @@
 ---
 title: 'Accessibility Statement'
 description: 'Commitment to digital accessibility and how to report accessibility issues.'
-date: 2026-05-31 # last substantive content change (de-EE'd the statement); bump only when the text changes
+date: 2026-05-31
 permalink: /accessibility/index.html
 layout: page
 tags: ["searchable"]
