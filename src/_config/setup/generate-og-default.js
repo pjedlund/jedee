@@ -4,17 +4,17 @@ import fs from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
 import puppeteer from 'puppeteer';
-import { siteName, author, pathToSvgLogo, opengraph_default } from '../../_data/meta.js';
+import { settings, siteName, siteDomain, themeColor, themeLight, pathToSvgLogo, opengraph_default } from '../../_data/meta.js';
 
-// The landing page's own second sentence. Mirrored rather than parsed — the h1 and intro live in content, not in meta.
-const TAGLINE = 'I design and build for the web from Malmö, Sweden.';
+// The landing page's own second sentence, kept in step by hand — the intro is prose in the page.
+const TAGLINE = settings.identity.tagline;
 
-// ⚠ NOT meta.domain — that is derived from meta.url, which is `http://localhost:8080` unless URL is set, so a local run stamped the card "localhost". author.website is the hardcoded canonical.
-const SITE_DOMAIN = new URL(author.website).hostname;
+// ⚠ NOT meta.domain — that comes from URL and is `localhost` in a local run.
+const SITE_DOMAIN = siteDomain;
 
 // The per-post cards' palette (src/common/og-images.njk front matter), so the fallback sits in the same set.
-const PAPER = '#F4F4F2';
-const INK = '#495464';
+const PAPER = themeLight;
+const INK = themeColor;
 const MUTED = '#bbbfca';
 
 const OUT = path.join('src', opengraph_default.replace(/^\//, ''));

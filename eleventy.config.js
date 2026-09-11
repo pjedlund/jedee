@@ -15,8 +15,8 @@ dotenv.config();
 import {load as yamlLoad} from 'js-yaml';
 import fs from 'node:fs';
 
-// The wiki dial (src/_data/features.yaml). Read here too because ignores must be set at config time, before the data cascade runs.
-const features = yamlLoad(fs.readFileSync('./src/_data/features.yaml', 'utf8'));
+// The wiki dial (src/_data/settings.yaml). Read here too because ignores must be set at config time, before the data cascade runs.
+const settings = yamlLoad(fs.readFileSync('./src/_data/settings.yaml', 'utf8'));
 
 //  config import
 import { POST_TYPES, byCategory, showInSitemap, tagList, genreList } from './src/_config/collections.js';
@@ -215,10 +215,10 @@ export default async function(eleventyConfig) {
   // Three working dial positions: "private" never builds the wiki; "local" builds it
   // only outside production, so it's browsable in `npm start` but never on Netlify;
   // "public" builds it everywhere, including production. The hard guarantee still holds: a production build (npm run build → ELEVENTY_ENV=production, what Netlify runs) only includes the wiki when the dial is explicitly "public" — never on "private"/"local".
-  const wikiVisibility = features?.wiki?.visibility;
+  const wikiVisibility = settings?.wiki?.visibility;
   if (!['private', 'local', 'public'].includes(wikiVisibility)) {
     throw new Error(
-      `features.wiki.visibility is "${wikiVisibility}" — only "private", "local" and "public" are built so far. See _local/design/Plan - LLM wiki (private-first).md §6.`
+      `settings.wiki.visibility is "${wikiVisibility}" — only "private", "local" and "public" are built so far. See _local/design/Plan - LLM wiki (private-first).md §6.`
     );
   }
   const buildWiki =

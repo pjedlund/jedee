@@ -1,0 +1,54 @@
+# JEDEE settings — what a person decides. meta.js and personal.js hand these to Eleventy Excellent's templates under Lene's names; interface wording and machinery stay in meta.js, colors in the design tokens.
+# ⚠ Read directly (not only through the data cascade) by eleventy.config.js, search.json.11ty.js and the scripts in _config/setup/ — keep the file name.
+
+identity:
+  name: Johan Edlund
+  email: me@johanedlund.se
+  website: https://johanedlund.se # the canonical address; its host name also goes into the webmention endpoint, robots.txt and the preview images
+  avatar: /avatar.webp
+  tagline: I design and build for the web from Malmö, Sweden. # the fallback preview image (npm run og:default)
+  bio: Johan Edlund is a web designer living in Malmö, Sweden. He believes that Jesus Christ is the truth and the way. # llms.txt
+  description: Personal site of Johan Edlund
+  feedDescription: Jesus Christ is the truth and the way.
+  address: |-
+    Johan Edlund
+    Västra Ryttmästaregatan 30D
+    21752 Malmö
+    Sweden
+    Tel: +46706022495
+
+# Footer icons, in this order; each key needs src/assets/svg/platform/<key>.svg. relMe: true = also a <link rel="me"> in the head, and the profile must link back here.
+profiles:
+  github: { url: https://github.com/pjedlund, relMe: true }
+  mastodon: { url: https://mastodon.social/@pjedlund, relMe: true, handle: '@pjedlund@mastodon.social' }
+  x: { url: https://x.com/pjedlund }
+  flickr: { url: https://www.flickr.com/people/pjedlund }
+  dribbble: { url: https://dribbble.com/pjedlund }
+  bluesky: { url: https://bsky.app/profile/johanedlund.se, relMe: true }
+  strava: { url: https://www.strava.com/athletes/62084904 }
+
+repos:
+  site: https://github.com/pjedlund/jedee
+  licence: https://github.com/pjedlund/soli-deo-gloria-dedication
+
+switches:
+  noindexSite: true # @until 1.0.0 — soft-launch: site-wide noindex,nofollow. Flip to false at go-live, alongside hideNav. (`visibility: unlisted` posts keep their own noindex either way.)
+  hideNav: true # @until 1.0.0 — soft-launch: hides the main nav in PRODUCTION only; header.njk still shows it in `eleventy --serve`.
+  breadcrumb: true # header: true = trail, false = logomark + wordmark
+  nameReveal: true # start page only: the wordmark types in beside the logomark, blinks twice, backspaces away
+  easteregg: false
+  viewRepo: true # the "View this page on GitHub" link
+
+# The wiki dial. private = never builds; local = builds only in the dev server (npm start); public = builds everywhere, production included. `hidden` is reserved (_local/design/Plan - LLM wiki (private-first).md §6) and stops the build.
+wiki:
+  visibility: public # private | local | public
+
+# The search dial. `enabled: false` removes /search.json, the header magnifier, and the CSS and JS that ride along with the partial.
+search:
+  enabled: true
+  # ⚠ Collection keys, SINGULAR — `article`, not `articles`. Plurals are archive URLs and produce an empty index with a green build.
+  types: [article, note, reading, watching, jam, photo, recipe, event, audio, video, activity, searchable]
+  # Optional per-type narrowing: frontmatter key -> required value. A type absent here is indexed whole.
+  only:
+    activity:
+      activityType: orienteering

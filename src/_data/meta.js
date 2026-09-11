@@ -1,36 +1,41 @@
+import 'dotenv/config'; // ⚠ config-time importers (the webmentions filter) load this before eleventy.config.js reads .env
+import fs from 'node:fs';
+import {load as yamlLoad} from 'js-yaml';
+
+// The values live in settings.yaml; this file gives them Lene's names so her templates still fit. ⚠ Named exports only — a default export here is silently ignored.
+export const settings = yamlLoad(fs.readFileSync(new URL('./settings.yaml', import.meta.url), 'utf8'));
+const {identity, profiles, switches} = settings;
+const relMe = Object.values(profiles).filter(profile => profile.relMe).map(profile => profile.url);
+
 export const url = process.env.URL || 'http://localhost:8080';
-export const siteName = 'Johan Edlund';
-export const siteDescription = 'Personal site of Johan Edlund';
+export const siteName = identity.name;
+export const siteDescription = identity.description;
 // Extract domain from `url`
 export const domain = new URL(url).hostname;
-// @until 1.0.0 — soft-launch: site-wide noindex,nofollow. Flip to false at go-live, alongside navigation.hideNav. (`visibility: unlisted` posts keep their own per-post noindex either way.)
-export const noindexSite = true;
+// The canonical host name from settings — unlike `domain`, never `localhost`.
+export const siteDomain = new URL(identity.website).hostname;
+export const noindexSite = switches.noindexSite;
 export const siteType = 'Person'; // schema
 export const locale = 'en_EN';
 export const lang = 'en';
 export const skipContent = 'Skip to content';
 // for the site content author, used in <head> meta and post h-card microformat
 export const author = {
-  name: 'Johan Edlund', // page / blog author's name. Must be set.
-  avatar: '/avatar.webp', // path to the author's avatar.
-  email: 'me@johanedlund.se', // email of the author
-  website: 'https://johanedlund.se', // the personal site of the author (apex is canonical)
-  // rel=me identities — the forward half of the bidirectional rel=me that powers IndieAuth. Each profile has to link back here.
-  me: [
-    'https://github.com/pjedlund',
-    'https://mastodon.social/@pjedlund',
-    'https://bsky.app/profile/johanedlund.se'
-  ],
-  fediverse: '@pjedlund@mastodon.social' // used for highlighting journalism on the fediverse. Can be Mastodon, Flipboard, Threads, WordPress (with the ActivityPub plugin installed), PeerTube, Pixelfed, etc. https://blog.joinmastodon.org/2024/07/highlighting-journalism-on-mastodon/
+  name: identity.name, // page / blog author's name. Must be set.
+  avatar: identity.avatar, // path to the author's avatar.
+  email: identity.email, // email of the author
+  website: identity.website, // the personal site of the author (apex is canonical)
+  me: relMe, // rel=me identities — the forward half of the bidirectional rel=me that powers IndieAuth
+  fediverse: profiles.mastodon?.handle // used for highlighting journalism on the fediverse. Can be Mastodon, Flipboard, Threads, WordPress (with the ActivityPub plugin installed), PeerTube, Pixelfed, etc. https://blog.joinmastodon.org/2024/07/highlighting-journalism-on-mastodon/
 };
 // for the site developer, used for footer credits and humans.txt info
 export const creator = {
-  name: 'Johan Edlund', // creator's (developer) name.
-  email: 'me@johanedlund.se',
-  website: 'https://johanedlund.se',
-  bluesky: 'https://bsky.app/profile/johanedlund.se',
-  mastodon: 'https://mastodon.social/@pjedlund',
-  x: 'https://x.com/pjedlund'
+  name: identity.name, // creator's (developer) name.
+  email: identity.email,
+  website: identity.website,
+  bluesky: profiles.bluesky?.url,
+  mastodon: profiles.mastodon?.url,
+  x: profiles.x?.url
 };
 export const pathToSvgLogo = 'src/assets/svg/misc/logo.svg'; // used for favicon generation
 //Color Hunt Palette f4f4f2e8e8e8bbbfca495464.png
@@ -41,8 +46,8 @@ export const opengraph_default = '/assets/images/template/opengraph-default.jpg'
 export const opengraph_default_alt = 'Johan Edlund — personal website'; // alt text for default meta image
 export const blog = {
   // RSS feed
-  name: 'Johan Edlund',
-  description: 'Jesus Christ is the truth and the way.',
+  name: identity.name,
+  description: identity.feedDescription,
   // feed links are looped over in the head. You may add more to the array.
   feedLinks: [
     {
@@ -87,10 +92,10 @@ export const navigation = {
   ariaTop: 'Main',
   ariaBottom: 'Complementary',
   ariaPlatforms: 'Platforms',
-  // Header chrome — three independent toggles (header.njk). breadcrumb: true = trail, false = logomark + wordmark. hideNav: see below.
-  breadcrumb: true,
-  nameReveal: true, // start page only: the wordmark types in beside the logomark, blinks twice, backspaces away (breadcrumb-reveal.css)
-  hideNav: true // @until 1.0.0 — soft-launch: hides the main nav in PRODUCTION only — header.njk still shows it in `eleventy --serve`.
+  // Header chrome — three independent switches (header.njk), set in settings.yaml.
+  breadcrumb: switches.breadcrumb,
+  nameReveal: switches.nameReveal,
+  hideNav: switches.hideNav
 };
 // Static ACCESSIBLE NAME for the header light/dark toggle; aria-pressed carries the state. ⚠ Don't make this change with the theme — a toggle button's name must stay put, or screen readers announce the state twice and disagree with themselves.
 export const themeToggleLabel = 'Toggle dark mode';
@@ -146,8 +151,8 @@ export const tests = {
 };
 export const viewRepo = {
   // this is for the view/edit on github link. The value in the package.json will be pulled in.
-  allow: true,
+  allow: switches.viewRepo,
   infoText: 'View this page on GitHub',
   issuesPage: 'Report accessibility issues'
 };
-export const easteregg = false;
+export const easteregg = switches.easteregg;

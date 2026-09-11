@@ -29,7 +29,7 @@ No premature-use error, no separate collection, and no HTML to strip out afterwa
 
 ## In jedee
 
-One dial in `src/_data/features.yaml` switches the whole feature:
+One dial in `src/_data/settings.yaml` switches the whole feature:
 
 ```yaml
 search:
@@ -53,11 +53,11 @@ Standalone prose pages are not in any post collection, so they opt in with `tags
 `src/search.json.11ty.js` is a thin wrapper; all the logic is in `src/_config/search-index.js` as pure functions, so it is unit-testable without Eleventy. Two wrinkles in the template are worth knowing:
 
 ```js
-permalink: data => (data.features.search.enabled ? '/search.json' : false),
+permalink: data => (data.settings.search.enabled ? '/search.json' : false),
 eleventyImport: {collections: search.types}
 ```
 
-`permalink` as a function receives the **data object**, so it is `data.features`, not a bare `features`. And `eleventyImport.collections` is resolved *before* the data cascade runs, so the type list cannot come from `data` — the template reads `features.yaml` off disk at module load, the same way `eleventy.config.js` already does for the wiki dial.
+`permalink` as a function receives the **data object**, so it is `data.settings`, not a bare `settings`. And `eleventyImport.collections` is resolved *before* the data cascade runs, so the type list cannot come from `data` — the template reads `features.yaml` off disk at module load, the same way `eleventy.config.js` already does for the wiki dial.
 
 Each entry carries `url`, `title`, `type`, `date`, a ~140-character `text` excerpt, and a lowercased `keywords` string holding title, description, tags and the whole body. Only `keywords` is matched against; the rest is for rendering.
 

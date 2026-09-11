@@ -1,3 +1,5 @@
+import {author} from '../../_data/meta.js';
+
 // Three small, composable webmention filters. Ported from Lene Saile's pattern — the TEMPLATE (partials/webmentions.njk) does the grouping; these just slice the flat JF2 `children` array. Registered in eleventy.config.js and re-exported from the filters.js barrel. Unit-tested in _local/tests/webmentions.test.js.
 
 /** All mentions whose `wm-target` is this page's absolute URL. */
@@ -14,11 +16,7 @@ export const webmentionisOwn = webmention => {
   if (/^https?:\/\/brid\.gy\/post\//.test(source)) return true;
 
   // (2) Author is one of Johan's own identities.
-  const urls = [
-    'https://johanedlund.se',
-    'https://bsky.app/profile/johanedlund.se',
-    'https://mastodon.social/@pjedlund'
-  ];
+  const urls = [author.website, ...author.me];
   const authorUrl = webmention.author ? webmention.author.url : false;
   return authorUrl && urls.includes(authorUrl);
 };
