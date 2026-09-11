@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import {load as yamlLoad} from 'js-yaml';
 
 // The values live in settings.yaml; this file gives them Lene's names so her templates still fit. ⚠ Named exports only — a default export here is silently ignored.
+// ⚠ settings.yaml has no comments on purpose: Sveltia (/admin/ → Site settings) drops them on save. Its notes are the hints in admin/config.yml.
 export const settings = yamlLoad(fs.readFileSync(new URL('./settings.yaml', import.meta.url), 'utf8'));
 const {identity, profiles, switches} = settings;
 const relMe = Object.values(profiles).filter(profile => profile.relMe).map(profile => profile.url);
@@ -156,3 +157,5 @@ export const viewRepo = {
   issuesPage: 'Report accessibility issues'
 };
 export const easteregg = switches.easteregg;
+export const eastereggKeyword = switches.eastereggKeyword; // empty = the starter's "eleventy" and "excellent"
+export const eastereggShape = switches.eastereggShape; // empty = the starter's ⭐️

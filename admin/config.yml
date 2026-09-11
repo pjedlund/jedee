@@ -129,3 +129,65 @@ collections:
     create: false
     sortable_fields: *by_date
     fields: [*title, { name: inReplyTo, label: Event URL, widget: string }, { name: rsvp, label: RSVP, widget: select, options: ['yes', 'no', 'maybe', 'interested'], required: false }, *description, *date, *tags, *draft, *body]
+
+# The site's settings file. ⚠ Sveltia rewrites the whole file on save and drops every comment, so settings.yaml has none: its notes live here, as hints.
+# @until 1.0.0 — switches.noindexSite in settings.yaml: flip to false at go-live, alongside hideNav. Laptop only, so neither is in the form.
+# @until 1.0.0 — switches.hideNav in settings.yaml: hides the main nav in production only; flip to false at go-live.
+# ⚠ search.types (not in the form): collection keys, SINGULAR (`article`, not `articles`) — a plural gives an empty index with a green build.
+singletons:
+  - name: settings
+    label: Site settings
+    file: src/_data/settings.yaml
+    fields:
+      - name: identity
+        label: Identity
+        widget: object
+        fields:
+          - { name: name, label: Name, widget: string }
+          - { name: email, label: Email, widget: string }
+          - { name: website, label: Website, widget: string, hint: 'The canonical address; its host name also goes into the webmention endpoint, robots.txt and the preview images' }
+          - { name: avatar, label: Avatar path, widget: string }
+          - { name: tagline, label: Tagline, widget: string, hint: "Mirrors the start page's second sentence; drawn on the fallback preview image (npm run og:default, laptop)" }
+          - { name: bio, label: Bio, widget: text, hint: 'llms.txt' }
+          - { name: description, label: Site description, widget: string }
+          - { name: feedDescription, label: Feed description, widget: string }
+          - { name: address, label: Postal address, widget: text, hint: 'Shown on the legal and privacy pages' }
+      - name: profiles
+        label: Profiles
+        widget: object
+        hint: 'Footer icons, in this order. rel=me: also listed as rel="me" in the head, and the profile must link back. A new platform needs an icon in src/assets/svg/platform/ and a line in admin/config.yml.'
+        fields:
+          - { name: github, label: GitHub, widget: object, fields: &profile [{ name: url, label: URL, widget: string }, { name: relMe, label: rel=me, widget: boolean }] }
+          - { name: mastodon, label: Mastodon, widget: object, fields: [{ name: url, label: URL, widget: string }, { name: relMe, label: rel=me, widget: boolean }, { name: handle, label: Fediverse handle, widget: string, hint: 'For fediverse:creator, e.g. @pjedlund@mastodon.social' }] }
+          - { name: x, label: X, widget: object, fields: *profile }
+          - { name: flickr, label: Flickr, widget: object, fields: *profile }
+          - { name: dribbble, label: Dribbble, widget: object, fields: *profile }
+          - { name: bluesky, label: Bluesky, widget: object, fields: *profile }
+          - { name: strava, label: Strava, widget: object, fields: *profile }
+      - name: repos
+        label: Repositories
+        widget: object
+        fields:
+          - { name: site, label: Site repo, widget: string }
+          - { name: licence, label: Licence repo, widget: string }
+      - name: switches
+        label: Switches
+        widget: object
+        fields:
+          - { name: breadcrumb, label: Breadcrumb, widget: boolean, hint: 'On: the trail in the header. Off: logomark + wordmark' }
+          - { name: nameReveal, label: Name reveal, widget: boolean, hint: 'Start page only: the wordmark types in beside the logomark, blinks twice, backspaces away' }
+          - { name: easteregg, label: Easter egg, widget: boolean, hint: 'Typing the trigger word anywhere on a page (not in a field) sets off confetti; never for visitors who ask for reduced motion' }
+          - { name: eastereggKeyword, label: Easter egg trigger word, widget: string, required: false, hint: 'Letters and spaces; case does not matter. Empty = "eleventy" and "excellent"' }
+          # Any single emoji works as a shape; add one here to offer it.
+          - { name: eastereggShape, label: Easter egg shape, widget: select, required: false, hint: 'Empty = star', options: [{ label: '⭐️ Star', value: '⭐️' }, { label: '🎉 Party popper', value: '🎉' }, { label: '❤️ Heart', value: '❤️' }, { label: '✝️ Cross', value: '✝️' }, { label: '🎵 Note', value: '🎵' }, { label: '🌍 Globe', value: '🌍' }, { label: '☀️ Sun', value: '☀️' }] }
+          - { name: viewRepo, label: View on GitHub link, widget: boolean }
+      - name: wiki
+        label: Wiki
+        widget: object
+        fields:
+          - { name: visibility, label: Visibility, widget: select, options: [private, local, public], hint: 'private: never built. local: dev server only. public: built everywhere, production included' }
+      - name: search
+        label: Search
+        widget: object
+        fields:
+          - { name: enabled, label: Site search, widget: boolean, hint: 'Off removes /search.json, the header magnifier, and their CSS and JS' }
