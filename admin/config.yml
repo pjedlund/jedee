@@ -19,7 +19,7 @@ slug:
   lowercase: false
   sanitize_replacement: ' '
 
-# Each type shows only the fields worth editing on a phone; every other key in a post is kept as-is on save. New posts only in notes and articles — the rest come from Micropub or the Web Clipper.
+# Each type shows only the fields worth editing on a phone; `thumbnail` names the key whose image shows in the list, and it needn't be a form field. every other key in a post is kept as-is on save. New posts only in notes and articles — the rest come from Micropub or the Web Clipper.
 collections:
   - name: notes
     label: Notes
@@ -42,6 +42,7 @@ collections:
     label: Photos
     label_singular: Photo
     folder: src/posts/photos
+    thumbnail: photo.src # ⚠ untested: the ./src/… path may not resolve, since Sveltia reads a relative path from the post's own folder
     create: false
     sortable_fields: *by_date
     fields:
@@ -64,11 +65,13 @@ collections:
       - { name: syndication, label: Also on (URLs), widget: list, required: false }
       - *draft
       - *body
-  # ⚠ Sveltia only lists files directly in `folder`, so the old This Is My Jam posts in the subfolder get their own collection.
+  # Depth 2 = new jams plus the This Is My Jam archive in `thisismyjam/`, shown as a folder tree.
   - name: jams
     label: Jams
     label_singular: Jam
     folder: src/posts/jams
+    nested: { depth: 2, subfolders: false }
+    thumbnail: cover
     create: false
     sortable_fields: *by_date
     fields: &jam_fields
@@ -76,17 +79,19 @@ collections:
       - *description
       - *date
       - *tags
+      # Upload a file or paste a URL; uploads go beside the other local covers. A remote URL is fetched and self-hosted at build.
+      - { name: cover, label: Cover, widget: image, required: false, media_folder: /src/assets/images/listening, public_folder: /assets/images/listening }
+      - { name: coverAlt, label: Cover alt text, widget: string, required: false, hint: 'Leave empty for "Cover for <title>"' }
       - { name: genre, label: Genre, widget: list, required: false, hint: 'One per line, as [[post-rock]] so Obsidian links it; reuse a genre from /jams/genres/ where one fits' }
       - *draft
       - *body
-  - { name: thisismyjam, label: This Is My Jam, label_singular: Jam, folder: src/posts/jams/thisismyjam, create: false, sortable_fields: *by_date, fields: *jam_fields }
-  - { name: watching, label: Watching, label_singular: Film, folder: src/posts/watching, create: false, sortable_fields: *by_date, fields: *post_fields }
-  - { name: reading, label: Reading, label_singular: Book, folder: src/posts/reading, create: false, sortable_fields: *by_date, fields: *post_fields }
-  - { name: activities, label: Activities, label_singular: Activity, folder: src/posts/activities, create: false, sortable_fields: *by_date, fields: *post_fields }
+  - { name: watching, label: Watching, label_singular: Film, folder: src/posts/watching, thumbnail: cover, create: false, sortable_fields: *by_date, fields: *post_fields }
+  - { name: reading, label: Reading, label_singular: Book, folder: src/posts/reading, thumbnail: cover, create: false, sortable_fields: *by_date, fields: *post_fields }
+  - { name: activities, label: Activities, label_singular: Activity, folder: src/posts/activities, thumbnail: cover, create: false, sortable_fields: *by_date, fields: *post_fields }
   - { name: audio, label: Audio, label_singular: Recording, folder: src/posts/audio, create: false, sortable_fields: *by_date, fields: *post_fields }
   - { name: videos, label: Videos, label_singular: Video, folder: src/posts/videos, create: false, sortable_fields: *by_date, fields: *post_fields }
   - { name: events, label: Events, label_singular: Event, folder: src/posts/events, create: false, sortable_fields: *by_date, fields: *post_fields }
-  - { name: recipes, label: Recipes, label_singular: Recipe, folder: src/posts/recipes, create: false, sortable_fields: *by_date, fields: *post_fields }
+  - { name: recipes, label: Recipes, label_singular: Recipe, folder: src/posts/recipes, thumbnail: cover, create: false, sortable_fields: *by_date, fields: *post_fields }
 
   # Response types: the shared fields plus the link each one answers.
   - name: bookmarks
