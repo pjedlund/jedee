@@ -8,6 +8,7 @@ listening:
 watching:
   - The Killing
 reading:
+  - A Confession
   - The Kingdom of God is Within You
 draft: true
 layout: now
@@ -16,4 +17,6 @@ tags:
   - searchable
 ---
 
-Placeholder — Johan writes this part in Sveltia (Now → What I'm doing), then unticks Draft.
+Marveling at the speed of Tove. 
+
+https://www.youtube.com/watch?v=hAHd28lyJys
