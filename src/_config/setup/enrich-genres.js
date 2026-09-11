@@ -11,9 +11,10 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import fg from 'fast-glob';
 import matter from 'gray-matter';
+import {author} from '../../_data/meta.js';
 
 const CACHE = '_local/data/musicbrainz-genres.json';
-const UA = 'jedee-genre-enrichment/1.0 (https://johanedlund.se; pjohanedlund@gmail.com)';
+const UA = `jedee-genre-enrichment/1.0 (${author.website}; ${author.email})`;
 const MAX_GENRES = 3;
 
 // MusicBrainz asks for 1 req/s and a descriptive User-Agent; going faster gets the IP throttled.

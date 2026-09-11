@@ -11,10 +11,11 @@ import fs from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import fg from 'fast-glob';
 import matter from 'gray-matter';
+import {author} from '../../_data/meta.js';
 
 const CACHE = '_local/data/wikipedia-genres.json';
 const DATA = 'src/_data/genreDescriptions.json';
-const UA = 'jedee-genre-descriptions/1.0 (https://johanedlund.se; pjohanedlund@gmail.com)';
+const UA = `jedee-genre-descriptions/1.0 (${author.website}; ${author.email})`;
 const SUMMARY = 'https://en.wikipedia.org/api/rest_v1/page/summary/';
 
 // Wikipedia's REST API has no published per-second limit, but it asks for a descriptive User-Agent and no hammering.
