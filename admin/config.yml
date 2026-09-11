@@ -133,6 +133,7 @@ collections:
 # The site's settings file. ⚠ Sveltia rewrites the whole file on save and drops every comment, so settings.yaml has none: its notes live here, as hints.
 # @until 1.0.0 — switches.noindexSite in settings.yaml: flip to false at go-live, alongside hideNav. Laptop only, so neither is in the form.
 # @until 1.0.0 — switches.hideNav in settings.yaml: hides the main nav in production only; flip to false at go-live.
+# @until 1.0.0 — switches.hideFeatured in settings.yaml: hides Featured on the start page in production only; flip to false at go-live.
 # ⚠ search.types (not in the form): collection keys, SINGULAR (`article`, not `articles`) — a plural gives an empty index with a green build.
 singletons:
   - name: settings

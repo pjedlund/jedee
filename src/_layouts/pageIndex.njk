@@ -14,7 +14,8 @@ layout: base
   event: "card-event.njk", recipe: "card-recipe.njk", activity: "card-blog.njk",
   bookmark: "card-response.njk", like: "card-response.njk", reply: "card-response.njk", repost: "card-response.njk", rsvp: "card-response.njk"
 } %}
-{% if collections.featured.length %}
+{# Soft-launch: hidden in production (settings.yaml → switches.hideFeatured), always shown in `eleventy --serve`, like the main nav. #}
+{% if collections.featured.length and ((not settings.switches.hideFeatured) or (eleventy.env.runMode === "serve")) %}
   <section class="region wrapper prose-wrapper flow" aria-labelledby="featured-heading">
     <h2 id="featured-heading">Featured</h2>
     <custom-masonry layout="33-33-33">

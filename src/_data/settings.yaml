@@ -44,6 +44,7 @@ switches:
   nameReveal: true
   easteregg: true
   viewRepo: true
+  hideFeatured: true
   hideNav: true
   noindexSite: true
 wiki:
