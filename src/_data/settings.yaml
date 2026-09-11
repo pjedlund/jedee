@@ -43,6 +43,8 @@ switches:
   breadcrumb: true
   nameReveal: true
   easteregg: true
+  eastereggKeyword: jesus
+  eastereggShape: ❤️
   viewRepo: true
   hideFeatured: true
   hideNav: true
