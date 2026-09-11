@@ -158,3 +158,4 @@ export const viewRepo = {
 };
 export const easteregg = switches.easteregg;
 export const eastereggKeyword = switches.eastereggKeyword; // empty = the starter's "eleventy" and "excellent"
+export const eastereggShape = switches.eastereggShape; // empty = the starter's ⭐️

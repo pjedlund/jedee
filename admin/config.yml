@@ -178,6 +178,8 @@ singletons:
           - { name: nameReveal, label: Name reveal, widget: boolean, hint: 'Start page only: the wordmark types in beside the logomark, blinks twice, backspaces away' }
           - { name: easteregg, label: Easter egg, widget: boolean, hint: 'Typing the trigger word anywhere on a page (not in a field) sets off confetti; never for visitors who ask for reduced motion' }
           - { name: eastereggKeyword, label: Easter egg trigger word, widget: string, required: false, hint: 'Letters and spaces; case does not matter. Empty = "eleventy" and "excellent"' }
+          # Any single emoji works as a shape; add one here to offer it.
+          - { name: eastereggShape, label: Easter egg shape, widget: select, required: false, hint: 'Empty = star', options: [{ label: '⭐️ Star', value: '⭐️' }, { label: '🎉 Party popper', value: '🎉' }, { label: '❤️ Heart', value: '❤️' }, { label: '✝️ Cross', value: '✝️' }, { label: '🎵 Note', value: '🎵' }, { label: '🌍 Globe', value: '🌍' }, { label: '☀️ Sun', value: '☀️' }] }
           - { name: viewRepo, label: View on GitHub link, widget: boolean }
       - name: wiki
         label: Wiki
