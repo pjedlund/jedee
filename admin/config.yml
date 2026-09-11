@@ -79,6 +79,9 @@ collections:
       - *description
       - *date
       - *tags
+      # Upload a file or paste a URL; uploads go beside the other local covers. A remote URL is fetched and self-hosted at build.
+      - { name: cover, label: Cover, widget: image, required: false, media_folder: /src/assets/images/listening, public_folder: /assets/images/listening }
+      - { name: coverAlt, label: Cover alt text, widget: string, required: false, hint: 'Leave empty for "Cover for <title>"' }
       - { name: genre, label: Genre, widget: list, required: false, hint: 'One per line, as [[post-rock]] so Obsidian links it; reuse a genre from /jams/genres/ where one fits' }
       - *draft
       - *body
