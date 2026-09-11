@@ -1,5 +1,18 @@
+import fs from 'node:fs';
 import { unwikilink } from './filters/unwikilink.js';
 import { slugifyString } from './filters/slugify.js';
+import { settings } from '../_data/meta.js';
+
+/** The Featured list from settings.yaml, in its order. Each item is { type: <folder in src/posts>, post: <path inside it, no .md> }, as Sveltia saves it. */
+export const featured = collection => {
+  const byPath = new Map(collection.getAll().map(item => [item.inputPath, item]));
+  return (settings.featured ?? []).flatMap(({ type, post }) => {
+    const inputPath = `./src/posts/${type}/${post}.md`;
+    // ⚠ A listed file that doesn't exist stops the build, so a renamed post can't drop off the start page silently.
+    if (!fs.existsSync(inputPath)) throw new Error(`settings.yaml → featured: no post at ${inputPath}`);
+    return byPath.get(inputPath) ?? []; // a draft is left out of production builds, like everywhere else
+  });
+};
 
 /** All relevant pages as a collection for sitemap.xml */
 export const showInSitemap = collection => {

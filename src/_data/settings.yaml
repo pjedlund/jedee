@@ -66,3 +66,6 @@ search:
     - video
     - activity
     - searchable
+featured:
+  - type: jams
+    post: Nine

@@ -19,7 +19,7 @@ import fs from 'node:fs';
 const settings = yamlLoad(fs.readFileSync('./src/_data/settings.yaml', 'utf8'));
 
 //  config import
-import { POST_TYPES, byCategory, showInSitemap, tagList, genreList } from './src/_config/collections.js';
+import { POST_TYPES, byCategory, showInSitemap, tagList, genreList, featured } from './src/_config/collections.js';
 import events from './src/_config/events.js';
 import filters from './src/_config/filters.js';
 import plugins from './src/_config/plugins.js';
@@ -80,6 +80,7 @@ export default async function(eleventyConfig) {
   eleventyConfig.addCollection('showInSitemap', showInSitemap);
   eleventyConfig.addCollection('tagList', tagList);
   eleventyConfig.addCollection('genreList', genreList);
+  eleventyConfig.addCollection('featured', featured);
 
   // ---------------------  Plugins
   // Patches the parser prototype, so it has to land before the plugin builds its parser.
