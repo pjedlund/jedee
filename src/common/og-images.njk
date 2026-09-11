@@ -6,7 +6,6 @@ textColor: '#495464'
 colorMediumDark: '#bbbfca'
 colorLightGrey: '#e8e8e8'
 accentColor: '#d0621e' # --color-accent-orange, the mark's own fill in src/assets/svg/misc/logo.svg
-siteUrl: 'johanedlund.se'
 pagination:
   data: collections.article
   size: 1
@@ -76,7 +75,7 @@ eleventyExcludeFromCollections: true
     font-weight="300"
     letter-spacing="-1"
     fill="{{ textColor }}" >
-    <tspan x="160" y="580">{{ siteUrl }}</tspan> </text> #}
+    <tspan x="160" y="580">{{ meta.siteDomain }}</tspan> </text> #}
 
 
   <!-- sitename -->
@@ -87,7 +86,7 @@ eleventyExcludeFromCollections: true
     fill="#bbbfca"
     letter-spacing="-1"
   >
-    <tspan x="950" y="580">{{ siteUrl }}</tspan>
+    <tspan x="950" y="580">{{ meta.siteDomain }}</tspan>
   </text>
 
   <!-- signature mark, in the accent orange. ⚠ It was the base-dark grey #bbbfca here, the value that measured 1.67 on the light page and was fixed everywhere else on the site. -->

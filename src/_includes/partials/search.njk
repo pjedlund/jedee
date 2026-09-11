@@ -41,7 +41,7 @@
     {# Icon templates, cloned per result row by search.js. Only the searchable types are emitted, plus `page` for the standalone prose pages. #}
     <div hidden>
       {% for item in navigation.postTypes %}
-        {% if item.collection in features.search.types %}
+        {% if item.collection in settings.search.types %}
           {% set iconName = "posts/" + item.icon %}
           <template data-search-icon="{{ item.collection }}">{% svg iconName %}</template>
         {% endif %}

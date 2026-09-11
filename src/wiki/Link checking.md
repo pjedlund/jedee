@@ -41,7 +41,7 @@ Until 2026-08-03 the console report carried **13 warnings, all 13 false positive
 
 Detection also drives backlinks. Two wiki pages use `[[Anna Karenina]]` as a code example, and since detection ignored the backticks, both counted as real links to the published `/reading/anna-karenina/` post. That post rendered a Backlinks nav pointing at two **wiki** URLs — a straight violation of the one-way rule, which exists to keep the private wiki out of published pages.
 
-Production was safe by luck of configuration: the wiki only builds when `features.yaml` is `local` or `public`, and production sits at `local`, so the pages generating those backlinks were not in the production build. Any local or public build leaked it.
+Production was safe by luck of configuration: the wiki only builds when the wiki dial in `settings.yaml` is `local` or `public`, and production sits at `local`, so the pages generating those backlinks were not in the production build. Any local or public build leaked it.
 
 It was not found by reading the warnings. It was found by diffing the whole built site against a pre-patch baseline. The warning count alone would have shown the fix "working" and said nothing about this.
 

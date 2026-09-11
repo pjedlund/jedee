@@ -4,7 +4,7 @@ import slugify from '@sindresorhus/slugify';
 export default {
   layout: 'wiki.njk',
 
-  // `searchable` is the existing non-post-type route into /search.json (features.yaml search.types); it is a SYSTEM_TAG, so it makes no /tags/ page.
+  // `searchable` is the existing non-post-type route into /search.json (settings.yaml search.types); it is a SYSTEM_TAG, so it makes no /tags/ page.
   tags: ['searchable'],
 
   // JSON-LD type for head/schema.njk (via base.njk). TechArticle, not the post types' BlogPosting, because these pages are reference rather than posts — and because that template carries the author/editor split (Claude wrote it, Johan supervised). Without a `schema` key matching a src/_includes/schemas/*.njk template, the build fails.
