@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-11] ingest | Sveltia CMS
+
+A new page on the edit layer, set up on 2026-09-10. General part: what a git-based CMS is (Netlify → Decap → Sveltia) and why keeping undeclared front matter keys is the deciding property, checked in the source because the docs rarely say. In jedee: the config shape, then five traps each found by a real save (datetime drops seconds, subfolders need `nested`, body required by default, object fields keep undeclared subkeys, punctuation in new filenames), GitHub sign-in through Netlify with `public_repo`, and `_local/tests/sveltia-roundtrip.mjs`. Links to Micropub, Web Clipper templates, The authoring tool decides the data model, Permalinks and Obsidian-friendly filenames, and Hosting large originals off-repo. Sources: the Sveltia clip in `src/_raw/` and the reference doc in `_local/design/`.
+
 ## [2026-09-10] enrich | Typographic conventions
 
 Ordinals, prompted by Johan trying "9th" in the Nine jam. The general half now has an Ordinals section. Figures stay on the baseline (Butterick). Spelling out follows the house style: Chicago to one hundred, AP to ninth, Swedish usually to twelve, where figure ordinals take a colon (29:e). In jedee: Chicago, and no `.ordinal` class on purpose. ⚠ fontTools shows Source Sans' `ordn` is a plain substitution over all 28 lowercase glyphs, not contextual, so `font-variant-numeric: ordinal` on a sentence would raise every letter in it. A raised suffix, if ever wanted, goes through `font-variant-position: super` on the suffix only. The four figure ordinals already in content are listed and left alone. No new links. The source is an added section in `How the typographic defaults were chosen`.

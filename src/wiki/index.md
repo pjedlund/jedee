@@ -46,6 +46,7 @@ The private wiki documenting web techniques and how jedee is designed and built.
 - [[The authoring tool decides the data model]] — flat front matter where a spec wanted nesting is usually the clipper's limit, not unfinished work. Find out what writes a field before designing it.
 - [[The IndieWeb]] — the movement, its principles, and the seven building blocks (microformats, Webmention, Micropub, IndieAuth, `rel=me`, POSSE, feeds); then the on-ramp criticism from inside it. ⚠ jedee sits on the far side of every barrier that criticism names.
 - [[Micropub]] — the publishing API that gives a static site an editor without giving up the static build; in jedee a Netlify Function that commits a markdown file. ⚠ **`category` means two different things** — the post's tags in Micropub, the post *type* here — so the endpoint never writes it; ⚠ `private` reuses the draft mechanism, because there is no true private on a public static build.
+- [[Sveltia CMS]] — a git-based CMS at `/admin/` that edits existing posts from a phone; keeps front matter keys it doesn't know, so the config stays partial. ⚠ Its datetime field drops seconds, a collection hides subfolders without `nested`, and the body is required by default.
 
 ## The open web
 
@@ -83,6 +84,8 @@ The private wiki documenting web techniques and how jedee is designed and built.
 - [[Site search]] — a JSON index written at build time, fetched once and filtered in the browser; no search library at a few hundred entries. ⚠ `page.rawInput` reaches a page's body at collection time where `templateContent` throws, but it is the source *before* rendering, so template expressions and HTML comments land in the index unless stripped. ⚠ A transitioned `visibility` is still `hidden` on the frame `focus()` runs, and `[hidden]` is a UA rule any author `display` outranks.
 
 ## Recent additions
+
+**2026-09-11** — ingest: **[[Sveltia CMS]]**, from the setup record of the edit layer. The general part: a git-based CMS, and why keeping undeclared front matter keys is the property that decides whether one can be used. In jedee: all 16 types, the five traps found by real saves, the two sign-in routes, and the round-trip script that checks a config change before anything is saved.
 
 **2026-09-10** — enrich: **[[Typographic conventions]]** gains an Ordinals section. Figures on the baseline (Butterick), and when to spell out under Chicago, AP and Swedish rules. jedee follows Chicago and has no `.ordinal` class. ⚠ Source Sans' `ordn` raises every lowercase letter it covers, so a raised suffix would go through `font-variant-position: super` on the suffix only.
 
