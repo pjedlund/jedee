@@ -11,7 +11,7 @@ myUrl:
 director:
   - "[[Stanley Kubrick]]"
 scoreImdb: 7.9
-scoreMy: 7
+scoreMy: 3.5
 cast:
   - "[[Sterling Hayden]]"
   - "[[Coleen Gray]]"

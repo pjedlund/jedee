@@ -11,7 +11,7 @@ myUrl:
 director:
   - "[[Roy Andersson]]"
 scoreLB: 3.98
-scoreMy: "4"
+scoreMy: 4
 cast:
   - "[[Håkan Angser]]"
   - "[[Eric Bäckman]]"

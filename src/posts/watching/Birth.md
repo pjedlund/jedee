@@ -11,7 +11,7 @@ myUrl: "https://letterboxd.com/pjedlund/film/birth-2004/"
 director:
   - "Jonathan Glazer"
 scoreLB: 3.71
-scoreMy: "3.5"
+scoreMy: 3.5
 cast:
   - "Nicole Kidman"
   - "Cameron Bright"

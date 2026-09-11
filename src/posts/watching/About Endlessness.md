@@ -11,7 +11,7 @@ myUrl:
 director:
   - "[[Roy Andersson]]"
 scoreLB: 3.71
-scoreMy: "4"
+scoreMy: 4
 cast:
   - "[[Jan-Eje Ferling]]"
   - "[[Kristina Ekmark]]"
