@@ -130,6 +130,21 @@ collections:
     sortable_fields: *by_date
     fields: [*title, { name: inReplyTo, label: Event URL, widget: string }, { name: rsvp, label: RSVP, widget: select, options: ['yes', 'no', 'maybe', 'interested'], required: false }, *description, *date, *tags, *draft, *body]
 
+  # Pages with layout: page (About, Accessibility, …). ⚠ Their Nunjucks tags (e.g. {{ personal.address }}) are kept as typed in the plain markdown body; new pages are made on the laptop, since they need a permalink.
+  - name: pages
+    label: Pages
+    label_singular: Page
+    folder: src/pages
+    extension: md
+    format: frontmatter
+    create: false
+    filter: { field: layout, value: page }
+    fields:
+      - *title
+      - *description
+      - { name: date, label: Last changed, widget: string, required: false, hint: 'YYYY-MM-DD. On Accessibility and Privacy, bump only when the text changes in substance', pattern: ['^\d{4}-\d{2}-\d{2}', 'Start with YYYY-MM-DD'] }
+      - *body
+
 # The site's settings file. ⚠ Sveltia rewrites the whole file on save and drops every comment, so settings.yaml has none: its notes live here, as hints.
 # @until 1.0.0 — switches.noindexSite in settings.yaml: flip to false at go-live, alongside hideNav. Laptop only, so neither is in the form.
 # @until 1.0.0 — switches.hideNav in settings.yaml: hides the main nav in production only; flip to false at go-live.
@@ -192,9 +207,13 @@ singletons:
         widget: object
         fields:
           - { name: enabled, label: Site search, widget: boolean, hint: 'Off removes /search.json, the header magnifier, and their CSS and JS' }
+  - name: featured
+    label: Featured
+    file: src/_data/featured.yaml
+    fields:
       # One item per post: pick its type, then the post. Saved as { type: <folder in src/posts>, post: <path in it> }; ⚠ a post that no longer exists stops the build.
-      - name: featured
-        label: Featured
+      - name: posts
+        label: Featured posts
         widget: list
         required: false
         hint: 'The first one is shown on the start page, under "Featured". Drag to reorder.'
@@ -215,3 +234,17 @@ singletons:
           - { name: replies, label: Reply, widget: object, fields: [{ name: post, label: Reply, widget: relation, collection: replies, search_fields: [title], display_fields: [title] }] }
           - { name: reposts, label: Repost, widget: object, fields: [{ name: post, label: Repost, widget: relation, collection: reposts, search_fields: [title], display_fields: [title] }] }
           - { name: rsvps, label: RSVP, widget: object, fields: [{ name: post, label: RSVP, widget: relation, collection: rsvps, search_fields: [title], display_fields: [title] }] }
+  # /now (nownownow.com): what I'm up to, plus picked jams, films and books. ⚠ Picks are paths inside each folder; a pick that no longer exists stops the build.
+  - name: now
+    label: Now
+    file: src/pages/now.md
+    fields:
+      - *title
+      - *description
+      - { name: date, label: Last updated, widget: string, hint: 'YYYY-MM-DD — bump it whenever the page changes; shown at the top', pattern: ['^\d{4}-\d{2}-\d{2}', 'Start with YYYY-MM-DD'] }
+      - { name: location, label: Where I am, widget: string, required: false, hint: 'Shown after the date, e.g. Malmö, Sweden' }
+      - { name: listening, label: Listening to, widget: relation, collection: jams, multiple: true, max: 3, required: false, search_fields: [title], display_fields: [title] }
+      - { name: watching, label: Watching, widget: relation, collection: watching, multiple: true, max: 3, required: false, search_fields: [title], display_fields: [title] }
+      - { name: reading, label: Reading, widget: relation, collection: reading, multiple: true, max: 3, required: false, search_fields: [title], display_fields: [title] }
+      - *draft
+      - { name: body, label: What I'm doing, widget: markdown, modes: [raw], required: false }

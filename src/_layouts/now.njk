@@ -1,0 +1,30 @@
+---
+layout: base
+---
+
+{# /now (src/pages/now.md, Sveltia: Now): the page's own text, then the picked jams, films and books, each with its archive's card. #}
+<div class="region wrapper flow prose" style="--region-space-top: var(--space-xl-2xl)">
+  <h1>{{ title }}</h1>
+  <p class="text-step-min-1">Last updated <time datetime="{{ page.date | toIsoString }}">{{ page.date | formatDate('D MMM YYYY') }}</time>{% if location %} · {{ location }}{% endif %}</p>
+  {{ content | safe }}
+</div>
+
+{% set nowLists = [
+  { heading: "Listening to", posts: collections.all | pickPosts("jams", listening), card: "card-jam.njk" },
+  { heading: "Watching", posts: collections.all | pickPosts("watching", watching), card: "card-watching.njk" },
+  { heading: "Reading", posts: collections.all | pickPosts("reading", reading), card: "card-reading.njk" }
+] %}
+{% for list in nowLists %}
+  {% if list.posts.length %}
+    <section class="region wrapper prose-wrapper flow" aria-labelledby="now-{{ loop.index }}">
+      <h2 id="now-{{ loop.index }}">{{ list.heading }}</h2>
+      <custom-masonry layout="33-33-33">
+        {% set cardPartial = list.card %}
+        {% asyncEach item in list.posts %}
+          {% set headingLevel = "h3" %}
+          {% include "partials/" + cardPartial %}
+        {% endeach %}
+      </custom-masonry>
+    </section>
+  {% endif %}
+{% endfor %}

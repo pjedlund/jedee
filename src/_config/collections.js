@@ -1,18 +1,22 @@
 import fs from 'node:fs';
 import { unwikilink } from './filters/unwikilink.js';
 import { slugifyString } from './filters/slugify.js';
-import { settings } from '../_data/meta.js';
+import { load as yamlLoad } from 'js-yaml';
 
-/** The Featured list from settings.yaml, in its order. Each item is { type: <folder in src/posts>, post: <path inside it, no .md> }, as Sveltia saves it. */
-export const featured = collection => {
-  const byPath = new Map(collection.getAll().map(item => [item.inputPath, item]));
-  return (settings.featured ?? []).flatMap(({ type, post }) => {
+/** Posts picked in Sveltia, in their order. Each pick is { type: <folder in src/posts>, post: <path inside it, no .md> }, as Sveltia saves it. */
+export const resolvePicks = (items, picks = []) => {
+  const byPath = new Map(items.map(item => [item.inputPath, item]));
+  return (picks ?? []).flatMap(({ type, post }) => {
     const inputPath = `./src/posts/${type}/${post}.md`;
-    // ⚠ A listed file that doesn't exist stops the build, so a renamed post can't drop off the start page silently.
-    if (!fs.existsSync(inputPath)) throw new Error(`settings.yaml → featured: no post at ${inputPath}`);
+    // ⚠ A pick that doesn't exist stops the build, so a renamed post can't drop off a page silently.
+    if (!fs.existsSync(inputPath)) throw new Error(`Picked post not found: ${inputPath} (featured.yaml or now.md)`);
     return byPath.get(inputPath) ?? []; // a draft is left out of production builds, like everywhere else
   });
 };
+
+/** The Featured list, src/_data/featured.yaml → posts (Sveltia: Featured). Read from the file: collections are built outside the data cascade. */
+export const featured = collection =>
+  resolvePicks(collection.getAll(), yamlLoad(fs.readFileSync('./src/_data/featured.yaml', 'utf8'))?.posts);
 
 /** All relevant pages as a collection for sitemap.xml */
 export const showInSitemap = collection => {
