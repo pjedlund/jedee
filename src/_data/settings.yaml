@@ -3,7 +3,7 @@ identity:
   email: me@johanedlund.se
   website: https://johanedlund.se
   avatar: /avatar.webp
-  tagline: I design and build for the web from Malmö, Sweden.
+  tagline: I design and build for the world wide web from Malmö, Sweden.
   bio: Johan Edlund is a web designer living in Malmö, Sweden. He believes that Jesus Christ is the truth and the way.
   description: Personal site of Johan Edlund
   feedDescription: Jesus Christ is the truth and the way.
@@ -42,7 +42,7 @@ repos:
 switches:
   breadcrumb: true
   nameReveal: true
-  easteregg: false
+  easteregg: true
   viewRepo: true
   hideNav: true
   noindexSite: true
