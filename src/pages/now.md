@@ -9,7 +9,6 @@ watching:
   - The Killing
 reading:
   - A Confession
-  - The Kingdom of God is Within You
 draft: false
 layout: now
 permalink: /now/index.html
