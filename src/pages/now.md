@@ -1,5 +1,5 @@
 ---
-title: Now
+title: /now
 description: What I'm doing now.
 date: 2026-09-11
 location: Slottsstaden, Malmö
