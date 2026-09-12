@@ -275,22 +275,22 @@ singletons:
         required: false
         hint: 'The first one is shown on the start page, under "Featured". Drag to reorder.'
         types:
-          - { name: articles, label: Article, widget: object, fields: [{ name: post, label: Article, widget: relation, collection: articles, search_fields: [title], display_fields: [title] }] }
-          - { name: notes, label: Note, widget: object, fields: [{ name: post, label: Note, widget: relation, collection: notes, search_fields: [title], display_fields: [title] }] }
-          - { name: photos, label: Photo, widget: object, fields: [{ name: post, label: Photo, widget: relation, collection: photos, search_fields: [title], display_fields: [title] }] }
-          - { name: jams, label: Jam, widget: object, fields: [{ name: post, label: Jam, widget: relation, collection: jams, search_fields: [title], display_fields: [title] }] }
-          - { name: watching, label: Film, widget: object, fields: [{ name: post, label: Film, widget: relation, collection: watching, search_fields: [title], display_fields: [title] }] }
-          - { name: reading, label: Book, widget: object, fields: [{ name: post, label: Book, widget: relation, collection: reading, search_fields: [title], display_fields: [title] }] }
-          - { name: activities, label: Activity, widget: object, fields: [{ name: post, label: Activity, widget: relation, collection: activities, search_fields: [title], display_fields: [title] }] }
-          - { name: audio, label: Recording, widget: object, fields: [{ name: post, label: Recording, widget: relation, collection: audio, search_fields: [title], display_fields: [title] }] }
-          - { name: videos, label: Video, widget: object, fields: [{ name: post, label: Video, widget: relation, collection: videos, search_fields: [title], display_fields: [title] }] }
-          - { name: events, label: Event, widget: object, fields: [{ name: post, label: Event, widget: relation, collection: events, search_fields: [title], display_fields: [title] }] }
-          - { name: recipes, label: Recipe, widget: object, fields: [{ name: post, label: Recipe, widget: relation, collection: recipes, search_fields: [title], display_fields: [title] }] }
-          - { name: bookmarks, label: Bookmark, widget: object, fields: [{ name: post, label: Bookmark, widget: relation, collection: bookmarks, search_fields: [title], display_fields: [title] }] }
-          - { name: likes, label: Like, widget: object, fields: [{ name: post, label: Like, widget: relation, collection: likes, search_fields: [title], display_fields: [title] }] }
-          - { name: replies, label: Reply, widget: object, fields: [{ name: post, label: Reply, widget: relation, collection: replies, search_fields: [title], display_fields: [title] }] }
-          - { name: reposts, label: Repost, widget: object, fields: [{ name: post, label: Repost, widget: relation, collection: reposts, search_fields: [title], display_fields: [title] }] }
-          - { name: rsvps, label: RSVP, widget: object, fields: [{ name: post, label: RSVP, widget: relation, collection: rsvps, search_fields: [title], display_fields: [title] }] }
+          - { name: articles, label: Article, widget: object, fields: [{ name: post, label: Article, widget: relation, collection: articles, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }] }
+          - { name: notes, label: Note, widget: object, fields: [{ name: post, label: Note, widget: relation, collection: notes, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }] }
+          - { name: photos, label: Photo, widget: object, fields: [{ name: post, label: Photo, widget: relation, collection: photos, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }] }
+          - { name: jams, label: Jam, widget: object, fields: [{ name: post, label: Jam, widget: relation, collection: jams, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }] }
+          - { name: watching, label: Film, widget: object, fields: [{ name: post, label: Film, widget: relation, collection: watching, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }] }
+          - { name: reading, label: Book, widget: object, fields: [{ name: post, label: Book, widget: relation, collection: reading, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }] }
+          - { name: activities, label: Activity, widget: object, fields: [{ name: post, label: Activity, widget: relation, collection: activities, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }] }
+          - { name: audio, label: Recording, widget: object, fields: [{ name: post, label: Recording, widget: relation, collection: audio, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }] }
+          - { name: videos, label: Video, widget: object, fields: [{ name: post, label: Video, widget: relation, collection: videos, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }] }
+          - { name: events, label: Event, widget: object, fields: [{ name: post, label: Event, widget: relation, collection: events, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }] }
+          - { name: recipes, label: Recipe, widget: object, fields: [{ name: post, label: Recipe, widget: relation, collection: recipes, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }] }
+          - { name: bookmarks, label: Bookmark, widget: object, fields: [{ name: post, label: Bookmark, widget: relation, collection: bookmarks, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }] }
+          - { name: likes, label: Like, widget: object, fields: [{ name: post, label: Like, widget: relation, collection: likes, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }] }
+          - { name: replies, label: Reply, widget: object, fields: [{ name: post, label: Reply, widget: relation, collection: replies, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }] }
+          - { name: reposts, label: Repost, widget: object, fields: [{ name: post, label: Repost, widget: relation, collection: reposts, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }] }
+          - { name: rsvps, label: RSVP, widget: object, fields: [{ name: post, label: RSVP, widget: relation, collection: rsvps, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }] }
   # /now (nownownow.com): what I'm up to, plus picked jams, films and books. ⚠ Picks are paths inside each folder; a pick that no longer exists stops the build.
   - name: now
     label: Now
