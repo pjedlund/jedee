@@ -16,6 +16,8 @@ tags:
   - searchable
 ---
 
-Marveling at the speed of Tove. 
+Marveling at the speed of Tove.
 
 https://www.youtube.com/watch?v=hAHd28lyJys
+
+<div><custom-youtube @slug="hAHd28lyJys" @poster="{{ 'hAHd28lyJys' | youtubePoster }}" @label="Tove Alexandersson POV"></custom-youtube></div>
