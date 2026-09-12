@@ -300,8 +300,8 @@ singletons:
       - *description
       - { name: date, label: Last updated, widget: string, hint: 'YYYY-MM-DD — bump it whenever the page changes; shown at the top', pattern: ['^\d{4}-\d{2}-\d{2}', 'Start with YYYY-MM-DD'] }
       - { name: location, label: Where I am, widget: string, required: false, hint: 'Shown after the date, e.g. Malmö, Sweden' }
-      - { name: listening, label: Listening to, widget: relation, collection: jams, multiple: true, max: 3, required: false, search_fields: [title], display_fields: [title] }
-      - { name: watching, label: Watching, widget: relation, collection: watching, multiple: true, max: 3, required: false, search_fields: [title], display_fields: [title] }
-      - { name: reading, label: Reading, widget: relation, collection: reading, multiple: true, max: 3, required: false, search_fields: [title], display_fields: [title] }
+      - { name: listening, label: Listening to, widget: relation, collection: jams, multiple: true, max: 3, required: false, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }
+      - { name: watching, label: Watching, widget: relation, collection: watching, multiple: true, max: 3, required: false, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }
+      - { name: reading, label: Reading, widget: relation, collection: reading, multiple: true, max: 3, required: false, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }
       - *draft
       - { name: body, label: What I'm doing, widget: markdown, modes: [raw], required: false }
