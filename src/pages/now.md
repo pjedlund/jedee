@@ -2,7 +2,7 @@
 title: Now
 description: What I'm doing now.
 date: 2026-09-11
-location: Malmö
+location: Slottsstaden, Malmö
 listening:
   - Nine
 watching:
