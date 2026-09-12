@@ -26,7 +26,7 @@ profiles:
     relMe: false
   flickr:
     url: https://www.flickr.com/people/pjedlund
-    relMe: false
+    relMe: true
   dribbble:
     url: https://dribbble.com/pjedlund
     relMe: false
