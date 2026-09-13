@@ -29,6 +29,8 @@ body {
   accent-color: var(--color-accent-orange);
   letter-spacing: var(--tracking);
   border-top: var(--color-border-height) solid var(--color-border-top);
+  /* ⚠ No faux bold, italic or small caps: a style with no real face renders plain instead. See the wiki "Font subsetting". */
+  font-synthesis: none;
 }
 
 main {

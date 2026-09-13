@@ -1,5 +1,5 @@
 ---
-description: "Shipping only the characters a site needs from a web font, and how a missing character silently falls back to another font."
+description: "Shipping only the characters and styles a site needs from a web font, and how a missing character falls back to another font while a missing style is faked."
 date: 2026-09-10
 ---
 
@@ -49,6 +49,29 @@ Then check before replacing the file: nothing the old cmap had is gone, the new 
 
 ⚠ Every character added is paid for on every page that loads the file. Whole blocks are tempting ("add all of Latin-1") and expensive: the full Latin-1 Supplement took this site's heading font from 33 KB to 45 KB, for letters no heading used. Add characters as pages need them.
 
+## Missing styles
+
+The same silent failure happens one level up, with a whole style instead of a character. When text asks for a weight or style the family has no file for (an `<em>` in a heading whose font ships only Bold, `font-weight: 700` on a font loaded at 400), the browser does not fall back to another family. It **synthesizes** the face from the one it has: a faux bold thickens the outlines, a faux italic slants the upright letters. It passes at a glance and reads worse, because a real italic is drawn separately, not a slanted roman ([Anders Norén, 2025](https://andersnoren.se/how-to-disable-faux-weights-with-css/); [Richard Rutter, "Beware the faux bold"](https://clagnut.com/blog/2438/)).
+
+[`font-synthesis`](https://developer.mozilla.org/en-US/docs/Web/CSS/font-synthesis) (CSS Fonts 4) turns it off:
+
+```css
+body {
+  font-synthesis: none;
+}
+```
+
+A missing italic then renders upright and a missing bold at the nearest real weight, so the gap shows instead of being faked. The property is inherited, so one declaration covers the page. `none` covers all four kinds of fake: weight, style, small caps and super/subscript position. The longhands (`font-synthesis-weight`, `-style`, `-small-caps`, `-position`) switch them one at a time.
+
+Two things look like gaps and are not, both measured in Chrome and Firefox:
+
+- **Bolder than the only bold.** `<strong>` inside a bold heading asks for 900 (`bolder`). The browser takes the 700 face as it is and synthesizes nothing.
+- **A variable font with no `font-weight` descriptor.** Its `@font-face` still gives real weights along the axis, because in CSS Fonts 4 the descriptor's initial value is `auto`, the range the file declares.
+
+The cmap scan above cannot see a missing style. It looks the family up by name, so italic text in a family with no italic file is checked against the upright cmap and passes. The check is the computed `font-style` and `font-weight` against the `@font-face` rules that exist. On a site with a handful of faces the risky combinations are few enough to grep the built HTML for, for example a heading that contains `<em>`, `<i>` or `<cite>`.
+
+A gap found this way is filled the subsetting way: cut the missing face from the full font, with the same character list as its sibling. A browser downloads a face only when a page uses it, so a style that appears on three headings costs nothing on the other pages.
+
 ## In jedee
 
 Eleventy Excellent ships **static, pre-subset `woff2` files** and has no subsetting step in the build. Its `@font-face` blocks have no `unicode-range`, so adding a character to a file is the whole fix: no CSS change. The full source fonts are bundled beside the subsets.
@@ -56,6 +79,7 @@ Eleventy Excellent ships **static, pre-subset `woff2` files** and has no subsett
 | file | kind | characters | source in the repo |
 | --- | --- | --- | --- |
 | `source-serif/source-serif.woff2` | static, Bold 700 only | 109 | `SourceSerif4-Bold.otf.woff2` |
+| `source-serif/source-serif-bold-italic.woff2` | static, Bold Italic 700 only | 109 | `_source/TTF/SourceSerif4-BoldIt.ttf.woff2` |
 | `source-sans/source-sans.woff2` | variable | 206 | `_source/VF/SourceSans3VF-Upright.otf.woff2` |
 | `source-sans/source-sans-italic.woff2` | variable | 207 | `_source/VF/SourceSans3VF-Italic.otf.woff2` |
 | `source-code-pro/source-code-pro.woff2` | variable | 241 | none bundled |
@@ -71,8 +95,14 @@ Left falling back on purpose:
 - **`⁂`, `❖`, `↩︎`** (the last is the footnote back-link). Also in no Source font.
 - **Code-block symbols** (`→ ← │ ⌄ ⚠`). The code font is a trimmed variable subset with no full variable source bundled; fixing it means downloading Source Code Pro's variable release first.
 
-⚠ Source Serif was deliberately kept small: the Latin-1 block was added and taken back out the same day. Add accented letters to it one at a time, when a heading actually needs one.
+⚠ Source Serif was deliberately kept small: the Latin-1 block was added and taken back out the same day. Add accented letters to it one at a time, when a heading actually needs one. ⚠ Add each one to the Bold Italic too: the two files share one character list, and a character in only one of them falls back in the other.
+
+**Styles.** Since 2026-09-13 `body` sets `font-synthesis: none` (`global/base/global-styles.css`). Until then only `.small-caps` refused fakes. Checking the shipped files against the CSS turned up two faux italics and no faux bold:
+
+- **Italic in a serif heading.** Source Serif ships Bold only, so an `<em>` in an `h1`–`h3` was a slanted Bold: the RSVP card's "RSVP *yes*" (`partials/card-response.njk`; all three RSVPs are drafts for now) and one heading on [[The interlinker's second render pass]]. Both now use a real Bold Italic, `source-serif-bold-italic.woff2`, cut from the bundled `SourceSerif4-BoldIt` to the Bold's 109 characters: 17 KB, against 33 KB for the Bold. It is not preloaded, so only a page with italic in a heading downloads it.
+- **Italic in code.** The syntax theme sets `.token.keyword { font-style: italic }` (`global/blocks/code.css`), and there is no Source Code Pro italic, so the keywords on 31 pages were slanted. They are now upright and still violet. A real italic needs Source Code Pro's italic downloaded first, like the code-block symbols above.
+- **Source Sans** is variable 200–900 in upright and italic, so every weight and style in body text is real. The breadcrumb's connector words use Source Sans rather than the serif for this reason (`global/blocks/breadcrumb.css`).
 
 The recipe itself needs a Python with fontTools and brotli; on this machine that is the python.org framework install, not the default `python3`.
 
-Raw source: `src/_raw/dev-notes/How missing glyphs were found and filled.md`
+Raw sources: `src/_raw/dev-notes/How missing glyphs were found and filled.md`, `src/_raw/How to disable faux weights with CSS and font synthesis.md`
