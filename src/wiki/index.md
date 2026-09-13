@@ -85,7 +85,7 @@ The private wiki documenting web techniques and how jedee is designed and built.
 
 ## Recent additions
 
-**2026-09-13** — enrich: **[[Font subsetting]]** gains "Missing styles": a weight or style with no file is faked rather than fallen back, the cmap scan cannot see it, and `font-synthesis: none` on `body` now refuses it. In jedee that turned up two faux italics and no faux bold: `<em>` in the bold-only serif headings, and the code theme's italic keywords. A 17 KB Source Serif Bold Italic, cut from the bundled source, would fix the headings properly; not shipped.
+**2026-09-13** — enrich: **[[Font subsetting]]** gains "Missing styles": a weight or style with no file is faked rather than fallen back, the cmap scan cannot see it, and `font-synthesis: none` on `body` now refuses it. In jedee that turned up two faux italics and no faux bold: `<em>` in the bold-only serif headings, and the code theme's italic keywords. The headings now get a real Source Serif Bold Italic, a 17 KB subset cut from the bundled source; the code keywords stay upright.
 
 **2026-09-11** — enrich: **[[Sveltia CMS]]** gains "Fields for one type": a dropdown whose values are numbers saves real numbers, which is how the film star rating works; ⚠ nested event dates stay plain text, since the datetime field drops seconds.
 

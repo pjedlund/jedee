@@ -7,7 +7,7 @@ Append-only. One entry per ingest / query-filed / lint, newest first. Entry form
 
 ## [2026-09-13] enrich | Font subsetting
 
-A "Missing styles" section from Anders Norén's faux-weights clip: synthesized bold and italic, `font-synthesis: none`, two cases that look like gaps and are not (bolder than the only bold; a variable font with no weight descriptor), and why the cmap scan misses a missing style. Tested with the shipped woff2 files in headless Chrome and Firefox. In jedee `body` now sets `font-synthesis: none`, which made the `.small-caps` longhand redundant (removed; [[Typographic conventions]] updated), and two faux italics are straightened. One new link, [[The interlinker's second render pass]]. Sources: the clip in `src/_raw/` and this session.
+A "Missing styles" section from Anders Norén's faux-weights clip: synthesized bold and italic, `font-synthesis: none`, two cases that look like gaps and are not (bolder than the only bold; a variable font with no weight descriptor), and why the cmap scan misses a missing style. Tested with the shipped woff2 files in headless Chrome and Firefox. In jedee `body` now sets `font-synthesis: none`, which made the `.small-caps` longhand redundant (removed; [[Typographic conventions]] updated), and the two faux italics are gone: the serif headings get a new 17 KB Bold Italic subset with the Bold's 109 characters, and the code keywords render upright. One new link, [[The interlinker's second render pass]]. Sources: the clip in `src/_raw/` and this session.
 
 ## [2026-09-11] enrich | Sveltia CMS
 
