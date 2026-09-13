@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-13] enrich | Font subsetting
+
+A "Missing styles" section from Anders Norén's faux-weights clip: synthesized bold and italic, `font-synthesis: none`, two cases that look like gaps and are not (bolder than the only bold; a variable font with no weight descriptor), and why the cmap scan misses a missing style. Tested with the shipped woff2 files in headless Chrome and Firefox. In jedee `body` now sets `font-synthesis: none`, which made the `.small-caps` longhand redundant (removed; [[Typographic conventions]] updated), and two faux italics are straightened. One new link, [[The interlinker's second render pass]]. Sources: the clip in `src/_raw/` and this session.
+
 ## [2026-09-11] enrich | Sveltia CMS
 
 "Fields for one type": a `select` with number values saves real numbers (the film star rating, checked with Johan's test save), make stored values agree before adding a number field, nested event dates stay plain text for the seconds, per-type image folders for covers, and an empty undeclared key saves as `null`. The shared fields gained "Also on". One new link, [[Self-hosting remote images at build time]]. Source: this session.

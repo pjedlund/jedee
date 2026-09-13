@@ -2,6 +2,4 @@
 .small-caps {
   font-variant-caps: small-caps;
   letter-spacing: var(--tracking-wide);
-  /* ⚠ Source Sans italic has no small caps; this stops the browser drawing fakes. */
-  font-synthesis-small-caps: none;
 }
