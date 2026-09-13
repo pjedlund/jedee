@@ -22,5 +22,3 @@ Tolstoy describing his midlife religious awakening («переворот» "over
 > I understood that faith was not merely an evidence of things not seen, and so forth, not revelation (that is only the description of one of the symptoms of faith), not the relation of man to man (faith has to be defined, and then God, and not first God, and faith through him), not merely an agreement with what a man was told, as faith was generally understood, — that faith was the knowledge of the meaning of human life, in consequence of which man did not destroy himself, but lived. Faith is the power of life. If a man lives he believes in something.
 
 I can only agree: faith is life.
-
-[[Henry George]]
