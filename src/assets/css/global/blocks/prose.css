@@ -92,7 +92,8 @@
 /* marker only for "regular lists" */
 .prose :is(ul:not([class]):not([role='list'])) li::marker {
   color: var(--color-accent-orange-text);
-  content: '– ';
+  /* ⚠ ◦ is added to the Source Sans subset by hand; a new marker glyph needs the same (see Font subsetting). */
+  content: '◦ ';
 }
 
 /* One text edge for both kinds; 2.75ch holds a two-digit number. */
