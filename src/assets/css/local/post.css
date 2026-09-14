@@ -53,6 +53,13 @@
   gap: 0.35em;
 }
 
+/* Rating stars sit closer to each other than an icon to its label. ⚠ No `.post` prefix: book and film pages have no .post ancestor. */
+.meta-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.1em;
+}
+
 .post .meta-icon {
   flex: none;
   inline-size: 1em;

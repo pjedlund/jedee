@@ -42,6 +42,11 @@
   {% if date %}
     <span class="meta-item">{% svg 'posts/calendar', '', 'meta-icon' %}{% set definedDate = date %}{% include "partials/date.njk" %}</span>
   {% endif %}
+  {# Books and films: my rating out of 5, halves allowed; not mf2 p-rating (reading/watching aren't h-review by design). #}
+  {% if scoreMy %}
+    {# ⚠ Stars are an SVG because Source Sans has no ★ glyph; ½ is text because it does. #}
+    <span class="meta-item meta-rating">{% for i in range(0, scoreMy | int) %}{% svg 'posts/star', '', 'meta-icon' %}{% endfor %}{% if scoreMy % 1 %}<span aria-hidden="true">½</span>{% endif %}<span class="visually-hidden">Rated {{ scoreMy }} out of 5</span></span>
+  {% endif %}
   {% if updatedDate %}
      | Updated: {{ updatedDate | formatDate('MMMM D, YYYY') }}
   {% endif %}
