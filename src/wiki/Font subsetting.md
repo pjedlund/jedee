@@ -82,8 +82,8 @@ Eleventy Excellent ships **static, pre-subset `woff2` files** and has no subsett
 | --- | --- | --- | --- |
 | `source-serif/source-serif.woff2` | static, Bold 700 only | 109 | `SourceSerif4-Bold.otf.woff2` |
 | `source-serif/source-serif-bold-italic.woff2` | static, Bold Italic 700 only | 109 | `_source/TTF/SourceSerif4-BoldIt.ttf.woff2` |
-| `source-sans/source-sans.woff2` | variable | 207 | `_source/VF/SourceSans3VF-Upright.otf.woff2` |
-| `source-sans/source-sans-italic.woff2` | variable | 208 | `_source/VF/SourceSans3VF-Italic.otf.woff2` |
+| `source-sans/source-sans.woff2` | variable | 208 | `_source/VF/SourceSans3VF-Upright.otf.woff2` |
+| `source-sans/source-sans-italic.woff2` | variable | 209 | `_source/VF/SourceSans3VF-Italic.otf.woff2` |
 | `source-sans/source-sans-cyrillic.woff2` | variable, `unicode-range` | 102 | `_source/VF/SourceSans3VF-Upright.otf.woff2` |
 | `source-sans/source-sans-italic-cyrillic.woff2` | variable, `unicode-range` | 102 | `_source/VF/SourceSans3VF-Italic.otf.woff2` |
 | `source-code-pro/source-code-pro.woff2` | variable | 241 | none bundled |
