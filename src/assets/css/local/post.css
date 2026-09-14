@@ -3,18 +3,17 @@ article h1 {
   font-size: var(--size-step-6);
 }
 
-/* Subtitle under the page title (the <p> in <hgroup>): bold italic, four steps below the h1, dimmed. ⚠ --flow-space sits on the p itself, or prose's "space after a heading" rule wins. */
+/* Subtitle under the page title (the <p> in <hgroup>): Source Sans italic, four steps below the h1. ⚠ --flow-space sits on the p itself, or prose's "space after a heading" rule wins. */
 hgroup > p {
   --flow-space: var(--space-2xs);
 
-  font-family: var(--font-display);
-  font-weight: var(--font-bold);
+  font-family: var(--font-base);
+  font-weight: var(--font-regular);
   font-style: italic;
   font-size: var(--size-step-2);
   line-height: var(--leading-fine);
-  /* ⚠ Mixed toward the page background, so it only holds on that surface: 4.0:1 light, 7.9:1 dark (large text needs 3:1). */
-  color: color-mix(in oklab, var(--color-headline) 75%, var(--color-bg));
-  text-wrap: pretty;
+  color: var(--color-headline);
+  text-wrap: balance;
 }
 
 /* Lede / intro — a slightly larger, gently de-emphasised summary under the title. */
