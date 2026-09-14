@@ -1,4 +1,5 @@
-.post article h1 {
+/* ⚠ Loaded by every post-type layout; don't scope with `.post` — that body class exists on articles only. */
+article h1 {
   font-size: var(--size-step-6);
 }
 
@@ -9,17 +10,17 @@
   text-wrap: balance;
 }
 
-.post article h2 {
+article h2 {
   font-size: var(--size-step-3);
 }
 
-.post article h3 {
+article h3 {
   font-size: var(--size-step-2);
 }
 
 /* Featured image always 16/9. Second selector: the featured image is a lightbox now, so the element after the h1 is its div.feature wrapper, not a bare picture/figure. */
-.post h1 + :is(picture, figure) img,
-.post h1 + .feature picture img {
+h1 + :is(picture, figure) img,
+h1 + .feature picture img {
   max-inline-size: var(--max-img-width, 100%);
   block-size: auto;
   aspect-ratio: 16/9;
@@ -27,12 +28,12 @@
   object-position: center;
 }
 
-.post date {
+date {
   font-size: var(--size-step-1);
   color: var(--color-text-light);
 }
 
-.post .credit {
+.credit {
   font-size: var(--size-step-min-1);
   color: var(--color-text-accent);
   background-color: var(--color-bg);
@@ -42,25 +43,25 @@
   max-inline-size: fit-content;
 }
 
-.post .meta {
+.meta {
   font-size: var(--size-step-min-1);
 }
 
 /* An icon + its label on the meta line (activity type, date). The cluster gap keeps the items apart; this keeps each glyph tight to its own text. */
-.post .meta-item {
+.meta-item {
   display: inline-flex;
   align-items: center;
   gap: 0.35em;
 }
 
-/* Rating stars sit closer to each other than an icon to its label. ⚠ No `.post` prefix: book and film pages have no .post ancestor. */
+/* Rating stars sit closer to each other than an icon to its label. */
 .meta-rating {
   display: inline-flex;
   align-items: center;
   gap: 0.1em;
 }
 
-.post .meta-icon {
+.meta-icon {
   flex: none;
   inline-size: 1em;
   block-size: 1em;
