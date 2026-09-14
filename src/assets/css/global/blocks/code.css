@@ -41,6 +41,9 @@ code,
 pre {
   font-family: var(--font-mono);
   font-size: var(--size-step-min-1);
+  /* Code is never bold or italic, even inside a heading or <em>. */
+  font-weight: var(--font-regular);
+  font-style: normal;
   background-color: var(--color-code-bg);
 }
 
@@ -154,12 +157,10 @@ pre[class*='language-'] {
 
 .token.id {
   color: var(--color-code-pink);
-  font-weight: var(--font-bold);
 }
 
 .token.important {
   color: var(--color-code-pink);
-  font-weight: var(--font-bold);
 }
 
 .token.inserted {
@@ -168,7 +169,6 @@ pre[class*='language-'] {
 
 .token.keyword {
   color: var(--color-code-violet);
-  font-style: italic;
 }
 
 .token.number {

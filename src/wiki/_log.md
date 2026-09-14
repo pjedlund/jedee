@@ -7,7 +7,7 @@ Append-only. One entry per ingest / query-filed / lint, newest first. Entry form
 
 ## [2026-09-14] enrich | Font subsetting
 
-Two additions from one session. A dev-server checker that greys out fallback characters and outlines fake styles, using a zero-width "blank font" in a canvas; the simpler two-fallback comparison missed ⁂ and ❖, and Chrome rejected the first blank font over an empty glyph table. And Cyrillic for Source Sans as separate `unicode-range` files, prompted by "переворот" on the A Confession page. Also recorded that `FontFace.weight` reads `normal` for a variable face with no weight descriptor.
+Two additions from one session. A dev-server checker that greys out fallback characters and outlines fake styles, using a zero-width "blank font" in a canvas; the simpler two-fallback comparison missed ⁂ and ❖, and Chrome rejected the first blank font over an empty glyph table. And Cyrillic for Source Sans as separate `unicode-range` files, prompted by "переворот" on the A Confession page. Also recorded that `FontFace.weight` reads `normal` for a variable face with no weight descriptor. Then `font-synthesis: none` came off `body` again, and code became never bold or italic.
 
 ## [2026-09-13] enrich | Font subsetting
 
