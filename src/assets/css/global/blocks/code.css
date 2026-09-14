@@ -69,8 +69,18 @@ pre {
 }
 
 /* Style Adjustments for <code> within different contexts */
+/* Inline code sits in a raised chip, adapted from arielsalminen.com. ⚠ Keep it display: inline — inline-block would move its baseline off the prose line. */
 :where(:not(pre)) > code {
-  padding: 0.1em 0.4em;
+  --inline-code-shadow: var(--box-shadow-popup);
+
+  padding: var(--space-3xs) var(--space-xs);
+  border-radius: var(--border-radius-medium);
+  background-color: var(--color-bg-accent);
+  box-shadow: var(--inline-code-shadow);
+}
+
+:root[data-theme='dark'] :where(:not(pre)) > code {
+  --inline-code-shadow: var(--box-shadow-popup-dark);
 }
 
 pre[class*='language-'] {
