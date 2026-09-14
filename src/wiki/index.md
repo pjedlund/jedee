@@ -12,6 +12,7 @@ The private wiki documenting web techniques and how jedee is designed and built.
 - [[Per-type feeds]] — fourteen of sixteen types have one, `events` and `reposts` deliberately don't; ⚠ a feed only ever sees the post body, never front matter.
 - [[Abbreviations]] — the `abbr` element, its `title`-attribute limits, and the markdown syntax for it; in jedee one glossary in directory data feeds all fifty-odd wiki pages. ⚠ **the data key must not be called `abbreviations`** — Eleventy hands the page data to markdown-it as its `env`, which is exactly where markdown-it-abbr keeps its own store.
 - [[The lang attribute]] — marking foreign-language passages with `lang="sv"` (page default + per-part); in jedee the homepage greeting, one all-Swedish note, and the mostly-Swedish activities, whose titles are language-detected at build time.
+- [[Web components]] — custom elements, and Ariel Salminen's case for building them in two layers (HTML and CSS first, JavaScript on top); in jedee every custom element wraps markup that already works, there is no Shadow DOM, and three tags are never defined at all. ⚠ WebC files are not web components.
 
 ## CSS & design
 
@@ -84,6 +85,8 @@ The private wiki documenting web techniques and how jedee is designed and built.
 - [[Site search]] — a JSON index written at build time, fetched once and filtered in the browser; no search library at a few hundred entries. ⚠ `page.rawInput` reaches a page's body at collection time where `templateContent` throws, but it is the source *before* rendering, so template expressions and HTML comments land in the index unless stripped. ⚠ A transitioned `visibility` is still `hidden` on the frame `focus()` runs, and `[hidden]` is a UA rule any author `display` outranks.
 
 ## Recent additions
+
+**2026-09-14** — ingest: **[[Web components]]**, from Ariel Salminen's *Progressive Web Components* (2026). The general part: the three browser pieces, the usual complaints, and her three kinds (composite, primitive, declarative). In jedee: five defined custom elements, all wrapping server-rendered markup, no Shadow DOM, and three tag names that nothing ever defines. See `_log.md`.
 
 **2026-09-14** — enrich: **[[Typographic conventions]]** gains a Lists section. Bringhurst has no list rule, but his figure rule gives list numbers old-style figures; Butterick has the bullet advice. ⚠ The browser gives `::marker` `tabular-nums`, which turns list numbers lining unless the marker is set explicitly. In jedee the numbers are now old-style, and `orange-600` in light mode for 4.5:1 contrast.
 

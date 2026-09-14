@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-14] ingest | Web components
+
+A new page from Ariel Salminen's *Progressive Web Components* (2026-03-25), clipped to `src/_raw/`. The general part covers the three browser pieces (custom elements, Shadow DOM, templates), the usual complaints about JavaScript-rendered components, and her split into composite, primitive and declarative kinds, with Elena as a one-paragraph example dated as a release candidate. In jedee, counted in a production build: five defined custom elements, all composite; no Shadow DOM (the one `attachShadow` is is-land's declarative-shadow-root code, unused here); and `custom-card`, `custom-youtube` and `custom-masonry` never defined, kept as CSS hooks. ⚠ WebC files are not web components. Links earned: [[is-land]], [[The place map]], [[The PhotoSwipe lightbox]], [[The YouTube embed]], [[Layout shift]]. Found in passing: [[is-land]]'s table still lists `custom-masonry.webc` as an `on:visible` island, which it has not been since 2026-09-06.
+
 ## [2026-09-14] enrich | Typographic conventions
 
 A Lists section, prompted by Johan asking what Bringhurst says about styling lists. He says nothing directly; his 3.2.1 figure rule reaches list numbers, and Butterick has the bullet advice. ⚠ Chrome's default stylesheet gives `::marker` `tabular-nums`, which made jedee's list numbers lining despite `.prose`'s old-style setting, measured on `/wiki/link-checking/`. In jedee the marker now restates the figure slot, and the numbers moved to a new `--color-accent-orange-text` (`orange-600` in light mode, since `orange-500` is 3.5:1 there), shared with the bullet marker, now a hollow bullet (◦) added to the Source Sans subset along with • for plain lists ([[Font subsetting]] counts updated). Both list kinds share a 2.75ch start padding, measured to hold "10. ". No new links. Source: this session.
