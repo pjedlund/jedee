@@ -1,5 +1,5 @@
 ---
-description: "The book-typography rules for figures, small caps, capitals, captions, line breaks, superscripts and ordinals, where they come from, and what each costs in accessibility."
+description: "The book-typography rules for figures, small caps, capitals, captions, line breaks, superscripts, ordinals and list markers, where they come from, and what each costs in accessibility."
 date: 2026-09-10
 ---
 
@@ -63,6 +63,14 @@ When to use words is a house-style choice, and ordinals follow the same rule as 
 
 ⚠ In CSS, `font-variant-numeric: ordinal` switches on the font's `ordn` feature. In some fonts that feature is contextual and raises only letters that follow a digit. In others it is a plain substitution that raises every lowercase letter in its span. Check the font before putting it on more than the suffix.
 
+## Lists
+
+Bringhurst has no rule for lists: neither the book's numbered rules nor webtypography.net covers bullets or list numbers. His figure rule still reaches them. A list number sits in lowercase running text, so by 3.2.1 it takes old-style figures. Butterick ([bulleted and numbered lists](https://practicaltypography.com/bulleted-and-numbered-lists.html)) says the bullet or number may differ in font and size from the item's text, a bullet should be noticeable but not big, hollow bullets are subtler than solid ones, and an asterisk is too small and sits too high to serve as one.
+
+⚠ Chrome's default stylesheet gives `::marker` `font-variant-numeric: tabular-nums` (checked 2026-09-14). By the one-property trap under Figures, that also makes list numbers lining, whatever the list item inherits. Old-style numbers need the marker set explicitly: `ol li::marker { font-variant-numeric: oldstyle-nums tabular-nums; }`. Tabular keeps "9." and "10." the same width.
+
+A list number carries meaning ("see step 3"), so it counts as text and needs 4.5:1 contrast ([WCAG 1.4.3](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html)). A bullet is decoration and has no contrast requirement.
+
 ## Accessibility
 
 WCAG says little here directly. [1.4.8](https://www.w3.org/WAI/WCAG22/Understanding/visual-presentation.html) (level AAA) limits lines to 80 characters and rules out text justified to both margins, and says nothing about italic or capitals. The guidance comes from plain-language style guides and reading research instead:
@@ -97,6 +105,10 @@ Set on 2026-09-10, after a research pass and an audit of the site. The decisions
   - If a raised suffix is ever wanted, put `font-variant-position: super` on a span around the suffix only. The Source Sans subset has superscript forms of a–z, and this route leaves the `--nums-*` slots alone.
   - ⚠ Source Sans' `ordn` is the plain kind: all 28 lowercase letters, with no check for a preceding digit. `font-variant-numeric: ordinal` on a sentence would raise every letter in it. This is the same trap as `frac`.
   - Content was not swept for older figure ordinals. At the time of writing there were four: two dates ("the 14th of July", "the 22nd of July"), "16th century" in a film's clipped plot, and "45th Anniversary" in an album title.
+- **List markers** in `.prose` (added 2026-09-14).
+  - Ordered-list numbers take old-style tabular figures. The marker reads `--nums-figure`, so a list inside `.lining-nums` still gets lining numbers.
+  - The numbers are `--color-accent-orange-text`: `orange-600` in light mode (5.8:1 on the page; `orange-500` measured 3.5:1) and `orange-500` in dark (4.7:1). Other orange text that carries meaning can use the same variable.
+  - Unordered lists keep an `orange-500` en dash, which is decorative.
 - **Not done:**
   - no `.figures` or `.balance` class, since the defaults cover them;
   - never `dlig`, which rewrites "he" and "she";

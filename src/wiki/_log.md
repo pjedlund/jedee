@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-14] enrich | Typographic conventions
+
+A Lists section, prompted by Johan asking what Bringhurst says about styling lists. He says nothing directly; his 3.2.1 figure rule reaches list numbers, and Butterick has the bullet advice. ⚠ Chrome's default stylesheet gives `::marker` `tabular-nums`, which made jedee's list numbers lining despite `.prose`'s old-style setting, measured on `/wiki/link-checking/`. In jedee the marker now restates the figure slot, and the numbers moved to a new `--color-accent-orange-text` (`orange-600` in light mode, since `orange-500` is 3.5:1 there). No new links. Source: this session.
+
 ## [2026-09-14] enrich | Font subsetting
 
 Two additions from one session. A dev-server checker that greys out fallback characters and outlines fake styles, using a zero-width "blank font" in a canvas; the simpler two-fallback comparison missed ⁂ and ❖, and Chrome rejected the first blank font over an empty glyph table. And Cyrillic for Source Sans as separate `unicode-range` files, prompted by "переворот" on the A Confession page. Also recorded that `FontFace.weight` reads `normal` for a variable face with no weight descriptor. Then `font-synthesis: none` came off `body` again, and code became never italic (bold code is real and stays).

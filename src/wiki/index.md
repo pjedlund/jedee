@@ -17,7 +17,7 @@ The private wiki documenting web techniques and how jedee is designed and built.
 
 - [[Text wrapping]] — `text-wrap: balance` and `pretty`, the end of JavaScript widow-fixes; ⚠ the global `pretty` reset overrides an explicit `white-space: nowrap` (the breadcrumb fight).
 - [[OpenType features]] — ligatures, small caps, figure styles and stylistic sets, and which of them the site's Source Serif and Source Sans subsets actually carry; ⚠ `font-feature-settings` replaces its whole list on every declaration, and ⚠ Source Sans italic has no small caps, so asking for them gets fakes.
-- [[Typographic conventions]] — Bringhurst's and Butterick's rules for figures, small caps, capitals, captions, superscripts and ordinals, and what each costs in accessibility; in jedee, old-style figures in running text, five classes to add by hand (small caps and four figure classes that combine), real superscript footnote markers, and Chicago's words-to-one-hundred rule for ordinals with no raised suffix. ⚠ A font with superscript digits but no superscript brackets cannot set `[1]`, and Chrome draws no fakes.
+- [[Typographic conventions]] — Bringhurst's and Butterick's rules for figures, small caps, capitals, captions, superscripts, ordinals and lists, and what each costs in accessibility; in jedee, old-style figures in running text and on list numbers, five classes to add by hand (small caps and four figure classes that combine), real superscript footnote markers, and Chicago's words-to-one-hundred rule for ordinals with no raised suffix. ⚠ A font with superscript digits but no superscript brackets cannot set `[1]`, and Chrome draws no fakes.
 - [[Line length]] — 50–75 characters per line, and WCAG's AAA ceiling of 80; ⚠ `60ch` is not 60 characters — in Source Sans it sets about 72, because `ch` is the width of "0".
 - [[The theme toggle]] — one SVG sun masked into a moon, the reduced-motion split, and the inline script that prevents a flash of the wrong theme.
 - [[Focus rings and paint containment]] — ⚠ an outset focus ring is invisible inside anything that clips paint. A silent accessibility failure.
@@ -84,6 +84,8 @@ The private wiki documenting web techniques and how jedee is designed and built.
 - [[Site search]] — a JSON index written at build time, fetched once and filtered in the browser; no search library at a few hundred entries. ⚠ `page.rawInput` reaches a page's body at collection time where `templateContent` throws, but it is the source *before* rendering, so template expressions and HTML comments land in the index unless stripped. ⚠ A transitioned `visibility` is still `hidden` on the frame `focus()` runs, and `[hidden]` is a UA rule any author `display` outranks.
 
 ## Recent additions
+
+**2026-09-14** — enrich: **[[Typographic conventions]]** gains a Lists section. Bringhurst has no list rule, but his figure rule gives list numbers old-style figures; Butterick has the bullet advice. ⚠ The browser gives `::marker` `tabular-nums`, which turns list numbers lining unless the marker is set explicitly. In jedee the numbers are now old-style, and `orange-600` in light mode for 4.5:1 contrast.
 
 **2026-09-14** — enrich: **[[Font subsetting]]** gains a while-you-work check: on the dev server a script greys out every character a fallback font draws and outlines every fake style, measured against a zero-width blank font. Source Sans also gains Cyrillic, as two files only pages with Cyrillic download.
 
