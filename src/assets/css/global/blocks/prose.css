@@ -104,7 +104,9 @@
 }
 
 .prose ol li::marker {
-  color: var(--color-accent-orange);
+  color: var(--color-accent-orange-text);
+  /* ⚠ The browser gives ::marker tabular-nums, which also resets it to lining, so the figure slot is restated here. */
+  font-variant-numeric: var(--nums-figure,) tabular-nums;
 }
 
 .prose img {

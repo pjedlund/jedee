@@ -57,6 +57,8 @@
   --color-bg: var(--color-base-lightest);
 
   --color-accent-orange: var(--color-orange-500);
+  /* orange-500 is 3.5:1 on the light bg; text that carries meaning needs 4.5:1. */
+  --color-accent-orange-text: var(--color-orange-600);
   --color-accent-blue: var(--color-blue);
   --color-accent-green: var(--color-green);
 
@@ -81,6 +83,7 @@
     --color-bg: var(--color-gray-900);
 
     --color-accent-orange: var(--color-orange-500);
+    --color-accent-orange-text: var(--color-orange-500);
     --color-accent-blue: var(--color-blue-subdued);
     --color-accent-green: var(--color-green-subdued);
 
@@ -104,6 +107,7 @@
   --color-bg: var(--color-gray-900);
 
   --color-accent-orange: var(--color-orange-500);
+  --color-accent-orange-text: var(--color-orange-500);
   --color-accent-blue: var(--color-blue-subdued);
   --color-accent-green: var(--color-green-subdued);
 
