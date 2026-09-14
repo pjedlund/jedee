@@ -1,6 +1,6 @@
 ---
 title: Drottningar i Kungahälla
-subtitle: Part of Standard Ebook's Short Fiction by Selma Lagerlöf
+subtitle: Part of Standard Ebooks' Short Fiction by Selma Lagerlöf
 description: desc
 date: 2025-12-01
 cover: http://books.google.com/books/content?id=W8lOAQAAMAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api
