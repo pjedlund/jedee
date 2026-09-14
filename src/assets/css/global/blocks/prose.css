@@ -101,11 +101,6 @@
   padding-inline-start: 2.75ch;
 }
 
-/* ::marker takes no margin, so the gap after the marker is padding on the item. */
-.prose :is(ul, ol):not([class]) > li {
-  padding-inline-start: 0.3em;
-}
-
 .prose ol li::marker {
   color: var(--color-accent-orange-text);
   /* ⚠ The browser gives ::marker tabular-nums, which also resets it to lining, so the figure slot is restated here. */
