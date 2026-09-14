@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-14] ingest | Accessibility
+
+A parent page, written because about ten pages already carry accessibility material and nothing tied them together. The general part covers WCAG 2.2 (the four principles, the A/AA/AAA levels, and why AAA is not a whole-site target) and the limits of automated testing. In jedee: the public statement's WCAG 2.1 AA target, with the two 2.2 AA criteria never checked; the test's limits (ten pages, light mode only, `color-mix()` colors it cannot read); a stock-versus-jedee table counted in both repositories (`:focus-visible` 3 → 16, `prefers-reduced-motion` 3 → 12, `forced-colors` 0 → 5); links by principle; and two decisions, decorative contrast and cheap AAA criteria. Links earned: [[The accessibility test]], [[Alt text]], [[Syntax highlighting]], [[Typographic conventions]], [[Line length]], [[Focus rings and paint containment]], [[The main menu]], [[The theme toggle]], [[The lang attribute]], [[Abbreviations]], [[Tooltips]]. Found in passing: `customPaths` has held ten paths since `/now/` was added on 2026-09-11, but [[The accessibility test]] and its index line still say nine, and that page's "Suppressing a finding" section says "the four tested pages". Source: this session.
+
 ## [2026-09-14] fix | is-land
 
 The islands table still listed `custom-masonry.webc` as an EE-stock `on:visible` island, eight days after its script was removed over layout shift; found while writing [[Web components]]. Row removed, the count is seven, and a line says what became of the eighth, linking [[Layout shift]] and [[Web components]]. Rechecked against the templates: seven `<is-land>`s, `partials/gallery.njk` still included by nothing, and the `<is-land>` in `activity.njk` is only a comment mention. The 2026-09-06 verification paragraph and the raw-source line were brought in line too.

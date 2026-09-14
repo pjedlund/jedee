@@ -7,6 +7,7 @@ The private wiki documenting web techniques and how jedee is designed and built.
 
 ## Web standards & markup
 
+- [[Accessibility]] — WCAG's four principles and three levels, what automated testing can and cannot check, and a map of the accessibility work spread across this wiki. In jedee: the AA target, what came from Eleventy Excellent (skip link, focus rings, reduced motion, visually hidden labels), and what jedee added. ⚠ The test is ten pages in light mode only.
 - [[Microformats]] — the mf2 vocabulary that makes HTML machine-readable; in jedee: the `e-content` wrapper, the Stack/owl spacing collision, and why an mf2 class must never be "cleaned up".
 - [[One JSON-LD envelope for sixteen types]] — ⚠ the schema include builds its path from front matter, so a `schema:` with no template fails the build. That constraint is why fifteen types say `BlogPosting`.
 - [[Per-type feeds]] — fourteen of sixteen types have one, `events` and `reposts` deliberately don't; ⚠ a feed only ever sees the post body, never front matter.
@@ -85,6 +86,8 @@ The private wiki documenting web techniques and how jedee is designed and built.
 - [[Site search]] — a JSON index written at build time, fetched once and filtered in the browser; no search library at a few hundred entries. ⚠ `page.rawInput` reaches a page's body at collection time where `templateContent` throws, but it is the source *before* rendering, so template expressions and HTML comments land in the index unless stripped. ⚠ A transitioned `visibility` is still `hidden` on the frame `focus()` runs, and `[hidden]` is a UA rule any author `display` outranks.
 
 ## Recent additions
+
+**2026-09-14** — ingest: **[[Accessibility]]**, a parent page for the accessibility material spread over about ten pages. The general part: WCAG 2.2, the four principles, the three levels, and the limits of automated testing. In jedee: the AA target in the public statement, the test's three limits, what came from Eleventy Excellent against what jedee added, and the decisions on decorative contrast and cheap AAA criteria.
 
 **2026-09-14** — enrich: **[[Syntax highlighting]]** gains "Colors". ⚠ The code palette is Eleventy Excellent's hues with jedee's lightness, **not** GitHub's color-blind theme, as the style guide had claimed. It even uses the red for HTML tags that GitHub's protanopia/deuteranopia theme removes. Simulated red–green color blindness still keeps its colors further apart than GitHub's own color-blind themes do. A rework toward GitHub's palette is planned.
 
