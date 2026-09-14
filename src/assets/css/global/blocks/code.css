@@ -41,6 +41,8 @@ code,
 pre {
   font-family: var(--font-mono);
   font-size: var(--size-step-min-1);
+  /* ⚠ Source Code Pro has no italic, so code is never italic, even inside an <em>. Bold is real (weights 200–900). */
+  font-style: normal;
   background-color: var(--color-code-bg);
 }
 
@@ -168,7 +170,6 @@ pre[class*='language-'] {
 
 .token.keyword {
   color: var(--color-code-violet);
-  font-style: italic;
 }
 
 .token.number {

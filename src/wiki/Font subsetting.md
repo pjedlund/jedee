@@ -37,6 +37,8 @@ for (let n; (n = tw.nextNode()); ) {
 
 Two additions matter: an italic that is its own file needs its own cmap (check `cs.fontStyle`), and `::before`, `::after` and `::marker` string content is text too.
 
+**While you work, one page at a time**, a script can do the same test with no cmaps at all. It measures each character in a canvas with the page's web font followed by a **blank font**: one zero-width glyph mapped to every code point (a cmap format 13 subtable, the trick behind [Adobe Blank](https://github.com/adobe-fonts/adobe-blank)). A character the web font has comes out with a width; one it lacks falls through to the blank font and measures zero. Comparing two ordinary fallbacks (`monospace` against `serif`) looks simpler and misses exactly the rare symbols: when neither fallback has `⁂`, both hand it to the same system font and the widths agree. ⚠ Chrome refuses a font whose glyph table is empty ("OTS parsing error: glyf: zero-length table" in the console), so the blank font's `.notdef` needs a real outline. ⚠ A canvas does not trigger font downloads, so a `unicode-range` face the page itself never needed measures as missing.
+
 ## Filling a gap
 
 Rebuild the subset from the full font, keeping everything the current file has plus the additions:
@@ -66,7 +68,7 @@ A missing italic then renders upright and a missing bold at the nearest real wei
 Two things look like gaps and are not, both measured in Chrome and Firefox:
 
 - **Bolder than the only bold.** `<strong>` inside a bold heading asks for 900 (`bolder`). The browser takes the 700 face as it is and synthesizes nothing.
-- **A variable font with no `font-weight` descriptor.** Its `@font-face` still gives real weights along the axis, because in CSS Fonts 4 the descriptor's initial value is `auto`, the range the file declares.
+- **A variable font with no `font-weight` descriptor.** Its `@font-face` still gives real weights along the axis, because in CSS Fonts 4 the descriptor's initial value is `auto`, the range the file declares. ⚠ Script can't see that: `FontFace.weight` reports `normal`, so a checker reading it flags every bold as fake. Writing the range out (`font-weight: 200 900`) changes nothing for the browser and fixes the reading.
 
 The cmap scan above cannot see a missing style. It looks the family up by name, so italic text in a family with no italic file is checked against the upright cmap and passes. The check is the computed `font-style` and `font-weight` against the `@font-face` rules that exist. On a site with a handful of faces the risky combinations are few enough to grep the built HTML for, for example a heading that contains `<em>`, `<i>` or `<cite>`.
 
@@ -74,7 +76,7 @@ A gap found this way is filled the subsetting way: cut the missing face from the
 
 ## In jedee
 
-Eleventy Excellent ships **static, pre-subset `woff2` files** and has no subsetting step in the build. Its `@font-face` blocks have no `unicode-range`, so adding a character to a file is the whole fix: no CSS change. The full source fonts are bundled beside the subsets.
+Eleventy Excellent ships **static, pre-subset `woff2` files** and has no subsetting step in the build. Its `@font-face` blocks have no `unicode-range`, so adding a character to a file is the whole fix: no CSS change. The full source fonts are bundled beside the subsets. The one exception is Cyrillic (below), which is its own file behind a `unicode-range`.
 
 | file | kind | characters | source in the repo |
 | --- | --- | --- | --- |
@@ -82,9 +84,15 @@ Eleventy Excellent ships **static, pre-subset `woff2` files** and has no subsett
 | `source-serif/source-serif-bold-italic.woff2` | static, Bold Italic 700 only | 109 | `_source/TTF/SourceSerif4-BoldIt.ttf.woff2` |
 | `source-sans/source-sans.woff2` | variable | 206 | `_source/VF/SourceSans3VF-Upright.otf.woff2` |
 | `source-sans/source-sans-italic.woff2` | variable | 207 | `_source/VF/SourceSans3VF-Italic.otf.woff2` |
+| `source-sans/source-sans-cyrillic.woff2` | variable, `unicode-range` | 102 | `_source/VF/SourceSans3VF-Upright.otf.woff2` |
+| `source-sans/source-sans-italic-cyrillic.woff2` | variable, `unicode-range` | 102 | `_source/VF/SourceSans3VF-Italic.otf.woff2` |
 | `source-code-pro/source-code-pro.woff2` | variable | 241 | none bundled |
 
 The fallback faces behind each are the metric-matched Georgia, Arial and Courier New described on [[Layout shift]], so a fallen-back character is at least the right size.
+
+**Cyrillic** (2026-09-14) came from one Russian word on the *A Confession* reading page, drawn letter by letter in Arial. Rather than grow the files every page loads, the two Cyrillic faces cover U+0400–045F (Russian, Ukrainian, Serbian and the rest of modern Cyrillic) plus the pre-1918 letters ѣ, ѳ and ѵ. Each is declared after its main face under the same family name with a `unicode-range`, so only a page containing Cyrillic downloads it: 22 KB upright, 16 KB italic. ⚠ Keep them after the main faces: for overlapping faces the last one declared is checked first. Source Serif has no Cyrillic, so a Russian word in a heading still falls back.
+
+**Checking while you work.** On the dev server only (`eleventy.env.runMode === "serve"` in `base.njk`), `src/assets/scripts/bundle/font-check.js` runs the blank-font test above on every page. It greys out and dot-underlines each character drawn by a fallback, outlines any element set in a style its family has no file for, gives both a hover title, and logs a count to the console. Emoji and pictographs such as `⚠` are skipped on purpose. On this page it flags nine characters, all in code where Source Code Pro lacks them (the symbols listed below, plus `Δ`), and the code keywords' missing italic.
 
 **The 2026-09-10 scan.** All 641 built pages, 34 characters falling back. The biggest was Source Serif having **no curly quotes at all**: with `typographer: true` in `src/_config/plugins/markdown.js`, every heading with an apostrophe drew its `’` in Georgia. Filled since: ‘ ’ “ ” – — … and `ü` in Source Serif; `~ ← ↑ → ↓ ↔ Δ` in Source Sans upright and italic. The YouTube captions on two jam pages had NFD accents from YouTube's own titles; `youtubeTitle` in `src/_config/filters/youtube-title.js` now normalizes to NFC (see [[The YouTube embed]]).
 
@@ -97,10 +105,10 @@ Left falling back on purpose:
 
 ⚠ Source Serif was deliberately kept small: the Latin-1 block was added and taken back out the same day. Add accented letters to it one at a time, when a heading actually needs one. ⚠ Add each one to the Bold Italic too: the two files share one character list, and a character in only one of them falls back in the other.
 
-**Styles.** Since 2026-09-13 `body` sets `font-synthesis: none` (`global/base/global-styles.css`). Until then only `.small-caps` refused fakes. Checking the shipped files against the CSS turned up two faux italics and no faux bold:
+**Styles.** `body` set `font-synthesis: none` for one day, 2026-09-13 to 09-14. It came out again once the dev-server checker could *show* fakes instead. Refusing a fake turns a missing italic upright, so the emphasis is lost, and the Georgia and Arial fallbacks, loaded as Regular only, lost their bold while the web fonts loaded. `.small-caps` still refuses fake small caps on its own. Checking the shipped files against the CSS turned up two faux italics and no faux bold:
 
 - **Italic in a serif heading.** Source Serif ships Bold only, so an `<em>` in an `h1`–`h3` was a slanted Bold: the RSVP card's "RSVP *yes*" (`partials/card-response.njk`; all three RSVPs are drafts for now) and one heading on [[The interlinker's second render pass]]. Both now use a real Bold Italic, `source-serif-bold-italic.woff2`, cut from the bundled `SourceSerif4-BoldIt` to the Bold's 109 characters: 17 KB, against 33 KB for the Bold. It is not preloaded, so only a page with italic in a heading downloads it.
-- **Italic in code.** The syntax theme sets `.token.keyword { font-style: italic }` (`global/blocks/code.css`), and there is no Source Code Pro italic, so the keywords on 31 pages were slanted. They are now upright and still violet. A real italic needs Source Code Pro's italic downloaded first, like the code-block symbols above.
+- **Italic in code.** The syntax theme sets `.token.keyword { font-style: italic }` (`global/blocks/code.css`), and there is no Source Code Pro italic, so the keywords on 31 pages were slanted. Since 2026-09-14 code is never italic: `code, pre` in `global/blocks/code.css` set `font-style: normal`, so code inside an `<em>` stays upright, and the keywords are upright and still violet. Bold code stays, because it is real (Source Code Pro is variable, 200–900); a day of never-bold code turned out to flatten wiki terms like **`animation-delay`**. A real italic needs Source Code Pro's italic downloaded first, like the code-block symbols above.
 - **Source Sans** is variable 200–900 in upright and italic, so every weight and style in body text is real. The breadcrumb's connector words use Source Sans rather than the serif for this reason (`global/blocks/breadcrumb.css`).
 
 The recipe itself needs a Python with fontTools and brotli; on this machine that is the python.org framework install, not the default `python3`.

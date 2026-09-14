@@ -54,10 +54,30 @@
   src: url('/assets/fonts/source-sans/source-sans-italic.woff2') format('woff2');
 }
 
+/* Cyrillic (modern plus pre-1918 ѣ ѳ ѵ): downloaded only by pages that contain it. ⚠ Keep these after the main faces — the last-declared face is checked first. */
+@font-face {
+  font-family: 'Source Sans';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 1000;
+  src: url('/assets/fonts/source-sans/source-sans-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0462-0463, U+0472-0475;
+}
+
+@font-face {
+  font-family: 'Source Sans';
+  font-style: italic;
+  font-display: swap;
+  font-weight: 100 1000;
+  src: url('/assets/fonts/source-sans/source-sans-italic-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0462-0463, U+0472-0475;
+}
+
 /* Source code pro with no fallback */
 @font-face {
   font-family: 'Source Code Pro';
   font-display: swap;
+  font-weight: 200 900;
   src: local('Source Code Pro'), url('/assets/fonts/source-code-pro/source-code-pro.woff2') format('woff2');
 }
 
