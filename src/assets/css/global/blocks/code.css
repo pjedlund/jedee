@@ -71,11 +71,12 @@ pre {
 /* Style Adjustments for <code> within different contexts */
 /* Inline code sits in a raised chip, adapted from arielsalminen.com. ⚠ Keep it display: inline — inline-block would move its baseline off the prose line. */
 :where(:not(pre)) > code {
+  --inline-code-bg: color-mix(in oklab, var(--color-bg-accent) 50%, var(--color-bg));
   --inline-code-shadow: var(--box-shadow-popup);
 
   padding: var(--space-3xs) var(--space-xs);
   border-radius: var(--border-radius-medium);
-  background-color: var(--color-bg-accent);
+  background-color: var(--inline-code-bg);
   box-shadow: var(--inline-code-shadow);
 }
 
