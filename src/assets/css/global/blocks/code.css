@@ -72,7 +72,7 @@ pre {
 /* Inline code sits in a raised chip, adapted from arielsalminen.com. ⚠ Keep it display: inline — inline-block would move its baseline off the prose line. */
 :where(:not(pre)) > code {
   --inline-code-bg: color-mix(in oklab, var(--color-bg-accent) 50%, var(--color-bg));
-  --inline-code-shadow: var(--box-shadow-popup);
+  --inline-code-shadow: var(--box-shadow-chip);
 
   padding: var(--space-3xs) var(--space-xs);
   border-radius: var(--border-radius-medium);
@@ -81,7 +81,7 @@ pre {
 }
 
 :root[data-theme='dark'] :where(:not(pre)) > code {
-  --inline-code-shadow: var(--box-shadow-popup-dark);
+  --inline-code-shadow: var(--box-shadow-chip-dark);
 }
 
 pre[class*='language-'] {
