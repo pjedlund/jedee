@@ -86,6 +86,8 @@ The private wiki documenting web techniques and how jedee is designed and built.
 
 ## Recent additions
 
+**2026-09-14** — enrich: **[[Syntax highlighting]]** gains "Inline code": inline code never goes through Prism, so it is styled as a raised chip instead, after arielsalminen.com, with its own `chip` shadow token. ⚠ It shares the prose baseline only because nothing nudges it; Eleventy Excellent's `top: -0.05em` would.
+
 **2026-09-14** — ingest: **[[Web components]]**, from Ariel Salminen's *Progressive Web Components* (2026). The general part: the three browser pieces, the usual complaints, and her three kinds (composite, primitive, declarative). In jedee: five defined custom elements, all wrapping server-rendered markup, no Shadow DOM, and three tag names that nothing ever defines. See `_log.md`.
 
 **2026-09-14** — enrich: **[[Typographic conventions]]** gains a Lists section. Bringhurst has no list rule, but his figure rule gives list numbers old-style figures; Butterick has the bullet advice. ⚠ The browser gives `::marker` `tabular-nums`, which turns list numbers lining unless the marker is set explicitly. In jedee the numbers are now old-style, and `orange-600` in light mode for 4.5:1 contrast.

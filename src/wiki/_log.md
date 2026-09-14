@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-14] enrich | Syntax highlighting
+
+An "Inline code" section, from the session that restyled inline code after arielsalminen.com. Inline code is a markdown-it `code_inline` token and never reaches Prism, so its only styling is `code.css`. Ariel's four values were swapped for jedee tokens: the surface is `--color-bg-accent` mixed halfway toward `--color-bg` (Johan found the plain surface too strong in both themes), the radius is the one code blocks use, and the shadow is a new `chip` pair in `shadows.json`, smaller than `popup`. ⚠ The baseline is shared because nothing moves it; EE's `top: -0.05em` nudge would. A first draft here claimed `inline-block` would break the baseline too. Measured, it does not: it only adds the padding to the line height (0.84px) and stops long spans wrapping, which is the real reason to stay `inline`. The `code.css` comment was corrected with it. No new links. Source: this session.
+
 ## [2026-09-14] ingest | Web components
 
 A new page from Ariel Salminen's *Progressive Web Components* (2026-03-25), clipped to `src/_raw/`. The general part covers the three browser pieces (custom elements, Shadow DOM, templates), the usual complaints about JavaScript-rendered components, and her split into composite, primitive and declarative kinds, with Elena as a one-paragraph example dated as a release candidate. In jedee, counted in a production build: five defined custom elements, all composite; no Shadow DOM (the one `attachShadow` is is-land's declarative-shadow-root code, unused here); and `custom-card`, `custom-youtube` and `custom-masonry` never defined, kept as CSS hooks. ⚠ WebC files are not web components. Links earned: [[is-land]], [[The place map]], [[The PhotoSwipe lightbox]], [[The YouTube embed]], [[Layout shift]]. Found in passing: [[is-land]]'s table still lists `custom-masonry.webc` as an `on:visible` island, which it has not been since 2026-09-06.

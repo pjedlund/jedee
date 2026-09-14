@@ -64,6 +64,32 @@ The audit behind the fix found every other tag in use — `js`, `css`, `json`, `
 node -e "import('./src/_config/plugins/markdown.js').then(m => console.log(m.markdownLib.render('\`\`\`njk\n{% if x %}<a href=\"{{ y }}\">z</a>{% endif %}\n\`\`\`')))"
 ```
 
+### Inline code
+
+Inline code never reaches Prism. A backtick span is a markdown-it `code_inline` token with no language, so the only thing that styles it is `code.css`. jedee sets it as a raised chip, after the inline code on [arielsalminen.com](https://arielsalminen.com/2026/progressive-web-components/): a surface a shade off the page, rounded corners, and a very faint shadow. Her four values, swapped for jedee tokens:
+
+| Ariel | jedee |
+| --- | --- |
+| `background: var(--color-surface)` | `--color-bg-accent` mixed halfway toward `--color-bg`, since the plain surface read too strong in both themes |
+| `border-radius: var(--border-radius)` | `--border-radius-medium`, the same radius as a code block |
+| `box-shadow: var(--box-shadow-dimmed)` | `--box-shadow-chip`, and `-chip-dark` on the dark theme, a new pair in `shadows.json`, smaller than `popup` |
+| `padding: .188rem .5rem` | `--space-3xs --space-xs` |
+| `font-size: 75%` | unchanged: `code` already sets `--size-step-min-1`, about 80% of body text |
+
+```css
+:where(:not(pre)) > code {
+  --inline-code-bg: color-mix(in oklab, var(--color-bg-accent) 50%, var(--color-bg));
+  --inline-code-shadow: var(--box-shadow-chip);
+
+  padding: var(--space-3xs) var(--space-xs);
+  border-radius: var(--border-radius-medium);
+  background-color: var(--inline-code-bg);
+  box-shadow: var(--inline-code-shadow);
+}
+```
+
+The code text shares the prose baseline because nothing moves it: no `vertical-align`, no offset. ⚠ Eleventy Excellent's version of this rule nudges inline code up with `position: relative; top: -0.05em`, the one declaration that would take it off the baseline; jedee had already dropped it. The chip also stays `display: inline`. Measured, `inline-block` keeps the text on the baseline too, since an inline-block's baseline is its last line of text; what changes is that the vertical padding then counts toward the line's height (the test paragraph grew 0.84px), and a long span can no longer wrap onto the next line. The selector is EE's, and so was the plain `0.1em 0.4em` padding it replaces. The chip is jedee's own.
+
 Related: [[The interlinker's second render pass]] — the other thing in this pipeline that rewrites content mid-build, and a reminder that markdown plugin order is load-bearing. [[Wikilinks]] — the interlinker deliberately ignores wikilinks inside code blocks, the other place fenced content gets special treatment.
 
 Raw source: `src/_raw/dev-notes/How njk code blocks got syntax highlighting.md`
