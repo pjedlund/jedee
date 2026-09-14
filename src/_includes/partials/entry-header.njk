@@ -2,7 +2,13 @@
 
 {# The page heading is always shown: it's the document outline / SEO / microformats `p-name`. With the breadcrumb on it sits just below the trail (the standard breadcrumb + heading pattern); with the breadcrumb off it's the page's only title. #}
 {# titleLang is set (to "sv") only for Swedish activity titles — see eleventyComputed.js. Other post types leave it undefined, so the h1 stays at the page's language. #}
-{% if title %}
+{# A subtitle rides in <hgroup> as a <p>, the WHATWG pattern; it isn't part of p-name. #}
+{% if title and subtitle %}
+  <hgroup class="flow">
+    <h1 class="p-name"{% if titleLang %} lang="{{ titleLang }}"{% endif %}>{{ title }}</h1>
+    <p>{{ subtitle }}</p>
+  </hgroup>
+{% elif title %}
   <h1 class="p-name"{% if titleLang %} lang="{{ titleLang }}"{% endif %}>{{ title }}</h1>
 {% endif %}
 

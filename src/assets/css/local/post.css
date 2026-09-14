@@ -3,6 +3,19 @@ article h1 {
   font-size: var(--size-step-6);
 }
 
+/* Subtitle under the page title (the <p> in <hgroup>): two steps below the h1, dimmed. ⚠ --flow-space sits on the p itself, or prose's "space after a heading" rule wins. */
+hgroup > p {
+  --flow-space: var(--space-2xs);
+
+  font-family: var(--font-display);
+  font-weight: var(--font-bold);
+  font-size: var(--size-step-4);
+  line-height: var(--leading-fine);
+  /* ⚠ Mixed toward the page background, so it only holds on that surface: 4.0:1 light, 7.9:1 dark (large text needs 3:1). */
+  color: color-mix(in oklab, var(--color-headline) 75%, var(--color-bg));
+  text-wrap: balance;
+}
+
 /* Lede / intro — a slightly larger, gently de-emphasised summary under the title. */
 .intro {
   color: var(--color-text-accent);
@@ -19,8 +32,8 @@ article h3 {
 }
 
 /* Featured image always 16/9. Second selector: the featured image is a lightbox now, so the element after the h1 is its div.feature wrapper, not a bare picture/figure. */
-h1 + :is(picture, figure) img,
-h1 + .feature picture img {
+:is(h1, hgroup) + :is(picture, figure) img,
+:is(h1, hgroup) + .feature picture img {
   max-inline-size: var(--max-img-width, 100%);
   block-size: auto;
   aspect-ratio: 16/9;
