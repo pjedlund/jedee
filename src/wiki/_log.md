@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-14] fix | The accessibility test
+
+Stale counts, found while writing [[Accessibility]]. `customPaths` has held ten paths since `/now/` was added on 2026-09-11, but the page said six in a heading, nine in two places and four in another, and its `meta.js` excerpt was two edits behind (the path list and the comments). All brought in line with `meta.js`, the growth history extended to ten, and the index line corrected. The coverage paragraph also claimed nothing the lightbox touches was tested; the jam on the list has opened its cover in the lightbox since 2026-08-29, so that clause went.
+
 ## [2026-09-14] ingest | Accessibility
 
 A parent page, written because about ten pages already carry accessibility material and nothing tied them together. The general part covers WCAG 2.2 (the four principles, the A/AA/AAA levels, and why AAA is not a whole-site target) and the limits of automated testing. In jedee: the public statement's WCAG 2.1 AA target, with the two 2.2 AA criteria never checked; the test's limits (ten pages, light mode only, `color-mix()` colors it cannot read); a stock-versus-jedee table counted in both repositories (`:focus-visible` 3 → 16, `prefers-reduced-motion` 3 → 12, `forced-colors` 0 → 5); links by principle; and two decisions, decorative contrast and cheap AAA criteria. Links earned: [[The accessibility test]], [[Alt text]], [[Syntax highlighting]], [[Typographic conventions]], [[Line length]], [[Focus rings and paint containment]], [[The main menu]], [[The theme toggle]], [[The lang attribute]], [[Abbreviations]], [[Tooltips]]. Found in passing: `customPaths` has held ten paths since `/now/` was added on 2026-09-11, but [[The accessibility test]] and its index line still say nine, and that page's "Suppressing a finding" section says "the four tested pages". Source: this session.
