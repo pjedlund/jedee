@@ -100,7 +100,7 @@
 }
 
 .prose ol:not([class]) {
-  padding-inline-start: 1.7ch;
+  padding-inline-start: 2.75ch;
 }
 
 .prose ol li::marker {
