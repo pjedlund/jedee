@@ -114,6 +114,7 @@ collections:
     sortable_fields: *by_date
     fields:
       - *title
+      - { name: subtitle, label: Subtitle, widget: string, required: false, hint: 'Shows under the title; title case, short words lowercase' }
       - *score
       - *description
       - *date

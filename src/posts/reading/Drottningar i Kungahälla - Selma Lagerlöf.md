@@ -1,17 +1,17 @@
 ---
 title: Drottningar i Kungahälla
-subtitle:
-draft: true
-date: 2025-12-01
-author: Selma Lagerlöf
-publisher: Bonniers
-publishDate: 1923
-totalPage: 402
-cover: http://books.google.com/books/content?id=W8lOAQAAMAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api
+subtitle: Part of Standard Ebook's Short Fiction by Selma Lagerlöf
 description: desc
+date: 2025-12-01
+cover: http://books.google.com/books/content?id=W8lOAQAAMAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api
+draft: true
+author: Selma Lagerlöf
+isbn13: IOWA:31858042904312
 link: https://books.google.com/books/about/Skrifter_Drottningar_i_kungah%C3%A4lla.html?hl=&id=W8lOAQAAMAAJ
 previewLink: http://books.google.se/books?id=W8lOAQAAMAAJ&q=Drottningarna+av+Kungah%C3%A4lla&dq=Drottningarna+av+Kungah%C3%A4lla&hl=&as_pt=BOOKS&cd=4&source=gbs_api
-isbn13: IOWA:31858042904312
+publishDate: 1923
+publisher: Bonniers
+totalPage: 402
 ---
 
 Selma Lagerlöf was a Swedish author, who, starting in 1891 with The Story of Gösta Berling, wrote a series of novels and short stories that soon garnered both national and international praise. This led to her winning the 1909 Nobel Prize in Literature “in appreciation of the lofty idealism, vivid imagination, and spiritual perception that characterize her writings,” the first woman to do so. She happily wrote for both adults and children, but the same feeling of romantic infatuation with the spiritual mysteries of life runs through all of her work, often anchored to her childhood home of Värmland in middle Sweden.
