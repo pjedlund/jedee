@@ -1,6 +1,6 @@
 {
   "$type": "shadow",
-  "$description": "The site's two shadow recipes, stored as layers because that is Penpot's own shape — offsetX / offsetY / blur / spread / color, with 8-digit hex so the alpha travels. Both are two-layer (tight contact plus wide soft) and go deeper on dark. `panel` lifts the mega-menu; `popup` is the same recipe scaled down for the place-map popup. tailwind.config.js composes the layers into --box-shadow-*; build-penpot-tokens.js emits panel/popup into theme/light and the -dark pair into theme/dark under the same names.",
+  "$description": "The site's three shadow recipes, stored as layers because that is Penpot's own shape — offsetX / offsetY / blur / spread / color, with 8-digit hex so the alpha travels. All are two-layer (tight contact plus wide soft) and go deeper on dark. `panel` lifts the mega-menu; `popup` is the same recipe scaled down for the place-map popup and tooltips; `chip` is smaller again, for inline code. tailwind.config.js composes the layers into --box-shadow-*; build-penpot-tokens.js emits panel/popup into theme/light and the -dark pair into theme/dark under the same names.",
   "panel": {
     "$value": [
       {"offsetX": "0", "offsetY": "2", "blur": "6", "spread": "-4", "color": "#0000000F"},
@@ -23,6 +23,18 @@
     "$value": [
       {"offsetX": "0", "offsetY": "2", "blur": "6", "spread": "-3", "color": "#00000066"},
       {"offsetX": "0", "offsetY": "10", "blur": "24", "spread": "-10", "color": "#00000080"}
+    ]
+  },
+  "chip": {
+    "$value": [
+      {"offsetX": "0", "offsetY": "1", "blur": "2", "spread": "-1", "color": "#00000014"},
+      {"offsetX": "0", "offsetY": "3", "blur": "8", "spread": "-5", "color": "#00000024"}
+    ]
+  },
+  "chip-dark": {
+    "$value": [
+      {"offsetX": "0", "offsetY": "1", "blur": "3", "spread": "-1", "color": "#00000059"},
+      {"offsetX": "0", "offsetY": "4", "blur": "10", "spread": "-5", "color": "#00000066"}
     ]
   }
 }
