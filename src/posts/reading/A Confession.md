@@ -1,19 +1,20 @@
 ---
-title: "A Confession"
+title: A Confession
+scoreMy: 4
+description: Autobiograph written between 1879 and 1882 where Tolstoy describes how he found the will to live again in the faith of ordinary working people and ending in a break with the Church.
+date: 2026-05-24T16:02:58+02:00
+cover: https://standardebooks.org/ebooks/leo-tolstoy/a-confession/aylmer-maude/downloads/cover.jpg
 draft: false
-date: "2026-05-24T16:02:58+02:00"
 author:
-  - "[[Leo Tolstoy]]"
-translator:
-  - "[[Aylmer Maude]]"
-cover: "https://standardebooks.org/ebooks/leo-tolstoy/a-confession/aylmer-maude/downloads/cover.jpg"
-link: "https://standardebooks.org/ebooks/leo-tolstoy/a-confession/aylmer-maude"
-description: "Autobiograph written between 1879 and 1882 where Tolstoy describes how he found the will to live again in the faith of ordinary working people and ending in a break with the Church."
+  - '[[Leo Tolstoy]]'
 genre:
-  - "[[Philosophy]]"
-  - "[[Spirituality]]"
-  - "[[Religion]]"
-  - "[[Christianity]]"
+  - '[[Philosophy]]'
+  - '[[Spirituality]]'
+  - '[[Religion]]'
+  - '[[Christianity]]'
+link: https://standardebooks.org/ebooks/leo-tolstoy/a-confession/aylmer-maude
+translator:
+  - '[[Aylmer Maude]]'
 wordCount: 25946
 ---
 
