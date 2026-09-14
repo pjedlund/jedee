@@ -36,7 +36,7 @@ The honest limit is that the technique costs a decision per component and gives 
 
 The dependency (`@11ty/is-land` 4.0.1), the bundle entry, and the inlining are all Eleventy Excellent stock. `src/assets/scripts/bundle/is-land.js` is a single `import` line — EE ships two, and the second was dropped here for a measured reason (below); esbuild bundles and minifies it to `src/_includes/scripts/is-land.js`, and `head/js-inline.njk` inlines that into the head of **every page**, so the runtime is never a request. It is 4,054 bytes minified.
 
-Eight elements use it, all with one of two conditions — `on:idle` for anything in the page chrome, `on:visible` for anything embedded in a post's body.
+Seven elements use it, all with one of two conditions — `on:idle` for anything in the page chrome, `on:visible` for anything embedded in a post's body.
 
 | Island | Condition | Origin |
 | --- | --- | --- |
@@ -46,10 +46,11 @@ Eight elements use it, all with one of two conditions — `on:idle` for anything
 | `partials/theme-toggle.njk` | `on:idle` | jedee's rewrite of EE's `theme-switch.njk` — see [[The theme toggle]] |
 | `webc/custom-youtube.webc` | `on:visible` | EE stock — see [[The YouTube embed]] |
 | `webc/custom-peertube.webc` | `on:visible` | EE stock |
-| `webc/custom-masonry.webc` | `on:visible` | EE stock |
 | `partials/gallery.njk` | `on:idle` | EE stock, **dead source** — nothing includes it |
 
-None of the eight uses `on:interaction`, `on:media` or `on:save-data`, and none combines conditions.
+None of the seven uses `on:interaction`, `on:media` or `on:save-data`, and none combines conditions.
+
+`webc/custom-masonry.webc` was an eighth, EE stock and `on:visible`, until its masonry script was removed on 2026-09-06 because it shifted the layout ([[Layout shift]]). The `<custom-masonry>` tag stays, never defined, as a CSS hook ([[Web components]]).
 
 ### The template boundary is a layout-shift trap
 
@@ -78,6 +79,6 @@ import '@11ty/is-land/is-land';
 
 Checked in the browser rather than by byte count alone: both `on:idle` islands still reach `ready` on load, and the theme toggle still switches.
 
-⚠ A note on checking `on:visible` at all, because it cost two false findings here: an automated browser pane can report `innerHeight` as **0**, and an IntersectionObserver in a zero-height viewport never fires, so every `on:visible` island looks permanently un-hydrated while every `on:idle` one looks fine. Set a real viewport size and re-read before believing it. The second false finding was pure timing — the island had hydrated a moment after the check ran. Both the masonry and the YouTube islands do reach `ready` on scroll in a production build, verified at 1280×900.
+⚠ A note on checking `on:visible` at all, because it cost two false findings here: an automated browser pane can report `innerHeight` as **0**, and an IntersectionObserver in a zero-height viewport never fires, so every `on:visible` island looks permanently un-hydrated while every `on:idle` one looks fine. Set a real viewport size and re-read before believing it. The second false finding was pure timing — the island had hydrated a moment after the check ran. Both the masonry and the YouTube islands did reach `ready` on scroll in a production build, verified at 1280×900 on 2026-09-06, before the masonry island was removed.
 
-Raw source: `src/assets/scripts/bundle/is-land.js`, `src/_config/events/build-js.js`, the five `webc/` and three `partials/` files above, and `node_modules/@11ty/is-land/` at 4.0.1, read on 2026-09-06.
+Raw source: `src/assets/scripts/bundle/is-land.js`, `src/_config/events/build-js.js`, the four `webc/` and three `partials/` files above, and `node_modules/@11ty/is-land/` at 4.0.1, read on 2026-09-06; the island list rechecked on 2026-09-14.

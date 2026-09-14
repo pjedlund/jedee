@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-14] fix | is-land
+
+The islands table still listed `custom-masonry.webc` as an EE-stock `on:visible` island, eight days after its script was removed over layout shift; found while writing [[Web components]]. Row removed, the count is seven, and a line says what became of the eighth, linking [[Layout shift]] and [[Web components]]. Rechecked against the templates: seven `<is-land>`s, `partials/gallery.njk` still included by nothing, and the `<is-land>` in `activity.njk` is only a comment mention. The 2026-09-06 verification paragraph and the raw-source line were brought in line too.
+
 ## [2026-09-14] enrich | Syntax highlighting — colors
 
 A "Colors" section, from Johan asking to document that the code colors follow GitHub's color-blind (protanopia and deuteranopia) themes, and to check that this was true. It was not. The hues are Eleventy Excellent's (checked against upstream `code.css`), retuned for contrast in `ce80897`; the style guide's "based on GitHub's colorblind theme" line (from `a584c17`) had nothing behind it, and none of `colorsBase.json`'s values is a Primer color-blind color either. The section tabulates GitHub's swaps from Primer's published CSS (red keywords to orange, green tags to blue) against jedee's, then a Machado 2009 simulation with OKLab pair distances: jedee's weakest pairs sit at 5.8–8.4, GitHub's color-blind themes at 2.3–3.2 (blue against purple). The style guide line now says the palette is due a rework, and TODO §33 holds it; the check is saved at `_local/design/cvd-check.mjs`. No new links: Johan's article on color blindness is still a draft. Source: this session.
