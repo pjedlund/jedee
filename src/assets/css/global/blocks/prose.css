@@ -95,11 +95,8 @@
   content: '– ';
 }
 
-.prose ul:not([class]) {
-  padding-inline-start: 1.3ch;
-}
-
-.prose ol:not([class]) {
+/* One text edge for both kinds; 2.75ch holds a two-digit number. */
+.prose :is(ul, ol):not([class]) {
   padding-inline-start: 2.75ch;
 }
 
