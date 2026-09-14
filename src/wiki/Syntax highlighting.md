@@ -56,13 +56,39 @@ The block's class becomes `language-jinja2`; nothing depends on the language cla
 
 The audit behind the fix found every other tag in use — `js`, `css`, `json`, `html`, `markdown`, `yaml`, `toml`, `python`, `bash`, `jinja2` — already mapped to a real grammar, and the 13 genuinely bare fences all correctly bare.
 
-**EE stock vs jedee:** `markdown-it-prism`, the `plaintext` default, and the `.token.*` colors in `code.css` are Eleventy Excellent stock. The `njk_as_jinja2` core rule is jedee's own. `@11ty/eleventy-plugin-syntaxhighlight` is also registered (EE stock) but serves the `{% highlight %}` template shortcode, which nothing in the repo uses; markdown fences never touch it.
+**EE stock vs jedee:** `markdown-it-prism`, the `plaintext` default, and the `.token.*` rules in `code.css` are Eleventy Excellent stock; the color values they point at are jedee's (see Colors). The `njk_as_jinja2` core rule is jedee's own. `@11ty/eleventy-plugin-syntaxhighlight` is also registered (EE stock) but serves the `{% highlight %}` template shortcode, which nothing in the repo uses; markdown fences never touch it.
 
 **Verify by rendering, not by reading.** The markdown pipeline is importable on its own, so a change can be checked in a second without a build:
 
 ```
 node -e "import('./src/_config/plugins/markdown.js').then(m => console.log(m.markdownLib.render('\`\`\`njk\n{% if x %}<a href=\"{{ y }}\">z</a>{% endif %}\n\`\`\`')))"
 ```
+
+### Colors
+
+The token colors are Eleventy Excellent's palette with jedee's lightness. EE's `code.css` names its variables by hue: orange 30°, indigo 260°, violet 314°, pink 350°, a gray, and a blue borrowed from `--color-secondary`. The `.token.*` rules map Prism's token types onto them. jedee kept every hue except blue and changed saturation and lightness per theme to clear WCAG AA against the code block background (commit `ce80897`, 2026-03-08); the two values that had failed are commented in `code.css`.
+
+⚠ The palette is **not** derived from GitHub's color-blind themes, although the style guide said so from 2026-09-10 until this check. GitHub's *protanopia and deuteranopia* themes (`light_colorblind` and `dark_colorblind` in [Primer's primitives](https://github.com/primer/primitives)) start from the default syntax colors and swap out exactly the ones red–green color-blind readers confuse:
+
+| Token | GitHub dark | GitHub dark, color-blind | jedee dark |
+| --- | --- | --- | --- |
+| keyword (`if`, `return`) | red `#ff7b72` | orange `#f0883e` | violet |
+| HTML tag | green `#7ee787` | light blue `#a5d6ff` | pink, 350° |
+| constant | blue `#79c0ff` | blue `#79c0ff` | pink |
+| class name | purple `#d2a8ff` | purple `#d2a8ff` | orange |
+
+The light themes follow the same pattern: keyword `#cf222e` becomes `#bc4c00`, and a regular expression `#116329` becomes `#0550ae`. The rule to take from it is to keep red and green out of any pair that has to be told apart, and let blue and orange carry the difference. jedee's pink tags are the red GitHub removes.
+
+How much that matters was measured rather than assumed. Each palette was run through [Machado et al.'s 2009 simulation](https://www.inf.ufrgs.br/~oliveira/pubs_files/CVD_Simulation/CVD_Simulation.html) of full protanopia and deuteranopia, with jedee's translucent colors first composited over the code block background, and every pair of token colors compared by distance in OKLab (×100, where about 2 is the smallest difference most people can see):
+
+| Palette | Weakest pair, protanopia | Weakest pair, deuteranopia |
+| --- | --- | --- |
+| jedee dark | indigo / violet 8.4 | pink / gray and violet / gray 6.0 |
+| GitHub dark, color-blind | class name / constant 3.2 | class name / constant 2.3 |
+| jedee light | blue / violet 5.8 | violet / gray 5.9 |
+| GitHub light, color-blind | tag / class name 2.3 | tag / class name 2.4 |
+
+By this measure jedee's palette keeps its colors further apart than GitHub's color-blind themes do; both of GitHub's put a blue next to a purple that the simulation nearly merges. Two limits: the simulation models the most severe form of each condition, and a distance says nothing about which colors a reader with the condition finds comfortable. Reworking jedee's palette toward GitHub's is planned (TODO §33), and the check that produced the table is kept, local-only, at `_local/design/cvd-check.mjs`.
 
 ### Inline code
 

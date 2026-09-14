@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-14] enrich | Syntax highlighting — colors
+
+A "Colors" section, from Johan asking to document that the code colors follow GitHub's color-blind (protanopia and deuteranopia) themes, and to check that this was true. It was not. The hues are Eleventy Excellent's (checked against upstream `code.css`), retuned for contrast in `ce80897`; the style guide's "based on GitHub's colorblind theme" line (from `a584c17`) had nothing behind it, and none of `colorsBase.json`'s values is a Primer color-blind color either. The section tabulates GitHub's swaps from Primer's published CSS (red keywords to orange, green tags to blue) against jedee's, then a Machado 2009 simulation with OKLab pair distances: jedee's weakest pairs sit at 5.8–8.4, GitHub's color-blind themes at 2.3–3.2 (blue against purple). The style guide line now says the palette is due a rework, and TODO §33 holds it; the check is saved at `_local/design/cvd-check.mjs`. No new links: Johan's article on color blindness is still a draft. Source: this session.
+
 ## [2026-09-14] enrich | Syntax highlighting
 
 An "Inline code" section, from the session that restyled inline code after arielsalminen.com. Inline code is a markdown-it `code_inline` token and never reaches Prism, so its only styling is `code.css`. Ariel's four values were swapped for jedee tokens: the surface is `--color-bg-accent` mixed halfway toward `--color-bg` (Johan found the plain surface too strong in both themes), the radius is the one code blocks use, and the shadow is a new `chip` pair in `shadows.json`, smaller than `popup`. ⚠ The baseline is shared because nothing moves it; EE's `top: -0.05em` nudge would. A first draft here claimed `inline-block` would break the baseline too. Measured, it does not: it only adds the padding to the line height (0.84px) and stops long spans wrapping, which is the real reason to stay `inline`. The `code.css` comment was corrected with it. No new links. Source: this session.

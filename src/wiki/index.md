@@ -86,6 +86,8 @@ The private wiki documenting web techniques and how jedee is designed and built.
 
 ## Recent additions
 
+**2026-09-14** — enrich: **[[Syntax highlighting]]** gains "Colors". ⚠ The code palette is Eleventy Excellent's hues with jedee's lightness, **not** GitHub's color-blind theme, as the style guide had claimed. It even uses the red for HTML tags that GitHub's protanopia/deuteranopia theme removes. Simulated red–green color blindness still keeps its colors further apart than GitHub's own color-blind themes do. A rework toward GitHub's palette is planned.
+
 **2026-09-14** — enrich: **[[Syntax highlighting]]** gains "Inline code": inline code never goes through Prism, so it is styled as a raised chip instead, after arielsalminen.com, with its own `chip` shadow token. ⚠ It shares the prose baseline only because nothing nudges it; Eleventy Excellent's `top: -0.05em` would.
 
 **2026-09-14** — ingest: **[[Web components]]**, from Ariel Salminen's *Progressive Web Components* (2026). The general part: the three browser pieces, the usual complaints, and her three kinds (composite, primitive, declarative). In jedee: five defined custom elements, all wrapping server-rendered markup, no Shadow DOM, and three tag names that nothing ever defines. See `_log.md`.
