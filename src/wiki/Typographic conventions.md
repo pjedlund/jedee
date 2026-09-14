@@ -109,6 +109,7 @@ Set on 2026-09-10, after a research pass and an audit of the site. The decisions
   - Ordered-list numbers take old-style tabular figures. The marker reads `--nums-figure`, so a list inside `.lining-nums` still gets lining numbers.
   - The numbers are `--color-accent-orange-text`: `orange-600` in light mode (5.8:1 on the page; `orange-500` measured 3.5:1) and `orange-500` in dark (4.7:1). Other orange text that carries meaning can use the same variable.
   - The en dash on unordered lists uses the same variable, so both list markers share one orange per theme. The dash is decorative and needed no contrast fix; this is for consistency.
+  - Both kinds of list share one start padding, 2.75ch, so bullet and numbered items start at the same place. It is sized for "10. ": the marker box includes the space before the text and measured 33.6px, which 2.75ch (33.7px) just holds. An estimate of 2.2ch left "10." hanging about 7px past the edge. Lists that reach 100 would hang again.
 - **Not done:**
   - no `.figures` or `.balance` class, since the defaults cover them;
   - never `dlig`, which rewrites "he" and "she";
