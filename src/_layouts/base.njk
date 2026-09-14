@@ -54,6 +54,9 @@
     <main id="main" class="flow">{{ content | safe }}</main>
 
     {% include "partials/footer.njk" %}
+    {% if eleventy.env.runMode === "serve" %}
+      {% js "defer" %}{% include "scripts/font-check.js" %}{% endjs %}
+    {% endif %}
     {%- if meta.easteregg -%}
       <script type="module" src="/assets/scripts/components/custom-easteregg.js"></script>
       <custom-easteregg{% if meta.eastereggKeyword %} keyword="{{ meta.eastereggKeyword }}"{% endif %}{% if meta.eastereggShape %} shape="{{ meta.eastereggShape }}"{% endif %}></custom-easteregg>

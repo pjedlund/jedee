@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-14] enrich | Font subsetting
+
+Two additions from one session. A dev-server checker that greys out fallback characters and outlines fake styles, using a zero-width "blank font" in a canvas; the simpler two-fallback comparison missed ⁂ and ❖, and Chrome rejected the first blank font over an empty glyph table. And Cyrillic for Source Sans as separate `unicode-range` files, prompted by "переворот" on the A Confession page. Also recorded that `FontFace.weight` reads `normal` for a variable face with no weight descriptor.
+
 ## [2026-09-13] enrich | Font subsetting
 
 A "Missing styles" section from Anders Norén's faux-weights clip: synthesized bold and italic, `font-synthesis: none`, two cases that look like gaps and are not (bolder than the only bold; a variable font with no weight descriptor), and why the cmap scan misses a missing style. Tested with the shipped woff2 files in headless Chrome and Firefox. In jedee `body` now sets `font-synthesis: none`, which made the `.small-caps` longhand redundant (removed; [[Typographic conventions]] updated), and the two faux italics are gone: the serif headings get a new 17 KB Bold Italic subset with the Bold's 109 characters, and the code keywords render upright. One new link, [[The interlinker's second render pass]]. Sources: the clip in `src/_raw/` and this session.
