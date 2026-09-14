@@ -1,6 +1,6 @@
 ---
 title: The Kingdom of God is Within You
-subtitle: Christianity Not As A Mystic Religion But As A New Theory Of Life
+subtitle: Christianity Not as a Mystic Religion but as a New Theory of Life
 scoreMy: 5
 description: The soul-searching book that inspired Gandhi to embrace the concept of passive resistance, Tolstoy's 1894 polemic outlines a radical, well-reasoned revision of traditional Christian thinking. The revered novelist and political thinker denounces violent revolution, calling upon readers to rely upon their inner divinity for the strength to effect social change.
 date: 2025-12-10
