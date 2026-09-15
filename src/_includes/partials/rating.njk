@@ -1,0 +1,6 @@
+{# My rating out of 5, halves allowed, for books and films; set `rating` before including. Not mf2 p-rating (reading/watching aren't h-review by design). ⚠ Stars are SVGs because Source Sans has no ★ glyph; ½ is text because it does. #}
+<span class="meta-rating" data-tooltip="{{ rating }} out of 5 stars">{% for i in range(0, rating | int) %}{% svg 'posts/star', '', 'meta-icon' %}{% endfor %}{% if rating % 1 %}<span aria-hidden="true">½</span>{% endif %}<span class="visually-hidden">Rated {{ rating }} out of 5</span></span>
+
+{% css "local" %}
+  {% include "css/rating.css" %}
+{% endcss %}
