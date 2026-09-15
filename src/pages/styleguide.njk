@@ -319,7 +319,13 @@ colorGroups:
         <a href="{{ designTokens.textSizes.$extensions.scaleGenerator }}">generated with Utopia</a>.
       </p>
 
-      <table class="sizes flow">
+      <div class="table-wrapper | popout" role="region" tabindex="0" aria-labelledby="table-sizes">
+      <table class="sizes">
+        <caption id="table-sizes">Type sizes, smallest to largest</caption>
+        <thead>
+          <tr><th scope="col">Token</th><th scope="col">Range</th><th scope="col">Sample</th></tr>
+        </thead>
+        <tbody>
         {%- for size in designTokens.textSizes | dtcgItems -%}
           <tr>
             <th scope="row">
@@ -336,7 +342,9 @@ colorGroups:
             </td>
           </tr>
         {%- endfor -%}
+        </tbody>
       </table>
+      </div>
     </section>
   </div>
 
@@ -348,7 +356,13 @@ colorGroups:
       <a href="{{ designTokens.spacing.$extensions.scaleGenerator }}">generated with Utopia</a>.
     </p>
 
-    <table class="spacing flow">
+    <div class="table-wrapper | popout" role="region" tabindex="0" aria-labelledby="table-spacing">
+    <table class="spacing">
+      <caption id="table-spacing">Space sizes, smallest to largest</caption>
+      <thead>
+        <tr><th scope="col">Token</th><th scope="col">Range</th><th scope="col">Sample</th></tr>
+      </thead>
+      <tbody>
       {%- for space in designTokens.spacing | dtcgItems -%}
         <tr>
           <th scope="row">
@@ -368,12 +382,13 @@ colorGroups:
           </td>
         </tr>
       {%- endfor -%}
+      </tbody>
     </table>
+    </div>
   </section>
 </article>
 
 {%- css "local" -%}
   {%- include 'css/styleguide.css' -%}
-  {%- include 'css/table.css' -%}
   {%- include 'css/footnotes.css' -%}
 {%- endcss -%}

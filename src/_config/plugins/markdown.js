@@ -76,4 +76,49 @@ export const markdownLib = markdownIt({
       const imgTag = `<img src="${src}" alt="${alt}" ${attributesString}>`;
       return caption ? `<figure>${imgTag}<figcaption>${caption}</figcaption></figure>` : imgTag;
     };
+  })
+  .use(md => {
+    // A `Table: …` paragraph directly before or after a table becomes its <caption> (pandoc's convention); see the wiki page Tables.
+    const captionAt = (tokens, i) =>
+      tokens[i]?.type === 'paragraph_open' && /^table:\s/i.test(tokens[i + 1].content) && tokens[i + 2].type === 'paragraph_close';
+
+    md.core.ruler.push('table_caption', state => {
+      const {tokens} = state;
+      for (let i = 0; i < tokens.length; i++) {
+        if (tokens[i].type !== 'table_open') continue;
+        const close = tokens.findIndex((t, j) => j > i && t.type === 'table_close');
+        const headEnd = tokens.findIndex((t, j) => j > i && t.type === 'thead_close');
+        const text = inline => inline.children.map(t => t.content).join('');
+        const headers = tokens.slice(i, headEnd).filter(t => t.type === 'inline');
+        tokens[i].meta = {label: headers.map(text).filter(Boolean).join(', ')};
+
+        const at = captionAt(tokens, i - 3) ? i - 3 : captionAt(tokens, close + 1) ? close + 1 : -1;
+        if (at < 0) continue;
+        const [, inline] = tokens.splice(at, 3);
+        if (at < i) i -= 3;
+        inline.children[0].content = inline.children[0].content.replace(/^table:\s*/i, '');
+        const id = `table-${slugifyString(text(inline))}`;
+        const open = new state.Token('caption_open', 'caption', 1);
+        open.attrSet('id', id);
+        tokens.splice(i + 1, 0, open, inline, new state.Token('caption_close', 'caption', -1));
+        tokens[i].meta.captionId = id;
+      }
+    });
+
+    // ⚠ The wrapper is the popout grid item and the keyboard-scrollable region; it needs tabindex, role and a name together.
+    md.renderer.rules.table_open = (tokens, idx) => {
+      const {captionId, label} = tokens[idx].meta;
+      const name = captionId ? `aria-labelledby="${captionId}"` : `aria-label="${md.utils.escapeHtml(label)}"`;
+      return `<div class="table-wrapper | popout" role="region" tabindex="0" ${name}>\n<table>\n`;
+    };
+    md.renderer.rules.table_close = () => '</table>\n</div>\n';
+
+    // Header cells get scope="col"; markdown's column alignment becomes logical start/end.
+    md.renderer.rules.th_open = md.renderer.rules.td_open = (tokens, idx, options, env, self) => {
+      const token = tokens[idx];
+      if (token.type === 'th_open') token.attrSet('scope', 'col');
+      const style = token.attrGet('style');
+      if (style) token.attrSet('style', style.replace('left', 'start').replace('right', 'end'));
+      return self.renderToken(tokens, idx, options);
+    };
   });
