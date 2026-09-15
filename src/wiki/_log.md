@@ -7,7 +7,7 @@ Append-only. One entry per ingest / query-filed / lint, newest first. Entry form
 
 ## [2026-09-15] enrich | Tables
 
-Session source: the table tweaks on the style guide. Two of the three "not adopted" choices are now adopted. Stripes replace the rules between rows on every table, painted as a translucent image on the cells so the sticky row header carries them and the scroll shadows show through; contrast measured in both themes. Equal-width columns are an opt-in attribute used only by the style guide. New bullets on the block of custom properties that sets the tables' look and on the style guide's middle alignment, and a sentence under *Popout width* on the Spacing section, which lacked `.wrapper-pass`. `caption-side: bottom` stays out. No new links.
+Session source: the table tweaks on the style guide. Two of the three "not adopted" choices are now adopted. Stripes replace the rules between rows on every table, painted as a translucent image on the cells so the sticky row header carries them and the scroll shadows show through; contrast measured in both themes. Equal-width columns are an opt-in attribute used only by the style guide. New bullets on the block of custom properties that sets the tables' look and on the style guide's middle alignment, and a sentence under *Popout width* on the Spacing section, which lacked `.wrapper-pass`. The caption and first column now keep a fixed 2rem inset at every width, which replaces the container-query formula that followed the popout track. `caption-side: bottom` stays out. No new links.
 
 ## [2026-09-15] correction | Syntax highlighting
 
