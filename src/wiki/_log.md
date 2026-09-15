@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-15] ingest | Tables
+
+A new page from the clip `Styling Tables the Modern CSS Way` (Michelle Barker, Piccalilli, 2024-07-18; `published:` filled in), plus Adrian Roselli's two articles on the scroll region. General part: markup, the defaults, alignment, bands, overflow and its accessibility, sticky row headers, column widths. In jedee: the session that replaced Eleventy Excellent's stacked `local/table.css` with jedee's own, taught `markdown.js` to wrap every table in a named region at popout width with a `Table:` caption convention, and moved the include into `base.njk`, conditional on the page containing a table. Three traps recorded: the article's invalid `scope="column"`; prose's mobile `word-break` collapsing table columns; and an unguarded `content.includes()` in `base.njk` that silently turned every wikilink on the site into plain text, caught by building with and without the change. Links earned: [[Layout breakouts]], [[Typographic conventions]], [[Layout shift]], [[The interlinker's second render pass]].
+
 ## [2026-09-15] enrich | Typographic conventions
 
 A Subtitles section, from the 2026-09-14 session that added subtitles (source of record written to `src/_raw/dev-notes/How the subtitle is marked up.md`). General part: the WHATWG `<hgroup>` model, why a second heading is the wrong pattern, what a screen reader hears. In jedee: the markup in `entry-header.njk`, the subtitle outside `p-name`, the italic sans after three serif tries, the `--flow-space` trap, and why films have no Sveltia field. Links earned: [[Microformats]], [[Sveltia CMS]].

@@ -52,6 +52,10 @@
     {% include "partials/header.njk" %}
 
     <main id="main" class="flow">{{ content | safe }}</main>
+    {# ⚠ Keep the `content and` guard: unguarded, .includes() throws in a render where content is undefined and every wikilink on the site silently turns into plain text. #}
+    {%- if content and content.includes('<table') -%}
+      {%- css "local" -%}{%- include 'css/table.css' -%}{%- endcss -%}
+    {%- endif -%}
 
     {% include "partials/footer.njk" %}
     {% if eleventy.env.runMode === "serve" %}

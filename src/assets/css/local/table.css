@@ -1,96 +1,79 @@
+/* TABLE — data tables and the scroll region around them. Included by base.njk only on pages with a table; markdown.js writes the wrapper (see the wiki page Tables). */
+
+.table-wrapper {
+  --table-rule: var(--border-thickness) solid var(--color-bg-accent-2);
+  --table-head-bg: var(--color-bg-accent);
+  --table-shadow: color-mix(in oklab, var(--color-text) 20%, transparent);
+
+  overflow-x: auto;
+  container-type: inline-size;
+  /* ⚠ Prose breaks words anywhere below sm, which would shrink columns to single letters instead of letting the table scroll. */
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: manual;
+  border: var(--table-rule);
+  border-radius: var(--border-radius-medium);
+
+  /* Scroll cues (Lea Verou, via Adrian Roselli): page-colored covers scroll with the content and hide the edge shadows once an edge is reached. */
+  background:
+    linear-gradient(to right, var(--color-bg) 30%, transparent),
+    linear-gradient(to left, var(--color-bg) 30%, transparent) 100% 0,
+    radial-gradient(farthest-side at 0 50%, var(--table-shadow), transparent),
+    radial-gradient(farthest-side at 100% 50%, var(--table-shadow), transparent) 100% 0;
+  background-color: var(--color-bg);
+  background-repeat: no-repeat;
+  background-size: 4em 100%, 4em 100%, 1.4em 100%, 1.4em 100%;
+  background-attachment: local, local, scroll, scroll;
+}
+
 table {
-  border: 0;
   inline-size: 100%;
+  border-collapse: collapse;
 }
 
-table br {
-  display: none;
-}
-
-thead {
-  border: none;
-  clip: rect(0 0 0 0);
-  block-size: 1px;
-  margin: -1px;
-  overflow: hidden;
-  padding: 0;
-  position: absolute;
-  inline-size: 1px;
-}
-
-tr {
-  border: var(--stroke);
-  display: block;
-  margin-block-end: var(--space-s);
-}
-
+caption,
 th,
 td {
-  padding: var(--space-xs) var(--space-s);
-  vertical-align: sub;
-}
-
-td {
-  border-block-end: var(--stroke);
-  display: block;
+  padding: var(--space-2xs) var(--space-s);
   text-align: start;
+  vertical-align: baseline;
 }
 
-td::before {
-  content: attr(data-label);
-  float: start;
+/* Start-column text lines up with the prose: the wrapper is the content column plus two popout tracks, so half the difference is one track. ⚠ Assumes the wrapper spans popout in a .wrapper sized by --wrapper-width. */
+.table-wrapper :is(caption, tr > :first-child) {
+  padding-inline-start: max(var(--space-s), (100cqi - var(--wrapper-width, 85rem)) / 2);
+}
+
+caption {
+  padding-block: var(--space-xs);
+  font-size: var(--size-step-min-1);
+  font-style: italic;
+}
+
+thead th {
+  vertical-align: bottom;
+  background: var(--table-head-bg);
+}
+
+thead,
+tfoot {
+  border-block: calc(var(--border-thickness) * 2) solid var(--color-bg-accent-2);
+}
+
+tbody tr + tr {
+  border-block-start: var(--table-rule);
+}
+
+tfoot {
   font-weight: var(--font-bold);
 }
 
-td:last-child {
-  border-block-end: 0;
+/* Row headers stay put while the rest scrolls; ⚠ a sticky cell needs its own background or the scrolled cells show through it. */
+table:has(tbody th) :is(th, td):first-child {
+  position: sticky;
+  inset-inline-start: 0;
 }
 
-@media screen(sm) {
-  table {
-    border-collapse: collapse;
-    margin: 0;
-    padding: 0;
-    table-layout: fixed;
-  }
-
-  table br {
-    display: block;
-  }
-
-  thead {
-    position: static;
-    text-align: start;
-    display: table-header-group;
-  }
-
-  caption {
-    margin: var(--space-xs) 0 var(--space-s);
-  }
-
-  tr {
-    border: 0;
-    padding: var(--space-xs);
-    margin: 0;
-    display: table-row;
-  }
-
-  tr:not(:last-child) {
-    border-block-end: var(--stroke);
-  }
-
-  td {
-    border: none;
-  }
-
-  td::before {
-    display: none;
-  }
-
-  th,
-  td {
-    padding: var(--space-s);
-    text-align: start;
-    display: table-cell;
-  }
+:is(tbody, tfoot) th {
+  background: var(--color-bg);
 }
