@@ -12,7 +12,7 @@
   --table-radius: var(--border-radius-medium);
   --table-cell-padding-block: var(--space-2xs);
   --table-cell-padding-inline: var(--space-s);
-  --table-edge-padding: calc(2rem - var(--border-thickness)); /* caption and first column; 2rem is the popout track in wrapper.css */
+  --table-edge-padding: var(--space-m-l); /* caption and first column; ⚠ its 31px maximum is the 2rem popout minus the border, which lines the text up with the prose */
   --table-cell-align: baseline;
   --table-caption-size: var(--size-step-min-1);
   --table-caption-style: italic;
