@@ -27,8 +27,6 @@ The articles, notes, photos, recordings and ratings are mine. I write them mysel
 
 ## Crawlers and training
 
-<!-- TODO Johan: your call. Today robots.txt allows every crawler, and /llms.txt lists the posts for AI tools. Since everything here is public domain, the licence already allows training. Keep it open, or block AI crawlers? -->
-
 Everything here is in the public domain, so I don't forbid anyone, person or machine, from reading or learning from it. There is an [llms.txt](/llms.txt) listing the posts for AI tools.
 
 ---
