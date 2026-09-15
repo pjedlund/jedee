@@ -117,8 +117,17 @@ Table: Inline code: Ariel Salminen's chip and jedee's
 }
 ```
 
-The code text shares the prose baseline because nothing moves it: no `vertical-align`, no offset. ⚠ Eleventy Excellent's version of this rule nudges inline code up with `position: relative; top: -0.05em`, the one declaration that would take it off the baseline; jedee had already dropped it. The chip also stays `display: inline`. Measured, `inline-block` keeps the text on the baseline too, since an inline-block's baseline is its last line of text; what changes is that the vertical padding then counts toward the line's height (the test paragraph grew 0.84px), and a long span can no longer wrap onto the next line. The selector is EE's, and so was the plain `0.1em 0.4em` padding it replaces. The chip is jedee's own.
+The code text shares the prose baseline because nothing moves it: no `vertical-align`, no offset. Eleventy Excellent's version of this rule adds `position: relative; top: -0.05em`, which lifts the chip, letters and all, off the baseline. That is an optical correction for EE's own fonts, not a mistake. It arrived as `-0.1em` in January 2024 and was halved to `-0.05em` in February (commit `7ad2693`), when EE set Figtree with Roboto Mono.
+
+Table: Where the chip's middle sits against the middle of the body text's capitals (positive = low), code at 0.8 of body size
+| Fonts | No nudge | `-0.05em` | `-0.1em` |
+|---|---|---|---|
+| Figtree + Roboto Mono (EE, 2024) | 0.038em | 0.002em | −0.042em |
+| Atkinson Hyperlegible + `ui-monospace` (EE today) | 0.071em | 0.032em | 0.008em |
+| Source Sans + Source Code Pro (jedee) | 0.053em | 0.013em | −0.027em |
+
+The February value centers EE's 2024 pair almost exactly. EE has since changed fonts and kept the value, which leaves today's pair 0.032em low; that row is SF Mono on macOS, since `ui-monospace` is a different font on other systems. In jedee's fonts the chip sits 0.053em low without the nudge, about 1.5px at the largest body size. jedee keeps the letters on the baseline instead, a choice between two alignments rather than a fix: the nudge would move them 0.04em off the line the prose sits on. The chip also stays `display: inline`. Measured, `inline-block` keeps the text on the baseline too, since an inline-block's baseline is its last line of text; what changes is that the vertical padding then counts toward the line's height (the test paragraph grew 0.84px), and a long span can no longer wrap onto the next line. The selector is EE's, and so was the plain `0.1em 0.4em` padding it replaces. The chip is jedee's own.
 
 Related: [[The interlinker's second render pass]] — the other thing in this pipeline that rewrites content mid-build, and a reminder that markdown plugin order is load-bearing. [[Wikilinks]] — the interlinker deliberately ignores wikilinks inside code blocks, the other place fenced content gets special treatment.
 
-Raw source: `src/_raw/dev-notes/How njk code blocks got syntax highlighting.md`
+Raw source: `src/_raw/dev-notes/How njk code blocks got syntax highlighting.md`; `src/_raw/dev-notes/How the inline-code nudge was measured.md` (the nudge table, 2026-09-15)

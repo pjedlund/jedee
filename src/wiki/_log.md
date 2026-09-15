@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-15] correction | Syntax highlighting
+
+Johan pointed out that Eleventy Excellent's `top: -0.05em` on inline code was likely there for EE's own font, where the page had framed it as the declaration that would take code off the baseline. Measured (raw note `src/_raw/dev-notes/How the inline-code nudge was measured.md`): the nudge arrived as `-0.1em` in January 2024 and was halved in February, when EE set Figtree with Roboto Mono, and the February value centers that pair's chip on the body's cap height to within 0.002em. EE's later font change left it 0.032em low; in jedee's fonts an unnudged chip sits 0.053em low. The paragraph now says it is an optical correction and gives the three-row table; jedee's no-nudge rule is described as a choice.
+
 ## [2026-09-15] ingest | Prefetching
 
 Session source: the EE 4.8 follow-ups (raw note `src/_raw/dev-notes/How hover prefetching was added.md`). New page on the Speculation Rules API: eagerness levels and Chrome's limits (50 for `immediate`, 2 first-in-first-out for the rest, and the "discarded" message that follows from it), browser support as of September 2026, Chrome 138's service-worker support, instant.page and Quicklink, and Guess.js. In jedee: EE's `speculation-rules.njk` with jedee's `not` clause, measured against the 510 feed links and 136 image links in the built pages; why it pays off with a network-first worker and `max-age=0` HTML; what was declined; and three environments that report a false failure (Helium, Claude's Browser pane, localhost). Earned links: The service worker's three strategies and Three things called cache (a sentence each, pointing back), What jedee kept from Eleventy Excellent (the rule and the bundled confetti, updated there), Sveltia CMS and Micropub (the excluded paths).
