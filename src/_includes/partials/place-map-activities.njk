@@ -18,9 +18,10 @@
     </div>
   {%- endif %}
   <sortable-table>
-    <div class="table-wrapper" role="region" tabindex="0" aria-labelledby="activities-caption" data-table-rows="link">
+    {#- ⚠ No tabindex on this wrapper: the head buttons and row links already let a keyboard scroll it, and Safari moves focus to the nearest focusable ancestor on a click, scrolling the page and losing the click. #}
+    <div class="table-wrapper" role="region" aria-labelledby="activities-caption" data-table-rows="link">
       <table data-place-list>
-        <caption id="activities-caption">Every activity</caption>
+        <caption id="activities-caption" class="visually-hidden">Every activity</caption>
         <thead>
           <tr>
             <th scope="col" aria-sort="descending">Date</th>
@@ -38,7 +39,7 @@
             {%- set day = post.date | formatDate('D MMM YYYY') %}
             {%- set p = d.activityType | pace(d.distanceKm, d.duration) %}
             {#- data-date is the marker popup's first line; it matches the visible date. -#}
-            <tr{% if d.lat and d.lon %} data-lat="{{ d.lat }}" data-lon="{{ d.lon }}" data-date="{{ day }}"{% endif %}>
+            <tr data-activity="{{ d.activityType | slugify }}"{% if d.lat and d.lon %} data-lat="{{ d.lat }}" data-lon="{{ d.lon }}" data-date="{{ day }}"{% endif %}>
               <td data-sort="{{ post.date.getTime() }}"><time datetime="{{ post.date | toIsoString }}">{{ day }}</time></td>
               <th scope="row"><a href="{{ post.url }}"{% if d.titleLang %} lang="{{ d.titleLang }}"{% endif %}>{{ d.title }}</a></th>
               <td data-table-priority="4">{{ d.activityType | capitalize }}</td>

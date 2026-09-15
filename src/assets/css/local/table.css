@@ -168,8 +168,9 @@ thead th small {
   }
 }
 
-/* Long names (Swedish compounds) break at syllables rather than setting the row header's minimum width. */
+/* Long names (Swedish compounds) break at syllables rather than setting the row header's minimum width. ⚠ No opaque background here: the rows are positioned, and Firefox paints a positioned row's cell backgrounds over the table's collapsed rules. */
 .table-wrapper[data-table-rows='link'] tbody th {
+  background-color: transparent;
   hyphens: auto;
 }
 

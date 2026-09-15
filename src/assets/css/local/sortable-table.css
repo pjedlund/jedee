@@ -6,8 +6,14 @@ sortable-table {
   --sort-arrow-size: 0.32em;
   --sort-arrow-gap: var(--space-3xs);
   --sort-arrow-hint: 0.4;
+  --sort-arrow-middle: 0.75em; /* the small caps' visual middle below the head's first line top, measured for Source Sans at the table's leading */
 
   display: block;
+}
+
+/* A head wrapping onto a second line (three, with its unit) leaves the head band ragged. */
+sortable-table thead th {
+  white-space: nowrap;
 }
 
 /* ⚠ Not `all: unset` — this bundle sits outside the cascade layers, so it would also strip the global focus ring. */
@@ -24,11 +30,11 @@ sortable-table thead button {
   cursor: pointer;
 }
 
-/* CSS-drawn chevron, as in the breadcrumb (no arrow glyphs in the font subset); absolutely placed after the text so nothing moves when it appears. */
+/* CSS-drawn chevron, as in the breadcrumb (no arrow glyphs in the font subset); absolutely placed after the text so nothing moves when it appears. The drawn V sits 0.354 of the box's side off its centre, so the offsets below put the V itself on the small caps' middle. */
 sortable-table thead button::after {
   content: '';
   position: absolute;
-  inset-block-start: 0.3em;
+  inset-block-start: calc(var(--sort-arrow-middle) - var(--sort-arrow-size) * 0.854);
   inset-inline-start: calc(100% + var(--sort-arrow-gap));
   inline-size: var(--sort-arrow-size);
   block-size: var(--sort-arrow-size);
@@ -47,6 +53,6 @@ sortable-table th[aria-sort] button::after {
 }
 
 sortable-table th[aria-sort='ascending'] button::after {
-  inset-block-start: 0.5em;
+  inset-block-start: calc(var(--sort-arrow-middle) - var(--sort-arrow-size) * 0.146);
   rotate: -135deg;
 }
