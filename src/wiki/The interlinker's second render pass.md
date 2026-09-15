@@ -56,6 +56,7 @@ Rendering shouldn't also compute the page graph. Resolving links by re-rendering
 
 Measured on a throwaway harness (N synthetic notes, 10 wikilinks each, Eleventy 3.1.5 / interlinker 1.1.2 / Node 22), plugin off vs on:
 
+Table: Build time and peak memory with the interlinker off and on
 | Notes | Off | On | Off peak RAM | On peak RAM |
 |---|---|---|---|---|
 | 500 | 0.34 s | 1.04 s | 172 MB | 435 MB |

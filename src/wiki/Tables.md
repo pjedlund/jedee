@@ -157,6 +157,6 @@ Measured: text and prose start at the same pixel at 1440px and 1200px; at 1024px
 - ⚠ Below the `sm` breakpoint `prose.css` sets `word-break: break-word` and `hyphens: auto` on everything in a post body, for long URLs. In a table that lowers every column's minimum width, so columns shrank to single characters ("P / e / rf", "0. / 00 / 4") instead of the table scrolling. The wrapper resets both. Measured at 375px on [[Layout shift]]: before the reset none of its 13 tables scrolled and the scores broke mid-number; after it, 7 scroll and the page itself still does not.
 - Not adopted: `table-layout: fixed`, because wiki tables mix one-word columns with one-sentence columns and content-sized columns are the point; stripes; and `caption-side: bottom`, since a table's title conventionally sits above it.
 
-The existing wiki tables predate the `Table:` convention and have no captions, so their regions are named from their headers. Adding a caption is a one-line edit per table.
+Every wiki table has had a `Table:` caption since 2026-09-15. Naming a region after its column headers is the fallback for a table written without one.
 
 Raw source: `src/_raw/Styling Tables the Modern CSS Way.md` (Michelle Barker, Piccalilli, 2024-07-18). Also: Adrian Roselli, [Under-Engineered Responsive Tables](https://adrianroselli.com/2020/11/under-engineered-responsive-tables.html) (2020) and [Fixed Table Headers](https://adrianroselli.com/2020/01/fixed-table-headers.html) (2020).

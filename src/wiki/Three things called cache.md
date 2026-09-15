@@ -17,6 +17,7 @@ The stores that commonly coexist on a static site:
 
 The word means three different things here, in three different places, and two of the three never touch a visitor.
 
+Table: The three caches
 | Layer | Lives on | Speeds up | Cleared by |
 |---|---|---|---|
 | Build cache | Netlify's build server | The next deploy | Nothing automatic — clear by hand |
@@ -87,6 +88,7 @@ Note that for a visitor with the service worker active, these headers never come
 
 Measured on the live site on 2026-08-30 with `place-map.js` (156 KB), navigating between two pages that both use the component. The browser's own resource timings report `deliveryType` and `transferSize`, so "bytes over the network" is observed rather than inferred.
 
+Table: A repeat request for `place-map.js`, by visitor
 | Visitor | Answered by | Bytes over the network | Time |
 |---|---|---|---|
 | Service worker active | `cache-storage` — the worker's cache | 0 | ~1 ms |

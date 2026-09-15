@@ -39,6 +39,7 @@ These are EE's, unchanged, and this wiki should not describe them as jedee inven
 
 ## Extended
 
+Table: What jedee extended from the stock starter
 | Area | EE stock | jedee |
 |---|---|---|
 | Post types | two (`articles`, `notes`), typed through `tags` | sixteen, typed through `category` with `tags` reserved for the public vocabulary — see [[Anatomy of a post type]] |
@@ -58,6 +59,7 @@ The design-token divergence is narrower than it looks from the file count: jedee
 
 `what-delete.md` is Lene's own list of what a fork can safely remove, which makes it a fair measure of how much of the starter jedee actually kept. Against that list:
 
+Table: Lene Saile's list of removable files, against jedee
 | Lene's item | jedee |
 |---|---|
 | `src/_data/github.js` | deleted |

@@ -34,6 +34,7 @@ Set four variables, include a shared body. Exactly the shape [[Anatomy of a post
 
 ### Nine bodies, not one
 
+Table: The feed bodies and the post types that use each
 | Body | Used by |
 |---|---|
 | `atom-body.njk` / `json-body.njk` | articles, notes, reading, watching, jams, recipes, audio, videos |

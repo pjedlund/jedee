@@ -15,6 +15,7 @@ It is small enough to hand-write. Libraries like [Workbox](https://developer.chr
 
 jedee is an installable PWA, and a visited page is served back fully styled when the network is gone. That's about 25 lines of hand-written JavaScript in `src/pages/serviceworker.njk`, registered by a six-line inline script at the foot of `base.njk`. No Workbox, no npm package, no build step. Of the five strategies, it uses three.
 
+Table: The service worker's strategies and what each is used for
 | Strategy | Behavior | Used for |
 |---|---|---|
 | Network only | Always the network, never cached | Non-GET and cross-origin requests |

@@ -87,6 +87,7 @@ The tint is a nod to perception rather than physics. The lunar surface is grey-b
 
 Two practical notes. There is no light blue to reach for — the ramp is three dark values (`#245375`, `#2f536e`, `#3d8ecc`), and the lightest reads as a link blue, an interface color that would compete with the orange logomark a few centimetres to its left in the same header. And the mix has to come from blue-**vivid**: `--color-accent-blue` resolves to the desaturated `#2f536e` in dark, so 12% of it barely registers (chroma 0.010 against 0.018). Contrast is not the constraint here the way it was for the sun — every mix from 6% to 30% lands between 8.9 and 10.6 on the dark background, so the percentage is purely an aesthetic dial.
 
+Table: Blue mixed into the dark theme's text color: contrast and chroma
 | mix into `--color-text` | hex | on `#141619` | chroma |
 |---|---|---|---|
 | none (`#c8cacc`) | `#c8cacc` | 11.03 | 0.004 |
@@ -99,6 +100,7 @@ Fixing the logomark to match found two live contrast failures on every page but 
 
 A yellower, lighter sun was the design intent and is not reachable. The sun only ever appears in the light theme, on `#f4f4f2`, and [WCAG 1.4.11 Non-text Contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html) wants 3:1 for a graphic you need in order to operate a control — which an icon-only button's icon is, notwithstanding its `aria-hidden` (that attribute governs the accessibility *tree*, not what a sighted user has to see). Measured against that background, the palette's lighter oranges are nowhere close:
 
+Table: Contrast of the lighter oranges on each theme's background
 | | on `#f4f4f2` | on `#141619` |
 |---|---|---|
 | orange-200 `#ffdec3` | 1.16 | 14.23 |
@@ -115,6 +117,7 @@ This is a general constraint, not a palette flaw: a light background and a yello
 
 The eight states as shipped, measured on the painted pixels rather than derived:
 
+Table: Contrast of the logomark and the toggle icon in all eight states
 | | light rest | light hover | dark rest | dark hover |
 |---|---|---|---|---|
 | logomark | 3.50 | 3.94 | 4.70 | 5.56 |

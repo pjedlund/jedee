@@ -7,6 +7,7 @@ A favicon is no longer one file. A site that wants to look right in a tab, on an
 
 The set is roughly:
 
+Table: The favicon files and where each one shows
 | File | Where it shows |
 | --- | --- |
 | `favicon.svg` | Modern browser tabs |
@@ -79,6 +80,7 @@ EE's stock script is immune, because it hands over a bare `sharp(svgBuffer)` wit
 
 **The four shapes, side by side.** The tab mark and the app tile are the two treatments; the app tile then differs only in its corners, and only because of who is doing the masking.
 
+Table: The four icon shapes, side by side
 | | File | Treatment |
 | --- | --- | --- |
 | <img src="/favicon.svg" alt="The jedee mark in brand orange on transparency, filling almost the whole square." width="72" height="72" eleventy:ignore> | `favicon.svg` | Bare mark, transparent, 14 of 16 pixels |

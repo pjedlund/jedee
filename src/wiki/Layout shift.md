@@ -32,6 +32,7 @@ All of which makes the measured result more interesting, not less.
 
 Lighthouse 12, mobile preset, run on 2026-09-06 against the production build served locally, and then against the live site:
 
+Table: Lighthouse 12, mobile preset, 2026-09-06
 | Run | Perf | A11y | Best practices | SEO | CLS |
 | --- | --- | --- | --- | --- | --- |
 | `/` local `dist/`, desktop | 100 | 100 | 100 | 66 | 0.004 |
@@ -59,6 +60,7 @@ That div is the landing page's masonry grid — `src/pages/index.njk`, wrapping 
 
 Two shifts from the same font swap, on the same page, show the size effect directly:
 
+Table: Two shifts from the same font swap
 | Element | Score |
 | --- | --- |
 | `<div class="region feature">` — the masonry grid, 7,093 px tall | 0.1960 |
@@ -82,6 +84,7 @@ Both point the same way, which is convenient: **remove the grid and re-measure.*
 
 The masonry JavaScript came out on 2026-09-06 — `custom-masonry.webc` lost its `<is-land>`, its `<template>` and its script, keeping the tag and `class="grid"` so every call site and stylesheet stayed put, and `custom-masonry.js` was deleted. The landing page's demo blocks, which existed only to illustrate the grid, went with it.
 
+Table: CLS and performance before and after the masonry script came out
 | Page | CLS before | CLS after | Perf before | Perf after |
 | --- | --- | --- | --- | --- |
 | `/` | 0.197 | **0.180** | 91 | 92 |
@@ -116,6 +119,7 @@ At 3G with 4× CPU throttling that reports **CLS 0.0993, of which 0.0922 lands i
 
 All four web `@font-face` blocks went from `font-display: swap` to `optional` — one word each, no other change.
 
+Table: CLS as the grid came out and `font-display` changed
 | | CLS (observer, 3G + 4× CPU) | Lighthouse CLS | Lighthouse performance |
 | --- | --- | --- | --- |
 | masonry grid + `swap` | — | 0.197 | 91 |
@@ -138,6 +142,7 @@ The two mechanisms in play match the fallback to the web font along *different a
 
 Measured on a local production build, cold cache, 3G + 4× CPU, observer installed before navigation:
 
+Table: `font-display` and `font-size-adjust` combinations on four pages
 | | landing, 1440 px | landing, 390 px | `/wiki/layout-shift/` | `/notes/` |
 | --- | --- | --- | --- | --- |
 | `optional` + `font-size-adjust` | 0 *(fallback painted)* | 0 *(fallback)* | 0 *(fallback)* | 0 *(fallback)* |
@@ -158,6 +163,7 @@ The generators — [screenspan.net/fallback](https://screenspan.net/fallback), [
 
 **1. One number, several requirements.** `size-adjust` matches an *average*, but any given line of text has its own letter mix. Deriving the value the heading actually needs from four different samples gives four different answers:
 
+Table: The `size-adjust` each text sample needs
 | sample | required `size-adjust` |
 | --- | --- |
 | the real `h1`, "Hej hej! I'm Johan." | 100.09% |
@@ -171,6 +177,7 @@ Nearly four points of spread. Whichever you pick is wrong for the other three.
 
 **3. `ch` is font-dependent, and so is anything built on it.** `1ch` is the advance of the "0" glyph, which differs per family even after `size-adjust` scales it:
 
+Table: The width of `1ch` in each family
 | | `1ch`, in em | vs its web font |
 | --- | --- | --- |
 | Source Sans | 0.49688 | — |
@@ -209,6 +216,7 @@ The page is short, so the footer is bottom-anchored — its top is `viewportHeig
 
 Everything above measures the shift where it happens. The complementary question is where it *doesn't*, which turns out to be almost everywhere. Sweeping the landing page and forcing the fallback state directly — dropping the web family from each element's stack, leaving the rest of the declaration alone — gives this:
 
+Table: Line counts in the web font and the fallback, by viewport width
 | viewport | `h1` lines | intro lines | intro height Δ | footer rows, web / fallback |
 | --- | --- | --- | --- | --- |
 | 360 | 2 / 2 | 7 / 7 | 0 | 3 / 3 |
@@ -233,6 +241,7 @@ Everything above measures the shift where it happens. The complementary question
 
 The residual metric error after the re-derived descriptors, measured as pure advance width on one unwrapped string:
 
+Table: The fallback faces' remaining width error
 | | vs. its web font | without `size-adjust` |
 | --- | --- | --- |
 | Source Sans Fallback, the 207-character intro | **−1.75%** | Arial alone: +6.55% |
@@ -246,6 +255,7 @@ So `92.5%` overshoots slightly and `100.8%` undershoots slightly, which is the o
 
 A common pattern is a hero that fades and slides in on load, and on sites using it you rarely catch the font changing. Measured at 412 px on 3G with 4× CPU, cold cache:
 
+Table: CLS and first paint, with and without a hero fade
 | | CLS | FCP |
 | --- | --- | --- |
 | as built, no masking | 0.1614 | 568 ms |
@@ -257,6 +267,7 @@ A common pattern is a hero that fades and slides in on load, and on sites using 
 
 **Gating the reveal does zero the score** — an element at `opacity: 0` generates no `layout-shift` entry at all, which is worth knowing on its own. But it pays for that in first paint, and there is no usable middle:
 
+Table: Gating the reveal on font load: CLS against first paint
 | gate ceiling | CLS | FCP |
 | --- | --- | --- |
 | none | 0.1614 | 568 ms |
@@ -271,6 +282,7 @@ The ceiling has to outlast the font download before the shift disappears, and by
 
 The reference work here is Zach Leatherman's [A Comprehensive Guide to Font Loading Strategies](https://www.zachleat.com/web/comprehensive-webfonts/) — he also wrote [[is-land]] — which ranks eleven approaches. The ones worth knowing, roughly in order of effort:
 
+Table: Font loading strategies, from Zach Leatherman's guide
 | Strategy | What it does | JS? |
 | --- | --- | --- |
 | Unceremonious `@font-face` | A naked block and hope. Up to three seconds of invisible text. | no |
@@ -294,6 +306,7 @@ The fallback faces are `local()`-only — `local('Georgia')`, `local('Arial')`, 
 
 So the reproduction fetched the candidate fonts *into the browser* rather than installing anything — Roboto and Noto Serif from Google Fonts, DejaVu from jsDelivr — declared each as its own family, and re-rendered the heading and the intro paragraph under every one at five widths:
 
+Table: Line counts at 360 px with each candidate fallback font
 | fallback for the heading / intro at 360 px | `h1` lines | intro lines |
 | --- | --- | --- |
 | Source Serif / Source Sans (the web fonts) | 2 | 7 |

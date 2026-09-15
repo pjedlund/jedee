@@ -15,6 +15,7 @@ The promise is portability: one component works in React, Vue, a static site or 
 
 [Ariel Salminen](https://arielsalminen.com/2026/progressive-web-components/) (2026-03-25) names the alternative. A *progressive web component* is designed in two layers: HTML and CSS that render immediately without JavaScript, and a JavaScript layer that adds reactivity and event handling on top. She sorts them into three kinds:
 
+Table: Ariel Salminen's three kinds of progressive web component
 | Kind | Where its HTML comes from | Where its CSS lives |
 | --- | --- | --- |
 | Composite | wraps and enhances HTML written inside it | light DOM |
@@ -31,6 +32,7 @@ jedee uses no component library. Every custom element on the site is of Ariel's 
 
 Counted in a production build on 2026-09-14, the custom tags split three ways:
 
+Table: The custom tags in jedee and what their JavaScript does
 | Tag | Defined by | What its JavaScript does |
 | --- | --- | --- |
 | `<is-land>` | `@11ty/is-land`, EE stock | holds back other scripts until a condition is met — see [[is-land]] |

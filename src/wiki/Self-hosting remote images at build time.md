@@ -20,6 +20,7 @@ The site shows plenty of images that live on someone else's server — album cov
 
 ### Two routes, and only one accepts a remote URL
 
+Table: Which image routes accept a remote URL
 | Route | Remote URL? |
 |---|---|
 | **HTML Transform** — a plain `<img src="https://…">` in markdown or a layout | ✅ fetched, optimized, self-hosted |

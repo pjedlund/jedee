@@ -20,6 +20,7 @@ Most JavaScript on a page is not needed when the page arrives. A lightbox matter
 
 Five conditions ship, and they can be combined on one element:
 
+Table: The five loading conditions
 | Condition | Fires when |
 | --- | --- |
 | `on:visible` | the element intersects the viewport |
@@ -38,6 +39,7 @@ The dependency (`@11ty/is-land` 4.0.1), the bundle entry, and the inlining are a
 
 Seven elements use it, all with one of two conditions — `on:idle` for anything in the page chrome, `on:visible` for anything embedded in a post's body.
 
+Table: The islands in jedee: condition and origin
 | Island | Condition | Origin |
 | --- | --- | --- |
 | `webc/place-map.webc` | `on:idle` | jedee — see [[The place map]] |

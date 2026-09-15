@@ -78,6 +78,7 @@ A gap found this way is filled the subsetting way: cut the missing face from the
 
 Eleventy Excellent ships **static, pre-subset `woff2` files** and has no subsetting step in the build. Its `@font-face` blocks have no `unicode-range`, so adding a character to a file is the whole fix: no CSS change. The full source fonts are bundled beside the subsets. The one exception is Cyrillic (below), which is its own file behind a `unicode-range`.
 
+Table: The shipped font files, their character counts and their sources
 | file | kind | characters | source in the repo |
 | --- | --- | --- | --- |
 | `source-serif/source-serif.woff2` | static, Bold 700 only | 109 | `SourceSerif4-Bold.otf.woff2` |

@@ -49,6 +49,7 @@ jedee's own additions reuse the number: `.intro` (the lede under a post title) i
 
 **What `60ch` actually sets**, measured on 2026-09-10 in the built site: characters per rendered line in paragraphs of plain running text (no inline code), last lines excluded, in Source Sans.
 
+Table: Characters per line set by `60ch`, by viewport
 | viewport | font size | paragraph width | characters per line (median, 10th–90th percentile) |
 | --- | --- | --- | --- |
 | 1920 px | 28 px | 835 px | 72 (67–75) |

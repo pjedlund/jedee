@@ -9,6 +9,7 @@ Treating that one message as one diagnosis is how debugging goes wrong. Node rep
 
 `process.memoryUsage()` separates them:
 
+Table: What each `process.memoryUsage()` field holds
 | Field | What it holds |
 | --- | --- |
 | `heapUsed` | live JS objects — where a genuine leak in JS code shows |

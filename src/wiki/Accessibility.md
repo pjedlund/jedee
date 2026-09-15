@@ -7,6 +7,7 @@ Web accessibility means building pages that people with disabilities can perceiv
 
 The reference standard is the W3C's [Web Content Accessibility Guidelines](https://www.w3.org/WAI/standards-guidelines/wcag/) (WCAG). WCAG 2.2 has been the current Recommendation since October 2023. Most laws and accessibility statements still cite 2.1 (2018); 2.2 mostly adds criteria, and retires one, 4.1.1 Parsing. Its success criteria sit under four principles:
 
+Table: WCAG's four principles, with examples
 | Principle | The question | For example |
 | --- | --- | --- |
 | Perceivable | Can the content reach the senses the reader has? | text alternatives, contrast, not relying on color alone |
@@ -32,6 +33,7 @@ The site's public [accessibility statement](/accessibility/) targets **WCAG 2.1 
 
 ### What came from Eleventy Excellent
 
+Table: Accessibility conventions from Eleventy Excellent, and what jedee did with each
 | Convention | WCAG | Eleventy Excellent | jedee |
 | --- | --- | --- | --- |
 | Skip link to `#main` (`skip-link.css`, `header.njk`) | 2.4.1 Bypass Blocks (A) | stock | stock |

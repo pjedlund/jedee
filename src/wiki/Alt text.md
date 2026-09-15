@@ -47,6 +47,7 @@ Nunjucks' `default` filter substitutes **only on `undefined`** unless its third 
 
 Left off, one expression yields all three behaviors:
 
+Table: What a cover's alt text renders as, by front matter
 | front matter | rendered |
 |---|---|
 | no `coverAlt` | `Cover for A Confession` |

@@ -71,6 +71,7 @@ Written the other way round — visible at rest, hidden by the animation — a r
 
 Not at `load`, and not at first paint: the clock starts when the element is first styled. Measured on one page load of a small static site, local server:
 
+Table: When the animation clock starts, on one page load
 | Event | Time |
 | --- | --- |
 | HTML response finished | 11 ms |

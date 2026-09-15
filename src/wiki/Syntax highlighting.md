@@ -70,6 +70,7 @@ The token colors are Eleventy Excellent's palette with jedee's lightness. EE's `
 
 ⚠ The palette is **not** derived from GitHub's color-blind themes, although the style guide said so from 2026-09-10 until this check. GitHub's *protanopia and deuteranopia* themes (`light_colorblind` and `dark_colorblind` in [Primer's primitives](https://github.com/primer/primitives)) start from the default syntax colors and swap out exactly the ones red–green color-blind readers confuse:
 
+Table: Token colors in GitHub dark, GitHub's color-blind theme and jedee dark
 | Token | GitHub dark | GitHub dark, color-blind | jedee dark |
 | --- | --- | --- | --- |
 | keyword (`if`, `return`) | red `#ff7b72` | orange `#f0883e` | violet |
@@ -81,6 +82,7 @@ The light themes follow the same pattern: keyword `#cf222e` becomes `#bc4c00`, a
 
 How much that matters was measured rather than assumed. Each palette was run through [Machado et al.'s 2009 simulation](https://www.inf.ufrgs.br/~oliveira/pubs_files/CVD_Simulation/CVD_Simulation.html) of full protanopia and deuteranopia, with jedee's translucent colors first composited over the code block background, and every pair of token colors compared by distance in OKLab (×100, where about 2 is the smallest difference most people can see):
 
+Table: The weakest color pair in each palette under simulated color blindness
 | Palette | Weakest pair, protanopia | Weakest pair, deuteranopia |
 | --- | --- | --- |
 | jedee dark | indigo / violet 8.4 | pink / gray and violet / gray 6.0 |
@@ -94,6 +96,7 @@ By this measure jedee's palette keeps its colors further apart than GitHub's col
 
 Inline code never reaches Prism. A backtick span is a markdown-it `code_inline` token with no language, so the only thing that styles it is `code.css`. jedee sets it as a raised chip, after the inline code on [arielsalminen.com](https://arielsalminen.com/2026/progressive-web-components/): a surface a shade off the page, rounded corners, and a very faint shadow. Her four values, swapped for jedee tokens:
 
+Table: Inline code: Ariel Salminen's chip and jedee's
 | Ariel | jedee |
 | --- | --- |
 | `background: var(--color-surface)` | `--color-bg-accent` mixed halfway toward `--color-bg`, since the plain surface read too strong in both themes |
