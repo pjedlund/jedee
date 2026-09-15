@@ -12,6 +12,7 @@
   --table-radius: var(--border-radius-medium);
   --table-cell-padding-block: var(--space-2xs);
   --table-cell-padding-inline: var(--space-s);
+  --table-edge-padding: calc(2rem - var(--border-thickness)); /* caption and first column; 2rem is the popout track in wrapper.css */
   --table-cell-align: baseline;
   --table-caption-size: var(--size-step-min-1);
   --table-caption-style: italic;
@@ -19,7 +20,6 @@
   --table-fixed-min-inline-size: 40rem;
 
   overflow-x: auto;
-  container-type: inline-size;
   /* ⚠ Prose breaks words anywhere below sm, which would shrink columns to single letters instead of letting the table scroll. */
   overflow-wrap: normal;
   word-break: normal;
@@ -52,9 +52,9 @@ td {
   vertical-align: var(--table-cell-align);
 }
 
-/* Start-column text lines up with the prose: the wrapper is the content column plus two popout tracks, so half the difference is one track. ⚠ Assumes the wrapper spans popout in a .wrapper sized by --wrapper-width. */
+/* Fixed at every width: at full popout width the text lines up with the prose, and a narrower box keeps the same inset. */
 .table-wrapper :is(caption, tr > :first-child) {
-  padding-inline-start: max(var(--table-cell-padding-inline), (100cqi - var(--wrapper-width, 85rem)) / 2);
+  padding-inline-start: var(--table-edge-padding);
 }
 
 caption {
