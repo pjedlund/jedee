@@ -1,0 +1,16 @@
+<!-- Prefetch same-origin pages on hover (Chromium only; others ignore it), skipping the CMS, Micropub, images and feeds. -->
+<script type="speculationrules">
+  {
+    "prefetch": [
+      {
+        "where": {
+          "and": [
+            {"href_matches": "/*"},
+            {"not": {"href_matches": ["/admin/*", "/api/*", "/assets/*", "/*.xml", "/*.json", "/*.txt"]}}
+          ]
+        },
+        "eagerness": "moderate"
+      }
+    ]
+  }
+</script>
