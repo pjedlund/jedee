@@ -88,6 +88,8 @@ The private wiki documenting web techniques and how jedee is designed and built.
 
 ## Recent additions
 
+**2026-09-15** — enrich: **[[What jedee kept from Eleventy Excellent]]** gets a *Taking a new release* section from the 4.8.0 merge. Files upstream adds merge in without a conflict: EE's new `llms.11tydata.js` would have taken over the address of jedee's own `llms.njk`. A conflict looks the same whether upstream fixed a bug or undid a jedee change: `svg.js` went async again, while `theme-toggle.js` brought a real fix that had to be merged in by hand. Unused files keep taking upstream's changes. Also corrected: the easter egg is on since 2026-09-11, so it's no longer an orphan. [[Themes and starters]] gets one sentence qualifying its "a merge conflict is a message" claim. See `_log.md`.
+
 **2026-09-15** — ingest: **[[Tables]]**, from Michelle Barker's *Styling Tables the Modern CSS Way* (2024) and Adrian Roselli's scroll-region pattern. In jedee: every markdown table is now wrapped by the renderer in a focusable, named region at popout width; a `Table:` paragraph becomes the caption; the stylesheet loads only on pages with a table. ⚠ The article's `scope="column"` is not a valid keyword, and ⚠ prose's mobile word-breaking shrank table columns to single letters until the wrapper reset it.
 
 **2026-09-15** — enrich: **[[Typographic conventions]]** gains a Subtitles section. `<hgroup>` holds one heading plus paragraphs (WHATWG, revised 2022), so a subtitle is a `<p>`, not a second heading, and stays out of the heading's accessible name. In jedee: a `subtitle:` renders in `<hgroup>` on every post type, outside `p-name`, in Source Sans italic. ⚠ Its `--flow-space` must sit on the `<p>`, or prose's space after a heading wins.

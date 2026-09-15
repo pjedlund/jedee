@@ -41,7 +41,7 @@ This is deliberate rather than missing. Eleventy's stated position is that it do
 
 What Eleventy has instead is the starter: a complete repo you copy and then own outright. [Eleventy Excellent](https://github.com/madrilene/eleventy-excellent) is one. Lene Saile calls it a starter rather than a theme, which is the accurate word — the moment it is copied it stops being a layer and becomes the site.
 
-The trade against Hugo is not one-sided. A forked starter is uglier to upgrade, because the upgrade is a merge rather than a version bump. But a merge conflict is a *message*: it names the file and shows both versions. A stale Hugo override says nothing at all. In practice a heavily customized Hugo site also accumulates a `layouts/` full of copied theme files — the same fork, without git tracking which upstream version each copy came from.
+The trade against Hugo is not one-sided. A forked starter is uglier to upgrade, because the upgrade is a merge rather than a version bump. But a merge conflict is a *message*: it names the file and shows both versions. A stale Hugo override says nothing at all. That holds for files both sides changed; a file upstream *adds* merges in without a word, which is how the 4.8.0 upgrade nearly let a starter file take over the address of jedee's own llms.txt — see [[What jedee kept from Eleventy Excellent]]. In practice a heavily customized Hugo site also accumulates a `layouts/` full of copied theme files — the same fork, without git tracking which upstream version each copy came from.
 
 ## In jedee
 

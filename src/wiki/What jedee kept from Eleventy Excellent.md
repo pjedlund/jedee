@@ -5,7 +5,7 @@ date: 2026-07-31
 
 jedee is a fork of [Eleventy Excellent](https://eleventy-excellent.netlify.app/) by Lene Saile. Every other page in this wiki states EE-stock-versus-jedee where it happens to matter locally; this page states it systematically, so a claim on another page can be checked against one inventory.
 
-The source is Lene's own documentation collection, `src/docs/` in the upstream checkout at `/Users/johanedlund/Projects/eleventy-excellent` — 22 files, about 3,800 words, read in place and never edited. The checkout sits on tag `4.6.1`; jedee merged **4.6.0** in May 2026, one patch behind.
+The source is Lene's own documentation collection, `src/docs/` in the upstream checkout at `/Users/johanedlund/Projects/eleventy-excellent` — 22 files, about 3,800 words, read in place and never edited. The checkout sits on tag `4.6.1`; jedee merged **4.6.0** in May 2026, one patch behind. Since then jedee has also merged 4.7.0 (August 2026) and 4.8.0 (15 September 2026); [Taking a new release](#taking-a-new-release) covers what the 4.8.0 merge showed about upgrading a fork.
 
 ⚠ **The docs are dated 30 March 2026 and are already stale in Lene's own repo.** `details.md` describes a `<custom-details>` WebC component at length — and the string `custom-details` appears nowhere in the 4.6.1 source tree except inside that doc file. The component was folded back into a plain `<details>`/`<summary>` partial and the doc was never updated. Treat every claim here as verified against code on **2026-07-31**, not as a transcription of Lene's prose.
 
@@ -75,12 +75,38 @@ So jedee removed almost exactly the set Lene marks as optional, and nothing beyo
 
 ## ⚠ Left behind by those deletions
 
-Three pieces of EE machinery are still in the tree with nothing referencing them. All three are the residue of a deletion, not a decision:
+Two pieces of EE machinery are still in the tree with nothing referencing them. Both are the residue of a deletion, not a decision:
 
 - **`partials/details.njk` + `scripts/bundle/details.js`** — the disclosure UI that rendered the `src/docs/` collection into `/get-started/`. The collection is gone; no template includes the partial. `meta.details` (the expand/collapse button labels) is still in `meta.js` too.
 - **`partials/gallery.njk` + `scripts/bundle/dialog.js`** — EE's `<dialog>`-based lightbox, superseded by PhotoSwipe. No layout includes it.
-- **`scripts/components/custom-easteregg.js`** — still copied to the output folder. `base.njk` gates the component behind `{% if meta.easteregg %}` (stock EE behavior) and `meta.easteregg` is `false`, so nothing ever loads it.
-
 Each is a handful of kilobytes of source that compiles but ships to no page — the JS-and-partial equivalent of the orphan `local/*.css` problem. Nothing is broken; the note exists so the next reader doesn't take their presence as evidence the features are in use.
 
+`scripts/components/custom-easteregg.js` was a third until 2026-09-11, when the easter egg was switched on in `settings.yaml` (`easteregg: true`). `base.njk` gates it behind `{% if meta.easteregg %}` (stock EE behavior), so it now loads on every page.
+
+## Taking a new release
+
+jedee takes an EE release as a git merge of upstream's `main` into a branch, following Lene's own procedure. [[Themes and starters]] makes the case for this over a theme system: a merge conflict names the file and shows both versions, where a stale override says nothing. The 4.8.0 merge on 2026-09-15 showed where that stops being true.
+
+**Files upstream adds merge in without a conflict.** A file that is new upstream and absent from the fork is simply added; git has nothing to compare it with. 4.8.0 added six. One of them, `src/common/llms.11tydata.js`, is a directory data file that sets the permalink of `src/common/llms.njk` through `eleventyComputed`:
+
+```js
+export default {
+  eleventyComputed: {
+    permalink(data) {
+      return data.meta.robots.generateLlmsTxt ? '/llms.txt' : false;
+    }
+  }
+};
+```
+
+jedee already had its own `llms.njk`, sectioned by post type and fed from `settings.yaml`. Computed data outranks front matter, so this file would have taken over the address of jedee's page, and it reads `meta.robots`, a key jedee's `meta.js` doesn't have. Nothing in the merge output flagged it. The check that does is reading the `A ` lines in `git status` before committing. That time they also held a speculation-rules include, a view-transitions stylesheet (jedee has its own, gated on reduced motion), an `escapeHtml` filter that only upstream's new `svg.js` calls, a demo GIF and a doc page. All six were removed.
+
+**A file upstream changes back looks like any other conflict.** Keeping jedee's side is usually right, but the conflict looks the same whether upstream fixed a bug or undid something jedee changed on purpose. In 4.8.0, EE's `svg.js` became `async` again; jedee keeps it synchronous, because an async shortcode inside a conditional include renders empty under the interlinker ([[The interlinker's second render pass]]). The same merge showed the opposite case in `theme-toggle.js`: upstream fixed swapped dark and light `theme-color` values that jedee's reworked single-button toggle still carried, so that fix was merged in by hand rather than dropped with the rest of upstream's file.
+
+**Orphans keep taking upstream's changes.** The details partial and script listed above were both rewritten by the 4.8.0 merge, with nothing on the site to show for it. Since the partial auto-merged to new button attributes, jedee's older script would have stopped matching it; upstream's script was taken too, to keep the unused pair consistent.
+
+The ordinary merge also depends on the fork still sharing history with upstream. Between 4.6.0 and 4.7.0 upstream rewrote its history (same file trees, new commits), so 4.7.0 was applied as a diff by hand and recorded with `git merge -s ours`, which gave 4.8.0 a normal merge base again.
+
 Source: `/Users/johanedlund/Projects/eleventy-excellent/src/docs/` at tag `4.6.1` (docs dated 2026-03-30), every claim checked against both checkouts on 2026-07-31.
+
+Raw source: src/_raw/dev-notes/How the Eleventy Excellent 4.8 upgrade went.md (the "Taking a new release" section and the easter egg update, 2026-09-15)
