@@ -67,6 +67,6 @@ Google's library is the standard answer, and it's deliberately not here. The who
 
 Workbox earns its keep where a precache manifest has to expand automatically as a forker adds post types across many sites. That's a template-reuse problem a single site doesn't have.
 
-Related: [[Three things called cache]] — the SW cache sits in front of the browser cache. [[Progressive web apps]] — the manifest and the installability half, and where this worker came from.
+Related: [[Three things called cache]] — the SW cache sits in front of the browser cache. [[Progressive web apps]] — the manifest and the installability half, and where this worker came from. [[Prefetching]] — pages are network-first here, so it's the hover prefetch, not this cache, that makes an online click fast.
 
 Source: `_local/project_docs/pwa-caching-pattern.html` (runtime caching shipped 23 Jun 2026, commit `0275458`), re-verified against `src/pages/serviceworker.njk` on 2026-07-31.

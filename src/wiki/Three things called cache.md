@@ -59,7 +59,7 @@ for = "*.woff2"
 
 Only the fonts get a year. **Everything else** — pages, images, feeds, the favicon — falls to Netlify's default of `public, max-age=0, must-revalidate` plus an ETag. The component scripts (`/assets/scripts/components/*.js`) once shared the fonts' year-long header but no longer do; they now carry an explicit `max-age=0,public,must-revalidate`, for the reason in the next section.
 
-`max-age=0, must-revalidate` reads like "don't cache", and isn't. The browser keeps its copy and revalidates cheaply: it sends the ETag, and the server answers `304 Not Modified` with no body if nothing changed. So an unchanged page costs a round-trip, not a download. The year-long files skip even that.
+`max-age=0, must-revalidate` reads like "don't cache", and isn't. The browser keeps its copy and revalidates cheaply: it sends the ETag, and the server answers `304 Not Modified` with no body if nothing changed. So an unchanged page costs a round-trip, not a download. The year-long files skip even that. For the next page, a hover prefetch removes the round-trip too: see [[Prefetching]].
 
 ### Cache-busting by inlining, not by filename
 

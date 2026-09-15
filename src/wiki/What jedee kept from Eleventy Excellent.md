@@ -81,7 +81,7 @@ Two pieces of EE machinery are still in the tree with nothing referencing them. 
 - **`partials/gallery.njk` + `scripts/bundle/dialog.js`** — EE's `<dialog>`-based lightbox, superseded by PhotoSwipe. No layout includes it.
 Each is a handful of kilobytes of source that compiles but ships to no page — the JS-and-partial equivalent of the orphan `local/*.css` problem. Nothing is broken; the note exists so the next reader doesn't take their presence as evidence the features are in use.
 
-`scripts/components/custom-easteregg.js` was a third until 2026-09-11, when the easter egg was switched on in `settings.yaml` (`easteregg: true`). `base.njk` gates it behind `{% if meta.easteregg %}` (stock EE behavior), so it now loads on every page.
+`scripts/components/custom-easteregg.js` was a third until 2026-09-11, when the easter egg was switched on in `settings.yaml` (`easteregg: true`). `base.njk` gates it behind `{% if meta.easteregg %}` (stock EE behavior), so it now loads on every page. Since 2026-09-15 it carries `canvas-confetti` inside it, as in EE 4.8, instead of fetching it from esm.run when the keyword is typed: 12 KB (4.9 KB compressed) on every page, where it was 1.9 KB.
 
 ## Taking a new release
 
@@ -99,7 +99,7 @@ export default {
 };
 ```
 
-jedee already had its own `llms.njk`, sectioned by post type and fed from `settings.yaml`. Computed data outranks front matter, so this file would have taken over the address of jedee's page, and it reads `meta.robots`, a key jedee's `meta.js` doesn't have. Nothing in the merge output flagged it. The check that does is reading the `A ` lines in `git status` before committing. That time they also held a speculation-rules include, a view-transitions stylesheet (jedee has its own, gated on reduced motion), an `escapeHtml` filter that only upstream's new `svg.js` calls, a demo GIF and a doc page. All six were removed.
+jedee already had its own `llms.njk`, sectioned by post type and fed from `settings.yaml`. Computed data outranks front matter, so this file would have taken over the address of jedee's page, and it reads `meta.robots`, a key jedee's `meta.js` doesn't have. Nothing in the merge output flagged it. The check that does is reading the `A ` lines in `git status` before committing. That time they also held a speculation-rules include, a view-transitions stylesheet (jedee has its own, gated on reduced motion), an `escapeHtml` filter that only upstream's new `svg.js` calls, a demo GIF and a doc page. All six were removed. The speculation-rules include came back the same day on its own branch, with jedee's own exclusions added ([[Prefetching]]): removing an added file in the merge doesn't rule it out, it moves the decision to a separate commit.
 
 **A file upstream changes back looks like any other conflict.** Keeping jedee's side is usually right, but the conflict looks the same whether upstream fixed a bug or undid something jedee changed on purpose. In 4.8.0, EE's `svg.js` became `async` again; jedee keeps it synchronous, because an async shortcode inside a conditional include renders empty under the interlinker ([[The interlinker's second render pass]]). The same merge showed the opposite case in `theme-toggle.js`: upstream fixed swapped dark and light `theme-color` values that jedee's reworked single-button toggle still carried, so that fix was merged in by hand rather than dropped with the rest of upstream's file.
 
@@ -109,4 +109,4 @@ The ordinary merge also depends on the fork still sharing history with upstream.
 
 Source: `/Users/johanedlund/Projects/eleventy-excellent/src/docs/` at tag `4.6.1` (docs dated 2026-03-30), every claim checked against both checkouts on 2026-07-31.
 
-Raw source: src/_raw/dev-notes/How the Eleventy Excellent 4.8 upgrade went.md (the "Taking a new release" section and the easter egg update, 2026-09-15)
+Raw source: src/_raw/dev-notes/How the Eleventy Excellent 4.8 upgrade went.md (the "Taking a new release" section and the easter egg update, 2026-09-15); src/_raw/dev-notes/How hover prefetching was added.md (the speculation rules and the bundled confetti, 2026-09-15)
