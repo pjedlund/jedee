@@ -1,9 +1,22 @@
 /* TABLE — data tables and the scroll region around them. Included by base.njk only on pages with a table; markdown.js writes the wrapper (see the wiki page Tables). */
 
 .table-wrapper {
-  --table-rule: var(--border-thickness) solid var(--color-bg-accent-2);
+  /* The look of every table: tweak here. Cells inherit these from the wrapper. */
+  --table-bg: var(--color-bg);
   --table-head-bg: var(--color-bg-accent);
+  --table-stripe: color-mix(in oklab, var(--color-text) 4%, transparent);
+  --table-rule-color: var(--color-bg-accent-2);
+  --table-rule: var(--border-thickness) solid var(--table-rule-color);
+  --table-row-rule: none; /* stripes replace the rules between rows; var(--table-rule) gives both */
+  --table-band-rule: calc(var(--border-thickness) * 2) solid var(--table-rule-color);
+  --table-radius: var(--border-radius-medium);
+  --table-cell-padding-block: var(--space-2xs);
+  --table-cell-padding-inline: var(--space-s);
+  --table-cell-align: baseline;
+  --table-caption-size: var(--size-step-min-1);
+  --table-caption-style: italic;
   --table-shadow: color-mix(in oklab, var(--color-text) 20%, transparent);
+  --table-fixed-min-inline-size: 40rem;
 
   overflow-x: auto;
   container-type: inline-size;
@@ -12,15 +25,15 @@
   word-break: normal;
   hyphens: manual;
   border: var(--table-rule);
-  border-radius: var(--border-radius-medium);
+  border-radius: var(--table-radius);
 
   /* Scroll cues (Lea Verou, via Adrian Roselli): page-colored covers scroll with the content and hide the edge shadows once an edge is reached. */
   background:
-    linear-gradient(to right, var(--color-bg) 30%, transparent),
-    linear-gradient(to left, var(--color-bg) 30%, transparent) 100% 0,
+    linear-gradient(to right, var(--table-bg) 30%, transparent),
+    linear-gradient(to left, var(--table-bg) 30%, transparent) 100% 0,
     radial-gradient(farthest-side at 0 50%, var(--table-shadow), transparent),
     radial-gradient(farthest-side at 100% 50%, var(--table-shadow), transparent) 100% 0;
-  background-color: var(--color-bg);
+  background-color: var(--table-bg);
   background-repeat: no-repeat;
   background-size: 4em 100%, 4em 100%, 1.4em 100%, 1.4em 100%;
   background-attachment: local, local, scroll, scroll;
@@ -34,20 +47,20 @@ table {
 caption,
 th,
 td {
-  padding: var(--space-2xs) var(--space-s);
+  padding: var(--table-cell-padding-block) var(--table-cell-padding-inline);
   text-align: start;
-  vertical-align: baseline;
+  vertical-align: var(--table-cell-align);
 }
 
 /* Start-column text lines up with the prose: the wrapper is the content column plus two popout tracks, so half the difference is one track. ⚠ Assumes the wrapper spans popout in a .wrapper sized by --wrapper-width. */
 .table-wrapper :is(caption, tr > :first-child) {
-  padding-inline-start: max(var(--space-s), (100cqi - var(--wrapper-width, 85rem)) / 2);
+  padding-inline-start: max(var(--table-cell-padding-inline), (100cqi - var(--wrapper-width, 85rem)) / 2);
 }
 
 caption {
   padding-block: var(--space-xs);
-  font-size: var(--size-step-min-1);
-  font-style: italic;
+  font-size: var(--table-caption-size);
+  font-style: var(--table-caption-style);
 }
 
 thead th {
@@ -57,11 +70,16 @@ thead th {
 
 thead,
 tfoot {
-  border-block: calc(var(--border-thickness) * 2) solid var(--color-bg-accent-2);
+  border-block: var(--table-band-rule);
 }
 
 tbody tr + tr {
-  border-block-start: var(--table-rule);
+  border-block-start: var(--table-row-rule);
+}
+
+/* On the cells, not the row: a translucent image lets the scroll shadows through and still tints the opaque sticky row header. */
+tbody tr:nth-child(even) > * {
+  background-image: linear-gradient(var(--table-stripe) 0 0);
 }
 
 tfoot {
@@ -75,5 +93,11 @@ table:has(tbody th) :is(th, td):first-child {
 }
 
 :is(tbody, tfoot) th {
-  background: var(--color-bg);
+  background-color: var(--table-bg);
+}
+
+/* Equal-width columns, opt-in: wiki tables mix one-word and one-sentence columns. The minimum width makes a narrow screen scroll instead of squeezing. */
+.table-wrapper[data-table-layout='fixed'] table {
+  inline-size: max(var(--table-fixed-min-inline-size), 100%);
+  table-layout: fixed;
 }

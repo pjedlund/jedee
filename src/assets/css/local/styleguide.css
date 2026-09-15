@@ -75,6 +75,11 @@
   text-transform: uppercase;
 }
 
+/* The samples are taller than the text beside them, so baseline alignment sinks the token name to the sample's baseline. */
+.styleguide .table-wrapper {
+  --table-cell-align: middle;
+}
+
 .styleguide .space {
   background-color: var(--color-text);
   display: block;
