@@ -7,12 +7,18 @@
   --table-stripe: color-mix(in oklab, var(--color-text) 4%, transparent);
   --table-rule-color: var(--color-bg-accent-2);
   --table-rule: var(--border-thickness) solid var(--table-rule-color);
-  --table-row-rule: none; /* stripes replace the rules between rows; var(--table-rule) gives both */
+  --table-border: none; /* the box around the table; var(--table-rule) brings it back */
+  --table-row-rule: var(--border-thickness) solid color-mix(in oklab, var(--color-text) 8%, transparent);
   --table-band-rule: calc(var(--border-thickness) * 2) solid var(--table-rule-color);
   --table-radius: var(--border-radius-medium);
-  --table-cell-padding-block: var(--space-2xs);
+  --table-font-size: var(--size-step-min-1);
+  --table-code-size: var(--size-step-min-2);
+  --table-head-size: var(--size-step-min-2);
+  --table-head-transform: uppercase;
+  --table-head-tracking: var(--tracking-wide);
+  --table-cell-padding-block: var(--space-s);
   --table-cell-padding-inline: var(--space-s);
-  --table-edge-padding: var(--space-m-l); /* caption and first column; ⚠ its 31px maximum is the 2rem popout minus the border, which lines the text up with the prose */
+  --table-edge-padding: var(--space-m-l); /* caption and first column; ⚠ its 31px maximum matches the 2rem popout, which lines the text up with the prose */
   --table-cell-align: baseline;
   --table-caption-size: var(--size-step-min-1);
   --table-caption-style: italic;
@@ -24,7 +30,7 @@
   overflow-wrap: normal;
   word-break: normal;
   hyphens: manual;
-  border: var(--table-rule);
+  border: var(--table-border);
   border-radius: var(--table-radius);
 
   /* Scroll cues (Lea Verou, via Adrian Roselli): page-colored covers scroll with the content and hide the edge shadows once an edge is reached. */
@@ -42,6 +48,11 @@
 table {
   inline-size: 100%;
   border-collapse: collapse;
+  font-size: var(--table-font-size);
+}
+
+.table-wrapper code {
+  font-size: var(--table-code-size);
 }
 
 caption,
@@ -65,12 +76,20 @@ caption {
 
 thead th {
   vertical-align: bottom;
+  font-size: var(--table-head-size);
+  letter-spacing: var(--table-head-tracking);
+  text-transform: var(--table-head-transform);
   background: var(--table-head-bg);
 }
 
 thead,
 tfoot {
   border-block: var(--table-band-rule);
+}
+
+/* With no box around the table, the last body row closes it; a tfoot carries its own rule. */
+tbody:last-child {
+  border-block-end: var(--table-band-rule);
 }
 
 tbody tr + tr {

@@ -81,6 +81,10 @@
   --table-cell-align: middle;
 }
 
+.styleguide .table-wrapper h3 {
+  font-size: inherit;
+}
+
 .styleguide .space {
   background-color: var(--color-text);
   display: block;
