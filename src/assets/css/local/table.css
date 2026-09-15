@@ -25,6 +25,7 @@
   --table-caption-style: italic;
   --table-shadow: color-mix(in oklab, var(--color-text) 20%, transparent);
   --table-fixed-min-inline-size: 40rem;
+  --table-row-hover: color-mix(in oklab, var(--color-text) 6%, transparent); /* linked rows only; it lies over the text, so keep it faint */
 
   overflow-x: auto;
   /* ⚠ Prose breaks words anywhere below sm, which would shrink columns to single letters instead of letting the table scroll. */
@@ -114,8 +115,88 @@ table:has(tbody th) :is(th, td):first-child {
   background-color: var(--table-bg);
 }
 
-/* Equal-width columns, opt-in: wiki tables mix one-word and one-sentence columns. The minimum width makes a narrow screen scroll instead of squeezing. */
+/* Lining, tabular figures wherever digits meet columns, in .prose or not; same slot list as utilities/numerals.css. */
+.table-wrapper {
+  --nums-figure: lining-nums;
+  --nums-spacing: tabular-nums;
+
+  font-variant-numeric: var(--nums-figure,) var(--nums-spacing,) var(--nums-fraction,) var(--nums-zero,);
+}
+
+/* A unit or qualifier on its own line under a column head: "km", "avg/max". */
+thead th small {
+  display: block;
+  font-size: inherit;
+}
+
+/* Number columns end-aligned so their digits line up; data-numeric goes on the head and its cells. */
+:is(th, td)[data-numeric] {
+  text-align: end;
+}
+
+/* Equal-width columns, opt-in:wiki tables mix one-word and one-sentence columns. The minimum width makes a narrow screen scroll instead of squeezing. */
 .table-wrapper[data-table-layout='fixed'] table {
   inline-size: max(var(--table-fixed-min-inline-size), 100%);
   table-layout: fixed;
+}
+
+/* Rows that each open a page (data-table-rows="link"): the row header's link covers the row. ⚠ No sticky column here: a sticky cell becomes the link's containing box and shrinks the click area to that cell. */
+.table-wrapper[data-table-rows='link'] :is(th, td):first-child {
+  position: static;
+}
+
+.table-wrapper[data-table-rows='link'] tbody tr {
+  position: relative;
+}
+
+/* The hover tint rides the link's overlay and fades by opacity, so a theme flip never animates a color. */
+.table-wrapper[data-table-rows='link'] tbody th a::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--table-row-hover);
+  opacity: 0;
+}
+
+.table-wrapper[data-table-rows='link'] tbody :is(tr:hover a, a:focus-visible)::after {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .table-wrapper[data-table-rows='link'] tbody th a::after {
+    transition: opacity var(--transition-duration) var(--transition-timing);
+  }
+}
+
+/* Long names (Swedish compounds) break at syllables rather than setting the row header's minimum width. */
+.table-wrapper[data-table-rows='link'] tbody th {
+  hyphens: auto;
+}
+
+/* Columns a narrowing table drops, priority 4 first, then 3, then 2 (data-table-priority on the head and its cells). Only for linked rows, whose pages show everything. ⚠ The widths were measured on the activities table, where the full seven columns need about 63rem. */
+.table-wrapper:has([data-table-priority]) {
+  container-type: inline-size;
+}
+
+@container (inline-size < 64rem) {
+  [data-table-priority='4'] {
+    display: none;
+  }
+}
+
+@container (inline-size < 54rem) {
+  [data-table-priority='3'] {
+    display: none;
+  }
+}
+
+@container (inline-size < 32rem) {
+  [data-table-priority='2'] {
+    display: none;
+  }
+}
+
+/* A date wrapping onto three lines in a narrow column triples the row's height. */
+.table-wrapper td time {
+  white-space: nowrap;
 }

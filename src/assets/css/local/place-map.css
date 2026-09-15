@@ -221,21 +221,6 @@ place-map[data-map-ready] > .place-map-static {
   color: var(--color-text-accent);
 }
 
-.place-list {
-  padding: 0;
-  list-style: none;
-  display: grid;
-  gap: var(--space-3xs);
-}
-.place-list li {
-  line-height: 1.35;
-}
-.place-note {
-  color: var(--color-text-accent);
-}
-.place-note::before {
-  content: ' — ';
-}
 /* Marker popups (click a dot → the place's name, linked), themed like the rest of the chrome. Popup panes live inside the canvas, so the fence covers them; same (0,3,x) repetition as the attribution rules, for the same reason. */
 [data-place-map-canvas].leaflet-container .leaflet-popup-content-wrapper,
 [data-place-map-canvas].leaflet-container .leaflet-popup-tip {

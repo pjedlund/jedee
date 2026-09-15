@@ -159,6 +159,7 @@ export default async function(eleventyConfig) {
   eleventyConfig.addFilter('formatDuration', filters.formatDuration);
   // Activity pace/speed (/activities/): derive min/km (+ /mi) or km/h (+ mph) from stored raw distance + duration at render — the activity post type never stores the derived value. withMiles pairs a stored km distance with its mi equivalent.
   eleventyConfig.addFilter('paceOrSpeed', filters.paceOrSpeed);
+  eleventyConfig.addFilter('pace', filters.pace);
   eleventyConfig.addFilter('withMiles', filters.withMiles);
   // Event archive partition (§9): build-time upcoming/past split + event-date sorts.
   eleventyConfig.addFilter('filterUpcoming', filters.filterUpcoming);

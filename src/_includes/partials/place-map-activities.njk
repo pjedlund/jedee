@@ -1,26 +1,55 @@
 {#
-  The activity index: a map of every located activity, and under it every activity as a plain link, newest first, all types mixed. The lat/lon frontmatter is backfilled from Eventor arena positions (script: _local/generated/eventor-coords.py) and, for the rest, the Strava export.
+  The activity index: a map of every located activity, and under it every activity as a table row, newest first, all types mixed. The lat/lon frontmatter is backfilled from Eventor arena positions (script: _local/generated/eventor-coords.py) and, for the rest, the Strava export.
 
-  The list is BOTH the page's index and the map's data source: <place-map> reads the <li data-lat data-lon> items on idle and drops one dot per located activity above it. Items without coordinates (indoor sessions) stay listed, just unmapped. Without JS this is the complete index by design, not a degraded state — Leaflet's markers have broken keyboard and screen-reader handling upstream, so nobody is routed through the map to reach a post.
+  The table is BOTH the page's index and the map's data source: <place-map> reads the <tr data-lat data-lon> rows on idle and drops one dot per located activity above it, named and linked from the row's first <a> — ⚠ keep the activity link the first link in the row. Rows without coordinates (indoor sessions) stay listed, just unmapped. Without JS this is the complete index by design, not a degraded state — Leaflet's markers have broken keyboard and screen-reader handling upstream, so nobody is routed through the map to reach a post.
 
   Iterate collections.activity DIRECTLY, not through | located. `byCategory` already reverses the collection to newest-first, and `located` reverses again — the two cancelled out and the list ran oldest-first for months.
 
   The empty .place-map-live box is rendered here on purpose. place-map.js used to create and prepend it after idle, which shoved the whole list down on every load; its 16:9 aspect-ratio now holds the space from first paint and the JS adopts this box instead of building one.
 
+  Sorting is <sortable-table> (webc/sortable-table.webc): data-sort is the raw value a column sorts by. data-table-priority columns drop out as the table narrows, 4 first, then 3, then 2 (table.css); each activity's page shows them all.
+
   No async shortcodes here, so the interlinker {% if %}-include trap doesn't apply.
 #}
-<place-map @place="my activities">
+<place-map @place="my activities" @breakout="popout">
   {%- if collections.activity | located | length %}
     <div class="place-map-live" data-place-map-box>
       <p class="place-map-pending">Map of my activities</p>
     </div>
   {%- endif %}
-  <ul class="place-list" role="list" data-place-list>
-    {%- for post in collections.activity %}
-      {#- data-date is the marker popup's first line; it matches the visible date. -#}
-      <li{% if post.data.lat and post.data.lon %} data-lat="{{ post.data.lat }}" data-lon="{{ post.data.lon }}" data-date="{{ post.date | formatDate('D MMM YYYY') }}"{% endif %}>
-        <a href="{{ post.url }}">{{ post.data.title }}</a><span class="place-note">{{ post.date | formatDate('D MMM YYYY') }}</span>
-      </li>
-    {%- endfor %}
-  </ul>
+  <sortable-table>
+    <div class="table-wrapper" role="region" tabindex="0" aria-labelledby="activities-caption" data-table-rows="link">
+      <table data-place-list>
+        <caption id="activities-caption">Every activity</caption>
+        <thead>
+          <tr>
+            <th scope="col" aria-sort="descending">Date</th>
+            <th scope="col">Activity</th>
+            <th scope="col" data-table-priority="4">Type</th>
+            <th scope="col" data-numeric data-table-priority="2">Distance <small>km</small></th>
+            <th scope="col" data-numeric data-table-priority="2">Time</th>
+            <th scope="col" data-numeric data-table-priority="3" data-sort-first="ascending">Pace <small>min/km</small></th>
+            <th scope="col" data-numeric data-table-priority="3">Heart rate <small>avg/max</small></th>
+          </tr>
+        </thead>
+        <tbody>
+          {%- for post in collections.activity %}
+            {%- set d = post.data %}
+            {%- set day = post.date | formatDate('D MMM YYYY') %}
+            {%- set p = d.activityType | pace(d.distanceKm, d.duration) %}
+            {#- data-date is the marker popup's first line; it matches the visible date. -#}
+            <tr{% if d.lat and d.lon %} data-lat="{{ d.lat }}" data-lon="{{ d.lon }}" data-date="{{ day }}"{% endif %}>
+              <td data-sort="{{ post.date.getTime() }}"><time datetime="{{ post.date | toIsoString }}">{{ day }}</time></td>
+              <th scope="row"><a href="{{ post.url }}"{% if d.titleLang %} lang="{{ d.titleLang }}"{% endif %}>{{ d.title }}</a></th>
+              <td data-table-priority="4">{{ d.activityType | capitalize }}</td>
+              <td data-numeric data-table-priority="2" data-sort="{{ d.distanceKm }}">{{ d.distanceKm.toFixed(1) if d.distanceKm }}</td>
+              <td data-numeric data-table-priority="2" data-sort="{{ d.duration }}">{{ d.duration | itunesDuration }}</td>
+              <td data-numeric data-table-priority="3" data-sort="{{ (d.duration / d.distanceKm) | round if p }}">{{ p }}</td>
+              <td data-numeric data-table-priority="3" data-sort="{{ d.hrAvg }}">{% if d.hrAvg %}{{ d.hrAvg }}/{{ d.hrMax or '–' }}{% endif %}</td>
+            </tr>
+          {%- endfor %}
+        </tbody>
+      </table>
+    </div>
+  </sortable-table>
 </place-map>

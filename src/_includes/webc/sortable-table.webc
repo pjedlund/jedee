@@ -1,0 +1,10 @@
+<!-- Adds a sort button to each column head of the slotted table on idle; without JS the table stays as the server wrote it. Built like place-map.webc: is-land is the SOLE root. CSS: css/sortable-table.css · JS: sortable-table.js -->
+<is-land on:idle>
+  <sortable-table webc:root webc:keep>
+    <slot></slot>
+
+    <template data-island="once" webc:raw>
+      <script type="module" src="/assets/scripts/components/sortable-table.js"></script>
+    </template>
+  </sortable-table>
+</is-land>

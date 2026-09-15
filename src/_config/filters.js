@@ -13,7 +13,7 @@ import { routeGeoJSON } from './filters/route-geojson.js';
 import { youtubePoster } from './filters/youtube-poster.js';
 import { youtubeTitle } from './filters/youtube-title.js';
 import { toISODuration, formatDuration, itunesDuration } from './filters/duration.js';
-import { paceOrSpeed } from './filters/pace.js';
+import { paceOrSpeed, pace } from './filters/pace.js';
 import { withMiles } from './filters/distance.js';
 import { filterUpcoming, filterPast, sortByStartAsc, sortByStartDesc } from './filters/events.js';
 import { enclosureBytes, enclosureType } from './filters/enclosure.js';
@@ -43,6 +43,7 @@ export default {
   formatDuration,
   itunesDuration,
   paceOrSpeed,
+  pace,
   withMiles,
   filterUpcoming,
   filterPast,

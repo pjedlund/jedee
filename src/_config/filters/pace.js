@@ -32,3 +32,6 @@ export const paceOrSpeed = (type, km, seconds) => {
   }
   return '';
 };
+
+// The activities table's pace: bare m:ss per km, foot sports only, since the column head carries the unit.
+export const pace = (type, km, seconds) => (km && seconds && FOOT.has(normalize(type)) ? clock(seconds / km) : '');

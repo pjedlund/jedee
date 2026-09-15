@@ -1,0 +1,52 @@
+/*
+SORTABLE TABLE
+The column-head buttons that sortable-table.js adds (webc/sortable-table.webc). A button reads as the head's own text; a chevron marks the sorted column and shows faintly on the others under the pointer or keyboard focus.
+*/
+sortable-table {
+  --sort-arrow-size: 0.32em;
+  --sort-arrow-gap: var(--space-3xs);
+  --sort-arrow-hint: 0.4;
+
+  display: block;
+}
+
+/* ⚠ Not `all: unset` — this bundle sits outside the cascade layers, so it would also strip the global focus ring. */
+sortable-table thead button {
+  position: relative;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+}
+
+/* CSS-drawn chevron, as in the breadcrumb (no arrow glyphs in the font subset); absolutely placed after the text so nothing moves when it appears. */
+sortable-table thead button::after {
+  content: '';
+  position: absolute;
+  inset-block-start: 0.3em;
+  inset-inline-start: calc(100% + var(--sort-arrow-gap));
+  inline-size: var(--sort-arrow-size);
+  block-size: var(--sort-arrow-size);
+  border: solid currentColor;
+  border-width: 0 0.1em 0.1em 0;
+  rotate: 45deg;
+  opacity: 0;
+}
+
+sortable-table thead button:is(:hover, :focus-visible)::after {
+  opacity: var(--sort-arrow-hint);
+}
+
+sortable-table th[aria-sort] button::after {
+  opacity: 1;
+}
+
+sortable-table th[aria-sort='ascending'] button::after {
+  inset-block-start: 0.5em;
+  rotate: -135deg;
+}
