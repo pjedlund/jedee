@@ -52,6 +52,13 @@
       "fontWeight": "{font.weight.regular}",
       "fontSize": "{font.size.step-min-1}",
       "lineHeight": "{font.lineHeight.standard}"
+    },
+    "intro": {
+      "fontFamily": "{font.family.base}",
+      "fontWeight": "{font.weight.regular}",
+      "fontSize": "{font.size.step-1}",
+      "lineHeight": "{font.lineHeight.standard}",
+      "letterSpacing": "-0.5"
     }
   }
 }
