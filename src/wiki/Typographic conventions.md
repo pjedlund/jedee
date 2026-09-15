@@ -1,5 +1,5 @@
 ---
-description: "The book-typography rules for figures, small caps, capitals, captions, line breaks, superscripts, ordinals and list markers, where they come from, and what each costs in accessibility."
+description: "The book-typography rules for figures, small caps, capitals, captions, line breaks, superscripts, ordinals, list markers and subtitles, where they come from, and what each costs in accessibility."
 date: 2026-09-10
 ---
 
@@ -71,6 +71,21 @@ Bringhurst has no rule for lists: neither the book's numbered rules nor webtypog
 
 A list number carries meaning ("see step 3"), so it counts as text and needs 4.5:1 contrast ([WCAG 1.4.3](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html)). A bullet is decoration and has no contrast requirement.
 
+## Subtitles
+
+A subtitle belongs to the title but is not part of it. HTML marks this with `<hgroup>`: one heading plus one or more `<p>` elements, before or after it ([WHATWG, the hgroup element](https://html.spec.whatwg.org/multipage/sections.html#the-hgroup-element)). The older model allowed several headings in one `<hgroup>` and dropped all but the first from the document outline. No browser ever built that outline, and the spec was revised to the heading-plus-paragraphs form in July 2022 ([whatwg/html#7829](https://github.com/whatwg/html/pull/7829)). A second heading for the subtitle (an `<h2>` straight after the `<h1>`) is the pattern this replaces: it puts a false section into the outline.
+
+```html
+<hgroup>
+  <h1>The Kingdom of God Is Within You</h1>
+  <p>Christianity Not as a Mystic Religion but as a New Theory of Life</p>
+</hgroup>
+```
+
+A screen reader announces the heading, then reads the subtitle as an ordinary paragraph. The heading's accessible name is the title alone, so a heading list stays short. [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/hgroup) gives `<hgroup>` the implicit role `group`.
+
+Typographically a subtitle is the title's second voice: smaller, often italic, and short enough to balance like a heading.
+
 ## Accessibility
 
 WCAG says little here directly. [1.4.8](https://www.w3.org/WAI/WCAG22/Understanding/visual-presentation.html) (level AAA) limits lines to 80 characters and rules out text justified to both margins, and says nothing about italic or capitals. The guidance comes from plain-language style guides and reading research instead:
@@ -111,6 +126,12 @@ Set on 2026-09-10, after a research pass and an audit of the site. The decisions
   - Unordered lists use a hollow bullet (◦) in the same variable, so both list markers share one orange per theme. It replaced an en dash: shrinking the dash to 0.75em sank it towards the baseline, and `::marker` cannot be moved up. Butterick prefers hollow bullets as the subtler kind.
   - ⚠ ◦ (U+25E6) and • (U+2022) were not in the Source Sans subset and were added by hand (see [[Font subsetting]]); the subset still lacks ‣ and ▪, so either of those as a marker needs the same step.
   - Both kinds of list share one start padding, 2.75ch, so bullet and numbered items start at the same place. It is sized for "10. ": the marker box includes the space before the text and measured 33.6px, which 2.75ch (33.7px) just holds. An estimate of 2.2ch left "10." hanging about 7px past the edge. Lists that reach 100 would hang again.
+- **Subtitles** (added 2026-09-14). A `subtitle:` in a post's front matter renders under the title in `<hgroup>`, from `partials/entry-header.njk`, on every post type.
+  - The `<p>` is not part of `p-name`, so the microformats title stays the title alone (see [[Microformats]]).
+  - Set in Source Sans italic at `--size-step-2`, in the headline color, balanced (`local/post.css`). Three serif versions came first: bold at two and three steps below the title, then dimmed toward the background. The italic sans read as a second voice rather than a smaller title.
+  - ⚠ The subtitle's `--flow-space` is set on the `<p>` itself. Set on the `<hgroup>`, it lost to `.prose`'s larger space after a heading.
+  - Written in title case with short words lowercase, like the title.
+  - Books have a Subtitle field in [[Sveltia CMS]]. Films don't: Letterboxd has no subtitle, so the Web Clipper has nothing to fill it from, and no film has needed one. A film can still take `subtitle:` by hand.
 - **Not done:**
   - no `.figures` or `.balance` class, since the defaults cover them;
   - never `dlig`, which rewrites "he" and "she";
@@ -118,4 +139,4 @@ Set on 2026-09-10, after a research pass and an audit of the site. The decisions
 
 The style guide (`/styleguide/`) shows each of these off and on under "Type features".
 
-Raw source: `src/_raw/dev-notes/How the typographic defaults were chosen.md`
+Raw source: `src/_raw/dev-notes/How the typographic defaults were chosen.md`, `src/_raw/dev-notes/How the subtitle is marked up.md`

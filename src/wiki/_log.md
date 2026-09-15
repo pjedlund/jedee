@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-15] enrich | Typographic conventions
+
+A Subtitles section, from the 2026-09-14 session that added subtitles (source of record written to `src/_raw/dev-notes/How the subtitle is marked up.md`). General part: the WHATWG `<hgroup>` model, why a second heading is the wrong pattern, what a screen reader hears. In jedee: the markup in `entry-header.njk`, the subtitle outside `p-name`, the italic sans after three serif tries, the `--flow-space` trap, and why films have no Sveltia field. Links earned: [[Microformats]], [[Sveltia CMS]].
+
 ## [2026-09-14] fix | The accessibility test
 
 Stale counts, found while writing [[Accessibility]]. `customPaths` has held ten paths since `/now/` was added on 2026-09-11, but the page said six in a heading, nine in two places and four in another, and its `meta.js` excerpt was two edits behind (the path list and the comments). All brought in line with `meta.js`, the growth history extended to ten, and the index line corrected. The coverage paragraph also claimed nothing the lightbox touches was tested; the jam on the list has opened its cover in the lightbox since 2026-08-29, so that clause went.
