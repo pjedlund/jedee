@@ -1,8 +1,6 @@
-const container = document.querySelector('.details');
-
-if (container) {
-  const expandAllButton = container.querySelector('#expandAll');
-  const collapseAllButton = container.querySelector('#collapseAll');
+document.querySelectorAll('.details').forEach(container => {
+  const expandAllButton = container.querySelector('[data-expand-all]');
+  const collapseAllButton = container.querySelector('[data-collapse-all]');
   const details = container.querySelectorAll('details');
 
   expandAllButton.addEventListener('click', () => {
@@ -16,13 +14,13 @@ if (container) {
   details.forEach(detail => {
     detail.addEventListener('toggle', () => {
       const hash = detail.open ? `#${detail.id}` : '#';
-      history.pushState(null, null, hash);
+      history.replaceState(null, '', hash);
     });
   });
+});
 
-  const id = window.location.hash.slice(1);
-  if (id) {
-    const detail = container.querySelector(`#${CSS.escape(id)}`);
-    if (detail) detail.open = true;
-  }
+const id = window.location.hash.slice(1);
+if (id) {
+  const detail = document.querySelector(`.details #${CSS.escape(id)}`);
+  if (detail) detail.open = true;
 }

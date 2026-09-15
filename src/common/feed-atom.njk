@@ -3,6 +3,7 @@ permalink: /feed.xml
 eleventyExcludeFromCollections: true
 excludeFromSitemap: true
 ---
+{%- set postslist = collections.posts -%}
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="{{ meta.lang or page.lang }}" xml:base="{{ meta.url }}/">
   <title>{{ meta.blog.name }}</title>
@@ -14,7 +15,6 @@ excludeFromSitemap: true
   <author>
     <name>{{ meta.author.name }}</name>
   </author>
-	{% set postslist = collections.posts %}
   {%- for post in postslist | reverse -%}
   {%- set absolutePostUrl = post.url | absoluteUrl(meta.url) -%}
     <entry>

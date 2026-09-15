@@ -1,7 +1,7 @@
 const storageKey = 'theme-preference';
 const themeColors = {
-  dark: '{{ meta.themeLight }}',
-  light: '{{ meta.themeDark }}'
+  dark: '{{ meta.themeDark }}',
+  light: '{{ meta.themeLight }}'
 };
 
 // The tooltip says what a click WILL do; the accessible name stays put and aria-pressed carries the state.
@@ -38,10 +38,15 @@ window.addEventListener('load', () => {
   );
 });
 
-// sync with system changes
+// sync with system changes only while the visitor has not picked a theme
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', ({matches: isDark}) => {
+  if (getStoredPreference()) {
+    return;
+  }
+
   theme.value = isDark ? 'dark' : 'light';
-  setPreference();
+  reflectPreference();
+  updateMetaThemeColor();
   const toggle = document.querySelector('[data-theme-toggle]');
   if (toggle) {
     reflectToggleState(toggle);
@@ -54,16 +59,27 @@ function reflectToggleState(toggle) {
   toggle.dataset.tooltip = toggleTooltips[theme.value];
 }
 
-function getColorPreference() {
-  if (localStorage.getItem(storageKey)) {
+function getStoredPreference() {
+  // storage can be blocked entirely, the toggle should still work
+  try {
     return localStorage.getItem(storageKey);
-  } else {
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  } catch (error) {
+    return null;
   }
 }
 
+function getColorPreference() {
+  return (
+    getStoredPreference() || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+  );
+}
+
 function setPreference() {
-  localStorage.setItem(storageKey, theme.value);
+  try {
+    localStorage.setItem(storageKey, theme.value);
+  } catch (error) {
+    // not persisted, but the current page still reflects the choice
+  }
   reflectPreference();
   updateMetaThemeColor();
 }
