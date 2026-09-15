@@ -4,15 +4,14 @@
   /* The look of every table: tweak here. Cells inherit these from the wrapper. */
   --table-bg: var(--color-bg);
   --table-head-bg: var(--color-bg-accent);
-  --table-stripe: color-mix(in oklab, var(--color-text) 4%, transparent);
+  --table-stripe: transparent; /* off, after Rutter and Barker; color-mix(in oklab, var(--color-text) 4%, transparent) turns them on */
   --table-rule-color: var(--color-bg-accent-2);
   --table-rule: var(--border-thickness) solid var(--table-rule-color);
   --table-border: none; /* the box around the table; var(--table-rule) brings it back */
-  --table-row-rule: var(--border-thickness) solid color-mix(in oklab, var(--color-text) 8%, transparent);
+  --table-row-rule: var(--table-rule);
   --table-band-rule: calc(var(--border-thickness) * 2) solid var(--table-rule-color);
   --table-radius: var(--border-radius-medium);
-  --table-font-size: var(--size-step-min-1);
-  --table-code-size: var(--size-step-min-2);
+  --table-font-size: 1em; /* body cells at the text size: Rutter warns against shrinking a table to fit */
   --table-head-size: var(--size-step-min-2);
   --table-head-transform: uppercase;
   --table-head-tracking: var(--tracking-wide);
@@ -49,10 +48,6 @@ table {
   inline-size: 100%;
   border-collapse: collapse;
   font-size: var(--table-font-size);
-}
-
-.table-wrapper code {
-  font-size: var(--table-code-size);
 }
 
 caption,
