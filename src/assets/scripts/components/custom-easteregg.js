@@ -39,8 +39,7 @@ class customEasteregg extends HTMLElement {
 
   triggerEffect(keyword) {
     console.log(`Hooray ${keyword}!`);
-    // jedee: version pinned, so a new release on the CDN can't change what runs here.
-    import('https://esm.run/canvas-confetti@1.9.4').then(({default: confetti}) => {
+    import('canvas-confetti').then(({default: confetti}) => {
       const scalar = 4;
       const customShape = confetti.shapeFromText({text: this.shape, scalar});
 
