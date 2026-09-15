@@ -79,7 +79,6 @@ colorGroups:
   <div class="full colors | section">
     <section class="section__inner wrapper flow region">
       <h2 class="heading-line">Colors</h2>
-      <p>Not yet based on GitHub's colorblind theme: the code colors are Eleventy Excellent's, retuned for contrast, and a rework after GitHub's protanopia and deuteranopia theme is planned.</p>
 
       {%- for group in colorGroups -%}
         {%- if group.description -%}<p{% if not loop.first %} class="mt-l-xl"{% endif %}>{{ group.description }}</p>{%- endif -%}
@@ -319,7 +318,7 @@ colorGroups:
         <a href="{{ designTokens.textSizes.$extensions.scaleGenerator }}">generated with Utopia</a>.
       </p>
 
-      <div class="table-wrapper | popout" role="region" tabindex="0" aria-labelledby="table-sizes">
+      <div class="table-wrapper | popout" role="region" tabindex="0" aria-labelledby="table-sizes" data-table-layout="fixed">
       <table class="sizes">
         <caption id="table-sizes">Type sizes, smallest to largest</caption>
         <thead>
@@ -348,7 +347,7 @@ colorGroups:
     </section>
   </div>
 
-  <section class="spacing | flow region">
+  <section class="spacing | wrapper-pass flow region">
     <h2 class="heading-line">Spacing</h2>
 
     <p>
@@ -356,7 +355,7 @@ colorGroups:
       <a href="{{ designTokens.spacing.$extensions.scaleGenerator }}">generated with Utopia</a>.
     </p>
 
-    <div class="table-wrapper | popout" role="region" tabindex="0" aria-labelledby="table-spacing">
+    <div class="table-wrapper | popout" role="region" tabindex="0" aria-labelledby="table-spacing" data-table-layout="fixed">
     <table class="spacing">
       <caption id="table-spacing">Space sizes, smallest to largest</caption>
       <thead>
