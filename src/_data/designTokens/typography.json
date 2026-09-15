@@ -1,6 +1,12 @@
 {
   "$type": "typography",
   "$description": "Typography composite tokens — bundled type styles that apply font family, weight, size, and line height in one token. Mirrors the type styles in src/assets/css/global/base/global-styles.css. Inner values reference atomic tokens from fonts.json / textWeights.json / textSizes.json / textLeading.json so any change cascades. PENPOT-ONLY FILE: tailwind.config.js does not read this, so nothing here reaches the CSS. That is why letterSpacing carries a bare number that does NOT match the stylesheet — the CSS uses ch units, which Penpot has no equivalent for, so the Penpot value is matched by eye instead. Do not 'correct' these to the CSS numbers; the two sides are deliberately unlinked. Only heading.1 was matched by eye (verified 2026-08-22, 0.7% off the CSS -0.04ch); heading.2 and heading.3 are heading.1 scaled by font size, so confirm them the first time one appears on a board.",
+  "letterSpacing": {
+    "wide": {
+      "$value": "1.67",
+      "$description": "Table column heads. The CSS is --tracking-wide, 0.12ch; this is that measured in px at the 28px text size (1ch = 0.497em in Source Sans 3)."
+    }
+  },
   "styles": {
     "body": {
       "fontFamily": "{font.family.base}",
