@@ -12,8 +12,10 @@
   --table-band-rule: calc(var(--border-thickness) * 2) solid var(--table-rule-color);
   --table-radius: var(--border-radius-medium);
   --table-font-size: 1em; /* body cells at the text size: Rutter warns against shrinking a table to fit */
-  --table-head-size: var(--size-step-min-2);
-  --table-head-transform: uppercase;
+  --table-head-size: 1em;
+  --table-head-caps: all-small-caps; /* capitals instead: normal here, uppercase below, and --size-step-min-2 */
+  --table-head-transform: none;
+  --table-head-weight: var(--font-regular); /* small caps replace bold rather than add to it (Butterick) */
   --table-head-tracking: var(--tracking-wide);
   --table-cell-padding-block: var(--space-s);
   --table-cell-padding-inline: var(--space-s);
@@ -72,6 +74,8 @@ caption {
 thead th {
   vertical-align: bottom;
   font-size: var(--table-head-size);
+  font-variant-caps: var(--table-head-caps);
+  font-weight: var(--table-head-weight);
   letter-spacing: var(--table-head-tracking);
   text-transform: var(--table-head-transform);
   background: var(--table-head-bg);
