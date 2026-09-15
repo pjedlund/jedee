@@ -1,0 +1,12 @@
+/* Rating stars (partials/rating.njk), on the post meta line and the book and film cards; the stars sit closer to each other than an icon to its label. */
+.meta-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.1em;
+}
+
+.meta-rating .meta-icon {
+  flex: none;
+  inline-size: 1em;
+  block-size: 1em;
+}

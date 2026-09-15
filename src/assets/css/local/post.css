@@ -67,13 +67,6 @@ date {
   gap: 0.35em;
 }
 
-/* Rating stars sit closer to each other than an icon to its label. */
-.meta-rating {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.1em;
-}
-
 .meta-icon {
   flex: none;
   inline-size: 1em;
