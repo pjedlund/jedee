@@ -37,12 +37,13 @@ The honest limit is that the technique costs a decision per component and gives 
 
 The dependency (`@11ty/is-land` 4.0.1), the bundle entry, and the inlining are all Eleventy Excellent stock. `src/assets/scripts/bundle/is-land.js` is a single `import` line — EE ships two, and the second was dropped here for a measured reason (below); esbuild bundles and minifies it to `src/_includes/scripts/is-land.js`, and `head/js-inline.njk` inlines that into the head of **every page**, so the runtime is never a request. It is 4,054 bytes minified.
 
-Seven elements use it, all with one of two conditions — `on:idle` for anything in the page chrome, `on:visible` for anything embedded in a post's body.
+Eight elements use it, all with one of two conditions — `on:idle` for anything in the page chrome, `on:visible` for anything embedded in a post's body.
 
 Table: The islands in jedee: condition and origin
 | Island | Condition | Origin |
 | --- | --- | --- |
 | `webc/place-map.webc` | `on:idle` | jedee — see [[The place map]] |
+| `webc/sortable-table.webc` | `on:idle` | jedee — inside the place map's island on `/activities/`; see [[Tables]] |
 | `webc/photo-lightbox.webc` | `on:idle` | jedee — see [[The PhotoSwipe lightbox]] |
 | `partials/search.njk` | `on:idle` | jedee — see [[Site search]] |
 | `partials/theme-toggle.njk` | `on:idle` | jedee's rewrite of EE's `theme-switch.njk` — see [[The theme toggle]] |
@@ -50,7 +51,7 @@ Table: The islands in jedee: condition and origin
 | `webc/custom-peertube.webc` | `on:visible` | EE stock |
 | `partials/gallery.njk` | `on:idle` | EE stock, **dead source** — nothing includes it |
 
-None of the seven uses `on:interaction`, `on:media` or `on:save-data`, and none combines conditions.
+None of the eight uses `on:interaction`, `on:media` or `on:save-data`, and none combines conditions. The sortable table is the one nested island; is-land's documentation says an island inside another inherits its parent's conditions as well as its own.
 
 `webc/custom-masonry.webc` was an eighth, EE stock and `on:visible`, until its masonry script was removed on 2026-09-06 because it shifted the layout ([[Layout shift]]). The `<custom-masonry>` tag stays, never defined, as a CSS hook ([[Web components]]).
 

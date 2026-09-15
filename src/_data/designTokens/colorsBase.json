@@ -14,9 +14,9 @@
     { "name": "Orange", "value": "#EF7E40" }
   ],
   "light_dark": [
-    { "name": "Red", "value": "#644B49" },
-    { "name": "Blue", "value": "#245375" },
-    { "name": "Green", "value": "#626449" }
+    { "name": "Red", "value": "#644B49", "vivid": "#d6403a" },
+    { "name": "Blue", "value": "#245375", "vivid": "#3d8ecc" },
+    { "name": "Green", "value": "#626449", "vivid": "#2e9d4f" }
   ],
   "standalone": [
     { "group": "gray", "label": "250", "value": "#C8CACC" }

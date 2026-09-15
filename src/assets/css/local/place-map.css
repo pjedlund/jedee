@@ -221,21 +221,19 @@ place-map[data-map-ready] > .place-map-static {
   color: var(--color-text-accent);
 }
 
-.place-list {
-  padding: 0;
-  list-style: none;
-  display: grid;
-  gap: var(--space-3xs);
+/* One color per activity type (data-activity on each row), read by place-map.js for that row's dot. No weight-training session has coordinates, so it has no dot color yet. */
+[data-activity='orienteering'] {
+  --place-color: var(--color-accent-orange);
 }
-.place-list li {
-  line-height: 1.35;
+
+[data-activity='hike'] {
+  --place-color: var(--color-green-vivid);
 }
-.place-note {
-  color: var(--color-text-accent);
+
+[data-activity='run'] {
+  --place-color: var(--color-blue-vivid);
 }
-.place-note::before {
-  content: ' — ';
-}
+
 /* Marker popups (click a dot → the place's name, linked), themed like the rest of the chrome. Popup panes live inside the canvas, so the fence covers them; same (0,3,x) repetition as the attribution rules, for the same reason. */
 [data-place-map-canvas].leaflet-container .leaflet-popup-content-wrapper,
 [data-place-map-canvas].leaflet-container .leaflet-popup-tip {

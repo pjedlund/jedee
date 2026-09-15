@@ -414,6 +414,8 @@ class PlaceMap extends HTMLElement {
           date: el.dataset.date || '',
           name: a?.textContent.trim() || el.textContent.trim(),
           url: a?.getAttribute('href'),
+          // The row's activity color (place-map.css); read once, since those tokens don't change with the theme.
+          fill: getComputedStyle(el).getPropertyValue('--place-color').trim() || undefined,
         };
       })
       .filter((p) => Number.isFinite(p.lat) && Number.isFinite(p.lon));
@@ -424,7 +426,7 @@ class PlaceMap extends HTMLElement {
       bounds: L.latLngBounds(places.map((p) => [p.lat, p.lon])),
       place: this.place,
     });
-    for (const p of places) this.mapObj.addDot(p.lat, p.lon, { popup: popupHtml(p) });
+    for (const p of places) this.mapObj.addDot(p.lat, p.lon, { fill: p.fill, popup: popupHtml(p) });
 
     this.finishInit();
   }

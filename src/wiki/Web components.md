@@ -37,12 +37,13 @@ Table: The custom tags in jedee and what their JavaScript does
 | --- | --- | --- |
 | `<is-land>` | `@11ty/is-land`, EE stock | holds back other scripts until a condition is met — see [[is-land]] |
 | `<place-map>` | jedee | reads the place list and route JSON rendered inside it and draws a Leaflet map — see [[The place map]] |
+| `<sortable-table>` | jedee (added 2026-09-15) | turns the column heads of the table inside it into sort buttons — see [[Tables]] |
 | `<photo-lightbox>` | jedee | wires PhotoSwipe to the single `<a>` inside it — see [[The PhotoSwipe lightbox]] |
 | `<lite-youtube>` | `lite-youtube-embed`, EE stock | swaps the poster for the player on click — see [[The YouTube embed]] |
 | `<custom-easteregg>` | EE stock | listens for a typed keyword; renders nothing itself |
 | `<custom-card>`, `<custom-youtube>`, `<custom-masonry>` | nothing | never defined — tag names kept as CSS hooks |
 
-The first four are composite components by the book: without JavaScript the place map is a list of places, the lightbox is a link to the full image, and the YouTube embed is a link to the video. The last row is the base layer with no enhancement layer at all. `<custom-masonry>` got there by subtraction: its masonry script was removed on 2026-09-06 because it shifted the layout ([[Layout shift]]), and the tag stayed so call sites and CSS did not have to change.
+The first five are composite components by the book: without JavaScript the place map is a table of places, the sortable table is the same table in date order, the lightbox is a link to the full image, and the YouTube embed is a link to the video. The last row is the base layer with no enhancement layer at all. `<custom-masonry>` got there by subtraction: its masonry script was removed on 2026-09-06 because it shifted the layout ([[Layout shift]]), and the tag stayed so call sites and CSS did not have to change.
 
 ⚠ The `.webc` files in `src/_includes/webc/` are not web components, despite the name. WebC is Eleventy's build-time component syntax and outputs plain HTML; whether a browser custom element exists afterwards depends only on whether some script calls `customElements.define` for that tag.
 

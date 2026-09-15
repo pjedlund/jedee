@@ -65,6 +65,9 @@
     "$value": "#644B49",
     "subdued": {
       "$value": "#614d4b"
+    },
+    "vivid": {
+      "$value": "#d6403a"
     }
   },
   "blue": {

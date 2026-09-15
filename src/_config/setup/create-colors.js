@@ -62,7 +62,7 @@ colorsBase.shades_vibrant.forEach(color => {
   });
 });
 
-// Light/dark colors — each gets a $value plus a "subdued" child (80% chroma)
+// Light/dark colors — each gets a $value plus a "subdued" child (80% chroma), and a "vivid" child when colorsBase gives one (same in both themes; icons, map dots, the route line)
 colorsBase.light_dark.forEach(color => {
   const key = nameSlug(color.name);
   colorTokens[key] = {'$value': color.value};
@@ -78,6 +78,7 @@ colorsBase.light_dark.forEach(color => {
   const subduedHex = `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
 
   colorTokens[key]['subdued'] = {'$value': subduedHex};
+  if (color.vivid) colorTokens[key]['vivid'] = {'$value': color.vivid};
 });
 
 // Palette colors (base theme colors) — flat keys derived via slugify e.g. "base-darkest" → "base-darkest"

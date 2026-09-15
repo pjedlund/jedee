@@ -89,6 +89,8 @@ The private wiki documenting web techniques and how jedee is designed and built.
 
 ## Recent additions
 
+**2026-09-15** — enrich: **[[Tables]]** gets *The activities table*: rows that link (and the three browser traps that came with them), columns that drop by priority at measured widths, units in the column heads, and the `<sortable-table>` island after Adrian Roselli's pattern. [[is-land]], [[Web components]] and [[The place map]] updated for the new island, custom tag and table. See `_log.md`.
+
 **2026-09-15** — correction: **[[Syntax highlighting]]**. Eleventy Excellent's `top: -0.05em` on inline code is an optical correction for EE's 2024 fonts, not a slip: with Figtree and Roboto Mono it centers the chip on the capitals around it to within 0.002em. Measured for EE's current fonts and jedee's too. jedee's unnudged chip sits 0.053em low, and stays that way after a side-by-side trial, to leave the letters on the baseline. See `_log.md`.
 
 **2026-09-15** — ingest: **[[Prefetching]]**, from the session that took Eleventy Excellent's speculation rules. The general part: the API, the four eagerness levels and Chrome's limit of two held at once, how a prefetch and a service worker divide the work, the script libraries (instant.page, Quicklink), and Guess.js's analytics-driven prediction. In jedee: EE's hover rule with feeds, images, the CMS and Micropub excluded; why it pays off with a network-first worker; why the scripts and a list built from Umami were declined. ⚠ Chrome cancelled prefetches on service-worker pages until 138; ⚠ Helium and Claude's Browser pane both fail by design. [[What jedee kept from Eleventy Excellent]] updated for the rule and the bundled confetti. See `_log.md`.

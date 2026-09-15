@@ -93,7 +93,11 @@ async function build() {
 	const coreColors = {};
 	for (const [topKey, val] of Object.entries(colors)) {
 		if (topKey.startsWith('$')) continue;
-		if (LIGHT_DARK_COLOR_NAMES.includes(topKey)) continue;
+		if (LIGHT_DARK_COLOR_NAMES.includes(topKey)) {
+			// The light/dark pair goes to the theme sets below; a vivid variant is the same in both themes, so it is core.
+			if (val.vivid?.$value) setLeaf(coreColors, `color.${topKey}.vivid`, token(val.vivid.$value, 'color'));
+			continue;
+		}
 
 		if (val.$value !== undefined) {
 			// e.g. base-darkest → color.base.darkest
@@ -180,6 +184,10 @@ async function build() {
 	for (const [k, v] of Object.entries(textLeading)) {
 		if (k.startsWith('$')) continue;
 		setLeaf(coreTypo, `font.lineHeight.${k}`, token(String(v.$value), 'number'));
+	}
+	// Letter spacing, Penpot-only like the composites: the CSS uses ch, so these are px measured at the text size.
+	for (const [k, v] of Object.entries(typography.letterSpacing ?? {})) {
+		setLeaf(coreTypo, `font.letterSpacing.${k}`, token(v.$value, 'letterSpacing', v.$description));
 	}
 	// Typography composite tokens — bundled type styles (family + weight + size + lineHeight). Inner keys are singular per Penpot's `typography` token shape.
 	const typographyType = typography.$type ?? 'typography';
