@@ -143,6 +143,15 @@ Every layout passes through `base.njk`, so no post type has to remember the incl
 - Rules between rows, no stripes and no column rules. The header row is tinted with `--color-bg-accent`, and the header and footer get a doubled rule. The wrapper carries the border and the rounded corners, which a collapsed table cannot have.
 - ⚠ The rules use `--color-bg-accent-2`, not `--stroke`. `--stroke` is drawn in `--color-bg-accent`, which is white in the light theme and disappears against the off-white page; the old stacked file used it, so its row rules were invisible in light mode.
 - The scroll shadows and covers are mixed from `--color-bg` and `--color-text` rather than the article's white, so they follow the theme.
+- The caption and first-column text line up with the prose beside the table, not with the box. A spacing token cannot do this: the popout track is 0 on narrow screens, grows to its `2rem` maximum over a band of window widths, and stays there, while every token scales with the viewport. The wrapper is a container instead, and since it is the content column plus two popout tracks, half the difference is one track:
+
+```css
+.table-wrapper :is(caption, tr > :first-child) {
+  padding-inline-start: max(var(--space-s), (100cqi - var(--wrapper-width, 85rem)) / 2);
+}
+```
+
+Measured: text and prose start at the same pixel at 1440px and 1200px; at 1024px and below the track is 0 and the cell keeps its ordinary padding. ⚠ The formula assumes the wrapper spans `popout` in a `.wrapper` sized by `--wrapper-width`; in any other context it can indent the first column by mistake.
 - The wrapper's focus ring is the site's global `:focus-visible` ring; nothing here is table-specific.
 - Row headers stick when a table has a `<th>` in its body, detected with `table:has(tbody th)`. With no column rules, Barker's `::after` repair is not needed.
 - ⚠ Below the `sm` breakpoint `prose.css` sets `word-break: break-word` and `hyphens: auto` on everything in a post body, for long URLs. In a table that lowers every column's minimum width, so columns shrank to single characters ("P / e / rf", "0. / 00 / 4") instead of the table scrolling. The wrapper resets both. Measured at 375px on [[Layout shift]]: before the reset none of its 13 tables scrolled and the scores broke mid-number; after it, 7 scroll and the page itself still does not.

@@ -6,6 +6,7 @@
   --table-shadow: color-mix(in oklab, var(--color-text) 20%, transparent);
 
   overflow-x: auto;
+  container-type: inline-size;
   /* ⚠ Prose breaks words anywhere below sm, which would shrink columns to single letters instead of letting the table scroll. */
   overflow-wrap: normal;
   word-break: normal;
@@ -36,6 +37,11 @@ td {
   padding: var(--space-2xs) var(--space-s);
   text-align: start;
   vertical-align: baseline;
+}
+
+/* Start-column text lines up with the prose: the wrapper is the content column plus two popout tracks, so half the difference is one track. ⚠ Assumes the wrapper spans popout in a .wrapper sized by --wrapper-width. */
+.table-wrapper :is(caption, tr > :first-child) {
+  padding-inline-start: max(var(--space-s), (100cqi - var(--wrapper-width, 85rem)) / 2);
 }
 
 caption {
