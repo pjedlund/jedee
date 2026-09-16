@@ -3,6 +3,11 @@ import htmlmin from 'html-minifier-terser';
 const isProduction = process.env.ELEVENTY_ENV === 'production';
 
 export const htmlConfig = eleventyConfig => {
+  // ⚠ Desktop browsers draw a bare ⚠ as a plain text glyph; U+FE0F asks for the yellow emoji, as iOS does by default.
+  eleventyConfig.addTransform('warning-emoji', (content, path) =>
+    path && path.endsWith('.html') ? content.replace(/\u26A0(?!\uFE0F)/g, '\u26A0\uFE0F') : content
+  );
+
   eleventyConfig.addTransform('html-minify', (content, path) => {
     if (path && path.endsWith('.html') && isProduction) {
       return htmlmin.minify(content, {
