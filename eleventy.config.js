@@ -189,7 +189,7 @@ export default async function(eleventyConfig) {
 
   // --------------------- Passthrough File Copy
   // -- same path Audio/Video self-hosted media: Eleventy Image only moves images, so the co-located .mp3/.mp4/.vtt files need an explicit passthrough for the on-page <audio>/<video> src and the feed <enclosure> URL to resolve. `jams-social` holds the This Is My Jam liker/commenter avatars, recovered from the Wayback Machine and self-hosted; rendered with `eleventy:ignore` (like the template fallback avatar), so they need an explicit passthrough to reach dist.
-  ['src/assets/fonts/', 'src/assets/images/template', 'src/assets/images/recipes', 'src/assets/images/jams-social', 'src/assets/og-images', 'src/assets/audio', 'src/assets/video'].forEach(path =>
+  ['src/assets/fonts/', 'src/assets/images/template', 'src/assets/images/recipes', 'src/assets/images/jams-social', 'src/assets/og-images', 'src/assets/audio', 'src/assets/video', 'src/assets/map'].forEach(path =>
     eleventyConfig.addPassthroughCopy(path)
   );
 
@@ -205,9 +205,8 @@ export default async function(eleventyConfig) {
     'node_modules/lite-youtube-embed/src/lite-yt-embed.{css,js}': `assets/components/`,
     // Single-file (non-glob) source: must name the destination file explicitly. A trailing-slash dir target writes a file literally named `components`, clobbering the lite-youtube glob's directory (Eleventy 3.x behaviour).
     'node_modules/photoswipe/dist/photoswipe.css': `assets/components/photoswipe.css`,
-    // Leaflet's JS is bundled into photo-map.js by esbuild (import L from 'leaflet');
-    // only its stylesheet needs copying. Its url()'d marker/layer PNGs are skipped on purpose — <photo-map> uses circleMarker (pure SVG) + the zoom control, so none of those images are ever requested.
-    'node_modules/leaflet/dist/leaflet.css': `assets/components/leaflet.css`
+    // MapLibre's JS is bundled into place-map.js by esbuild; only its stylesheet needs copying.
+    'node_modules/maplibre-gl/dist/maplibre-gl.css': `assets/components/maplibre-gl.css`
   });
 
   // ----------------------  ignore test files
