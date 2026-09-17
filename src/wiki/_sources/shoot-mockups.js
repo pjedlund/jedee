@@ -1,17 +1,21 @@
-// Shoots every [data-shot] element in this folder's mockups to src/assets/images/wiki/<data-shot>.png. Run: npm run mockups
+// Shoots every [data-shot] element in this folder's mockups to src/assets/images/wiki/<data-shot>.png. Run: npm run mockups (or `npm run mockups -- place-map` for the mockups whose filename contains that)
 import { fileURLToPath } from 'node:url';
 import { readdirSync } from 'node:fs';
 import path from 'node:path';
 import puppeteer from 'puppeteer';
+import { serveMockups, launchArgs } from './serve-mockups.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const outputDir = path.resolve(here, '../../assets/images/wiki');
-const mockups = readdirSync(here).filter(f => f.endsWith('.html')).sort();
+const only = process.argv[2] || '';
+const mockups = readdirSync(here).filter(f => f.endsWith('.html') && f.includes(only)).sort();
+
+const { base, server } = await serveMockups(here);
 
 // puppeteer arrives transitively under pa11y-ci and hunts for its own pinned build — point it at an installed Chrome, same as meta.tests.pa11y.chromePath does.
 const chromePath = process.env.PA11Y_CHROME || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 
-const browser = await puppeteer.launch({ executablePath: chromePath, headless: 'new' });
+const browser = await puppeteer.launch({ executablePath: chromePath, headless: 'new', args: launchArgs });
 const page = await browser.newPage();
 // ⚠ deviceScaleFactor 2 is load-bearing: a wiki page declares each shot at its full pixel size and lets CSS scale it down, so a 1x shot renders soft.
 await page.setViewport({ width: 1400, height: 1400, deviceScaleFactor: 2 });
@@ -19,9 +23,9 @@ await page.setViewport({ width: 1400, height: 1400, deviceScaleFactor: 2 });
 const sizes = [];
 
 for (const file of mockups) {
-  await page.goto(`file://${path.join(here, file)}`, { waitUntil: 'networkidle0' });
+  await page.goto(`${base}/${file}`, { waitUntil: 'networkidle0' });
   // A mockup that freezes an animation sets window.__mockupReady = false up front and true once it has settled; one that does not is ready as soon as it loads.
-  await page.waitForFunction(() => window.__mockupReady !== false, { timeout: 10000 });
+  await page.waitForFunction(() => window.__mockupReady !== false, { timeout: 30000 });
 
   // The mockup's own ground and drop shadows are dropped so each shot sits on the wiki page itself, in either theme.
   await page.evaluate(() => {
@@ -45,6 +49,7 @@ for (const file of mockups) {
 }
 
 await browser.close();
+server.close();
 console.log(`Wrote ${sizes.length} shots to ${outputDir}:`);
 sizes.forEach(s => console.log(`  ${s}`));
 console.log('⚠ Those are the intrinsic sizes — they must be the width/height on each <img>, or eleventy-img ships a soft image.');

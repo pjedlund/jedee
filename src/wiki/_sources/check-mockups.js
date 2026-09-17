@@ -4,20 +4,22 @@ import { readdirSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import path from 'node:path';
 import puppeteer from 'puppeteer';
+import { serveMockups, launchArgs } from './serve-mockups.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const chromePath = process.env.PA11Y_CHROME || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 
-const browser = await puppeteer.launch({ executablePath: chromePath, headless: 'new' });
+const { base, server } = await serveMockups(here);
+const browser = await puppeteer.launch({ executablePath: chromePath, headless: 'new', args: launchArgs });
 const page = await browser.newPage();
 await page.setViewport({ width: 1400, height: 1400, deviceScaleFactor: 2 });
 
 let failures = 0;
 
 for (const file of readdirSync(here).filter(f => f.endsWith('.html')).sort()) {
-  await page.goto(`file://${path.join(here, file)}`, { waitUntil: 'networkidle0' });
+  await page.goto(`${base}/${file}`, { waitUntil: 'networkidle0' });
   // A mockup that freezes an animation sets window.__mockupReady = false up front and true once it has settled; one that does not is ready as soon as it loads.
-  await page.waitForFunction(() => window.__mockupReady !== false, { timeout: 10000 });
+  await page.waitForFunction(() => window.__mockupReady !== false, { timeout: 30000 });
 
   // ⚠ The pair is compared as PIXELS, not as text: the wrapping specimens differ in line breaks, but border width, a focus ring and a syntax color do not move a single word.
   // Every frame, not just the top document — a mockup that needs real viewport widths draws its sides in iframes, and their elements are unreachable from the top document.
@@ -41,6 +43,7 @@ for (const file of readdirSync(here).filter(f => f.endsWith('.html')).sort()) {
 }
 
 await browser.close();
+server.close();
 if (failures) {
   console.error(`\n${failures} comparison(s) render identically. Widen the sweep or change what varies — see the ⚠ on the wiki page.`);
   process.exit(1);
