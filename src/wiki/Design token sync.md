@@ -39,6 +39,14 @@ When it is, the API can usually still *read*. Making one token by hand in the UI
 
 That shape is then what the generator has to emit, and it is worth checking against the docs rather than trusting them: derived fields the docs never mention, keys the docs list that are absent, and values in a different form than the type says are all normal.
 
+## A computed color is not a token value
+
+A design tool's color token holds a color. It does not hold a *calculation* over other tokens — Penpot rejects `color-mix(in srgb, {color.bg}, {color.green.vivid} 8%)` outright, with token references and with plain hex alike (`invalid-token-value`), and offers no modifier of its own. So a palette built on `color-mix()`, as jedee's map colors are, has nowhere to land: flattening each mix to one hex loses the recipe, which is the part worth tweaking.
+
+**Stacking rebuilds it.** Alpha compositing in sRGB and `color-mix()` in sRGB are the same arithmetic, so a shape bound to token A with a copy above it bound to token B at 8% opacity renders exactly `color-mix(in srgb, A, B 8%)` — and the percentage is now a number in the tool, editable without breaking either binding. Nested mixes stack as more layers, in the order the CSS nests them.
+
+⚠ **The percentage has to be the layer's opacity, not the fill's.** Binding a token writes it into the shape's first fill and resets that fill's opacity to 1; editing that fill's opacity afterwards silently drops the binding, leaving the resolved color behind and the token gone.
+
 ## Some tools have no references, no themes, and no variants
 
 Three things DTCG can express that a design tool may simply not model. Each one moves work from the tool back into the generator, and each one costs something that is worth naming in the file rather than discovering later.

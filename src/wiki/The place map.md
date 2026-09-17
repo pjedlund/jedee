@@ -100,6 +100,18 @@ The whole style (base layers plus the dots, route and symbols) is rebuilt by one
 
 ⚠ **MapLibre loads a style on an animation frame**, and browsers pause those in a hidden tab. A map on a background tab (or in Claude's Browser pane while it's hidden) stays blank with `isStyleLoaded()` false until the tab is shown — not a bug.
 
+### Waiting for the first tiles
+
+Tiles arrive over the network, so between the page's first paint and a drawn map there is a gap of a second or more. Three parts cover it, and none of them is a spinner:
+
+- The box is filled with `--map-water`, the map's own sea color, and **pulses** between that and a paler version of it while the canvas is hidden. A loading state that is already one of the map's colors reads as the map arriving rather than as a placeholder.
+- The canvas carries `[data-map-loading]` (set when the map is built, removed on MapLibre's first `idle` event) and fades in over 500 ms when it goes. `idle` is the honest signal: it fires when nothing is left to fetch or draw, so the fade starts on a finished picture rather than on a half-drawn one.
+- A route's intro waits for the same event, so the line is never drawn across an empty box.
+
+⚠ **A caption meant for no-JS visitors will flash.** The activity index renders its map box server-side to reserve the space ([[Layout shift]]), and the caption inside it — *Map of my activities* — showed for as long as the island took to hydrate. It is now hidden under [`@media (scripting: enabled)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/scripting), the mirror of the `scripting: none` rule in [[The main menu]]: the text is only for the visitor who will never get a map, and `visibility: hidden` keeps the box's height either way. Pre-hydration text is worth a second look in general — it is written for a case that most visitors pass through rather than land in.
+
+⚠ Reduced motion removes both the pulse and the fade, and the map simply appears.
+
 ### A base-layer style switch
 
 A control in the bottom-right corner switches between **Map** (jedee's tiles) and two fixed raster styles: **Satellite** (Esri World Imagery) and **Topographic** (OpenTopoMap, contours and trails). Every mode opens on Map, routes included; before the move, routes opened on Topographic. One tile-source gotcha: Esri's URL template is `{z}/{y}/{x}` — row before column, the reverse of the usual order.

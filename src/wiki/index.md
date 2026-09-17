@@ -89,6 +89,8 @@ The private wiki documenting web techniques and how jedee is designed and built.
 
 ## Recent additions
 
+**2026-09-17** — enrich: **[[The place map]]** gains *Waiting for the first tiles* — a box in the map's own sea color that pulses until MapLibre's first `idle`, then the canvas fades in and a route starts drawing; ⚠ the server-rendered no-JS caption flashed until `@media (scripting: enabled)` hid it. **[[Design token sync]]** gains *A computed color is not a token value*: a design tool's color token can't hold a `color-mix()` over other tokens, but alpha compositing in sRGB is the same arithmetic, so the recipe rebuilds as stacked token-bound layers with the percentage as a layer's opacity. Both figures on [[The place map]] re-shot on the new map. See `_log.md`.
+
 **2026-09-17** — enrich: **[[The place map]]** moves from Leaflet to MapLibre on jedee's own Protomaps tiles of Sweden, in the site's colors. ⚠ MapLibre can't parse `color-mix()`, so the `--map-*` colors are resolved through a 1×1 canvas; ⚠ the properties live on the canvas, which moves into the overlay; ⚠ a hidden tab never loads the style. See `_log.md`.
 
 **2026-09-15** — enrich: **[[Tables]]** gets *The activities table*: rows that link (and the three browser traps that came with them), columns that drop by priority at measured widths, units in the column heads, and the `<sortable-table>` island after Adrian Roselli's pattern. [[is-land]], [[Web components]] and [[The place map]] updated for the new island, custom tag and table. See `_log.md`.

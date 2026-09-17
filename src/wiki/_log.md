@@ -5,6 +5,12 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-17] enrich | The place map, Design token sync
+
+Session source: the place map's own tiles going live and the loading pass. New section *Waiting for the first tiles* in [[The place map]] — the `--map-water` box that pulses, `[data-map-loading]` removed on MapLibre's first `idle` (the honest signal: nothing left to fetch or draw), the route intro waiting for the same event, and the no-JS caption that flashed until `@media (scripting: enabled)` hid it, which is the mirror of the `scripting: none` rule on [[The main menu]]. Links earned: [[Layout shift]], [[The main menu]].
+
+New section *A computed color is not a token value* in [[Design token sync]]: a tool's color token holds a color, not a calculation over other tokens, so a `color-mix()` palette has nowhere to land — Penpot rejects the value with references and with hex alike. The generalisable half is that **alpha compositing in sRGB is the same arithmetic as `color-mix()` in sRGB**, so the recipe can be rebuilt as stacked layers, each bound to its own token, with the percentage as a layer's opacity. ⚠ It must be the *layer's* opacity: binding a token resets its fill's opacity to 1, and editing that fill's opacity afterwards drops the binding silently.
+
 ## [2026-09-17] enrich | The place map (figures)
 
 Both figures re-shot on MapLibre and the R2 tile file, the two "captured with the old Leaflet map" warnings removed, the route-symbols alt text updated, and the intro paragraph now names the loading pulse and fade (`[data-map-loading]`). ⚠ The mockups are now served over http by `src/wiki/_sources/serve-mockups.js`, not opened as `file://`: MapLibre builds absolute URLs from `location.origin`, which is `"null"` on `file://`, and R2's CORS policy has no entry for the shooter's random port, so Chrome runs with web security off. The place-map mockup reports reduced motion to the component so the route is drawn at once. `npm run mockups -- <name>` now shoots only the mockups whose filename contains the name. `mockups:check` passes on every mockup over http.
