@@ -43,6 +43,24 @@ place-map[data-map-ready] > .place-map-static {
   isolation: isolate; /* keeps MapLibre's control z-indexes below the sibling maximize button */
 }
 
+/* Until the first tiles are drawn the canvas is hidden and the empty box breathes; then the map fades in. */
+.place-map-canvas[data-map-loading] {
+  opacity: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .place-map-canvas {
+    transition: opacity 500ms ease-out;
+  }
+  .place-map-live:has(> [data-map-loading]) {
+    animation: place-map-pulse 1.6s ease-in-out infinite alternate;
+  }
+  @keyframes place-map-pulse {
+    to {
+      background-color: var(--color-bg);
+    }
+  }
+}
+
 /* The map's own colors, read by place-map.js on every render — tweak here or live in devtools, then flip the theme to redraw. ⚠ Set on the canvas, not <place-map>: the canvas moves into the overlay outside it. */
 [data-place-map-canvas] {
   --map-land: var(--color-bg);
