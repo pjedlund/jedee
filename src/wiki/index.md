@@ -40,7 +40,7 @@ The private wiki documenting web techniques and how jedee is designed and built.
 - [[Hosting large originals off-repo]] — the deliberate inverse: 157 MB scans stay in a Cloudflare R2 bucket the build never touches.
 - [[The PhotoSwipe lightbox]] — the `{% lightbox %}` shortcode, deferred behind `is-land`, degrading to a plain link without JS.
 - [[The YouTube embed]] — a facade with a build-time self-hosted poster and a placeholder that the thumbnail fades over.
-- [[The place map]] — a Leaflet component that upgrades server-rendered location data into a live map, with three modes chosen by the slotted markup: single pin, place groups, and a recorded GPS route line inlined as GeoJSON, plus a base-layer style switch (themed map / satellite / topographic — the CARTO "streets" style went when CARTO started requiring a key). ⚠ GeoJSON is `[lon,lat]`, the reverse of Leaflet; ⚠ Leaflet wires attribution *removal* only for layers added after the attribution control exists.
+- [[The place map]] — a MapLibre component on jedee's own Protomaps tiles that upgrades server-rendered location data into a live map, with three modes chosen by the slotted markup: single pin, place groups, and a recorded GPS route line inlined as GeoJSON, plus a base-layer style switch (themed map / satellite / topographic — the CARTO "streets" style went when CARTO started requiring a key). ⚠ GeoJSON is `[lon,lat]`, the reverse of Leaflet; ⚠ Leaflet wires attribution *removal* only for layers added after the attribution control exists.
 
 ## Publishing & the IndieWeb
 
@@ -88,6 +88,8 @@ The private wiki documenting web techniques and how jedee is designed and built.
 - [[Site search]] — a JSON index written at build time, fetched once and filtered in the browser; no search library at a few hundred entries. ⚠ `page.rawInput` reaches a page's body at collection time where `templateContent` throws, but it is the source *before* rendering, so template expressions and HTML comments land in the index unless stripped. ⚠ A transitioned `visibility` is still `hidden` on the frame `focus()` runs, and `[hidden]` is a UA rule any author `display` outranks.
 
 ## Recent additions
+
+**2026-09-17** — enrich: **[[The place map]]** moves from Leaflet to MapLibre on jedee's own Protomaps tiles of Sweden, in the site's colors. ⚠ MapLibre can't parse `color-mix()`, so the `--map-*` colors are resolved through a 1×1 canvas; ⚠ the properties live on the canvas, which moves into the overlay; ⚠ a hidden tab never loads the style. See `_log.md`.
 
 **2026-09-15** — enrich: **[[Tables]]** gets *The activities table*: rows that link (and the three browser traps that came with them), columns that drop by priority at measured widths, units in the column heads, and the `<sortable-table>` island after Adrian Roselli's pattern. [[is-land]], [[Web components]] and [[The place map]] updated for the new island, custom tag and table. See `_log.md`.
 

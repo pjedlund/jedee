@@ -23,7 +23,7 @@ Bach wrote *Soli Deo Gloria* — to God alone be the glory — at the end of his
 - [Eleventy Excellent](https://github.com/madrilene/eleventy-excellent), Lene Saile's starter, which this site began as and still follows closely.
 - CSS written the [CUBE CSS](https://cube.fyi) way, with layouts from [Every Layout](https://every-layout.dev) and fluid type and spacing from [Utopia](https://utopia.fyi).
 - Design tokens kept in the repository, with a mirror in Sketch for sketching new pages.
-- [Leaflet](https://leafletjs.com) for the maps, [PhotoSwipe](https://photoswipe.com) for the photo lightbox, and [lite-youtube-embed](https://github.com/paulirish/lite-youtube-embed) so a video loads nothing from Google until you press play.
+- [MapLibre](https://maplibre.org) for the maps, drawn from a [Protomaps](https://protomaps.com) file of [OpenStreetMap](https://www.openstreetmap.org/copyright) data that the site hosts itself, [PhotoSwipe](https://photoswipe.com) for the photo lightbox, and [lite-youtube-embed](https://github.com/paulirish/lite-youtube-embed) so a video loads nothing from Google until you press play.
 - Hosted on [Netlify](https://www.netlify.com); photo originals and audio live on Cloudflare R2.
 
 ## Type

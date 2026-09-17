@@ -36,7 +36,7 @@ Table: The custom tags in jedee and what their JavaScript does
 | Tag | Defined by | What its JavaScript does |
 | --- | --- | --- |
 | `<is-land>` | `@11ty/is-land`, EE stock | holds back other scripts until a condition is met — see [[is-land]] |
-| `<place-map>` | jedee | reads the place list and route JSON rendered inside it and draws a Leaflet map — see [[The place map]] |
+| `<place-map>` | jedee | reads the place list and route JSON rendered inside it and draws a MapLibre map from jedee's own tiles — see [[The place map]] |
 | `<sortable-table>` | jedee (added 2026-09-15) | turns the column heads of the table inside it into sort buttons — see [[Tables]] |
 | `<photo-lightbox>` | jedee | wires PhotoSwipe to the single `<a>` inside it — see [[The PhotoSwipe lightbox]] |
 | `<lite-youtube>` | `lite-youtube-embed`, EE stock | swaps the poster for the player on click — see [[The YouTube embed]] |

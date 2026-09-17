@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-17] enrich | The place map
+
+The component moved from Leaflet + OpenStreetMap tiles to MapLibre + jedee's own Protomaps tiles of Sweden. New sections *Our own tiles* (colors as CSS custom properties, the color-probe trap, the canvas-not-element trap, coverage fallback, style diffing, paused animation frames in hidden tabs) and a rewritten base-layer switch; the route intro is now a `line-gradient` sweep. The two figures are flagged as pre-move captures.
+
 ## [2026-09-15] enrich | Tables
 
 Session source: the activities table (`src/_raw/dev-notes/How the activities table works.md`). New subsection *The activities table* under "In jedee": the linked rows and their three traps (a sticky column shrinks the click area; Firefox paints a positioned row's cell backgrounds over collapsed rules; Safari's click focus on the `tabindex` wrapper, cause not yet confirmed in Safari), columns that drop by `data-table-priority` at measured container widths, units in a `<small>` under the column head instead of a tooltip, and `<sortable-table>` after Adrian Roselli's Sortable Table Columns, with the two parts not taken. Two stylesheet bullets updated (container-type, the sticky row header) and one added (figures on the wrapper). Links earned: [[The place map]], [[Tooltips]], [[is-land]]. Corrected on the way: [[is-land]] (eight islands, the first nested one), [[Web components]] (the `<sortable-table>` row), [[The place map]] (the table replaces the list; dots colored by type).

@@ -1,52 +1,90 @@
-// <place-map> — upgrades a slotted static map into a live, maximizable Leaflet map. esbuild bundles Leaflet into this file, so nothing loads until the is-land hydrates on idle. The inline map never wheel-zooms, so the page keeps scrolling; the maximize button grows THE SAME instance into a modal overlay where wheel + pinch turn on, which is why pan/zoom state survives.
-//
-// Three modes, decided by the slotted markup: - single pin (photo pages): data-lat/data-lon on the element, static <a><img> slot. - places (the activity index): a slotted [data-place-list] of <li data-lat data-lon>
-//    items. The LIST is the data source and the no-JS/screen-reader path (Leaflet
-//    markers' keyboard/SR handling is broken upstream, so nobody is forced through the
-//    map). JS drops one dot per item into the box above it.
-//  - route (an activity post): a slotted GeoJSON LineString.
-import L from 'leaflet';
+// <place-map> — upgrades a slotted static map into a live, maximizable MapLibre map drawn from our own Protomaps tiles. esbuild bundles MapLibre into this file, so nothing loads until the is-land hydrates on idle. The inline map never wheel-zooms, so the page keeps scrolling; the maximize button grows THE SAME instance into a modal overlay where wheel + pinch turn on.
+// Three modes, decided by the slotted markup: single pin (data-lat/data-lon on the element), places (a slotted [data-place-list] whose [data-lat] rows are the data AND the no-JS path), route (a slotted GeoJSON LineString).
+import maplibregl from 'maplibre-gl';
+import { Protocol } from 'pmtiles';
+import { layers, namedFlavor } from '@protomaps/basemaps';
 
-// ⚠ CARTO's basemaps now demand an API key, so the default layer is plain OSM and dark mode is a CSS filter on this layer alone (.tiles-themed in place-map.css).
-const TILES = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
-const ATTRIB = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
-// Alternate base layers offered by the tile switch (the themed "Map" default is built per-map in makeMap). All free to use WITH attribution — Leaflet shows the active layer's automatically. Esri's World Imagery URL is {z}/{y}/{x} (row before column).
-const BASE_LAYERS = [
-  [
-    'Satellite',
-    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    { maxZoom: 19, attribution: 'Imagery &copy; <a href="https://www.esri.com/">Esri</a>, Maxar, Earthstar Geographics' },
-  ],
-  [
-    'Topographic',
-    'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
-    {
-      maxZoom: 17,
-      attribution:
-        'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
-    },
-  ],
-];
+// @until tiles-upload — swap the localhost file for the R2 copy once sweden-20260916.pmtiles is uploaded (TODO.md §37).
+const TILES_URL = 'http://localhost:8769/sweden-20260916.pmtiles';
+// ⚠ Outside this box the tile file is empty, so a map reaching past it opens on Topographic instead.
+const COVERAGE = [10.5, 55.0, 24.5, 69.2]; // west, south, east, north
+const ASSETS = '/assets/map';
+const ATTRIB_OSM = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+// Fixed alternate styles offered by the switch. Esri's URL is {z}/{y}/{x} (row before column).
+const RASTER_BASES = {
+  Satellite: {
+    tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],
+    maxzoom: 19,
+    attribution: 'Imagery &copy; <a href="https://www.esri.com/">Esri</a>, Maxar, Earthstar Geographics',
+  },
+  Topographic: {
+    tiles: ['a', 'b', 'c'].map((s) => `https://${s}.tile.opentopomap.org/{z}/{x}/{y}.png`),
+    maxzoom: 17,
+    attribution: `Map data: ${ATTRIB_OSM}, <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)`,
+  },
+};
+const BASE_NAMES = ['Map', ...Object.keys(RASTER_BASES)];
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
-// Marker keeps the site's orange; read the token so it tracks the palette.
-const MARKER_FILL =
-  getComputedStyle(document.documentElement).getPropertyValue('--color-accent-orange').trim() || '#d0621e';
 
-// Orienteering route symbols — start triangle, finish double-circle. Native Leaflet vector geometry (L.polygon + L.circle) in the route line's own pane, so they re-project on zoom for free; color tracks the theme via CSS like the line does. Sizes are PIXELS AT THE FIT ZOOM: built in screen pixels then frozen to lat/lon. This is the calibration knob — eyeball the numbers against the tiles.
-const TRI_HEIGHT = 18; // triangle apex-to-base, px at fit zoom
-const TRI_HALF_WIDTH = 9; // triangle base half-width, px
-const FINISH_OUTER = 9; // finish outer circle radius, px at fit zoom
-const FINISH_INNER = 4; // finish inner circle radius, px
-const SYMBOL_WEIGHT = 2.5; // stroke width, px (constant across zoom, like the line's)
+// Orienteering route symbols, sized in PIXELS AT THE FIT ZOOM then frozen to lat/lon so they scale with the map. Calibration knobs.
+const TRI_HEIGHT = 18;
+const TRI_HALF_WIDTH = 9;
+const FINISH_OUTER = 9;
+const FINISH_INNER = 4;
+const SYMBOL_WEIGHT = 2.5;
 
-// Follow the page theme (the site sets data-theme; fall back to the OS setting) so the inline map and the overlay always show matching light/dark tiles.
+maplibregl.addProtocol('pmtiles', new Protocol().tile);
+
 function pageTheme() {
   const t = document.documentElement.getAttribute('data-theme');
   if (t === 'dark' || t === 'light') return t;
   return matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 }
-// Stroke = the theme's background, so the dot always reads a clean halo.
-const markerStroke = (theme) => (theme === 'dark' ? '#141619' : '#ffffff');
+
+// Any CSS color (var(), color-mix(), oklab…) → "rgba(…)" MapLibre can parse, by painting one pixel.
+const probe = document.createElement('canvas').getContext('2d', { willReadFrequently: true });
+function cssColor(el, prop) {
+  const value = getComputedStyle(el).getPropertyValue(prop).trim();
+  if (!value) return undefined;
+  const span = document.createElement('span');
+  span.style.color = value;
+  el.append(span);
+  const computed = getComputedStyle(span).color;
+  span.remove();
+  probe.clearRect(0, 0, 1, 1);
+  probe.fillStyle = computed;
+  probe.fillRect(0, 0, 1, 1);
+  const [r, g, b, a] = probe.getImageData(0, 0, 1, 1).data;
+  return `rgba(${r},${g},${b},${(a / 255).toFixed(3)})`;
+}
+
+// The map's colors live in place-map.css as --map-* properties, so a theme flip or a CSS tweak is picked up by re-reading them.
+function jedeeFlavor(el, theme) {
+  const c = (name) => cssColor(el, `--map-${name}`);
+  const land = c('land');
+  const park = c('park');
+  const road = c('road');
+  const minor = c('road-minor');
+  const label = c('label');
+  const labelMinor = c('label-minor');
+  const labelFaint = c('label-faint');
+  return {
+    ...namedFlavor(theme === 'dark' ? 'black' : 'white'),
+    background: land, earth: land,
+    water: c('water'),
+    park_a: park, park_b: park, wood_a: park, wood_b: park, scrub_a: park, scrub_b: park,
+    buildings: c('buildings'),
+    highway: road, major: road, link: road,
+    minor_a: minor, minor_b: minor, minor_service: minor, other: minor,
+    city_label: label, city_label_halo: land,
+    subplace_label: labelMinor, subplace_label_halo: land,
+    roads_label_major: labelMinor, roads_label_major_halo: land,
+    roads_label_minor: labelFaint, roads_label_minor_halo: land,
+    ocean_label: label,
+  };
+}
+
+const outsideCoverage = ([w, s, e, n]) => w < COVERAGE[0] || s < COVERAGE[1] || e > COVERAGE[2] || n > COVERAGE[3];
 
 // Marker popup: the date in italics, then the place's name on its own line, linked to the post. Styling is in place-map.css.
 const popupHtml = (p) => {
@@ -54,117 +92,113 @@ const popupHtml = (p) => {
   return p.date ? `<i class="place-popup-date">${p.date}</i>${name}` : name;
 };
 
-// A compact base-layer switch (bottom-right). A native <select>, not Leaflet's own layers control — correct semantics for free, and its toggle icon is a PNG the build doesn't ship. As a Leaflet control it rides into the maximize overlay with the canvas.
-function addTileSwitch(map, bases, defaultBase = Object.keys(bases)[0]) {
-  const names = Object.keys(bases);
-  const control = L.control({ position: 'bottomright' });
-  control.onAdd = () => {
-    // `leaflet-control` restores pointer-events (the corner containers set none) — without it the select can't be clicked.
-    const wrap = L.DomUtil.create('div', 'place-map-tiles leaflet-control');
-    const select = L.DomUtil.create('select', '', wrap);
-    select.setAttribute('aria-label', 'Map style');
-    for (const n of names) select.append(new Option(n, n));
-    select.value = defaultBase; // match the layer makeMap put on the map at start
-    let shown = bases[defaultBase];
-    select.addEventListener('change', () => {
-      map.removeLayer(shown);
-      shown = bases[select.value];
-      map.addLayer(shown);
-    });
-    L.DomEvent.disableClickPropagation(wrap); // a click on the select must not pan the map
-    L.DomEvent.disableScrollPropagation(wrap);
-    return wrap;
-  };
-  control.addTo(map);
+// A native <select> as a MapLibre control — correct semantics for free, and it rides into the maximize overlay with the canvas.
+function tileSwitch(initial, onChange) {
+  const wrap = document.createElement('div');
+  wrap.className = 'maplibregl-ctrl place-map-tiles';
+  const select = document.createElement('select');
+  select.setAttribute('aria-label', 'Map style');
+  for (const n of BASE_NAMES) select.append(new Option(n, n));
+  select.value = initial;
+  select.addEventListener('change', () => onChange(select.value));
+  wrap.append(select);
+  return { onAdd: () => wrap, onRemove: () => wrap.remove() };
 }
 
-// Build one live map. Wheel + pinch start disabled (toggled on when maximized); drag, keyboard and the +/- zoom control stay on inline so the map is usable in place. Returns { map, addDot } — dots added through addDot get theme re-stroking and the grow-a-little-on-zoom behavior, whichever layer they sit in.
-function makeMap(el, { center, zoom, bounds, place, defaultBase = 'Map', fitPadding = [28, 28] }) {
-  let theme = pageTheme();
-  const map = L.map(el, {
-    zoomControl: false,
-    attributionControl: false, // we add our own (prefix-less) one below
-    scrollWheelZoom: false, // enabled only when maximized (else it traps page scroll)
-    touchZoom: false, // ditto — no pinch-trap inline
-    zoomAnimation: !REDUCED,
-    fadeAnimation: !REDUCED,
-    markerZoomAnimation: !REDUCED,
+// Build one live map. `overlays()` returns the extra { sources, layers } drawn above the base; `render()` re-applies the whole style (theme flip, base switch, animation state).
+function makeMap(el, { center, zoom, bounds, place, base = 'Map', fitPadding = 28, overlays = () => ({ sources: {}, layers: [] }) }) {
+  el.dataset.placeMapCanvas = '';
+  const map = new maplibregl.Map({
+    container: el,
+    style: { version: 8, sources: {}, layers: [] },
+    ...(bounds ? { bounds, fitBoundsOptions: { padding: fitPadding, maxZoom: 16 } } : { center, zoom }),
+    attributionControl: false,
+    scrollZoom: false, // enabled only when maximized (else it traps page scroll)
+    touchZoomRotate: false,
+    dragRotate: false,
+    pitchWithRotate: false,
+    touchPitch: false,
+    maxPitch: 0,
+    fadeDuration: REDUCED ? 0 : 300,
   });
-  const fit = () => map.fitBounds(bounds, { padding: fitPadding });
-  if (bounds) {
-    fit();
-    // A map fitted while its container has no size (hidden tab, collapsed viewport) computes a garbage zoom — refit once it gets its first real size.
-    if (!el.clientWidth)
-      map.once('resize', () => {
-        fit();
-        refZoom = map.getZoom();
-      });
-  } else map.setView(center, zoom);
-  el.dataset.placeMapCanvas = ''; // styling hook that outranks leaflet.css
-  el.setAttribute('role', 'application');
-  el.setAttribute('aria-label', place ? `Map of ${place}` : 'Map of this location');
-  L.control.zoom({ position: 'bottomleft' }).addTo(map);
+  map.keyboard.disableRotation();
+  map.getCanvas().setAttribute('aria-label', place ? `Map of ${place}` : 'Map of this location');
+  if (bounds && !el.clientWidth) map.once('resize', () => map.fitBounds(bounds, { padding: fitPadding, animate: false }));
 
-  // "Map" = OSM, darkened by CSS when the page theme is dark (see .tiles-themed). Satellite / Topographic are fixed styles. Each layer carries its own attribution option, so the single attribution control shows whichever base is active.
-  const mapTiles = L.tileLayer(TILES, { maxZoom: 19, attribution: ATTRIB, className: 'tiles-themed' });
-  const bases = { Map: mapTiles };
-  for (const [name, url, opts] of BASE_LAYERS) bases[name] = L.tileLayer(url, opts);
+  const state = { theme: pageTheme(), base };
+  const render = () => {
+    const own = overlays();
+    const style = {
+      version: 8,
+      glyphs: `${location.origin}${ASSETS}/fonts/{fontstack}/{range}.pbf`,
+      sprite: `${location.origin}${ASSETS}/sprites/${state.theme === 'dark' ? 'black' : 'white'}`,
+      sources: { ...own.sources },
+      layers: [],
+    };
+    if (state.base === 'Map') {
+      style.sources.protomaps = { type: 'vector', url: `pmtiles://${TILES_URL}`, attribution: `<a href="https://protomaps.com">Protomaps</a> ${ATTRIB_OSM}` };
+      style.layers = layers('protomaps', jedeeFlavor(el, state.theme), { lang: 'sv' });
+    } else {
+      style.sources.raster = { type: 'raster', tileSize: 256, ...RASTER_BASES[state.base] };
+      style.layers = [{ id: 'raster', type: 'raster', source: 'raster' }];
+    }
+    style.layers.push(...own.layers);
+    map.setStyle(style, { diff: map.isStyleLoaded() }); // the very first render replaces the empty placeholder style
+  };
 
-  // Attribution first, switch second: in a Leaflet corner the LAST-added control stacks on top, so this pins the attribution to the bottom edge with the switch just above it.
-  L.control.attribution({ prefix: false }).addTo(map);
-  addTileSwitch(map, bases, defaultBase); // bottom-right, above the attribution
-  // Add the default base only now — AFTER the attribution control exists — so it registers through the control's `layeradd` handler, which is what also wires attribution REMOVAL on layer remove. Add it earlier and its credit would stick when you switch away (Leaflet only attaches the removal hook to layers added via layeradd, not its onAdd catch-up loop).
-  bases[defaultBase].addTo(map);
+  map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom-left');
+  // Attribution first, switch second: in a bottom corner the last-added control sits nearest the top.
+  map.addControl(new maplibregl.AttributionControl({ compact: false }), 'bottom-right');
+  map.addControl(tileSwitch(base, (next) => { state.base = next; render(); }), 'bottom-right');
 
-  // Ctrl/⌘ + wheel zooms the inline map around the pointer; a PLAIN wheel keeps scrolling the page (no scroll trap — the reason scrollWheelZoom stays off inline). Trackpad pinch arrives as ctrlKey wheel events, so pinch-to-zoom works too. When maximized, Leaflet's own (enabled) handler owns the wheel — skip.
+  // Ctrl/⌘ + wheel (and trackpad pinch, which arrives as ctrl-wheel) zooms inline; a plain wheel keeps scrolling the page.
   el.addEventListener(
     'wheel',
     (e) => {
-      if (!(e.ctrlKey || e.metaKey) || map.scrollWheelZoom.enabled()) return;
+      if (!(e.ctrlKey || e.metaKey) || map.scrollZoom.isEnabled()) return;
       e.preventDefault();
-      map.setZoomAround(map.mouseEventToLatLng(e), map.getZoom() + (e.deltaY < 0 ? 1 : -1));
+      const r = map.getCanvas().getBoundingClientRect();
+      map.zoomTo(map.getZoom() - e.deltaY * 0.01, { around: map.unproject([e.clientX - r.left, e.clientY - r.top]), duration: 0 });
     },
     { passive: false }
   );
 
-  const dots = [];
-  const addDot = (lat, lon, { fill = MARKER_FILL, layer, popup } = {}) => {
-    const dot = L.circleMarker([lat, lon], {
-      radius: 7,
-      weight: 2,
-      color: markerStroke(theme),
-      fillColor: fill,
-      fillOpacity: 0.9,
-    }).addTo(layer || map);
-    if (popup) dot.bindPopup(popup);
-    dots.push(dot);
-    return dot;
-  };
-
-  // Dots swell a little as you zoom in, shrink out — clamped (circleMarker radius is screen px, constant per zoom level).
-  let refZoom = map.getZoom();
-  map.on('zoomend', () => {
-    const r = Math.max(4, Math.min(13, 7 + (map.getZoom() - refZoom) * 0.8));
-    dots.forEach((d) => d.setRadius(r));
-  });
-
-  // Re-stroke the dots when the site theme flips (the tiles follow via CSS).
   const onTheme = () => {
     const next = pageTheme();
-    if (next === theme) return;
-    theme = next;
-    dots.forEach((d) => d.setStyle({ color: markerStroke(theme) }));
+    if (next === state.theme) return;
+    state.theme = next;
+    requestAnimationFrame(render); // after the theme's CSS has applied, so the --map-* read is fresh
   };
-  new MutationObserver(onTheme).observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ['data-theme'],
-  });
+  new MutationObserver(onTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', onTheme);
 
-  return { map, addDot };
+  return { map, render, fitZoom: map.getZoom(), color: (name) => cssColor(el, name) };
 }
 
-// --- shared maximize overlay (one per page, built on first open). It's just a themed scrim + frame; the live map canvas is MOVED into it on open and back out on close. ---
+// A dot layer for one or more places. Radius grows a little with zoom around the fit zoom, clamped 4–13 px.
+function dotLayers(mapObj, features) {
+  const z = mapObj.fitZoom;
+  return {
+    sources: { places: { type: 'geojson', data: { type: 'FeatureCollection', features } } },
+    layers: [
+      {
+        id: 'places',
+        type: 'circle',
+        source: 'places',
+        paint: {
+          'circle-color': ['coalesce', ['get', 'color'], mapObj.color('--color-accent-orange')],
+          'circle-opacity': 0.9,
+          'circle-stroke-color': mapObj.color('--map-dot-stroke'),
+          'circle-stroke-width': 2,
+          'circle-radius': ['interpolate', ['linear'], ['zoom'], z - 3.75, 4, z, 7, z + 7.5, 13],
+        },
+      },
+    ],
+  };
+}
+const point = (lon, lat, properties = {}) => ({ type: 'Feature', properties, geometry: { type: 'Point', coordinates: [lon, lat] } });
+
+// --- shared maximize overlay (one per page, built on first open). The live map canvas is MOVED into it on open and back out on close. ---
 let overlay;
 let overlayFrame;
 let closeBtn;
@@ -189,7 +223,6 @@ function buildOverlay() {
   document.body.append(overlay);
 
   closeBtn.addEventListener('click', () => active?.close());
-  // Click the backdrop (not the frame) to close.
   overlay.addEventListener('mousedown', (e) => {
     if (e.target === overlay) active?.close();
   });
@@ -200,9 +233,8 @@ function buildOverlay() {
   });
 }
 
-// Keep Tab focus inside the open dialog (Leaflet's zoom/attribution links + the map container + the close button are the focus stops).
 function trapTab(e) {
-  const f = overlay.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])');
+  const f = overlay.querySelectorAll('a[href], button:not([disabled]), select, [tabindex]:not([tabindex="-1"])');
   if (!f.length) return;
   const first = f[0];
   const last = f[f.length - 1];
@@ -225,9 +257,7 @@ class PlaceMap extends HTMLElement {
     else this.initSinglePin();
   }
 
-  // The live inline slot. Its aspect-ratio holds the box, so moving the canvas out to the overlay (and back) never shifts the page.
-  //
-  // A page whose slot has nothing else holding the space (the activity index — a list, no static map image) renders the box server-side and we adopt it here. Building it on idle instead pushed the whole page down a second after paint.
+  // The live inline slot; its aspect-ratio holds the box, so moving the canvas to the overlay never shifts the page. The activity index renders the box server-side and it's adopted here.
   buildBox() {
     this.box = this.querySelector('[data-place-map-box]');
     const adopted = Boolean(this.box);
@@ -248,21 +278,9 @@ class PlaceMap extends HTMLElement {
     this.box.append(this.maxBtn);
 
     if (!adopted) this.prepend(this.box);
-
-    // Keep the canvas a WHOLE number of pixels: fluid 16:9 sizing lands on fractions, and Leaflet then tiles on fractional offsets, opening hairline gaps that read as grid lines. Sized from whichever parent currently holds the canvas, so the overlay gets the same treatment.
-    this.fitCanvas = () => {
-      const parent = this.canvas.parentElement;
-      if (!parent) return;
-      this.canvas.style.inlineSize = parent.clientWidth + 'px';
-      this.canvas.style.blockSize = parent.clientHeight + 'px';
-      this.mapObj?.map.invalidateSize();
-    };
-    this.fitCanvas(); // before the map initializes, so its very first layout is integer
-    new ResizeObserver(this.fitCanvas).observe(this.box);
   }
 
   finishInit() {
-    requestAnimationFrame(this.fitCanvas);
     this.maxBtn.addEventListener('click', () => this.open());
     this.dataset.mapReady = '';
   }
@@ -271,139 +289,21 @@ class PlaceMap extends HTMLElement {
     if (!this.dataset.lat) return; // no coords → leave the static map
     const lat = Number(this.dataset.lat);
     const lon = Number(this.dataset.lon);
-    const zoom = Number(this.dataset.zoom) || 13;
     if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;
 
     this.buildBox();
-    this.mapObj = makeMap(this.canvas, { center: [lat, lon], zoom, place: this.place });
-    this.mapObj.addDot(lat, lon);
-    this.finishInit();
-  }
-
-  // Route mode: a slotted GeoJSON LineString (from the post's committed .geojson). Draw the track fitted to its bounds, an orienteering start triangle and a finish double-circle. No slotted list here — the no-JS path is the "View on Strava" link.
-  initRoute(script) {
-    let gj;
-    try {
-      gj = JSON.parse(script.textContent);
-    } catch {
-      return; // malformed data → leave the page mapless, Strava link still stands
-    }
-    const coords = gj?.geometry?.coordinates;
-    if (!coords || coords.length < 2) return;
-    const latlngs = coords.map(([lon, lat]) => [lat, lon]); // GeoJSON [lon,lat] → Leaflet [lat,lon]
-
-    this.buildBox();
     this.mapObj = makeMap(this.canvas, {
-      bounds: L.latLngBounds(latlngs),
+      center: [lon, lat],
+      zoom: Number(this.dataset.zoom) || 13,
       place: this.place,
-      defaultBase: 'Topographic', // terrain suits an orienteering route
-      fitPadding: [20, 20], // sit a little closer to the track than the default, with room for the symbols
+      base: outsideCoverage([lon, lat, lon, lat]) ? 'Topographic' : 'Map',
+      overlays: () => dotLayers(this.mapObj, [point(lon, lat)]),
     });
-    // The course line — a lighter blue, styled via CSS (.route-line) so it tracks the theme like the symbols.
-    const line = L.polyline(latlngs, { weight: 4, opacity: 0.9, className: 'route-line' }).addTo(this.mapObj.map);
-
-    // Start + finish symbols. The start triangle's apex sits on the track's first point and aims at the first point at least ~25 m out — the opening GPS fixes cluster on the spot, so a 2-point bearing there is noise. None are interactive; the map isn't the screen-reader path.
-    const map = this.mapObj.map;
-    const startLL = latlngs[0];
-    const endLL = latlngs.at(-1);
-    let aheadLL = endLL;
-    for (let i = 1; i < latlngs.length; i++) {
-      if (map.distance(startLL, latlngs[i]) >= 25) {
-        aheadLL = latlngs[i];
-        break;
-      }
-    }
-
-    // Build the triangle in screen pixels at the current (fit) zoom, then unproject to lat/lon so it becomes fixed geographic geometry. Apex pinned exactly on the start point; the body trails back along the reverse of the travel direction, base vertices offset by the perpendicular.
-    const z = map.getZoom();
-    const p0 = map.project(startLL, z);
-    const p1 = map.project(aheadLL, z);
-    const len = Math.hypot(p1.x - p0.x, p1.y - p0.y) || 1;
-    const ux = (p1.x - p0.x) / len;
-    const uy = (p1.y - p0.y) / len; // unit travel direction, screen px
-    const bx = p0.x - ux * TRI_HEIGHT;
-    const by = p0.y - uy * TRI_HEIGHT; // base midpoint, behind the apex
-    const startShape = L.polygon(
-      [
-        startLL,
-        map.unproject(L.point(bx - uy * TRI_HALF_WIDTH, by + ux * TRI_HALF_WIDTH), z),
-        map.unproject(L.point(bx + uy * TRI_HALF_WIDTH, by - ux * TRI_HALF_WIDTH), z),
-      ],
-      { className: 'route-start-symbol', weight: SYMBOL_WEIGHT, fill: false, interactive: false }
-    ).addTo(map);
-
-    // Finish = two concentric circles on the end point. L.circle's radius is in METRES, so it scales with zoom too; convert the fit-zoom pixel radii via the local metres-per-pixel.
-    const c = map.getCenter();
-    const mpp = map.distance(c, map.unproject(map.project(c, z).add(L.point(64, 0)), z)) / 64;
-    const finishCircle = (px) =>
-      L.circle(endLL, { radius: px * mpp, className: 'route-finish-symbol', weight: SYMBOL_WEIGHT, fill: false, interactive: false }).addTo(map);
-    const finishShapes = [finishCircle(FINISH_OUTER), finishCircle(FINISH_INNER)];
-
-    // Intro on first paint: fade the map up, fade the start in, draw the line, reveal the finish.
-    if (!REDUCED) this.routeIntro(line, startShape, finishShapes);
-
+    this.mapObj.render();
     this.finishInit();
   }
 
-  // Sequenced route intro: (0) fade the whole canvas up, (1) fade the START symbol in, (2) draw the line start → finish, (3) reveal the FINISH once the line reaches it. Only called when motion is allowed, so under reduced motion everything is left in its resting, visible state.
-  routeIntro(line, startShape, finishShapes) {
-    const MAP_FADE = 500; // canvas fade-up
-    const MARK_FADE = 320; // symbol fade
-    const LINE_DRAW = 7000; // slow, steady line sweep (calibration knob — bump for slower)
-
-    const path = line._path;
-    const startEl = startShape._path; // the polygon's SVG <path>
-    const finishEls = finishShapes.map((s) => s._path).filter(Boolean);
-    const fadeIn = (el) => {
-      if (!el) return;
-      el.style.transition = `opacity ${MARK_FADE}ms ease-out`;
-      el.style.opacity = '1';
-    };
-
-    // Hide the line (a full-length dash), the start, and — until the line arrives — the finish.
-    if (path && path.getTotalLength) {
-      const len = path.getTotalLength();
-      path.style.strokeDasharray = len;
-      path.style.strokeDashoffset = len;
-    }
-    if (startEl) startEl.style.opacity = '0';
-    finishEls.forEach((el) => (el.style.opacity = '0'));
-
-    // (0) fade the canvas up.
-    this.canvas.style.opacity = '0';
-    this.canvas.getBoundingClientRect(); // flush so the fades below start from 0
-    this.canvas.style.transition = `opacity ${MAP_FADE}ms ease-out`;
-    this.canvas.style.opacity = '1';
-
-    // (1) once the map is up, fade the START symbol in.
-    setTimeout(() => fadeIn(startEl), MAP_FADE);
-
-    // (3) reveal the FINISH when the line reaches it. Clearing the dash here doubles as the zoom-bug fix: a leftover dasharray sized to the OLD length stops matching after a zoom re-projects the path, which clipped the line to nothing.
-    const finishRoute = () => {
-      if (path) {
-        path.style.strokeDasharray = 'none';
-        path.style.strokeDashoffset = '';
-        path.style.transition = '';
-      }
-      finishEls.forEach(fadeIn);
-    };
-
-    if (!path) {
-      setTimeout(finishRoute, MAP_FADE + MARK_FADE); // no line to draw — just reveal the finish
-      return;
-    }
-
-    // (2) after the start, sweep the line in.
-    setTimeout(() => {
-      path.style.transition = `stroke-dashoffset ${LINE_DRAW}ms linear`;
-      path.style.strokeDashoffset = '0';
-      path.addEventListener('transitionend', finishRoute, { once: true });
-    }, MAP_FADE + MARK_FADE);
-    // A zoom before/during the draw snaps the line solid and reveals the finish, so nothing stays hidden.
-    this.mapObj.map.once('zoomstart', finishRoute);
-  }
-
-  // Places mode: the slotted list is the data source. Parse every item that carries coordinates, fit the map to them, one dot each. Items without coordinates (indoor sessions) stay in the list and simply aren't on the map.
+  // Places mode: every [data-lat] row becomes a dot, named and linked from the row's first link. Rows without coordinates stay in the table, unmapped.
   initPlaces(root) {
     const places = [...root.querySelectorAll('[data-lat]')]
       .map((el) => {
@@ -414,21 +314,142 @@ class PlaceMap extends HTMLElement {
           date: el.dataset.date || '',
           name: a?.textContent.trim() || el.textContent.trim(),
           url: a?.getAttribute('href'),
-          // The row's activity color (place-map.css); read once, since those tokens don't change with the theme.
-          fill: getComputedStyle(el).getPropertyValue('--place-color').trim() || undefined,
+          color: cssColor(el, '--place-color'),
         };
       })
       .filter((p) => Number.isFinite(p.lat) && Number.isFinite(p.lon));
-    if (!places.length) return; // nothing to map → leave the plain list
+    if (!places.length) return; // nothing to map → leave the plain table
+
+    const lons = places.map((p) => p.lon);
+    const lats = places.map((p) => p.lat);
+    const bounds = [Math.min(...lons), Math.min(...lats), Math.max(...lons), Math.max(...lats)];
+    const features = places.map((p) => point(p.lon, p.lat, { name: p.name, url: p.url, date: p.date, color: p.color }));
 
     this.buildBox();
     this.mapObj = makeMap(this.canvas, {
-      bounds: L.latLngBounds(places.map((p) => [p.lat, p.lon])),
+      bounds,
       place: this.place,
+      base: outsideCoverage(bounds) ? 'Topographic' : 'Map',
+      overlays: () => dotLayers(this.mapObj, features),
     });
-    for (const p of places) this.mapObj.addDot(p.lat, p.lon, { fill: p.fill, popup: popupHtml(p) });
-
+    const { map } = this.mapObj;
+    this.mapObj.render();
+    map.on('click', 'places', (e) => {
+      const f = e.features[0];
+      new maplibregl.Popup({ offset: 10, maxWidth: '300px' }).setLngLat(f.geometry.coordinates).setHTML(popupHtml(f.properties)).addTo(map);
+    });
+    map.on('mouseenter', 'places', () => (map.getCanvas().style.cursor = 'pointer'));
+    map.on('mouseleave', 'places', () => (map.getCanvas().style.cursor = ''));
     this.finishInit();
+  }
+
+  // Route mode: a slotted GeoJSON LineString, fitted to its bounds, with an orienteering start triangle and finish double-circle.
+  initRoute(script) {
+    let gj;
+    try {
+      gj = JSON.parse(script.textContent);
+    } catch {
+      return; // malformed data → leave the page mapless, Strava link still stands
+    }
+    const coords = gj?.geometry?.coordinates;
+    if (!coords || coords.length < 2) return;
+    const lons = coords.map((c) => c[0]);
+    const lats = coords.map((c) => c[1]);
+    const bounds = [Math.min(...lons), Math.min(...lats), Math.max(...lons), Math.max(...lats)];
+
+    // Animation state lives here so a theme flip or base switch mid-intro redraws in the same place.
+    this.intro = { start: 1, finish: 1, progress: null };
+    let symbols = { start: null, finish: null };
+
+    this.buildBox();
+    this.mapObj = makeMap(this.canvas, {
+      bounds,
+      place: this.place,
+      fitPadding: 20,
+      base: outsideCoverage(bounds) ? 'Topographic' : 'Map',
+      overlays: () => {
+        const color = this.mapObj.color('--color-route-line');
+        const { start, finish, progress } = this.intro;
+        const hidden = 'rgba(0,0,0,0)';
+        const line = (id, data, opacity) => [id, { type: 'geojson', data }, { id, type: 'line', source: id, layout: { 'line-join': 'round', 'line-cap': 'round' }, paint: { 'line-color': color, 'line-width': SYMBOL_WEIGHT, 'line-opacity': opacity, 'line-opacity-transition': { duration: 320 } } }];
+        const parts = [line('route-start', symbols.start, start), line('route-finish', symbols.finish, finish)];
+        const route = {
+          id: 'route',
+          type: 'line',
+          source: 'route',
+          layout: { 'line-join': 'round', 'line-cap': 'round' },
+          paint: { 'line-color': color, 'line-width': 4, 'line-opacity': 0.9, ...(progress === null ? {} : { 'line-gradient': ['step', ['line-progress'], color, Math.max(progress, 0.0001), hidden] }) },
+        };
+        return {
+          sources: { route: { type: 'geojson', data: gj, lineMetrics: true }, ...Object.fromEntries(parts.map(([id, src]) => [id, src])) },
+          layers: [route, ...parts.map(([, , layer]) => layer)],
+        };
+      },
+    });
+    symbols = this.routeSymbols(coords);
+    if (!REDUCED) this.intro = { start: 0, finish: 0, progress: 0 };
+    this.mapObj.render();
+    if (!REDUCED) this.routeIntro();
+    this.finishInit();
+  }
+
+  // Start triangle + finish circles, built in screen pixels at the fit zoom and unprojected, so they're geographic shapes. ⚠ The heading aims at the first point ≥ 25 m out: the opening GPS fixes cluster on the spot.
+  routeSymbols(coords) {
+    const { map } = this.mapObj;
+    const start = maplibregl.LngLat.convert(coords[0]);
+    const end = coords.at(-1);
+    const ahead = coords.find((c) => start.distanceTo(maplibregl.LngLat.convert(c)) >= 25) || end;
+    const p0 = map.project(coords[0]);
+    const p1 = map.project(ahead);
+    const len = Math.hypot(p1.x - p0.x, p1.y - p0.y) || 1;
+    const ux = (p1.x - p0.x) / len;
+    const uy = (p1.y - p0.y) / len;
+    const bx = p0.x - ux * TRI_HEIGHT;
+    const by = p0.y - uy * TRI_HEIGHT;
+    const lngLat = (x, y) => map.unproject([x, y]).toArray();
+    const tri = [coords[0], lngLat(bx - uy * TRI_HALF_WIDTH, by + ux * TRI_HALF_WIDTH), lngLat(bx + uy * TRI_HALF_WIDTH, by - ux * TRI_HALF_WIDTH), coords[0]];
+    const pe = map.project(end);
+    const ring = (r) => Array.from({ length: 49 }, (_, i) => lngLat(pe.x + r * Math.cos((i / 48) * 2 * Math.PI), pe.y + r * Math.sin((i / 48) * 2 * Math.PI)));
+    const geo = (type, coordinates) => ({ type: 'Feature', properties: {}, geometry: { type, coordinates } });
+    return { start: geo('LineString', tri), finish: geo('MultiLineString', [ring(FINISH_OUTER), ring(FINISH_INNER)]) };
+  }
+
+  // Sequenced intro: fade the canvas up, fade the start in, draw the line start → finish, then reveal the finish. Only runs when motion is allowed.
+  routeIntro() {
+    const MAP_FADE = 500;
+    const MARK_FADE = 320;
+    const LINE_DRAW = 7000; // calibration knob — bump for slower
+    const { map, render } = this.mapObj;
+
+    this.canvas.style.opacity = '0';
+    this.canvas.getBoundingClientRect(); // flush so the fade starts from 0
+    this.canvas.style.transition = `opacity ${MAP_FADE}ms ease-out`;
+    this.canvas.style.opacity = '1';
+
+    let raf;
+    const finish = () => {
+      cancelAnimationFrame(raf);
+      this.intro = { start: 1, finish: 1, progress: null };
+      render();
+    };
+    map.once('zoomstart', finish); // a zoom mid-draw snaps everything visible
+
+    setTimeout(() => {
+      this.intro.start = 1;
+      render();
+    }, MAP_FADE);
+    setTimeout(() => {
+      const t0 = performance.now();
+      const step = (now) => {
+        if (this.intro.progress === null) return; // already finished
+        this.intro.progress = Math.min(1, (now - t0) / LINE_DRAW);
+        if (this.intro.progress >= 1) return finish();
+        // ⚠ A theme flip mid-draw rebuilds the style, and setPaintProperty throws until it's back — skip that frame, the rebuild already carries the progress.
+        if (map.isStyleLoaded()) map.setPaintProperty('route', 'line-gradient', ['step', ['line-progress'], this.mapObj.color('--color-route-line'), this.intro.progress, 'rgba(0,0,0,0)']);
+        raf = requestAnimationFrame(step);
+      };
+      raf = requestAnimationFrame(step);
+    }, MAP_FADE + MARK_FADE);
   }
 
   open() {
@@ -437,26 +458,23 @@ class PlaceMap extends HTMLElement {
     overlayFrame.append(this.canvas); // move the SAME map into the overlay
     overlay.setAttribute('data-open', '');
     overlay.setAttribute('aria-label', this.place ? `Map showing ${this.place}` : 'Interactive map');
-    this.canvas.setAttribute('aria-label', this.place ? `Interactive map of ${this.place}` : 'Interactive map of this location');
+    this.mapObj.map.getCanvas().setAttribute('aria-label', this.place ? `Interactive map of ${this.place}` : 'Interactive map of this location');
     document.body.style.overflow = 'hidden';
-    this.mapObj.map.scrollWheelZoom.enable();
-    this.mapObj.map.touchZoom.enable();
-    closeBtn.focus(); // move focus into the dialog now that it's visible
-    if (!this.roOverlay) {
-      new ResizeObserver(this.fitCanvas).observe(overlayFrame);
-      this.roOverlay = true;
-    }
-    requestAnimationFrame(this.fitCanvas);
+    this.mapObj.map.scrollZoom.enable();
+    this.mapObj.map.touchZoomRotate.enable();
+    this.mapObj.map.touchZoomRotate.disableRotation();
+    closeBtn.focus();
+    requestAnimationFrame(() => this.mapObj.map.resize());
   }
 
   close() {
-    this.mapObj.map.scrollWheelZoom.disable();
-    this.mapObj.map.touchZoom.disable();
+    this.mapObj.map.scrollZoom.disable();
+    this.mapObj.map.touchZoomRotate.disable();
     overlay.removeAttribute('data-open');
     document.body.style.overflow = '';
     this.box.prepend(this.canvas); // move the map back inline
-    this.canvas.setAttribute('aria-label', this.place ? `Map of ${this.place}` : 'Map of this location');
-    requestAnimationFrame(this.fitCanvas);
+    this.mapObj.map.getCanvas().setAttribute('aria-label', this.place ? `Map of ${this.place}` : 'Map of this location');
+    requestAnimationFrame(() => this.mapObj.map.resize());
     active = null;
     this.maxBtn.focus();
   }
