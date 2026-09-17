@@ -4,8 +4,7 @@ import maplibregl from 'maplibre-gl';
 import { Protocol } from 'pmtiles';
 import { layers, namedFlavor } from '@protomaps/basemaps';
 
-// @until tiles-upload — swap the localhost file for the R2 copy once sweden-20260916.pmtiles is uploaded (TODO.md §37).
-const TILES_URL = 'http://localhost:8769/sweden-20260916.pmtiles';
+const TILES_URL = 'https://pub-820f82fa11f94b03ab1d34e77b3572f6.r2.dev/maps/sweden-20260916.pmtiles';
 // ⚠ Outside this box the tile file is empty, so a map reaching past it opens on Topographic instead.
 const COVERAGE = [10.5, 55.0, 24.5, 69.2]; // west, south, east, north
 const ASSETS = '/assets/map';
