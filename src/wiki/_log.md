@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-17] enrich | The place map (figures)
+
+Both figures re-shot on MapLibre and the R2 tile file, the two "captured with the old Leaflet map" warnings removed, the route-symbols alt text updated, and the intro paragraph now names the loading pulse and fade (`[data-map-loading]`). ⚠ The mockups are now served over http by `src/wiki/_sources/serve-mockups.js`, not opened as `file://`: MapLibre builds absolute URLs from `location.origin`, which is `"null"` on `file://`, and R2's CORS policy has no entry for the shooter's random port, so Chrome runs with web security off. The place-map mockup reports reduced motion to the component so the route is drawn at once. `npm run mockups -- <name>` now shoots only the mockups whose filename contains the name. `mockups:check` passes on every mockup over http.
+
 ## [2026-09-17] enrich | The place map
 
 The component moved from Leaflet + OpenStreetMap tiles to MapLibre + jedee's own Protomaps tiles of Sweden. New sections *Our own tiles* (colors as CSS custom properties, the color-probe trap, the canvas-not-element trap, coverage fallback, style diffing, paused animation frames in hidden tabs) and a rewritten base-layer switch; the route intro is now a `line-gradient` sweep. The two figures are flagged as pre-move captures.

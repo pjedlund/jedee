@@ -107,6 +107,7 @@ function tileSwitch(initial, onChange) {
 // Build one live map. `overlays()` returns the extra { sources, layers } drawn above the base; `render()` re-applies the whole style (theme flip, base switch, animation state).
 function makeMap(el, { center, zoom, bounds, place, base = 'Map', fitPadding = 28, overlays = () => ({ sources: {}, layers: [] }) }) {
   el.dataset.placeMapCanvas = '';
+  el.dataset.mapLoading = ''; // hides the canvas over a pulsing box until the first tiles are drawn
   const map = new maplibregl.Map({
     container: el,
     style: { version: 8, sources: {}, layers: [] },
@@ -121,6 +122,7 @@ function makeMap(el, { center, zoom, bounds, place, base = 'Map', fitPadding = 2
     fadeDuration: REDUCED ? 0 : 300,
   });
   map.keyboard.disableRotation();
+  map.once('idle', () => delete el.dataset.mapLoading);
   map.getCanvas().setAttribute('aria-label', place ? `Map of ${place}` : 'Map of this location');
   if (bounds && !el.clientWidth) map.once('resize', () => map.fitBounds(bounds, { padding: fitPadding, animate: false }));
 
@@ -388,7 +390,7 @@ class PlaceMap extends HTMLElement {
     symbols = this.routeSymbols(coords);
     if (!REDUCED) this.intro = { start: 0, finish: 0, progress: 0 };
     this.mapObj.render();
-    if (!REDUCED) this.routeIntro();
+    if (!REDUCED) this.mapObj.map.once('idle', () => this.routeIntro()); // draw the line only once the map has faded in
     this.finishInit();
   }
 
@@ -413,17 +415,12 @@ class PlaceMap extends HTMLElement {
     return { start: geo('LineString', tri), finish: geo('MultiLineString', [ring(FINISH_OUTER), ring(FINISH_INNER)]) };
   }
 
-  // Sequenced intro: fade the canvas up, fade the start in, draw the line start → finish, then reveal the finish. Only runs when motion is allowed.
+  // Sequenced intro, after the canvas fade in place-map.css: fade the start in, draw the line start → finish, then reveal the finish. Only runs when motion is allowed.
   routeIntro() {
-    const MAP_FADE = 500;
+    const MAP_FADE = 500; // ⚠ matches the [data-map-loading] fade in place-map.css
     const MARK_FADE = 320;
     const LINE_DRAW = 7000; // calibration knob — bump for slower
     const { map, render } = this.mapObj;
-
-    this.canvas.style.opacity = '0';
-    this.canvas.getBoundingClientRect(); // flush so the fade starts from 0
-    this.canvas.style.transition = `opacity ${MAP_FADE}ms ease-out`;
-    this.canvas.style.opacity = '1';
 
     let raf;
     const finish = () => {

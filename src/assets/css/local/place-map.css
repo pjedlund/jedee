@@ -33,7 +33,7 @@ place-map[data-map-ready] > .place-map-static {
   inline-size: 100%;
   border: var(--stroke);
   border-radius: var(--border-radius-small);
-  background: color-mix(in oklab, var(--color-bg) 92%, black); /* pre-tile surface */
+  background: var(--map-water); /* pre-tile surface */
   overflow: hidden;
   isolation: isolate;
 }
@@ -43,7 +43,26 @@ place-map[data-map-ready] > .place-map-static {
   isolation: isolate; /* keeps MapLibre's control z-indexes below the sibling maximize button */
 }
 
-/* The map's own colors, read by place-map.js on every render — tweak here or live in devtools, then flip the theme to redraw. ⚠ Set on the canvas, not <place-map>: the canvas moves into the overlay outside it. */
+/* Until the first tiles are drawn the canvas is hidden and the ocean-colored box breathes; then the map fades in. */
+.place-map-canvas[data-map-loading] {
+  opacity: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .place-map-canvas {
+    transition: opacity 500ms ease-out;
+  }
+  .place-map-live:has(> [data-map-loading]) {
+    animation: place-map-pulse 1.6s ease-in-out infinite alternate;
+  }
+  @keyframes place-map-pulse {
+    to {
+      background-color: color-mix(in oklab, var(--map-water), var(--color-bg) 50%);
+    }
+  }
+}
+
+/* The map's own colors, read by place-map.js on every render — tweak here or live in devtools, then flip the theme to redraw. ⚠ Set on the canvas, not <place-map>: the canvas moves into the overlay outside it. The box gets them too, for its ocean-colored loading surface. */
+.place-map-live,
 [data-place-map-canvas] {
   --map-land: var(--color-bg);
   --map-water: var(--color-base-light);
@@ -56,7 +75,7 @@ place-map[data-map-ready] > .place-map-static {
   --map-label-faint: var(--color-gray-300);
   --map-dot-stroke: var(--color-bg-accent);
 }
-[data-theme='dark'] [data-place-map-canvas] {
+[data-theme='dark'] :is(.place-map-live, [data-place-map-canvas]) {
   --map-water: color-mix(in srgb, color-mix(in srgb, var(--color-gray-900), black 50%), var(--color-blue-subdued) 10%);
   --map-buildings: var(--color-gray-800);
   --map-road-minor: color-mix(in srgb, var(--color-gray-900), var(--color-gray-700) 60%);
@@ -64,7 +83,7 @@ place-map[data-map-ready] > .place-map-static {
   --map-dot-stroke: var(--color-bg);
 }
 @media (prefers-color-scheme: dark) {
-  html:not([data-theme='light']) [data-place-map-canvas] {
+  html:not([data-theme='light']) :is(.place-map-live, [data-place-map-canvas]) {
     --map-water: color-mix(in srgb, color-mix(in srgb, var(--color-gray-900), black 50%), var(--color-blue-subdued) 10%);
     --map-buildings: var(--color-gray-800);
     --map-road-minor: color-mix(in srgb, var(--color-gray-900), var(--color-gray-700) 60%);
@@ -236,6 +255,12 @@ place-map[data-map-ready] > .place-map-static {
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
   color: var(--color-text-accent);
+}
+/* The caption is for no-JS visitors only; with scripting on, the map is on its way and the text would just flash. */
+@media (scripting: enabled) {
+  .place-map-pending {
+    visibility: hidden;
+  }
 }
 
 /* One color per activity type (data-activity on each row), read by place-map.js for that row's dot. */

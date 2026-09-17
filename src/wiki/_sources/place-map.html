@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <title>The place map — wiki mockup</title>
 
-<!-- ⚠ Three build artifacts: the site bundle, the component's local bundle, and Leaflet's own stylesheet. Run `npm start` or a build once if any is missing. -->
+<!-- ⚠ Three build artifacts: the site bundle, the component's local bundle, and MapLibre's own stylesheet. Run `npm start` or a build once if any is missing. Shoot it with `npm run mockups`, which serves it over http. -->
 <link rel="stylesheet" href="../../_includes/css/global.css">
 <link rel="stylesheet" href="../../_includes/css/place-map.css">
-<link rel="stylesheet" href="../../../dist/assets/components/leaflet.css">
+<link rel="stylesheet" href="../../../dist/assets/components/maplibre-gl.css">
 
 <style>
   @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../assets/fonts/source-sans/source-sans.woff2') format('woff2'); }
@@ -81,27 +81,27 @@
 </div>
 
 <script>
-  // Leaflet fetches its tiles over the network and the route intro animates the line in, so the shooters must wait for both rather than race networkidle0.
+  // MapLibre fetches its tiles over the network, so the shooters must wait for them rather than race networkidle0.
   window.__mockupReady = false;
+  // Reports reduced motion to the component only, so the route is drawn at once instead of over a 7-second intro.
+  const realMatchMedia = window.matchMedia.bind(window);
+  window.matchMedia = q => (q.includes('prefers-reduced-motion') ? { ...realMatchMedia(q), matches: true } : realMatchMedia(q));
 </script>
-<!-- The real component, bundled with Leaflet by esbuild — this mockup renders the shipped element, not a drawing of it.
-     ⚠ No type="module": a FETCHED module script is blocked from file:// as a cross-origin request (origin null). The esbuild bundle is an IIFE with no imports, so a classic script loads it fine. -->
+<!-- The real component, bundled with MapLibre by esbuild — this mockup renders the shipped element, not a drawing of it. -->
 <script src="../../../dist/assets/scripts/components/place-map.js"></script>
 <script type="module">
   const wait = ms => new Promise(r => setTimeout(r, ms));
-  const settled = () => Promise.all(document.getAnimations().map(a => a.finished.catch(() => {})));
-
-  await wait(1800);
-  await settled();
+  const maps = [...document.querySelectorAll('place-map')];
+  // Each canvas drops data-map-loading once its first tiles are drawn.
+  while (maps.some(m => !m.mapObj || m.querySelector('[data-map-loading]'))) await wait(100);
 
   // Zooming is just operating the real map, the way a reader would — the symbols are geographic shapes, so they grow with it rather than staying a fixed screen size.
   const zoomed = document.querySelector('[data-zoom-to]');
   const [lat, lon, z] = zoomed.dataset.zoomTo.split(',').map(Number);
-  zoomed.mapObj.map.setView([lat, lon], z);
-
-  // A second settle: the new zoom level fetches a fresh set of tiles.
-  await wait(2500);
-  await settled();
+  const { map } = zoomed.mapObj;
+  const idle = new Promise(r => map.once('idle', r));
+  map.jumpTo({ center: [lon, lat], zoom: z });
+  await idle; // the new zoom level fetches a fresh set of tiles
   requestAnimationFrame(() => requestAnimationFrame(() => (window.__mockupReady = true)));
 </script>
 
