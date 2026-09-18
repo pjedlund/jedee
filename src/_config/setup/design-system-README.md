@@ -4,15 +4,13 @@
 
 ## How this design system stays true
 
-`jedee.css` **is the site's own compiled stylesheet**, copied unmodified from `src/_includes/css/global.css` with only the font URLs rewritten to sit beside it. It is not a translation, a summary, or a hand-kept copy. Every token name here is the name the site uses.
+Every value here is generated from the site's own repository — the DTCG tokens in `src/_data/designTokens/*.json` and the compiled `src/_includes/css/global.css` — by one command, `npm run design:system`. Nothing in it is kept by hand.
 
-This matters because the previous version of this project was a hand-written translation under a third set of names, and it drifted three months out of date without anyone noticing — including a dark theme that was never in the site at all.
+`components/bundle.css` **is the site's own compiled stylesheet**, copied unmodified but for the font URLs, with the two per-page bundles the previews need concatenated on. The type preloads it into every preview, so a preview is styled by the CSS the site actually ships rather than by a reconstruction of it.
 
-**So: this file holds only what cannot go stale** — intent, voice, and rules. Every *value* lives in the preview pages, which take their token names from `jedee.css` when the bundle is built and read each value from the live stylesheet as they render. If you want to know a number, open the preview; don't look for it here.
+This matters because the previous version of this system was a hand-written translation under a third set of names. It drifted three months out of date without anyone noticing, and it carried a dark theme that was never in the site at all.
 
-⚠ A preview must never discover token names through `document.styleSheets` — reading `cssRules` on a stylesheet served from another origin throws, and the page then renders empty with no error anyone would see.
-
-Regenerate the bundle from the repo with `npm run design:bundle`.
+⚠ The repo's tokens are DTCG, and this format cannot read DTCG — a name-to-value map makes a family render empty. The generator converts to the flat lists this page wants. Edit the DTCG source, never these files.
 
 ## Content fundamentals
 
@@ -48,30 +46,11 @@ The writing voice is first-person, reflective, unhurried. Johan writes as himsel
 
 **Icons** are a small hand-picked SVG set in `src/assets/svg/` (`misc/`, `platform/`, `posts/`, `divider/`), inlined at build time by an `{% svg %}` shortcode. No icon font, no sprite sheet, no third-party library, and no emoji standing in for an icon. Icons support the type; they never replace a label.
 
-## What's in here
+## About the previews
 
-```
-README.md                      ← This file: voice, principles, rules
-SKILL.md                       ← Agent skill descriptor
-jedee.css                      ← The site's compiled stylesheet, verbatim
-fonts/                         ← The seven self-hosted woff2 subsets it references
-local/                         ← Per-page CSS bundles a preview links when it needs one
-js/                            ← Compiled site scripts a preview needs to actually behave
-preview/
-  foundations-color.html       ← Every --color-* token, read live, light and dark
-  foundations-type.html        ← Families and the full type scale, clamps resolved
-  foundations-space.html       ← Space steps and fluid pairs
-  component-button.html        ← All button variants and states
-  component-card.html          ← <custom-card> and its image-ratio variants
-  component-prose.html         ← Running text, quotes, code, lists, rules
-  component-nav.html           ← The post-type mega-menu, running the site's own nav-menu.js
-  component-breadcrumb.html    ← Home, archive and post trails in the header bar
-  component-theme-toggle.html  ← The sun/moon morph, light and dark
-  component-tooltip.html       ← Placement exceptions and the current-page suppression
-  component-footer.html        ← Licence line, page links, rel="me" platform icons
-```
+Two carry live behaviour rather than a picture of it. **Nav** runs the site's own compiled `nav-menu.js`, so the MENU button really is injected from its template, the panel really opens, and Escape really closes it. **Theme toggle** uses a small stand-in script, because the site's compiled `theme-toggle.js` still holds `{{ meta.* }}` placeholders that only Eleventy fills.
 
-Two previews carry live behaviour rather than a picture of it: **nav** runs the site's compiled `nav-menu.js`, so the MENU button really is injected from its template and the panel really closes on Escape; **theme toggle** uses a small stand-in script, because the compiled `theme-toggle.js` still holds `{{ meta.* }}` placeholders that only Eleventy fills.
+⚠ Because `bundle.css` is the site's real stylesheet, its global element rules apply to preview markup too. `global-styles.css` sizes every `<svg>` to `0.6lh` for inline icons, so a preview with a large SVG has to state its own size or it collapses.
 
 ## Rules for building with this
 

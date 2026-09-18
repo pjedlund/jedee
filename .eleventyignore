@@ -8,3 +8,4 @@ src/wiki/_sources/
 
 # Claude Design preview sources — assembled into _local/claude-design/ by build-design-bundle.js, never a page.
 src/_config/setup/design-previews/
+src/_config/setup/design-system-docs/

@@ -316,6 +316,7 @@ await mkdir(resolve(OUT, 'components/Cover'), {recursive: true});
 await copyFile(resolve(DOCS, 'Cover.html'), resolve(OUT, 'components/Cover/preview.html'));
 
 // The index names the system and is published LAST, because a call replaces the whole file and a stale copy would undo an edit someone made in the page meanwhile.
+// ⚠ On a REPUBLISH, read the live index first and carry its createdOnFiles across — this regenerates the marker, and a reset one is not the same system.
 const now = new Date().toISOString().replace(/\.\d+Z$/, 'Z');
 const index = {
 	v: 3,
