@@ -44,7 +44,7 @@
 				<h1 class="text-step-3">Color tokens</h1>
 				<button class="button" data-small-button type="button" id="theme">Dark theme</button>
 			</div>
-			<p>Read live from <code>jedee.css</code> — this page has no token list of its own, so it cannot go stale.</p>
+			<p>Token names come from <code>jedee.css</code> when the bundle is built; every value below is read from the live stylesheet, so the theme toggle shows the real pair.</p>
 
 			<h2 class="text-step-1">Semantic</h2>
 			<ul class="ds-swatches" role="list" id="semantic"></ul>
@@ -54,28 +54,16 @@
 		</main>
 
 		<script>
-			// Walk grouping rules too: the site's custom properties sit inside @layer, whose rules are not on the top-level list.
-			const collect = (rules, out) => {
-				for (const rule of rules) {
-					if (rule.cssRules) collect(rule.cssRules, out);
-					if (rule.selectorText?.split(',').some(s => s.trim().startsWith(':root'))) {
-						// --color-border-height is a length that shares the --color- prefix; a swatch of it would be blank.
-						for (const prop of rule.style) if (prop.startsWith('--color-') && !/^\s*[\d.]+(px|rem|em)\s*$/.test(rule.style.getPropertyValue(prop))) out.add(prop);
-					}
-				}
-				return out;
-			};
+			// Names are baked in by the bundler; the values below are still read live, so a theme switch is honest.
+			const declared = /*@tokens:--color-*/;
 
-			const names = new Set();
-			for (const sheet of document.styleSheets) {
-				try {
-					collect(sheet.cssRules, names);
-				} catch {
-					/* a cross-origin sheet cannot be read; the site's own can */
-				}
-			}
+			// A name may be declared inside a block rather than on :root, or be a length sharing the --color- prefix; neither belongs in a swatch grid.
+			const probe = getComputedStyle(document.documentElement);
+			const names = declared.filter(n => {
+				const v = probe.getPropertyValue(n).trim();
+				return v && !/^[\d.]+(px|rem|em)$/.test(v);
+			});
 
-			const root = getComputedStyle(document.documentElement);
 			const isPalette = name => /-\d{3}$/.test(name) || /-(vivid|subdued)$/.test(name);
 
 			const render = () => {

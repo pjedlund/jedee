@@ -8,7 +8,9 @@
 
 This matters because the previous version of this project was a hand-written translation under a third set of names, and it drifted three months out of date without anyone noticing — including a dark theme that was never in the site at all.
 
-**So: this file holds only what cannot go stale** — intent, voice, and rules. Every *value* lives in the preview pages, which read their swatches out of the live stylesheet at render time. If you want to know a number, open the preview; don't look for it here.
+**So: this file holds only what cannot go stale** — intent, voice, and rules. Every *value* lives in the preview pages, which take their token names from `jedee.css` when the bundle is built and read each value from the live stylesheet as they render. If you want to know a number, open the preview; don't look for it here.
+
+⚠ A preview must never discover token names through `document.styleSheets` — reading `cssRules` on a stylesheet served from another origin throws, and the page then renders empty with no error anyone would see.
 
 Regenerate the bundle from the repo with `npm run design:bundle`.
 

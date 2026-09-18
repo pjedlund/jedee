@@ -58,9 +58,14 @@ const inlineIcons = async html => {
 	return out;
 };
 
+// ⚠ A preview must NOT discover token names through document.styleSheets: reading cssRules on a stylesheet the host serves from another origin throws, and the page then renders empty. `/*@tokens:--color-*/` is filled with the matching names here instead; the preview still reads each VALUE at runtime via getComputedStyle, which no origin rule restricts.
+const tokenNames = [...new Set([...globalCss.matchAll(/(--[A-Za-z0-9-]+)\s*:/g)].map(m => m[1]))].sort();
+const inlineTokens = html =>
+	html.replace(/\/\*@tokens:(--[a-z-]+)\*\//g, (_, prefix) => JSON.stringify(tokenNames.filter(n => n.startsWith(prefix))));
+
 const previews = (await readdir(PREVIEW_SRC)).filter(f => f.endsWith('.html'));
 for (const f of previews) {
-	await writeFile(resolve(OUT, 'preview', f), await inlineIcons(await readFile(resolve(PREVIEW_SRC, f), 'utf8')));
+	await writeFile(resolve(OUT, 'preview', f), inlineTokens(await inlineIcons(await readFile(resolve(PREVIEW_SRC, f), 'utf8'))));
 }
 
 const SETUP = dirname(fileURLToPath(import.meta.url));
