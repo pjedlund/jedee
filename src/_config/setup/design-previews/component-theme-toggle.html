@@ -1,0 +1,79 @@
+<!-- @dsCard group="Components" -->
+<!doctype html>
+<html lang="en" data-theme="light">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Theme toggle</title>
+		<link rel="stylesheet" href="../jedee.css" />
+		<style>
+			.ds-page {
+				padding: var(--space-l);
+			}
+			.ds-meta {
+				font-family: var(--font-mono, monospace);
+				font-size: var(--size-step-min-2);
+				color: var(--color-text-accent);
+			}
+			.ds-stage {
+				display: grid;
+				place-items: center;
+				padding-block: var(--space-xl);
+				border: 1px dashed var(--color-bg-accent-2);
+			}
+		</style>
+	</head>
+	<body>
+		<div class="ds-page flow">
+			<h1 class="text-step-4">Theme toggle</h1>
+			<p class="ds-meta">Adapted from Adam Argyle's web.dev theme switch (MIT), retokenized.</p>
+			<p>
+				It shows the <em>current</em> theme — sun in light, moon in dark — and morphs between them. Click it; the whole page follows, because the
+				theme lives on <code>&lt;html data-theme&gt;</code>.
+			</p>
+			<p>
+				The SVG is decorative; the accessible name is the visually-hidden label, and the state rides on <code>aria-pressed</code>. The visible
+				tooltip follows the theme ("Show dark mode" / "Show light mode") while the accessible name deliberately does not — and there is no
+				<code>title</code>, or two tooltips would show at once.
+			</p>
+
+			<div class="ds-stage">
+				<button type="button" id="theme-toggle" class="theme-toggle" data-theme-toggle aria-pressed="false" data-tooltip="Show dark mode" data-tooltip-align="end">
+					<svg class="sun-and-moon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
+						<mask class="moon" id="theme-toggle-moon-mask">
+							<rect x="0" y="0" width="100%" height="100%" fill="white" />
+							<circle cx="24" cy="10" r="6" fill="black" />
+						</mask>
+						<circle class="sun" cx="12" cy="12" r="6" mask="url(#theme-toggle-moon-mask)" fill="currentColor" />
+						<g class="sun-beams" stroke="currentColor">
+							<line x1="12" y1="1" x2="12" y2="3" />
+							<line x1="12" y1="21" x2="12" y2="23" />
+							<line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+							<line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+							<line x1="1" y1="12" x2="3" y2="12" />
+							<line x1="21" y1="12" x2="23" y2="12" />
+							<line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+							<line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+						</g>
+					</svg>
+					<span class="visually-hidden">Toggle light and dark theme</span>
+				</button>
+			</div>
+
+			<p class="ds-meta">
+				On the site this sits in an <code>&lt;is-land on:idle&gt;</code> — a toggle that cannot run should not appear — and the real script also
+				writes the choice to localStorage and updates the theme-color meta. This preview toggles only the page.
+			</p>
+		</div>
+
+		<script>
+			const toggle = document.getElementById('theme-toggle');
+			toggle.addEventListener('click', () => {
+				const dark = document.documentElement.dataset.theme !== 'dark';
+				document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+				toggle.setAttribute('aria-pressed', String(dark));
+				toggle.dataset.tooltip = dark ? 'Show light mode' : 'Show dark mode';
+			});
+		</script>
+	</body>
+</html>

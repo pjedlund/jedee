@@ -1,0 +1,102 @@
+<!-- @dsCard group="Components" -->
+<!doctype html>
+<html lang="en" data-theme="light">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Breadcrumb</title>
+		<link rel="stylesheet" href="../jedee.css" />
+		<style>
+			.ds-page {
+				padding-block: var(--space-l);
+			}
+			.ds-meta {
+				font-family: var(--font-mono, monospace);
+				font-size: var(--size-step-min-2);
+				color: var(--color-text-accent);
+				padding-inline: var(--space-l);
+			}
+			.ds-frame {
+				border: 1px dashed var(--color-bg-accent-2);
+				margin-block: var(--space-s);
+			}
+		</style>
+	</head>
+	<body>
+		<div class="ds-page flow">
+			<div class="repel" style="padding-inline: var(--space-l)">
+				<h1 class="text-step-4">Breadcrumb</h1>
+				<button class="button" data-small-button type="button" id="theme">Dark theme</button>
+			</div>
+			<p class="ds-meta">
+				Top-left wayfinding that replaced the site logo. The home crumb is the logomark; the last crumb carries the page title. Separators are
+				CSS-drawn chevrons and are inert to assistive tech.
+			</p>
+
+			<p class="ds-meta">Home — one crumb, no leaf</p>
+			<div class="ds-frame">
+				<header class="site-header wrapper">
+					<div class="repel ontop gutter-s breadcrumb-bar">
+						<nav aria-label="Breadcrumb" class="breadcrumb">
+							<ol role="list" class="cluster">
+								<li>
+									<span aria-current="page" class="breadcrumb-home">
+										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="var(--color-logo-icon)" viewBox="0 0 100 100" aria-hidden="true"><path d="m50 0 .588.003V0h9.706v30.882h-9.706v.009a19 19 0 0 0-.588-.009c-10.558 0-19.118 8.559-19.118 19.118S39.441 69.118 50 69.118 69.118 60.559 69.118 50V30.882C69.118 13.826 82.945 0 100 0v50c0 27.614-22.386 50-50 50S0 77.614 0 50 22.386 0 50 0" /></svg>
+										<span class="visually-hidden">Johan Edlund, home</span>
+									</span>
+								</li>
+							</ol>
+						</nav>
+					</div>
+				</header>
+			</div>
+
+			<p class="ds-meta">An archive — logomark then the section, the last crumb not a link</p>
+			<div class="ds-frame">
+				<header class="site-header wrapper">
+					<div class="repel ontop gutter-s breadcrumb-bar">
+						<nav aria-label="Breadcrumb" class="breadcrumb">
+							<ol role="list" class="cluster">
+								<li>
+									<a href="/" data-tooltip="Home" data-tooltip-align="start" class="breadcrumb-home">
+										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="var(--color-logo-icon)" viewBox="0 0 100 100" aria-hidden="true"><path d="m50 0 .588.003V0h9.706v30.882h-9.706v.009a19 19 0 0 0-.588-.009c-10.558 0-19.118 8.559-19.118 19.118S39.441 69.118 50 69.118 69.118 60.559 69.118 50V30.882C69.118 13.826 82.945 0 100 0v50c0 27.614-22.386 50-50 50S0 77.614 0 50 22.386 0 50 0" /></svg>
+										<span class="visually-hidden">Johan Edlund, home</span>
+									</a>
+								</li>
+								<li><span aria-current="page" class="breadcrumb-current">Reading</span></li>
+							</ol>
+						</nav>
+					</div>
+				</header>
+			</div>
+
+			<p class="ds-meta">A post — the leaf truncates rather than wrapping, so the header row never grows</p>
+			<div class="ds-frame">
+				<header class="site-header wrapper">
+					<div class="repel ontop gutter-s breadcrumb-bar">
+						<nav aria-label="Breadcrumb" class="breadcrumb">
+							<ol role="list" class="cluster">
+								<li>
+									<a href="/" data-tooltip="Home" data-tooltip-align="start" class="breadcrumb-home">
+										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="var(--color-logo-icon)" viewBox="0 0 100 100" aria-hidden="true"><path d="m50 0 .588.003V0h9.706v30.882h-9.706v.009a19 19 0 0 0-.588-.009c-10.558 0-19.118 8.559-19.118 19.118S39.441 69.118 50 69.118 69.118 60.559 69.118 50V30.882C69.118 13.826 82.945 0 100 0v50c0 27.614-22.386 50-50 50S0 77.614 0 50 22.386 0 50 0" /></svg>
+										<span class="visually-hidden">Johan Edlund, home</span>
+									</a>
+								</li>
+								<li><a href="/reading/">Reading</a></li>
+								<li><span aria-current="page" class="breadcrumb-current">Nils Holgerssons underbara resa genom Sverige</span></li>
+							</ol>
+						</nav>
+					</div>
+				</header>
+			</div>
+		</div>
+
+		<script>
+			document.getElementById('theme').addEventListener('click', e => {
+				const dark = document.documentElement.dataset.theme === 'dark';
+				document.documentElement.dataset.theme = dark ? 'light' : 'dark';
+				e.target.textContent = dark ? 'Dark theme' : 'Light theme';
+			});
+		</script>
+	</body>
+</html>

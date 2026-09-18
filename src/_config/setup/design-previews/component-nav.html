@@ -1,0 +1,76 @@
+<!-- @dsCard group="Components" -->
+<!doctype html>
+<html lang="en" data-theme="light">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Main nav</title>
+		<link rel="stylesheet" href="../jedee.css" />
+		<link rel="stylesheet" href="../local/nav-menu-cls.css" />
+		<style>
+			.ds-page {
+				padding: var(--space-l);
+			}
+			.ds-meta {
+				font-family: var(--font-mono, monospace);
+				font-size: var(--size-step-min-2);
+				color: var(--color-text-accent);
+			}
+		</style>
+	</head>
+	<body>
+		<div class="ds-page flow">
+			<div class="repel">
+				<h1 class="text-step-4">Main nav</h1>
+				<button class="button" data-small-button type="button" id="theme">Dark theme</button>
+			</div>
+			<p class="ds-meta">
+				The post-type mega-menu, running the site's own <code>nav-menu.js</code> — the MENU button is injected from the template below, so the
+				disclosure really opens, closes on Escape, and closes on a click outside.
+			</p>
+			<p>
+				Without JS no button exists and the panel is a plain visible list of links. That is the fallback, not a degradation — the layered pattern
+				is Manuel Matuzović's. The counts here are stand-ins; on the site they come from each collection's length.
+			</p>
+
+			<div class="repel ontop gutter-s">
+				<nav id="mainnav" class="mainnav" aria-label="Main">
+					<ul id="megamenu" class="megamenu | cluster" role="list" data-no-flash>
+						<li><a href="/articles/" aria-current="page"><!--@icon:newspaper--><span class="megamenu-label">Articles</span><span class="megamenu-dots" aria-hidden="true"></span><span class="megamenu-count">42</span></a></li>
+						<li><a href="/notes/"><!--@icon:pencil--><span class="megamenu-label">Notes</span><span class="megamenu-dots" aria-hidden="true"></span><span class="megamenu-count">118</span></a></li>
+						<li><a href="/reading/"><!--@icon:book-open--><span class="megamenu-label">Reading</span><span class="megamenu-dots" aria-hidden="true"></span><span class="megamenu-count">64</span></a></li>
+						<li><a href="/watching/"><!--@icon:film--><span class="megamenu-label">Watching</span><span class="megamenu-dots" aria-hidden="true"></span><span class="megamenu-count">37</span></a></li>
+						<li><a href="/jams/"><!--@icon:music--><span class="megamenu-label">Jams</span><span class="megamenu-dots" aria-hidden="true"></span><span class="megamenu-count">119</span></a></li>
+						<li><a href="/photos/"><!--@icon:camera--><span class="megamenu-label">Photos</span><span class="megamenu-dots" aria-hidden="true"></span><span class="megamenu-count">28</span></a></li>
+						<li><a href="/recipes/"><!--@icon:chef-hat--><span class="megamenu-label">Recipes</span><span class="megamenu-dots" aria-hidden="true"></span><span class="megamenu-count">9</span></a></li>
+						<li><a href="/events/"><!--@icon:calendar--><span class="megamenu-label">Events</span><span class="megamenu-dots" aria-hidden="true"></span><span class="megamenu-count">6</span></a></li>
+						<li><a href="/bookmarks/"><!--@icon:bookmark--><span class="megamenu-label">Bookmarks</span><span class="megamenu-dots" aria-hidden="true"></span><span class="megamenu-count">53</span></a></li>
+						<li><a href="/replies/"><!--@icon:reply--><span class="megamenu-label">Replies</span><span class="megamenu-dots" aria-hidden="true"></span><span class="megamenu-count">14</span></a></li>
+						<li><a href="/reposts/"><!--@icon:repeat-2--><span class="megamenu-label">Reposts</span><span class="megamenu-dots" aria-hidden="true"></span><span class="megamenu-count">11</span></a></li>
+						<li><a href="/likes/"><!--@icon:heart--><span class="megamenu-label">Likes</span><span class="megamenu-dots" aria-hidden="true"></span><span class="megamenu-count">72</span></a></li>
+						<li><a href="/rsvps/"><!--@icon:calendar-check--><span class="megamenu-label">RSVPs</span><span class="megamenu-dots" aria-hidden="true"></span><span class="megamenu-count">4</span></a></li>
+						<li><a href="/audio/"><!--@icon:mic--><span class="megamenu-label">Audio</span><span class="megamenu-dots" aria-hidden="true"></span><span class="megamenu-count">8</span></a></li>
+						<li><a href="/videos/"><!--@icon:video--><span class="megamenu-label">Videos</span><span class="megamenu-dots" aria-hidden="true"></span><span class="megamenu-count">12</span></a></li>
+						<li><a href="/activities/"><!--@icon:activity--><span class="megamenu-label">Activities</span><span class="megamenu-dots" aria-hidden="true"></span><span class="megamenu-count">206</span></a></li>
+					</ul>
+				</nav>
+			</div>
+
+			<template id="menu-template">
+				<button data-menu-toggle class="menu-toggle" type="button" aria-expanded="false" aria-controls="megamenu">
+					<span>Menu</span>
+					<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+				</button>
+			</template>
+		</div>
+
+		<script src="../js/nav-menu.js"></script>
+		<script>
+			document.getElementById('theme').addEventListener('click', e => {
+				const dark = document.documentElement.dataset.theme === 'dark';
+				document.documentElement.dataset.theme = dark ? 'light' : 'dark';
+				e.target.textContent = dark ? 'Dark theme' : 'Light theme';
+			});
+		</script>
+	</body>
+</html>
