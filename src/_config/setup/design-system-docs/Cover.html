@@ -1,0 +1,85 @@
+<!-- @dsCard height=320 -->
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<style>
+			.cover {
+				inline-size: 960px;
+				block-size: 320px;
+				position: relative;
+				background: var(--color-bg);
+				overflow: hidden;
+			}
+			/* ⚠ bundle.css is the site's own CSS, and it sizes every svg to 0.6lh for inline icons — the cover has to say its real size or the band collapses. */
+			.cover svg {
+				display: block;
+				inline-size: 960px;
+				block-size: 112px;
+			}
+			.orange {
+				fill: var(--color-orange-500);
+			}
+			.slate {
+				fill: var(--color-base-darkest);
+			}
+			.blue {
+				fill: var(--color-blue);
+			}
+			.green {
+				fill: var(--color-green);
+			}
+			.tint {
+				fill: var(--color-base-light);
+			}
+			.rule {
+				stroke: var(--color-bg);
+				stroke-width: 1;
+			}
+			.name {
+				position: absolute;
+				inset-block-start: 152px;
+				inset-inline-start: 56px;
+				inline-size: 440px;
+				font-family: var(--font-display);
+				font-weight: 700;
+				font-size: 64px;
+				line-height: 0.95;
+				letter-spacing: -0.04em;
+				color: var(--color-headline);
+				margin: 0;
+			}
+			.tagline {
+				position: absolute;
+				inset-block-start: 286px;
+				inset-inline-start: 56px;
+				inline-size: 440px;
+				font-family: var(--font-base);
+				font-size: 14px;
+				line-height: 1.4;
+				color: var(--color-text-accent);
+				margin: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="cover">
+			<!-- Blocks: orange-500 336 · base-darkest 224 · blue 168 · green 112 · base-light 120, all multiples of space-xl (56), squared off because the system gives layout containers no radius.
+			     Arrangement: one full-width band of unequal bands across the top, 112px (space-xl x 2) — the brand composes in horizontal strips, the way the 1rem border-top bands every page.
+			     Pattern: hairline rules — the editorial/serif row. The README says depth is tonal and borders do the work shadows would; three rules in the ground color read as paper showing through the band.
+			     Scales: band 112 and block widths from space-xl (56); rule pitch 28 (space-xl / 2); name inset 56 (space-xl). -->
+			<svg width="960" height="112" viewBox="0 0 960 112" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+				<rect class="orange" x="0" y="0" width="336" height="112" />
+				<rect class="slate" x="336" y="0" width="224" height="112" />
+				<rect class="blue" x="560" y="0" width="168" height="112" />
+				<rect class="green" x="728" y="0" width="112" height="112" />
+				<rect class="tint" x="840" y="0" width="120" height="112" />
+				<line class="rule" x1="0" y1="28" x2="960" y2="28" />
+				<line class="rule" x1="0" y1="56" x2="960" y2="56" />
+				<line class="rule" x1="0" y1="84" x2="960" y2="84" />
+			</svg>
+			<p class="name">JEDEE<br />Design System</p>
+			<p class="tagline">The personal indieweb site of Johan Edlund.</p>
+		</div>
+	</body>
+</html>

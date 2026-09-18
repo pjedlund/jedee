@@ -18,6 +18,7 @@
     "colors": "node ./src/_config/setup/create-colors.js",
     "design:md": "node ./src/_config/setup/build-design-md.js",
     "design:bundle": "node ./src/_config/setup/build-design-bundle.js",
+    "design:system": "node ./src/_config/setup/build-design-system.js",
     "genres:fetch": "node ./src/_config/setup/enrich-genres.js fetch",
     "genres:apply": "node ./src/_config/setup/enrich-genres.js apply",
     "descriptions:fetch": "node ./src/_config/setup/genre-descriptions.js fetch",
