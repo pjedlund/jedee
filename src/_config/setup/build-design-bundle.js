@@ -40,9 +40,27 @@ for (const f of localCss) {
 	await copyFile(resolve(CSS_DIR, f), resolve(OUT, 'local', f));
 }
 
+// The nav disclosure is real behaviour, not a picture of it, so its compiled script rides along. ⚠ theme-toggle.js is deliberately NOT here: it still carries `{{ meta.* }}` that Eleventy only fills at include time.
+await mkdir(resolve(OUT, 'js'), {recursive: true});
+for (const f of ['nav-menu.js']) {
+	await copyFile(resolve(REPO_ROOT, 'src/_includes/scripts', f), resolve(OUT, 'js', f));
+}
+
+// `<!--@icon:book-open-->` in a preview pulls in that post-type icon, so a renamed or redrawn glyph reaches the preview on the next build.
+const ICONS = resolve(REPO_ROOT, 'src/assets/svg/posts');
+const inlineIcons = async html => {
+	const wanted = [...html.matchAll(/<!--@icon:([\w-]+)-->/g)].map(m => m[1]);
+	let out = html;
+	for (const name of new Set(wanted)) {
+		const svg = await readFile(resolve(ICONS, `${name}.svg`), 'utf8');
+		out = out.replaceAll(`<!--@icon:${name}-->`, svg.trim());
+	}
+	return out;
+};
+
 const previews = (await readdir(PREVIEW_SRC)).filter(f => f.endsWith('.html'));
 for (const f of previews) {
-	await copyFile(resolve(PREVIEW_SRC, f), resolve(OUT, 'preview', f));
+	await writeFile(resolve(OUT, 'preview', f), await inlineIcons(await readFile(resolve(PREVIEW_SRC, f), 'utf8')));
 }
 
 const SETUP = dirname(fileURLToPath(import.meta.url));

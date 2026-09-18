@@ -54,6 +54,7 @@ SKILL.md                       ← Agent skill descriptor
 jedee.css                      ← The site's compiled stylesheet, verbatim
 fonts/                         ← The seven self-hosted woff2 subsets it references
 local/                         ← Per-page CSS bundles a preview links when it needs one
+js/                            ← Compiled site scripts a preview needs to actually behave
 preview/
   foundations-color.html       ← Every --color-* token, read live, light and dark
   foundations-type.html        ← Families and the full type scale, clamps resolved
@@ -61,7 +62,14 @@ preview/
   component-button.html        ← All button variants and states
   component-card.html          ← <custom-card> and its image-ratio variants
   component-prose.html         ← Running text, quotes, code, lists, rules
+  component-nav.html           ← The post-type mega-menu, running the site's own nav-menu.js
+  component-breadcrumb.html    ← Home, archive and post trails in the header bar
+  component-theme-toggle.html  ← The sun/moon morph, light and dark
+  component-tooltip.html       ← Placement exceptions and the current-page suppression
+  component-footer.html        ← Licence line, page links, rel="me" platform icons
 ```
+
+Two previews carry live behaviour rather than a picture of it: **nav** runs the site's compiled `nav-menu.js`, so the MENU button really is injected from its template and the panel really closes on Escape; **theme toggle** uses a small stand-in script, because the compiled `theme-toggle.js` still holds `{{ meta.* }}` placeholders that only Eleventy fills.
 
 ## Rules for building with this
 
