@@ -63,13 +63,13 @@
   --color-accent-green: var(--color-green);
 
   --color-text-accent: var(--color-gray-700);
-  --color-bg-accent: white;
+  --color-bg-accent: var(--color-base-white);
   --color-bg-accent-2: var(--color-gray-300);
   /* border top for body */
   --color-border-top: var(--color-base-light);
 
-  --color-code-bg: color-mix(in oklab, var(--color-bg) 97%, rgb(0, 0, 0));
-  --code-border-color: color-mix(in oklab, var(--color-bg) 96%, rgb(0, 0, 0));
+  --color-code-bg: color-mix(in oklab, var(--color-bg) 97%, var(--color-base-black));
+  --code-border-color: color-mix(in oklab, var(--color-bg) 96%, var(--color-base-black));
 
   --color-link-underline: var(--color-orange-600);
   --color-link-underline-hover: var(--color-red-subdued);
@@ -93,8 +93,8 @@
     /* border top for body */
     --color-border-top: var(--color-orange-900);
 
-    --color-code-bg: color-mix(in oklab, var(--color-bg) 80%, rgb(0, 0, 0));
-    --code-border-color: color-mix(in oklab, var(--color-bg) 95%, rgb(255, 255, 255));
+    --color-code-bg: color-mix(in oklab, var(--color-bg) 80%, var(--color-base-black));
+    --code-border-color: color-mix(in oklab, var(--color-bg) 95%, var(--color-base-white));
 
     --color-link-text: var(--color-orange-500);
     --color-link-underline-hover: var(--color-red-subdued);
