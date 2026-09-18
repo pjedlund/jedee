@@ -65,9 +65,9 @@ place-map[data-map-ready] > .place-map-static {
 .place-map-live,
 [data-place-map-canvas] {
   --map-land: var(--color-bg);
-  --map-water: var(--color-base-light);
-  --map-park: color-mix(in srgb, var(--map-land), var(--color-green-vivid) 8%);
-  --map-buildings: color-mix(in srgb, var(--color-base-lightest), var(--color-base-light) 50%);
+  --map-water: color-mix(in srgb, var(--color-base-light), var(--color-gray-900) 4%);
+  --map-park: color-mix(in srgb, var(--map-land), var(--color-green-vivid) 12%);
+  --map-buildings: color-mix(in srgb, var(--color-base-lightest), var(--color-gray-500) 16%);
   --map-road: var(--color-bg-accent);
   --map-road-minor: var(--color-bg-accent);
   --map-label: var(--color-text);
@@ -76,7 +76,8 @@ place-map[data-map-ready] > .place-map-static {
   --map-dot-stroke: var(--color-bg-accent);
 }
 [data-theme='dark'] :is(.place-map-live, [data-place-map-canvas]) {
-  --map-water: color-mix(in srgb, color-mix(in srgb, var(--color-gray-900), black 50%), var(--color-blue-subdued) 10%);
+  --map-water: color-mix(in srgb, color-mix(in srgb, var(--color-gray-900), black 50%), var(--color-blue-subdued) 20%);
+  --map-park: color-mix(in srgb, var(--map-land), var(--color-green-vivid) 8%); /* dark keeps 8%; light's 12% would otherwise inherit */
   --map-buildings: var(--color-gray-800);
   --map-road-minor: color-mix(in srgb, var(--color-gray-900), var(--color-gray-700) 60%);
   --map-label-faint: var(--color-gray-500);
@@ -84,7 +85,8 @@ place-map[data-map-ready] > .place-map-static {
 }
 @media (prefers-color-scheme: dark) {
   html:not([data-theme='light']) :is(.place-map-live, [data-place-map-canvas]) {
-    --map-water: color-mix(in srgb, color-mix(in srgb, var(--color-gray-900), black 50%), var(--color-blue-subdued) 10%);
+    --map-water: color-mix(in srgb, color-mix(in srgb, var(--color-gray-900), black 50%), var(--color-blue-subdued) 20%);
+    --map-park: color-mix(in srgb, var(--map-land), var(--color-green-vivid) 8%);
     --map-buildings: var(--color-gray-800);
     --map-road-minor: color-mix(in srgb, var(--color-gray-900), var(--color-gray-700) 60%);
     --map-label-faint: var(--color-gray-500);
