@@ -1,0 +1,86 @@
+<!-- @dsCard group="Components" -->
+<!doctype html>
+<html lang="en" data-theme="light">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Prose</title>
+		<link rel="stylesheet" href="../jedee.css" />
+		<style>
+			.ds-page {
+				padding: var(--space-l);
+			}
+			.ds-meta {
+				font-family: var(--font-mono, monospace);
+				font-size: var(--size-step-min-2);
+				color: var(--color-text-accent);
+			}
+		</style>
+	</head>
+	<body>
+		<div class="ds-page">
+			<div class="repel">
+				<h1 class="text-step-4">Prose</h1>
+				<button class="button" data-small-button type="button" id="theme">Dark theme</button>
+			</div>
+			<p class="ds-meta">
+				The <code>.prose</code> block — running text at a 60ch measure, old-style figures, and the element styles that come from
+				<code>global-styles.css</code> without any class at all.
+			</p>
+
+			<article class="prose flow">
+				<h2 class="heading-line">A second-level heading</h2>
+
+				<p>
+					Body copy sits at a 60ch measure with <code>text-wrap: pretty</code>. The numerals are old-style by default — 1234567890 — because
+					running text reads better with figures that have ascenders and descenders, the way lowercase letters do.
+				</p>
+
+				<p>
+					Links are <a href="#">underlined in orange</a> and darken on hover, with the thickness fixed so nothing shifts. An
+					<abbr title="Abbreviation">abbr</abbr> switches back to lining figures, and inline <code>code</code> drops old-style figures
+					entirely because Source Code Pro has them too.
+				</p>
+
+				<blockquote>
+					<p>Depth is tonal before it is spatial. A surface lifts by changing value, not by casting a shadow — and where a shadow does appear, it is doing a job no tone could.</p>
+					<p><span class="small-caps">Johan Edlund</span>, on the JEDEE design system</p>
+				</blockquote>
+
+				<h3>A third-level heading</h3>
+
+				<p>Quotes balance their lines rather than merely wrapping prettily, and the attribution is just the last paragraph — no quote marks, no <code>cite</code> element, the name in small caps.</p>
+
+				<pre><code>/* Token usage — never a raw hex in a block */
+.thing {
+  background: var(--color-bg-accent);
+  color: var(--color-text);
+  border-radius: var(--border-radius-medium);
+}</code></pre>
+
+				<p>A code block breaks out past the measure via <code>grid-column: popout</code> when it sits inside a <code>.wrapper</code>.</p>
+
+				<ul>
+					<li>Unordered lists take the same measure as paragraphs</li>
+					<li>Flow spacing between items comes from the <code>.flow</code> composition</li>
+					<li>Nothing here needs a class</li>
+				</ul>
+
+				<hr />
+
+				<p>
+					A horizontal rule separates sections. Text can be <mark>marked</mark>, <strong>bolded</strong>, <em>italicised</em>, or set in
+					<span class="small-caps">small caps</span>.
+				</p>
+			</article>
+		</div>
+
+		<script>
+			document.getElementById('theme').addEventListener('click', e => {
+				const dark = document.documentElement.dataset.theme === 'dark';
+				document.documentElement.dataset.theme = dark ? 'light' : 'dark';
+				e.target.textContent = dark ? 'Dark theme' : 'Light theme';
+			});
+		</script>
+	</body>
+</html>

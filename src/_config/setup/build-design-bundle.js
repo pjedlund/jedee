@@ -45,6 +45,10 @@ for (const f of previews) {
 	await copyFile(resolve(PREVIEW_SRC, f), resolve(OUT, 'preview', f));
 }
 
+const SETUP = dirname(fileURLToPath(import.meta.url));
+await copyFile(resolve(SETUP, 'design-system-README.md'), resolve(OUT, 'README.md'));
+await copyFile(resolve(SETUP, 'design-system-SKILL.md'), resolve(OUT, 'SKILL.md'));
+
 console.log(`Claude Design bundle → _local/claude-design/`);
 console.log(`  jedee.css        ${(rewritten.length / 1024).toFixed(1)} KB`);
 console.log(`  fonts/           ${new Set(fontPaths).size} files`);
