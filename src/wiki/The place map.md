@@ -112,6 +112,12 @@ Tiles arrive over the network, so between the page's first paint and a drawn map
 
 ⚠ Reduced motion removes both the pulse and the fade, and the map simply appears.
 
+### One declaration, two themes
+
+The map's colors are CSS custom properties — `--map-land`, `--map-water`, `--map-park` and seven more — set on `.place-map-live` and on the canvas, and read back by `place-map.js` on every render, so a theme flip or a devtools tweak redraws the map without touching JavaScript. They are declared in **three** blocks: a light one, a `[data-theme='dark']` one, and a `prefers-color-scheme: dark` copy of the second. The dark blocks override only the properties that actually differ.
+
+⚠ **Every property the dark blocks leave out is served by the light block's single declaration, in both themes.** Raising the light park tint from 8% to 12% also raised the dark one, because dark had never declared `--map-park`; holding dark at 8% took a new declaration in each dark block. Before changing a themed custom property, check whether the other theme overrides it — one that appears once is shared, and the diff reads the same either way. The mirror of [[Undefined custom properties]], where the reference is the thing that is missing rather than the override.
+
 ### A base-layer style switch
 
 A control in the bottom-right corner switches between **Map** (jedee's tiles) and two fixed raster styles: **Satellite** (Esri World Imagery) and **Topographic** (OpenTopoMap, contours and trails). Every mode opens on Map, routes included; before the move, routes opened on Topographic. One tile-source gotcha: Esri's URL template is `{z}/{y}/{x}` — row before column, the reverse of the usual order.
@@ -120,4 +126,4 @@ The control is a native `<select>`: a base-layer choice is single-select, and `<
 
 The inline map keeps the old gesture rules: no wheel or pinch zoom (that would trap the page scroll) except with Ctrl/⌘ held, which is also how a trackpad pinch arrives; rotation and tilt are off everywhere.
 
-The move to MapLibre and jedee's own tiles: the session of 2026-09-17, verified against `place-map.js` and `place-map.css`. Source: `_local/design/Plan - GPX route line on the activity map.md` (2026-08-11), verified against `place-map.js` and `route-geojson.js`. The base-layer switch: `_raw/dev-notes/How the place map switches tile styles.md` (2026-08-11), verified against `place-map.js` and `place-map.css`. The start/finish symbols were reworked from `divIcon` HTML markers into native vector shapes on 2026-08-16 (commit 30aade8), re-verified against `place-map.js` and `place-map.css`.
+The move to MapLibre and jedee's own tiles: the session of 2026-09-17, verified against `place-map.js` and `place-map.css`. Source: `_local/design/Plan - GPX route line on the activity map.md` (2026-08-11), verified against `place-map.js` and `route-geojson.js`. The base-layer switch: `_raw/dev-notes/How the place map switches tile styles.md` (2026-08-11), verified against `place-map.js` and `place-map.css`. The start/finish symbols were reworked from `divIcon` HTML markers into native vector shapes on 2026-08-16 (commit 30aade8), re-verified against `place-map.js` and `place-map.css`. The colors and their theme blocks: the session of 2026-09-18, `src/_raw/dev-notes/How the map colors came back from Penpot.md`.

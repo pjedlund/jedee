@@ -5,6 +5,16 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-18] enrich | Design token sync, The place map
+
+Session source: Johan changed four of the place map's colors in the Penpot file and asked for them in the CSS. Two takeaways, both enrichments of existing pages rather than a new one.
+
+New section *A mockup states the same value twice* in [[Design token sync]], placed after the stacking section it follows from. Rebuilding a `color-mix()` as stacked layers means the design file holds the recipe once per place it draws it — the Place map page draws each color in the map artwork and again in a ten-swatch legend, both edited by hand, nothing linking them. The artwork is the authority, and the concrete case is what the strip cannot show: light draws `--map-road` and `--map-road-minor` as the same white at all five stroke widths, dark splits them into two grays.
+
+New section *One declaration, two themes* in [[The place map]] — the trap that nearly shipped. The `--map-*` properties are declared in three blocks and the dark ones override only what differs, so `--map-park` was served to both themes by the light block; taking light from 8% to 12% took dark with it. Link earned: [[Undefined custom properties]], the mirror case where the reference rather than the override is what's missing.
+
+Raw source: `src/_raw/dev-notes/How the map colors came back from Penpot.md`.
+
 ## [2026-09-17] enrich | The place map, Design token sync
 
 Session source: the place map's own tiles going live and the loading pass. New section *Waiting for the first tiles* in [[The place map]] — the `--map-water` box that pulses, `[data-map-loading]` removed on MapLibre's first `idle` (the honest signal: nothing left to fetch or draw), the route intro waiting for the same event, and the no-JS caption that flashed until `@media (scripting: enabled)` hid it, which is the mirror of the `scripting: none` rule on [[The main menu]]. Links earned: [[Layout shift]], [[The main menu]].

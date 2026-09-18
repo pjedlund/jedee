@@ -89,6 +89,8 @@ The private wiki documenting web techniques and how jedee is designed and built.
 
 ## Recent additions
 
+**2026-09-18** — enrich: **[[Design token sync]]** gains *A mockup states the same value twice* — a mockup that draws a rendering and a legend of its values holds each color in both, with nothing linking them; the artwork is the authority, and a swatch strip flattens distinctions only the strokes show. **[[The place map]]** gains *One declaration, two themes*: ⚠ a `--map-*` property the dark blocks don't override is served by the light block's single declaration in both themes, so changing one theme's value silently changes the other. See `_log.md`.
+
 **2026-09-17** — enrich: **[[The place map]]** gains *Waiting for the first tiles* — a box in the map's own sea color that pulses until MapLibre's first `idle`, then the canvas fades in and a route starts drawing; ⚠ the server-rendered no-JS caption flashed until `@media (scripting: enabled)` hid it. **[[Design token sync]]** gains *A computed color is not a token value*: a design tool's color token can't hold a `color-mix()` over other tokens, but alpha compositing in sRGB is the same arithmetic, so the recipe rebuilds as stacked token-bound layers with the percentage as a layer's opacity. Both figures on [[The place map]] re-shot on the new map. See `_log.md`.
 
 **2026-09-17** — enrich: **[[The place map]]** moves from Leaflet to MapLibre on jedee's own Protomaps tiles of Sweden, in the site's colors. ⚠ MapLibre can't parse `color-mix()`, so the `--map-*` colors are resolved through a 1×1 canvas; ⚠ the properties live on the canvas, which moves into the overlay; ⚠ a hidden tab never loads the style. See `_log.md`.

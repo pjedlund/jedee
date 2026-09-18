@@ -47,6 +47,14 @@ A design tool's color token holds a color. It does not hold a *calculation* over
 
 ⚠ **The percentage has to be the layer's opacity, not the fill's.** Binding a token writes it into the shape's first fill and resets that fill's opacity to 1; editing that fill's opacity afterwards silently drops the binding, leaving the resolved color behind and the token gone.
 
+## A mockup states the same value twice
+
+Stacking rebuilds a computed color, but it also means the design file holds the recipe once for every place it draws it. A mockup that shows a rendering *and* a legend of the values behind it carries each color twice — once in the artwork, once in the swatch — with nothing linking them. Changing a color is then two edits, and skipping one leaves the file internally inconsistent while both halves still look deliberate.
+
+The artwork is the authority when the two disagree: it is what the mockup is for, and it is the half a reader trusts. A legend is a caption. When checking a design value against code, read the artwork's own fills *and strokes* rather than the legend — a swatch strip flattens any distinction the drawing makes, because one named color may be drawn several ways.
+
+jedee's Place map page in Penpot is shaped this way: a light board and a dark board, each a drawn map above a strip of ten swatches naming the `--map-*` custom properties. The two agreed on every value when they were checked against each other, but the drawing carried something the strip could not — light draws `--map-road` and `--map-road-minor` as the same white at all five stroke widths, while dark splits them into two grays. Only the strokes show that; the strip shows two swatches that happen to match in one theme.
+
 ## Some tools have no references, no themes, and no variants
 
 Three things DTCG can express that a design tool may simply not model. Each one moves work from the tool back into the generator, and each one costs something that is worth naming in the file rather than discovering later.
@@ -113,4 +121,4 @@ The one thing that got *better* under the constraint: because a symbol cannot ca
 
 Related: [[Undefined custom properties]] — the other way a token reference fails silently, on the CSS side rather than at the tool boundary. [[Three things called cache]] — another page where two systems share a name for different things.
 
-Raw sources: `src/_raw/dev-notes/How the Penpot token sync survives an import.md`, `src/_raw/dev-notes/How the shadow tokens got into Penpot.md`
+Raw sources: `src/_raw/dev-notes/How the Penpot token sync survives an import.md`, `src/_raw/dev-notes/How the shadow tokens got into Penpot.md`, `src/_raw/dev-notes/How the map colors came back from Penpot.md`
