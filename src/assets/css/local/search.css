@@ -5,14 +5,14 @@ A disclosure panel dropping from the header row, sharing the mega-menu's surface
 
 .site-search {
   /* Same lifted-off-the-page surface as the mega-menu. Redeclared rather than inherited: main-nav.css declares it on .mainnav, which is absent while the nav is hidden. */
-  --search-surface: color-mix(in oklab, white 45%, var(--color-bg));
+  --search-surface: color-mix(in oklab, var(--color-base-white) 45%, var(--color-bg));
 
   display: flex;
   align-items: center;
 }
 
 :root[data-theme='dark'] .site-search {
-  --search-surface: color-mix(in oklab, white 7%, var(--color-bg));
+  --search-surface: color-mix(in oklab, var(--color-base-white) 7%, var(--color-bg));
 }
 
 /* no JS / before hydration: hide the control entirely */

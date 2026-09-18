@@ -6,7 +6,7 @@
   --color-code-pink: hsl(350, 70%, 60%);
   --color-code-pink: hsl(350, 70%, 60%);
   --color-code-gray: hsla(0, 0%, 70%, 0.75); /* updated to maintain a 5:1*/
-  --color-code-text: color-mix(in oklab, var(--color-text-accent) 90%, black);
+  --color-code-text: color-mix(in oklab, var(--color-text-accent) 90%, var(--color-base-black));
   --code-border-size: var(--border-thickness);
   --code-border-style: solid;
 }
@@ -19,7 +19,7 @@
     --color-code-violet: hsla(314, 80%, 42%, 1); /* light theme: L=42 → 5:1 on light bg (was 45% = 4.4:1, just under AA) */
     --color-code-pink: hsl(350, 90%, 30%);
     --color-code-gray: hsla(0, 0%, 35%, 0.85);
-    --color-code-text: color-mix(in oklab, var(--color-text-accent) 90%, black);
+    --color-code-text: color-mix(in oklab, var(--color-text-accent) 90%, var(--color-base-black));
     --code-border-size: var(--border-thickness);
     --code-border-style: solid;
   }
@@ -32,7 +32,7 @@
   --color-code-violet: hsla(314, 80%, 42%, 1); /* light theme: L=42 → 5:1 on light bg (was 45% = 4.4:1, just under AA) */
   --color-code-pink: hsl(350, 90%, 30%);
   --color-code-gray: hsla(0, 0%, 35%, 0.85);
-  --color-code-text: color-mix(in oklab, var(--color-text-accent) 90%, black);
+  --color-code-text: color-mix(in oklab, var(--color-text-accent) 90%, var(--color-base-black));
   --code-border-size: var(--border-thickness);
   --code-border-style: solid;
 }

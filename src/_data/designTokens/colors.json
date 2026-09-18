@@ -99,5 +99,11 @@
   },
   "base-lightest": {
     "$value": "#f4f4f2"
+  },
+  "base-white": {
+    "$value": "#ffffff"
+  },
+  "base-black": {
+    "$value": "#000000"
   }
 }

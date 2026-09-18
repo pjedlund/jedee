@@ -9,12 +9,12 @@ A "Menu ⌄" button drops a two-column, table-of-contents-style panel of every p
   /* The panel is anchored to the full-width header row (.repel.ontop in header.njk), not to .mainnav — that puts it under the theme toggle with equal gutters. Keep .mainnav static so the anchor wins. */
 
   /* Shared surface for the panel and the open MENU trigger, so the two read as one connected sheet. A lifted version of the page in both themes (dark overridden below). */
-  --megamenu-surface: color-mix(in oklab, white 45%, var(--color-bg));
+  --megamenu-surface: color-mix(in oklab, var(--color-base-white) 45%, var(--color-bg));
 }
 
 :root[data-theme='dark'] .mainnav {
   /* lifted toward white off the dark page, not recessed below it */
-  --megamenu-surface: color-mix(in oklab, white 7%, var(--color-bg));
+  --megamenu-surface: color-mix(in oklab, var(--color-base-white) 7%, var(--color-bg));
 }
 
 /* The nav wrapper inherits the body's tall line-height (~34px), so the inline-flex button sits on that oversized baseline instead of the row's optical center. :has() scopes this to the enhanced state; the no-JS list keeps its block layout. */
