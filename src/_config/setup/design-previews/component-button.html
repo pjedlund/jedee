@@ -1,0 +1,101 @@
+<!-- @dsCard group="Components" -->
+<!doctype html>
+<html lang="en" data-theme="light">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Button</title>
+		<link rel="stylesheet" href="../jedee.css" />
+		<style>
+			.ds-page {
+				padding: var(--space-l);
+			}
+			.ds-meta {
+				font-family: var(--font-mono, monospace);
+				font-size: var(--size-step-min-2);
+				color: var(--color-text-accent);
+			}
+			.ds-set {
+				display: grid;
+				gap: var(--space-2xs);
+			}
+		</style>
+	</head>
+	<body>
+		<main class="ds-page flow">
+			<div class="repel">
+				<h1 class="text-step-3">Button</h1>
+				<button class="button" data-small-button type="button" id="theme">Dark theme</button>
+			</div>
+			<p>
+				<code>global/blocks/button.css</code> — one block, variants as data attributes. Every color is derived with
+				<code>color-mix()</code> from <code>--button-bg</code>, so a variant only sets the background.
+			</p>
+
+			<div class="ds-set">
+				<span class="ds-meta">default · data-button-variant="primary" · "secondary" · "tertiary"</span>
+				<ul class="cluster" role="list">
+					<li><a href="#" class="button">Default button</a></li>
+					<li><a href="#" class="button" data-button-variant="primary">Primary button</a></li>
+					<li><a href="#" class="button" data-button-variant="secondary">Secondary button</a></li>
+					<li><a href="#" class="button" data-button-variant="tertiary">Tertiary button</a></li>
+				</ul>
+			</div>
+
+			<div class="ds-set">
+				<span class="ds-meta">data-ghost-button · data-button-radius="hard" · data-small-button</span>
+				<ul class="cluster" role="list">
+					<li><a href="#" class="button" data-ghost-button>Ghost button</a></li>
+					<li><a href="#" class="button" data-button-radius="hard">Hard edges</a></li>
+					<li><a href="#" class="button" data-small-button>Small button</a></li>
+				</ul>
+			</div>
+
+			<div class="ds-set">
+				<span class="ds-meta">with icon · data-icon (48×48 tap target, WCAG 2.5.5)</span>
+				<ul class="cluster" role="list">
+					<li>
+						<a href="#" class="button">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor">
+								<path
+									fill-rule="evenodd"
+									d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z"
+									clip-rule="evenodd"
+								/>
+							</svg>
+							Button with icon
+						</a>
+					</li>
+					<li>
+						<a href="#" class="button" data-icon>
+							<span class="visually-hidden">Icon button</span>
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor">
+								<path
+									fill-rule="evenodd"
+									d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z"
+									clip-rule="evenodd"
+								/>
+							</svg>
+						</a>
+					</li>
+				</ul>
+			</div>
+
+			<div class="ds-set">
+				<span class="ds-meta">states — aria-current="page" and aria-pressed="true" take the hover treatment</span>
+				<ul class="cluster" role="list">
+					<li><a href="#" class="button" aria-current="page">Current page</a></li>
+					<li><button class="button" type="button" aria-pressed="true">Pressed</button></li>
+				</ul>
+			</div>
+		</main>
+
+		<script>
+			document.getElementById('theme').addEventListener('click', e => {
+				const dark = document.documentElement.dataset.theme === 'dark';
+				document.documentElement.dataset.theme = dark ? 'light' : 'dark';
+				e.target.textContent = dark ? 'Dark theme' : 'Light theme';
+			});
+		</script>
+	</body>
+</html>

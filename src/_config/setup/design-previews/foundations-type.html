@@ -1,0 +1,95 @@
+<!-- @dsCard group="Foundations" -->
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Type scale</title>
+		<link rel="stylesheet" href="../jedee.css" />
+		<style>
+			.ds-page {
+				padding: var(--space-l);
+			}
+			.ds-row {
+				display: grid;
+				gap: var(--space-3xs);
+				padding-block: var(--space-xs);
+				border-block-end: 1px solid var(--color-bg-accent-2);
+			}
+			.ds-meta {
+				font-family: var(--font-mono, monospace);
+				font-size: var(--size-step-min-2);
+				color: var(--color-text-accent);
+			}
+			.ds-specimen {
+				line-height: 1.1;
+			}
+			.ds-families {
+				display: grid;
+				gap: var(--space-m);
+			}
+		</style>
+	</head>
+	<body>
+		<main class="ds-page flow">
+			<h1 class="text-step-3">Type scale</h1>
+			<p>Utopia clamps, read live from <code>jedee.css</code>. Resize the frame to watch each step move between its min and max.</p>
+
+			<h2 class="text-step-1">Families</h2>
+			<div class="ds-families" id="families"></div>
+
+			<h2 class="text-step-1">Steps</h2>
+			<div id="steps"></div>
+		</main>
+
+		<script>
+			// Walk grouping rules too: the site's custom properties sit inside @layer, whose rules are not on the top-level list.
+			const collect = (rules, out) => {
+				for (const rule of rules) {
+					if (rule.cssRules) collect(rule.cssRules, out);
+					if (rule.selectorText?.split(',').some(s => s.trim().startsWith(':root'))) {
+						for (const prop of rule.style) if (prop.startsWith('--size-step-') || prop.startsWith('--font-')) out.add(prop);
+					}
+				}
+				return out;
+			};
+
+			const names = new Set();
+			for (const sheet of document.styleSheets) {
+				try {
+					collect(sheet.cssRules, names);
+				} catch {
+					/* a cross-origin sheet cannot be read; the site's own can */
+				}
+			}
+
+			const computed = getComputedStyle(document.documentElement);
+			// A custom property computes to its declared text, so a clamp() reads as "clamp(...)". Resolving it needs a real element to apply it to.
+			const probe = document.createElement('div');
+			probe.style.cssText = 'position:absolute;visibility:hidden;inline-size:max-content';
+			document.body.append(probe);
+			const px = name => {
+				probe.style.fontSize = `var(${name})`;
+				return parseFloat(getComputedStyle(probe).fontSize);
+			};
+
+			// A font token whose value is a weight or a stack: only the stacks get a specimen.
+			const families = [...names].filter(n => n.startsWith('--font-') && computed.getPropertyValue(n).match(/[a-z]{3}/i) && !/^\s*\d/.test(computed.getPropertyValue(n)));
+			document.getElementById('families').innerHTML = families
+				.sort()
+				.map(
+					n =>
+						`<div class="ds-row"><span class="ds-meta">${n} — ${computed.getPropertyValue(n).trim()}</span><span class="ds-specimen text-step-2" style="font-family:var(${n})">Handgloves &amp; 0123</span></div>`
+				)
+				.join('');
+
+			const steps = [...names].filter(n => n.startsWith('--size-step-')).sort((a, b) => px(a) - px(b));
+			document.getElementById('steps').innerHTML = steps
+				.map(
+					n =>
+						`<div class="ds-row"><span class="ds-meta">${n} — ${computed.getPropertyValue(n).trim()} → ${px(n).toFixed(1)}px here</span><span class="ds-specimen" style="font-size:var(${n})">The quick brown fox</span></div>`
+				)
+				.join('');
+		</script>
+	</body>
+</html>

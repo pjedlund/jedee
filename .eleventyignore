@@ -5,3 +5,6 @@ src/_obsidian/
 
 # The wiki's own source artifacts (the device-frame preview page) — tracked in the wiki's inner repo, never a page.
 src/wiki/_sources/
+
+# Claude Design preview sources — assembled into _local/claude-design/ by build-design-bundle.js, never a page.
+src/_config/setup/design-previews/

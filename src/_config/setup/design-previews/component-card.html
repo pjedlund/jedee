@@ -1,0 +1,115 @@
+<!-- @dsCard group="Components" -->
+<!doctype html>
+<html lang="en" data-theme="light">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Card</title>
+		<link rel="stylesheet" href="../jedee.css" />
+		<link rel="stylesheet" href="../local/custom-card.css" />
+		<style>
+			.ds-page {
+				padding: var(--space-l);
+			}
+			.ds-meta {
+				font-family: var(--font-mono, monospace);
+				font-size: var(--size-step-min-2);
+				color: var(--color-text-accent);
+			}
+			.ds-set {
+				display: grid;
+				gap: var(--space-2xs);
+			}
+		</style>
+	</head>
+	<body>
+		<main class="ds-page flow">
+			<div class="repel">
+				<h1 class="text-step-3">Card</h1>
+				<button class="button" data-small-button type="button" id="theme">Dark theme</button>
+			</div>
+			<p>
+				The <code>&lt;custom-card&gt;</code> WebC component as it renders in the built HTML, styled by the
+				<code>local/custom-card.css</code> bundle. Placeholder images stand in for the real covers.
+			</p>
+
+			<div class="ds-set">
+				<span class="ds-meta">default 16/9 · clickable · img-square</span>
+				<div class="grid" style="--grid-min-item-size: 16rem">
+					<custom-card class="flow no-indicator">
+						<picture><img src="" alt="" width="640" height="360" data-ph /></picture>
+						<h2 class="text-step-2"><a href="#">A default card</a></h2>
+						<div class="meta | cluster"><span>12 September 2026</span><span>note</span></div>
+						<p>The description slot. Everything above and below it is a named grid row, so a missing slot collapses rather than leaving a gap.</p>
+						<footer class="repel">note</footer>
+					</custom-card>
+
+					<custom-card clickable class="flow no-indicator">
+						<picture><img src="" alt="" width="640" height="360" data-ph /></picture>
+						<h2 class="text-step-2"><a href="#">A clickable card</a></h2>
+						<div class="meta | cluster"><span>12 September 2026</span></div>
+						<p>The whole card is the hit area — the heading link stretches an invisible overlay across it. Hover or tab to it.</p>
+						<footer class="repel">article</footer>
+					</custom-card>
+
+					<custom-card img-square class="flow no-indicator">
+						<picture><img src="" alt="" width="640" height="640" data-ph /></picture>
+						<h2 class="text-step-2"><a href="#">A square-image card</a></h2>
+						<div class="meta | cluster"><span>12 September 2026</span></div>
+						<p>Used where the source art is square — album covers on the jams archive.</p>
+						<footer class="repel">jam</footer>
+					</custom-card>
+				</div>
+			</div>
+
+			<div class="ds-set">
+				<span class="ds-meta">data-poster (2/3) · no-padding · with a .recipe-badge in the content slot</span>
+				<div class="grid" style="--grid-min-item-size: 16rem">
+					<custom-card clickable data-poster class="flow no-indicator">
+						<picture><img src="" alt="" width="640" height="960" data-ph /></picture>
+						<h2 class="text-step-2"><a href="#">A poster card</a></h2>
+						<div class="meta | cluster"><span>12 September 2026</span></div>
+						<footer class="repel">reading</footer>
+					</custom-card>
+
+					<custom-card no-padding class="flow no-indicator">
+						<picture><img src="" alt="" width="640" height="360" data-ph /></picture>
+						<h2 class="text-step-2"><a href="#">A no-padding card</a></h2>
+						<div class="meta | cluster"><span>12 September 2026</span></div>
+						<p>Transparent background, square corners, border only.</p>
+						<footer class="repel">photo</footer>
+					</custom-card>
+
+					<custom-card clickable class="flow no-indicator">
+						<picture><img src="" alt="" width="640" height="360" data-ph /></picture>
+						<h2 class="text-step-2"><a href="#">A recipe card</a></h2>
+						<div class="meta | cluster"><span>12 September 2026</span></div>
+						<p>Badges ride the cluster composition in the content slot.</p>
+						<ul class="recipe-badge | cluster" role="list">
+							<li data-badge>45 min</li>
+							<li data-badge>Serves 4</li>
+						</ul>
+						<footer class="repel">recipe</footer>
+					</custom-card>
+				</div>
+			</div>
+		</main>
+
+		<script>
+			// Stand-in art so the aspect-ratio variants are visible without shipping images into the bundle.
+			for (const img of document.querySelectorAll('img[data-ph]')) {
+				const w = img.getAttribute('width');
+				const h = img.getAttribute('height');
+				img.src = `data:image/svg+xml,${encodeURIComponent(
+					`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#495464"/><stop offset="1" stop-color="#d0621e"/></linearGradient></defs><rect width="${w}" height="${h}" fill="url(#g)"/></svg>`
+				)}`;
+			}
+
+			document.getElementById('theme').addEventListener('click', e => {
+				const dark = document.documentElement.dataset.theme === 'dark';
+				document.documentElement.dataset.theme = dark ? 'light' : 'dark';
+				e.target.textContent = dark ? 'Dark theme' : 'Light theme';
+			});
+		</script>
+	</body>
+</html>
