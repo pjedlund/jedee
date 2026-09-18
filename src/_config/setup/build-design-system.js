@@ -265,7 +265,7 @@ for (const f of FONT_FILES) {
 	await copyFile(resolve(REPO_ROOT, 'src/assets/fonts', dir, name), resolve(OUT, 'fonts', name));
 }
 
-await copyFile(resolve(HERE, 'design-system-README.md'), resolve(OUT, 'README.md'));
+await copyFile(resolve(HERE, 'design-system-docs/README.md'), resolve(OUT, 'README.md'));
 
 /* ── Components: reuse the preview pages, minus their page chrome ──── */
 
