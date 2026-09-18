@@ -5,7 +5,9 @@
     { "name": "base-darkest", "value": "#495464" },
     { "name": "base-dark", "value": "#bbbfca" },
     { "name": "base-light", "value": "#dddee8" },
-    { "name": "base-lightest", "value": "#f4f4f2" }
+    { "name": "base-lightest", "value": "#f4f4f2" },
+    { "name": "base-white", "value": "#ffffff" },
+    { "name": "base-black", "value": "#000000" }
   ],
   "shades_neutral": [
     { "name": "Gray", "value": "#495464" }
