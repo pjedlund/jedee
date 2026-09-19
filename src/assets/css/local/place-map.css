@@ -26,8 +26,8 @@ place-map[data-map-ready] > .place-map-static {
   display: none;
 }
 
-/* Whatever follows the map inside <place-map> — the activities table here — needs air, or the map's border sits straight on the table's top rule. */
-place-map > :is(.place-map-live, .place-map-static) + * {
+/* Whatever follows the map inside <place-map> — the activities table here — needs air, or the map's border sits straight on the table's top rule. ⚠ :not(script) — on an activity page the next sibling is the route GeoJSON, and display:block prints it as text. */
+place-map > :is(.place-map-live, .place-map-static) + :not(script) {
   display: block;
   margin-block-start: var(--space-l);
 }
