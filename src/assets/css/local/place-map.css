@@ -336,3 +336,33 @@ place-map[data-map-ready] > .place-map-static {
   line-height: 1.2;
   color: color-mix(in oklab, var(--color-text) 80%, var(--color-bg-accent));
 }
+
+/* ACTIVITY TYPE ICON — the table's first column. One icon per activityType (src/assets/svg/activity/), the name beside it for screen readers. */
+.activity-type {
+  --activity-icon-size: 1em; /* the design draws the icon at the body text size */
+  --activity-icon-color: var(--color-text-accent); /* any type without a color below */
+
+  color: var(--activity-icon-color);
+}
+
+.activity-type-icon {
+  inline-size: var(--activity-icon-size);
+  block-size: var(--activity-icon-size);
+}
+
+/* Color per type, matching the Penpot design. The row carries data-activity; the palette values are the vivid pair each type already uses on the map. */
+[data-activity='run'] .activity-type {
+  --activity-icon-color: var(--color-blue-vivid);
+}
+
+[data-activity='orienteering'] .activity-type {
+  --activity-icon-color: var(--color-orange-500);
+}
+
+[data-activity='weight-training'] .activity-type {
+  --activity-icon-color: var(--color-red-vivid);
+}
+
+[data-activity='hike'] .activity-type {
+  --activity-icon-color: var(--color-green-vivid);
+}

@@ -7,6 +7,8 @@
 
   The empty .place-map-live box is rendered here on purpose. place-map.js used to create and prepend it after idle, which shoved the whole list down on every load; its 16:9 aspect-ratio now holds the space from first paint and the JS adopts this box instead of building one.
 
+  The Type column is an icon per activityType (src/assets/svg/activity/<type>.svg, colored per type in place-map.css) with the type name beside it for screen readers and sorting. A type with no icon file fails the build by name — add the SVG rather than a fallback.
+
   Sorting is <sortable-table> (webc/sortable-table.webc): data-sort is the raw value a column sorts by. data-table-priority columns drop out as the table narrows, 4 first, then 3, then 2 (table.css); each activity's page shows them all.
 
   No async shortcodes here, so the interlinker {% if %}-include trap doesn't apply.
@@ -24,9 +26,9 @@
         <caption id="activities-caption" class="visually-hidden">Every activity</caption>
         <thead>
           <tr>
+            <th scope="col" data-table-priority="4">Type</th>
             <th scope="col" aria-sort="descending">Date</th>
             <th scope="col">Activity</th>
-            <th scope="col" data-table-priority="4">Type</th>
             <th scope="col" data-numeric data-table-priority="2">Distance <small>km</small></th>
             <th scope="col" data-numeric data-table-priority="2">Time</th>
             <th scope="col" data-numeric data-table-priority="3" data-sort-first="ascending">Pace <small>min/km</small></th>
@@ -40,9 +42,10 @@
             {%- set p = d.activityType | pace(d.distanceKm, d.duration) %}
             {#- data-date is the marker popup's first line; it matches the visible date. -#}
             <tr data-activity="{{ d.activityType | slugify }}"{% if d.lat and d.lon %} data-lat="{{ d.lat }}" data-lon="{{ d.lon }}" data-date="{{ day }}"{% endif %}>
+              {#- ⚠ No link in here: place-map reads the row's FIRST <a> as the activity. -#}
+              <td class="activity-type" data-table-priority="4" data-sort="{{ d.activityType }}">{% svg "activity/" + (d.activityType | slugify), "", "activity-type-icon" %}<span class="visually-hidden">{{ d.activityType | capitalize }}</span></td>
               <td data-sort="{{ post.date.getTime() }}"><time datetime="{{ post.date | toIsoString }}">{{ day }}</time></td>
               <th scope="row"><a href="{{ post.url }}"{% if d.titleLang %} lang="{{ d.titleLang }}"{% endif %}>{{ d.title }}</a></th>
-              <td data-table-priority="4">{{ d.activityType | capitalize }}</td>
               <td data-numeric data-table-priority="2" data-sort="{{ d.distanceKm }}">{{ d.distanceKm.toFixed(1) if d.distanceKm }}</td>
               <td data-numeric data-table-priority="2" data-sort="{{ d.duration }}">{{ d.duration | itunesDuration }}</td>
               <td data-numeric data-table-priority="3" data-sort="{{ (d.duration / d.distanceKm) | round if p }}">{{ p }}</td>
