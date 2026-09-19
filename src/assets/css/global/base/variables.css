@@ -5,6 +5,8 @@
   --gutter: var(--space-m-l);
   --transition-duration: 250ms;
   --transition-timing: ease;
+  /* Quad easing (easings.net), for motion that should start or stop gently rather than linearly. */
+  --ease-out-quad: cubic-bezier(0.5, 1, 0.89, 1);
   --wrapper-width: 85rem;
   --tracking: -0.04ch;
   --tracking-s: -0.075ch;
@@ -63,8 +65,14 @@
   --color-accent-green: var(--color-green);
 
   --color-text-accent: var(--color-gray-700);
+  --color-text-subdued: var(--color-base-subdued);
   --color-bg-accent: var(--color-base-white);
   --color-bg-accent-2: var(--color-gray-300);
+  /* Hairline rules. Warmer than the gray ramp, to sit on the warm page rather than cut across it. */
+  --color-rule: var(--color-base-rule);
+  --color-rule-shadow: var(--color-base-rule); /* the groove's upper line; must read darker than --color-bg */
+  --color-rule-highlight: var(--color-base-white);
+  --color-bg-head: color-mix(in srgb, var(--color-base-dark) 35%, var(--color-bg)); /* in srgb, not oklab: this stands in for a 40% alpha wash, and CSS composites alpha in srgb */
   /* border top for body */
   --color-border-top: var(--color-base-light);
 
@@ -88,8 +96,13 @@
     --color-accent-green: var(--color-green-subdued);
 
     --color-text-accent: var(--color-gray-200);
+    --color-text-subdued: var(--color-gray-300);
     --color-bg-accent: var(--color-gray-700);
     --color-bg-accent-2: var(--color-gray-600);
+    --color-rule: var(--color-base-rule-dark);
+    --color-rule-shadow: var(--color-base-black);
+    --color-rule-highlight: var(--color-gray-800);
+    --color-bg-head: color-mix(in srgb, var(--color-base-dark) 15%, var(--color-bg));
     /* border top for body */
     --color-border-top: var(--color-orange-900);
 
@@ -112,8 +125,13 @@
   --color-accent-green: var(--color-green-subdued);
 
   --color-text-accent: var(--color-gray-200);
+  --color-text-subdued: var(--color-gray-300);
   --color-bg-accent: var(--color-gray-700);
   --color-bg-accent-2: var(--color-gray-600);
+  --color-rule: var(--color-base-rule-dark);
+  --color-rule-shadow: var(--color-base-black);
+  --color-rule-highlight: var(--color-gray-800);
+  --color-bg-head: color-mix(in srgb, var(--color-base-dark) 15%, var(--color-bg));
   /* border top for body */
   --color-border-top: var(--color-orange-900);
 
