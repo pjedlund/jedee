@@ -5,6 +5,14 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-19] enrich | Tables
+
+Second pass on *The activities table*, from the session that rebuilt it against Johan's reworked Penpot file (`feat/table-stamped-rules`, merge 31d9271). Ten claims on the page had gone stale and were corrected rather than appended to: the header's tint, its small caps and its size, the rule colour, the drop priorities and their thresholds, the unit lines in the heads, the `data-sort` contract, the sort arrow's offset, and the hover's transition.
+
+Four new sections. *The stamped rule* — a collapsed border paints one colour per edge, so a two-tone rule is a background gradient, composed with the stripe through two custom properties; and an engraved rule needs a separate role per half, because the band colour that works as a shadow on a light page is lighter than a near-black one and inverts the groove. *An icon column* — the icon `aria-hidden` beside a visually hidden name that carries both the announcement and the sort key, and Penpot's inner-stroke emulation leaving duplicate `clipPath` ids in 180 inlined copies. *Two surfaces that converge* — a header tint and a hover tint drawn the same way meet, and the header text's contrast is then bounded by the gap between them rather than by either colour. *A hover that snaps on and decays off* — the asymmetry is which rule carries the transition.
+
+Links earned: [[Undefined custom properties]] for the `none` fallbacks composing the two gradient layers, and [[Choreographing CSS animations]] for the `prefers-reduced-motion` opt-in idiom the hover follows. [[Tooltips]] and [[Typographic conventions]] were already linked and stay. Sources: `src/_raw/dev-notes/How the activities table matched the Penpot design.md`, beside the original `How the activities table works.md`.
+
 ## [2026-09-18] enrich | Design token sync, The place map
 
 Session source: Johan changed four of the place map's colors in the Penpot file and asked for them in the CSS. Two takeaways, both enrichments of existing pages rather than a new one.
