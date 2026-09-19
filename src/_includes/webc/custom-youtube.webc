@@ -15,14 +15,14 @@
   }
 </script>
 <style>
-  /* ⚠ These rules must stay OUT of the island's <template data-island>: inside it they only land on hydration, and the box collapses to 0 height until then — a layout shift. */
+  /* ⚠ Keep these out of <template data-island>: in there they land only on hydration and the box collapses to 0 until then. */
   lite-youtube {
     max-inline-size: 100% !important;
     background-size: cover;
   }
 
-  /* Steady placeholder on the WRAPPER so the poster (on lite-youtube) fades in over it without the placeholder flashing. Surface = the mega-menu overlay sheet (main-nav.css), so the box reads as header chrome, light per theme.
-     The mid-gray logomark at 0.1 alpha darkens the light sheet and lightens the dark one, so one mark works in both modes. Corners use border-radius on both layers, NOT overflow:hidden — that would clip the play button's focus ring, drawn outside the box. */
+  /* Placeholder on the WRAPPER so the poster fades in over it; surface mirrors the mega-menu sheet in main-nav.css. */
+  /* ⚠ Round both layers with border-radius, never overflow:hidden — that clips the play button's focus ring. */
   is-land.video-wrapper {
     display: block;
     position: relative;
@@ -42,12 +42,12 @@
     --yt-surface: color-mix(in oklab, white 7%, var(--color-bg));
   }
 
-  /* lite-youtube carries just the poster, transparent so the wrapper's placeholder shows through until it's ready, then fades in. A one-shot keyframe (not a default opacity:0) so a stalled hydration can't strand the play button invisible: no [ready] → opacity stays 1. */
+  /* ⚠ The fade is a one-shot keyframe, not a default opacity:0 — that would strand the play button invisible if hydration stalls. */
   is-land lite-youtube {
     background-color: transparent;
     border-radius: 0.2em;
   }
-  /* Keyboard focus ring for the play button: lite-yt-embed's `contain: content` paint-clips anything outside the box — including the site's OUTSET focus ring (outline-offset: 0.3ch), leaving focus invisible. Inset the ring (negative offset) so it lands inside the box and stays visible. */
+  /* ⚠ lite-yt-embed's `contain: content` clips the site's outset focus ring, so inset it here. */
   is-land lite-youtube .lyt-playbtn {
     --focus-offset: -4px;
   }
