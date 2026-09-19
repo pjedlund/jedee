@@ -107,7 +107,7 @@ Mapping rules and the full trap list live in `_local/penpot/penpot-tokens.md` (g
 
 ## In Sketch
 
-A second mirror since 2026-08-31, built the same way and losing different things. `npm run sketch:tokens` → `src/_config/setup/build-sketch-tokens.js` → `_local/sketch/sketch-tokens.json`, fed into `_local/sketch/JEDEE - design system.sketch` through Sketch's MCP server. 91 Color Variables, 7 text styles, 67 symbols.
+A second mirror since 2026-08-31, built the same way and losing different things. `npm run sketch:tokens` → `src/_config/setup/build-sketch-tokens.js` → `_local/sketch/sketch-tokens.json`, fed into `_local/sketch/jedee.sketch` through Sketch's MCP server. 91 Color Variables, 7 text styles, 67 symbols.
 
 Sketch models none of the three above, so all three costs land at once. References are resolved in the build, making the file a snapshot rather than a live mirror. The light/dark semantic pair becomes two swatch groups, `Light/…` and `Dark/…`, and the component colors in `buttonColors.json` and `megamenuColors.json` are resolved once per theme, because their `core` entries reference `{color.text}` and `{color.semantic.blue}` — which is how `Light/Button/Default/Bg` and `Dark/Button/Default/Bg` correctly land on different hexes from one source line. And every state and theme is its own symbol: fourteen buttons per theme, where the CSS has one rule and a handful of custom-property overrides.
 

@@ -18,10 +18,11 @@ export default {
   // Filenames are Title Case (for Obsidian wikilinks); URLs are kebab. index.md's fileSlug
   // is the folder name "wiki", so it serves at /wiki/. A function (not a Nunjucks template
   // string) because the md-only override above would stop a permalink template rendering.
+  // ⚠ decamelize: false, or slugify splits internal capitals — "The YouTube embed" became /wiki/the-you-tube-embed/.
   permalink: data =>
     data.page.fileSlug === 'wiki'
       ? '/wiki/index.html'
-      : `/wiki/${slugify(data.page.fileSlug)}/index.html`,
+      : `/wiki/${slugify(data.page.fileSlug, {decamelize: false})}/index.html`,
 
   // Expanded into markdown-it-abbr definitions by the `glossary` preprocessor in eleventy.config.js, so every wiki page gets <abbr> for free. Only opaque jargon belongs here; CSS/HTML/JSON etc. would just be dotted-underline noise. ⚠ Do not rename this key to `abbreviations` — see the preprocessor's warning.
   glossary: {

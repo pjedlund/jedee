@@ -5,6 +5,22 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-19] lint | full checkup
+
+61 content pages. Structure clean: no dead wikilinks, every page in `index.md`, frontmatter conforming on all 61, and no orphans — [[Accessibility]] is the only page whose sole inbound links are the index and this log. Every count the 2026-09-06 lint corrected is still right: 180 activities, ten pa11y paths, 2 OG JPEGs against a 2-post `collections.article`, fourteen of sixteen types with a feed, `syndication:` on exactly one post. 188 external links checked, one dead.
+
+Four fixes, all approved and applied the same day.
+
+⚠ **Four public URLs carried a word split.** `wiki.11tydata.js` slugs a filename with `@sindresorhus/slugify`, which **decamelizes by default** — so "The YouTube embed" served at `/wiki/the-you-tube-embed/`, and OpenType features, The PhotoSwipe lightbox and The IndieWeb the same way. `{decamelize: false}` fixes exactly those four and changes no other page's slug, checked against every title. No redirects: the site is still soft-launched behind `noindex`, so nothing outside has the old URLs. The relief is that **the interlinker follows the permalink** rather than re-deriving a slug of its own — every inbound `[[link]]` moved with the pages, verified in the built HTML.
+
+**One dead external link**, on [[Syntax highlighting]]: `prismjs.com/plugins/markup-templating/` is a 404 and `prismjs.com/plugins/` is gone entirely. The page also had the category wrong — in Prism 1.x `markup-templating` is a **component**, not a plugin, which is why it ships in `components/`. Repointed at the source file in the tag the site actually installs (1.30.0), which is what the page's claims about the `before-tokenize` hook describe anyway. A source file at a pinned tag is a more durable citation than a docs page for a project mid-rewrite: Prism's default branch is now v2 and has no `plugins/` directory at all.
+
+**A stale path**: [[Design token sync]] cited `_local/sketch/JEDEE - design system.sketch`; the file is `_local/sketch/jedee.sketch`. `AGENTS.md` carried the same old name and was corrected with it. Its "91 Color Variables, 7 text styles, 67 symbols" could not be re-verified — the Sketch MCP server failed to connect.
+
+**A claim made stale the same morning**: [[Tables]]' *Popout width* ended on the style guide's Spacing table being 32px narrower than the Sizes table above it. Both style-guide tables lost `.popout` hours earlier, so they are equal again; the section now says so and points at [[Layout breakouts]] for why.
+
+Two gaps recorded, not filled. **WebC** is mentioned on 14 pages while [[Web components]] — which is about browser custom elements — mentions it once, and its traps are scattered across the pages that hit them. **Netlify** is on 12 pages with nothing describing the deploy, the headers, or the function [[Micropub]] runs on. `color-mix()` appears on 7 pages but always in passing, and reads fine where it is.
+
 ## [2026-09-19] enrich | Layout breakouts, The place map
 
 From the session that pulled `.popout` back to prose-width contexts (`fix/activities-popout`, merge 997ad2d). Johan reported the activities overview looking wider than the full wrapper and named the class. It was: 1424 against a 1360 content column, though not in fact wider than `.full` and with nothing overflowing.
