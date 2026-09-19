@@ -15,7 +15,7 @@
   --table-font-size: 1em; /* body cells at the text size: Rutter warns against shrinking a table to fit */
   --table-head-size: 1em;
   --table-head-color: var(--color-text-subdued);
-  --table-head-caps: all-small-caps; /* capitals instead: normal here, uppercase below, and --size-step-min-2 */
+  --table-head-caps: normal; /* small caps instead: all-small-caps here, and --table-head-tracking carries the extra letter-spacing they want */
   --table-head-transform: none;
   --table-head-weight: var(--font-regular); /* small caps replace bold rather than add to it (Butterick) */
   --table-head-tracking: var(--tracking-wide);
@@ -148,6 +148,11 @@ thead th small {
   text-align: end;
 }
 
+/* An icon column: the head's label and the icon under it share the column's centre, so neither needs to know the other's width. */
+:is(th, td)[data-icon] {
+  text-align: center;
+}
+
 /* Equal-width columns, opt-in:wiki tables mix one-word and one-sentence columns. The minimum width makes a narrow screen scroll instead of squeezing. */
 .table-wrapper[data-table-layout='fixed'] table {
   inline-size: max(var(--table-fixed-min-inline-size), 100%);
@@ -193,7 +198,7 @@ thead th small {
   container-type: inline-size;
 }
 
-@container (inline-size < 66rem) {
+@container (inline-size < 63rem) {
   [data-table-priority='5'] {
     display: none;
   }
@@ -205,13 +210,13 @@ thead th small {
   }
 }
 
-@container (inline-size < 47rem) {
+@container (inline-size < 48rem) {
   [data-table-priority='3'] {
     display: none;
   }
 }
 
-@container (inline-size < 38rem) {
+@container (inline-size < 39rem) {
   [data-table-priority='2'] {
     display: none;
   }
