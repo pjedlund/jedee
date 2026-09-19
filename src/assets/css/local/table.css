@@ -28,6 +28,9 @@
   --table-shadow: color-mix(in oklab, var(--color-text) 20%, transparent);
   --table-fixed-min-inline-size: 40rem;
   --table-row-hover: color-mix(in oklab, var(--color-text) 6%, transparent); /* linked rows only; it lies over the text, so keep it faint */
+  --table-row-hover-in: 50ms; /* lights up almost at once */
+  --table-row-hover-out: 2s; /* and decays slowly behind the pointer */
+  --table-row-hover-ease: var(--ease-out-quad);
 
   overflow-x: auto;
   /* ⚠ Prose breaks words anywhere below sm, which would shrink columns to single letters instead of letting the table scroll. */
@@ -181,9 +184,14 @@ thead th small {
   opacity: 1;
 }
 
+/* Asymmetric on purpose: a rule's transition is the one that plays on the way INTO that state, so the resting rule times the fade-out and the hover rule the fade-in. */
 @media (prefers-reduced-motion: no-preference) {
   .table-wrapper[data-table-rows='link'] tbody th a::after {
-    transition: opacity var(--transition-duration) var(--transition-timing);
+    transition: opacity var(--table-row-hover-out) var(--table-row-hover-ease);
+  }
+
+  .table-wrapper[data-table-rows='link'] tbody :is(tr:hover a, a:focus-visible)::after {
+    transition-duration: var(--table-row-hover-in);
   }
 }
 

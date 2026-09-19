@@ -5,6 +5,8 @@
   --gutter: var(--space-m-l);
   --transition-duration: 250ms;
   --transition-timing: ease;
+  /* Quad easing (easings.net), for motion that should start or stop gently rather than linearly. */
+  --ease-out-quad: cubic-bezier(0.5, 1, 0.89, 1);
   --wrapper-width: 85rem;
   --tracking: -0.04ch;
   --tracking-s: -0.075ch;
