@@ -5,6 +5,18 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-19] enrich | Layout breakouts, The place map
+
+From the session that pulled `.popout` back to prose-width contexts (`fix/activities-popout`, merge 997ad2d). Johan reported the activities overview looking wider than the full wrapper and named the class. It was: 1424 against a 1360 content column, though not in fact wider than `.full` and with nothing overflowing.
+
+[[Layout breakouts]] gets the general finding, a second silent failure to sit beside the direct-child one and the exact opposite shape — the class on the right element, a real grid child, doing nothing. The outer tracks are `minmax(0, 2rem)`, a zero minimum, and the content track takes all free space until `--wrapper-width` wins its `min()`. So a breakout renders at content width below `--wrapper-width + 2 × gap` and reaches full width 128px past it, measured at both wrapper widths (1120 → 1249 at 64rem, 1456 → 1585 at 85rem). The consequence is counter-intuitive enough to be worth the page: the wider you set the wrapper, the further off-screen you push your own breakouts, and in a container already sized wide the class is a no-op most of the time and unintended the rest. Three call sites were in that state — the activities map-and-table and two styleguide tables — all in `archive-listing.njk`'s and the styleguide's stock 85rem wrapper, because `.prose` was on a child and a custom property cannot inherit upward into the grid.
+
+⚠ The correction is the better half of the entry. Both `table.css` comments about `--table-edge-padding` looked stale once no *hand-written* table was in a breakout, and were rewritten — but `markdown.js` wraps every markdown table in `table-wrapper | popout`, and post, note and wiki bodies are all prose wrappers, so most of the site's tables still are and the comments were right. Restored with a clause naming the two exceptions. Filed on the page as the general form: a comment explaining one value by naming another describes a pair that can break from either end, with only one end looking.
+
+[[The place map]] gets the second finding, reported the same session: the route GeoJSON printing as ~4 kB of visible text under the map. A `<script>` is hidden only by the UA sheet's `script { display: none }`, and the component's own `place-map > .place-map-live + *` rule sets `display: block` — needed because on the index that sibling is `<sortable-table>`, an unregistered element that is inline by default and would drop its margin. On an activity page the sibling is the script. Narrowed to `+ :not(script)`, which raises the specificity rather than lowering it since `:not()` takes its argument's.
+
+No new page: both findings belong to pages that already exist and already carry the neighbouring traps. Raw source: `src/_raw/dev-notes/How the popout breakout was pulled back to prose width.md`.
+
 ## [2026-09-19] enrich | Tables
 
 Second pass on *The activities table*, from the session that rebuilt it against Johan's reworked Penpot file (`feat/table-stamped-rules`, merge 31d9271). Ten claims on the page had gone stale and were corrected rather than appended to: the header's tint, its small caps and its size, the rule colour, the drop priorities and their thresholds, the unit lines in the heads, the `data-sort` contract, the sort arrow's offset, and the hover's transition.

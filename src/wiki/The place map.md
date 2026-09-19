@@ -85,6 +85,23 @@ The route map sits one step wider than the prose column — the `.popout` [[Layo
 
 The fix routes the class onto the `<is-land>` itself via a prop: the component takes `:class="breakout || ''"` on its `<is-land>`, and `activity.njk` passes `@breakout="popout"`. Two details that bite: the `|| ''` guard is load-bearing — a bare `:class="breakout"` throws `Cannot read properties of undefined (reading 'toString')` at build time for every caller that omits the prop (the places index, the single-pin photo maps), and `|| false` renders a literal `class="false"` because WebC stringifies a falsy `:class` rather than dropping it; only `|| ''` cleanly omits the attribute. The breakout also collapses back to content width on narrow screens automatically — that is the `.wrapper` grid working as designed, not a bug.
 
+### A `<script>` is only hidden by a default, and a default is easy to beat
+
+The route JSON is slotted into the component as an ordinary `<script type="application/json" data-route>`. Nothing hides it but the browser's own UA stylesheet, which carries `script { display: none }` — a real rule in the lowest-priority sheet there is, not a property of the element. Any author rule that reaches the element and sets `display` to something else puts the script's text on the page.
+
+That is what happened here. The component's stylesheet gives whatever follows the map some air:
+
+```css
+place-map > :is(.place-map-live, .place-map-static) + * {
+  display: block;
+  margin-block-start: var(--space-l);
+}
+```
+
+The `display: block` is deliberate: on `/activities/` the element after the map is `<sortable-table>`, an unregistered custom element, so it is `display: inline` by default and would ignore `margin-block-start` entirely. On an activity page the element after the map is the route script instead — same selector, same rule — and about 4 kB of coordinates printed under the map in the body text. Narrowed to `+ :not(script)`.
+
+Two things worth keeping. The first is that `display: block` on a `+ *` selector is a wider hazard than it looks: the sibling combinator picks the next *element*, and `<script>`, `<template>`, `<style>` and `<link>` are all elements that happen to be hidden only by a default. The second is a small relief — `:not(script)` takes the specificity of its argument, a type selector, so the fix raised the selector from (0,1,1) to (0,1,2) rather than lowering it, and nothing that had been winning against it started losing.
+
 ### Our own tiles
 
 Since 2026-09-17 every map opens on jedee's own basemap: a Protomaps extract of Sweden (`sweden-20260916.pmtiles`, 4.4 GB, full detail to zoom 15), cut from the free daily world build with `pmtiles extract … --bbox=10.5,55.0,24.5,69.2 --maxzoom=15` and hosted on the site's R2 bucket. It replaced plain OpenStreetMap tiles, whose dark mode was a CSS `invert()` filter — CARTO's ready-made dark basemap started demanding an API key in August 2026. Everything the map needs besides the tiles is self-hosted in `src/assets/map/`: the label fonts (only the Latin, Greek and Cyrillic glyph ranges — MapLibre asks for a range per character block and draws a missing one locally, with a console warning) and the icon sprites.
@@ -126,4 +143,4 @@ The control is a native `<select>`: a base-layer choice is single-select, and `<
 
 The inline map keeps the old gesture rules: no wheel or pinch zoom (that would trap the page scroll) except with Ctrl/⌘ held, which is also how a trackpad pinch arrives; rotation and tilt are off everywhere.
 
-The move to MapLibre and jedee's own tiles: the session of 2026-09-17, verified against `place-map.js` and `place-map.css`. Source: `_local/design/Plan - GPX route line on the activity map.md` (2026-08-11), verified against `place-map.js` and `route-geojson.js`. The base-layer switch: `_raw/dev-notes/How the place map switches tile styles.md` (2026-08-11), verified against `place-map.js` and `place-map.css`. The start/finish symbols were reworked from `divIcon` HTML markers into native vector shapes on 2026-08-16 (commit 30aade8), re-verified against `place-map.js` and `place-map.css`. The colors and their theme blocks: the session of 2026-09-18, `src/_raw/dev-notes/How the map colors came back from Penpot.md`.
+The move to MapLibre and jedee's own tiles: the session of 2026-09-17, verified against `place-map.js` and `place-map.css`. Source: `_local/design/Plan - GPX route line on the activity map.md` (2026-08-11), verified against `place-map.js` and `route-geojson.js`. The base-layer switch: `_raw/dev-notes/How the place map switches tile styles.md` (2026-08-11), verified against `place-map.js` and `place-map.css`. The start/finish symbols were reworked from `divIcon` HTML markers into native vector shapes on 2026-08-16 (commit 30aade8), re-verified against `place-map.js` and `place-map.css`. The colors and their theme blocks: the session of 2026-09-18, `src/_raw/dev-notes/How the map colors came back from Penpot.md`. The route script's `display` trap: the session of 2026-09-19, `src/_raw/dev-notes/How the popout breakout was pulled back to prose width.md`.
