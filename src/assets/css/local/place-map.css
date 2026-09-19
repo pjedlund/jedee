@@ -26,6 +26,12 @@ place-map[data-map-ready] > .place-map-static {
   display: none;
 }
 
+/* Whatever follows the map inside <place-map> — the activities table here — needs air, or the map's border sits straight on the table's top rule. */
+place-map > :is(.place-map-live, .place-map-static) + * {
+  display: block;
+  margin-block-start: var(--space-m);
+}
+
 /* Live inline map. Same 16:9 as the static fallback so the swap doesn't shift layout, and the box keeps its height when the canvas moves out to the overlay. position:relative anchors the maximize button. */
 .place-map-live {
   position: relative;

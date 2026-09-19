@@ -6,7 +6,7 @@ sortable-table {
   --sort-arrow-size: 0.32em;
   --sort-arrow-gap: var(--space-3xs);
   --sort-arrow-hint: 0.4;
-  --sort-arrow-middle: 0.75em; /* the small caps' visual middle below the head's first line top, measured for Source Sans at the table's leading */
+  --sort-arrow-middle: 0.8em; /* the x-height's middle below the head's first line top, measured for Source Sans at the table's leading; the cap middle (0.71em) reads high beside a word with descenders */
 
   display: block;
 }

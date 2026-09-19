@@ -13,7 +13,7 @@
   --table-band-rule: calc(var(--border-thickness) * 2) solid var(--table-rule-color);
   --table-radius: var(--border-radius-medium);
   --table-font-size: 1em; /* body cells at the text size: Rutter warns against shrinking a table to fit */
-  --table-head-size: 1em;
+  --table-head-size: var(--size-step-min-1); /* type.table.header sets the head a step below the body text, not level with it */
   --table-head-color: var(--color-text-subdued);
   --table-head-caps: normal; /* small caps instead: all-small-caps here, and --table-head-tracking carries the extra letter-spacing they want */
   --table-head-transform: none;
@@ -198,25 +198,25 @@ thead th small {
   container-type: inline-size;
 }
 
-@container (inline-size < 63rem) {
+@container (inline-size < 55rem) {
   [data-table-priority='5'] {
     display: none;
   }
 }
 
-@container (inline-size < 58rem) {
+@container (inline-size < 50rem) {
   [data-table-priority='4'] {
     display: none;
   }
 }
 
-@container (inline-size < 48rem) {
+@container (inline-size < 42rem) {
   [data-table-priority='3'] {
     display: none;
   }
 }
 
-@container (inline-size < 39rem) {
+@container (inline-size < 35rem) {
   [data-table-priority='2'] {
     display: none;
   }

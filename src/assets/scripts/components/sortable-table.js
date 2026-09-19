@@ -1,12 +1,15 @@
 // <sortable-table>: turns each column head of the table inside it into a sort button (Adrian Roselli, "Sortable Table Columns": aria-sort on the sorted head only).
-// Markup contract: a cell's data-sort is its raw sort value (numeric; empty = no value, always last); cells without it sort by their text. A head's data-sort-first="ascending" makes the first click start low (pace). The server marks its own order with aria-sort on one head.
+// Markup contract: a cell's data-sort is its raw sort value (numeric, or text where the cell shows something else — an icon; empty = no value, always last); cells without it sort by their text. A head's data-sort-first="ascending" makes the first click start low (pace, and any text column carrying data-sort). The server marks its own order with aria-sort on one head.
 
 const collator = new Intl.Collator(undefined, {numeric: true});
 
 export const keyOf = cell => {
   const raw = cell.dataset.sort ?? cell.textContent.trim();
   if (raw === '') return null;
-  return 'sort' in cell.dataset ? Number(raw) : raw;
+  if (!('sort' in cell.dataset)) return raw;
+  // ⚠ A data-sort that isn't a number sorts as text; Number() would make it NaN, and a NaN comparator leaves every row where it was.
+  const number = Number(raw);
+  return Number.isNaN(number) ? raw : number;
 };
 
 // Empty keys sink in either direction; ties keep the order the server wrote.
