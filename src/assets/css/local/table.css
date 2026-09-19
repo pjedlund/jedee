@@ -3,7 +3,7 @@
 .table-wrapper {
   /* The look of every table: tweak here. Cells inherit these from the wrapper. */
   --table-bg: var(--color-bg);
-  --table-head-bg: color-mix(in oklab, var(--color-text) 2%, var(--table-bg)); /* the design's faint tint; mixed INTO the bg, not translucent, because the sticky head cell must stay opaque */
+  --table-head-bg: color-mix(in oklab, var(--color-text) 4%, var(--table-bg)); /* the design's faint tint; mixed INTO the bg, not translucent, because the sticky head cell must stay opaque */
   --table-stripe: transparent; /* off, after Rutter and Barker; color-mix(in oklab, var(--color-text) 4%, transparent) turns them on */
   --table-rule-color: var(--color-rule);
   --table-rule-shadow: var(--color-rule-shadow); /* the stamped rule's upper half; darker than the page, which in dark mode the band color is not */
@@ -27,7 +27,7 @@
   --table-caption-style: italic;
   --table-shadow: color-mix(in oklab, var(--color-text) 20%, transparent);
   --table-fixed-min-inline-size: 40rem;
-  --table-row-hover: color-mix(in oklab, var(--color-text) 6%, transparent); /* linked rows only; it lies over the text, so keep it faint */
+  --table-row-hover: color-mix(in oklab, var(--color-text) 8%, transparent); /* linked rows only; it lies over the text, so keep it faint */
   --table-row-hover-in: 0s; /* lights up on the frame the pointer arrives */
   --table-row-hover-out: 1s; /* and decays behind it */
   --table-row-hover-ease: var(--ease-out-quad);
