@@ -69,6 +69,7 @@
   /* Hairline rules. Warmer than the gray ramp, to sit on the warm page rather than cut across it. */
   --color-rule: var(--color-base-rule);
   --color-rule-shadow: var(--color-base-rule); /* the groove's upper line; must read darker than --color-bg */
+  --color-rule-highlight: var(--color-base-white);
   /* border top for body */
   --color-border-top: var(--color-base-light);
 
@@ -97,6 +98,7 @@
     --color-bg-accent-2: var(--color-gray-600);
     --color-rule: var(--color-base-rule-dark);
     --color-rule-shadow: var(--color-base-black);
+    --color-rule-highlight: var(--color-gray-800);
     /* border top for body */
     --color-border-top: var(--color-orange-900);
 
@@ -124,6 +126,7 @@
   --color-bg-accent-2: var(--color-gray-600);
   --color-rule: var(--color-base-rule-dark);
   --color-rule-shadow: var(--color-base-black);
+  --color-rule-highlight: var(--color-gray-800);
   /* border top for body */
   --color-border-top: var(--color-orange-900);
 

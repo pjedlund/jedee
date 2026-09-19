@@ -7,7 +7,7 @@
   --table-stripe: transparent; /* off, after Rutter and Barker; color-mix(in oklab, var(--color-text) 4%, transparent) turns them on */
   --table-rule-color: var(--color-rule);
   --table-rule-shadow: var(--color-rule-shadow); /* the stamped rule's upper half; darker than the page, which in dark mode the band color is not */
-  --table-rule-highlight: var(--color-bg-accent); /* its lower half; its own slot so it can leave --color-bg-accent behind */
+  --table-rule-highlight: var(--color-rule-highlight); /* its lower half; paired with the shadow so neither line dominates and the groove reads as cut in */
   --table-rule: var(--border-thickness) solid var(--table-rule-color);
   --table-border: none; /* the box around the table; var(--table-rule) brings it back */
   --table-band-rule: calc(var(--border-thickness) * 2) solid var(--table-rule-color);
