@@ -63,8 +63,11 @@
   --color-accent-green: var(--color-green);
 
   --color-text-accent: var(--color-gray-700);
+  --color-text-subdued: var(--color-base-subdued);
   --color-bg-accent: var(--color-base-white);
   --color-bg-accent-2: var(--color-gray-300);
+  /* Hairline rules. Warmer than the gray ramp, to sit on the warm page rather than cut across it. */
+  --color-rule: var(--color-base-rule);
   /* border top for body */
   --color-border-top: var(--color-base-light);
 
@@ -88,8 +91,10 @@
     --color-accent-green: var(--color-green-subdued);
 
     --color-text-accent: var(--color-gray-200);
+    --color-text-subdued: var(--color-gray-300);
     --color-bg-accent: var(--color-gray-700);
     --color-bg-accent-2: var(--color-gray-600);
+    --color-rule: var(--color-base-rule-dark);
     /* border top for body */
     --color-border-top: var(--color-orange-900);
 
@@ -112,8 +117,10 @@
   --color-accent-green: var(--color-green-subdued);
 
   --color-text-accent: var(--color-gray-200);
+  --color-text-subdued: var(--color-gray-300);
   --color-bg-accent: var(--color-gray-700);
   --color-bg-accent-2: var(--color-gray-600);
+  --color-rule: var(--color-base-rule-dark);
   /* border top for body */
   --color-border-top: var(--color-orange-900);
 

@@ -5,14 +5,15 @@
   --table-bg: var(--color-bg);
   --table-head-bg: var(--color-bg-accent);
   --table-stripe: transparent; /* off, after Rutter and Barker; color-mix(in oklab, var(--color-text) 4%, transparent) turns them on */
-  --table-rule-color: var(--color-bg-accent-2);
+  --table-rule-color: var(--color-rule);
+  --table-rule-highlight: var(--color-bg-accent); /* the lower half of the stamped rule; its own slot so it can leave --color-bg-accent behind */
   --table-rule: var(--border-thickness) solid var(--table-rule-color);
   --table-border: none; /* the box around the table; var(--table-rule) brings it back */
-  --table-row-rule: var(--table-rule);
   --table-band-rule: calc(var(--border-thickness) * 2) solid var(--table-rule-color);
   --table-radius: var(--border-radius-medium);
   --table-font-size: 1em; /* body cells at the text size: Rutter warns against shrinking a table to fit */
   --table-head-size: 1em;
+  --table-head-color: var(--color-text-subdued);
   --table-head-caps: all-small-caps; /* capitals instead: normal here, uppercase below, and --size-step-min-2 */
   --table-head-transform: none;
   --table-head-weight: var(--font-regular); /* small caps replace bold rather than add to it (Butterick) */
@@ -79,6 +80,7 @@ thead th {
   font-weight: var(--table-head-weight);
   letter-spacing: var(--table-head-tracking);
   text-transform: var(--table-head-transform);
+  color: var(--table-head-color);
   background: var(--table-head-bg);
 }
 
@@ -92,13 +94,24 @@ tbody:last-child {
   border-block-end: var(--table-band-rule);
 }
 
-tbody tr + tr {
-  border-block-start: var(--table-row-rule);
+/* The stamped rule: a hairline with a lighter one directly under it, so the join reads as pressed into the page. Painted, not bordered — a collapsed border gives one color per edge. */
+tbody tr + tr > * {
+  --table-rule-layer: linear-gradient(
+    to bottom,
+    var(--table-rule-color) 0 var(--border-thickness),
+    var(--table-rule-highlight) var(--border-thickness) calc(var(--border-thickness) * 2),
+    transparent calc(var(--border-thickness) * 2)
+  );
 }
 
-/* On the cells, not the row: a translucent image lets the scroll shadows through and still tints the opaque sticky row header. */
 tbody tr:nth-child(even) > * {
-  background-image: linear-gradient(var(--table-stripe) 0 0);
+  --table-stripe-layer: linear-gradient(var(--table-stripe) 0 0);
+}
+
+/* On the cells, not the row: a translucent image lets the scroll shadows through and still tints the opaque sticky row header. Rule over stripe, both optional. */
+tbody tr > * {
+  background-image: var(--table-rule-layer, none), var(--table-stripe-layer, none);
+  background-repeat: no-repeat;
 }
 
 tfoot {
