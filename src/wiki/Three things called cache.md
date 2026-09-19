@@ -67,6 +67,8 @@ jedee takes the second option above and gets the guarantee for free, because in 
 
 ⚠ **The `/bundle/<hash>.css` paths are dev-only.** Eleventy's bundle plugin can emit content-hashed files and does — but `css-inline.njk` only *links* them under `npm start`, so a refresh picks up edits. A production build emits no `/bundle/` directory at all. That's why there's no `[[headers]]` rule for it: in production there is nothing at that path.
 
+⚠ **So a dev build is the wrong place to measure page weight.** The two builds put the same CSS in different places, and a page that looks like 50 kB with three stylesheet links under `npm start` is 85 kB with everything inline in production. Measuring [[WebC|a component's inline CSS]] on the dev output in September 2026 produced both a percentage and a cacheability argument that a production build contradicted.
+
 ### A long cache on an unhashed URL is a time bomb
 
 The year-long cache is only safe on a URL whose contents never change under it. Fonts qualify, and they change identity by filename anyway. The component scripts did **not**: esbuild builds them to stable, unhashed names (`dist/assets/scripts/components/<name>.js`) and the `.webc` components reference them unhashed, so a returning visitor holds the *old* file for up to a year after any edit. This inherited EE header shipped for months as a real bug — the [[The place map|route-line place-map update]] hit it exactly.

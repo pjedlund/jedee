@@ -5,6 +5,16 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-19] enrich | Three things called cache, WebC
+
+Two short additions from the session that cut the YouTube components' inline CSS comments to one line each.
+
+⚠ The keeper is a method error, not a fact. The component's CSS was measured on a **dev** build, which gave "3.5 kB of a 50 kB page, about 7%" and an argument that moving it to a bundle would buy a cacheable shared file. A production build contradicts both: `head/css-inline.njk` links the bundles only under `--serve` and inlines global and local into the head otherwise, so the same page is 85 kB with every stylesheet inline and no bundle fetched. [[Three things called cache]] already recorded the mechanism — its `/bundle/<hash>.css` paths are dev-only — and was not consulted before measuring. It now carries the consequence as well as the fact.
+
+[[WebC]] gains the one genuinely new line: ⚠ a comment in a component's `<style>` reaches visitors, because cssnano never sees that block. The two YouTube components' comments went from 1,458 to 819 bytes, paid once per embed.
+
+What survives of the original claim: the block still loses cssnano, autoprefixer and deduplication, and `/jams/nine/` emits the same rules three times, 8.4 kB where one copy is 2.9 kB.
+
 ## [2026-09-19] ingest | WebC
 
 The page this morning's lint named as the clearest gap: 14 pages mentioned WebC, and [[Web components]] — which is about browser custom elements — mentioned it once. Written from the ten `.webc` files, `eleventy.config.js` and the built HTML, checked against upstream Eleventy Excellent on disk.
