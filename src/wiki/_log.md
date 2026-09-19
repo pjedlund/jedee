@@ -5,6 +5,20 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-19] ingest | WebC
+
+The page this morning's lint named as the clearest gap: 14 pages mentioned WebC, and [[Web components]] — which is about browser custom elements — mentioned it once. Written from the ten `.webc` files, `eleventy.config.js` and the built HTML, checked against upstream Eleventy Excellent on disk.
+
+The general half's job is the distinction the name invites you to miss: WebC is **build-time**, a custom element is **runtime**, and neither needs the other. Then what survives into the HTML, which is the only question that matters in practice — `webc:root` merges the invocation's attributes onto an inner element, `webc:keep` saves a tag for a script to upgrade later, and ⚠ **a component with several top-level elements has no root, so WebC keeps the invocation tag as a wrapper around them.** With `webc:keep` on an inner tag of the same name, that renders the element twice and any upgrade script runs twice on the same children. Two precisions worth having: an HTML comment does **not** count as a top-level element (all three of jedee's own components open with one and emit once, verified in the built HTML), while a `<style>` block does — which is the usual way a component acquires a second root by accident.
+
+In jedee: ten components, seven from Eleventy Excellent with three still byte-identical (`custom-card`, `custom-peertube`, `custom-peertube-link`), and three of jedee's own — [[The PhotoSwipe lightbox|photo-lightbox]], [[The place map|place-map]] and `sortable-table` — all the same shape, an [[is-land]] around a kept custom element. The two ends of the range are both EE's: `custom-svg` runs eleventy-img and svgo at build time and leaves no trace at all, and `custom-masonry` is a tag with `webc:keep` whose JavaScript was deleted over [[Layout shift]], now a `<div class="grid">` wearing a custom element's name.
+
+⚠ One measurement taken while writing. EE's `custom-youtube` keeps its CSS in a top-level `<style>`, so it ships **inline in the body, un-minified, comments and all,** on every page with a video — never reaching the CSS pipeline, never deduplicated. Upstream that block is 730 bytes; jedee's is 3,020 after the poster fade, the themed placeholder and the focus-ring fix. A jam page carries 3.5 kB of inline `<style>` against 50 kB of HTML, about 7%, identical on every such page. Recorded rather than fixed: the pattern is inherited, and moving it to a `local` bundle is the same change as the one the other three components already made.
+
+Collects three traps the other pages were each carrying alone — the doubling root, the `@breakout` prop that exists because `webc:root` puts a breakout class one level too deep ([[Layout breakouts]]), and `webc:setup` being unable to await, which is why the YouTube poster is computed by a filter and passed in.
+
+[[Wikilinks]] gains one more, found by hitting it in this page's own component table: ⚠ an aliased `[[Page Title|shown text]]` cannot sit in a markdown table cell, because the table's `|` splits the row before the interlinker sees the link. It does not fail as a dead link — it mangles the row, dropping the overflow cell, so the build is green and the page just quietly misses a column's worth of text.
+
 ## [2026-09-19] lint | full checkup
 
 61 content pages. Structure clean: no dead wikilinks, every page in `index.md`, frontmatter conforming on all 61, and no orphans — [[Accessibility]] is the only page whose sole inbound links are the index and this log. Every count the 2026-09-06 lint corrected is still right: 180 activities, ten pa11y paths, 2 OG JPEGs against a 2-post `collections.article`, fourteen of sixteen types with a feed, `syndication:` on exactly one post. 188 external links checked, one dead.

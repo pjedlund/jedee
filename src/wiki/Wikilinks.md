@@ -35,6 +35,12 @@ So `backlinks` is a data value that appears on a page when others link to it —
 
 The mechanism fills in retroactively and instantly: the first time a long-linked-to page is finally written, every page that ever pointed at it lands in its `backlinks` on the next build, and its list appears fully populated on day one.
 
+### ⚠ An aliased wikilink cannot sit in a markdown table cell
+
+`[[Page Title|shown text]]` and a markdown table both use `|` as their separator, and the table wins — markdown-it splits the row on the pipe before the interlinker ever sees the link. The result is not a dead link but a **mangled row**: the cell ends at `[[Page Title`, and `shown text]]` becomes an extra cell that is silently dropped when the row already has as many cells as the header. The build stays green and the page looks nearly right, which is what makes it worth writing down — a table with one column's worth of text missing reads as a typo rather than a syntax collision.
+
+Use the plain `[[Page Title]]` form inside a table, or put the link in the prose around it. Escaping the pipe as `\|` also works, at the cost of a wikilink nobody can read in Obsidian. Hit while writing [[WebC]]'s component table on 2026-09-19.
+
 ### Dead wikilinks render as plain text
 
 ⚠ **This changed on 2026-07-31 and the raw source note predates it.** The plugin's own default returns the raw `[[bracketed]]` string for an unresolvable link — and before reaching that default it substitutes `opts.stubUrl` (default `/stubs/`), so a dead link actually rendered as a live anchor to a page that doesn't exist. Both behaviors are wrong for this site, because published posts must never link into the private wiki (see the one-way rule in the LLM wiki section of `AGENTS.md`).
