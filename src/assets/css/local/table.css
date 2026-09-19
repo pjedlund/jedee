@@ -21,7 +21,7 @@
   --table-head-tracking: var(--tracking-wide);
   --table-cell-padding-block: var(--space-s);
   --table-cell-padding-inline: var(--space-s);
-  --table-edge-padding: var(--space-m-l); /* caption and first column; ⚠ its 31px maximum matches the 2rem popout, which lines the text up with the prose */
+  --table-edge-padding: var(--space-m-l); /* caption and first column, inset from the table edge */
   --table-cell-align: baseline;
   --table-caption-size: var(--size-step-min-1);
   --table-caption-style: italic;
@@ -66,7 +66,7 @@ td {
   vertical-align: var(--table-cell-align);
 }
 
-/* Fixed at every width: at full popout width the text lines up with the prose, and a narrower box keeps the same inset. */
+/* The caption and first column sit one step in from the table edge, at every width. */
 .table-wrapper :is(caption, tr > :first-child) {
   padding-inline-start: var(--table-edge-padding);
 }

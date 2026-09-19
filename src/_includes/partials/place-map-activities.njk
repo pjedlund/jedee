@@ -13,7 +13,7 @@
 
   No async shortcodes here, so the interlinker {% if %}-include trap doesn't apply.
 #}
-<place-map @place="my activities" @breakout="popout">
+<place-map @place="my activities">
   {%- if collections.activity | located | length %}
     <div class="place-map-live" data-place-map-box>
       <p class="place-map-pending">Map of my activities</p>
