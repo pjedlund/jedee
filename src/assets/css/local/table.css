@@ -188,24 +188,30 @@ thead th small {
   hyphens: auto;
 }
 
-/* Columns a narrowing table drops, priority 4 first, then 3, then 2 (data-table-priority on the head and its cells). Only for linked rows, whose pages show everything. ⚠ The widths were measured on the activities table, where the full seven columns need about 63rem. */
+/* Columns a narrowing table drops, highest priority number first (data-table-priority on the head and its cells). Only for linked rows, whose pages show everything. ⚠ Each threshold sits just above the min-content width of the table WITHOUT that column, measured on the activities table; re-measure if its columns change. */
 .table-wrapper:has([data-table-priority]) {
   container-type: inline-size;
 }
 
-@container (inline-size < 64rem) {
+@container (inline-size < 66rem) {
+  [data-table-priority='5'] {
+    display: none;
+  }
+}
+
+@container (inline-size < 58rem) {
   [data-table-priority='4'] {
     display: none;
   }
 }
 
-@container (inline-size < 54rem) {
+@container (inline-size < 47rem) {
   [data-table-priority='3'] {
     display: none;
   }
 }
 
-@container (inline-size < 32rem) {
+@container (inline-size < 38rem) {
   [data-table-priority='2'] {
     display: none;
   }
