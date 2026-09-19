@@ -1,5 +1,5 @@
 ---
-title: MOK träningsläger"
+title: MOK träningsläger
 date: "2023-04-22T15:55:08+02:00"
 activityType: orienteering
 distanceKm: 3.84
