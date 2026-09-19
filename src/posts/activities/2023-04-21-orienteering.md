@@ -1,5 +1,5 @@
 ---
-title: "Orienteering"
+title: "MOK träningsläger"
 date: "2023-04-21T16:45:21+02:00"
 activityType: orienteering
 eventType: training
