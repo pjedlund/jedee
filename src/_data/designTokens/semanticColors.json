@@ -9,7 +9,7 @@
       "rule":        "{color.base.rule}",
       "rule-shadow": "{color.base.rule}",
       "rule-highlight": "{color.base.white}",
-      "bg-head": "#dddfe2",
+      "bg-head": "#e0e1e4",
       "text":        "{color.base.darkest}",
       "text-subdued": "{color.base.subdued}",
       "text-accent": "{color.gray.700}",

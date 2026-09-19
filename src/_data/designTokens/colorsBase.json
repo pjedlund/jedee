@@ -8,7 +8,7 @@
     { "name": "base-lightest", "value": "#f4f4f2" },
     { "name": "base-rule", "value": "#D5D6CE" },
     { "name": "base-rule-dark", "value": "#222423" },
-    { "name": "base-subdued", "value": "#4E5A69" },
+    { "name": "base-subdued", "value": "#576374" },
     { "name": "base-white", "value": "#ffffff" },
     { "name": "base-black", "value": "#000000" }
   ],
