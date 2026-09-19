@@ -109,6 +109,12 @@
   "base-subdued": {
     "$value": "#576374"
   },
+  "base-cream": {
+    "$value": "#EEEAE0"
+  },
+  "base-cream-dark": {
+    "$value": "#1E1C17"
+  },
   "base-white": {
     "$value": "#ffffff"
   },
