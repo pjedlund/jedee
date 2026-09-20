@@ -16,6 +16,7 @@ layout: base
       <p class="meta">
         {% set definedDate = date %}{% include "partials/date.njk" %}
         {%- if updated %} · Updated <time datetime="{{ updated | toIsoString }}">{{ updated | formatDate('D MMM YYYY') }}</time>{% endif %}
+        {%- if meta.viewRepo.allow %} · <a href="{{ settings.repos.site }}/commits/main/{{ page.inputPath | replace('./', '') | replace(' ', '%20') }}">Revision history</a>{% endif %}
       </p>
     {% endif %}
 
