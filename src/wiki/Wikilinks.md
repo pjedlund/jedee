@@ -43,7 +43,7 @@ Use the plain `[[Page Title]]` form inside a table, or put the link in the prose
 
 ### Dead wikilinks render as plain text
 
-⚠ **This changed on 2026-07-31 and the raw source note predates it.** The plugin's own default returns the raw `[[bracketed]]` string for an unresolvable link — and before reaching that default it substitutes `opts.stubUrl` (default `/stubs/`), so a dead link actually rendered as a live anchor to a page that doesn't exist. Both behaviors are wrong for this site, because published posts must never link into the private wiki (see the one-way rule in the LLM wiki section of `AGENTS.md`).
+**This changed on 2026-07-31 and the raw source note predates it.** The plugin's own default returns the raw `[[bracketed]]` string for an unresolvable link — and before reaching that default it substitutes `opts.stubUrl` (default `/stubs/`), so a dead link actually rendered as a live anchor to a page that doesn't exist. Both behaviors are wrong for this site, because published posts must never link into the private wiki (see the one-way rule in the LLM wiki section of `AGENTS.md`).
 
 The fix is two coupled settings in `eleventy.config.js`:
 
@@ -58,11 +58,11 @@ eleventyConfig.addPlugin(plugins.interlinker, {
 
 The plugin's console dead-link report stays on and is the build-time warning that someone added a link they shouldn't have.
 
-⚠ **That was only true from 2026-08-03.** Until then the report carried 13 warnings and all 13 were false positives — code examples and an un-rendered template href, matched because the plugin scans raw source. A report with no true positives catches nothing, and this one was concealing a real one-way-rule breach: this page's own `[[Anna Karenina]]` example was registering as a live link, giving a published post backlinks into the wiki. See [[Link checking]] for the mechanism and the fix.
+**That was only true from 2026-08-03.** Until then the report carried 13 warnings and all 13 were false positives — code examples and an un-rendered template href, matched because the plugin scans raw source. A report with no true positives catches nothing, and this one was concealing a real one-way-rule breach: this page's own `[[Anna Karenina]]` example was registering as a live link, giving a published post backlinks into the wiki. See [[Link checking]] for the mechanism and the fix.
 
 ### Scale, and what the count actually means
 
-⚠ **Counting bracket pairs in the tree overstates this, and earlier figures here did.** The plugin reads a page's **body only** — front matter is never scanned. The Jam front-matter wikilinks (artist, genre) that dominate any file-level count have therefore never been detected, never produced a backlink, and never appeared in the dead-link report. A grep answers a different question than "what does the plugin see".
+**Counting bracket pairs in the tree overstates this, and earlier figures here did.** The plugin reads a page's **body only** — front matter is never scanned. The Jam front-matter wikilinks (artist, genre) that dominate any file-level count have therefore never been detected, never produced a backlink, and never appeared in the dead-link report. A grep answers a different question than "what does the plugin see".
 
 Recounted 2026-08-03 across the markdown in `src/`: **483 bracket pairs, 219 distinct titles**, of which 16 pairs (11 titles) sit inside code and are now excluded from detection ([[Link checking]]). Neither figure is the number of *live* links, for the front-matter reason above. The number that actually matters is the dead-link report, which is **0** — so the plain-text fallback above is a net with nothing currently falling into it.
 

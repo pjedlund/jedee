@@ -24,7 +24,7 @@ Every type is a folder under `src/posts/` with a data file of the same name, and
 
 This is a **jedee divergence** — Eleventy Excellent ships two types (`articles`, `notes`) and tags them directly.
 
-⚠ **Photo is the one type not configured in JSON.** Fifteen types have a `<type>.json`; photo has `photos.11tydata.js`, an ES module carrying the same four keys plus a fifth:
+**Photo is the one type not configured in JSON.** Fifteen types have a `<type>.json`; photo has `photos.11tydata.js`, an ES module carrying the same four keys plus a fifth:
 
 ```js
 eleventyComputed: {
@@ -49,7 +49,7 @@ export const POST_TYPES = ['article', 'note', 'reading', /* … */ 'activity'];
 
 `eleventy.config.js` loops it: `POST_TYPES.forEach(type => eleventyConfig.addCollection(type, byCategory(type)))`.
 
-⚠ **The layout aliases are not looped, and must not be.** `article` is in `POST_TYPES` but there is no `article.njk` — articles use `post.njk`, EE's stock layout name. A generic `addLayoutAlias(t, t + '.njk')` loop would emit a bogus alias for it. All nineteen aliases are written out one per line instead (`eleventy.config.js:45–63` — the sixteen types minus `article`, plus `base`, `page`, `post` and `tags`). The comment in `collections.js` says so; it is the single most repeated warning across the fifteen specs.
+**The layout aliases are not looped, and must not be.** `article` is in `POST_TYPES` but there is no `article.njk` — articles use `post.njk`, EE's stock layout name. A generic `addLayoutAlias(t, t + '.njk')` loop would emit a bogus alias for it. All nineteen aliases are written out one per line instead (`eleventy.config.js:45–63` — the sixteen types minus `article`, plus `base`, `page`, `post` and `tags`). The comment in `collections.js` says so; it is the single most repeated warning across the fifteen specs.
 
 ## One archive template, fifteen wrappers
 
@@ -73,7 +73,7 @@ export const POST_TYPES = ['article', 'note', 'reading', /* … */ 'activity'];
 - **Layout** — `src/_layouts/<type>.njk`. All sixteen exist. All sixteen open with `<article class="wrapper flow prose h-entry">`; see [[Microformats]].
 - **Card** — `src/_includes/partials/card-<type>.njk`. Eleven types have their own; the five response types share one — see [[The title-less post types]].
 - **Feed** — twelve types have one, four deliberately don't. See [[Per-type feeds]].
-- **Navigation** — one entry in `src/_data/navigation.js` with a Lucide icon and the collection key for the count. All sixteen are listed. ⚠ Jam is asymmetric: URL `/jams/`, collection key `jam`.
+- **Navigation** — one entry in `src/_data/navigation.js` with a Lucide icon and the collection key for the count. All sixteen are listed. Jam is asymmetric: URL `/jams/`, collection key `jam`.
 - **Schema** — a `schema:` line in the layout's front matter. See [[One JSON-LD envelope for sixteen types]].
 
 Source: the fifteen per-type specs in `_local/project_docs/`, checked against live code 2026-07-31.

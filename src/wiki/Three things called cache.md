@@ -1,6 +1,7 @@
 ---
 description: "The unrelated stores that share the name cache — build, browser, service worker — which of them ever reach a visitor, and jedee's inlining approach to cache-busting."
 date: 2026-07-31
+updated: 2026-09-19
 ---
 
 *Cache* is among the most overloaded words in web development. On a single site it can name several unrelated stores, living in different places, owned by different parties and cleared in completely different ways. Conflating them makes debugging miserable, because "clear the cache" then has several possible meanings and usually only one of them is the one that would help.
@@ -37,7 +38,7 @@ package = "netlify-plugin-cache"
 
 `.cache/` is `@11ty/eleventy-fetch`'s store. Three build steps fill it: remote cover images pulled in and self-hosted by the image transform (see [[Self-hosting remote images at build time]]), webmentions fetched by `src/_data/webmentions.js`, and a static map image per photo post from Geoapify.
 
-⚠ **The cache is excluded from Netlify's secret scanning, and it has to be.** The Geoapify URL carries `MAP_API_KEY` in its query string, and eleventy-fetch stores request URLs verbatim. Netlify scans build-generated files for leaked secrets and would flag it:
+**The cache is excluded from Netlify's secret scanning, and it has to be.** The Geoapify URL carries `MAP_API_KEY` in its query string, and eleventy-fetch stores request URLs verbatim. Netlify scans build-generated files for leaked secrets and would flag it:
 
 ```toml
 [build.environment]
@@ -65,9 +66,9 @@ Only the fonts get a year. **Everything else** — pages, images, feeds, the fav
 
 jedee takes the second option above and gets the guarantee for free, because in a production build the CSS and JS **ride inside the HTML**. `head/css-inline.njk` inlines the whole stylesheet as a `<style>` block; the site's JavaScript is inlined the same way. There is no stylesheet request to go stale. Since the HTML revalidates on every visit, so does everything inlined in it.
 
-⚠ **The `/bundle/<hash>.css` paths are dev-only.** Eleventy's bundle plugin can emit content-hashed files and does — but `css-inline.njk` only *links* them under `npm start`, so a refresh picks up edits. A production build emits no `/bundle/` directory at all. That's why there's no `[[headers]]` rule for it: in production there is nothing at that path.
+**The `/bundle/<hash>.css` paths are dev-only.** Eleventy's bundle plugin can emit content-hashed files and does — but `css-inline.njk` only *links* them under `npm start`, so a refresh picks up edits. A production build emits no `/bundle/` directory at all. That's why there's no `[[headers]]` rule for it: in production there is nothing at that path.
 
-⚠ **So a dev build is the wrong place to measure page weight.** The two builds put the same CSS in different places, and a page that looks like 50 kB with three stylesheet links under `npm start` is 85 kB with everything inline in production. Measuring [[WebC|a component's inline CSS]] on the dev output in September 2026 produced both a percentage and a cacheability argument that a production build contradicted.
+**So a dev build is the wrong place to measure page weight.** The two builds put the same CSS in different places, and a page that looks like 50 kB with three stylesheet links under `npm start` is 85 kB with everything inline in production. Measuring [[WebC|a component's inline CSS]] on the dev output in September 2026 produced both a percentage and a cacheability argument that a production build contradicted.
 
 ### A long cache on an unhashed URL is a time bomb
 

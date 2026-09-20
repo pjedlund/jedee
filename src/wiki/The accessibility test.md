@@ -38,7 +38,7 @@ npm run test:a11y
 
 Never hand-edit `dist/pa11y.json`: `npm run clean` deletes it and the next test build regenerates it. Change the template or `meta.js` instead.
 
-⚠ **The test build is heavier than production, not lighter.** `eleventy.config.js` ignores the template outside the test environment:
+**The test build is heavier than production, not lighter.** `eleventy.config.js` ignores the template outside the test environment:
 
 ```js
 if (process.env.ELEVENTY_ENV != 'test') {
@@ -50,7 +50,7 @@ So `pa11y.json` exists only in an `ELEVENTY_ENV=test` build. That is also why `t
 
 The four steps behind the one command: clean and build in test mode → start `eleventy --serve` on `localhost:8080` with `--ignore-initial` so it serves the build that already exists → sleep → run `pa11y-ci` against the generated config.
 
-### ⚠ "The a11y test passes" means ten pages
+### "The a11y test passes" means ten pages
 
 `src/_data/meta.js`:
 
@@ -87,7 +87,7 @@ The cheap guard is to confirm the target actually resolves before believing a gr
 curl -s -o /dev/null -w '%{http_code}\n' http://localhost:8080/audio/nybrostrand-beach/
 ```
 
-### ⚠ A missing browser fails the suite outright
+### A missing browser fails the suite outright
 
 pa11y-ci drives Chrome through puppeteer, and `puppeteer-core` ships no browser — it resolves one from `~/.cache/puppeteer` by exact version. When that version is absent the whole run dies before testing anything:
 
@@ -113,11 +113,11 @@ chromePath: process.env.PA11Y_CHROME || '/Applications/Google Chrome.app/Content
 
 Worth distinguishing from the failure above: this one is loud — a non-zero exit and no results table. The dead-path failure is the quiet one.
 
-### ⚠ It only ever sees light mode
+### It only ever sees light mode
 
 `chromeLaunchConfig` passes nothing but the sandbox flags, so Chrome runs at its default color scheme and pa11y measures **light-mode contrast only**. Every dark-mode color pairing in the site is unverified by this test. Checking dark mode means driving a headless browser with `prefers-color-scheme: dark` forced — a separate run, not a setting in this config (the script in the next section does both themes). See [[The theme toggle]] for how the two themes are switched.
 
-### ⚠ It cannot see the no-JS rendering at all — and pa11y is the wrong tool for it
+### It cannot see the no-JS rendering at all — and pa11y is the wrong tool for it
 
 The main menu renders two different layouts depending on whether scripts run: a MENU button with a dropdown panel, or a row of pills (see [[The main menu]]). pa11y drives a real browser with JavaScript on, so it has only ever seen the first one.
 

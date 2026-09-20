@@ -29,7 +29,7 @@ Table: Eagerness levels and Chrome's limits
 | `moderate` | When the pointer rests on the link for about 200 ms, or on pointerdown | 2, oldest dropped |
 | `conservative` | On pointerdown or touchstart | 2, oldest dropped |
 
-⚠ **The limit of two shows up as an error, and isn't one.** Hover three links in a row and DevTools reports the first as "discarded because the initiating page has too many prefetches ongoing, and this was one of the oldest". The link the visitor is about to click is almost always the most recent one hovered, so it is still there.
+**The limit of two shows up as an error, and isn't one.** Hover three links in a row and DevTools reports the first as "discarded because the initiating page has too many prefetches ongoing, and this was one of the oldest". The link the visitor is about to click is almost always the most recent one hovered, so it is still there.
 
 Support, as of September 2026 ([Can I use](https://caniuse.com/mdn-html_elements_script_type_speculationrules)): Chromium browsers (Chrome, Edge, Opera, Samsung Internet). Safari has it built in but disabled by default since 26.2, so it will switch on with no change to the page. Firefox has no support. The older `<link rel="prefetch">` is supported in Firefox and disabled by default in Safari.
 
@@ -37,7 +37,7 @@ Support, as of September 2026 ([Can I use](https://caniuse.com/mdn-html_elements
 
 A [[The service worker's three strategies|service worker]]'s cache makes a page available with no network at all. Whether it also makes an online click faster depends on its strategy for pages: a network-first worker asks the network every time, so online it saves nothing on the page itself. The prefetch is what removes that wait, and the two don't compete.
 
-⚠ **Until Chrome 138 (June 2025), a service worker switched prefetching off.** Chrome cancelled any speculation-rules prefetch whose URL was controlled by a service worker. A worker usually installs on the first page view, so on such a site the rules did nothing from the second page on, which is every page that matters. Since 138 the prefetch goes through the worker's `fetch` handler, and the response is kept for the navigation ([release notes](https://developer.chrome.com/release-notes/138)). The enterprise policy `PrefetchWithServiceWorkerEnabled` controls it.
+**Until Chrome 138 (June 2025), a service worker switched prefetching off.** Chrome cancelled any speculation-rules prefetch whose URL was controlled by a service worker. A worker usually installs on the first page view, so on such a site the rules did nothing from the second page on, which is every page that matters. Since 138 the prefetch goes through the worker's `fetch` handler, and the response is kept for the navigation ([release notes](https://developer.chrome.com/release-notes/138)). The enterprise policy `PrefetchWithServiceWorkerEnabled` controls it.
 
 ### Prefetching with a script
 

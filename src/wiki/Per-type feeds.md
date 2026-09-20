@@ -1,6 +1,7 @@
 ---
 description: "What a feed is, why splitting one per category helps subscribers, and how jedee gives fourteen of sixteen post types their own — plus what a feed silently drops."
 date: 2026-07-31
+updated: 2026-08-10
 ---
 
 A feed is a machine-readable list of a site's recent items that a reader application polls for updates — the mechanism for following a site without an account, an algorithm, or anyone's permission. Three formats are in use: [RSS](https://www.rssboard.org/rss-specification), [Atom](https://datatracker.ietf.org/doc/html/rfc4287) (an IETF standard, stricter and more precisely specified), and [JSON Feed](https://www.jsonfeed.org/) (the same idea expressed in JSON). Readers generally accept all three; a site advertises whichever it publishes with a `<link rel="alternate">` in the head.

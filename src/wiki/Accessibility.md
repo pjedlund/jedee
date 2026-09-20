@@ -21,14 +21,14 @@ Automated testing covers only what a rule engine can decide from markup and comp
 
 ## In jedee
 
-The site's public [accessibility statement](/accessibility/) targets **WCAG 2.1 Level AA** and names pa11y-ci as its test. ⚠ Two criteria new in 2.2, 2.4.11 Focus Not Obscured (Minimum) and 2.5.8 Target Size (Minimum), both AA, have not been checked here.
+The site's public [accessibility statement](/accessibility/) targets **WCAG 2.1 Level AA** and names pa11y-ci as its test. Two criteria new in 2.2, 2.4.11 Focus Not Obscured (Minimum) and 2.5.8 Target Size (Minimum), both AA, have not been checked here.
 
 ### What is tested
 
 `npm run test:a11y` runs pa11y-ci with HTML_CodeSniffer's `WCAG2AA` rules over the paths listed in `meta.js`. Three limits, each written up on [[The accessibility test]]:
 
-- ⚠ It is a spot check of **ten pages**, chosen to cover the layout shapes, not the whole site.
-- ⚠ It sees **light mode only**. Dark mode is checked by a separate script, `_local/tests/a11y-nojs.js`, which also covers the no-JavaScript rendering pa11y cannot load.
+- It is a spot check of **ten pages**, chosen to cover the layout shapes, not the whole site.
+- It sees **light mode only**. Dark mode is checked by a separate script, `_local/tests/a11y-nojs.js`, which also covers the no-JavaScript rendering pa11y cannot load.
 - ⚠ A passing contrast rule over a `color-mix()` color can mean the engine could not read the color, not that it passed. The style guide's primary button measured 3.45:1 on 2026-08-04 while pa11y reported nothing.
 
 ### What came from Eleventy Excellent

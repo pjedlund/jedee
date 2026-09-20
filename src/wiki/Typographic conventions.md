@@ -1,6 +1,7 @@
 ---
 description: "The book-typography rules for figures, small caps, capitals, captions, line breaks, superscripts, ordinals, list markers and subtitles, where they come from, and what each costs in accessibility."
 date: 2026-09-10
+updated: 2026-09-15
 ---
 
 Typography carries a set of conventions older than the web, most of them written down in two books. Robert Bringhurst's *The Elements of Typographic Style* (1992; 4th edition 2012) is adapted rule by rule for CSS at [webtypography.net](http://webtypography.net/). Matthew Butterick's *Practical Typography* is a free online book. The two agree more than they differ, and where they differ Butterick is the milder. This page covers the part CSS can switch on, given fonts that carry the features; the switches themselves are on [[OpenType features]].
@@ -34,7 +35,7 @@ Small caps are capitals drawn at about the height of lowercase letters, with str
 
 Bringhurst ([2.1.6](http://webtypography.net/2.1.6)): letterspace strings of capitals and small caps by 5–10% of the type size, and don't letterspace lowercase without a reason. Butterick ([all caps](https://practicaltypography.com/all-caps.html)): capitals for short text only (headings under a line, labels, small print), never whole paragraphs, and always letterspaced. Lowercase reads faster because its ascenders and descenders give each word a recognizable shape; in capitals every word is a rectangle.
 
-⚠ `text-transform: uppercase` can reach assistive technology. [Ben Myers](https://benmyers.dev/blog/css-can-influence-screenreaders/) (2020) showed VoiceOver reading a button labelled "Add", styled uppercase, as the acronym A.D.D. Small caps made from lowercase letters don't have this problem, because the characters are unchanged.
+`text-transform: uppercase` can reach assistive technology. [Ben Myers](https://benmyers.dev/blog/css-can-influence-screenreaders/) (2020) showed VoiceOver reading a button labelled "Add", styled uppercase, as the acronym A.D.D. Small caps made from lowercase letters don't have this problem, because the characters are unchanged.
 
 ## Captions and italic
 
@@ -50,7 +51,7 @@ Covered on [[Text wrapping]]. `text-wrap: balance` evens out the lines of a shor
 
 A footnote marker is conventionally a bare superscript figure. The browser's `<sup>` fakes one with `vertical-align: super` and a smaller size, which pushes the line apart. `font-variant-position: super` uses the font's own superscript glyphs, which sit inside the line. It works in Chrome since version 117 (2023), in Firefox and in Safari.
 
-⚠ Chrome and Safari draw nothing fake when the font has no superscript form for a character: it shows at full size on the baseline. So every character in the marker has to be covered. A font with superscript digits but no superscript brackets cannot set `[1]`.
+Chrome and Safari draw nothing fake when the font has no superscript form for a character: it shows at full size on the baseline. So every character in the marker has to be covered. A font with superscript digits but no superscript brackets cannot set `[1]`.
 
 ## Ordinals
 
@@ -61,13 +62,13 @@ When to use words is a house-style choice, and ordinals follow the same rule as 
 - **AP** (news) spells out first through ninth and uses figures from 10th ([NIU's AP summary](https://web.news.niu.edu/2019/02/25/numbers-in-ap-style/), 2019).
 - **Swedish** usually spells out numbers up to twelve (*Myndigheternas skrivregler*, [Ds 2004:45](https://www.riksdagen.se/sv/dokument-och-lagar/dokument/departementsserien/myndigheternas-skrivregler_gsb445/html/)). A figure ordinal takes a colon and the word's last letter: 1:a, 3:e, 29:e, never raised ([Språkrådet's Frågelådan](https://frageladan.isof.se/faqs/24030)).
 
-⚠ In CSS, `font-variant-numeric: ordinal` switches on the font's `ordn` feature. In some fonts that feature is contextual and raises only letters that follow a digit. In others it is a plain substitution that raises every lowercase letter in its span. Check the font before putting it on more than the suffix.
+In CSS, `font-variant-numeric: ordinal` switches on the font's `ordn` feature. In some fonts that feature is contextual and raises only letters that follow a digit. In others it is a plain substitution that raises every lowercase letter in its span. Check the font before putting it on more than the suffix.
 
 ## Lists
 
 Bringhurst has no rule for lists: neither the book's numbered rules nor webtypography.net covers bullets or list numbers. His figure rule still reaches them. A list number sits in lowercase running text, so by 3.2.1 it takes old-style figures. Butterick ([bulleted and numbered lists](https://practicaltypography.com/bulleted-and-numbered-lists.html)) says the bullet or number may differ in font and size from the item's text, a bullet should be noticeable but not big, hollow bullets are subtler than solid ones, and an asterisk is too small and sits too high to serve as one.
 
-⚠ Chrome's default stylesheet gives `::marker` `font-variant-numeric: tabular-nums` (checked 2026-09-14). By the one-property trap under Figures, that also makes list numbers lining, whatever the list item inherits. Old-style numbers need the marker set explicitly: `ol li::marker { font-variant-numeric: oldstyle-nums tabular-nums; }`. Tabular keeps "9." and "10." the same width.
+Chrome's default stylesheet gives `::marker` `font-variant-numeric: tabular-nums` (checked 2026-09-14). By the one-property trap under Figures, that also makes list numbers lining, whatever the list item inherits. Old-style numbers need the marker set explicitly: `ol li::marker { font-variant-numeric: oldstyle-nums tabular-nums; }`. Tabular keeps "9." and "10." the same width.
 
 A list number carries meaning ("see step 3"), so it counts as text and needs 4.5:1 contrast ([WCAG 1.4.3](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html)). A bullet is decoration and has no contrast requirement.
 
@@ -97,39 +98,39 @@ WCAG says little here directly. [1.4.8](https://www.w3.org/WAI/WCAG22/Understand
 
 Set on 2026-09-10, after a research pass and an audit of the site. The decisions are recorded in `_local/design/Plan - Typographic utility classes.md`. The `text-wrap` reset they build on is Eleventy Excellent stock; everything below is jedee's own.
 
-- **Old-style figures in running text.** `.prose` sets `oldstyle-nums proportional-nums`. Inside it, `table`, `abbr`, and `code, kbd, samp, pre` set lining figures back. ⚠ Source Code Pro ships with old-style figures too, so without that reset code would inherit them. Outside `.prose` nothing changes: the breadcrumb, the menu's counts and the footer keep lining figures.
+- **Old-style figures in running text.** `.prose` sets `oldstyle-nums proportional-nums`. Inside it, `table`, `abbr`, and `code, kbd, samp, pre` set lining figures back. Source Code Pro ships with old-style figures too, so without that reset code would inherit them. Outside `.prose` nothing changes: the breadcrumb, the menu's counts and the footer keep lining figures.
   - Inside an activity post, the stats' `tabular-nums` (`local/activity.css`) replaces the inherited value and keeps them lining. That is the rule [[OpenType features]] had recorded as doing nothing.
   - A photo's capture metadata ("6×17", "3:30 @ 38 °C") takes old-style figures, as running text does.
 - **`.small-caps`** (`global/utilities/small-caps.css`), for the opening words of an article or a name. It sets small caps and `--tracking-wide` letterspacing. Fake small caps are refused site-wide by `font-synthesis: none` on `body` (see [[Font subsetting]]).
   - Write it as `<span class="small-caps">…</span>`, or as `{.small-caps}` at the end of a markdown paragraph.
-  - ⚠ Not `*text*{.small-caps}`: that is italic, and Source Sans italic has no small caps.
+  - Not `*text*{.small-caps}`: that is italic, and Source Sans italic has no small caps.
 - **Four figure classes** in `global/utilities/numerals.css`: `.fraction`, `.slashed-zero`, `.lining-nums` and `.tabular-nums`. None is on by default: the OpenType registry says `frac` "should be off by default", because it turns every digit–slash–digit into a fraction. On the built site that would hit 9 sequences, none of them a fraction ("12/13" meaning 12 of 13 widths, "206/207" characters).
   - The classes combine. Each one fills a slot (`--nums-figure`, `--nums-spacing`, `--nums-fraction` or `--nums-zero`), and one rule joins the slots into `font-variant-numeric`. So `lining-nums tabular-nums` keeps both, and a class inside `.prose` keeps its old-style figures. `.prose` sets its own default through the same slots.
-  - ⚠ Any element that changes a slot must repeat the joining rule. Otherwise it inherits the value its parent already worked out, and the change does nothing.
-  - ⚠ Three of the names are also Tailwind classes. Tailwind's content scan generated them, and because its `tailwindUtilities` layer comes after `cubeUtilities`, its versions replaced the whole value. Tailwind's `fontVariantNumeric` plugin is now switched off (see [[Tailwind]]).
-  - ⚠ In Source Sans, `frac` changes every digit, full stop, comma and parenthesis it covers, not only the fraction. So `.fraction` goes on the fraction itself (`<span class="fraction">3/4</span>`). Put on a whole sentence, it turned the closing full stop into a small raised dot.
-  - ⚠ The old-style zero has no slashed form, so `slashed-zero` over old-style figures does nothing. `.slashed-zero` therefore sets lining figures as well, which is what a code or serial number wants anyway.
+  - Any element that changes a slot must repeat the joining rule. Otherwise it inherits the value its parent already worked out, and the change does nothing.
+  - Three of the names are also Tailwind classes. Tailwind's content scan generated them, and because its `tailwindUtilities` layer comes after `cubeUtilities`, its versions replaced the whole value. Tailwind's `fontVariantNumeric` plugin is now switched off (see [[Tailwind]]).
+  - In Source Sans, `frac` changes every digit, full stop, comma and parenthesis it covers, not only the fraction. So `.fraction` goes on the fraction itself (`<span class="fraction">3/4</span>`). Put on a whole sentence, it turned the closing full stop into a small raised dot.
+  - The old-style zero has no slashed form, so `slashed-zero` over old-style figures does nothing. `.slashed-zero` therefore sets lining figures as well, which is what a code or serial number wants anyway.
 - **No small caps on `abbr`**, for two reasons. The glossary ([[Abbreviations]]) marks only its 31 terms (it has CLS but not CSS), so styled acronyms would sit beside unstyled ones. And `all-small-caps` would flatten RDFa.
 - **Capital labels** (site logo, breadcrumb, menu button, footer, buttons) share `--tracking-wide`, raised from 0.09ch to 0.12ch. That is about 5.7% of the size, since a Source Sans digit is 0.472 em wide.
 - **Captions** stay italic and centred, and are now balanced. The wiki's captions run long (a median of about 100 characters, up to 400), so `local/wiki.css` sets them upright, left-aligned and `pretty`, at 60ch.
 - **Quotations** balance. The rule is in `global-styles.css`, and again in `prose.css`, whose `pretty` rule on `p` would otherwise win.
 - **Footnote markers** are bare superscript figures.
   - `markdown.js` overrides markdown-it-footnote's `footnote_caption` rule to drop the brackets. The Source Sans subset has superscript digits, parentheses and colons, but no square brackets. `footnotes.css` then uses `font-variant-position: super`.
-  - ⚠ The link inside the marker had `padding: 0.3ch`, sized for the old, smaller number. At full size it opened a visible gap on either side, so the padding is now top and bottom only (`padding-block`).
+  - The link inside the marker had `padding: 0.3ch`, sized for the old, smaller number. At full size it opened a visible gap on either side, so the padding is now top and bottom only (`padding-block`).
 - **Ordinals follow Chicago**, so words up to one hundred ("for the ninth time") and figures on the baseline above that. There is no `.ordinal` class, on purpose.
   - If a raised suffix is ever wanted, put `font-variant-position: super` on a span around the suffix only. The Source Sans subset has superscript forms of a–z, and this route leaves the `--nums-*` slots alone.
-  - ⚠ Source Sans' `ordn` is the plain kind: all 28 lowercase letters, with no check for a preceding digit. `font-variant-numeric: ordinal` on a sentence would raise every letter in it. This is the same trap as `frac`.
+  - Source Sans' `ordn` is the plain kind: all 28 lowercase letters, with no check for a preceding digit. `font-variant-numeric: ordinal` on a sentence would raise every letter in it. This is the same trap as `frac`.
   - Content was not swept for older figure ordinals. At the time of writing there were four: two dates ("the 14th of July", "the 22nd of July"), "16th century" in a film's clipped plot, and "45th Anniversary" in an album title.
 - **List markers** in `.prose` (added 2026-09-14).
   - Ordered-list numbers take old-style tabular figures. The marker reads `--nums-figure`, so a list inside `.lining-nums` still gets lining numbers.
   - The numbers are `--color-accent-orange-text`: `orange-600` in light mode (5.8:1 on the page; `orange-500` measured 3.5:1) and `orange-500` in dark (4.7:1). Other orange text that carries meaning can use the same variable.
   - Unordered lists use a hollow bullet (◦) in the same variable, so both list markers share one orange per theme. It replaced an en dash: shrinking the dash to 0.75em sank it towards the baseline, and `::marker` cannot be moved up. Butterick prefers hollow bullets as the subtler kind.
-  - ⚠ ◦ (U+25E6) and • (U+2022) were not in the Source Sans subset and were added by hand (see [[Font subsetting]]); the subset still lacks ‣ and ▪, so either of those as a marker needs the same step.
+  - ◦ (U+25E6) and • (U+2022) were not in the Source Sans subset and were added by hand (see [[Font subsetting]]); the subset still lacks ‣ and ▪, so either of those as a marker needs the same step.
   - Both kinds of list share one start padding, 2.75ch, so bullet and numbered items start at the same place. It is sized for "10. ": the marker box includes the space before the text and measured 33.6px, which 2.75ch (33.7px) just holds. An estimate of 2.2ch left "10." hanging about 7px past the edge. Lists that reach 100 would hang again.
 - **Subtitles** (added 2026-09-14). A `subtitle:` in a post's front matter renders under the title in `<hgroup>`, from `partials/entry-header.njk`, on every post type.
   - The `<p>` is not part of `p-name`, so the microformats title stays the title alone (see [[Microformats]]).
   - Set in Source Sans italic at `--size-step-2`, in the headline color, balanced (`local/post.css`). Three serif versions came first: bold at two and three steps below the title, then dimmed toward the background. The italic sans read as a second voice rather than a smaller title.
-  - ⚠ The subtitle's `--flow-space` is set on the `<p>` itself. Set on the `<hgroup>`, it lost to `.prose`'s larger space after a heading.
+  - The subtitle's `--flow-space` is set on the `<p>` itself. Set on the `<hgroup>`, it lost to `.prose`'s larger space after a heading.
   - Written in title case with short words lowercase, like the title.
   - Books have a Subtitle field in [[Sveltia CMS]]. Films don't: Letterboxd has no subtitle, so the Web Clipper has nothing to fill it from, and no film has needed one. A film can still take `subtitle:` by hand.
 - **Not done:**

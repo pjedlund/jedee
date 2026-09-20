@@ -20,7 +20,7 @@ That last one is worth spelling out, because it is the subtlest. `font-display: 
 
 The other option is `font-display: optional`: the browser uses the web font only if it is ready within roughly 100 ms, otherwise it keeps the fallback for that entire pageview and quietly caches the font for the next navigation. No swap can happen, so swap-induced shift is zero by construction.
 
-⚠ **That 100 ms is almost never met on a real network, so `optional` is a worse trade than it looks.** The window is counted from when the *font request starts*, and the font cannot be requested until the HTML referencing it has arrived. On this site's live pages that is 250–350 ms in, after which the fonts take a further 170–350 ms to land. Measured over five cold loads, unthrottled, the fallback painted every single time. So `optional` does not trade "some visitors on slow connections see the fallback" for zero shift — it trades *every first visit, on any connection*. The web font only ever appears from the second navigation onward, off the cache.
+**That 100 ms is almost never met on a real network, so `optional` is a worse trade than it looks.** The window is counted from when the *font request starts*, and the font cannot be requested until the HTML referencing it has arrived. On this site's live pages that is 250–350 ms in, after which the fonts take a further 170–350 ms to land. Measured over five cold loads, unthrottled, the fallback painted every single time. So `optional` does not trade "some visitors on slow connections see the fallback" for zero shift — it trades *every first visit, on any connection*. The web font only ever appears from the second navigation onward, off the cache.
 
 ## In jedee
 
@@ -43,7 +43,7 @@ Table: Lighthouse 12, mobile preset, 2026-09-06
 
 Same commit, same markup. The gap is the whole score — 0.197 is what holds performance at 90 instead of 100.
 
-⚠ **The cause turned out to be a Lighthouse setting, not the local server.** Lighthouse's default `--throttling-method=simulate` loads the page at full speed and then models what a slow connection *would* have done, arithmetically, after the fact. A layout shift is a real event in a real load: if the font arrives before there is anything to reflow, no shift happens, and no amount of post-hoc modelling invents one. Re-running the identical local build with `--throttling-method=devtools`, which throttles the actual load in the browser, reproduces the live figure exactly — **CLS 0.197, the same 0.196 on the same element, the same named cause**. So a local build can measure this; the default preset simply cannot. Use `devtools` throttling for anything about layout shift.
+**The cause turned out to be a Lighthouse setting, not the local server.** Lighthouse's default `--throttling-method=simulate` loads the page at full speed and then models what a slow connection *would* have done, arithmetically, after the fact. A layout shift is a real event in a real load: if the font arrives before there is anything to reflow, no shift happens, and no amount of post-hoc modelling invents one. Re-running the identical local build with `--throttling-method=devtools`, which throttles the actual load in the browser, reproduces the live figure exactly — **CLS 0.197, the same 0.196 on the same element, the same named cause**. So a local build can measure this; the default preset simply cannot. Use `devtools` throttling for anything about layout shift.
 
 The SEO 66 is `is-crawlable` failing on the site-wide `noindex` of the soft launch, expected, and it will clear at 1.0.0.
 
@@ -69,7 +69,7 @@ Table: Two shifts from the same font swap
 
 One font load, three elements, a 150× spread in what it cost. The greeting and the caret reflow too; they are simply too small to matter. This is why "which element moved" is a poor guide to what to fix — everything downstream of a late font moves, and the ranking is by size, not by blame.
 
-⚠ So the honest reading is that the fault is shared, and the report alone does not settle it. The font is what Lighthouse names, and every standard font mitigation is *already in place*, which is the puzzle. What is unusual about this block is that its layout is computed in JavaScript from measured positions. `custom-masonry` waits a frame after hydrating, then walks its children and sets an explicit `margin-top` on each one, pulling it up under the item in the column above:
+So the honest reading is that the fault is shared, and the report alone does not settle it. The font is what Lighthouse names, and every standard font mitigation is *already in place*, which is the puzzle. What is unusual about this block is that its layout is computed in JavaScript from measured positions. `custom-masonry` waits a frame after hydrating, then walks its children and sets an explicit `margin-top` on each one, pulling it up under the item in the column above:
 
 ```js
 const previousItemBottom = previousItem.offsetTop + previousItem.offsetHeight + rowGap;
@@ -96,7 +96,7 @@ That is the answer, and it is the opposite of the obvious reading of the first r
 
 Which left an open question, stated plainly at the time rather than guessed at: every recommended font mitigation *is* correctly in place, including the fallback families being present in the `font-family` stacks where they actually take effect (`["Source Sans", "Source Sans Fallback", "sans-serif"]` in `fonts.json`), and the swap still moved the page far enough to score 0.18. So either the `size-adjust` / override triple was mistuned for this text, or something other than text metrics was resizing on swap. **It was the second, and the answer is in the next section.**
 
-`/notes/` is a clean 100 either way. ⚠ It has no matched before-number — the earlier `/notes/` run used simulated throttling, which cannot be compared with these — so read it as the current state and not as an improvement this change caused.
+`/notes/` is a clean 100 either way. It has no matched before-number — the earlier `/notes/` run used simulated throttling, which cannot be compared with these — so read it as the current state and not as an improvement this change caused.
 
 ### Lighthouse names a culprit; a PerformanceObserver names the event
 
@@ -128,7 +128,7 @@ Table: CLS as the grid came out and `font-display` changed
 
 The 0.0922 event was simply gone, and the landing page scored 100 / 100 / 100 with SEO 66 for the soft-launch `noindex`.
 
-⚠ **It was the wrong fix, and the number that proved it was never taken.** The trade-off was checked as "does the real font apply on a fast connection", unthrottled, on a browser that had already cached the fonts from the previous run. The question that mattered is what a *first* visitor sees, and the answer, over five cold loads of the live site with no throttling at all, is the fallback — every time, for the reason in the `optional` warning above. `optional` had not reduced the shift so much as removed the thing that shifts: the web fonts were no longer being used.
+**It was the wrong fix, and the number that proved it was never taken.** The trade-off was checked as "does the real font apply on a fast connection", unthrottled, on a browser that had already cached the fonts from the previous run. The question that mattered is what a *first* visitor sees, and the answer, over five cold loads of the live site with no throttling at all, is the fallback — every time, for the reason in the `optional` warning above. `optional` had not reduced the shift so much as removed the thing that shifts: the web fonts were no longer being used.
 
 ### The real fix: `font-size-adjust` was fighting `size-adjust`
 
@@ -151,7 +151,7 @@ Table: `font-display` and `font-size-adjust` combinations on four pages
 
 So the site is back on `swap`, with `font-size-adjust: from-font` removed from `global-styles.css` — a deliberate divergence from Eleventy Excellent, and the only change jedee makes to Lene's font kit. Readers get the real typography on their first visit *and* a CLS an order of magnitude under the 0.1 "good" threshold. `base/fonts.css` carries a one-line warning against re-adding the declaration on the next upstream merge.
 
-⚠ **A second mis-derivation existed and was fixed a day later, after an initial "leave it alone" call that a bad measurement had supported.** Both fallback faces were tuned to fonts this site does not ship, so both `size-adjust` values were re-derived by scoring the real page across viewport widths — `Source Serif Fallback` 110.8118% → **100.8%** (17/17 widths, was 12) and `Source Sans Fallback` 93.7639% → **92.5%** (12/13, was 10). Only `size-adjust` moved; the ascent and descent overrides are Capsize's, rescaled by the inverse ratio so the vertical box is byte-identical, since this site uses unitless line-heights and the vertical overrides are largely inert. The serif value is worth **CLS 0.0997 → 0.0020 at 720 px**, where the heading took two lines in Georgia against one in Source Serif.
+**A second mis-derivation existed and was fixed a day later, after an initial "leave it alone" call that a bad measurement had supported.** Both fallback faces were tuned to fonts this site does not ship, so both `size-adjust` values were re-derived by scoring the real page across viewport widths — `Source Serif Fallback` 110.8118% → **100.8%** (17/17 widths, was 12) and `Source Sans Fallback` 93.7639% → **92.5%** (12/13, was 10). Only `size-adjust` moved; the ascent and descent overrides are Capsize's, rescaled by the inverse ratio so the vertical box is byte-identical, since this site uses unitless line-heights and the vertical overrides are largely inert. The serif value is worth **CLS 0.0997 → 0.0020 at 720 px**, where the heading took two lines in Georgia against one in Source Serif.
 
 The reason it was first waved off is worth keeping: a sweep reported no line-count change at any width from 360 to 1600 px, and that sweep reused one browser across 32 navigations, so every case after the first was served fonts from cache. **A measurement that says "no difference" deserves the same scrutiny as one that says "big difference"** — a broken harness returns "no difference" by default.
 
@@ -185,7 +185,7 @@ Table: The width of `1ch` in each family
 | Source Serif | 0.54187 | — |
 | Source Serif Fallback | 0.68000 | +25.49% |
 
-So `prose.css`'s `max-inline-size: 60ch` (about 72 characters in the web font, see [[Line length]]) and the `--tracking` values in `ch` all resolve differently while the fallback shows. ⚠ **This turned out not to be the cause of any shift measured here** — converting every `ch` tracking value to `em` made letter-spacing identical between the two states and the footer still wrapped the same way, because the difference is around 1% of a sub-pixel value. Recorded because it is real and easy to assume is the culprit; it was measured and it is not.
+So `prose.css`'s `max-inline-size: 60ch` (about 72 characters in the web font, see [[Line length]]) and the `--tracking` values in `ch` all resolve differently while the fallback shows. **This turned out not to be the cause of any shift measured here** — converting every `ch` tracking value to `em` made letter-spacing identical between the two states and the footer still wrapped the same way, because the difference is around 1% of a sub-pixel value. Recorded because it is real and easy to assume is the culprit; it was measured and it is not.
 
 **What is *not* a factor: font size.** `size-adjust` is a pure ratio, so it is scale-invariant — the required value for the heading is 100.119% at 32 px, 100.103% at 64 px and 100.100% at 107 px. Fluid `clamp()` type does not weaken metric matching.
 
@@ -206,11 +206,11 @@ The page is short, so the footer is bottom-anchored — its top is `viewportHeig
 
 `align-content` earns its line: centring the rows inside a taller box moves *every* row by half the slack when the row count changes, which is a shift of its own. Pinned to the top, only the links that actually change row move.
 
-⚠ **Reserve in `rem`.** An earlier version used `lh` and did nothing, because `lh` is font-dependent — it grows and shrinks with the very thing being compensated for, exactly like the `ch` units above. Any reservation meant to absorb a font difference has to be written in a unit the font cannot move.
+**Reserve in `rem`.** An earlier version used `lh` and did nothing, because `lh` is font-dependent — it grows and shrinks with the very thing being compensated for, exactly like the `ch` units above. Any reservation meant to absorb a font difference has to be written in a unit the font cannot move.
 
-⚠ **This halves the shift, it does not remove it** — 0.1726 → 0.079. The box is stable now, but the seven links still redistribute between three rows and two when the font lands, and that redistribution is itself a layout shift. Only an identical row count in both fonts would remove it, and no CSS achieves that across every width: shrinking the link padding makes 412 px agree and 380 px disagree instead.
+**This halves the shift, it does not remove it** — 0.1726 → 0.079. The box is stable now, but the seven links still redistribute between three rows and two when the font lands, and that redistribution is itself a layout shift. Only an identical row count in both fonts would remove it, and no CSS achieves that across every width: shrinking the link padding makes 412 px agree and 380 px disagree instead.
 
-⚠ **Stacking the nav into a column measures worse, at 0.1055.** It was the option that looked cleanest, because it gives six rows in both fonts and the footer's *top* is then identical at every width. But impact fraction is area, and a much taller footer scores higher on the small per-row metric differences that remain. Both of these misjudgements came from the same mistake — comparing element *positions* between the two font states instead of measuring CLS. Position equality is necessary, not sufficient; the score counts every element that moved, not just the container.
+**Stacking the nav into a column measures worse, at 0.1055.** It was the option that looked cleanest, because it gives six rows in both fonts and the footer's *top* is then identical at every width. But impact fraction is area, and a much taller footer scores higher on the small per-row metric differences that remain. Both of these misjudgements came from the same mistake — comparing element *positions* between the two font states instead of measuring CLS. Position equality is necessary, not sufficient; the score counts every element that moved, not just the container.
 
 ### The band is 22 px wide, and Lighthouse sits inside it
 
@@ -237,7 +237,7 @@ Table: Line counts in the web font and the fallback, by viewport width
   <figcaption>The band, re-measured rather than redrawn: each panel is the real footer in its own iframe at that viewport width, and the row counts are read back off the rendered geometry. Only the middle column disagrees. Note that all six report the same 96 px height — that is the reserve holding the box still while the links redistribute inside it, which is why the fix halves the shift instead of removing it.</figcaption>
 </figure>
 
-⚠ **The disagreement is a band roughly 409–430 px wide, and Lighthouse's mobile preset emulates 412 px** — inside it, near the lower edge. That is the whole reason the landing page carries a residual CLS on the mobile audit while measuring clean at 360, 390, 720 and up. It is not a mobile problem; it is a 22-pixel problem that the standard audit width happens to fall into. Anyone reproducing this at their own browser width will find nothing wrong.
+**The disagreement is a band roughly 409–430 px wide, and Lighthouse's mobile preset emulates 412 px** — inside it, near the lower edge. That is the whole reason the landing page carries a residual CLS on the mobile audit while measuring clean at 360, 390, 720 and up. It is not a mobile problem; it is a 22-pixel problem that the standard audit width happens to fall into. Anyone reproducing this at their own browser width will find nothing wrong.
 
 The residual metric error after the re-derived descriptors, measured as pure advance width on one unwrapped string:
 
@@ -249,7 +249,7 @@ Table: The fallback faces' remaining width error
 
 So `92.5%` overshoots slightly and `100.8%` undershoots slightly, which is the one-number limit from the section above, now stated as what is left rather than as what is required.
 
-⚠ **Do not read a layout shift off two overlaid screenshots.** Superimposing the fallback and web-font states shows the words in the intro landing in visibly different places — line 1 runs 44 px longer in the fallback, line 3 runs 149 px shorter — which looks like a serious problem and costs exactly nothing, because the line *count* and the block height are the same. Narrower glyphs fit more words before the wrap, so the early lines fill closer to the edge and the last line empties out. The only thing worth reading off such a comparison is whether the number of lines changed; everything else is word-level jitter that moves nothing below it.
+**Do not read a layout shift off two overlaid screenshots.** Superimposing the fallback and web-font states shows the words in the intro landing in visibly different places — line 1 runs 44 px longer in the fallback, line 3 runs 149 px shorter — which looks like a serious problem and costs exactly nothing, because the line *count* and the block height are the same. Narrower glyphs fit more words before the wrap, so the early lines fill closer to the edge and the last line empties out. The only thing worth reading off such a comparison is whether the number of lines changed; everything else is word-level jitter that moves nothing below it.
 
 ### Can an animation hide the swap?
 
@@ -263,7 +263,7 @@ Table: CLS and first paint, with and without a hero fade
 | reveal gated on `document.fonts.ready` (1.5 s ceiling) | **0** | 1544 ms |
 | gated reveal + hero fade | **0** | 1168 ms |
 
-⚠ **The decorative fade does nothing for the score.** A layout shift is counted whether or not the moving element is mid-animation, and here the fade had finished long before the font arrived at ~1.4 s. If those sites look smooth it is because the reader's eye is elsewhere, not because the technique fixed anything.
+**The decorative fade does nothing for the score.** A layout shift is counted whether or not the moving element is mid-animation, and here the fade had finished long before the font arrived at ~1.4 s. If those sites look smooth it is because the reader's eye is elsewhere, not because the technique fixed anything.
 
 **Gating the reveal does zero the score** — an element at `opacity: 0` generates no `layout-shift` entry at all, which is worth knowing on its own. But it pays for that in first paint, and there is no usable middle:
 
@@ -329,15 +329,15 @@ The decision was to change nothing: the CSS is right for the platforms that have
 
 `src/wiki/_sources/layout-shift.html` draws the band above. Six `srcdoc` iframes, one per width and font state, each loading the compiled `global.css` and the real footer lifted verbatim into `site-footer.js`; the row counts and heights in the labels are read out of each frame's own geometry after its fonts settle, so the picture states what it measured rather than repeating the table.
 
-⚠ **An iframe, not a copy.** The reserve is a `@media (width < 27rem)` query and a media query reads the *viewport*, so a fixed-width `div` inside the 1400 px shooter page would never match it — and every space and type token here is `vw`-based for the same reason. `srcdoc` rather than `src`: a `srcdoc` frame inherits the parent's origin so its geometry can be read back, where a separate `file://` document is an opaque origin and `contentDocument` comes back `null`.
+**An iframe, not a copy.** The reserve is a `@media (width < 27rem)` query and a media query reads the *viewport*, so a fixed-width `div` inside the 1400 px shooter page would never match it — and every space and type token here is `vw`-based for the same reason. `srcdoc` rather than `src`: a `srcdoc` frame inherits the parent's origin so its geometry can be read back, where a separate `file://` document is an opaque origin and `contentDocument` comes back `null`.
 
-⚠ **The first attempt built the link row by hand, and all six columns agreed.** The real cluster sits inside `.wrapper`, whose gutter is `6vw` a side, and shares a flex container with the platform-icon nav — about 26 px of width that is the whole difference between wrapping at two rows and three. A simplified copy measures a different element and quietly reports no problem. Lift the markup.
+**The first attempt built the link row by hand, and all six columns agreed.** The real cluster sits inside `.wrapper`, whose gutter is `6vw` a side, and shares a flex container with the platform-icon nav — about 26 px of width that is the whole difference between wrapping at two rows and three. A simplified copy measures a different element and quietly reports no problem. Lift the markup.
 
-⚠ **The bundle's own `@font-face` is unusable here**: it points at an absolute `/assets` path, dead under `file://`, and its `src` list starts with `local('Source Sans')`. Without redeclaring the face by relative path, the "web font" column renders in whatever the machine happens to have installed — which is the same class of mistake as the Netlify finding two sections up, in miniature.
+**The bundle's own `@font-face` is unusable here**: it points at an absolute `/assets` path, dead under `file://`, and its `src` list starts with `local('Source Sans')`. Without redeclaring the face by relative path, the "web font" column renders in whatever the machine happens to have installed — which is the same class of mistake as the Netlify finding two sections up, in miniature.
 
 ### Measuring it honestly
 
-⚠ Two ways to get a wrong number, both met on the day this page was written.
+Two ways to get a wrong number, both met on the day this page was written.
 
 **Your own browser scores your site.** A Lighthouse run from a normal profile reported Best Practices 96 on the live site, on the strength of one console error: `cloud.umami.is/script.js — net::ERR_BLOCKED_BY_CLIENT`. That is a content blocker in the *auditing* browser refusing the analytics script. The same page from a clean headless profile scores **100** with zero console errors. The site did not change; the browser did. Run the audit in a clean profile before believing a Best Practices deduction — though note the real-world corollary, that a visitor with a blocker does see that error, and the analytics simply do not record them.
 
