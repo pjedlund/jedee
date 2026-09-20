@@ -1,6 +1,7 @@
 ---
 description: "Searching a static site without a server or a search library: a JSON index written at build time, fetched once and filtered in the browser."
 date: 2026-09-02
+updated: 2026-09-20
 ---
 
 A static site has no server to ask, so search has to happen somewhere else. Three places are available, and the choice is mostly about how many entries there are.
@@ -42,11 +43,11 @@ search:
 
 `enabled: false` does three things at once and only one of them is written anywhere: the index template's `permalink` returns `false` so no `/search.json` is emitted; one `{% if %}` in `partials/header.njk` skips the partial; and because the partial is what pulls in its own CSS and JS through `{% css "local" %}` and `{% js "defer" %}`, skipping it is what actually stops both from shipping. That last point is why the panel is a plain Nunjucks partial rather than a WebC component — the same reason [[The main menu]] is one.
 
-`types` is a curated list, not every collection. The response types (likes, replies, reposts, RSVPs, bookmarks) stay out because they would drown prose results. ⚠ The keys are **collection keys, and they are singular** — `article`, not `articles`; the plurals are archive URLs and produce an empty index with a green build. See [[Anatomy of a post type]].
+`types` is a curated list, not every collection. The response types (likes, replies, reposts, RSVPs, bookmarks) stay out because they would drown prose results. The keys are **collection keys, and they are singular** — `article`, not `articles`; the plurals are archive URLs and produce an empty index with a green build. See [[Anatomy of a post type]].
 
 Activities are the one type where the whole collection is the wrong unit, so `only` narrows them by a front-matter key: 112 of 180 are orienteering, with real event and forest names worth looking up months later, while the rest carry Strava's defaults including 24 posts called "Morning Run". `only` is deliberately a general key/value match rather than an orienteering flag — it is the same few lines either way, and it keeps the answer to "what is searchable?" inside the dial.
 
-Standalone prose pages are not in any post collection, so they opt in with `tags: ["searchable"]`, which gives a real `collections.searchable` the index can list beside the post types. ⚠ `searchable` has to join `SYSTEM_TAGS` in `src/_config/collections.js` in the same edit — every other tag on this site is a public page, and without that one word `/tags/searchable/` quietly appears in the tag index.
+Standalone prose pages are not in any post collection, so they opt in with `tags: ["searchable"]`, which gives a real `collections.searchable` the index can list beside the post types. `searchable` has to join `SYSTEM_TAGS` in `src/_config/collections.js` in the same edit — every other tag on this site is a public page, and without that one word `/tags/searchable/` quietly appears in the tag index.
 
 ### The index
 
@@ -78,14 +79,14 @@ The rest of the strip is ordinary markdown: fenced code and images before links,
 
 Result rows are built client-side, so their per-type icons cannot be rendered per result. The partial emits one `<template data-search-icon="<type>">` per searchable type and the script clones the matching one.
 
-⚠ Close to half the index has no body at all — 153 of 342 entries counted on 2026-09-20, mostly jams (82) and orienteering activities (63), which carry a title and front matter and nothing else. It was 153 of 289 and a clear majority until the wiki joined the searchable types; the bodyless count has not moved, the bodied one grew around it. A row with only an icon and a title is still the common case rather than the edge case, so the row omits the excerpt element entirely rather than rendering an empty one that leaves a ragged gap in the list. Design a result row against the body-less half, not against the posts that happen to have prose.
+Close to half the index has no body at all — 153 of 342 entries counted on 2026-09-20, mostly jams (82) and orienteering activities (63), which carry a title and front matter and nothing else. It was 153 of 289 and a clear majority until the wiki joined the searchable types; the bodyless count has not moved, the bodied one grew around it. A row with only an icon and a title is still the common case rather than the edge case, so the row omits the excerpt element entirely rather than rendering an empty one that leaves a ragged gap in the list. Design a result row against the body-less half, not against the posts that happen to have prose.
 
 <figure class="popout" data-wiki-mockup>
   <img eleventy:formats="webp,png" src="/assets/images/wiki/site-search-panel.png" alt="A browser window with the search panel open under the header. The field holds the word night; below it seven results, each with a small type icon and a bold title. The first two, both orienteering activities, are a single line with no excerpt; the five below them — three wiki pages, a recipe and a jam — each carry two lines of grey excerpt text." width="1392" height="928">
   <figcaption>Seven real hits for <code>night</code>. The top two rows are the common shape — icon and title, nothing else — and the row simply omits the excerpt element rather than leaving an empty one.</figcaption>
 </figure>
 
-⚠ The include in `header.njk` is wrapped in an `{% if %}`, and the partial calls `{% svg %}`. That is the exact shape that once blanked the entire nav — see [[The interlinker's second render pass]]. It is safe only because `{% svg %}` is synchronous. If the panel ever renders empty with a green build, that is the first thing to check, not a template typo.
+The include in `header.njk` is wrapped in an `{% if %}`, and the partial calls `{% svg %}`. That is the exact shape that once blanked the entire nav — see [[The interlinker's second render pass]]. It is safe only because `{% svg %}` is synchronous. If the panel ever renders empty with a green build, that is the first thing to check, not a template typo.
 
 ### Opening it, and clearing it
 
@@ -111,7 +112,7 @@ The clear button was the same shape of mistake one property along. It ships with
 .search-clear[hidden] { display: none; }  /* the line that was missing */
 ```
 
-⚠ `[hidden]` is a *UA* rule of `display: none`, and an author rule beats a UA rule at equal specificity — the class does not have to outrank it, only to exist. Any component that sets `display` on its own class has to restate `[hidden]`, or its `hidden` attribute is decoration. Here it meant a dead X sat in the field from the moment the panel opened, clearing an already-empty input.
+`[hidden]` is a *UA* rule of `display: none`, and an author rule beats a UA rule at equal specificity — the class does not have to outrank it, only to exist. Any component that sets `display` on its own class has to restate `[hidden]`, or its `hidden` attribute is decoration. Here it meant a dead X sat in the field from the moment the panel opened, clearing an already-empty input.
 
 `input[type=search]` draws WebKit's own cancel button as well, once there is a value. It works, but it is painted at a fixed pixel size and stops matching the row the moment the page is zoomed, while the styled button — sized in `em` — scales with everything else. Hiding it needs its own rule, not a shared selector list: Firefox does not know `::-webkit-search-cancel-button`, and an unknown pseudo-element invalidates every selector it is grouped with.
 
@@ -123,15 +124,15 @@ The clear button was the same shape of mistake one property along. It ships with
 
 The search panel and the mega-menu both anchor to the header row (`.repel.ontop`) with `inset-inline-end: 0`, so open together they sit on top of each other. Each trigger's click handler sets the other's `aria-expanded` to `false`.
 
-⚠ `search.css` redeclares the panel surface rather than reading the nav's `--megamenu-surface`, because that property is declared on `.mainnav` — which does not exist at all in a production build while the soft-launch dial hides the nav. An inherited custom property that is only sometimes in scope is the failure in [[Undefined custom properties]].
+`search.css` redeclares the panel surface rather than reading the nav's `--megamenu-surface`, because that property is declared on `.mainnav` — which does not exist at all in a production build while the soft-launch dial hides the nav. An inherited custom property that is only sometimes in scope is the failure in [[Undefined custom properties]].
 
 The panel also had no `font-size` of its own at first, so it inherited the header's ~26px and every `em`-sized icon scaled off that: the magnifier rendered at 34px beside the theme toggle's 21px. It now sits on `--size-step-min-1` with `0.95em` icons throughout, which is what the mega-menu uses, so the two read as the same object.
 
 ### Contrast on a lifted panel
 
-⚠ The excerpt color cleared 4.5:1 against the panel at `color-mix(… 80%, …)` and then failed at **4.31** on the *highlighted* row, whose own 4% tint darkens the ground beneath it. A `color-mix()` is only valid on the surface it was tuned on, and a row that changes background on hover is two surfaces. Shipped 84% in light, 72% in dark — light and dark run out of headroom at different percentages, so one number does not fix both.
+The excerpt color cleared 4.5:1 against the panel at `color-mix(… 80%, …)` and then failed at **4.31** on the *highlighted* row, whose own 4% tint darkens the ground beneath it. A `color-mix()` is only valid on the surface it was tuned on, and a row that changes background on hover is two surfaces. Shipped 84% in light, 72% in dark — light and dark run out of headroom at different percentages, so one number does not fix both.
 
-⚠ Measure these with an oklab→sRGB conversion, not a regex over `getComputedStyle().color`. Chromium serializes an oklab mix as `oklab(L a b)`, and a parser expecting `rgb()` reads those three floats as channels and reports a confident pass — it scored the failing values above as 1.00 and 2.73 before the conversion went in.
+Measure these with an oklab→sRGB conversion, not a regex over `getComputedStyle().color`. Chromium serializes an oklab mix as `oklab(L a b)`, and a parser expecting `rgb()` reads those three floats as channels and reports a confident pass — it scored the failing values above as 1.00 and 2.73 before the conversion went in.
 
 pa11y only ever sees the panel closed, since it does not click ([[The accessibility test]]). The combobox, the listbox and the options exist only in the open state and have to be checked by hand.
 

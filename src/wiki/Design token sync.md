@@ -1,6 +1,7 @@
 ---
 description: "Generating a design tool's tokens from the code that is their source of truth, and the three ways the two sides drift apart anyway."
 date: 2026-08-22
+updated: 2026-09-18
 ---
 
 A **design token** is a named design value — a color, a spacing step, a radius — held somewhere both a stylesheet and a design tool can read. **Design token sync** is keeping those two copies in agreement. The interchange format is [DTCG](https://tr.designtokens.org/format/), a W3C community-group JSON schema that [Tokens Studio](https://tokens.studio/) popularized and that Figma, Penpot and others now import.

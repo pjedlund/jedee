@@ -1,6 +1,7 @@
 ---
 description: "A named-column grid that lets an element step wider than the text column it sits in, and the direct-child constraint that makes it awkward in practice."
 date: 2026-08-23
+updated: 2026-09-19
 ---
 
 A reading page wants one narrow column for prose and the occasional element wider than it — a diagram, a code block, a full-bleed image. The old way was negative margins, which fight the page's own padding and break at small widths.

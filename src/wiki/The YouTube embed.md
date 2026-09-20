@@ -1,6 +1,7 @@
 ---
 description: "The facade pattern that keeps a YouTube iframe off the page until someone clicks, and the two details jedee finishes — a self-hosted poster and a visible focus ring."
 date: 2026-07-31
+updated: 2026-08-26
 ---
 
 A standard YouTube embed is an `<iframe>` that pulls in several hundred kilobytes of JavaScript and contacts a number of Google domains before anyone presses play. On a page where the video is not the main point, that cost is paid by every visitor, most of whom will never watch it — and a third party gets to observe everyone who loads the page.

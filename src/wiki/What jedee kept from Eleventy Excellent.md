@@ -1,6 +1,7 @@
 ---
 description: "A systematic inventory of what jedee keeps unchanged from Eleventy Excellent and where it has deliberately diverged."
 date: 2026-07-31
+updated: 2026-09-15
 ---
 
 jedee is a fork of [Eleventy Excellent](https://eleventy-excellent.netlify.app/) by Lene Saile. Every other page in this wiki states EE-stock-versus-jedee where it happens to matter locally; this page states it systematically, so a claim on another page can be checked against one inventory.

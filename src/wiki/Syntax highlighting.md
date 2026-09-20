@@ -1,6 +1,7 @@
 ---
 description: "How a static site colors its code blocks at build time with Prism, and what happens to a fence whose language the highlighter has never heard of."
 date: 2026-08-23
+updated: 2026-09-14
 ---
 
 Syntax highlighting on a static site is a build-time job. The markdown processor hands each fenced code block to a highlighter, which wraps the interesting substrings in `<span class="token …">` elements; a stylesheet colors those classes. No JavaScript reaches the browser, and the highlighting is part of the HTML.

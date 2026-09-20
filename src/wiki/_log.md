@@ -5,6 +5,14 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-20] enrich | Line length
+
+Johan named the design rule behind a thing the wiki had only measured one half of. The measure is set in `ch`, `ch` is font-relative, and nothing centres the capped blocks — so every text element works out its own line length from its own type size and they all hang from the same left edge, with the right edge stepping in as the type gets smaller. Measured on [[Layout breakouts]] in a 946 px column: band 48–898 px, code block and `h2` at 850 px, paragraph at 804.8 px, figcaption at 654.5 px. The same `60ch` at two type sizes, with the uncapped elements filling the band.
+
+It is deliberate and Johan wants it kept: the full-width elements between the text re-establish the band and the page still reads as balanced. The risk is that nothing in the CSS says so, and a single `margin-inline: auto` on the prose rule would centre every short block and flatten it site-wide — so `prose.css` now carries a one-line comment saying not to, pointing here by name. The wiki page also takes a correction: it cited the rule at `prose.css:38`, which is now `:62`.
+
+This also settles the figcaption question raised during the readability pass. The wiki's caption rule carries `60ch` at the caption's smaller size, which makes it *consistent* with the design rather than a divergence from it; the earlier suggestion to revisit it was wrong. The page's source-provenance marker came off in passing, under the rationing rule set the same day.
+
 ## [2026-09-20] enrich | Tables, Site search
 
 The session that balanced the activities table's two edges, and the figure that went stale underneath it.

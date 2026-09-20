@@ -1,6 +1,7 @@
 ---
 description: "What a lightbox has to get right — a no-JS fallback, trapped focus, a responsive zoom target — and jedee's PhotoSwipe shortcode built on the Eleventy Image pipeline."
 date: 2026-07-31
+updated: 2026-08-29
 ---
 
 A lightbox shows a larger version of an image in an overlay above the page. The pattern is old and easy to do badly, and the failures share one root: the overlay is a piece of application UI assembled out of elements that were never a dialog.
@@ -19,7 +20,7 @@ A `{% lightbox %}` shortcode puts a zoomable PhotoSwipe image in any note, artic
 
 **jedee's own** — Eleventy Excellent ships no lightbox component. Built on `photo-lightbox.webc` + `photo-lightbox.js`.
 
-⚠ **`{% bento %}` is not on `main`.** The grouped-gallery shortcode that reuses this lightbox lives on `feat/bento-gallery`, **parked 2026-07-31** — and parked blocked: the branch's draft articles carry an incomplete `{% bento %}` call that fatally aborts the build. It is described below as the worked example of grouping, because that is what it does, but nothing on the live site calls it and the branch can't be merged as it stands.
+**`{% bento %}` is not on `main`.** The grouped-gallery shortcode that reuses this lightbox lives on `feat/bento-gallery`, **parked 2026-07-31** — and parked blocked: the branch's draft articles carry an incomplete `{% bento %}` call that fatally aborts the build. It is described below as the worked example of grouping, because that is what it does, but nothing on the live site calls it and the branch can't be merged as it stands.
 
 ### Usage
 
@@ -103,7 +104,7 @@ this.lightbox = new PhotoSwipeLightbox({
   <figcaption>The overlay open over the page it came from. The image opens fitted, and the scrim leaves the page faintly visible rather than replacing it.</figcaption>
 </figure>
 
-⚠ Adding a component that keeps its custom-element tag (`webc:root webc:keep`) requires a **single top-level node** in the `.webc` file, or the element renders doubled and initializes twice. Keep component styles in a `local` bundle, not a sibling `<style>`.
+Adding a component that keeps its custom-element tag (`webc:root webc:keep`) requires a **single top-level node** in the `.webc` file, or the element renders doubled and initializes twice. Keep component styles in a `local` bundle, not a sibling `<style>`.
 
 ### Invoking the component directly from a layout
 
