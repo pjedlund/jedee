@@ -5,6 +5,14 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-20] enrich | The dev server's memory
+
+The dev server had crashed twice in a day, and Johan asked whether saves could be batched so one rebuild covers them all. They cannot: Eleventy drains its watch queue one file per build while `--incremental` is on, and says so in a comment in `EleventyWatch.js`. The page now carries that, with the `setWatchThrottleWaitTime` dead end marked — it is a real API that accepts any value and cannot do the thing.
+
+The bigger correction is to the leak itself. August measured ~368 MB per rebuild on full rebuilds only; measuring again with `--incremental` in the dev script shows it is paid **per page rendered**, about 1 MB each — +156 MB for a 159-page content save, +1 MB for a one-page template save, +607 MB for a CSS save. That turns the whole thing into a table of what a given save costs, which is the useful shape.
+
+It also let the August note's unimplemented cure be built and the paragraph promising it be replaced with what happened: global CSS out of the watch target, recompiled by a `node:fs` watcher inside the Eleventy process, served as a plain file, and Eleventy printing `(skips build)`. 0.79 s instead of 12 s, and production verified byte-identical rather than assumed so. Second raw source added to the footer.
+
 ## [2026-09-20] enrich | Line length
 
 Johan named the design rule behind a thing the wiki had only measured one half of. The measure is set in `ch`, `ch` is font-relative, and nothing centres the capped blocks — so every text element works out its own line length from its own type size and they all hang from the same left edge, with the right edge stepping in as the type gets smaller. Measured on [[Layout breakouts]] in a 946 px column: band 48–898 px, code block and `h2` at 850 px, paragraph at 804.8 px, figcaption at 654.5 px. The same `60ch` at two type sizes, with the uncapped elements filling the band.

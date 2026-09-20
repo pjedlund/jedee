@@ -66,7 +66,7 @@ Each entry below says what a page covers and why you would open it. The traps an
 - [[The accessibility test]] — the generated pa11y config and the test-only build, and what a green run does and does not cover.
 - [[Link checking]] — why scanning source for links finds things that were never links, and what an all-false-positive report costs.
 - [[Watch loops]] — a build that watches a folder it also writes into, and the other ways a rebuild retriggers itself.
-- [[The dev server's memory]] — telling a JavaScript heap leak from native memory and from a one-off spike.
+- [[The dev server's memory]] — telling a JavaScript heap leak from native memory and from a one-off spike, and what one save costs when the leak is paid per page rendered.
 - [[Syntax highlighting]] — coloring code blocks at build time, the palette behind it, and why inline code is treated differently.
 - [[Favicons]] — the six-file set, and the rule the differences follow from: whether the destination frames the icon for you.
 - [[Timestamps without a time zone]] — a datetime with no offset resolves silently and wrongly. How to settle one against a spec-defined field or a physical artefact.
