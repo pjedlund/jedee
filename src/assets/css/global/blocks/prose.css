@@ -59,6 +59,7 @@
   --flow-space: var(--space-l);
 }
 
+/* Measure is in ch, so each type size finds its own line length and the short blocks hang from the start edge on purpose — never add margin-inline: auto here. See the wiki's "Line length". */
 .prose :is(p, li, dl, blockquote) {
   max-inline-size: 60ch;
   text-wrap: pretty;
