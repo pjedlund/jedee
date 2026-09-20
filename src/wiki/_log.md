@@ -5,6 +5,18 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-20] enrich | Tables, Site search
+
+The session that balanced the activities table's two edges, and the figure that went stale underneath it.
+
+[[Tables]] gains the reason a centred column drifts. `data-icon` centres a head and its cells together, which was already written down — what was missing is that an auto-layout table hands each column a share of whatever width is left once every column is served, so the icon column grew, and the centre its head and icons share moved right with it by half the slack. Six pixels, which is the whole difference between a first column sitting 37px in from the box and one sitting 31px in. `inline-size: 1%` holds the column at its label's width; ⚠ `min-content` and `auto` both measured identically to no rule at all, so the percentage is doing real work and is not a tidier spelling of the same thing.
+
+Two more on the same page. The closing edge now takes the same inset as the opening one — ⚠ and `:last-child` is the last cell in the *markup*, not the last one still showing, so a table whose columns drop by container query has to hand that inset on by name. And the inset is two tokens now rather than one: `--table-edge-padding` is a free choice, `--table-popout-edge-padding` is the one pinned to the popout track, swapped in by `.table-wrapper.popout` — which is exactly the set of tables the markdown renderer puts in a breakout, and so exactly the set where the number has a job.
+
+⚠ The keeper is on [[Site search]], and it is a figure failing in a way a figure is supposed to be safe from. Its mockup carries *real* data — the top hits for "night", read off a built `/search.json` — which is what makes the shot trustworthy and is also what made it rot: two of the six rows were draft notes, and deleting those notes left the picture showing results for pages that no longer exist. Nothing in the build could catch it; the mockup is a hand-written snapshot with no link back to its source. It is re-read and re-shot at seven rows, and the comment above the array now says it is a dated snapshot and when to read it again.
+
+The prose above that figure had drifted too, more quietly. *"Over half the index has no body at all — 153 of 289 entries"*: the 153 is still exactly right, and so are jams (82) and orienteering activities (63) — the **denominator** moved, 289 → 342, when the wiki joined the searchable types and brought fifty-odd bodied pages with it. So a count can go stale without a single one of its own numbers changing, and "over half" and "the body-less majority" both quietly stopped being true while the sentence still read as if it had been checked.
+
 ## [2026-09-19] enrich | Three things called cache, WebC
 
 Two short additions from the session that cut the YouTube components' inline CSS comments to one line each.
