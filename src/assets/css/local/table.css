@@ -21,7 +21,8 @@
   --table-head-tracking: var(--tracking-wide);
   --table-cell-padding-block: var(--space-s);
   --table-cell-padding-inline: var(--space-s);
-  --table-edge-padding: var(--space-m-l); /* caption, first column and last column; ⚠ its 31px maximum matches the 2rem popout the markdown renderer gives every table in a prose body */
+  --table-edge-padding: var(--space-m-l); /* the caption's, first column's and last column's inset; free to change — a prose table takes the popout one below instead */
+  --table-popout-edge-padding: var(--space-m-l); /* ⚠ keep this on the 2rem popout track: its 31px maximum is what lands a prose table's text on the prose's own edge */
   --table-cell-align: baseline;
   --table-caption-size: var(--size-step-min-1);
   --table-caption-style: italic;
@@ -50,6 +51,11 @@
   background-repeat: no-repeat;
   background-size: 4em 100%, 4em 100%, 1.4em 100%, 1.4em 100%;
   background-attachment: local, local, scroll, scroll;
+}
+
+/* The markdown renderer wraps every table in a prose body in .popout, where the inset has that job to do; a standalone table (activities, styleguide) is in no popout track and is free to take any inset. */
+.table-wrapper.popout {
+  --table-edge-padding: var(--table-popout-edge-padding);
 }
 
 table {
