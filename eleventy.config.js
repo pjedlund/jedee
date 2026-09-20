@@ -46,6 +46,15 @@ export default async function(eleventyConfig) {
   eleventyConfig.addWatchTarget('./src/assets/**/*.{css,js,svg,png,jpeg}');
   eleventyConfig.addWatchTarget('./src/_includes/**/*.{webc}');
 
+  // `npm run dev:mem` prints retained heap after each build — how the ~1 MB-per-page-rendered leak was measured. See the wiki "The dev server's memory".
+  if (process.env.MEMLOG) {
+    eleventyConfig.on('eleventy.after', async () => {
+      global.gc?.(); global.gc?.();
+      const m = process.memoryUsage();
+      console.log(`[mem] heapUsed ${Math.round(m.heapUsed / 1048576)} MB  external ${Math.round(m.external / 1048576)} MB  rss ${Math.round(m.rss / 1048576)} MB`);
+    });
+  }
+
   // `eleventy.before` rewrites both these dirs every build. .gitignore used to hide them from the watcher; the wiki dial below turns .gitignore off, so without these two lines each build retriggers itself — one CSS edit measured 18 rebuilds and climbing.
   eleventyConfig.watchIgnores.add('src/_includes/css/**');
   eleventyConfig.watchIgnores.add('src/_includes/scripts/**');
