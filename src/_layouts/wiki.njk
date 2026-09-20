@@ -15,6 +15,7 @@ layout: base
     {% if date %}
       <p class="meta">
         {% set definedDate = date %}{% include "partials/date.njk" %}
+        {%- if updated %} · Updated <time datetime="{{ updated | toIsoString }}">{{ updated | formatDate('D MMM YYYY') }}</time>{% endif %}
       </p>
     {% endif %}
 

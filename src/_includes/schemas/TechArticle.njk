@@ -31,6 +31,7 @@
       "name": "{{ meta.author.name }}",
       "url": "{{ meta.author.website }}"
     },
-    "datePublished": "{{ date | toIsoString }}"
+    "datePublished": "{{ date | toIsoString }}"{% if updated %},
+    "dateModified": "{{ updated | toIsoString }}"{% endif %}
   }
 </script>
