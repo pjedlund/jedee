@@ -2,6 +2,7 @@ import autoprefixer from 'autoprefixer';
 import cssnano from 'cssnano';
 import fg from 'fast-glob';
 import fs from 'node:fs/promises';
+import {watch} from 'node:fs';
 import path from 'node:path';
 import postcss from 'postcss';
 import postcssImport from 'postcss-import';
@@ -27,10 +28,34 @@ const buildCss = async (inputPath, outputPaths) => {
   return result.css;
 };
 
+// Serving ALSO writes the global CSS as a plain file, so a CSS save costs no Eleventy rebuild. ⚠ Condition must stay in step with the runMode branch in head/css-inline.njk, which is what links this file.
+const GLOBAL_SRC = 'src/assets/css/global/global.css';
+const globalOutputs = () =>
+  process.env.ELEVENTY_RUN_MODE === 'serve'
+    ? ['src/_includes/css/global.css', 'dist/assets/css/global.css']
+    : ['src/_includes/css/global.css'];
+
+export const buildGlobalCss = () => buildCss(GLOBAL_SRC, globalOutputs());
+
+/** Recompiles global CSS on save, in the Eleventy process, so `src/assets/css/global/**` can stay out of Eleventy's watcher. */
+export const watchGlobalCss = () => {
+  let pending;
+  return watch('src/assets/css/global', {recursive: true}, () => {
+    clearTimeout(pending);
+    pending = setTimeout(
+      () =>
+        buildGlobalCss()
+          .then(() => console.log('[css] global.css rebuilt'))
+          .catch(error => console.error(`[css] ${error.message}`)),
+      50
+    );
+  });
+};
+
 export const buildAllCss = async () => {
   const tasks = [];
 
-  tasks.push(buildCss('src/assets/css/global/global.css', ['src/_includes/css/global.css']));
+  tasks.push(buildGlobalCss());
 
   const localCssFiles = await fg(['src/assets/css/local/**/*.css']);
   for (const inputPath of localCssFiles) {

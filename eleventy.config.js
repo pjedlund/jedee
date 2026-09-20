@@ -33,9 +33,12 @@ Image.concurrency = 4;
 
 export default async function(eleventyConfig) {
   // --------------------- Events: before build
-  eleventyConfig.on('eleventy.before', async () => {
+  let cssWatcher;
+  eleventyConfig.on('eleventy.before', async ({runMode}) => {
     await events.buildAllCss();
     await events.buildAllJs();
+    // ⚠ Must come after the first buildAllCss — the watcher only recompiles, it does not write the first copy.
+    if (runMode === 'serve' && !cssWatcher) cssWatcher = events.watchGlobalCss();
   });
 
   // create a build time for serviceworker.njk
@@ -58,6 +61,9 @@ export default async function(eleventyConfig) {
   // `eleventy.before` rewrites both these dirs every build. .gitignore used to hide them from the watcher; the wiki dial below turns .gitignore off, so without these two lines each build retriggers itself — one CSS edit measured 18 rebuilds and climbing.
   eleventyConfig.watchIgnores.add('src/_includes/css/**');
   eleventyConfig.watchIgnores.add('src/_includes/scripts/**');
+  // A global CSS save rebuilt all 681 pages — 12 seconds, and ~600 MB of heap Eleventy never gives back. Out of the watcher it costs nothing: watchGlobalCss recompiles the file, and the dev server below swaps the stylesheet in place. See the wiki "The dev server's memory".
+  eleventyConfig.watchIgnores.add('src/assets/css/global/**');
+  eleventyConfig.setServerOptions({watch: ['dist/assets/css/global.css']});
   // ⚠ The Obsidian vault is src/, and Eleventy reads the .gitignore line `.obsidian` as ./.obsidian at the repo root, so without this every Obsidian click (workspace.json) triggers a full rebuild. See the wiki "Watch loops".
   eleventyConfig.watchIgnores.add('src/.obsidian/**');
   eleventyConfig.ignores.add('src/.obsidian/**');

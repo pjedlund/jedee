@@ -1,7 +1,8 @@
 
 	{%- if eleventy.env.runMode === "serve" %}
 		<!-- External CSS for local dev (refresh without page reload) -->
-		<link rel="stylesheet" href="{% getBundleFileUrl "css", "global" %}">
+		<!-- Global CSS is a plain file, not the bundle: a CSS save then costs no Eleventy rebuild. See eleventy.config.js. -->
+		<link rel="stylesheet" href="/assets/css/global.css">
 		<link rel="stylesheet" href="{% getBundleFileUrl "css", "local" %}">
 	{%- else  %}
 		<!-- Inlined CSS (fastest site performance in production)  -->
