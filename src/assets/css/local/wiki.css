@@ -43,8 +43,3 @@ Shots whose subject has its own rounded, transparent corners — a device frame,
   border: none;
   border-radius: 0;
 }
-
-/* The meta line under the title. Same size as a post's, whose copy is in local/post.css — the wiki loads its own bundle, so the one declaration is repeated rather than shared. */
-.meta {
-  font-size: var(--size-step-min-1);
-}
