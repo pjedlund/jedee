@@ -30,6 +30,7 @@
   font-variant-numeric: normal;
 }
 
+/* Lists, code blocks and rules keep the browser's bottom margin on top of the flow gap, so they get more space below than above — on purpose (wiki: Typographic conventions). */
 .prose :is(pre, pre + *, figure, picture) {
   --flow-space: var(--space-m-l);
 }
