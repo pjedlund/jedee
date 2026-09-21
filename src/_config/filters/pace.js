@@ -28,7 +28,7 @@ export const paceOrSpeed = (type, km, seconds) => {
   }
   if (WHEEL.has(k) || SKI.has(k)) {
     const kmh = km / (seconds / 3600);
-    return `${kmh.toFixed(1)} km/h (${(kmh * KM_PER_MI).toFixed(1)} mph)`;
+    return `${kmh.toFixed(1)}\u00a0km/h (${(kmh * KM_PER_MI).toFixed(1)}\u00a0mph)`;
   }
   return '';
 };

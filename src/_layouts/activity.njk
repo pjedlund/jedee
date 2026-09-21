@@ -51,10 +51,10 @@ schema: BlogPosting
         <div><dt>Heart rate</dt><dd>{{ hrAvg }}{% if hrMax %} ({{ hrMax }} max){% endif %}</dd></div>
       {% endif %}
       {% if elevationGain %}
-        <div><dt>Elevation</dt><dd>+{{ elevationGain }} m{% if elevationLoss %} / -{{ elevationLoss }} m{% endif %}</dd></div>
+        <div><dt>Elevation</dt><dd>+{{ elevationGain }}&nbsp;m{% if elevationLoss %} / -{{ elevationLoss }}&nbsp;m{% endif %}</dd></div>
       {% endif %}
       {% if energyKcal %}
-        <div><dt>Energy</dt><dd>{{ energyKcal }} kcal</dd></div>
+        <div><dt>Energy</dt><dd>{{ energyKcal }}&nbsp;kcal</dd></div>
       {% endif %}
     </dl>
 
