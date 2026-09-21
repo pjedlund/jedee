@@ -93,13 +93,13 @@
 /* marker only for "regular lists" */
 .prose :is(ul:not([class]):not([role='list'])) li::marker {
   color: var(--color-accent-orange-text);
-  /* ⚠ ◦ is added to the Source Sans subset by hand; a new marker glyph needs the same (see Font subsetting). */
-  content: '◦ ';
+  /* A thin space and a punctuation space (a period's width) stand in for the numbers' ". ", so the ring sits over their last digit. ⚠ ◦ is added to the Source Sans subset by hand; a new marker glyph needs the same (see Font subsetting). */
+  content: '◦\2009\2008 ';
 }
 
-/* One text edge for both kinds; 2.75ch holds a two-digit number. */
+/* One text edge for both kinds, indented one line-height like Bringhurst's paragraph indent (2.3.2); it holds "10. " but not "100. ". */
 .prose :is(ul, ol):not([class]) {
-  padding-inline-start: 2.75ch;
+  padding-inline-start: 1lh;
 }
 
 .prose ol li::marker {

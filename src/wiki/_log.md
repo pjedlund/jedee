@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-21] enrich | Typographic conventions
+
+Johan asked for the hollow bullet to line up with the numbers' last digit and for the list indent to follow the type. The page now records what the books say about indenting a list (nothing directly; the paragraph indent is the nearest rule), the move from 2.75ch to a one-line-height indent, and the spaces that centre the ring over the digit column.
+
 ## [2026-09-20] enrich | The dev server's memory
 
 The dev server had crashed twice in a day, and Johan asked whether saves could be batched so one rebuild covers them all. They cannot: Eleventy drains its watch queue one file per build while `--incremental` is on, and says so in a comment in `EleventyWatch.js`. The page now carries that, with the `setWatchThrottleWaitTime` dead end marked — it is a real API that accepts any value and cannot do the thing.

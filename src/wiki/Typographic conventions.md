@@ -1,7 +1,7 @@
 ---
 description: "The book-typography rules for figures, small caps, capitals, captions, line breaks, superscripts, ordinals, list markers and subtitles, where they come from, and what each costs in accessibility."
 date: 2026-09-10
-updated: 2026-09-15
+updated: 2026-09-21
 ---
 
 Typography carries a set of conventions older than the web, most of them written down in two books. Robert Bringhurst's *The Elements of Typographic Style* (1992; 4th edition 2012) is adapted rule by rule for CSS at [webtypography.net](http://webtypography.net/). Matthew Butterick's *Practical Typography* is a free online book. The two agree more than they differ, and where they differ Butterick is the milder. This page covers the part CSS can switch on, given fonts that carry the features; the switches themselves are on [[OpenType features]].
@@ -68,6 +68,8 @@ In CSS, `font-variant-numeric: ordinal` switches on the font's `ordn` feature. I
 
 Bringhurst has no rule for lists: neither the book's numbered rules nor webtypography.net covers bullets or list numbers. His figure rule still reaches them. A list number sits in lowercase running text, so by 3.2.1 it takes old-style figures. Butterick ([bulleted and numbered lists](https://practicaltypography.com/bulleted-and-numbered-lists.html)) says the bullet or number may differ in font and size from the item's text, a bullet should be noticeable but not big, hollow bullets are subtler than solid ones, and an asterisk is too small and sits too high to serve as one.
 
+Neither book says how far to indent a list. The nearest rule is the paragraph indent. Bringhurst (2.3.2) asks for at least an en, and [webtypography.net](http://webtypography.net/2.3.2) suggests an indent of one line-height, so the indent and the leading make a square. Butterick ([first-line indents](https://practicaltypography.com/first-line-indents.html)) gives one to four times the point size.
+
 Chrome's default stylesheet gives `::marker` `font-variant-numeric: tabular-nums` (checked 2026-09-14). By the one-property trap under Figures, that also makes list numbers lining, whatever the list item inherits. Old-style numbers need the marker set explicitly: `ol li::marker { font-variant-numeric: oldstyle-nums tabular-nums; }`. Tabular keeps "9." and "10." the same width.
 
 A list number carries meaning ("see step 3"), so it counts as text and needs 4.5:1 contrast ([WCAG 1.4.3](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html)). A bullet is decoration and has no contrast requirement.
@@ -126,7 +128,8 @@ Set on 2026-09-10, after a research pass and an audit of the site. The decisions
   - The numbers are `--color-accent-orange-text`: `orange-600` in light mode (5.8:1 on the page; `orange-500` measured 3.5:1) and `orange-500` in dark (4.7:1). Other orange text that carries meaning can use the same variable.
   - Unordered lists use a hollow bullet (◦) in the same variable, so both list markers share one orange per theme. It replaced an en dash: shrinking the dash to 0.75em sank it towards the baseline, and `::marker` cannot be moved up. Butterick prefers hollow bullets as the subtler kind.
   - ◦ (U+25E6) and • (U+2022) were not in the Source Sans subset and were added by hand (see [[Font subsetting]]); the subset still lacks ‣ and ▪, so either of those as a marker needs the same step.
-  - Both kinds of list share one start padding, 2.75ch, so bullet and numbered items start at the same place. It is sized for "10. ": the marker box includes the space before the text and measured 33.6px, which 2.75ch (33.7px) just holds. An estimate of 2.2ch left "10." hanging about 7px past the edge. Lists that reach 100 would hang again.
+  - Both kinds of list share one start padding, `1lh`, so bullet and numbered items start at the same place (changed 2026-09-21 from 2.75ch, which was sized by eye to the same marker). One line-height is the square indent above: the indent follows the leading instead of a guessed width. It holds "10. ", whose marker box (the space before the text included) is 1.36em against the 1.4em of `--leading-standard`; a smaller leading would let it hang. Lists that reach 100 hang.
+  - The bullet's marker is `'◦\2009\2008 '`: the ring, a thin space, a punctuation space (a period's width) and a word space. The last two copy the numbers' ". ", and the thin space makes up half the difference between a digit and the ring, so the ring sits centred over the numbers' last digit. With `'◦ '` it sat in the period's column instead, tight against the text. Source Sans has both spaces; the ring was within 0.3px of centre at 19px.
 - **Subtitles** (added 2026-09-14). A `subtitle:` in a post's front matter renders under the title in `<hgroup>`, from `partials/entry-header.njk`, on every post type.
   - The `<p>` is not part of `p-name`, so the microformats title stays the title alone (see [[Microformats]]).
   - Set in Source Sans italic at `--size-step-2`, in the headline color, balanced (`local/post.css`). Three serif versions came first: bold at two and three steps below the title, then dimmed toward the background. The italic sans read as a second voice rather than a smaller title.
