@@ -1,5 +1,5 @@
 ---
-description: "The book-typography rules for figures, small caps, capitals, captions, line breaks, superscripts, ordinals, list markers and subtitles, where they come from, and what each costs in accessibility."
+description: "The book-typography rules for figures, small caps, capitals, captions, line breaks, superscripts, ordinals, list markers, subtitles, kerning, hyphenation and hard spaces, where they come from, and what each costs in accessibility."
 date: 2026-09-10
 updated: 2026-09-21
 ---
@@ -136,6 +136,11 @@ Set on 2026-09-10, after a research pass and an audit of the site. The decisions
   - The `<p>` is not part of `p-name`, so the microformats title stays the title alone (see [[Microformats]]).
   - Set in Source Sans italic at `--size-step-2`, in the headline color, balanced (`local/post.css`). Three serif versions came first: bold at two and three steps below the title, then dimmed toward the background. The italic sans read as a second voice rather than a smaller title.
   - The subtitle's `--flow-space` is set on the `<p>` itself. Set on the `<hgroup>`, it lost to `.prose`'s larger space after a heading.
+- **Fixes from a check against every webtypography.net rule** (2026-09-21).
+  - **Kerning in WebKit** (2.1.8). Eleventy Excellent's reset set `text-rendering: optimizeSpeed` on `body`, and WebKit turns kerning off under it: "AVATAR To Wa Yo" in Source Sans at 18px measured 130.3px, the same as `font-kerning: none`, against 125.9px kerned. That is Safari and practically every iPhone browser. Chrome kerned either way. The line is gone, and a ⚠ comment in `reset.css` keeps an upgrade from bringing it back.
+  - **Running text at the font's own spacing** (2.1.7). Eleventy Excellent also tracked `body` at `--tracking` (−0.04ch, about −2.5% of the size), which pulled every lowercase letter tighter. Headings keep it: tightening display sizes is the reason Bringhurst allows (2.1.1).
+  - **Hyphenation limits** (2.4.1). `body` sets `hyphenate-limit-chars: auto 2 3`, two letters left behind and three taken forward, inherited wherever `hyphens: auto` is on. Chrome honours it only some of the time: at 375px, English paragraphs that carried two letters forward went from 147 to 50. "forev-er" became "for-ever"; "activi-ty" stays, although the paragraph computes `auto 2 3`.
+  - **Hard spaces between numbers and units** (2.4.6). A markdown-it rule in `markdown.js` joins a number and the unit after it (km, min, s, MB, °C and a few more) with a non-breaking space; code is a different token type and is left alone. The activity stats and the `withMiles` and `paceOrSpeed` filters do the same. A trade-off: on a phone, a table whose cells split "0.34 / s" now keeps each value on one line and scrolls sideways instead.
   - Written in title case with short words lowercase, like the title.
   - Books have a Subtitle field in [[Sveltia CMS]]. Films don't: Letterboxd has no subtitle, so the Web Clipper has nothing to fill it from, and no film has needed one. A film can still take `subtitle:` by hand.
 - **Not done:**
