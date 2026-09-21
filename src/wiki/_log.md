@@ -7,7 +7,7 @@ Append-only. One entry per ingest / query-filed / lint, newest first. Entry form
 
 ## [2026-09-21] enrich | Typographic conventions
 
-Johan asked for the hollow bullet to line up with the numbers' last digit and for the list indent to follow the type. The page now records what the books say about indenting a list (nothing directly; the paragraph indent is the nearest rule), the move from 2.75ch to a one-line-height indent, and the spaces that centre the ring over the digit column.
+Johan asked for the hollow bullet to line up with the numbers' last digit and for the list indent to follow the type. The page now records what the books say about indenting a list (nothing directly; the paragraph indent is the nearest rule), the move from 2.75ch to a one-line-height indent, and the spaces that centre the ring over the digit column. A one-line-height paragraph gap was tried and dropped, and the page says why.
 
 ## [2026-09-20] enrich | The dev server's memory
 
