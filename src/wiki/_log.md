@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-21] lint | jedee against webtypography.net
+
+Johan asked for a check of the site against every rule on webtypography.net. Of 24 rules, four were missing and are now fixed; [[Typographic conventions]] records each, with the measurements. The biggest was invisible in Chrome: Eleventy Excellent's reset turned kerning off in WebKit, so Safari and iPhone readers saw unkerned text. Hyphenation limits turned out to be only partly honoured by Chrome, and the page says so rather than claiming the rule is enforced.
+
 ## [2026-09-21] enrich | Typographic conventions
 
 Johan asked for the hollow bullet to line up with the numbers' last digit and for the list indent to follow the type. The page now records what the books say about indenting a list (nothing directly; the paragraph indent is the nearest rule), the move from 2.75ch to a one-line-height indent, and the spaces that centre the ring over the digit column. A one-line-height paragraph gap was tried and dropped, and the page says why.

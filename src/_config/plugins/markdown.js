@@ -78,6 +78,16 @@ export const markdownLib = markdownIt({
     };
   })
   .use(md => {
+    // A hard space between a number and its unit, so a line never splits "0.34 s" (Bringhurst 2.4.6). Code spans and fences are other token types, so they are left alone.
+    const numberUnit = /(\d) (km\/h|km|kcal|mph|mi|mm|cm|m|kg|g|°C|°F|ms|min|s|h|kB|KB|MB|GB|TB|px|bpm)(?![\p{L}\d])/gu;
+    md.core.ruler.push('number_unit_nbsp', state => {
+      for (const token of state.tokens) {
+        if (token.type !== 'inline') continue;
+        for (const child of token.children) if (child.type === 'text') child.content = child.content.replace(numberUnit, '$1\u00a0$2');
+      }
+    });
+  })
+  .use(md => {
     // A `Table: …` paragraph directly before or after a table becomes its <caption> (pandoc's convention); see the wiki page Tables.
     const captionAt = (tokens, i) =>
       tokens[i]?.type === 'paragraph_open' && /^table:\s/i.test(tokens[i + 1].content) && tokens[i + 2].type === 'paragraph_close';

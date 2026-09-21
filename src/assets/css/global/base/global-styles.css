@@ -27,7 +27,8 @@ body {
   color: var(--color-text);
   background-color: var(--color-bg);
   accent-color: var(--color-accent-orange);
-  letter-spacing: var(--tracking);
+  /* Wherever hyphens: auto is on, leave two letters behind and take three forward (Bringhurst 2.4.1). */
+  hyphenate-limit-chars: auto 2 3;
   border-top: var(--color-border-height) solid var(--color-border-top);
 }
 
