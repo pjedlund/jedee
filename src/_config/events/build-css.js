@@ -40,6 +40,7 @@ export const buildGlobalCss = () => buildCss(GLOBAL_SRC, globalOutputs());
 /** Recompiles global CSS on save, in the Eleventy process, so `src/assets/css/global/**` can stay out of Eleventy's watcher. */
 export const watchGlobalCss = () => {
   let pending;
+  // ⚠ unref() is what lets Ctrl+C stop the dev server: Eleventy's SIGINT handler only closes its own watchers, and an open fs.watch keeps Node alive.
   return watch('src/assets/css/global', {recursive: true}, () => {
     clearTimeout(pending);
     pending = setTimeout(
@@ -49,7 +50,7 @@ export const watchGlobalCss = () => {
           .catch(error => console.error(`[css] ${error.message}`)),
       50
     );
-  });
+  }).unref();
 };
 
 export const buildAllCss = async () => {

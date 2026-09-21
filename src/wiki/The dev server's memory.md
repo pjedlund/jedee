@@ -1,7 +1,7 @@
 ---
 description: "Telling a JS-heap leak from native memory, and from a one-off spike: what heapUsed, external and RSS each mean, why GC must be forced before reading them, and jedee's two unrelated out-of-memory crashes."
 date: 2026-08-02
-updated: 2026-09-20
+updated: 2026-09-21
 ---
 
 A build that dies of memory exhaustion says `JavaScript heap out of memory` and nothing else. The message names one place — the JavaScript heap — but the pressure that filled it frequently came from somewhere else, so the same words cover several unrelated problems: a genuine leak, memory held outside the heap by native image code, and an ordinary workload spike. They are fixed in completely different ways, which makes telling them apart the first job rather than a detail.
@@ -86,7 +86,7 @@ eleventyConfig.watchIgnores.add('src/assets/css/global/**');
 eleventyConfig.setServerOptions({watch: ['dist/assets/css/global.css']});
 ```
 
-`watchIgnores`, not `ignores` — the same distinction as the fix above, watch-only, so template discovery and include resolution are untouched. Serving also writes the compiled global CSS to `dist/` as a plain file alongside the include copy production inlines, keyed on `ELEVENTY_RUN_MODE === 'serve'` so the condition stays in step with the `runMode` branch in `head/css-inline.njk` that links it. A recompile-on-save watcher runs *inside* the Eleventy process — `node:fs`'s recursive `watch`, started once from the existing `eleventy.before` hook — so there is no second process, no extra terminal and no new dependency, which is what the August note had assumed a standalone watcher would cost. It catches its own errors, because a half-typed rule mid-edit would otherwise take the server down with it.
+`watchIgnores`, not `ignores` — the same distinction as the fix above, watch-only, so template discovery and include resolution are untouched. Serving also writes the compiled global CSS to `dist/` as a plain file alongside the include copy production inlines, keyed on `ELEVENTY_RUN_MODE === 'serve'` so the condition stays in step with the `runMode` branch in `head/css-inline.njk` that links it. A recompile-on-save watcher runs *inside* the Eleventy process — `node:fs`'s recursive `watch`, started once from the existing `eleventy.before` hook — so there is no second process, no extra terminal and no new dependency, which is what the August note had assumed a standalone watcher would cost. It catches its own errors, because a half-typed rule mid-edit would otherwise take the server down with it. ⚠ The watcher is `unref()`ed so Ctrl+C still stops the server. Eleventy's own Ctrl+C handler closes only its own watchers and then waits for Node to run out of work; an open `fs.watch` kept it running indefinitely, so Ctrl+C did nothing (found and fixed 2026-09-21). With it unref'd, Eleventy exits 0, and the `until` loop in `npm start`, which only relaunches on a failure, ends too.
 
 The result is a CSS save that Eleventy declines to build for at all:
 
