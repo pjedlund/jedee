@@ -27,7 +27,6 @@ body {
   color: var(--color-text);
   background-color: var(--color-bg);
   accent-color: var(--color-accent-orange);
-  letter-spacing: var(--tracking);
   border-top: var(--color-border-height) solid var(--color-border-top);
 }
 
