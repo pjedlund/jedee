@@ -2,7 +2,7 @@
 title: /now
 description: What I am doing now.
 date: 2026-09-11
-location: Slottsstaden, Malmöno
+location: Slottsstaden, Malmö
 listening:
   - Nine
   - In Reverse (Polygonia Remix)
