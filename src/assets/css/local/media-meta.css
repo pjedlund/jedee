@@ -45,7 +45,7 @@ Type-specific pieces stay with their type: `.photo-tech` below is the photograph
 .photo-tech > summary:hover,
 .photo-tech > summary:focus-visible,
 .photo-tech[open] > summary {
-  color: var(--color-primary);
+  color: var(--color-accent-orange-text);
 }
 
 .photo-tech[open] > dl {

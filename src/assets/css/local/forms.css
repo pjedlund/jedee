@@ -37,7 +37,7 @@ label:has(input) {
   display: flex;
   align-items: baseline;
   gap: var(--space-s);
-  font-weight: var(--font-normal);
+  font-weight: var(--font-regular);
 }
 
 label:has(input) + label:has(input) {
