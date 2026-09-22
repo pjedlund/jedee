@@ -52,7 +52,7 @@ is-land[ready] lite-youtube { animation: yt-poster-fade var(--yt-poster-fade, 35
 ```
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/youtube-poster-fade.png" alt="Three players side by side, frozen at three instants of the same 350 millisecond fade. The first is an empty lifted panel with a very faint logomark at its centre. The second shows the album artwork and the red play button at about half opacity over that panel. The third is the finished poster, opaque, with the play button at full strength." width="1456" height="394">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/youtube-poster-fade.png" alt="Three players side by side, frozen at three instants of the same 350 millisecond fade. The first is an empty lifted panel with a very faint logomark at its center. The second shows the album artwork and the red play button at about half opacity over that panel. The third is the finished poster, opaque, with the play button at full strength." width="1456" height="394">
   <figcaption>The same keyframe frozen at 0, 175 and 350ms. The placeholder is a separate layer on the wrapper, which is why it shows <em>through</em> the half-faded poster rather than being replaced by it.</figcaption>
 </figure>
 

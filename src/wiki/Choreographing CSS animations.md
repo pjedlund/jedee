@@ -100,7 +100,7 @@ document.getAnimations()
 The start page — and only the start page — types its own name. The header's logomark is followed by JOHAN EDLUND wiping in behind a caret, which blinks twice and then backspaces the name away, leaving the bare logomark that every other page shows. Everything above is from building it, 2026-08-28.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/reveal-filmstrip.png" alt="Six stacked frames of the site header, each labelled with a time. At 1.080s only the letters JO are visible with a caret bar beside them. At 1.325s the name has reached JOHAN EDL. At 1.650s the full name JOHAN EDLUND stands with the caret parked a small gap past the D. At 2.100s the name is complete and the caret has vanished. At 3.400s the name has shrunk back to JOHAN EDL with the caret on its edge. At 3.700s only the orange logomark is left." width="1360" height="1004">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/reveal-filmstrip.png" alt="Six stacked frames of the site header, each labeled with a time. At 1.080s only the letters JO are visible with a caret bar beside them. At 1.325s the name has reached JOHAN EDL. At 1.650s the full name JOHAN EDLUND stands with the caret parked a small gap past the D. At 2.100s the name is complete and the caret has vanished. At 3.400s the name has shrunk back to JOHAN EDL with the caret on its edge. At 3.700s only the orange logomark is left." width="1360" height="1004">
   <figcaption>The chain at six instants on its own clock. The caret is one bar riding the wipe edge — the same duration and easing as the clip, and a percentage offset doing the tracking.</figcaption>
 </figure>
 

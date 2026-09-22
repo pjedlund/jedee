@@ -1,6 +1,7 @@
 ---
 description: "Partial hydration as a custom element: markup that works on its own, with the JavaScript that upgrades it held back until a condition is met."
 date: 2026-09-06
+updated: 2026-09-14
 ---
 
 Most JavaScript on a page is not needed when the page arrives. A lightbox matters when someone clicks a photo, a map when it scrolls into view, a search field when the browser has nothing better to do. Loading all of it up front is the arrangement that produces a page which looks finished and does nothing for another second and a half.

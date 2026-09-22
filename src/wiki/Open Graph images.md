@@ -1,6 +1,7 @@
 ---
 description: "Generating per-post social preview images at build time by rendering an SVG template and converting it to JPEG — and why the output is committed to the repo rather than rebuilt on the server."
 date: 2026-09-05
+updated: 2026-09-09
 ---
 
 When a link is shared, the receiving platform reads the page's `<head>` for [Open Graph](https://ogp.me/) tags and draws a card from them. `og:image` is the picture on that card. It is fetched by a crawler that runs no JavaScript and does not wait, so the image has to be a real file at a real URL by the time the page is published — which makes it a build-time problem, not a page-time one.
@@ -72,7 +73,7 @@ Three things the generator does differently from the per-post template, all of t
 
 **So the generator asserts both faces loaded and throws if not.** This is the one place the silent-fallback failure can be made loud, and it earned its four lines the first time it ran.
 
-The per-post template was aligned to match on the same day: Eleventy Excellent's star came out for the site's own mark at the same size, position and 10%, and the signature logomark went from the base-dark grey `#bbbfca` to the accent orange — the same value, and the same fix, as the breadcrumb logomark. Measured over the watermark, the 80px title reads 6.20:1 against 6.97:1 on bare paper, so the overlap on a long title costs nothing.
+The per-post template was aligned to match on the same day: Eleventy Excellent's star came out for the site's own mark at the same size, position and 10%, and the signature logomark went from the base-dark gray `#bbbfca` to the accent orange — the same value, and the same fix, as the breadcrumb logomark. Measured over the watermark, the 80px title reads 6.20:1 against 6.97:1 on bare paper, so the overlap on a long title costs nothing.
 
 **An XML comment may not contain a double hyphen**, so a CSS custom property name cannot be written inside one. `<!-- … --color-base-dark … -->` in the SVG template made every card fail to rasterize with `Input file has corrupt header: XML parse error … Comment must not contain '--'`. The template is Nunjucks but the output is XML, and the comment syntax belongs to the output.
 

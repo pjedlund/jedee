@@ -1,6 +1,7 @@
 ---
 description: "A build that watches a directory it also writes into will retrigger itself; how .gitignore-as-watch-list hides the problem, and why the fix belongs in a watch-only ignore."
 date: 2026-08-02
+updated: 2026-09-22
 ---
 
 A watch loop is a build that triggers itself. The shape is always the same: a watcher observes a directory tree, the build writes generated output *into* that tree, the watcher sees its own build's output change, and starts another build. Each pass is legitimate work as far as the tool is concerned, so nothing errors — it simply never settles, and the process eventually dies of memory exhaustion or pins a core until it's killed.
@@ -13,9 +14,9 @@ It is easy to introduce and hard to see, because most tools ship with a default 
 
 ## In jedee
 
-Eleventy honours `.gitignore` by default, and jedee's build writes 23 generated files into its own input directory on every pass — 18 compiled stylesheets into `src/_includes/css/` and 5 bundled scripts into `src/_includes/scripts/`, from an `eleventy.before` event. Both directories are gitignored, so for a long time the watcher never saw them.
+Eleventy honors `.gitignore` by default, and jedee's build writes 29 generated files into its own input directory on every pass — 22 compiled stylesheets into `src/_includes/css/` and 7 bundled scripts into `src/_includes/scripts/`, from an `eleventy.before` event. Both directories are gitignored, so for a long time the watcher never saw them.
 
-Making the private wiki browsable locally broke that. `src/wiki/` is gitignored because it holds its own inner git repo, so the only way to make Eleventy build it was to stop honouring `.gitignore` entirely:
+Making the private wiki browsable locally broke that. `src/wiki/` is gitignored because it holds its own inner git repo, so the only way to make Eleventy build it was to stop honoring `.gitignore` entirely:
 
 ```js
 eleventyConfig.setUseGitIgnore(false);

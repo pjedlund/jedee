@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-22] lint | The wiki lane of the first full-project lint
+
+The new `lint` skill's full run checked every page against the code and found thirteen things; all are fixed. Counts that had drifted, recounted rather than copied from the lint: fourteen types have a feed, not twelve; ten have their own card, not eleven; twelve are configured in JSON and four in JavaScript; five JSON-LD templates, with TechArticle; ten accessibility-test paths; eight WebC components, fifteen token files, twenty-one local stylesheets; 29 generated files in the input directory; 113 orienteering activities; the `⚠` on 50 pages. Two narrative counts in [[Per-type feeds]] are now dated to the moment they describe instead of recounted. [[What jedee kept from Eleventy Excellent]] and [[Tailwind]] now show the `cubeUtilities` layer name, [[Site search]] reads `settings.yaml`, [[The title-less post types]] names `link-atom-body.njk` and four affected types, and line-number citations into the CSS became file names so they stop drifting. Six pages got the `updated:` date of their last real revision, and British spellings in prose Claude wrote became US ones, except where alt text quotes words printed in a figure.
+
 ## [2026-09-21] lint | jedee against webtypography.net
 
 Johan asked for a check of the site against every rule on webtypography.net. Of 24 rules, four were missing and are now fixed; [[Typographic conventions]] records each, with the measurements. The biggest was invisible in Chrome: Eleventy Excellent's reset turned kerning off in WebKit, so Safari and iPhone readers saw unkerned text. Hyphenation limits turned out to be only partly honoured by Chrome, and the page says so rather than claiming the rule is enforced.

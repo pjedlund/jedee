@@ -1,7 +1,7 @@
 ---
 description: "Searching a static site without a server or a search library: a JSON index written at build time, fetched once and filtered in the browser."
 date: 2026-09-02
-updated: 2026-09-20
+updated: 2026-09-22
 ---
 
 A static site has no server to ask, so search has to happen somewhere else. Three places are available, and the choice is mostly about how many entries there are.
@@ -45,7 +45,7 @@ search:
 
 `types` is a curated list, not every collection. The response types (likes, replies, reposts, RSVPs, bookmarks) stay out because they would drown prose results. The keys are **collection keys, and they are singular** — `article`, not `articles`; the plurals are archive URLs and produce an empty index with a green build. See [[Anatomy of a post type]].
 
-Activities are the one type where the whole collection is the wrong unit, so `only` narrows them by a front-matter key: 112 of 180 are orienteering, with real event and forest names worth looking up months later, while the rest carry Strava's defaults including 24 posts called "Morning Run". `only` is deliberately a general key/value match rather than an orienteering flag — it is the same few lines either way, and it keeps the answer to "what is searchable?" inside the dial.
+Activities are the one type where the whole collection is the wrong unit, so `only` narrows them by a front-matter key: 113 of 180 are orienteering, with real event and forest names worth looking up months later, while the rest carry Strava's defaults including 24 posts called "Morning Run". `only` is deliberately a general key/value match rather than an orienteering flag — it is the same few lines either way, and it keeps the answer to "what is searchable?" inside the dial.
 
 Standalone prose pages are not in any post collection, so they opt in with `tags: ["searchable"]`, which gives a real `collections.searchable` the index can list beside the post types. `searchable` has to join `SYSTEM_TAGS` in `src/_config/collections.js` in the same edit — every other tag on this site is a public page, and without that one word `/tags/searchable/` quietly appears in the tag index.
 
@@ -58,7 +58,7 @@ permalink: data => (data.settings.search.enabled ? '/search.json' : false),
 eleventyImport: {collections: search.types}
 ```
 
-`permalink` as a function receives the **data object**, so it is `data.settings`, not a bare `settings`. And `eleventyImport.collections` is resolved *before* the data cascade runs, so the type list cannot come from `data` — the template reads `features.yaml` off disk at module load, the same way `eleventy.config.js` already does for the wiki dial.
+`permalink` as a function receives the **data object**, so it is `data.settings`, not a bare `settings`. And `eleventyImport.collections` is resolved *before* the data cascade runs, so the type list cannot come from `data` — the template reads `settings.yaml` off disk at module load, the same way `eleventy.config.js` already does for the wiki dial.
 
 Each entry carries `url`, `title`, `type`, `date`, a ~140-character `text` excerpt, and a lowercased `keywords` string holding title, description, tags and the whole body. Only `keywords` is matched against; the rest is for rendering.
 
@@ -82,7 +82,7 @@ Result rows are built client-side, so their per-type icons cannot be rendered pe
 Close to half the index has no body at all — 153 of 342 entries counted on 2026-09-20, mostly jams (82) and orienteering activities (63), which carry a title and front matter and nothing else. It was 153 of 289 and a clear majority until the wiki joined the searchable types; the bodyless count has not moved, the bodied one grew around it. A row with only an icon and a title is still the common case rather than the edge case, so the row omits the excerpt element entirely rather than rendering an empty one that leaves a ragged gap in the list. Design a result row against the body-less half, not against the posts that happen to have prose.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/site-search-panel.png" alt="A browser window with the search panel open under the header. The field holds the word night; below it seven results, each with a small type icon and a bold title. The first two, both orienteering activities, are a single line with no excerpt; the five below them — three wiki pages, a recipe and a jam — each carry two lines of grey excerpt text." width="1392" height="928">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/site-search-panel.png" alt="A browser window with the search panel open under the header. The field holds the word night; below it seven results, each with a small type icon and a bold title. The first two, both orienteering activities, are a single line with no excerpt; the five below them — three wiki pages, a recipe and a jam — each carry two lines of gray excerpt text." width="1392" height="928">
   <figcaption>Seven real hits for <code>night</code>. The top two rows are the common shape — icon and title, nothing else — and the row simply omits the excerpt element rather than leaving an empty one.</figcaption>
 </figure>
 

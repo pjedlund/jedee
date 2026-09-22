@@ -1,5 +1,5 @@
 ---
-description: "Styling data tables with modern CSS: markup that reads correctly unstyled, the browser defaults worth overriding, alignment and sticky headers, the scroll container a wide table needs, and rules painted as a gradient because a collapsed border gives one colour per edge."
+description: "Styling data tables with modern CSS: markup that reads correctly unstyled, the browser defaults worth overriding, alignment and sticky headers, the scroll container a wide table needs, and rules painted as a gradient because a collapsed border gives one color per edge."
 date: 2026-09-15
 updated: 2026-09-20
 ---
@@ -41,7 +41,7 @@ th, td { padding: 0.25rem 0.75rem; }
 ```
 
 - `border-collapse` defaults to `separate`: every cell draws its own border with `border-spacing` between them, and a `<tr>` cannot take a border at all. `collapse` makes neighbouring cells share one border and lets whole rows carry rules.
-- `<th>` and `<caption>` are centred by default. Start alignment reads better, and the logical keyword follows the writing direction. Barker found `text-align: start` on `<table>` itself unreliable across browsers, so it goes on the cells.
+- `<th>` and `<caption>` are centered by default. Start alignment reads better, and the logical keyword follows the writing direction. Barker found `text-align: start` on `<table>` itself unreliable across browsers, so it goes on the cells.
 - Cells get no padding from the browser.
 
 ## Alignment
@@ -163,7 +163,7 @@ Every wiki table has had a `Table:` caption since 2026-09-15. Naming a region af
 
 Between body rows the single hairline became a pair on 2026-09-19: a dark 1px line with a lighter one directly under it, which reads as pressed into the page. The order carries the illusion — dark above light implies a light source above, so the surface is cut in rather than raised.
 
-**A collapsed border paints one colour per edge**, so the pair cannot be a border at all. It is painted as a background gradient on the cells of every row after the first:
+**A collapsed border paints one color per edge**, so the pair cannot be a border at all. It is painted as a background gradient on the cells of every row after the first:
 
 ```css
 tbody tr + tr > * {
@@ -187,15 +187,15 @@ tbody tr > * {
 
 It is on the cells rather than the row for the reason the stripe already was: a row background is hidden by the sticky row header's opaque background.
 
-**An engraved rule cannot be mirrored into a dark theme by swapping the colours.** Each half needs its own role — `--color-rule-shadow` and `--color-rule-highlight` — because the band colour that works as the shadow on a light page is *lighter* than a near-black one, which inverts the groove. Measured on the first attempt: both halves above the page, 1.16 and 1.61. Recolouring the shared rule instead would have taken the 2px band rules to near-black and made the table's frame invisible.
+**An engraved rule cannot be mirrored into a dark theme by swapping the colors.** Each half needs its own role — `--color-rule-shadow` and `--color-rule-highlight` — because the band color that works as the shadow on a light page is *lighter* than a near-black one, which inverts the groove. Measured on the first attempt: both halves above the page, 1.16 and 1.61. Recolouring the shared rule instead would have taken the 2px band rules to near-black and made the table's frame invisible.
 
-There is a floor. Against a `#141619` page, pure black is only 1.16 below it, where the light theme gets 1.33 below and 1.10 above. Dark cannot match that ratio, and pushing its highlight below 1.16 would put it within a unit of the band colour, so the two halves are balanced instead (1.16 down, 1.33 up) and the dark-over-light order carries the engraving on its own.
+There is a floor. Against a `#141619` page, pure black is only 1.16 below it, where the light theme gets 1.33 below and 1.10 above. Dark cannot match that ratio, and pushing its highlight below 1.16 would put it within a unit of the band color, so the two halves are balanced instead (1.16 down, 1.33 up) and the dark-over-light order carries the engraving on its own.
 
 ### An icon column
 
-Type leads the table as one icon per activity type, with the type name beside it in a `.visually-hidden` span — that span is what a screen reader announces and what the column sorts on, so the icon can be `aria-hidden`. `data-icon` centres a head and its cells together, so the label and the icon under it share the column's centre without either knowing the other's width, and holds the column at `inline-size: 1%` so it keeps the label's own width. Without that last part the column takes a share of whatever width the table has spare once every column is served, and the shared centre — and with it the first column's inset — slides right by half the slack: 37px in from the box instead of 31px at a 1440px window, against 31px at the closing edge.
+Type leads the table as one icon per activity type, with the type name beside it in a `.visually-hidden` span — that span is what a screen reader announces and what the column sorts on, so the icon can be `aria-hidden`. `data-icon` centers a head and its cells together, so the label and the icon under it share the column's center without either knowing the other's width, and holds the column at `inline-size: 1%` so it keeps the label's own width. Without that last part the column takes a share of whatever width the table has spare once every column is served, and the shared center — and with it the first column's inset — slides right by half the slack: 37px in from the box instead of 31px at a 1440px window, against 31px at the closing edge.
 
-The icons carry `stroke="currentColor"` and take their colour from the row's existing `data-activity`, which keeps the SVGs theme-agnostic and the colours in CSS where the palette is.
+The icons carry `stroke="currentColor"` and take their color from the row's existing `data-activity`, which keeps the SVGs theme-agnostic and the colors in CSS where the palette is.
 
 **A design tool's SVG export is not a web asset.** Penpot fakes an inner stroke by doubling the stroke width and clipping half of it away: the geometry is repeated three times and every file carries `clipPath` ids of `a` and `b`. Inlined across 180 rows that is 180 duplicate ids in one document, and the files ran 7–30 KB each. Rebuilt as a single path at the real stroke width they are a few hundred bytes. The same trap applies to any tool that emulates a stroke alignment CSS and SVG do not have.
 
@@ -203,15 +203,15 @@ A type with no icon file fails the build by name. Deliberate: a silent fallback 
 
 ### Two surfaces that converge
 
-**A tinted header and a hover tint drawn the same way will meet.** Both mixed a neutral into the page colour, so both moved along the same grey line, and darkening either one slid it toward the other. Measured at the point it was noticed: header `#e7e7e5`, a hovered row compositing to `#e7e8e7` — zero, one and two units apart.
+**A tinted header and a hover tint drawn the same way will meet.** Both mixed a neutral into the page color, so both moved along the same gray line, and darkening either one slid it toward the other. Measured at the point it was noticed: header `#e7e7e5`, a hovered row compositing to `#e7e8e7` — zero, one and two units apart.
 
 Separating them means separating by something other than weight. A cream header (`#EEEAE0`) did it by hue and worked numerically. The settled answer is a cool wash instead, `color-mix(in srgb, var(--color-base-dark) 35%, var(--color-bg))`, against a neutral hover.
 
 - Mixed `in srgb`, not oklab, because it stands in for an alpha wash and CSS composites alpha in sRGB.
 - Kept as an opaque mix rather than real alpha: a sticky head cell shows the scrolled rows through a translucent background, and wiki tables use a sticky first column.
-- The dark theme needs its own percentage, not the same one. `--color-base-dark` is a light colour, so 40% of it over a near-black page is a mid-grey band; at 10% it landed on the hover again. It sits at 15%, above the hover, the head being the most-lifted surface in dark as it is the heaviest in light.
+- The dark theme needs its own percentage, not the same one. `--color-base-dark` is a light color, so 40% of it over a near-black page is a mid-gray band; at 10% it landed on the hover again. It sits at 15%, above the hover, the head being the most-lifted surface in dark as it is the heaviest in light.
 
-**The head text's contrast is then bounded by the gap between those two surfaces, not by either colour alone.** With the head at `#e0e1e4` the body text colour itself only reaches 5.75 on it, so contrast can only be bought by moving the subdued colour toward body text — at which point it stops being subdued. Lightening the head instead runs into the hover: five units lighter and they are a unit apart again. The settled `#576374` gives 4.67, an AA pass, with the head's smaller size carrying the secondary reading rather than the colour.
+**The head text's contrast is then bounded by the gap between those two surfaces, not by either color alone.** With the head at `#e0e1e4` the body text color itself only reaches 5.75 on it, so contrast can only be bought by moving the subdued color toward body text — at which point it stops being subdued. Lightening the head instead runs into the hover: five units lighter and they are a unit apart again. The settled `#576374` gives 4.67, an AA pass, with the head's smaller size carrying the secondary reading rather than the color.
 
 ### A hover that snaps on and decays off
 
@@ -249,6 +249,6 @@ Both rules sit inside the `prefers-reduced-motion` guard, so a reduced-motion vi
 
 **Sorting.** `<sortable-table>` (`webc/sortable-table.webc`, an [[is-land]] island inside the map's own) turns each column head into a button, after Adrian Roselli's [Sortable Table Columns](https://adrianroselli.com/2021/04/sortable-table-columns.html) (2021, updated 2024): the button sits inside the `<th>`, `aria-sort` goes on the sorted head only, and the caption gains a visually hidden "column headings with buttons are sortable". A cell's `data-sort` holds its raw value (seconds, km, a timestamp, or text where the cell shows something else — an icon); cells without one sort by their text. **A non-numeric `data-sort` used to become `NaN`.** `keyOf` ran every one of them through `Number()`, and a NaN comparator returns NaN for every pair, so the rows kept their order while the arrow moved to the head — a sort that looks like it ran and did nothing. Found when the Type column started sorting on a type name; it now falls back to text when `Number()` cannot read the value, covered by a regression test. Numbers start biggest first and text A→Z, and a head's `data-sort-first="ascending"` overrides that for pace, so the fastest comes first. Empty cells go last in both directions, and ties keep the server's order. Without JavaScript the heads stay plain text and the table stays newest first, which is the order the server marks with `aria-sort`.
 
-The sorted column shows a CSS-drawn chevron, as in the breadcrumb, placed absolutely after the label so nothing moves when it appears. It is set on the measured middle of the x-height, `--sort-arrow-middle: 0.8em` below the line's top; the drawn V of a rotated square sits 0.354 of its side off the square's centre, which is where the 0.854 and 0.146 in the offsets come from. **A chevron on the cap-height middle reads high.** The value was 0.75em, measured against small caps, and after those came off it sat within 0.3px of the cap middle — centred by the numbers, and visibly high beside a word with descenders, which "Type" is. Cap middle is 0.712em and the x-height's is 0.797em. Two parts of Roselli's pattern were not taken: he draws filled triangles rather than a chevron, and adds an optional live region announcing the new order.
+The sorted column shows a CSS-drawn chevron, as in the breadcrumb, placed absolutely after the label so nothing moves when it appears. It is set on the measured middle of the x-height, `--sort-arrow-middle: 0.8em` below the line's top; the drawn V of a rotated square sits 0.354 of its side off the square's center, which is where the 0.854 and 0.146 in the offsets come from. **A chevron on the cap-height middle reads high.** The value was 0.75em, measured against small caps, and after those came off it sat within 0.3px of the cap middle — centered by the numbers, and visibly high beside a word with descenders, which "Type" is. Cap middle is 0.712em and the x-height's is 0.797em. Two parts of Roselli's pattern were not taken: he draws filled triangles rather than a chevron, and adds an optional live region announcing the new order.
 
 Raw source: `src/_raw/Styling Tables the Modern CSS Way.md` (Michelle Barker, Piccalilli, 2024-07-18); the activities table, `src/_raw/dev-notes/How the activities table works.md` and `src/_raw/dev-notes/How the activities table matched the Penpot design.md`. Also: Adrian Roselli, [Under-Engineered Responsive Tables](https://adrianroselli.com/2020/11/under-engineered-responsive-tables.html) (2020) and [Fixed Table Headers](https://adrianroselli.com/2020/01/fixed-table-headers.html) (2020).

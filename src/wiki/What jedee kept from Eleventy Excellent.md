@@ -1,7 +1,7 @@
 ---
 description: "A systematic inventory of what jedee keeps unchanged from Eleventy Excellent and where it has deliberately diverged."
 date: 2026-07-31
-updated: 2026-09-15
+updated: 2026-09-22
 ---
 
 jedee is a fork of [Eleventy Excellent](https://eleventy-excellent.netlify.app/) by Lene Saile. Every other page in this wiki states EE-stock-versus-jedee where it happens to matter locally; this page states it systematically, so a claim on another page can be checked against one inventory.
@@ -14,8 +14,8 @@ The source is Lene's own documentation collection, `src/docs/` in the upstream c
 
 These are EE's, unchanged, and this wiki should not describe them as jedee inventions:
 
-- **The config module layout.** `src/_config/` splits into `collections.js`, `events.js`, `filters.js`, `plugins.js`, `shortcodes.js`, each a barrel over a folder of the same name, plus `setup/` and `utils/`. jedee's tree is file-for-file identical to EE's. `eleventy.config.js` only registers; the logic lives in the modules.
-- **The cascade layer order**, byte-identical in both `global/global.css`:
+- **The config module layout.** `src/_config/` splits into `collections.js`, `events.js`, `filters.js`, `plugins.js`, `shortcodes.js`, each a barrel over a folder of the same name, plus `setup/` and `utils/`. jedee's tree matches EE's file for file, plus one module of its own, `search-index.js`. `eleventy.config.js` only registers; the logic lives in the modules.
+- **The cascade layer order**, the same in both `global/global.css` except for one name: jedee calls the utilities layer `cubeUtilities` (see [[Tailwind]]):
 
   ```css
   @import 'tailwindcss/base' layer(tailwindBase);
@@ -26,7 +26,7 @@ These are EE's, unchanged, and this wiki should not describe them as jedee inven
   @import 'base/global-styles.css' layer(global);
   @import-glob 'compositions/*.css' layer(compositions);
   @import-glob 'blocks/*.css' layer(blocks);
-  @import-glob 'utilities/*.css' layer(utilities);
+  @import-glob 'utilities/*.css' layer(cubeUtilities);
   @import 'tailwindcss/utilities' layer(tailwindUtilities);
   ```
 
@@ -44,12 +44,12 @@ Table: What jedee extended from the stock starter
 | Area | EE stock | jedee |
 |---|---|---|
 | Post types | two (`articles`, `notes`), typed through `tags` | sixteen, typed through `category` with `tags` reserved for the public vocabulary — see [[Anatomy of a post type]] |
-| Design tokens | nine files in `designTokens/`, two-step `colorsBase.json` → `colors.json` via `npm run colors` | the same two-step color pipeline, plus `semanticColors.json` and `typography.json` — eleven files, with Utopia fluid scales, a Penpot export (`npm run penpot:tokens`) and a generated `DESIGN.md` |
+| Design tokens | nine files in `designTokens/`, two-step `colorsBase.json` → `colors.json` via `npm run colors` | the same two-step color pipeline, plus `semanticColors.json` and `typography.json` — fifteen files, with Utopia fluid scales, a Penpot export (`npm run penpot:tokens`) and a generated `DESIGN.md` |
 | Fonts | two families (Red Hat Display, Atkinson Hyperlegible) | six (adds Figtree, Source Sans, Source Serif, Source Code Pro) |
-| WebC components | five | seven — adds `photo-lightbox.webc` ([[The PhotoSwipe lightbox]]) and `place-map.webc` |
+| WebC components | five | eight — adds `photo-lightbox.webc` ([[The PhotoSwipe lightbox]]), `place-map.webc` and `sortable-table.webc` |
 | Header chrome | `navigation.drawerNav` and `navigation.subMenu` booleans in `meta.js` | neither key exists; replaced by `breadcrumb` and `hideNav`, and one `nav-menu.js` in place of EE's `nav-drawer.js` + `nav-sub.js` |
 | Wikilinks | not shipped at all | `@photogabble/eleventy-plugin-interlinker` — see [[Wikilinks]] |
-| Per-page CSS | ten files in `css/local/` | sixteen |
+| Per-page CSS | ten files in `css/local/` | twenty-one |
 | npm scripts | adds `screenshots` | drops `screenshots`; adds `design:md`, `penpot:tokens`, `fallback-font-style`, `test:unit` |
 
 **The interlinker is the consequential addition.** Vanilla EE does not ship it, which is exactly what made a vanilla checkout the decisive control when jedee's navigation rendered blank — see [[The interlinker's second render pass]]. Any oddity that only reproduces here and not upstream should be tested against that checkout before anything else.

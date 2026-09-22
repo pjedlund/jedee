@@ -1,6 +1,7 @@
 ---
 description: "Custom elements, and the case for building them in two layers: HTML and CSS that render on their own, then JavaScript that upgrades them."
 date: 2026-09-14
+updated: 2026-09-17
 ---
 
 A **web component** is an HTML element the page author defines. The browser supplies three separate pieces: the Custom Elements API (`customElements.define('my-thing', MyThing)` registers a class for a tag name, which must contain a hyphen), Shadow DOM (a private subtree with its own scoped styles), and `<template>` / `<slot>` for markup to stamp out. None of the three needs the others. A tag with a hyphen in it is valid HTML whether or not anything ever defines it; until it is defined it is an unknown element that CSS can still style.

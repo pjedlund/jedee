@@ -1,6 +1,7 @@
 ---
 description: "Two machine-readable layers with different audiences, and why fifteen of jedee's sixteen post types share one generic JSON-LD envelope."
 date: 2026-07-31
+updated: 2026-09-22
 ---
 
 A terminology point first, because it settles a recurring question: **schema.org is a vocabulary, not a format.** It can be encoded three ways — JSON-LD (a script block of JSON), microdata, or RDFa (both woven into the HTML as attributes). A page emitting JSON-LD in its head is therefore already publishing schema.org metadata, in [the encoding Google recommends](https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data). Asking to "add schema.org" to such a page means adding a redundant second encoding with no new consumers; the investment that pays is richer JSON-LD *types*, not another channel.
@@ -30,7 +31,7 @@ Two blocks on every page — site identity and the breadcrumb trail — then a t
 
 ⚠ **A `schema:` value with no matching template throws and fails the build.** The path is built from data, so nothing checks it until Eleventy tries to read the file. `schema: VideoPosting` is a one-word edit that looks harmless and stops the build.
 
-Four templates exist: `BlogPosting.njk`, `WebSite.njk`, `BreadcrumbList.njk`, `Event.njk`.
+Five templates exist: `BlogPosting.njk`, `WebSite.njk`, `BreadcrumbList.njk`, `Event.njk`, and `TechArticle.njk`, which `wiki.11tydata.js` sets for the whole wiki folder since 2026-09-05.
 
 ### Fifteen types say BlogPosting
 

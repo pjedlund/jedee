@@ -35,13 +35,13 @@ Small caps are capitals drawn at about the height of lowercase letters, with str
 
 Bringhurst ([2.1.6](http://webtypography.net/2.1.6)): letterspace strings of capitals and small caps by 5–10% of the type size, and don't letterspace lowercase without a reason. Butterick ([all caps](https://practicaltypography.com/all-caps.html)): capitals for short text only (headings under a line, labels, small print), never whole paragraphs, and always letterspaced. Lowercase reads faster because its ascenders and descenders give each word a recognizable shape; in capitals every word is a rectangle.
 
-`text-transform: uppercase` can reach assistive technology. [Ben Myers](https://benmyers.dev/blog/css-can-influence-screenreaders/) (2020) showed VoiceOver reading a button labelled "Add", styled uppercase, as the acronym A.D.D. Small caps made from lowercase letters don't have this problem, because the characters are unchanged.
+`text-transform: uppercase` can reach assistive technology. [Ben Myers](https://benmyers.dev/blog/css-can-influence-screenreaders/) (2020) showed VoiceOver reading a button labeled "Add", styled uppercase, as the acronym A.D.D. Small caps made from lowercase letters don't have this problem, because the characters are unchanged.
 
 ## Captions and italic
 
 Neither book makes captions italic. Italic captions are a book habit for telling a caption apart from the text around it, and a smaller size does the same job. The case against italic is readability. The [GOV.UK style guide](https://guidance.publishing.service.gov.uk/writing-to-gov-uk-standards/style-guides/a-to-z-style-guide/) does not use italics at all. Rello and Baeza-Yates' eye-tracking study *Good fonts for dyslexia* (ASSETS 2013) reported that italic slowed readers with dyslexia; the paper is paywalled and was not re-read for this page. The cost grows with length, so the useful line falls between a short label under a picture and a paragraph of explanation.
 
-Centring adds a second cost: every line starts at a different place, so the eye has to search for the next one. It suits a line or two. Check the face too. A caption in a font with no real italic gets a slant the browser synthesizes.
+Centering adds a second cost: every line starts at a different place, so the eye has to search for the next one. It suits a line or two. Check the face too. A caption in a font with no real italic gets a slant the browser synthesizes.
 
 ## Line breaks
 
@@ -94,7 +94,7 @@ Typographically a subtitle is the title's second voice: smaller, often italic, a
 WCAG says little here directly. [1.4.8](https://www.w3.org/WAI/WCAG22/Understanding/visual-presentation.html) (level AAA) limits lines to 80 characters and rules out text justified to both margins, and says nothing about italic or capitals. The guidance comes from plain-language style guides and reading research instead:
 - **Italic:** keep it for short text.
 - **Capitals:** use them for labels, not paragraphs.
-- **Small caps and superscripts:** these keep the text's colour. What makes them harder to read is their smaller size, not contrast.
+- **Small caps and superscripts:** these keep the text's color. What makes them harder to read is their smaller size, not contrast.
 
 ## In jedee
 
@@ -114,7 +114,7 @@ Set on 2026-09-10, after a research pass and an audit of the site. The decisions
   - The old-style zero has no slashed form, so `slashed-zero` over old-style figures does nothing. `.slashed-zero` therefore sets lining figures as well, which is what a code or serial number wants anyway.
 - **No small caps on `abbr`**, for two reasons. The glossary ([[Abbreviations]]) marks only its 31 terms (it has CLS but not CSS), so styled acronyms would sit beside unstyled ones. And `all-small-caps` would flatten RDFa.
 - **Capital labels** (site logo, breadcrumb, menu button, footer, buttons) share `--tracking-wide`, raised from 0.09ch to 0.12ch. That is about 5.7% of the size, since a Source Sans digit is 0.472 em wide.
-- **Captions** stay italic and centred, and are now balanced. The wiki's captions run long (a median of about 100 characters, up to 400), so `local/wiki.css` sets them upright, left-aligned and `pretty`, at 60ch.
+- **Captions** stay italic and centered, and are now balanced. The wiki's captions run long (a median of about 100 characters, up to 400), so `local/wiki.css` sets them upright, left-aligned and `pretty`, at 60ch.
 - **Quotations** balance. The rule is in `global-styles.css`, and again in `prose.css`, whose `pretty` rule on `p` would otherwise win.
 - **Footnote markers** are bare superscript figures.
   - `markdown.js` overrides markdown-it-footnote's `footnote_caption` rule to drop the brackets. The Source Sans subset has superscript digits, parentheses and colons, but no square brackets. `footnotes.css` then uses `font-variant-position: super`.
@@ -129,7 +129,7 @@ Set on 2026-09-10, after a research pass and an audit of the site. The decisions
   - Unordered lists use a hollow bullet (◦) in the same variable, so both list markers share one orange per theme. It replaced an en dash: shrinking the dash to 0.75em sank it towards the baseline, and `::marker` cannot be moved up. Butterick prefers hollow bullets as the subtler kind.
   - ◦ (U+25E6) and • (U+2022) were not in the Source Sans subset and were added by hand (see [[Font subsetting]]); the subset still lacks ‣ and ▪, so either of those as a marker needs the same step.
   - Both kinds of list share one start padding, `1lh`, so bullet and numbered items start at the same place (changed 2026-09-21 from 2.75ch, which was sized by eye to the same marker). One line-height is the square indent above: the indent follows the leading instead of a guessed width. It holds "10. ", whose marker box (the space before the text included) is 1.36em against the 1.4em of `--leading-standard`; a smaller leading would let it hang. Lists that reach 100 hang.
-  - The bullet's marker is `'◦\2009\2008 '`: the ring, a thin space, a punctuation space (a period's width) and a word space. The last two copy the numbers' ". ", and the thin space makes up half the difference between a digit and the ring, so the ring sits centred over the numbers' last digit. With `'◦ '` it sat in the period's column instead, tight against the text. Source Sans has both spaces; the ring was within 0.3px of centre at 19px.
+  - The bullet's marker is `'◦\2009\2008 '`: the ring, a thin space, a punctuation space (a period's width) and a word space. The last two copy the numbers' ". ", and the thin space makes up half the difference between a digit and the ring, so the ring sits centered over the numbers' last digit. With `'◦ '` it sat in the period's column instead, tight against the text. Source Sans has both spaces; the ring was within 0.3px of center at 19px.
 - **Paragraphs are marked by space, not an indent**, so Bringhurst's indent rule (2.3.2) does not apply to them. The space is Eleventy Excellent's `--space-m-l`, unchanged: 14–31px against body text of 19–28px (`--size-step-0`), so about half a line on a phone (0.55 at 375px) and four-fifths of a line on a wide screen (0.79 at 1350px); it never reaches a full line.
   - One line-height (`--flow-space: 1lh`, as webtypography.net suggests for block paragraphs) was tried on 2026-09-21 and dropped. `.flow` resolves the value on each element, so every element's gap became its own line-height: a blockquote, set larger, got about twice the space above it (61px against 31px on the style guide).
   - Lists, code blocks and horizontal rules get more space below than above, on purpose. The reset clears margins on `p`, headings, `figure` and `blockquote` but not on `ul`, `ol` or `pre`, so they keep the browser's 1em bottom margin on top of the flow gap, and `hr` sets its own: about twice the gap, 59px against 31px after a list at 1350px. Zeroing it in `.prose` was tried on 2026-09-21 and dropped, because the extra space reads better.
@@ -140,7 +140,7 @@ Set on 2026-09-10, after a research pass and an audit of the site. The decisions
 - **Fixes from a check against every webtypography.net rule** (2026-09-21).
   - **Kerning in WebKit** (2.1.8). Eleventy Excellent's reset set `text-rendering: optimizeSpeed` on `body`, and WebKit turns kerning off under it: "AVATAR To Wa Yo" in Source Sans at 18px measured 130.3px, the same as `font-kerning: none`, against 125.9px kerned. That is Safari and practically every iPhone browser. Chrome kerned either way. The line is gone, and a ⚠ comment in `reset.css` keeps an upgrade from bringing it back.
   - **Running text at the font's own spacing** (2.1.7). Eleventy Excellent also tracked `body` at `--tracking` (−0.04ch, about 2% of the body text's size), which pulled every lowercase letter tighter. Headings keep it: tightening display sizes is the reason Bringhurst allows (2.1.1).
-  - **Hyphenation limits** (2.4.1). `body` sets `hyphenate-limit-chars: auto 2 3`, two letters left behind and three taken forward, inherited wherever `hyphens: auto` is on. Chrome honours it only some of the time: at 375px, English paragraphs that carried two letters forward went from 147 to 50. "forev-er" became "for-ever"; "activi-ty" stays, although the paragraph computes `auto 2 3`.
+  - **Hyphenation limits** (2.4.1). `body` sets `hyphenate-limit-chars: auto 2 3`, two letters left behind and three taken forward, inherited wherever `hyphens: auto` is on. Chrome honors it only some of the time: at 375px, English paragraphs that carried two letters forward went from 147 to 50. "forev-er" became "for-ever"; "activi-ty" stays, although the paragraph computes `auto 2 3`.
   - **Hard spaces between numbers and units** (2.4.6). A markdown-it rule in `markdown.js` joins a number and the unit after it (km, min, s, MB, °C and a few more) with a non-breaking space; code is a different token type and is left alone. The activity stats and the `withMiles` and `paceOrSpeed` filters do the same. A trade-off: on a phone, a table whose cells split "0.34 / s" now keeps each value on one line and scrolls sideways instead.
   - Written in title case with short words lowercase, like the title.
   - Books have a Subtitle field in [[Sveltia CMS]]. Films don't: Letterboxd has no subtitle, so the Web Clipper has nothing to fill it from, and no film has needed one. A film can still take `subtitle:` by hand.

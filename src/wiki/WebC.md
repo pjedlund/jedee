@@ -34,7 +34,7 @@ eleventyConfig.addPlugin(plugins.webc, {
 
 `components` makes every file in that folder available as a tag without importing it. `useTransform: true` is the load-bearing one: it runs WebC as a transform over the *output* of the other template languages, which is why a `<custom-card>` written in a Nunjucks layout expands at all. Without it, WebC components only work inside `.webc` templates, and this site has none — every page is Nunjucks or markdown. Both settings are Eleventy Excellent stock.
 
-Ten components live in `src/_includes/webc/`. Seven came from Eleventy Excellent, three of them still byte-identical to upstream (`custom-card`, `custom-peertube`, `custom-peertube-link`) and four diverged (`custom-masonry`, `custom-svg`, `custom-youtube`, `custom-youtube-link`). Three are jedee's own, and all three are the same shape: an [[is-land]] wrapping a kept custom element, for behaviour that should not load until the browser is idle.
+Ten components live in `src/_includes/webc/`. Seven came from Eleventy Excellent, three of them still byte-identical to upstream (`custom-card`, `custom-peertube`, `custom-peertube-link`) and four diverged (`custom-masonry`, `custom-svg`, `custom-youtube`, `custom-youtube-link`). Three are jedee's own, and all three are the same shape: an [[is-land]] wrapping a kept custom element, for behavior that should not load until the browser is idle.
 
 | Component | Whose | Emits | Upgraded by |
 | --- | --- | --- | --- |

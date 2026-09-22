@@ -1,6 +1,7 @@
 ---
 description: "A git-based CMS that runs as one page inside a static site and edits its markdown through the GitHub API, and the traps met setting it up for sixteen post types, a settings file and a few single pages."
 date: 2026-09-11
+updated: 2026-09-12
 ---
 
 A git-based CMS gives a static site an editing screen without giving it a database. It runs in the browser, reads the repo's markdown files through the GitHub API, shows their front matter as a form, and saves an edit as a commit, which then triggers the normal deploy. Netlify CMS started this kind of tool. It was renamed [Decap CMS](https://decapcms.org/) in 2023, and [Sveltia CMS](https://sveltiacms.app/) is a rewrite that its author offers as the successor: the same `config.yml` format, a much better phone interface, and direct uploads to Cloudflare R2. Sveltia is still in beta before 1.0 and mostly one developer's work, so its behavior can change between versions. Pin the version in the script address.

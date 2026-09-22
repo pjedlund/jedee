@@ -1,6 +1,7 @@
 ---
 description: "What a rule engine can and cannot check, why coverage matters more than the tool, and how jedee runs pa11y-ci against a locally served build."
 date: 2026-07-31
+updated: 2026-09-14
 ---
 
 Automated accessibility testing runs a rule engine over rendered pages and reports violations of machine-checkable [WCAG](https://www.w3.org/WAI/standards-guidelines/wcag/) criteria: missing alt text, insufficient contrast, unlabeled form controls, a missing `lang` on the `<html>` element ([[The lang attribute]]), broken heading order. Two engines do most of the work in practice — [axe-core](https://github.com/dequelabs/axe-core) and HTML CodeSniffer. [pa11y](https://pa11y.org/) is a command-line wrapper that drives a headless browser and runs one of them; `pa11y-ci` is the batch version, taking a list of URLs and exiting non-zero when any of them fails.

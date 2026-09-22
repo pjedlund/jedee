@@ -3,7 +3,7 @@ description: "A disclosure menu built so the fallback is the base layer: the but
 date: 2026-08-03
 ---
 
-A site menu that collapses behind a button is one of the few interface patterns that genuinely needs JavaScript, which makes it a standing test of whether a site's enhancement layers are real. The robust arrangement, set out in [Manuel Matuzović's *Building the main navigation for a website*](https://web.dev/articles/website-navigation), is to build the list first and add the button last: plain `<a>` elements, wrapped in `<ul role="list">`, inside a labelled `<nav>` landmark, with the toggle **injected by script from a `<template>`**. Nothing hides the list except a button that, by construction, only exists when the script that operates it has run.
+A site menu that collapses behind a button is one of the few interface patterns that genuinely needs JavaScript, which makes it a standing test of whether a site's enhancement layers are real. The robust arrangement, set out in [Manuel Matuzović's *Building the main navigation for a website*](https://web.dev/articles/website-navigation), is to build the list first and add the button last: plain `<a>` elements, wrapped in `<ul role="list">`, inside a labeled `<nav>` landmark, with the toggle **injected by script from a `<template>`**. Nothing hides the list except a button that, by construction, only exists when the script that operates it has run.
 
 Which leaves the question of how CSS knows. There are two mechanisms and they answer different questions.
 
@@ -88,7 +88,7 @@ The count numbers are `color-mix(in oklab, var(--color-text) 80%, var(--color-bg
 
 - The panel closes with `visibility: hidden`, never `opacity` or `transform` alone, so its links are not tab-focusable while closed.
 - The open/closed state lives on the button's `aria-expanded`; the CSS selects `[aria-expanded='true'] + .megamenu` rather than toggling a class on the list.
-- `role="list"` stays on the `<ul>` after `list-style: none`, which WebKit otherwise takes as licence to drop list semantics.
+- `role="list"` stays on the `<ul>` after `list-style: none`, which WebKit otherwise takes as license to drop list semantics.
 - A focused row gets `position: relative; z-index: 1` so its offset ring is not clipped by the next row's background — the same failure mode as [[Focus rings and paint containment]].
 - The reveal transition is inside `@media (prefers-reduced-motion: no-preference)`, the same opt-in-to-motion idiom as [[The theme toggle]].
 

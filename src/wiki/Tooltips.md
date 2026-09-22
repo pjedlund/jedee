@@ -48,16 +48,16 @@ Touch is the third case, and the honest answer is that a hover tooltip does not 
 
 ## Positioning and the page edge
 
-A tooltip centred under its control is `inset-inline-start: 50%` plus a `-50%` translate. That is correct until the control sits at the edge of the page, where half the label lands outside the viewport and the document grows a scrollbar — on every page, not just when the tooltip is showing, because a `visibility: hidden` element still takes part in layout and overflow.
+A tooltip centered under its control is `inset-inline-start: 50%` plus a `-50%` translate. That is correct until the control sits at the edge of the page, where half the label lands outside the viewport and the document grows a scrollbar — on every page, not just when the tooltip is showing, because a `visibility: hidden` element still takes part in layout and overflow.
 
 The vertical version of the same thing is easier to miss: a tooltip *below* a control near the foot of the page extends past the document, adding dead scroll under the footer that nothing visible accounts for. Both are worth measuring rather than eyeballing — compare `documentElement.scrollWidth` / `scrollHeight` against `clientWidth` / `clientHeight` with the tooltip hidden.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/tooltip-edge-anchors.png" alt="Two frames standing in for a page, one above the other. In the upper frame, labelled &quot;centred and below on every control&quot;, three dark tooltips are cut off by the frame edges: a Home label clipped at the left, a &quot;Show dark mode&quot; label clipped mid-word at the right, and an Atom feed label clipped at the bottom. In the lower frame, labelled &quot;align=start, align=end, position=top&quot;, the same three labels sit fully inside the frame — the first two anchored to the controls' own edges, the third opening upwards above its control." width="1198" height="1092">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/tooltip-edge-anchors.png" alt="Two frames standing in for a page, one above the other. In the upper frame, labeled &quot;centred and below on every control&quot;, three dark tooltips are cut off by the frame edges: a Home label clipped at the left, a &quot;Show dark mode&quot; label clipped mid-word at the right, and an Atom feed label clipped at the bottom. In the lower frame, labeled &quot;align=start, align=end, position=top&quot;, the same three labels sit fully inside the frame — the first two anchored to the controls' own edges, the third opening upwards above its control." width="1198" height="1092">
   <figcaption>The three exceptions, and what they exist for. ⚠ The frame clips here so the failure is visible in a still; on a real page nothing is clipped — the label lands outside the viewport and the document grows a scrollbar instead, on every page rather than only while the tooltip shows.</figcaption>
 </figure>
 
-Without the CSS Anchor Positioning API (not yet broadly available) the cheap fix is explicit placement exceptions, chosen in the markup by whoever places the control: anchor the label to the control's leading or trailing edge instead of its centre, and flip it above the control instead of below.
+Without the CSS Anchor Positioning API (not yet broadly available) the cheap fix is explicit placement exceptions, chosen in the markup by whoever places the control: anchor the label to the control's leading or trailing edge instead of its center, and flip it above the control instead of below.
 
 Keeping the two axes independent is worth a little care, or a control that needs both gets one and loses the other. Expressing the placement as two custom properties the exceptions rewrite — one inline nudge, one block nudge — lets an alignment and a position combine, where two rules each rewriting the whole `translate` cannot.
 
@@ -77,8 +77,8 @@ The colors need no dark-mode rules. Background is `--color-text` and text is `--
 
 Three behaviors the source design did not have:
 
-- **`:focus-visible` as well as `:hover`.** Verified with a real Tab press — Chromium does not honour `element.focus({focusVisible: true})` from script, so a scripted focus reports `:focus-visible` as false and reads as broken CSS.
-- **Two edge anchors**, `data-tooltip-align="start"` and `="end"`, because both header controls are at opposite edges, and a `data-tooltip-position="top"` for the footer's feed icon, which sits close enough to the bottom of the document that a tooltip below it added 16px of dead scroll — measured, not guessed. The defaults stay centred and below for anything placed inland.
+- **`:focus-visible` as well as `:hover`.** Verified with a real Tab press — Chromium does not honor `element.focus({focusVisible: true})` from script, so a scripted focus reports `:focus-visible` as false and reads as broken CSS.
+- **Two edge anchors**, `data-tooltip-align="start"` and `="end"`, because both header controls are at opposite edges, and a `data-tooltip-position="top"` for the footer's feed icon, which sits close enough to the bottom of the document that a tooltip below it added 16px of dead scroll — measured, not guessed. The defaults stay centered and below for anything placed inland.
 - **Suppressed on `aria-current`.** The source spells this `:not(.active)` on its nav items; the attribute already carries the state, so `[data-tooltip][aria-current]::after` does it without a class. On the start page the logomark *is* the current page, and its tooltip would have landed on top of the wordmark typing itself in (see [[Choreographing CSS animations]]).
 
 ### A `::after` inherits from a control styled not to look like text
@@ -97,7 +97,7 @@ The weight tokens here are `--font-regular`, `--font-bold`, `--font-extra-bold`.
 
 `:active` hides the tooltip for the length of the press, and that is all CSS can express: on mouseup the pointer is still over the control, `:hover` still matches, and the label comes back over a button the visitor has just finished using. There is no CSS state for "hidden until the pointer leaves and returns."
 
-`:hover:not(:focus)` is the usual trick and was rejected. It relies on a click focusing the button, which Chrome and Firefox do and Safari on macOS does not, so the behaviour would be absent on one engine and the tooltip would additionally stay suppressed for as long as the button kept focus — including after the pointer left and came back.
+`:hover:not(:focus)` is the usual trick and was rejected. It relies on a click focusing the button, which Chrome and Firefox do and Safari on macOS does not, so the behavior would be absent on one engine and the tooltip would additionally stay suppressed for as long as the button kept focus — including after the pointer left and came back.
 
 Instead the control's own script sets a `data-tooltip-dismissed` attribute on click and removes it on `pointerleave` or `blur`; the block hides on that attribute alongside `:active`. Four lines inside the existing theme-toggle click handler, correct in every engine, and keyboard-safe — nothing is blurred, so an Enter press leaves focus where it was. The attribute is part of the block's contract, so any control can opt in the same way.
 

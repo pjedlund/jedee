@@ -1,7 +1,7 @@
 ---
 description: "Shipping only the characters and styles a site needs from a web font, and how a missing character falls back to another font while a missing style is faked."
 date: 2026-09-10
-updated: 2026-09-14
+updated: 2026-09-22
 ---
 
 **Subsetting** a font means keeping only the characters a site needs and dropping the rest, so the file is a fraction of the full family's size. A complete Source Sans 3 carries Latin, Greek, Cyrillic, arrows and much more; a site written in English and Swedish needs about two hundred characters of it. The standard tool is fontTools' [`pyftsubset`](https://fonttools.readthedocs.io/en/latest/subset/), which glyphhanger and most build-time subsetting wrap. The other half of the technique is CSS [`unicode-range`](https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/unicode-range), which tells the browser which characters a face covers, so it can skip downloading a file the page has no characters for.
@@ -94,14 +94,14 @@ The fallback faces behind each are the metric-matched Georgia, Arial and Courier
 
 **Cyrillic** (2026-09-14) came from one Russian word on the *A Confession* reading page, drawn letter by letter in Arial. Rather than grow the files every page loads, the two Cyrillic faces cover U+0400–045F (Russian, Ukrainian, Serbian and the rest of modern Cyrillic) plus the pre-1918 letters ѣ, ѳ and ѵ. Each is declared after its main face under the same family name with a `unicode-range`, so only a page containing Cyrillic downloads it: 22 KB upright, 16 KB italic. Keep them after the main faces: for overlapping faces the last one declared is checked first. Source Serif has no Cyrillic, so a Russian word in a heading still falls back.
 
-**Checking while you work.** On the dev server only (`eleventy.env.runMode === "serve"` in `base.njk`), `src/assets/scripts/bundle/font-check.js` runs the blank-font test above on every page. It greys out and dot-underlines each character drawn by a fallback, outlines any element set in a style its family has no file for, gives both a hover title, and logs a count to the console. Emoji and pictographs such as `⚠` are skipped on purpose. On this page it flags nine characters, all in code where Source Code Pro lacks them (the symbols listed below, plus `Δ`), and the code keywords' missing italic.
+**Checking while you work.** On the dev server only (`eleventy.env.runMode === "serve"` in `base.njk`), `src/assets/scripts/bundle/font-check.js` runs the blank-font test above on every page. It grays out and dot-underlines each character drawn by a fallback, outlines any element set in a style its family has no file for, gives both a hover title, and logs a count to the console. Emoji and pictographs such as `⚠` are skipped on purpose. On this page it flags nine characters, all in code where Source Code Pro lacks them (the symbols listed below, plus `Δ`), and the code keywords' missing italic.
 
 **The 2026-09-10 scan.** All 641 built pages, 34 characters falling back. The biggest was Source Serif having **no curly quotes at all**: with `typographer: true` in `src/_config/plugins/markdown.js`, every heading with an apostrophe drew its `’` in Georgia. Filled since: ‘ ’ “ ” – — … and `ü` in Source Serif; `~ ← ↑ → ↓ ↔ Δ` in Source Sans upright and italic. The YouTube captions on two jam pages had NFD accents from YouTube's own titles; `youtubeTitle` in `src/_config/filters/youtube-title.js` now normalizes to NFC (see [[The YouTube embed]]).
 
 Left falling back on purpose:
 
 - **Emoji.** No text font has them, and the system emoji font is the right one.
-- **`⚠`**, on 36 wiki pages. It is in no Source font, so the wiki's own warning marker always comes from a system font. Decorative; left.
+- **`⚠`**, on 50 wiki pages. It is in no Source font, so the wiki's own warning marker always comes from a system font. Decorative; left.
 - **`⁂`, `❖`, `↩︎`** (the last is the footnote back-link). Also in no Source font.
 - **Code-block symbols** (`→ ← │ ⌄ ⚠`). The code font is a trimmed variable subset with no full variable source bundled; fixing it means downloading Source Code Pro's variable release first.
 

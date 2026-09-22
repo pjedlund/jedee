@@ -37,7 +37,7 @@ On a phone in portrait the column is narrower than any sensible maximum, so the 
 
 ## In jedee
 
-The measure is Eleventy Excellent's stock rule in `global/blocks/prose.css:62`:
+The measure is Eleventy Excellent's stock rule in `global/blocks/prose.css`:
 
 ```css
 .prose :is(p, li, dl, blockquote) {
@@ -46,9 +46,9 @@ The measure is Eleventy Excellent's stock rule in `global/blocks/prose.css:62`:
 }
 ```
 
-jedee's own additions reuse the number: `.intro` (the lede under a post title) in `local/post.css:8` is also `60ch`, and the webmention list in `local/webmentions.css:30` is `40ch`. The prose column around them is `--wrapper-width: 64rem`, so the `ch` cap, not the column, is what limits a paragraph on a desktop screen. [[Text wrapping]] covers the `text-wrap` half of the same rule.
+jedee's own additions reuse the number: `.intro` (the lede under a post title) in `local/post.css` is also `60ch`, and the webmention list in `local/webmentions.css` is `40ch`. The prose column around them is `--wrapper-width: 64rem`, so the `ch` cap, not the column, is what limits a paragraph on a desktop screen. [[Text wrapping]] covers the `text-wrap` half of the same rule.
 
-Because that cap is narrower than the column and nothing centres it, every text block hangs from the column's start edge and the right edge steps in as the type gets smaller. Measured on [[Layout breakouts]] in a 946 px column: the band runs 48–898 px, a code block and an `h2` fill it at 850 px, a paragraph stops at 804.8 px at 24.5 px type, and a figcaption at 654.5 px at 19.7 px type (its `60ch` comes from the wiki's own caption rule, not the one above) — the same number at two type sizes, with the uncapped elements filling the band. A paragraph's optical centre therefore sits about 47 px left of the band's centre, a caption's about 122 px. **This is deliberate and the page is designed around it**: the full-width elements that fall between the text — a code block, a table, a figure — re-establish the band, so the page reads as balanced without the short blocks being centred. Adding `margin-inline: auto` to the rule above would centre every one of them and flatten the effect site-wide, in one line.
+Because that cap is narrower than the column and nothing centers it, every text block hangs from the column's start edge and the right edge steps in as the type gets smaller. Measured on [[Layout breakouts]] in a 946 px column: the band runs 48–898 px, a code block and an `h2` fill it at 850 px, a paragraph stops at 804.8 px at 24.5 px type, and a figcaption at 654.5 px at 19.7 px type (its `60ch` comes from the wiki's own caption rule, not the one above) — the same number at two type sizes, with the uncapped elements filling the band. A paragraph's optical center therefore sits about 47 px left of the band's center, a caption's about 122 px. **This is deliberate and the page is designed around it**: the full-width elements that fall between the text — a code block, a table, a figure — re-establish the band, so the page reads as balanced without the short blocks being centered. Adding `margin-inline: auto` to the rule above would center every one of them and flatten the effect site-wide, in one line.
 
 **What `60ch` actually sets**, measured on 2026-09-10 in the built site: characters per rendered line in paragraphs of plain running text (no inline code), last lines excluded, in Source Sans.
 

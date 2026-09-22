@@ -22,7 +22,7 @@ Each entry below says what a page covers and why you would open it. The traps an
 - [[Text wrapping]] — `text-wrap: balance` and `pretty`, and the end of JavaScript widow-fixers.
 - [[OpenType features]] — ligatures, small caps, figure styles and stylistic sets, and which of them this site's fonts actually carry.
 - [[Typographic conventions]] — Bringhurst's and Butterick's rules for figures, capitals, captions, superscripts, ordinals and subtitles, and what each costs in accessibility.
-- [[Line length]] — how many characters a line of text should hold, why `60ch` is not 60 characters, and why the capped blocks hang from the left edge rather than being centred.
+- [[Line length]] — how many characters a line of text should hold, why `60ch` is not 60 characters, and why the capped blocks hang from the left edge rather than being centered.
 - [[The theme toggle]] — one SVG sun masked into a moon, and the inline script that prevents a flash of the wrong theme.
 - [[Focus rings and paint containment]] — why an outline drawn outside its element disappears inside anything that clips.
 - [[The main menu]] — a disclosure menu whose button is added by script, so the CSS has to detect its absence from the markup alone.

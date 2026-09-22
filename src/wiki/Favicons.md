@@ -30,7 +30,7 @@ That split produces three rules that are easy to get backwards:
 
 - **`apple-touch-icon` must be opaque.** iOS composites transparency to black, so a transparent one arrives as a mark floating on a black tile.
 - **`apple-touch-icon` must not have baked rounded corners.** iOS applies its own mask on top; corners already cut out of the image become transparent notches inside the OS's rounded shape.
-- **A maskable icon must be opaque and full-bleed.** Its whole premise is that the launcher crops it to an unknown shape. The [maskable spec](https://www.w3.org/TR/appmanifest/#dfn-maskable) defines a safe zone — a circle of 40% radius, centred — and everything outside it may be cropped away. Transparency there means the wallpaper shows through the crop. [maskable.app](https://maskable.app/) previews this against real launcher shapes.
+- **A maskable icon must be opaque and full-bleed.** Its whole premise is that the launcher crops it to an unknown shape. The [maskable spec](https://www.w3.org/TR/appmanifest/#dfn-maskable) defines a safe zone — a circle of 40% radius, centered — and everything outside it may be cropped away. Transparency there means the wallpaper shows through the crop. [maskable.app](https://maskable.app/) previews this against real launcher shapes.
 
 Only the icons that nothing masks — the manifest's plain `"any"` icons — can carry their own corners.
 
@@ -91,7 +91,7 @@ Table: The four icon shapes, side by side
 
 The last two look identical here and that is the point: baked corners would become transparent notches inside the shape the OS cuts.
 
-**The theme colors.** Three exports in `src/_data/meta.js`, one consumer each: `themeColor` (`#495464`) reaches only the manifest's `theme_color`, so it paints the splash and the app-switcher card; `themeLight` (`#F4F4F2`) does `<meta name="theme-color">` in light mode, the manifest's `background_color`, and the knockout mark on the tiles; `themeDark` does the meta tag in dark mode and now references `themeColor`, having been `#bbbfca` — the old logo grey, which put a pale band over the near-black dark page ([[The theme toggle]]).
+**The theme colors.** Three exports in `src/_data/meta.js`, one consumer each: `themeColor` (`#495464`) reaches only the manifest's `theme_color`, so it paints the splash and the app-switcher card; `themeLight` (`#F4F4F2`) does `<meta name="theme-color">` in light mode, the manifest's `background_color`, and the knockout mark on the tiles; `themeDark` does the meta tag in dark mode and now references `themeColor`, having been `#bbbfca` — the old logo gray, which put a pale band over the near-black dark page ([[The theme toggle]]).
 
 Because `background_color` is `themeLight`, a light plate on the manifest icons would have been invisible on the splash. That is why they are the orange tile instead — and it makes the install prompt show the same object as the home screen it leads to. The other half of the installed-app experience is [[The service worker's three strategies]].
 
@@ -102,7 +102,7 @@ The frames are drawn by `src/wiki/_sources/pwa-preview.html`, which points at th
 <ul class="grid | popout" role="list" data-wiki-mockup style="--grid-min-item-size: 17rem; --gutter: var(--space-m)">
   <li>
     <figure>
-      <img eleventy:formats="webp,png" src="/assets/images/wiki/pwa-home-screen.png" alt="A phone home screen of grey placeholder apps, with the orange tile circular-cropped among them and labelled Johan Edlund." width="504" height="944">
+      <img eleventy:formats="webp,png" src="/assets/images/wiki/pwa-home-screen.png" alt="A phone home screen of gray placeholder apps, with the orange tile circular-cropped among them and labeled Johan Edlund." width="504" height="944">
       <figcaption><strong>Home screen</strong> — The maskable icon under Android's circular crop.</figcaption>
     </figure>
   </li>

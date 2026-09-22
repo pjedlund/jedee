@@ -1,6 +1,7 @@
 ---
 description: "Cumulative Layout Shift: what it measures, why the element that moves is rarely the element at fault, and how a font-size-adjust fighting a size-adjust cost this site 0.18."
 date: 2026-09-06
+updated: 2026-09-10
 ---
 
 A page that moves under the reader is a specific kind of broken. You go to click a link and an image finishes loading above it, so you click an ad instead. You start reading a paragraph and a font swaps in, reflowing the line you were on. Nothing failed and nothing is slow — the page simply arrived in pieces, and the later pieces pushed the earlier ones around.
@@ -16,7 +17,7 @@ The mitigations are all versions of one instruction — reserve the space before
 
 That last one is worth spelling out, because it is the subtlest. `font-display: swap` renders text immediately in a fallback and swaps the web font in when it arrives — good for reading, but the swap reflows every line if the two faces have different metrics. The usual fix is a `@font-face` block describing the *fallback* with `size-adjust`, `ascent-override` and `descent-override` tuned so it occupies the same space as the real font ([the generator at screenspan.net/fallback](https://screenspan.net/fallback) computes them).
 
-⚠ **A `@font-face` inserted with JavaScript *after* load does not honour `size-adjust`** — which is easy to mistake for the descriptor being broken, and this page made exactly that mistake. It previously claimed `size-adjust` was silently ignored in Chromium, on the strength of a control that injected `local('Arial')` faces at 200% and 50% into an already-parsed document and measured both at exactly 1.000× Arial. Declared in the *initial* document instead, the same faces measure 2.0000× and 0.5000× — exact, in the same Chrome 152. The shipped fallback proves it in situ without any synthetic test: `Source Sans Fallback` measures 594.11 px against raw Arial's 633.72 px on the live page, a ratio of 0.9375, which is precisely its declared `size-adjust: 93.7639%`. Measure a font descriptor in a document that was parsed with it, never in one you added it to afterwards.
+⚠ **A `@font-face` inserted with JavaScript *after* load does not honor `size-adjust`** — which is easy to mistake for the descriptor being broken, and this page made exactly that mistake. It previously claimed `size-adjust` was silently ignored in Chromium, on the strength of a control that injected `local('Arial')` faces at 200% and 50% into an already-parsed document and measured both at exactly 1.000× Arial. Declared in the *initial* document instead, the same faces measure 2.0000× and 0.5000× — exact, in the same Chrome 152. The shipped fallback proves it in situ without any synthetic test: `Source Sans Fallback` measures 594.11 px against raw Arial's 633.72 px on the live page, a ratio of 0.9375, which is precisely its declared `size-adjust: 93.7639%`. Measure a font descriptor in a document that was parsed with it, never in one you added it to afterwards.
 
 The other option is `font-display: optional`: the browser uses the web font only if it is ready within roughly 100 ms, otherwise it keeps the fallback for that entire pageview and quietly caches the font for the next navigation. No swap can happen, so swap-induced shift is zero by construction.
 
@@ -204,7 +205,7 @@ The page is short, so the footer is bottom-anchored — its top is `viewportHeig
 }
 ```
 
-`align-content` earns its line: centring the rows inside a taller box moves *every* row by half the slack when the row count changes, which is a shift of its own. Pinned to the top, only the links that actually change row move.
+`align-content` earns its line: centering the rows inside a taller box moves *every* row by half the slack when the row count changes, which is a shift of its own. Pinned to the top, only the links that actually change row move.
 
 **Reserve in `rem`.** An earlier version used `lh` and did nothing, because `lh` is font-dependent — it grows and shrinks with the very thing being compensated for, exactly like the `ch` units above. Any reservation meant to absorb a font difference has to be written in a unit the font cannot move.
 
@@ -286,7 +287,7 @@ Table: Font loading strategies, from Zach Leatherman's guide
 | Strategy | What it does | JS? |
 | --- | --- | --- |
 | Unceremonious `@font-face` | A naked block and hope. Up to three seconds of invisible text. | no |
-| `font-display` | Opt into a defined behaviour: `swap`, `fallback` or `optional`. Kills FOIT. | no |
+| `font-display` | Opt into a defined behavior: `swap`, `fallback` or `optional`. Kills FOIT. | no |
 | Preload | `<link rel="preload">` starts the fetch sooner. Delays first render slightly if you preload several. | no |
 | Don't use web fonts | Eliminates both FOIT and FOUT outright. | no |
 | Inline Data URI | Font embedded in blocking CSS. No flash of any kind, at the cost of a much later first render and one format only. | no |

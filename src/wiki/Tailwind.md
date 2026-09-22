@@ -1,6 +1,7 @@
 ---
 description: "Using Tailwind as a compiler that turns design tokens into CSS custom properties rather than as a utility framework — the CUBE boilerplate inversion, and what actually survives into the stylesheet."
 date: 2026-09-05
+updated: 2026-09-22
 ---
 
 [Tailwind CSS](https://tailwindcss.com/) is normally used by writing its utility classes in markup — `class="mt-4 flex items-center"` — and letting it emit only the classes it finds. Its config file is a secondary thing: a place to declare the values those utilities are built from.
@@ -71,7 +72,7 @@ The declared layer order in `global/global.css`:
 
 ```
 tailwindBase → reset → fonts → tailwindComponents → variables →
-global → compositions → blocks → utilities → tailwindUtilities
+global → compositions → blocks → cubeUtilities → tailwindUtilities
 ```
 
 Compiled, on 2026-09-05: **`tailwindComponents` is 3.0 KB and contains zero class selectors** — it is the `:root` token block and nothing else, which is the arrangement working as intended. `tailwindUtilities` holds 52 selectors.
@@ -92,7 +93,7 @@ So the folk version — "Tailwind is imported but you don't write utility classe
 
 ⚠ **A cascade layer must not be named `utilities` here, because Tailwind claims the name.** Fixed on 2026-09-05 by renaming it `cubeUtilities`; what follows is what went wrong and how it was found, because the trap applies to any layer called `base`, `components` or `utilities`. `@import-glob 'utilities/*.css' layer(utilities)` should produce a ninth cascade layer between `blocks` and `tailwindUtilities`. The compiled file has no `@layer utilities` at all, and the six hand-written utilities (`region`, `ontop`, `grayscale`, `heading-line`, `visually-hidden`, `spin`) come out *inside* `tailwindUtilities`, after Tailwind's own rules.
 
-The cause is a name collision, and it is Tailwind rather than the import plugins. Tailwind 3 has its **own** `@layer` directive — `base`, `components`, `utilities` — which predates native cascade layers and means "put these rules in that bucket". It cannot tell a native `@layer utilities { … }` apart from its own directive, so it swallows the block and hoists the rules into its utilities output. `compositions` and `blocks` survive precisely because Tailwind does not recognise those names.
+The cause is a name collision, and it is Tailwind rather than the import plugins. Tailwind 3 has its **own** `@layer` directive — `base`, `components`, `utilities` — which predates native cascade layers and means "put these rules in that bucket". It cannot tell a native `@layer utilities { … }` apart from its own directive, so it swallows the block and hoists the rules into its utilities output. `compositions` and `blocks` survive precisely because Tailwind does not recognize those names.
 
 Bisecting the PostCSS pipeline shows exactly where it happens: after `postcss-import-ext-glob` + `postcss-import` the layer is present (as six `@layer utilities` blocks, one per globbed file, 9 rules in total) and `tailwindUtilities` is empty; adding `tailwindcss` makes `utilities` vanish and `tailwindUtilities` jump to 61 rules. Autoprefixer and cssnano change neither. Renaming the layer to anything Tailwind does not claim restores it — with `layer(cubeUtilities)` the compiled file carries `cubeUtilities` at 9 rules and `tailwindUtilities` drops to 52, which is the same 9 rules moving back where they were declared.
 

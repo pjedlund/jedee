@@ -1,6 +1,7 @@
 ---
 description: "Why six of the sixteen post types can be published without a title, and what follows from having no p-name."
 date: 2026-07-31
+updated: 2026-09-22
 ---
 
 Six of the sixteen types can be published without a title: note, and the five response types — bookmark, reply, repost, like, rsvp. This isn't laziness in the schema. In IndieWeb terms a `p-name` is precisely what separates an *article* from a *note*, so a short post that invents a headline is mislabelled at the data level, not just visually.
@@ -21,7 +22,7 @@ Nothing else in the layouts emits `p-name`. So a title-less post has no headline
 
 ## One card for five types
 
-Eleven types have their own card partial. The five response types share `card-response.njk`, which resolves the differences with three lookup tables:
+Ten types have their own card partial, and activities have none (their archive is a map and a table). The five response types share `card-response.njk`, which resolves the differences with three lookup tables:
 
 ```njk
 {% set verbs  = { "bookmark": "Bookmarked", "reply": "In reply to", "rsvp": "RSVP to", "like": "Liked", "repost": "Reposted" } %}
@@ -60,7 +61,7 @@ The rule that decides it: *can this type be published with an empty body?* If ye
 
 ## Two consequences still open
 
-- **Empty `<title>` in the feeds.** `atom-body.njk` emits `<title>{{ post.data.title }}</title>` with no fallback, so a title-less bookmark, reply or rsvp entry syndicates an empty title element. Bookmark, reply and rsvp all have feeds; like and repost don't, which is why this shows up in three types and not five. Whether to compute a fallback (the target's hostname, say) or accept it is unresolved.
+- **Empty `<title>` in the feeds.** `link-atom-body.njk`, the body the four link types share, emits the title with no fallback, so a title-less bookmark, reply, rsvp or like entry syndicates an empty title element. Those four have feeds (likes since 2026-08-10); repost doesn't, which is why this shows up in four types and not five. Whether to compute a fallback (the target's hostname, say) or accept it is unresolved.
 - **The URL has nothing but the filename.** With no title, the filename is the only slug source — see [[Permalinks and Obsidian-friendly filenames]]. There's a standing wish to give these types a title anyway for uniform filenames and URLs, which runs straight back into the `p-name` question above: a title that is *displayed* changes the post's IndieWeb kind, a title used only for the filename doesn't.
 
 Related: [[Anatomy of a post type]] · [[Microformats]] · [[Per-type feeds]]
