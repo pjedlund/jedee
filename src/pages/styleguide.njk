@@ -1,0 +1,394 @@
+---
+title: Style Guide
+draft: true
+permalink: /styleguide/index.html
+layout: base
+eleventyExcludeFromCollections: true
+customColors:
+  - property: '--color-text'
+  - property: '--color-text-accent'
+  - property: '--color-bg'
+  - property: '--color-bg-accent'
+  - property: '--color-bg-accent-2'
+  - property: '--color-accent-orange'
+  - property: '--color-accent-blue'
+  - property: '--color-accent-green'
+customGradients:
+  - property: '--gradient-slate'
+  - property: '--gradient-conic'
+  - property: '--gradient-stripes'
+colorGroups:
+  - heading: 'Base palette'
+    description: 'Foundational theme tones. Composed into the semantic theme variables in variables.css.'
+    prefix: 'base'
+  - heading: 'Neutral shades'
+    description: 'Gray scale generated from a single base in OKLCH space. Includes the standalone gray-250.'
+    prefix: 'gray'
+  - heading: 'Vibrant shades'
+    description: 'Orange scale generated from a single base in OKLCH space.'
+    prefix: 'orange'
+  - heading: 'Accent colors'
+    description: 'Each has a chroma-reduced subdued variant used in dark theme.'
+    prefixes: ['red', 'blue', 'green']
+---
+
+<!-- Inspired by: https://stevenwoodson.com/blog/eleventy-style-guide-generator-step-by-step-guide-adding-to-an-existing-site/ -->
+
+<article class="styleguide | wrapper flow">
+  <header class="intro | flow region">
+    <h1 class="gradient-text-linear">{{ title }}</h1>
+
+    <p>
+      All design tokens can be found in <code>src/_data/designTokens</code>. <br />
+      This includes all baseline fonts, colors, sizes, and spacing.
+    </p>
+  </header>
+
+  <section class="flow region region-space-m">
+    <h2 class="heading-line">Buttons</h2>
+    <ul class="cluster" role="list">
+      <li>
+        <a href="#" class="button">Default button</a>
+      </li>
+      <li>
+        <a href="#" class="button" data-button-variant="primary">primary button</a>
+      </li>
+      <li>
+        <a href="#" class="button" data-button-variant="secondary">secondary button</a>
+      </li>
+      <li>
+        <a href="#" class="button" data-button-variant="tertiary">tertiary button</a>
+      </li>
+      <li>
+        <a href="#" class="button" data-ghost-button>Ghost button</a>
+      </li>
+      <li>
+        <a href="#" class="button" data-button-radius="hard">Hard edges</a>
+      </li>
+      <li>
+        <a href="#" class="button"> {% svg "misc/star" %} Button with icon </a>
+      </li>
+      <li>
+        <a href="#" class="button" data-small-button>small button</a>
+      </li>
+      <li>
+        <a href="#" class="button" data-icon><span class="visually-hidden">Icon button</span>{% svg "misc/star" %}</a>
+      </li>
+    </ul>
+  </section>
+
+  <div class="full colors | section">
+    <section class="section__inner wrapper flow region">
+      <h2 class="heading-line">Colors</h2>
+
+      {%- for group in colorGroups -%}
+        {%- if group.description -%}<p{% if not loop.first %} class="mt-l-xl"{% endif %}>{{ group.description }}</p>{%- endif -%}
+        <ul role="list">
+          {%- for color in designTokens.colors | dtcgItems -%}
+            {%- set slug = color.name | slugify -%}
+            {%- set bracket = slug.split('-')[0] -%}
+            {%- if (group.prefix and bracket == group.prefix) or (group.prefixes and bracket in group.prefixes) -%}
+              <li>
+                <div style="background-color: var(--color-{{ slug }})"></div>
+                <p>
+                  <code
+                    >#{{ color.value | slugify }}<br />
+                    var(--color-{{ slug }})</code
+                  >
+                </p>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      {%- endfor -%}
+
+      <h3 class="heading-line | mt-l-xl">Custom colors</h3>
+      <p>in <code>variables.css</code>. Some only change for dark theme.</p>
+
+      <ul role="list">
+        {%- for color in customColors -%}
+          <li>
+            <div style="background-color: var({{ color.property }})"></div>
+            <p>
+              <code>{{ color.property }}</code>
+            </p>
+          </li>
+        {%- endfor -%}
+      </ul>
+
+      <h3 class="heading-line | mt-l-xl">Gradients</h3>
+
+      <ul role="list">
+        {%- for gradient in customGradients -%}
+          <li>
+            <div style="background-image: var({{ gradient.property }})"></div>
+
+            <p>
+              <code>{{ gradient.property }}</code>
+              <br />
+              <!-- <code>{{ color.value }}</code> -->
+            </p>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </section>
+  </div>
+
+  <section class="fonts | flow region">
+    <h2 class="heading-line">Fonts</h2>
+
+    <ul class="fonts flow">
+      {%- for font in designTokens.fonts | dtcgItems -%}
+        <li class="font" style="font-family: var(--font-{{ font.name | slugify }})">
+          <h3 style="font-family: var(--font-{{ font.name | slugify }})">{{ font.name }}</h3>
+          <p>{{ font.description }}</p>
+          <p><strong>Font Families</strong>: {{ font.value | join(', ') }}</p>
+          <code>var(--font-{{ font.name | slugify }})</code>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </section>
+
+  <section class="type-features | flow region">
+    <h2 class="heading-line">Type features</h2>
+    <p>Typographic defaults from Bringhurst's <cite>The Elements of Typographic Style</cite> and Butterick's <cite>Practical Typography</cite>. Each pair shows the plain setting, then the site's.</p>
+
+    <div class="flow">
+      <h3>Old-style figures</h3>
+      <p>Running text (<code>.prose</code>) sets old-style, proportional figures, which sit with lowercase letters. Tables, acronyms and code keep lining figures.</p>
+      <div class="grid" data-layout="50-50">
+        <div class="type-sample | flow">
+          <p class="type-sample-label">Plain</p>
+          <p>Founded in 1994, the W3C made CSS 2.1 a Recommendation in 2011. Code keeps its own figures: <code>--tracking-wide: 0.12ch</code>.</p>
+        </div>
+        <div class="type-sample prose | flow">
+          <p class="type-sample-label">Site</p>
+          <p>Founded in 1994, the <abbr title="World Wide Web Consortium">W3C</abbr> made CSS 2.1 a Recommendation in 2011. Code keeps its own figures: <code>--tracking-wide: 0.12ch</code>.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow">
+      <h3>Small caps</h3>
+      <p>The <code>.small-caps</code> class, by hand, for the opening words of an article or a name. Letterspaced, and never faked in italic, which has no small caps.</p>
+      <div class="grid" data-layout="50-50">
+        <div class="type-sample | flow">
+          <p class="type-sample-label">Plain</p>
+          <p>The opening words of an article, or a name such as Robert Bringhurst.</p>
+        </div>
+        <div class="type-sample | flow">
+          <p class="type-sample-label">Site</p>
+          <p><span class="small-caps">The opening words</span> of an article, or a name such as <span class="small-caps">Robert Bringhurst</span>.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow">
+      <h3>Figure classes</h3>
+      <p>Four classes for figures, used by hand. They combine with each other and with the running-text default, so <code>class="lining-nums tabular-nums"</code> keeps both. Samples are set in running text (<code>.prose</code>). Put <code>.fraction</code> on the fraction itself: in Source Sans it changes every digit, full stop, comma and parenthesis it covers. <code>.slashed-zero</code> brings lining figures with it, because the old-style zero has no slashed form.</p>
+      <div class="grid" data-layout="50-50">
+        <div class="type-sample prose | flow">
+          <p class="type-sample-label">Without, then with <code>.fraction</code></p>
+          <p>Add 3/4 cup of water and 1/2 teaspoon of salt.</p>
+          <p>Add <span class="fraction">3/4</span> cup of water and <span class="fraction">1/2</span> teaspoon of salt.</p>
+        </div>
+        <div class="type-sample prose | flow">
+          <p class="type-sample-label">Without, then with <code>.slashed-zero</code></p>
+          <p>Serial number O0O-2020-0O.</p>
+          <p class="slashed-zero">Serial number O0O-2020-0O.</p>
+        </div>
+        <div class="type-sample prose | flow">
+          <p class="type-sample-label">Without, then with <code>.lining-nums</code></p>
+          <p>The 1990s, the 2020s, and 1,380 metres.</p>
+          <p class="lining-nums">The 1990s, the 2020s, and 1,380 metres.</p>
+        </div>
+        <div class="type-sample prose | flow">
+          <p class="type-sample-label">Without, then with <code>.tabular-nums</code></p>
+          <p>1,111.11<br />8,888.88</p>
+          <p class="tabular-nums">1,111.11<br />8,888.88</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow">
+      <h3>Captions and quotes</h3>
+      <p>Captions and quotes are balanced so their lines come out even, not ending on one word. Short captions are italic and centred; long wiki captions are upright and left-aligned.</p>
+      <div class="grid" data-layout="50-50">
+        <div class="type-sample | flow">
+          <p class="type-sample-label">Plain</p>
+          <figure><figcaption style="text-wrap: pretty">A caption long enough to run onto a second line under its picture, where the last word used to sit on its own.</figcaption></figure>
+          <blockquote style="text-wrap: pretty">Simple is almost always more effective than complex, and short.</blockquote>
+        </div>
+        <div class="type-sample | flow">
+          <p class="type-sample-label">Site</p>
+          <figure><figcaption>A caption long enough to run onto a second line under its picture, where the last word used to sit on its own.</figcaption></figure>
+          <blockquote>Simple is almost always more effective than complex, and short.</blockquote>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow">
+      <h3>Capital labels</h3>
+      <p>Strings of capitals are letterspaced 5–10% of the size: <code>--tracking-wide</code> is 0.12ch, about 5.7%.</p>
+      <div class="grid" data-layout="50-50">
+        <div class="type-sample | flow">
+          <p class="type-sample-label">Before (0.09ch)</p>
+          <p class="type-caps" style="letter-spacing: 0.09ch">Articles · Notes · Photos</p>
+        </div>
+        <div class="type-sample | flow">
+          <p class="type-sample-label">Site</p>
+          <p class="type-caps">Articles · Notes · Photos</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow">
+      <h3>Footnote numbers</h3>
+      <p>The font's own superscript figures, bare, rather than a shrunken, raised number in brackets. They don't push the lines apart.</p>
+      <div class="grid" data-layout="50-50">
+        <div class="type-sample | flow">
+          <p class="type-sample-label">Plain</p>
+          <p>A claim that needs a source.<sup>[1]</sup> The next line keeps its spacing, or doesn't.</p>
+        </div>
+        <div class="type-sample | flow">
+          <p class="type-sample-label">Site</p>
+          <p>A claim that needs a source.<sup class="footnote-ref">1</sup> The next line keeps its spacing, or doesn't.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow">
+      <h3>List markers</h3>
+      <p>List numbers take old-style figures, like the text around them; left alone, the browser sets them lining. They are tabular, so 9 and 10 line up. Numbers and hollow bullets share <code>--color-accent-orange-text</code>: <code>orange-600</code> in light mode, so the numbers pass 4.5:1, and <code>orange-500</code> in dark.</p>
+      <div class="grid" data-layout="50-50">
+        <div class="type-sample | flow">
+          <p class="type-sample-label">Plain</p>
+          <ol start="8">
+            <li>Old-style figures in running text</li>
+            <li>Lining figures with capitals</li>
+            <li>Tabular figures in columns</li>
+          </ol>
+          <ul>
+            <li>A bullet should be noticeable</li>
+            <li>but not big</li>
+          </ul>
+        </div>
+        <div class="type-sample prose | flow">
+          <p class="type-sample-label">Site</p>
+          <ol start="8">
+            <li>Old-style figures in running text</li>
+            <li>Lining figures with capitals</li>
+            <li>Tabular figures in columns</li>
+          </ol>
+          <ul>
+            <li>A bullet should be noticeable</li>
+            <li>but not big</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="blockquotes | flow region">
+    <h2 class="heading-line">Blockquotes</h2>
+    <p>A quotation set off from the text: a rule on the start edge, a larger size, balanced lines, and no quote marks. The source goes inside the quote as its last paragraph, which the site sets two steps smaller.</p>
+
+    <div class="grid" data-layout="50-50">
+      <div class="prose | flow">
+        <p class="type-sample-label">With a source</p>
+        <blockquote>
+          <p>Typography exists to honor content.</p>
+          <p>— <span class="small-caps">Robert Bringhurst</span>, <cite>The Elements of Typographic Style</cite></p>
+        </blockquote>
+      </div>
+      <div class="flow">
+        <p class="type-sample-label">Written in markdown</p>
+        <pre><code>&gt; Typography exists to honor content.
+&gt;
+&gt; — &lt;span class="small-caps"&gt;Robert Bringhurst&lt;/span&gt;, *The Elements of Typographic Style*</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <div class="full sizes | section">
+    <section class="section__inner wrapper flow region">
+      <h2 class="heading-line">Sizes</h2>
+
+      <p>
+        Fluid type and space scales were
+        <a href="{{ designTokens.textSizes.$extensions.scaleGenerator }}">generated with Utopia</a>.
+      </p>
+
+      <div class="table-wrapper" role="region" tabindex="0" aria-labelledby="table-sizes" data-table-layout="fixed">
+      <table class="sizes">
+        <caption id="table-sizes">Type sizes, smallest to largest</caption>
+        <thead>
+          <tr><th scope="col">Token</th><th scope="col">Range</th><th scope="col">Sample</th></tr>
+        </thead>
+        <tbody>
+        {%- for size in designTokens.textSizes | dtcgItems -%}
+          <tr>
+            <th scope="row">
+              <h3>{{ size.name }}</h3>
+            </th>
+            <td>
+              <span class="flow">
+                <p>{{ size.min }}px to {{ size.max }}px</p>
+                <code>var(--size-{{ size.name | slugify }})</code>
+              </span>
+            </td>
+            <td class="sizes-example">
+              <p style="font-size:var(--size-{{ size.name | slugify }})">{{ size.name }}</p>
+            </td>
+          </tr>
+        {%- endfor -%}
+        </tbody>
+      </table>
+      </div>
+    </section>
+  </div>
+
+  <section class="spacing | wrapper-pass flow region">
+    <h2 class="heading-line">Spacing</h2>
+
+    <p>
+      Fluid type and space scales were
+      <a href="{{ designTokens.spacing.$extensions.scaleGenerator }}">generated with Utopia</a>.
+    </p>
+
+    <div class="table-wrapper" role="region" tabindex="0" aria-labelledby="table-spacing" data-table-layout="fixed">
+    <table class="spacing">
+      <caption id="table-spacing">Space sizes, smallest to largest</caption>
+      <thead>
+        <tr><th scope="col">Token</th><th scope="col">Range</th><th scope="col">Sample</th></tr>
+      </thead>
+      <tbody>
+      {%- for space in designTokens.spacing | dtcgItems -%}
+        <tr>
+          <th scope="row">
+            <h3>{{ space.name }}</h3>
+          </th>
+          <td>
+            <span class="flow">
+              <p>{{ space.min }}px to {{ space.max }}px</p>
+              <code>var(--space-{{ space.name | slugify }})</code>
+            </span>
+          </td>
+          <td>
+            <div
+              class="space"
+              style="height:var(--space-{{ space.name | slugify }}); width:var(--space-{{ space.name | slugify }});"
+            ></div>
+          </td>
+        </tr>
+      {%- endfor -%}
+      </tbody>
+    </table>
+    </div>
+  </section>
+</article>
+
+{%- css "local" -%}
+  {%- include 'css/styleguide.css' -%}
+  {%- include 'css/footnotes.css' -%}
+{%- endcss -%}
