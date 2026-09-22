@@ -1,4 +1,4 @@
-// Fills in the `genre:` front matter of jam posts from MusicBrainz. Two phases, on purpose: `fetch` is slow (MusicBrainz allows 1 request/second) and `apply` is the part you re-run while deciding what the vocabulary should look like, so the lookups are cached to disk and never repeated. See TODO §20 and the wiki page "Genre enrichment from MusicBrainz".
+// Fills in the `genre:` front matter of jam posts from MusicBrainz. Two phases, on purpose: `fetch` is slow (MusicBrainz allows 1 request/second) and `apply` is the part you re-run while deciding what the vocabulary should look like, so the lookups are cached to disk and never repeated. See the wiki page "Genre enrichment from MusicBrainz".
 //
 //   node ./src/_config/setup/enrich-genres.js fetch           — populate the cache (safe to re-run; only misses cost a request)
 //   node ./src/_config/setup/enrich-genres.js apply           — show what would change, write nothing

@@ -73,6 +73,6 @@
 	"triggers": [
 		"https://www.imdb.com/title/"
 	],
-	"noteNameFormat": "{{schema:name}}",
+	"noteNameFormat": "{{schema:name|safe_name}}",
 	"path": "posts/watching/"
 }

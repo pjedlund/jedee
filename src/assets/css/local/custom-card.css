@@ -150,13 +150,13 @@ custom-card[clickable] a:after {
   border-radius: var(--border-radius-medium);
   background-color: var(--color-bg);
   color: var(--color-text);
-  line-height: 1.1;
+  line-height: var(--leading-extrafine);
   text-align: center;
 }
 
 .event-date-badge .day {
   font-size: var(--size-step-3);
-  font-weight: 700;
+  font-weight: var(--font-bold);
 }
 
 .event-date-badge .month {
