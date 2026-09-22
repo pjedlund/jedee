@@ -2,3 +2,5 @@ src/**/*.md
 src/_includes/components/**/custom-*.njk
 src/common/*
 src/_includes/scripts/*
+# ⚠ Nova's Prettier extension saves an empty file when the jinja-template parser fails on a template.
+*.njk
