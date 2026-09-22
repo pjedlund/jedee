@@ -1,6 +1,7 @@
 ---
 description: "A var() pointing at nothing does not skip the declaration — it makes the property unset, which means inherit or initial depending on the property."
 date: 2026-08-22
+updated: 2026-09-22
 ---
 
 CSS lets a stylesheet name its own values — `--brand-color: crimson` — and read them back anywhere with `var(--brand-color)`. These are **custom properties**, and they are the machinery behind design tokens, theming and dark mode. This page is about what happens when the name is wrong: a typo, a token that got renamed, a property that was never defined at all.
@@ -74,10 +75,14 @@ border-size: var(--button-border-size);
 
 That refines the rule above rather than contradicting it. The inherit branch "looks fine" when the parent is ordinary body text, which is the usual case and is why the `font-family` example above went unnoticed for months. It looks *wrong* the moment the parent is styled deliberately unlike body text — a control, a heading, a caption. Generated content is the sharpest version, because a `::after` always inherits from exactly such an element. See [[Tooltips]].
 
-**How to sweep for it:** grep the source for `var(--…)` references and diff the names against the defined ones. A referenced-but-undefined property is always a mistake; only whether it is a *visible* mistake depends on the property. The moment to do this is after any token-system rewrite, which is precisely when such references get orphaned.
+**It came back, and the cause was upstream of the CSS.** The first full-project lint on 2026-09-22 found three more: `--color-primary` on the photo page's "Scan & technical data" toggle, `--font-body` still in `button.css` (the fix above defined `--border-thickness` and left it) and in `details.css`, and `--font-normal` — the tooltip's name — on checkbox labels and in the breadcrumb, where `var(--font-normal, 400)` only worked through its fallback. All three are Eleventy Excellent names. The `color` one showed: undefined, the open toggle inherited the surrounding text color, so the hover did nothing. They are now `--color-accent-orange-text`, `--font-base` and `--font-regular`.
+
+The reason they kept reappearing was not the stylesheet. The `cube-css` and `eleventy-excellent` skills Claude reads before writing CSS listed `--font-body` and `--color-primary` among "the project's tokens" — true of plain EE, false here — so code written with them in context reached for names jedee doesn't define. Both skills now say to read the project's own token files first and warn that plain EE names may not exist on a fork. A fix to the CSS alone would have lasted until the next time something was written from the skills.
+
+**How to sweep for it:** grep the source for `var(--…)` references and diff the names against the defined ones. A referenced-but-undefined property is always a mistake; only whether it is a *visible* mistake depends on the property. The moment to do this is after any token-system rewrite, which is precisely when such references get orphaned. The `lint` skill's design lane does exactly this diff on every full run: it builds the list of defined properties from the compiled CSS, then checks every `var()` against it.
 
 **EE stock vs jedee:** the two property names are upstream; the missing definitions, and therefore the bug, are jedee's own.
 
 Related: [[Design token sync]] — the other silent token failure, at the boundary with the design tool rather than inside the stylesheet. [[Text wrapping]] — another case where a global CSS rule produces a surprise in one specific block.
 
-Raw source: `src/_raw/dev-notes/How an undefined custom property broke every button border.md`
+Raw sources: `src/_raw/dev-notes/How an undefined custom property broke every button border.md`, `src/_raw/dev-notes/How the upstream token names came back.md`
