@@ -118,7 +118,7 @@ place-map > :is(.place-map-live, .place-map-static) + :not(script) {
   border: var(--stroke);
   border-radius: var(--border-radius-small);
   font-size: 1.25rem;
-  line-height: 1;
+  line-height: var(--leading-flat);
   cursor: pointer;
 }
 .place-map-maximize:hover {
@@ -185,7 +185,7 @@ place-map > :is(.place-map-live, .place-map-static) + :not(script) {
   border: var(--stroke);
   border-radius: var(--border-radius-small);
   font-size: 1.4rem;
-  line-height: 1;
+  line-height: var(--leading-flat);
   cursor: pointer;
 }
 .place-map-overlay-close:hover {
@@ -338,8 +338,8 @@ place-map > :is(.place-map-live, .place-map-static) + :not(script) {
 .place-popup-date {
   display: block;
   font-size: 0.85em;
-  font-weight: 400;
-  line-height: 1.2;
+  font-weight: var(--font-regular);
+  line-height: var(--leading-fine);
   color: color-mix(in oklab, var(--color-text) 80%, var(--color-bg-accent));
 }
 

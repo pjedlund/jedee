@@ -15,7 +15,7 @@ Build-time static render of received webmentions on article, note, and photo pag
 
 .webmentions__kinds {
   font-size: var(--size-step-min-1);
-  font-weight: 400;
+  font-weight: var(--font-regular);
   color: var(--color-text-accent);
 }
 
