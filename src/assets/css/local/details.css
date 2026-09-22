@@ -60,7 +60,7 @@ is-land:not(:defined) .details .control {
 }
 
 .details details > :is(h2, h3, h4) {
-  font-family: var(--font-body);
+  font-family: var(--font-base);
 }
 
 .details details > h2 {

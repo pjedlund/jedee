@@ -135,7 +135,7 @@ Top-left wayfinding that replaces the old site logo: the home crumb is the logom
 .breadcrumb-connector {
   font-family: var(--font-base);
   font-style: italic;
-  font-weight: var(--font-normal, 400);
+  font-weight: var(--font-regular);
   text-transform: none;
   letter-spacing: normal;
   color: var(--breadcrumb-color-ancestor);
