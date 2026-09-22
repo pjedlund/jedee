@@ -2,6 +2,7 @@
 title: About
 description: UX/UI designer and front-end developer based in Malmö, Sweden.
 layout: page
+draft: true
 permalink: /about/index.html
 tags:
   - searchable
