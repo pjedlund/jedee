@@ -7,12 +7,19 @@ The dim type/date/revision line under a post or wiki title (partials/entry-heade
   --meta-color-lit: var(--color-text-lit);
   --meta-glow-lit: var(--text-glow-lit);
   --meta-fade: 150ms;
+  --meta-link-pad-block: var(--space-2xs);
+  --meta-link-pad-inline: var(--space-xs);
 
   font-size: var(--size-step-min-1);
   color: var(--meta-color);
 }
 
 .meta a {
+  /* Padding gives the focus ring room around the label, like the header buttons; the negative margin hands it back so nothing moves. */
+  --focus-offset: 0;
+
+  padding: var(--meta-link-pad-block) var(--meta-link-pad-inline);
+  margin: calc(var(--meta-link-pad-block) * -1) calc(var(--meta-link-pad-inline) * -1);
   color: inherit;
   text-decoration: none;
   transition: color var(--meta-fade) ease-out, text-shadow var(--meta-fade) ease-out;
