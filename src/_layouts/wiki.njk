@@ -13,11 +13,11 @@ layout: base
     <h1>{{ title }}</h1>
 
     {% if date %}
-      <p class="meta | text-step-min-1">
-        <a class="meta-item" href="/wiki/">{% svg "posts/book", "", "meta-icon" %}Wiki</a> ·
+      <p class="meta | cluster gutter-s-m">
+        <a class="meta-item" href="/wiki/">{% svg "posts/book", "", "meta-icon" %}Wiki</a>
         {% set definedDate = date %}{% include "partials/date.njk" %}
-        {%- if updated %} · Updated <time datetime="{{ updated | toIsoString }}">{{ updated | formatDate('D MMM YYYY') }}</time>{% endif %}
-        {%- if meta.viewRepo.allow %} · <a href="{{ settings.repos.site }}/commits/main/{{ page.inputPath | replace('./', '') | replace(' ', '%20') }}">{% svg 'platform/github', '', 'meta-icon' %}Revision history</a>{% endif %}
+        {%- if updated %}<span>Updated <time datetime="{{ updated | toIsoString }}">{{ updated | formatDate('D MMM YYYY') }}</time></span>{% endif %}
+        {%- if meta.viewRepo.allow %}<a class="meta-item" href="{{ settings.repos.site }}/commits/main/{{ page.inputPath | replace('./', '') | replace(' ', '%20') }}">{% svg 'platform/github', '', 'meta-icon' %}Revision history</a>{% endif %}
       </p>
     {% endif %}
 
