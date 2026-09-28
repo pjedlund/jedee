@@ -1,23 +1,20 @@
 ---
-title: How I use AI
+title: AI policy
 description: What on this site was made with AI, and what wasn't.
 date: 2026-09-11
+draft: true
 layout: page
 permalink: /ai/index.html
-draft: true
 tags:
   - searchable
 ---
 
-A lot of people now say plainly where AI comes into their work. Here is where it comes into mine.
+I use AI for the following:
 
-## The code: mostly Claude, under my direction
+- as a coding assistant, organize projects and files, 
+- to write the LLM wiki, image alt texts, spell checking
+- research topics and fact check posts
 
-I am a web designer, not a programmer. Most of the code behind this site — the templates, the scripts, the build — was written by [Claude](https://www.anthropic.com/claude), Anthropic's AI model, working in Claude Code. I decide what the site should be and how it should look and behave, and I review and test what gets built, but I didn't type most of it, and I won't pretend I did. The [source code](https://github.com/pjedlund/jedee) is on GitHub.
-
-## The wiki: written by Claude
-
-[The wiki](/wiki/) is Claude's notebook on how this site is built and the web techniques behind it. Claude writes and maintains it as we work; I read it and steer it. It is useful to me and maybe to you, but those words are not mine.
 
 ## The posts: mine
 
