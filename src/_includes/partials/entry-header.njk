@@ -28,6 +28,10 @@
 {% endif %}
 
 <p class="meta | cluster gutter-xs-s">
+  {# The post type, linked to its archive — icon and name come from navigation.postTypes, matched on the folder's category. #}
+  {%- for pt in navigation.postTypes %}{% if pt.collection == category %}
+    <span class="meta-item">{% svg 'posts/' + pt.icon, '', 'meta-icon' %}<a href="{{ pt.url }}">{{ pt.text }}</a></span>
+  {%- endif %}{% endfor %}
   {%- if draft -%}
     <span class="button" data-small-button data-button-variant="tertiary">draft</span>
   {%- endif %}
