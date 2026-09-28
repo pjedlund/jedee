@@ -49,7 +49,7 @@ Table: What jedee extended from the stock starter
 | WebC components | five | eight — adds `photo-lightbox.webc` ([[The PhotoSwipe lightbox]]), `place-map.webc` and `sortable-table.webc` |
 | Header chrome | `navigation.drawerNav` and `navigation.subMenu` booleans in `meta.js` | neither key exists; replaced by `breadcrumb` and `hideNav`, and one `nav-menu.js` in place of EE's `nav-drawer.js` + `nav-sub.js` |
 | Wikilinks | not shipped at all | `@photogabble/eleventy-plugin-interlinker` — see [[Wikilinks]] |
-| Per-page CSS | ten files in `css/local/` | twenty |
+| Per-page CSS | ten files in `css/local/` | twenty-eight |
 | npm scripts | adds `screenshots` | drops `screenshots`; adds `design:md`, `penpot:tokens`, `fallback-font-style`, `test:unit` |
 
 **The interlinker is the consequential addition.** Vanilla EE does not ship it, which is exactly what made a vanilla checkout the decisive control when jedee's navigation rendered blank — see [[The interlinker's second render pass]]. Any oddity that only reproduces here and not upstream should be tested against that checkout before anything else.

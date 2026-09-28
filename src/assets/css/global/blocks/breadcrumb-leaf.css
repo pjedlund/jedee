@@ -1,0 +1,27 @@
+/*
+BREADCRUMB LEAF
+The current-page crumb (partials/breadcrumb-leaf.njk): one clamped line, and the quiet italic connector words inside it. The trail itself is breadcrumb.css.
+*/
+
+.breadcrumb-current {
+  /* Single-line clamp + ellipsis. -webkit-line-clamp rather than `white-space: nowrap`, because the global `* { text-wrap: pretty }` reset re-enables wrapping even against an explicit nowrap. `min-inline-size: 0` lets this nested flex item shrink below its content so the clamp bites. */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+  min-inline-size: 0;
+  color: var(--breadcrumb-color-current);
+  /* The trail's `line-height: 1` is fine for the uppercase ancestors (no descenders) but clips a lowercase leaf — most visibly the italic "y" in a Jam's "by". ⚠ Pinned to the same line: a -webkit-box rounds its own box up half a pixel, which is enough to leave the row a hair taller here than on the home page. */
+  line-height: var(--breadcrumb-leaf-leading);
+  block-size: var(--breadcrumb-line);
+}
+
+/* Connector words in a leaf — the Jam "by", the Like "on": a quiet italic against the uppercase trail. Uses the body face on purpose: the display serif loads only a bold italic, so a regular-weight italic in it would be a faux slant. */
+.breadcrumb-connector {
+  font-family: var(--font-base);
+  font-style: italic;
+  font-weight: var(--font-regular);
+  text-transform: none;
+  letter-spacing: normal;
+  color: var(--breadcrumb-color-ancestor);
+}
