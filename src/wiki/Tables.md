@@ -1,7 +1,7 @@
 ---
 description: "Styling data tables with modern CSS: markup that reads correctly unstyled, the browser defaults worth overriding, alignment and sticky headers, the scroll container a wide table needs, and rules painted as a gradient because a collapsed border gives one color per edge."
 date: 2026-09-15
-updated: 2026-09-20
+updated: 2026-09-28
 ---
 
 A table is for tabular data: values that relate along two axes at once, read across a row and down a column. That relationship is what `<table>` gives a screen reader, which announces the row and column headers as the reader moves from cell to cell, and it is lost the moment the grid is rebuilt from `div`s. A timetable, a price list or a comparison is tabular; a page layout is not.
@@ -131,9 +131,14 @@ The wrapper carries `.popout`, not the table, because the breakout classes only 
 
 ```njk
 {%- if content and content.includes('<table') -%}
-  {%- css "local" -%}{%- include 'css/table.css' -%}{%- endcss -%}
+  {%- css "local" -%}{%- include 'css/table.css' -%}{%- include 'css/table-columns.css' -%}{%- endcss -%}
+{%- endif -%}
+{%- if content and content.includes('data-table-') -%}
+  {%- css "local" -%}{%- include 'css/table-options.css' -%}{%- endcss -%}
 {%- endif -%}
 ```
+
+The opt-in variants below (`data-table-layout`, `data-table-rows`, `data-table-priority`) live in `table-options.css` and load only on a page that uses one. That second test is plain text, so a page that merely mentions an attribute name, like the wiki log, loads the file too; the cost is one small stylesheet.
 
 ⚠ **The `content and` guard is load-bearing.** Written as a bare `content.includes('<table')`, the build still succeeded, but every wikilink on the site rendered as literal `[[…]]` text: `content` is undefined in at least one render of the layout, the call throws there, and the interlinker's link lookup is lost without an error. Measured by building with and without the change: 8 links on [[Layout breakouts]] with the guard, none without. Another member of the family described in [[The interlinker's second render pass]].
 
@@ -235,7 +240,7 @@ Both rules sit inside the `prefers-reduced-motion` guard, so a reduced-motion vi
 
 ### The activities table
 
-`/activities/` is the one table here not written in markdown: the partial `place-map-activities.njk` writes one row per activity, 180 of them, and four additions to `table.css` came from it. The table is also the page's map data. `<place-map>` reads the `<tr data-lat data-lon>` rows and names each dot after the row's first link ([[The place map]]), so the activity's link has to stay the first link in its row.
+`/activities/` is the one table here not written in markdown: the partial `place-map-activities.njk` writes one row per activity, 180 of them, and four additions to the table stylesheets came from it. The table is also the page's map data. `<place-map>` reads the `<tr data-lat data-lon>` rows and names each dot after the row's first link ([[The place map]]), so the activity's link has to stay the first link in its row.
 
 **Rows that link.** `data-table-rows="link"` on the wrapper stretches each row header's link over its row: `tr { position: relative }` plus an `a::after` with `inset: 0`, the pattern `custom-card[clickable]` uses. The row tints on hover and when its link has keyboard focus. The tint is that overlay's background going from `opacity: 0` to 1, so the fade is an opacity transition and a theme switch never animates a color. Three traps came with it, all met on this table:
 

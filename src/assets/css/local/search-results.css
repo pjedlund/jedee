@@ -1,0 +1,83 @@
+/*
+SEARCH RESULTS
+The result list inside the search panel; included by search.njk beside search.css.
+*/
+
+.search-results {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.search-result a {
+  --search-result-icon: color-mix(in oklab, var(--color-accent-blue) 40%, var(--search-surface));
+  /* Measured against the PANEL surface, not the page — a color-mix is only valid on the surface it was tuned on. 84%, not 80%: the highlighted row's own tint darkens the ground under it and 80% fell to 4.31:1 there. */
+  --search-result-text-color: color-mix(in oklab, var(--color-text) 84%, var(--search-surface));
+  --search-result-bg: transparent;
+
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-3xs) var(--space-2xs);
+  padding: var(--space-xs) var(--space-s);
+  background: var(--search-result-bg);
+  border-radius: var(--border-radius-medium);
+  color: var(--color-text);
+  font-size: var(--size-step-min-1);
+  text-decoration: none;
+}
+
+:root[data-theme='dark'] .search-result a {
+  --search-result-icon: oklch(from var(--color-accent-blue) 0.5 calc(c * 1.6) h);
+  --search-result-text-color: color-mix(in oklab, var(--color-text) 72%, var(--search-surface));
+}
+
+.search-result svg {
+  grid-row: 1;
+  align-self: center;
+  flex: none;
+  inline-size: 0.95em;
+  block-size: 0.95em;
+  color: var(--search-result-icon);
+}
+
+.search-result-title {
+  grid-column: 2;
+  font-weight: var(--font-bold);
+}
+
+.search-result-text {
+  grid-column: 2;
+  /* Two lines, then an ellipsis — 140 characters runs to three on a wide panel. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color: var(--search-result-text-color);
+  font-size: var(--size-step-min-2);
+}
+
+.search-result a:hover,
+.search-result[aria-selected='true'] a,
+.search-result a:focus-visible {
+  --search-result-icon: var(--color-accent-orange);
+  --search-result-bg: color-mix(in oklab, var(--color-text) 4%, var(--search-surface));
+}
+
+.search-more {
+  /* 70% measured 3.68:1 in light. Light and dark run out of headroom at different points — 80/72 is the pair the mega-menu's count already proved. */
+  --search-more-color: color-mix(in oklab, var(--color-text) 80%, var(--search-surface));
+
+  margin: 0;
+  padding-inline: var(--space-s);
+  color: var(--search-more-color);
+  font-size: var(--size-step-min-2);
+}
+
+:root[data-theme='dark'] .search-more {
+  --search-more-color: color-mix(in oklab, var(--color-text) 72%, var(--search-surface));
+}
+
+.search-more:empty {
+  display: none;
+}

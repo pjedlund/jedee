@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-28] lint | Six oversized stylesheets split
+
+The last open item from the 2026-09-22 lint. `place-map`, `search`, `table`, `custom-card`, `breadcrumb` and `theme-toggle` were split along their seams into files included where the originals were; a declaration-level comparison of every built page before and after found no change except CSS that had shipped to pages which never used it. [[Tables]] shows the new include pair, [[The theme toggle]] names `sun-and-moon.css`, [[Text wrapping]] cites `breadcrumb-leaf.css`, and [[What jedee kept from Eleventy Excellent]] recounts twenty-eight local stylesheets.
+
 ## [2026-09-28] ingest | Netlify and Breadcrumb, and the rest of the 2026-09-22 lint
 
 Two pages for gaps the full-project lint named, written from the code. [[Netlify]] covers the deploy model, what jedee changed in Eleventy Excellent's `netlify.toml` (the `build:11ty` command, the second cached folder, per-path caching), the generated `_redirects`, and the two functions; it links [[Three things called cache]], [[Micropub]], [[Webmentions]], [[Permalinks and Obsidian-friendly filenames]] and [[The activities archive]]. [[Breadcrumb]] covers the WAI-ARIA pattern and BreadcrumbList, then jedee's one computed list rendered twice, the enriched leaf, the one-line clamp and the name reveal; it links [[Text wrapping]], [[Configuring a layout composition]], [[The main menu]], [[Choreographing CSS animations]], [[The lang attribute]], [[Font subsetting]] and [[One JSON-LD envelope for sixteen types]].

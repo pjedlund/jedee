@@ -1,0 +1,97 @@
+/*
+PLACE-MAP OVERLAY
+The maximize button and the modal overlay it opens; part of place-map.css, included beside it.
+*/
+
+/* Maximize button over the map's top-right corner. The global :focus-visible ring is fine here since the button sits outside the clipped map. */
+.place-map-maximize {
+  --place-map-btn-surface: color-mix(in srgb, var(--color-bg-accent) 92%, transparent);
+
+  position: absolute;
+  z-index: 1;
+  inset-block-start: var(--space-2xs);
+  inset-inline-end: var(--space-2xs);
+  display: grid;
+  place-items: center;
+  inline-size: 2.25rem;
+  block-size: 2.25rem;
+  padding: 0;
+  color: var(--color-text);
+  background: var(--place-map-btn-surface);
+  border: var(--stroke);
+  border-radius: var(--border-radius-small);
+  font-size: 1.25rem;
+  line-height: var(--leading-flat);
+  cursor: pointer;
+}
+.place-map-maximize:hover {
+  color: var(--color-headline);
+  border-color: color-mix(in oklab, var(--color-text) 30%, var(--color-bg));
+}
+
+/* --- maximize overlay: dark scrim, themed map (like the photo lightbox) --- */
+.place-map-overlay {
+  --place-map-overlay-inset: var(--space-m-l);
+
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: none;
+  padding: var(--place-map-overlay-inset);
+  background: color-mix(in srgb, var(--color-gray-900) 97%, transparent);
+}
+.place-map-overlay[data-open] {
+  display: block;
+}
+.place-map-overlay-frame {
+  position: relative;
+  block-size: 100%;
+  border: 1px solid color-mix(in oklab, var(--color-text) 20%, var(--color-bg));
+  border-radius: var(--border-radius-small);
+  overflow: hidden;
+  isolation: isolate; /* keeps the map's z-indexes below the close button */
+  background: color-mix(in oklab, var(--color-bg) 92%, var(--color-base-black)); /* pre-tile surface */
+}
+.place-map-overlay-frame .place-map-canvas {
+  block-size: 100%;
+  inline-size: 100%;
+}
+
+/* a little zoom on open — the "enlarge" gesture, like the image lightbox */
+@media (prefers-reduced-motion: no-preference) {
+  .place-map-overlay[data-open] .place-map-overlay-frame {
+    animation: place-map-zoom-in 220ms ease-out;
+  }
+  @keyframes place-map-zoom-in {
+    from {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+.place-map-overlay-close {
+  position: absolute;
+  z-index: 10; /* above the isolated frame */
+  inset-block-start: calc(var(--place-map-overlay-inset) + var(--space-2xs));
+  inset-inline-end: calc(var(--place-map-overlay-inset) + var(--space-2xs));
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  display: grid;
+  place-items: center;
+  color: var(--color-text);
+  background: color-mix(in srgb, var(--color-bg-accent) 92%, transparent);
+  border: var(--stroke);
+  border-radius: var(--border-radius-small);
+  font-size: 1.4rem;
+  line-height: var(--leading-flat);
+  cursor: pointer;
+}
+.place-map-overlay-close:hover {
+  color: var(--color-headline);
+  border-color: color-mix(in oklab, var(--color-text) 30%, var(--color-bg));
+}

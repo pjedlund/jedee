@@ -62,5 +62,5 @@ schema: BlogPosting
   {%- include 'css/post.css' -%}
   {%- include 'css/footnotes.css' -%}
   {%- include 'css/webmentions.css' -%}
-  {%- if photoExif and photoExif.gps and meta.mapApiKey and not photo.hideMap -%}{%- include 'css/place-map.css' -%}{%- endif -%}
+  {%- if photoExif and photoExif.gps and meta.mapApiKey and not photo.hideMap -%}{%- include 'css/place-map.css' -%}{%- include 'css/place-map-overlay.css' -%}{%- include 'css/place-map-places.css' -%}{%- endif -%}
 {%- endcss -%}

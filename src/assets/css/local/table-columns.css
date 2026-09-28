@@ -1,0 +1,32 @@
+/* TABLE COLUMNS — figures, units, numeric and icon columns, and dates inside cells. Included by base.njk beside table.css. */
+
+/* Lining, tabular figures wherever digits meet columns, in .prose or not; same slot list as utilities/numerals.css. */
+.table-wrapper {
+  --nums-figure: lining-nums;
+  --nums-spacing: tabular-nums;
+
+  font-variant-numeric: var(--nums-figure,) var(--nums-spacing,) var(--nums-fraction,) var(--nums-zero,);
+}
+
+/* A unit or qualifier on its own line under a column head: "km", "avg/max". */
+thead th small {
+  display: block;
+  font-size: inherit;
+}
+
+/* Number columns end-aligned so their digits line up; data-numeric goes on the head and its cells. */
+:is(th, td)[data-numeric] {
+  text-align: end;
+}
+
+/* An icon column: the head's label and the icon under it share the column's centre, so neither needs to know the other's width. The 1% keeps the column at that label's width instead of letting it take a share of the table's spare width, which would push the centre — and the first column's inset with it — off by half the slack; ⚠ under table-layout: fixed it would be taken literally. */
+:is(th, td)[data-icon] {
+  inline-size: 1%;
+  white-space: nowrap;
+  text-align: center;
+}
+
+/* A date wrapping onto three lines in a narrow column triples the row's height. */
+.table-wrapper td time {
+  white-space: nowrap;
+}

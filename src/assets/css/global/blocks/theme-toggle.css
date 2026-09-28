@@ -1,6 +1,6 @@
 /*
 THEME TOGGLE — animated sun ↔ moon
-Single icon button in the header, showing the CURRENT theme: sun in light, moon in dark. Switching to dark grows the sun's disc, fades and rotates its beams, and slides a masked circle in to carve the crescent. Adapted from Adam Argyle's "Building a theme switch component" (web.dev, MIT), rewritten flat with the easings inlined and motion gated on prefers-reduced-motion.
+Single icon button in the header, showing the CURRENT theme: sun in light, moon in dark. The icon's animation is sun-and-moon.css. Adapted from Adam Argyle's "Building a theme switch component" (web.dev, MIT), rewritten flat with the easings inlined and motion gated on prefers-reduced-motion.
 Progressive enhancement: hidden until <is-land> upgrades — a toggle that can't run shouldn't show. The no-flash theme itself is set by the inline theme-toggle.js.
 */
 .theme-toggle {
@@ -44,78 +44,10 @@ Progressive enhancement: hidden until <is-land> upgrades — a toggle that can't
   stroke-linecap: round;
 }
 
-/* sun, moon-mask and beams share a center pivot */
-.sun-and-moon > :is(.moon, .sun, .sun-beams) {
-  transform-origin: center center;
-}
-
-.sun-and-moon > .sun-beams {
-  stroke: currentColor;
-  stroke-width: 2px;
-}
-
 /* Moon: pale silver cooled by a whisper of blue, hover keeps the accent orange. ⚠ Mixed from blue-VIVID — accent-blue is desaturated enough that 12% of it barely tints. Why 12%: wiki, "The theme toggle". */
 :root[data-theme='dark'] .theme-toggle {
   --theme-toggle-color: color-mix(in oklab, var(--color-text) 88%, var(--color-blue-vivid));
   --theme-toggle-color-hover: var(--color-accent-orange);
-}
-
-/* DARK = moon: the disc grows, the beams fade, and the mask circle slides in to bite the crescent (cx where supported, translateX as a fallback). */
-[data-theme='dark'] .sun-and-moon > .sun {
-  transform: scale(1.75);
-}
-
-[data-theme='dark'] .sun-and-moon > .sun-beams {
-  opacity: 0;
-}
-
-[data-theme='dark'] .sun-and-moon > .moon > circle {
-  transform: translateX(-7px);
-}
-
-@supports (cx: 1px) {
-  [data-theme='dark'] .sun-and-moon > .moon > circle {
-    transform: translateX(0);
-    cx: 17px;
-  }
-}
-
-/* Motion only when the user is OK with it; reduced-motion gets an instant swap (the dark-state rules above still apply, minus the transitions). */
-@media (prefers-reduced-motion: no-preference) {
-  .sun-and-moon > .sun {
-    transition: transform 0.5s var(--ease-elastic-3);
-  }
-
-  .sun-and-moon > .sun-beams {
-    transition:
-      transform 0.5s var(--ease-elastic-4),
-      opacity 0.5s var(--ease-3);
-  }
-
-  .sun-and-moon > .moon > circle {
-    transition: transform 0.25s var(--ease-out-5);
-  }
-
-  @supports (cx: 1px) {
-    .sun-and-moon > .moon > circle {
-      transition: cx 0.25s var(--ease-out-5);
-    }
-  }
-
-  [data-theme='dark'] .sun-and-moon > .sun {
-    transition-timing-function: var(--ease-3);
-    transition-duration: 0.25s;
-  }
-
-  [data-theme='dark'] .sun-and-moon > .sun-beams {
-    transform: rotateZ(-25deg);
-    transition-duration: 0.15s;
-  }
-
-  [data-theme='dark'] .sun-and-moon > .moon > circle {
-    transition-delay: 0.25s;
-    transition-duration: 0.5s;
-  }
 }
 
 /* no JS / before hydration: hide the control entirely */

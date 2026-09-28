@@ -64,19 +64,6 @@ Top-left wayfinding that replaces the old site logo: the home crumb is the logom
   min-inline-size: 0;
 }
 
-.breadcrumb-current {
-  /* Single-line clamp + ellipsis. -webkit-line-clamp rather than `white-space: nowrap`, because the global `* { text-wrap: pretty }` reset re-enables wrapping even against an explicit nowrap. `min-inline-size: 0` lets this nested flex item shrink below its content so the clamp bites. */
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
-  overflow: hidden;
-  min-inline-size: 0;
-  color: var(--breadcrumb-color-current);
-  /* The trail's `line-height: 1` is fine for the uppercase ancestors (no descenders) but clips a lowercase leaf — most visibly the italic "y" in a Jam's "by". ⚠ Pinned to the same line: a -webkit-box rounds its own box up half a pixel, which is enough to leave the row a hair taller here than on the home page. */
-  line-height: var(--breadcrumb-leaf-leading);
-  block-size: var(--breadcrumb-line);
-}
-
 /* links: muted, brightening to full contrast on hover/keyboard focus (focus ring is global) */
 .breadcrumb a {
   /* The focus ring is drawn on the box, so the box carries the MENU trigger's block padding + radius and every crumb rings up the same shape and height as the header buttons. The negative margin hands the extra height straight back, so the header row is unchanged. */
@@ -129,14 +116,4 @@ Top-left wayfinding that replaces the old site logo: the home crumb is the logom
   rotate: 45deg;
   /* Nudge onto the cap height's optical centre, and left onto the box's: rotating a square 45deg leaves the two drawn borders entirely in the box's RIGHT half, which reads as the chevron sitting closer to the crumb after it. */
   translate: -0.08em -0.05em;
-}
-
-/* Connector words in a leaf — the Jam "by", the Like "on": a quiet italic against the uppercase trail. Uses the body face on purpose: the display serif loads only a bold italic, so a regular-weight italic in it would be a faux slant. */
-.breadcrumb-connector {
-  font-family: var(--font-base);
-  font-style: italic;
-  font-weight: var(--font-regular);
-  text-transform: none;
-  letter-spacing: normal;
-  color: var(--breadcrumb-color-ancestor);
 }

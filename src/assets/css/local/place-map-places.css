@@ -1,0 +1,129 @@
+/*
+PLACE-MAP PLACES
+Places mode (the activity index and its route pages): the pending caption, per-type colors, marker popups and the table's type icons; part of place-map.css, included beside it.
+*/
+
+/* --- places mode: the activity index. The server-rendered table is BOTH the map's data source and the no-JS / screen-reader path. --- */
+
+/* Caption inside the server-rendered map box, which reserves the map's space from first paint. The JS clears it when the live map takes over. */
+.place-map-pending {
+  display: grid;
+  place-items: center;
+  block-size: 100%;
+  margin: 0;
+  padding: var(--space-s);
+  text-align: center;
+  font-family: var(--font-base);
+  font-size: var(--size-step-min-2);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-text-accent);
+}
+/* The caption is for no-JS visitors only; with scripting on, the map is on its way and the text would just flash. */
+@media (scripting: enabled) {
+  .place-map-pending {
+    visibility: hidden;
+  }
+}
+
+/* One color per activity type (data-activity on each row), read by place-map.js for that row's dot. */
+[data-activity='orienteering'] {
+  --place-color: var(--color-accent-orange);
+}
+
+[data-activity='hike'] {
+  --place-color: var(--color-green-vivid);
+}
+
+[data-activity='run'] {
+  --place-color: var(--color-blue-vivid);
+}
+
+/* Marker popups (click a dot → the place's name, linked), themed like the rest of the chrome. The tip is a border triangle, so its color goes on whichever side faces the box. */
+[data-place-map-canvas].maplibregl-map .maplibregl-popup {
+  --place-popup-bg: var(--color-bg-accent);
+  --place-popup-shadow: var(--box-shadow-popup);
+}
+:root[data-theme='dark'] [data-place-map-canvas].maplibregl-map .maplibregl-popup {
+  --place-popup-shadow: var(--box-shadow-popup-dark);
+}
+[data-place-map-canvas].maplibregl-map .maplibregl-popup-content {
+  padding: 0.6em 2em 0.6em 0.9em;
+  background: var(--place-popup-bg);
+  color: var(--color-text);
+  border: var(--stroke);
+  border-radius: var(--border-radius-small);
+  box-shadow: var(--place-popup-shadow);
+  font-size: var(--size-step-min-2);
+  line-height: var(--leading-standard);
+}
+[data-place-map-canvas].maplibregl-map [class*='maplibregl-popup-anchor-top'] .maplibregl-popup-tip {
+  border-block-end-color: var(--place-popup-bg);
+}
+[data-place-map-canvas].maplibregl-map [class*='maplibregl-popup-anchor-bottom'] .maplibregl-popup-tip {
+  border-block-start-color: var(--place-popup-bg);
+}
+[data-place-map-canvas].maplibregl-map .maplibregl-popup-anchor-left .maplibregl-popup-tip {
+  border-inline-end-color: var(--place-popup-bg);
+}
+[data-place-map-canvas].maplibregl-map .maplibregl-popup-anchor-right .maplibregl-popup-tip {
+  border-inline-start-color: var(--place-popup-bg);
+}
+[data-place-map-canvas].maplibregl-map .maplibregl-popup-close-button {
+  color: var(--color-text-accent);
+  font-size: 1.2em;
+  padding-inline: 0.4em;
+}
+
+/* Hover moves the name AWAY from the popup surface, which is what --color-text-accent already does in both themes. */
+[data-place-map-canvas].maplibregl-map .maplibregl-popup-content a {
+  --place-popup-fade: 90ms;
+
+  color: var(--color-text);
+  font-weight: var(--font-bold);
+  text-decoration: none;
+  transition: color var(--place-popup-fade) var(--transition-timing);
+}
+[data-place-map-canvas].maplibregl-map .maplibregl-popup-content a:hover,
+[data-place-map-canvas].maplibregl-map .maplibregl-popup-content a:focus-visible {
+  color: var(--color-text-accent);
+}
+
+/* The date above the name: own line, a step down, regular italic. ⚠ Dimmed toward the popup surface at 80% (4.89:1 dark, 4.79:1 light) — 75% fails 4.5:1, re-measure before dimming further. */
+.place-popup-date {
+  display: block;
+  font-size: 0.85em;
+  font-weight: var(--font-regular);
+  line-height: var(--leading-fine);
+  color: color-mix(in oklab, var(--color-text) 80%, var(--color-bg-accent));
+}
+
+/* ACTIVITY TYPE ICON — the table's first column. One icon per activityType (src/assets/svg/activity/), the name beside it for screen readers. */
+.activity-type {
+  --activity-icon-size: 1em; /* the design draws the icon at the body text size */
+  --activity-icon-color: var(--color-text-accent); /* any type without a color below */
+
+  color: var(--activity-icon-color);
+}
+
+.activity-type-icon {
+  inline-size: var(--activity-icon-size);
+  block-size: var(--activity-icon-size);
+}
+
+/* Color per type, matching the Penpot design. The row carries data-activity; the palette values are the vivid pair each type already uses on the map. */
+[data-activity='run'] .activity-type {
+  --activity-icon-color: var(--color-blue-vivid);
+}
+
+[data-activity='orienteering'] .activity-type {
+  --activity-icon-color: var(--color-orange-500);
+}
+
+[data-activity='weight-training'] .activity-type {
+  --activity-icon-color: var(--color-red-vivid);
+}
+
+[data-activity='hike'] .activity-type {
+  --activity-icon-color: var(--color-green-vivid);
+}
