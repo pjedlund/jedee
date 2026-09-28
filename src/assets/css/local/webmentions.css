@@ -13,7 +13,7 @@ Build-time static render of received webmentions on article, note, and photo pag
   font-size: var(--size-step-0);
 }
 
-.webmentions__kinds {
+.webmentions .kinds {
   font-size: var(--size-step-min-1);
   font-weight: var(--font-regular);
   color: var(--color-text-accent);
@@ -50,17 +50,17 @@ Build-time static render of received webmentions on article, note, and photo pag
   --flow-space: var(--space-2xs);
 }
 
-.webmention__meta {
+.webmention > .cluster {
   --gutter: var(--space-2xs);
 }
 
-.webmention__author {
+.webmention .author {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2xs);
 }
 
-.webmention__author img {
+.webmention .author img {
   aspect-ratio: 1;
   inline-size: var(--size-step-1);
   block-size: var(--size-step-1);
@@ -70,7 +70,7 @@ Build-time static render of received webmentions on article, note, and photo pag
   background: var(--webmention-avatar-bg);
 }
 
-.webmention__date {
+.webmention time {
   font-size: var(--size-step-min-1);
   color: var(--color-text-accent);
 }

@@ -90,6 +90,12 @@ pre {
   --inline-code-shadow: var(--box-shadow-chip-dark);
 }
 
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) :where(:not(pre)) > code {
+    --inline-code-shadow: var(--box-shadow-chip-dark);
+  }
+}
+
 pre[class*='language-'] {
   overflow: auto;
   position: relative;

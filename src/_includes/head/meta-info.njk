@@ -63,7 +63,7 @@
     {{- meta.siteName -}}
   {%- endif -%}"
 />
-{# Three sources, most specific first. `ogCard` is a jam's composited card (npm run og:jams); `ogImage` is the post's own artwork self-hosted at build time (src/_config/utils/og-image.js), set by the photo and jam data files and null everywhere else; then Eleventy Excellent's generated title card for articles; then the site default. #}
+{# Four sources, most specific first. `ogCard` is an artwork post's composited card (npm run og:cards); `ogImage` is the post's own artwork self-hosted at build time (src/_config/utils/og-image.js), set by the photo and jam data files and null everywhere else; then Eleventy Excellent's generated title card for articles; then the site default. #}
 <meta
   property="og:image"
   content="{%- if ogCard -%}

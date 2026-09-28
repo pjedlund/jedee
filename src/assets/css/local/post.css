@@ -41,11 +41,6 @@ article h3 {
   object-position: center;
 }
 
-date {
-  font-size: var(--size-step-1);
-  color: var(--color-text-light);
-}
-
 .credit {
   font-size: var(--size-step-min-1);
   color: var(--color-text-accent);

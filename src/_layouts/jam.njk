@@ -39,13 +39,9 @@ schema: BlogPosting
       {{ content | safe }}
     </div>
 
-    {# Genre chips link into the /jams/genres/ index, which is built from this same
-       `genre` field and stays out of /tags/ on purpose (see genreList in
-       src/_config/collections.js). Slugged the same way the collection groups,
-       so a chip can't point at a page that doesn't exist. #}
+    {# Genre chips link into /jams/genres/, slugged the same way genreList groups them so a chip can't point at a missing page. #}
     {% if genre %}
-      {# A clipper template set to `text` rather than `multitext` yields a single
-         string here, which a bare {% for %} would walk character by character. #}
+      {# ⚠ A clipper property typed `text` gives one string, which a bare {% for %} walks character by character. #}
       {% set genres = [genre] if genre is string else genre %}
       <ul class="my-s-m cluster gutter-s" role="list">
         {% for name in genres | unwikilink %}

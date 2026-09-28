@@ -2,12 +2,7 @@
 
 <script webc:setup>
   function getPosterImage(slug) {
-    // Remote fallback poster, used only when no @poster is passed in. The layouts
-    // (jam.njk, video.njk) and markdown embeds pass a self-hosted, build-time
-    // optimized poster via @poster (the `youtubePoster` filter) — so the page
-    // normally makes no request to Google. This remote URL is the safety net for
-    // any embed that skips that wiring. (WebC's webc:setup can't run the async
-    // image pipeline itself, hence the filter.)
+    // Safety net only: embeds pass a self-hosted poster via @poster (the `youtubePoster` filter), so a page normally makes no request to Google.
     return `https://i.ytimg.com/vi/${slug}/maxresdefault.jpg`;
   }
   function getLinkUrl(slug, start) {

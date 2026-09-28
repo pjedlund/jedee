@@ -1,7 +1,7 @@
 ---
 description: "Why six of the sixteen post types can be published without a title, and what follows from having no p-name."
 date: 2026-07-31
-updated: 2026-09-22
+updated: 2026-09-28
 ---
 
 Six of the sixteen types can be published without a title: note, and the five response types — bookmark, reply, repost, like, rsvp. This isn't laziness in the schema. In IndieWeb terms a `p-name` is precisely what separates an *article* from a *note*, so a short post that invents a headline is mislabelled at the data level, not just visually.
@@ -13,12 +13,17 @@ Everything below follows from having no title.
 `entry-header.njk` guards the heading:
 
 ```njk
-{% if title %}
-  <h1 class="p-name">{{ title }}</h1>
+{% if title and subtitle %}
+  <hgroup class="flow">
+    <h1 class="p-name"{% if titleLang %} lang="{{ titleLang }}"{% endif %}>{{ title }}</h1>
+    <p>{{ subtitle }}</p>
+  </hgroup>
+{% elif title %}
+  <h1 class="p-name"{% if titleLang %} lang="{{ titleLang }}"{% endif %}>{{ title }}</h1>
 {% endif %}
 ```
 
-Nothing else in the layouts emits `p-name`. So a title-less post has no headline property at all, which is the correct reading for a note or a like, and the guard is the whole mechanism — there is no per-type switch.
+The `hgroup` branch only adds a subtitle beside the heading, and `titleLang` only marks its language (see [[The lang attribute]]). Nothing else in the layouts emits `p-name`. So a title-less post has no headline property at all, which is the correct reading for a note or a like, and the guard is the whole mechanism — there is no per-type switch.
 
 ## One card for five types
 

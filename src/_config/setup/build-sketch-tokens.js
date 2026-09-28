@@ -1,16 +1,9 @@
-/**
- * Build a flat Sketch payload from the jedee design tokens in `src/_data/designTokens/*.json`, ready to paste into a Sketch `run_code` script that creates Color Variables (swatches) and Text Styles.
- *
- * Workflow:
- *   1. Edit any file in src/_data/designTokens/ (if you edited colorsBase.json, run `npm run colors` first to regenerate colors.json)
- *   2. Run `npm run sketch:tokens`
- *   3. Feed `_local/sketch/sketch-tokens.json` to Sketch via the MCP `run_code` tool.
- *
- * Differences from the Penpot build (build-penpot-tokens.js), all forced by Sketch:
- *   - {curly.bracket} references are RESOLVED here. A Sketch swatch holds a hex, not a live link back to the palette, so the pushed file is a snapshot — re-run this after any token change.
- *   - Sketch has no light/dark switch on a swatch, so the semantic pair becomes two swatch groups, Light/… and Dark/….
- *   - Fluid Utopia sizes collapse to their `max` (desktop) value; Sketch has no fluid type.
- */
+// Builds a flat Sketch payload (swatches + text styles) from the design tokens, for the Sketch MCP's `run_code`.
+// Workflow: edit src/_data/designTokens/ (run `npm run colors` after colorsBase.json) → `npm run sketch:tokens` → feed `_local/sketch/sketch-tokens.json` to Sketch.
+// Unlike the Penpot build:
+//   {references}  -> resolved to hex ⚠ a snapshot, so re-run after any token change
+//   light/dark    -> two swatch groups, Light/… and Dark/…
+//   fluid sizes   -> the max (desktop) value
 
 import {readFile, writeFile, mkdir} from 'node:fs/promises';
 import {dirname, resolve} from 'node:path';

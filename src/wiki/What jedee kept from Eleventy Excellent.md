@@ -1,7 +1,7 @@
 ---
 description: "A systematic inventory of what jedee keeps unchanged from Eleventy Excellent and where it has deliberately diverged."
 date: 2026-07-31
-updated: 2026-09-22
+updated: 2026-09-28
 ---
 
 jedee is a fork of [Eleventy Excellent](https://eleventy-excellent.netlify.app/) by Lene Saile. Every other page in this wiki states EE-stock-versus-jedee where it happens to matter locally; this page states it systematically, so a claim on another page can be checked against one inventory.
@@ -49,7 +49,7 @@ Table: What jedee extended from the stock starter
 | WebC components | five | eight — adds `photo-lightbox.webc` ([[The PhotoSwipe lightbox]]), `place-map.webc` and `sortable-table.webc` |
 | Header chrome | `navigation.drawerNav` and `navigation.subMenu` booleans in `meta.js` | neither key exists; replaced by `breadcrumb` and `hideNav`, and one `nav-menu.js` in place of EE's `nav-drawer.js` + `nav-sub.js` |
 | Wikilinks | not shipped at all | `@photogabble/eleventy-plugin-interlinker` — see [[Wikilinks]] |
-| Per-page CSS | ten files in `css/local/` | twenty-one |
+| Per-page CSS | ten files in `css/local/` | twenty |
 | npm scripts | adds `screenshots` | drops `screenshots`; adds `design:md`, `penpot:tokens`, `fallback-font-style`, `test:unit` |
 
 **The interlinker is the consequential addition.** Vanilla EE does not ship it, which is exactly what made a vanilla checkout the decisive control when jedee's navigation rendered blank — see [[The interlinker's second render pass]]. Any oddity that only reproduces here and not upstream should be tested against that checkout before anything else.
@@ -78,7 +78,6 @@ So jedee removed almost exactly the set Lene marks as optional, and nothing beyo
 
 Two pieces of EE machinery are still in the tree with nothing referencing them. Both are the residue of a deletion, not a decision:
 
-- **`partials/details.njk` + `scripts/bundle/details.js`** — the disclosure UI that rendered the `src/docs/` collection into `/get-started/`. The collection is gone; no template includes the partial. `meta.details` (the expand/collapse button labels) is still in `meta.js` too.
 - **`partials/gallery.njk` + `scripts/bundle/dialog.js`** — EE's `<dialog>`-based lightbox, superseded by PhotoSwipe. No layout includes it.
 Each is a handful of kilobytes of source that compiles but ships to no page — the JS-and-partial equivalent of the orphan `local/*.css` problem. Nothing is broken; the note exists so the next reader doesn't take their presence as evidence the features are in use.
 
@@ -104,7 +103,7 @@ jedee already had its own `llms.njk`, sectioned by post type and fed from `setti
 
 **A file upstream changes back looks like any other conflict.** Keeping jedee's side is usually right, but the conflict looks the same whether upstream fixed a bug or undid something jedee changed on purpose. In 4.8.0, EE's `svg.js` became `async` again; jedee keeps it synchronous, because an async shortcode inside a conditional include renders empty under the interlinker ([[The interlinker's second render pass]]). The same merge showed the opposite case in `theme-toggle.js`: upstream fixed swapped dark and light `theme-color` values that jedee's reworked single-button toggle still carried, so that fix was merged in by hand rather than dropped with the rest of upstream's file.
 
-**Orphans keep taking upstream's changes.** The details partial and script listed above were both rewritten by the 4.8.0 merge, with nothing on the site to show for it. Since the partial auto-merged to new button attributes, jedee's older script would have stopped matching it; upstream's script was taken too, to keep the unused pair consistent.
+**Orphans keep taking upstream's changes.** The details partial and script (the disclosure UI for EE's `/get-started/` docs) were both rewritten by the 4.8.0 merge with nothing on the site to show for it, which is why they were deleted on 2026-09-28 along with `local/details.css` and `meta.details`. Expect the next upstream merge to offer them back; decline.
 
 The ordinary merge also depends on the fork still sharing history with upstream. Between 4.6.0 and 4.7.0 upstream rewrote its history (same file trees, new commits), so 4.7.0 was applied as a diff by hand and recorded with `git merge -s ours`, which gave 4.8.0 a normal merge base again.
 

@@ -20,7 +20,7 @@ const closeMenu = () => {
   buttonMenu.setAttribute('aria-expanded', 'false');
 };
 
-// close on Escape, return focus to the trigger. Match on event.key, not event.code: `code` is the PHYSICAL key position and comes through empty from input paths with no real key behind them (virtual keyboards, some assistive tech, remapping tools), which left those users unable to dismiss the panel.
+// close on Escape, return focus to the trigger. ⚠ Match on event.key, not event.code: `code` is empty from virtual keyboards and some assistive tech.
 nav.addEventListener('keyup', event => {
   if (event.key === 'Escape') {
     closeMenu();

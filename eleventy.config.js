@@ -27,7 +27,7 @@ import {resolveOrPlainText} from './src/_config/plugins/interlinker-resolver.js'
 import ignoreWikilinksInCode from './src/_config/plugins/interlinker-ignore-code.js';
 import shortcodes from './src/_config/shortcodes.js';
 
-// Caps how many of the ~370 images fetch + encode at once (default = CPU count), so fewer large buffers are live together — the memory that spikes a cold build. Module global, so this covers every eleventy-img path. Lower it if a cold build still OOMs; 4 measured no slower than the default.
+// Caps how many images fetch + encode at once, to keep a cold build's memory down. Lower it if a cold build still runs out of memory.
 import Image from '@11ty/eleventy-img';
 Image.concurrency = 4;
 
@@ -49,7 +49,7 @@ export default async function(eleventyConfig) {
   eleventyConfig.addWatchTarget('./src/assets/**/*.{css,js,svg,png,jpeg}');
   eleventyConfig.addWatchTarget('./src/_includes/**/*.{webc}');
 
-  // `npm run dev:mem` prints retained heap after each build — how the ~1 MB-per-page-rendered leak was measured. See the wiki "The dev server's memory".
+  // `npm run dev:mem` prints retained heap after each build. See the wiki "The dev server's memory".
   if (process.env.MEMLOG) {
     eleventyConfig.on('eleventy.after', async () => {
       global.gc?.(); global.gc?.();
@@ -58,10 +58,10 @@ export default async function(eleventyConfig) {
     });
   }
 
-  // `eleventy.before` rewrites both these dirs every build. .gitignore used to hide them from the watcher; the wiki dial below turns .gitignore off, so without these two lines each build retriggers itself — one CSS edit measured 18 rebuilds and climbing.
+  // ⚠ Keep these ignored or every build retriggers itself: `eleventy.before` rewrites both dirs, and the wiki dial turns .gitignore off. See the wiki "Watch loops".
   eleventyConfig.watchIgnores.add('src/_includes/css/**');
   eleventyConfig.watchIgnores.add('src/_includes/scripts/**');
-  // A global CSS save rebuilt all 681 pages — 12 seconds, and ~600 MB of heap Eleventy never gives back. Out of the watcher it costs nothing: watchGlobalCss recompiles the file, and the dev server below swaps the stylesheet in place. See the wiki "The dev server's memory".
+  // ⚠ Global CSS stays out of the watcher: watchGlobalCss recompiles it and the dev server swaps it in place, where a rebuild would cost every page. See the wiki "The dev server's memory".
   eleventyConfig.watchIgnores.add('src/assets/css/global/**');
   eleventyConfig.setServerOptions({watch: ['dist/assets/css/global.css']});
   // ⚠ The Obsidian vault is src/, and Eleventy reads the .gitignore line `.obsidian` as ./.obsidian at the repo root, so without this every Obsidian click (workspace.json) triggers a full rebuild. See the wiki "Watch loops".
@@ -143,7 +143,7 @@ export default async function(eleventyConfig) {
   eleventyConfig.setLibrary('md', plugins.markdownLib);
 
   // Appends markdown-it-abbr definitions from a `glossary` data key, so <abbr> comes from one list instead of per-page markup. Only src/wiki/ sets the key.
-  // ⚠ The key must NOT be called `abbreviations`: Eleventy hands the whole data object to markdown-it as its `env`, and markdown-it-abbr reads `env.abbreviations` as its own store — a same-named data key poisons it, and every abbreviation renders one character short with title="undefined".
+  // ⚠ The key must NOT be called `abbreviations`: markdown-it-abbr reads `env.abbreviations`, and Eleventy passes page data as the env.
   eleventyConfig.addPreprocessor('glossary', 'md', (data, content) => {
     if (!data.glossary) return;
     const defs = Object.entries(data.glossary).map(([short, long]) => `*[${short}]: ${long}`);
@@ -203,7 +203,7 @@ export default async function(eleventyConfig) {
   }
 
   // --------------------- Passthrough File Copy
-  // -- same path Audio/Video self-hosted media: Eleventy Image only moves images, so the co-located .mp3/.mp4/.vtt files need an explicit passthrough for the on-page <audio>/<video> src and the feed <enclosure> URL to resolve. `jams-social` holds the This Is My Jam liker/commenter avatars, recovered from the Wayback Machine and self-hosted; rendered with `eleventy:ignore` (like the template fallback avatar), so they need an explicit passthrough to reach dist.
+  // -- same path: self-hosted .mp3/.mp4/.vtt and the This Is My Jam avatars (`jams-social`, rendered with `eleventy:ignore`), which Eleventy Image never moves.
   ['src/assets/fonts/', 'src/assets/images/template', 'src/assets/images/recipes', 'src/assets/images/jams-social', 'src/assets/og-images', 'src/assets/audio', 'src/assets/video', 'src/assets/map'].forEach(path =>
     eleventyConfig.addPassthroughCopy(path)
   );
@@ -229,10 +229,8 @@ export default async function(eleventyConfig) {
     eleventyConfig.ignores.add('src/common/pa11y.njk');
   }
 
-  // ---------------------- LLM wiki (src/wiki/) — design plan §3/§6.
-  // Three working dial positions: "private" never builds the wiki; "local" builds it
-  // only outside production, so it's browsable in `npm start` but never on Netlify;
-  // "public" builds it everywhere, including production. The hard guarantee still holds: a production build (npm run build → ELEVENTY_ENV=production, what Netlify runs) only includes the wiki when the dial is explicitly "public" — never on "private"/"local".
+  // ---------------------- LLM wiki (src/wiki/): "private" never builds it, "local" builds it outside production only, "public" builds it everywhere.
+  // ⚠ A production build (what Netlify runs) includes the wiki only when the dial is explicitly "public".
   const wikiVisibility = settings?.wiki?.visibility;
   if (!['private', 'local', 'public'].includes(wikiVisibility)) {
     throw new Error(

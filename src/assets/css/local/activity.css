@@ -18,5 +18,7 @@ The recorded-data block on an activity post (activity.njk). Type-specific, so it
 .activity-stats dd {
   margin-inline-start: 0;
   font-size: var(--size-step-1);
-  font-variant-numeric: tabular-nums;
+  /* ⚠ Same slot list as utilities/numerals.css, so the prose's old-style figures stay. */
+  --nums-spacing: tabular-nums;
+  font-variant-numeric: var(--nums-figure,) var(--nums-spacing,) var(--nums-fraction,) var(--nums-zero,);
 }

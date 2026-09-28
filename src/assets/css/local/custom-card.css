@@ -118,17 +118,17 @@ custom-card[clickable] a:after {
   top: 0;
 }
 
-/* -------------------- recipe duration/yield badge --------------------  */
+/* -------------------- card badges --------------------  */
 
-/* Small pills in the recipe card's content slot (card-recipe.njk). Wrap + gap ride the .cluster composition via --gutter; this adds only the visual treatment. */
+/* Small pills in the content slot of the recipe, audio and video cards (duration, yield, episode). Wrap + gap ride the .cluster composition via --gutter; this adds only the visual treatment. */
 
-.recipe-badge {
+.card-badges {
   --gutter: var(--space-xs);
   margin-block-start: var(--space-xs);
   font-size: var(--size-step-min-2);
 }
 
-.recipe-badge [data-badge] {
+.card-badges [data-badge] {
   padding-inline: var(--space-xs);
   padding-block: 0.2em;
   border-radius: var(--border-radius-medium);
@@ -162,14 +162,14 @@ custom-card[clickable] a:after {
 .event-date-badge .month {
   font-size: var(--size-step-0);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--tracking-wide);
 }
 
 .event-date-badge .year {
   font-size: var(--size-step-min-1);
 }
 
-/* Event card meta line (card-event.njk): location + status on one wrapping line below the description — the same shape as .recipe-badge, so the status pill is a content-sized flex item rather than a stretched grid child. The pill's colors live in the global event-status block; this only spaces the line. */
+/* Event card meta line (card-event.njk): location + status on one wrapping line below the description — the same shape as .card-badges, so the status pill is a content-sized flex item rather than a stretched grid child. The pill's colors live in local/event-status.css; this only spaces the line. */
 
 .event-card-meta {
   --gutter: var(--space-xs);
@@ -178,71 +178,5 @@ custom-card[clickable] a:after {
 }
 
 .event-card-location {
-  font-weight: 600;
-}
-
-/* -------------------- audio/video duration badge --------------------  */
-
-/* Duration (+ episode) pill in the media cards' content slot (card-audio.njk / card-video.njk). Same treatment as .recipe-badge so the heavy types read consistently; its own class for semantics. */
-
-.media-badge {
-  --gutter: var(--space-xs);
-  margin-block-start: var(--space-xs);
-  font-size: var(--size-step-min-2);
-}
-
-.media-badge [data-badge] {
-  padding-inline: var(--space-xs);
-  padding-block: 0.2em;
-  border-radius: var(--border-radius-medium);
-  background-color: var(--color-bg);
-  color: var(--color-text);
-}
-
-/* -------------------- video play overlay --------------------  */
-
-/* A play affordance over the poster on video cards (card-video.njk). A grid pseudo-element in the `image` row, so it overlaps the poster without a hoisted child element — webc:nokeep would stretch one into its own grid cell (the Event lesson). :has(picture) keeps posterless embed cards clean. Decorative and non-interactive, so the card's link still gets the click. */
-
-custom-card[data-video]:has(picture) {
-  position: relative;
-}
-
-custom-card[data-video]:has(picture)::before {
-  content: "";
-  grid-row: image;
-  grid-column: 1 / -1;
-  z-index: 1;
-  align-self: center;
-  justify-self: center;
-  inline-size: 3rem;
-  block-size: 3rem;
-  border-radius: 50%;
-  background-color: color-mix(in oklab, var(--color-dark) 55%, transparent);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23fff'%3E%3Cpath d='M8 5v14l11-7z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: 56% center;
-  background-size: 38%;
-  pointer-events: none;
-}
-
-
-/* -------------------- missing-image mark --------------------  */
-
-/* The jedee mark, faint, behind every card picture: a cover that loads hides it; one that failed at build (eleventy:optional's 1×1 placeholder) shows it. ::before paints before the picture, so the card link's overlay stays on top. Video cards keep their play button on ::before instead. The path is logo.svg's; update it here if the mark changes. */
-
-custom-card> :is(picture, figure) {
-  grid-column: 1 / -1;
-}
-
-custom-card:has(> picture) img {
-  inline-size: 100%;
-}
-
-custom-card:has(> picture)::before {
-  content: "";
-  grid-row: image;
-  grid-column: 1 / -1;
-  background-color: color-mix(in oklab, var(--color-text) 12%, transparent);
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='m50 0 .588.003V0h9.706v30.882h-9.706v.009a19 19 0 0 0-.588-.009c-10.558 0-19.118 8.559-19.118 19.118S39.441 69.118 50 69.118 69.118 60.559 69.118 50V30.882C69.118 13.826 82.945 0 100 0v50c0 27.614-22.386 50-50 50S0 77.614 0 50 22.386 0 50 0'/%3E%3C/svg%3E") center / 40% no-repeat;
-  pointer-events: none;
+  font-weight: var(--font-bold);
 }

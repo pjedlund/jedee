@@ -1,7 +1,7 @@
 ---
 photo:
   src: ./src/assets/images/photos/pier-4-ribersborg.jpg
-  alt: A panoramic film frame at dusk — a calm, glassy sea under a soft pastel sky, the sun a small point low on the horizon at centre, a sandy beach in the foreground crossed by a curving band of dark seaweed, and a long low pier with railings reaching out into the water on the right. The black film rebate with “Kodak Ektar 100” edge markings frames the image.
+  alt: A panoramic film frame at dusk — a calm, glassy sea under a soft pastel sky, the sun a small point low on the horizon at center, a sandy beach in the foreground crossed by a curving band of dark seaweed, and a long low pier with railings reaching out into the water on the right. The black film rebate with “Kodak Ektar 100” edge markings frames the image.
   caption: View across the Sound towards Copenhagen at sunset — Ribersborg, Malmö.
   format: "6×17"
   exposure: 60 seconds

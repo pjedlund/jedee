@@ -1,16 +1,6 @@
-// Build-time, curated EXIF/IPTC/XMP extraction for photo posts.
-//
-// Reads an allowlisted, render-safe set of fields from a local image and splits them into two groups:
-//   - capture:  what made the photograph (camera, film date, place, GPS).
-//               The pinhole/lens line is intentionally NOT surfaced — the camera
-//               model already conveys the pinhole, so it read as redundant.
-//   - scan:     the digitization rig (the scanner's aperture/shutter/focal/lens,
-//               software, scan date) — labelled separately so f/8 · 1/60 is never
-//               mistaken for the pinhole's exposure.
-//
-// It DELIBERATELY never returns the creator contact fields (home address, phone, email) that live in the file's XMP — they must not reach a rendered page.
-//
-// Dates are formatted from the raw wall-clock string, never a revived Date — a Netlify build running in UTC would otherwise shift a midnight-local capture to the previous day.
+// Build-time EXIF/IPTC/XMP for photo posts, from an allowlist, split into `capture` (what made the photo) and `scan` (the scanner's settings, kept apart so they never read as the camera's).
+// ⚠ Never return the creator contact fields (address, phone, email) in the file's XMP.
+// ⚠ Format dates from the raw wall-clock string, never a Date: Netlify builds in UTC and would shift a midnight capture a day.
 import exifr from 'exifr';
 
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];

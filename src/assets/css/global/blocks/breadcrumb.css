@@ -131,7 +131,7 @@ Top-left wayfinding that replaces the old site logo: the home crumb is the logom
   translate: -0.08em -0.05em;
 }
 
-/* Connector words in a leaf — the Jam "by", the Like "on": a quiet italic against the uppercase trail. Uses the body face on purpose; it's the only family with a real italic loaded, so the display serif would give a faux slant instead of true italic glyphs. */
+/* Connector words in a leaf — the Jam "by", the Like "on": a quiet italic against the uppercase trail. Uses the body face on purpose: the display serif loads only a bold italic, so a regular-weight italic in it would be a faux slant. */
 .breadcrumb-connector {
   font-family: var(--font-base);
   font-style: italic;

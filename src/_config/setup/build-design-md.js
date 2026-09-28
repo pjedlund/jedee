@@ -1,20 +1,10 @@
-/**
- * Regenerate the YAML front matter in `DESIGN.md` from the design tokens in `src/_data/designTokens/*.json`. The markdown body below the front matter is preserved verbatim — humans own the prose; this script owns the tokens.
- *
- * The generated front matter conforms to the alpha DESIGN.md spec:
- *   https://github.com/anthropic-ai (see DESIGN.md and spec.md)
- *
- * Workflow:
- *   1. Edit any file in src/_data/designTokens/ (if you edited colorsBase.json, run `npm run colors` first)
- *   2. Run `npm run design:md`  (or `npm run penpot:tokens` which chains both)
- *   3. Review the diff. The markdown body below the second `---` is untouched.
- *
- * Mapping rules:
- *   - Semantic roles (primary/secondary/tertiary/neutral) follow the SEMANTIC_ROLES map at the top of this file. Edit it to rebrand.
- *   - Surface / on-surface tokens resolve from semanticColors.json (→ palette tokens). Dark theme is emitted with a `-dark` suffix (the spec has no theming concept; relies on its "unknown token name → accept if valid" rule).
- *   - Typography composites resolve from typography.json via the {font.*} references into fonts/textWeights/textSizes/textLeading. Font sizes collapse the Utopia {min,max} pair to the max in px, matching Penpot's tokens.
- *   - Components are defined inline in the COMPONENTS map below — token references, not inferred from JSON.
- */
+// Regenerates DESIGN.md's YAML front matter from the design tokens; the markdown body is left untouched, since people own the prose.
+// Workflow: edit src/_data/designTokens/ (run `npm run colors` after colorsBase.json) → `npm run design:md` (or `penpot:tokens`, which runs both) → review the diff.
+// Mapping:
+//   semantic roles  -> the SEMANTIC_ROLES map below; edit it to rebrand
+//   surfaces        -> semanticColors.json; dark values get a `-dark` suffix
+//   typography      -> typography.json, font sizes at the max in px
+//   components      -> the COMPONENTS map below
 
 import {mkdir, readFile, writeFile} from 'node:fs/promises';
 import {dirname, resolve} from 'node:path';
@@ -84,11 +74,11 @@ const COMPONENTS = {
 	},
 	link: {
 		textColor: '{colors.on-surface}',
-		underlineColor: '{colors.orange-600}',
+		underlineColor: '{colors.accent-orange}',
 	},
 	'link-hover': {
 		textColor: '{colors.accent-orange}',
-		underlineColor: '{colors.accent-red-subdued}',
+		underlineColor: '{colors.accent-orange}',
 	},
 	blockquote: {
 		backgroundColor: '{colors.surface}',
@@ -320,7 +310,6 @@ async function build() {
 		if (k.startsWith('$')) continue;
 		out.rounded[roundedNameMap[k] ?? k] = v.$value;
 	}
-	out.rounded.full = '9999px';
 
 	// ---- spacing ----
 	out.spacing.base = fluidMaxToPx(textSizes['step-0']?.$value);

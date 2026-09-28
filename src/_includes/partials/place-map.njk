@@ -1,13 +1,6 @@
-{#
-  Static map for a post's location, linked to OpenStreetMap. A plain <img> (NOT the local-only {% image %} shortcode, and NOT a WebC component): the eleventy-img HTML transform runs BEFORE the WebC transform, so only a Nunjucks-emitted <img> gets fetched + self-hosted — a WebC-emitted one would ship the raw keyed URL. Same remote-cover pattern as reading/watching/jam.
-
-  - `src | safe`                       keeps the multi-param URL's literal '&' (an escaped '&amp;' makes eleventy-img fetch a 404 → fatal build — see the eleventy-excellent remote-image note).
-  - `eleventy:optional="placeholder"`  a failed fetch (bad key, quota, outage) becomes a placeholder, so the keyed URL is never left in the HTML.
-
-  Bare-include-friendly: no async shortcode, so the interlinker {% if %}-blank trap doesn't apply even though photo.njk wraps this include in {% if showMap %}. This is the no-JS fallback for the <place-map> element — 16:9 to match the live map that replaces it on idle; zoom matches place-map.js's default.
-
-  The CALLER supplies the coordinates, so the same partial serves any post type that knows where it happened — photo.njk passes them from EXIF, audio.njk from front matter. Expects in context: mapLat, mapLon, meta.mapApiKey; optionally mapZoom, mapPlace, and mapSubject (the "where this ___" clause in the alt text).
-#}
+{# Static map for a post's location, linked to OpenStreetMap; the no-JS fallback for <place-map>. Expects mapLat, mapLon, meta.mapApiKey; optionally mapZoom, mapPlace, mapSubject (the alt text's "where this ___"). #}
+{# ⚠ A plain Nunjucks <img>, never {% image %} or WebC: the image transform runs before WebC, so only this gets self-hosted. #}
+{# ⚠ `src | safe` keeps the URL's literal `&` (escaped, the fetch 404s and fails the build); `eleventy:optional` turns a failed fetch into a placeholder. #}
 {%- set mz = mapZoom or 13 -%}
 {%- set mapSubject = mapSubject or "this was recorded" -%}
 {%- set center = mapLon ~ "," ~ mapLat -%}

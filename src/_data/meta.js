@@ -77,11 +77,6 @@ export const blog = {
   paginationNext: 'Next',
   paginationNumbers: true
 };
-export const details = {
-  aria: 'section controls',
-  expand: 'expand all',
-  collapse: 'collapse all'
-};
 export const dialog = {
   close: 'Close',
   next: 'Next',
