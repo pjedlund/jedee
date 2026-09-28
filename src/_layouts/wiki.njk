@@ -17,7 +17,7 @@ layout: base
         <a class="meta-item" href="/wiki/">{% svg "posts/book", "", "meta-icon" %}Wiki</a>
         <span class="meta-item">{% svg "posts/calendar", "", "meta-icon" %}{% set definedDate = date %}{% include "partials/date.njk" %}</span>
         {%- if updated %}<span>Updated <time datetime="{{ updated | toIsoString }}">{{ updated | formatDate('D MMM YYYY') }}</time></span>{% endif %}
-        {%- if meta.viewRepo.allow %}<a class="meta-item" href="{{ settings.repos.site }}/commits/main/{{ page.inputPath | replace('./', '') | replace(' ', '%20') }}">{% svg 'platform/github', '', 'meta-icon' %}Revision history</a>{% endif %}
+        {%- if meta.viewRepo.allow %}<a class="meta-item" data-meta-tight href="{{ settings.repos.site }}/commits/main/{{ page.inputPath | replace('./', '') | replace(' ', '%20') }}">{% svg 'platform/github', '', 'meta-icon' %}Revision history</a>{% endif %}
       </p>
     {% endif %}
 
