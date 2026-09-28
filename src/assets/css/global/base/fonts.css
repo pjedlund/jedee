@@ -6,7 +6,7 @@
   font-style: normal;
   font-display: swap;
   font-weight: 700;
-  src: local('Source Serif'), url('/assets/fonts/source-serif/source-serif.woff2') format('woff2');
+  src: url('/assets/fonts/source-serif/source-serif.woff2') format('woff2');
 }
 
 /* ⚠ Same character list as source-serif.woff2 — a character added to only one of the two falls back in the other. */
@@ -33,7 +33,7 @@
   font-style: normal;
   font-display: swap;
   font-weight: 100 1000;
-  src: local('Source Sans'), url('/assets/fonts/source-sans/source-sans.woff2') format('woff2');
+  src: url('/assets/fonts/source-sans/source-sans.woff2') format('woff2');
 }
 
 /* ⚠ Same treatment as the serif: 92.5% scored 12/13 viewport widths against Capsize's 93.7639% at 10/13, overrides rescaled to keep the vertical box identical. */
@@ -78,7 +78,7 @@
   font-family: 'Source Code Pro';
   font-display: swap;
   font-weight: 200 900;
-  src: local('Source Code Pro'), url('/assets/fonts/source-code-pro/source-code-pro.woff2') format('woff2');
+  src: url('/assets/fonts/source-code-pro/source-code-pro.woff2') format('woff2');
 }
 
 @font-face {
