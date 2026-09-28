@@ -14,7 +14,7 @@ layout: base
 
     {% if date %}
       <p class="meta | text-step-min-1">
-        <span class="meta-item">{% svg "posts/book", "", "meta-icon" %}<a href="/wiki/">Wiki</a></span> ·
+        <a class="meta-item" href="/wiki/">{% svg "posts/book", "", "meta-icon" %}Wiki</a> ·
         {% set definedDate = date %}{% include "partials/date.njk" %}
         {%- if updated %} · Updated <time datetime="{{ updated | toIsoString }}">{{ updated | formatDate('D MMM YYYY') }}</time>{% endif %}
         {%- if meta.viewRepo.allow %} · <a href="{{ settings.repos.site }}/commits/main/{{ page.inputPath | replace('./', '') | replace(' ', '%20') }}">{% svg 'platform/github', '', 'meta-icon' %}Revision history</a>{% endif %}
