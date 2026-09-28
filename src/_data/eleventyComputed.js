@@ -19,9 +19,9 @@ const titleCase = segment =>
 const sectionLabel = segment => EXTRA_LABELS[segment] || titleCase(segment);
 
 export default {
-  // Activity titles are a Swedish/English mix from Strava; flag the Swedish ones so the shared entry-header h1 can carry lang="sv". Only for activities — other post types keep the page's `en` default. See utils/looks-swedish.js for the detection rationale.
+  // A front-matter titleLang wins; otherwise activity titles (a Swedish/English mix from Strava) get flagged when Swedish, so the shared entry-header h1 can carry lang="sv". See utils/looks-swedish.js for the detection rationale.
   titleLang: data =>
-    data.category === 'activity' && looksSwedish(data.title) ? 'sv' : undefined,
+    data.titleLang ?? (data.category === 'activity' && looksSwedish(data.title) ? 'sv' : undefined),
 
   breadcrumbs: data => {
     const url = data && data.page && data.page.url;
