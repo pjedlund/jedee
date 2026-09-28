@@ -1,0 +1,50 @@
+/*
+META LINE
+The dim type/date/revision line under a post or wiki title (partials/entry-header.njk, wiki.njk). Its links carry no underline and light up on hover instead.
+*/
+.meta {
+  --meta-color: var(--color-text-dim);
+  --meta-color-lit: var(--color-text-lit);
+  --meta-glow-lit: var(--text-glow-lit);
+  --meta-fade: 150ms;
+  --meta-link-pad-block: var(--space-2xs);
+  --meta-link-pad-inline: var(--space-xs);
+
+  font-size: var(--size-step-min-1);
+  color: var(--meta-color);
+}
+
+.meta a {
+  /* Padding gives the focus ring room around the label, like the header buttons; the negative margin hands it back so nothing moves. */
+  --focus-offset: 0;
+
+  padding: var(--meta-link-pad-block) var(--meta-link-pad-inline);
+  margin: calc(var(--meta-link-pad-block) * -1) calc(var(--meta-link-pad-inline) * -1);
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--meta-fade) ease-out, text-shadow var(--meta-fade) ease-out;
+}
+
+.meta a:hover,
+.meta a:focus-visible {
+  color: var(--meta-color-lit);
+  text-shadow: var(--meta-glow-lit);
+}
+
+/* An icon + its label on the meta line, kept together. ⚠ Not inline-flex: a flex box takes its baseline from the icon's bottom edge and lifts the label off the line. */
+.meta-item {
+  white-space: nowrap;
+}
+
+/* Centres a 1em icon on the capital height, the optical middle of the label. */
+.meta-icon {
+  inline-size: 1em;
+  block-size: 1em;
+  vertical-align: calc(0.5cap - 0.5em);
+  margin-inline-end: 0.35em;
+}
+
+/* The star row is a flex box whose baseline is a star's bottom edge; this centres it on the capital height like the icons. */
+.meta .meta-rating {
+  vertical-align: calc(0.5cap - 0.5em);
+}

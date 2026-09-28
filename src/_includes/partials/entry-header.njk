@@ -27,10 +27,14 @@
   %}
 {% endif %}
 
-<p class="meta | cluster gutter-xs-s">
+<p class="meta | cluster gutter-s-m">
   {%- if draft -%}
     <span class="button" data-small-button data-button-variant="tertiary">draft</span>
   {%- endif %}
+  {# The post type, linked to its archive — icon and name come from navigation.postTypes, matched on the folder's category. #}
+  {%- for pt in navigation.postTypes %}{% if pt.collection == category %}
+    <a class="meta-item" href="{{ pt.url }}">{% svg 'posts/' + pt.icon, '', 'meta-icon' %}{{ pt.text }}</a>
+  {%- endif %}{% endfor %}
   {# Activity pages only: the activity type with its own glyph, to the left of the date. activityType is set only on activity posts, so this block never renders on other types. Small local icon+label map — Johan's four types ("Gym" is the weight-training label). #}
   {%- if activityType %}
     {%- set activityMeta = {
@@ -55,3 +59,7 @@
      | Updated: {{ updatedDate | formatDate('MMMM D, YYYY') }}
   {% endif %}
 </p>
+
+{% css "local" %}
+  {% include "css/meta.css" %}
+{% endcss %}

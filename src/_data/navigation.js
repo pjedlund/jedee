@@ -13,7 +13,7 @@ export default {
     {text: 'Jams', url: '/jams/', icon: 'music', collection: 'jam'},
     {text: 'Photos', url: '/photos/', icon: 'camera', collection: 'photo'},
     {text: 'Recipes', url: '/recipes/', icon: 'chef-hat', collection: 'recipe'},
-    {text: 'Events', url: '/events/', icon: 'calendar', collection: 'event'},
+    {text: 'Events', url: '/events/', icon: 'ticket', collection: 'event'},
     {text: 'Bookmarks', url: '/bookmarks/', icon: 'bookmark', collection: 'bookmark'},
     {text: 'Replies', url: '/replies/', icon: 'reply', collection: 'reply'},
     {text: 'Reposts', url: '/reposts/', icon: 'repeat-2', collection: 'repost'},
