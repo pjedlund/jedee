@@ -1,0 +1,42 @@
+/*
+META LINE
+The dim type/date/revision line under a post or wiki title (partials/entry-header.njk, wiki.njk). Its links carry no underline and light up on hover instead.
+*/
+.meta {
+  --meta-color: var(--color-text-dim);
+  --meta-color-lit: var(--color-text-lit);
+  --meta-glow-lit: var(--text-glow-lit);
+
+  font-size: var(--size-step-min-1);
+  color: var(--meta-color);
+}
+
+.meta a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--transition-duration) ease-out, text-shadow var(--transition-duration) ease-out;
+}
+
+.meta a:hover,
+.meta a:focus-visible {
+  color: var(--meta-color-lit);
+  text-shadow: var(--meta-glow-lit);
+}
+
+/* An icon + its label on the meta line, kept together. ⚠ Not inline-flex: a flex box takes its baseline from the icon's bottom edge and lifts the label off the line. */
+.meta-item {
+  white-space: nowrap;
+}
+
+/* Centres a 1em icon on the capital height, the optical middle of the label. */
+.meta-icon {
+  inline-size: 1em;
+  block-size: 1em;
+  vertical-align: calc(0.5cap - 0.5em);
+  margin-inline-end: 0.35em;
+}
+
+/* The star row is a flex box whose baseline is a star's bottom edge; this centres it on the capital height like the icons. */
+.meta .meta-rating {
+  vertical-align: calc(0.5cap - 0.5em);
+}

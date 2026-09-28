@@ -50,21 +50,3 @@ article h3 {
   transform: translateY(-4ch) translateX(-0.5ch);
   max-inline-size: fit-content;
 }
-
-.meta {
-  font-size: var(--size-step-min-1);
-  color: var(--color-text-dim);
-}
-
-/* An icon + its label on the meta line (activity type, date). The cluster gap keeps the items apart; this keeps each glyph tight to its own text. */
-.meta-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35em;
-}
-
-.meta-icon {
-  flex: none;
-  inline-size: 1em;
-  block-size: 1em;
-}
