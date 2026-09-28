@@ -66,6 +66,8 @@
 
   --color-text-accent: var(--color-gray-700);
   --color-text-subdued: var(--color-base-subdued);
+  /* The dimmest text still at 4.5:1 on --color-bg (4.58). ⚠ Tuned for --color-bg only; on another surface re-check contrast. */
+  --color-text-dim: color-mix(in srgb, var(--color-gray-500) 60%, var(--color-gray-400));
   --color-bg-accent: var(--color-base-white);
   --color-bg-accent-2: var(--color-gray-300);
   /* Hairline rules. Warmer than the gray ramp, to sit on the warm page rather than cut across it. */
@@ -95,6 +97,7 @@
 
     --color-text-accent: var(--color-gray-200);
     --color-text-subdued: var(--color-gray-300);
+    --color-text-dim: var(--color-gray-400);
     --color-bg-accent: var(--color-gray-700);
     --color-bg-accent-2: var(--color-gray-600);
     --color-rule: var(--color-base-rule-dark);
@@ -121,6 +124,7 @@
 
   --color-text-accent: var(--color-gray-200);
   --color-text-subdued: var(--color-gray-300);
+  --color-text-dim: var(--color-gray-400);
   --color-bg-accent: var(--color-gray-700);
   --color-bg-accent-2: var(--color-gray-600);
   --color-rule: var(--color-base-rule-dark);

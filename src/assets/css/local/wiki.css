@@ -43,3 +43,8 @@ Shots whose subject has its own rounded, transparent corners — a device frame,
   border: none;
   border-radius: 0;
 }
+
+/* The date/revision line under the title, as dim as AA allows (4.5:1). */
+.meta {
+  color: var(--color-text-dim);
+}
