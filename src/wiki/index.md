@@ -25,6 +25,7 @@ Each entry below says what a page covers and why you would open it. The traps an
 - [[Line length]] — how many characters a line of text should hold, why `60ch` is not 60 characters, and why the capped blocks hang from the left edge rather than being centered.
 - [[The theme toggle]] — one SVG sun masked into a moon, and the inline script that prevents a flash of the wrong theme.
 - [[Focus rings and paint containment]] — why an outline drawn outside its element disappears inside anything that clips.
+- [[Breadcrumb]] — a trail of links in a labeled `nav`, the structured data that mirrors it, and keeping a header row on one line.
 - [[The main menu]] — a disclosure menu whose button is added by script, so the CSS has to detect its absence from the markup alone.
 - [[Choreographing CSS animations]] — sequencing a multi-step animation without JavaScript: named step times, `clip-path` wipes, and a caret that tracks the wipe.
 - [[Scroll-aware CSS during view transitions]] — a tested finding about what reaches the view-transition pseudo-elements. Not shipped.
@@ -59,6 +60,7 @@ Each entry below says what a page covers and why you would open it. The traps an
 
 ## Build & delivery
 
+- [[Netlify]] — the host that builds on every push: headers and redirects from files, the two serverless endpoints, and what a clean build machine has to carry over.
 - [[Three things called cache]] — the build cache, the browser cache and the service-worker cache, and why this site busts cache by inlining rather than by hashed filenames.
 - [[The service worker's three strategies]] — network-first pages, cache-first assets, and a cache that clears itself on every deploy, in about 25 lines.
 - [[Prefetching]] — fetching the next page before the click with speculation rules, and the script libraries that predate them.

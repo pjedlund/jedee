@@ -5,6 +5,12 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-28] ingest | Netlify and Breadcrumb, and the rest of the 2026-09-22 lint
+
+Two pages for gaps the full-project lint named, written from the code. [[Netlify]] covers the deploy model, what jedee changed in Eleventy Excellent's `netlify.toml` (the `build:11ty` command, the second cached folder, per-path caching), the generated `_redirects`, and the two functions; it links [[Three things called cache]], [[Micropub]], [[Webmentions]], [[Permalinks and Obsidian-friendly filenames]] and [[The activities archive]]. [[Breadcrumb]] covers the WAI-ARIA pattern and BreadcrumbList, then jedee's one computed list rendered twice, the enriched leaf, the one-line clamp and the name reveal; it links [[Text wrapping]], [[Configuring a layout composition]], [[The main menu]], [[Choreographing CSS animations]], [[The lang attribute]], [[Font subsetting]] and [[One JSON-LD envelope for sixteen types]].
+
+The same session closed the lint's other wiki findings: [[The title-less post types]] quotes the current entry-header guard, [[The lang attribute]] documents the front-matter `titleLang` override the Swedish note now uses, and [[What jedee kept from Eleventy Excellent]] records the details partial's deletion and recounts twenty local stylesheets. Sources written to `src/_raw/dev-notes/`.
+
 ## [2026-09-22] ingest | Format on save, and Undefined custom properties enriched
 
 From the session that built the `lint` skill. New page [[Format on save]]: Nova's Prettier extension saved `styleguide.njk` empty when the `jinja-template` parser failed on it, the second time after `reading.njk` in July, and the empty file was committed and pushed. The page covers the general failure, the three guards (an ignore file, reading the diff, a pre-commit hook), and jedee's two: `*.njk` in `.prettierignore` and the local hook, quoted in full. It links [[Sveltia CMS]], the other tool that rewrites a file on save. [[Undefined custom properties]] enriched with the recurrence: three more upstream names the lint found, and the cause, the stack skills listing plain EE token names as the project's own. Sources written to `src/_raw/dev-notes/`.
