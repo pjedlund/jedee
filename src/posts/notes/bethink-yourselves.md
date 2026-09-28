@@ -1,6 +1,6 @@
 ---
 title: Bethink Yourselves!
-description: Leo Tolstoys avslutningningsord i Betänken Eder.
+description: Leo Tolstoys avslutningsord i Betänken Eder.
 date: 2026-06-01T21:08:20.943Z
 draft: false
 ---
