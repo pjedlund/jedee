@@ -53,6 +53,7 @@ article h3 {
 
 .meta {
   font-size: var(--size-step-min-1);
+  color: var(--color-text-dim);
 }
 
 /* An icon + its label on the meta line (activity type, date). The cluster gap keeps the items apart; this keeps each glyph tight to its own text. */
