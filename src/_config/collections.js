@@ -57,8 +57,7 @@ export const genreList = collection => {
     const values = Array.isArray(item.data.genre) ? item.data.genre : [item.data.genre];
 
     unwikilink(values).forEach(raw => {
-      // unwikilink's pattern needs at least one char between the brackets, so an
-      // empty "[[]]" survives it — strip any leftovers so they can't reach a URL.
+      // An empty "[[]]" survives unwikilink, so strip leftover brackets before they reach a URL.
       const name = typeof raw === 'string' ? raw.replace(/[[\]]/g, '').trim() : '';
       if (!name) return;
       const slug = slugifyString(name);
@@ -73,9 +72,7 @@ export const genreList = collection => {
 
   return Array.from(groups.values())
     .map(({slug, spellings, items}) => ({
-      // Case drift means one genre can arrive spelled several ways. The most
-      // common spelling wins the label, ties broken alphabetically — otherwise
-      // the label would depend on which jam the build happened to read first.
+      // The most common spelling wins the label, ties alphabetical, so it doesn't depend on read order.
       name: Array.from(spellings.entries()).sort(
         (a, b) => b[1] - a[1] || a[0].localeCompare(b[0])
       )[0][0],

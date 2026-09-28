@@ -1,18 +1,8 @@
-{#
-  The activity index: a map of every located activity, and under it every activity as a table row, newest first, all types mixed. The lat/lon frontmatter is backfilled from Eventor arena positions (script: _local/generated/eventor-coords.py) and, for the rest, the Strava export.
-
-  The table is BOTH the page's index and the map's data source: <place-map> reads the <tr data-lat data-lon> rows on idle and drops one dot per located activity above it, named and linked from the row's first <a> — ⚠ keep the activity link the first link in the row. Rows without coordinates (indoor sessions) stay listed, just unmapped. Without JS this is the complete index by design, not a degraded state — Leaflet's markers have broken keyboard and screen-reader handling upstream, so nobody is routed through the map to reach a post.
-
-  Iterate collections.activity DIRECTLY, not through | located. `byCategory` already reverses the collection to newest-first, and `located` reverses again — the two cancelled out and the list ran oldest-first for months.
-
-  The empty .place-map-live box is rendered here on purpose. place-map.js used to create and prepend it after idle, which shoved the whole list down on every load; its 16:9 aspect-ratio now holds the space from first paint and the JS adopts this box instead of building one.
-
-  The Type column is an icon per activityType (src/assets/svg/activity/<type>.svg, colored per type in place-map.css) with the type name beside it for screen readers and sorting. A type with no icon file fails the build by name — add the SVG rather than a fallback.
-
-  Sorting is <sortable-table> (webc/sortable-table.webc): data-sort is the raw value a column sorts by. data-table-priority columns drop out as the table narrows, Pace first, then Heart rate, Distance, Time (table.css); Type, Date and Activity always stay, and each activity's page shows them all.
-
-  No async shortcodes here, so the interlinker {% if %}-include trap doesn't apply.
-#}
+{# The activity index: every activity as a table row, newest first, and above it a map that reads its dots from those rows; without JS the table is the complete index. See the wiki "The place map". #}
+{# ⚠ Keep the activity link the first link in each row: the map names and links each dot from it. #}
+{# ⚠ Iterate collections.activity directly, not through | located: both reverse, and together they list oldest-first. #}
+{# ⚠ The empty .place-map-live box is rendered here so its aspect-ratio holds the space from first paint; the JS adopts it. #}
+{# ⚠ A type with no icon in src/assets/svg/activity/ fails the build by name: add the SVG, not a fallback. #}
 <place-map @place="my activities">
   {%- if collections.activity | located | length %}
     <div class="place-map-live" data-place-map-box>

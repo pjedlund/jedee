@@ -1,7 +1,7 @@
 ---
 description: "A systematic inventory of what jedee keeps unchanged from Eleventy Excellent and where it has deliberately diverged."
 date: 2026-07-31
-updated: 2026-09-22
+updated: 2026-09-28
 ---
 
 jedee is a fork of [Eleventy Excellent](https://eleventy-excellent.netlify.app/) by Lene Saile. Every other page in this wiki states EE-stock-versus-jedee where it happens to matter locally; this page states it systematically, so a claim on another page can be checked against one inventory.
@@ -49,7 +49,7 @@ Table: What jedee extended from the stock starter
 | WebC components | five | eight — adds `photo-lightbox.webc` ([[The PhotoSwipe lightbox]]), `place-map.webc` and `sortable-table.webc` |
 | Header chrome | `navigation.drawerNav` and `navigation.subMenu` booleans in `meta.js` | neither key exists; replaced by `breadcrumb` and `hideNav`, and one `nav-menu.js` in place of EE's `nav-drawer.js` + `nav-sub.js` |
 | Wikilinks | not shipped at all | `@photogabble/eleventy-plugin-interlinker` — see [[Wikilinks]] |
-| Per-page CSS | ten files in `css/local/` | twenty-one |
+| Per-page CSS | ten files in `css/local/` | twenty |
 | npm scripts | adds `screenshots` | drops `screenshots`; adds `design:md`, `penpot:tokens`, `fallback-font-style`, `test:unit` |
 
 **The interlinker is the consequential addition.** Vanilla EE does not ship it, which is exactly what made a vanilla checkout the decisive control when jedee's navigation rendered blank — see [[The interlinker's second render pass]]. Any oddity that only reproduces here and not upstream should be tested against that checkout before anything else.

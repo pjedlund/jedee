@@ -1,11 +1,7 @@
-{#
-  Photo metadata block: capture facts (visible, left) + a static map (right, stacks on mobile) + downloads + the public-domain line + a collapsible scan/technical block.
-
-  - `photoExif`        build-time extracted, render-safe (src/_config/utils/exif.js)
+{# Photo metadata block: capture facts, downloads, the public-domain line and a collapsible scan block. Expects:
+  - `photoExif`        build-time, render-safe (src/_config/utils/exif.js)
   - `photo.format` / `photo.exposure` / `photo.film` / `photo.development`   authored capture facts
-  - `photo.downloads`  authored list; the FIRST entry is the full-size raster (carries width/height) and drives both the lightbox (photo.njk) and the Resolution row below.
-
-  Bare include from photo.njk (no async shortcodes here), so the interlinker async-blank trap doesn't apply and internal {% if %} guards are safe. The <place-map> custom element is expanded by the WebC transform, then its remote <img> is fetched + self-hosted by the eleventy-img transform — no async shortcode. Microformats: p-location (+ nested h-adr) on the place; h-geo on the coords.
+  - `photo.downloads`  the FIRST entry is the full-size raster, and drives the lightbox and the Resolution row
 #}
 {% set ex = photoExif %}
 
@@ -13,7 +9,7 @@
 {% set raster = false %}
 {% if photo.downloads %}{% set raster = photo.downloads[0] %}{% endif %}
 
-{# The map moved out of this sidebar to a popout <place-map> element in photo.njk; this block is now just the capture-facts list. The Place row links to OpenStreetMap whenever there's GPS. #}
+{# The Place row links to OpenStreetMap whenever there's GPS. #}
 {% if ex or photo.downloads %}
 <section class="media-meta | flow" aria-label="Photograph details">
 

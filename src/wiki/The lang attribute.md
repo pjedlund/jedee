@@ -1,7 +1,7 @@
 ---
-description: "Marking content language with lang and BCP 47 — the page default plus per-passage lang for foreign text, and how jedee marks its Swedish greeting, one Swedish note, and the mostly-Swedish activities."
+description: "Marking content language with lang and BCP 47 — the page default plus per-passage lang for foreign text, and how jedee marks its Swedish greeting, its Swedish notes, and the mostly-Swedish activities."
 date: 2026-08-01
-updated: 2026-09-22
+updated: 2026-09-28
 ---
 
 `lang` declares the human language of content so browsers, screen readers and search engines handle it correctly — hyphenation, quotation marks, and above all pronunciation. Two levels: the whole page carries a `lang` on `<html>` ([WCAG 3.1.1 Language of Page](https://www.w3.org/WAI/WCAG22/Understanding/language-of-page.html)), and any passage in a *different* language gets its own `lang` on a wrapping element ([3.1.2 Language of Parts](https://www.w3.org/WAI/WCAG22/Understanding/language-of-parts.html), AA). Without the second, a screen reader reads the foreign words with the page's voice — Swedish "hej" mangled by an English synthesiser.
@@ -29,6 +29,8 @@ På sin tid suckade Jesus i förväntan …
 
 </div>
 ```
+
+**A Swedish title** — `hej-fran-min-telefon` is Swedish in both title and body. The body is wrapped as above; the title sets `titleLang: sv` in front matter, which the entry-header h1 carries. A front-matter `titleLang` wins over the activity detection below, so any post type can use it.
 
 **Activity captions** — almost all Swedish, so `activities.json` defaults `captionLang: sv` and `activity.njk` puts it on the `.e-content` wrapper; the one English caption overrides with `captionLang: en` in its front matter (front matter beats directory data).
 

@@ -1,21 +1,8 @@
-// jedee's Micropub server — the site's first Netlify Function.
-//
-// One endpoint at /api/micropub that turns an incoming h-entry (from any Micropub client: Sparkles, Quill, iA Writer…) into a shape-correct .md committed to the repo via the GitHub Contents API. A Micropub post lands as the *same* kind of .md, in the *same* src/posts/<type>/ folder, as an Obsidian Web Clipper clip — the two are complementary authoring paths over one content layer. See the `micropub` skill and _local/project_docs/micropub-pattern.html.
-//
-// Engine: @benjifs/micropub (auth, routing, frontmatter, CRUD) + @benjifs/github-store (the GitHub backend). We "vendor-but-patch": the engine (v2.0.1) exposes its conventions only through constructor options, so we steer it through those documented seams rather than editing its source —
-//   • contentDir  -> src/posts
-//   • formatSlug  -> map the engine post-type to this site's folder, and strip
-//                    the engine's leading unix-timestamp prefix (patch points 1+2)
-//   • store       -> a wrapper that rewrites the committed frontmatter to this
-//                    site's conventions before the GitHub commit (patch point 3):
-//                    camelCase target keys, no `category` (inherited from the
-//                    folder JSON), merged `tags`, full-res cover URLs, a derived
-//                    `title` for every post (so none lands blank in
-//                    <title>/OG/feeds/cards), and — for a title-less post — that
-//                    same title as a clean slug so its filename, URL, and <h1>
-//                    all match (not a bare timestamp).
-//
-// v1 is create-only, text post-types; the media/update/delete surface the engine already supports is simply not wired. Real-client auth presupposes the public `me` domain being live — see the sequencing note in the design doc.
+// jedee's Micropub server: turns an incoming h-entry into a .md in src/posts/<type>/, committed through the GitHub API. How and why: the wiki page "Micropub" and the `micropub` skill.
+// ⚠ Steer the engine (@benjifs/micropub 2.0.1) only through its constructor options, never by editing its source. The three patch points:
+//   • formatSlug -> this site's folder, minus the engine's unix-timestamp prefix (patch points 1+2)
+//   • store      -> rewrites the front matter to this site's shape before the commit (patch point 3)
+// v1 is create-only, text post types.
 
 import MicropubEndpoint from '@benjifs/micropub'
 import GitHubStore from '@benjifs/github-store'
@@ -34,7 +21,7 @@ const {
 export const CONTENT_DIR = 'src/posts'
 const FIREHOSE_TAG = 'posts' // every post carries tags:"posts" via its folder JSON
 
-// Engine post-type -> destination folder under CONTENT_DIR. The post `category` (the post *type* that drives byCategory() collections) is inherited from each folder's directory-data JSON, so the Function never writes it — routing a post is purely choosing its folder, and `category` falls out of the data cascade. Note the asymmetries: listen -> jams, watch -> watching, read -> reading.
+// Engine post-type -> folder under CONTENT_DIR. ⚠ Never write `category`: it comes from the folder's data file.
 export const TYPE_DIR = {
   note: 'notes',
   reply: 'replies',
@@ -49,7 +36,7 @@ export const TYPE_DIR = {
   photo: 'photos'
 }
 
-// Micropub kebab property -> this site's frontmatter key (what the layouts read). name/category/published are already translated by the engine's translateProps; these are the simple target-URL keys it leaves hyphenated (a string value).
+// Micropub kebab property -> this site's front-matter key, for the target-URL keys the engine leaves hyphenated.
 export const KEY_MAP = {
   'in-reply-to': 'inReplyTo',
   'like-of': 'likeOf',
@@ -57,14 +44,14 @@ export const KEY_MAP = {
   'repost-of': 'repostOf'
 }
 
-// watch/read/listen are richer: Sparkles' editors nest the media's identity in an h-cite, whose url becomes the layout's identity key (url/link/source) and whose rest is destructured into title/cover/year/(artist|author)/plot below. A jam diverges: the cite name also fills `album`, and its author is the `artist` where film/book keep `author`.
+// watch/read/listen nest the media in an h-cite; its url becomes the identity key and the rest is unpacked below. A jam also fills `album`, and calls its author `artist`.
 export const MEDIA_KEY = {
   'watch-of': 'url',
   'read-of': 'link',
   'listen-of': 'source'
 }
 
-// Workout post (Apple Watch -> iOS Shortcut -> /api/micropub). There is no native engine post-type for a workout, so the Shortcut POSTs a plain h-entry with these flat properties and the engine routes it as a `note`; the store wrapper detects the `activity` property and reroutes it to src/posts/activities/ (see workoutFile). Pace/speed is DERIVED at render (paceOrSpeed filter), never stored — so only the recorded raw numbers land here. Numeric props are coerced; the rest stay strings.
+// A workout arrives as a plain h-entry the engine routes as a note; the store reroutes it to activities/. ⚠ Store only recorded numbers: pace/speed is derived at render.
 export const WORKOUT_KEY = {
   activity: 'activityType',
   distance: 'distanceKm',
@@ -126,7 +113,7 @@ export const flatten = (v) => {
   return v
 }
 
-// Sparkles' Movie/Book/Listen editors hand over a thumbnail-sized cover URL (Apple Music's 100x100, OpenLibrary's -M, ~180px). The .cover block only caps width — it never upscales — so a thumbnail renders tiny. Rewrite the known providers to a full-resolution variant so the build self-hosts a sharp image instead of a blurry one. Unknown hosts pass through unchanged.
+// Upgrade a known provider's thumbnail cover URL to full resolution, since the cover never upscales. Unknown hosts pass through.
 export const upgradeCoverUrl = (url = '') => {
   if (!url || typeof url !== 'string') return url
   // Apple Music / iTunes artwork (mzstatic): the trailing `{w}x{h}bb.<ext>` segment is the requested render size — ask for 1000x1000.
@@ -140,11 +127,11 @@ export const upgradeCoverUrl = (url = '') => {
   return url
 }
 
-// folder/slug for the engine; strips the leading unix-timestamp prefix it adds to titled posts (e.g. `1733436000-anna-karenina` -> `anna-karenina`). A bare timestamp (title-less post) has no trailing `-`, so it passes through here and is upgraded later in the store.
+// Strip the engine's unix-timestamp prefix from a titled post's slug. A bare timestamp (title-less post) passes through and is upgraded in the store.
 export const formatSlug = (type = 'note', slug = '') =>
   `${TYPE_DIR[type] || type}/${slug.replace(/^\d+-/, '')}`
 
-// A workout carries no `name`, so give it a title for <title>/OG/feeds/card/p-name: the activity, plus the distance when there is one ("Run · 5.2 km" / "Strength"). Exported so the health-export adapter can predict the same title (and therefore the same workoutFile slug) before a post exists, to check for a collision.
+// A workout's title: the activity, plus the distance when there is one ("Run · 5.2 km"). Exported so the health-export adapter can predict the slug and check for a collision.
 export const deriveWorkoutTitle = (activityType, distanceKm) =>
   distanceKm ? `${activityType} · ${distanceKm} km` : activityType
 
@@ -163,15 +150,10 @@ export const rewriteFrontmatter = (data = {}) => {
       continue
     }
     if (key === 'visibility') {
-      // Micropub `visibility` -> jedee's native vocabulary, interpreted at build time (see src/_config/plugins/drafts.js):
-      //   unlisted -> keep the native key; the build drops it from every
-      //               collection/feed + the sitemap and emits `noindex`, while
-      //               its permalink still resolves.
-      //   private  -> there is no true "private" on a public static build, so
-      //               reuse the `draft` mechanism (unpublished). A documented
-      //               limitation — not encryption/auth-gating.
-      //   public / absent / anything else -> dropped, so the catch-all below
-      //               never leaks a stray `visibility:` line into frontmatter.
+      // Micropub `visibility` -> jedee's vocabulary, interpreted at build time in src/_config/plugins/drafts.js:
+      //   unlisted -> kept: out of every collection, feed and the sitemap, noindex, but its URL still works
+      //   private  -> draft (a static build has no real private)
+      //   public / absent / anything else -> dropped
       if (value === 'unlisted') out.visibility = 'unlisted'
       else if (value === 'private') out.draft = true
       continue
@@ -227,10 +209,10 @@ export const rewriteFrontmatter = (data = {}) => {
   // Upgrade a thumbnail cover URL (Apple Music / OpenLibrary) to full-res so the build self-hosts a sharp image rather than a tiny upscale.
   if (out.cover) out.cover = upgradeCoverUrl(out.cover)
 
-  // A custom `mp-slug` on a TITLED post becomes a `slug` URL field — the titled-type permalinks honor it (`(slug or page.fileSlug) | slugify`), so the file keeps its Obsidian Title-Case name while the slug drives the URL. On a title-less post the engine already used the mp-slug as the filename, so don't duplicate it here.
+  // A titled post's `mp-slug` becomes a `slug` URL field, so the file keeps its Title-Case name. A title-less post already used it as the filename.
   if (out.title && data['mp-slug']) out.slug = flatten(data['mp-slug'])
 
-  // tags: the folder JSON's tags:"posts" is added by Eleventy's data cascade (deep merge concatenates `tags`), so front matter carries ONLY the user tags (engine mapped Micropub `category` -> `tags`). Re-adding the firehose tag here would double it — folder "posts" + this "posts" — so strip it out instead.
+  // ⚠ Front matter carries only the user's tags: the folder's `posts` tag is added by the data cascade, so re-adding it would double it.
   if ('tags' in out) {
     const user = (Array.isArray(out.tags) ? out.tags : [out.tags]).filter(Boolean)
     const userTags = [...new Set(user)].filter((tag) => tag !== FIREHOSE_TAG)
@@ -245,24 +227,16 @@ export const rewriteFrontmatter = (data = {}) => {
   return out
 }
 
-// Turn a post title into an Obsidian-friendly filename: keep Title Case, spaces, commas and apostrophes (so `[[wikilinks]]` read naturally and match the clipper's `Paris, Texas.md`), stripping only the characters Obsidian / most filesystems forbid in a name.
+// Title -> an Obsidian-friendly filename: keep Title Case and punctuation so [[wikilinks]] read naturally, strip only what filesystems forbid.
 export const titleToFilename = (title = '') =>
   String(title)
     .replace(/[\\/:*?"<>|]+/g, '')
     .replace(/\s+/g, ' ')
     .trim()
 
-// Decide the final committed filename for a post. Two cases:
-//   1. a titled post (film/book/jam/article) -> an Obsidian Title-Case `<title>.md`
-//      filename (patch point #2) so `[[wikilinks]]` resolve. A custom URL slug
-//      (written to `data.slug` by rewriteFrontmatter when a client sends `mp-slug`)
-//      drives the URL via the titled-type permalink — it never hijacks the filename.
-//   2. a title-less post the engine named with a *bare* unix timestamp (`^\d+$`)
-//      -> upgrade to a slug derived from `derivedTitle` (the post's own derived
-//      title, so the filename, URL, and <h1> all match), falling back to a
-//      content/target slug. A title-less `mp-slug` already named the file (not a
-//      bare timestamp), so it passes straight through untouched.
-// Pure (no I/O). `data` is the already-rewritten frontmatter; `derivedTitle` is the guaranteed title (from ensureTitle). Returns the path and the public URL it implies (null when unchanged / ME unset).
+// The committed filename, two cases (pure; returns the path and its public URL, null when unchanged):
+//   1. a titled post -> `<Title>.md` (patch point 2); a custom slug only drives the URL
+//   2. a title-less post named with a bare timestamp -> a slug from its derived title, so filename, URL and <h1> match
 export const resolveFilename = (filename, data = {}, content = '', derivedTitle = '') => {
   const unchanged = { finalName: filename, location: null }
   const m = filename.match(/^(.*)\/([^/]+)\/([^/]+)\.md$/)
@@ -303,9 +277,9 @@ export const workoutFile = (filename, data = {}) => {
   return { finalName: `${dir}/${folder}/${slug}.md`, location }
 }
 
-// --- title derivation ------------------------------------------------------ Every post should carry a `title`: a title-less post degrades in the page <title> (falls back to the bare site name), og:title + the OG-image path, the Atom/JSON feed entry <title>, the notes archive card headline, and the hidden h-entry p-name. The media/article types already get a title (the cite name / required `name`); these helpers derive one for the title-less types (note, reply, like, bookmark, repost, rsvp) — content-first, then the target.
+// --- title derivation: every post gets a `title`, content-first, then the target; see the wiki "Micropub" ---
 
-// A readable title from the body: the first non-empty line, then its first sentence, capped at TITLE_MAX_WORDS words on a word boundary. No ellipsis — the title also becomes the filename/slug for title-less posts, so a clean cut beats signalling truncation — and any stopword left dangling by the cut is trimmed.
+// A title from the body's first sentence, capped at TITLE_MAX_WORDS on a word boundary, with no ellipsis because it also becomes the slug.
 const TITLE_MAX_WORDS = 6
 const TRAILING_STOPWORDS = new Set([
   'a', 'an', 'the', 'and', 'or', 'but', 'nor', 'of', 'to', 'in', 'into', 'on',
@@ -374,7 +348,7 @@ export const ensureTitle = (data = {}, content = '') => {
 
 // --- store ----------------------------------------------------------------
 
-// A GitHubStore that rewrites frontmatter to jedee conventions and upgrades a title-less post's timestamp slug to a content/target-derived one, just before the commit. `onLocation` reports the final public URL so the handler can keep the Location header (the client's "view post" link) in sync with any re-slug.
+// A GitHubStore that rewrites front matter and re-slugs a title-less post just before the commit; `onLocation` keeps the Location header in sync.
 class JedeeStore {
   constructor(opts, onLocation) {
     this.inner = new GitHubStore(opts)
@@ -390,7 +364,7 @@ class JedeeStore {
     const parsed = matter(content)
     const data = rewriteFrontmatter(parsed.data)
 
-    // A workout routes to src/posts/training/ with a dated kebab filename; its title is already derived (activity + distance) by rewriteFrontmatter, so it skips the generic title/slug path entirely.
+    // A workout routes to src/posts/activities/ with a dated filename and its own title, so it skips the generic title/slug path.
     if ('activityType' in data) {
       const { finalName, location } = workoutFile(filename, data)
       if (location && this.onLocation) this.onLocation(location)

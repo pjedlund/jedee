@@ -1,24 +1,12 @@
-/**
- * Build a DTCG (Design Tokens Community Group) JSON file from the jedee design tokens in `src/_data/designTokens/*.json`, ready to import into the JEDEE - design tokens file on design.penpot.app.
- *
- * Workflow:
- *   1. Edit any file in src/_data/designTokens/ (if you edited colorsBase.json, run `npm run colors` first to regenerate colors.json)
- *   2. Run `npm run penpot:tokens`
- *   3. In Penpot, open the design file → Tokens panel → import the generated `_local/penpot/penpot-tokens.dtcg.json`.
- *
- * Mapping rules:
- *   - JSON nesting becomes dot-separated token names (e.g. gray.100 → color.gray.100).
- *   - Fluid Utopia values { min, max } collapse to the max as "<n>px".
- *   - Border radii convert rem → px (base 16px): Penpot's border-radius binding validator rejects rem strings, even though they import fine.
- *   - Bare numbers in viewports.json become "<n>px" dimension tokens.
- *   - The three light_dark colors (red, blue, green) are split:
- *       primary value   → theme/light
- *       .subdued value  → theme/dark
- *
- * Token type names use the plural form (`fontFamilies`, `fontSizes`, `fontWeights`) because that is what the Penpot plugin API and Tokens Studio extension expect. If a future Penpot importer rejects them, switch to the W3C singular forms.
- *
- * Theme membership note: Penpot's Plugin API `theme.addSet()` is silently no-op, so we emit a Tokens Studio-style `$themes` block in the DTCG file and trust the importer to wire it up. If themes still come in empty after import, set their members manually in Penpot's Themes tab — the active sets are documented in _local/penpot/penpot-tokens.md.
- */
+// Builds a DTCG JSON of the design tokens for Penpot's Tokens panel; full mapping notes in _local/penpot/penpot-tokens.md.
+// Workflow: edit src/_data/designTokens/ (run `npm run colors` after colorsBase.json) → `npm run penpot:tokens` → import `_local/penpot/penpot-tokens.dtcg.json` in Penpot.
+// Mapping:
+//   nesting            -> dot names (gray.100 -> color.gray.100)
+//   fluid { min, max } -> the max, in px
+//   border radii       -> px ⚠ Penpot's radius binding rejects rem, though rem imports fine
+//   viewports.json     -> "<n>px" dimensions
+//   light_dark colors  -> the value to theme/light, .subdued to theme/dark
+// ⚠ Type names are plural (fontFamilies…) because Penpot's importer expects them; if themes import empty, set their members by hand in Penpot's Themes tab.
 
 import {readFile, writeFile} from 'node:fs/promises';
 import {dirname, resolve} from 'node:path';

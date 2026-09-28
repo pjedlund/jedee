@@ -1,7 +1,6 @@
-{# POST-TYPE MEGA-MENU — the main nav. A single disclosure: the "Menu ⌄" button (injected by JS from #menu-template) drops a two-column, table-of-contents-style panel of all post types (icon · name · leader dots · count). Built on Manuel Matuzović's progressive- enhancement pattern (see the nav-accessible skill):
-     plain <a> list → <ul role="list"> → <nav> landmark → JS-injected toggle button. Without JS no button exists and the panel is a plain, visible list of links.
-
-   ⚠ {% svg %} MUST stay synchronous — an async shortcode reached through this {% if %}-wrapped include (header.njk) renders to zero bytes via the interlinker plugin (see the eleventy-excellent skill). ⚠ Nav scripts target #mainnav explicitly — the breadcrumb is a second <nav> before this one. #}
+{# The main nav: one disclosure listing every post type, on Manuel Matuzović's progressive-enhancement pattern; without JS it is a plain visible list. See the wiki "The main menu". #}
+{# ⚠ {% svg %} must stay synchronous: an async shortcode through header.njk's {% if %}-wrapped include renders to nothing. #}
+{# ⚠ Nav scripts target #mainnav explicitly: the breadcrumb is a second <nav> before this one. #}
 
 <nav id="mainnav" class="mainnav" aria-label="{{ meta.navigation.ariaTop }}">
   <ul id="megamenu" class="megamenu | cluster" role="list" data-no-flash>

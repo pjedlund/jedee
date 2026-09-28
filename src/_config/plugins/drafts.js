@@ -1,14 +1,7 @@
-// Interprets jedee's post-status / visibility vocabulary centrally — the single place the `draft` and `visibility` frontmatter keys take effect, so all three authoring paths (hand-written · Obsidian Web Clipper · Micropub) share one contract. The Micropub endpoint translates the Micropub-extension fields into these native keys at the edge (see netlify/functions/micropub.js); everything downstream only ever sees `draft` / `visibility`.
-//
-//   draft: true            -> no public output at all (permalink:false + excluded
-//                             from collections), except in serve/watch builds.
-//   visibility: 'unlisted' -> URL resolves, but excluded from every collection
-//                             (=> archives + per-type feeds + the firehose) and
-//                             the sitemap, and emitted with `noindex`. A permanent
-//                             property, so — unlike drafts — never build-mode-gated.
-//   visibility: 'private'  -> the endpoint writes it as draft:true (no true
-//                             "private" on a public static build); nothing extra
-//                             is needed here.
+// The one place `draft` and `visibility` take effect, for every authoring path (Micropub translates its fields into these at the edge).
+//   draft: true            -> no output and out of every collection, except in serve/watch builds
+//   visibility: 'unlisted' -> URL works, but out of every collection, feed and the sitemap, with noindex; never build-mode-gated
+//   visibility: 'private'  -> written as draft: true by the endpoint, so nothing extra here
 export const drafts = eleventyConfig => {
   const isUnlisted = data => data.visibility === 'unlisted';
 
