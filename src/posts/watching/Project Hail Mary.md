@@ -6,7 +6,7 @@ date: 2026-05-29
 cover: https://image.tmdb.org/t/p/original/yihdXomYb5kTeSivtFndMy5iDmf.jpg
 draft: true
 url: https://themoviedb.org/movie/687163
-year: '2026'
+year: 2026
 ---
 
 Pretty nice but I have a hard time not to think about how this world works instead of following along in the movie.

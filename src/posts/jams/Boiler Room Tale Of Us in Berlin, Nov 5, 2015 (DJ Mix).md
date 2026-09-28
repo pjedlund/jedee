@@ -10,7 +10,7 @@ description:
 genre:
   - "[[electronic]]"
   - "[[instrumental]]"
-year: "2015"
+year: 2015
 favoriteTrack:
 favoriteTrackUrl:
 similar:

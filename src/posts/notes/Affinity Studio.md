@@ -9,4 +9,4 @@ draft: false
 
 > Affinity has been re-engineered into a single, unified app that merges the capabilities of what used to be separate apps for layout, photo, and vector editing into one. It’s now completely free to download and use – like, forever – with no subscription required for the core features, except AI generation stuff.
 >
->— [Matthias Ott](https://matthiasott.com/notes/to-affinity-and-beyond)
+> — <span class="small-caps">Matthias Ott</span>, <cite>[To Affinity and Beyond](https://matthiasott.com/notes/to-affinity-and-beyond)</cite>
