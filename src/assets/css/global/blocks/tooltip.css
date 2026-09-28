@@ -70,6 +70,12 @@ Adapted from arielsalminen.com's header tooltip, retokenized and given a focus-v
   --tooltip-shadow: var(--box-shadow-popup-dark);
 }
 
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) [data-tooltip] {
+    --tooltip-shadow: var(--box-shadow-popup-dark);
+  }
+}
+
 /* ⚠ A centred tooltip on a control at either page edge overflows the viewport; anchor it to that edge of the control instead. */
 [data-tooltip][data-tooltip-align='start']::after {
   --tooltip-nudge-inline: 0;

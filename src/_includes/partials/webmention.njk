@@ -5,10 +5,10 @@
    `content.text` is rendered WITHOUT `| safe` so Nunjucks auto-escapes it — never trust a remote mention's HTML. Avatars are hotlinked plain <img> (webmention.io proxies them); the {% image %} shortcode is avoided on purpose — it breaks on remote URLs and is async, which the interlinker plugin would drop here. #}
 
 <article id="webmention-{{ webmention['wm-id'] }}" class="webmention h-cite | flow">
-  <div class="webmention__meta | cluster">
+  <div class="cluster">
     {% if webmention.author and webmention.author.name %}
       <a
-        class="webmention__author p-author h-card u-url no-indicator"
+        class="author p-author h-card u-url no-indicator"
         href="{{ webmention.author.url or webmention.url }}"
         rel="noreferrer"
       >
@@ -24,21 +24,21 @@
         <strong class="p-name">{{ webmention.author.name }}</strong>
       </a>
     {% else %}
-      <strong class="webmention__author">Anonymous</strong>
+      <strong class="author">Anonymous</strong>
     {% endif %}
 
     {% if webmention['wm-received'] %}
-      <time class="webmention__date" datetime="{{ webmention['wm-received'] | toIsoString }}">
+      <time datetime="{{ webmention['wm-received'] | toIsoString }}">
         {{ webmention['wm-received'] | formatDate('D MMM YYYY') }}
       </time>
     {% endif %}
   </div>
 
-  <div class="webmention__text p-content">
+  <div class="p-content">
     {{ webmention.content.text | truncate }}
   </div>
 
   {% if webmention.url %}
-    <a class="webmention__source u-url" href="{{ webmention.url }}" rel="noopener noreferrer">Source</a>
+    <a class="u-url" href="{{ webmention.url }}" rel="noopener noreferrer">Source</a>
   {% endif %}
 </article>

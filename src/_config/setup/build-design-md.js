@@ -84,11 +84,11 @@ const COMPONENTS = {
 	},
 	link: {
 		textColor: '{colors.on-surface}',
-		underlineColor: '{colors.orange-600}',
+		underlineColor: '{colors.accent-orange}',
 	},
 	'link-hover': {
 		textColor: '{colors.accent-orange}',
-		underlineColor: '{colors.accent-red-subdued}',
+		underlineColor: '{colors.accent-orange}',
 	},
 	blockquote: {
 		backgroundColor: '{colors.surface}',
@@ -320,7 +320,6 @@ async function build() {
 		if (k.startsWith('$')) continue;
 		out.rounded[roundedNameMap[k] ?? k] = v.$value;
 	}
-	out.rounded.full = '9999px';
 
 	// ---- spacing ----
 	out.spacing.base = fluidMaxToPx(textSizes['step-0']?.$value);

@@ -1,4 +1,4 @@
-// Builds the one-line descriptions shown on /jams/genres/<slug>/ from Wikipedia. Companion to enrich-genres.js, which fills the `genre:` front matter itself from MusicBrainz. See TODO §20.
+// Builds the one-line descriptions shown on /jams/genres/<slug>/ from Wikipedia. Companion to enrich-genres.js, which fills the `genre:` front matter itself from MusicBrainz.
 //
 //   node ./src/_config/setup/genre-descriptions.js fetch           — populate the cache (safe to re-run; only misses cost a request)
 //   node ./src/_config/setup/genre-descriptions.js build           — show what the data file would contain, write nothing

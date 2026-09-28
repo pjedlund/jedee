@@ -78,7 +78,6 @@ So jedee removed almost exactly the set Lene marks as optional, and nothing beyo
 
 Two pieces of EE machinery are still in the tree with nothing referencing them. Both are the residue of a deletion, not a decision:
 
-- **`partials/details.njk` + `scripts/bundle/details.js`** — the disclosure UI that rendered the `src/docs/` collection into `/get-started/`. The collection is gone; no template includes the partial. `meta.details` (the expand/collapse button labels) is still in `meta.js` too.
 - **`partials/gallery.njk` + `scripts/bundle/dialog.js`** — EE's `<dialog>`-based lightbox, superseded by PhotoSwipe. No layout includes it.
 Each is a handful of kilobytes of source that compiles but ships to no page — the JS-and-partial equivalent of the orphan `local/*.css` problem. Nothing is broken; the note exists so the next reader doesn't take their presence as evidence the features are in use.
 
@@ -104,7 +103,7 @@ jedee already had its own `llms.njk`, sectioned by post type and fed from `setti
 
 **A file upstream changes back looks like any other conflict.** Keeping jedee's side is usually right, but the conflict looks the same whether upstream fixed a bug or undid something jedee changed on purpose. In 4.8.0, EE's `svg.js` became `async` again; jedee keeps it synchronous, because an async shortcode inside a conditional include renders empty under the interlinker ([[The interlinker's second render pass]]). The same merge showed the opposite case in `theme-toggle.js`: upstream fixed swapped dark and light `theme-color` values that jedee's reworked single-button toggle still carried, so that fix was merged in by hand rather than dropped with the rest of upstream's file.
 
-**Orphans keep taking upstream's changes.** The details partial and script listed above were both rewritten by the 4.8.0 merge, with nothing on the site to show for it. Since the partial auto-merged to new button attributes, jedee's older script would have stopped matching it; upstream's script was taken too, to keep the unused pair consistent.
+**Orphans keep taking upstream's changes.** The details partial and script (the disclosure UI for EE's `/get-started/` docs) were both rewritten by the 4.8.0 merge with nothing on the site to show for it, which is why they were deleted on 2026-09-28 along with `local/details.css` and `meta.details`. Expect the next upstream merge to offer them back; decline.
 
 The ordinary merge also depends on the fork still sharing history with upstream. Between 4.6.0 and 4.7.0 upstream rewrote its history (same file trees, new commits), so 4.7.0 was applied as a diff by hand and recorded with `git merge -s ours`, which gave 4.8.0 a normal merge base again.
 

@@ -39,7 +39,7 @@
       <div class="flow">
         <h3>
           {{ reactions | length }} Reaction{% if reactions | length != 1 %}s{% endif %}
-          <span class="webmentions__kinds">(likes, reposts and bookmarks)</span>
+          <span class="kinds">(likes, reposts and bookmarks)</span>
         </h3>
         <ul class="avatars | cluster gutter-3xs" role="list">
           {% for webmention in reactions %}
