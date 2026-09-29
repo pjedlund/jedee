@@ -17,7 +17,7 @@ Put a focusable child that fills its container inside one of those, give it an o
 
 ## In jedee
 
-The site's focus ring is **outset** by design: `global-styles.css` suppresses the always-on ring with `:focus { outline: none }` and restores a strong one on `:focus-visible`, drawn with `--focus-color` and offset outward by `--focus-offset` (`0.3ch`). Tokenizing the offset is what makes the fix below a one-property override rather than a re-declaration of the whole `outline`. This is Eleventy Excellent stock; the clipping cases below are jedee's own.
+The site's focus ring is **outset** by design: `global-styles.css` suppresses the always-on ring with `:focus { outline: none }` and restores a strong one on `:focus-visible`, drawn with `--focus-color` and offset outward by `--focus-offset` (`0.3ch`). Tokenizing the offset is what makes the fix below a one-property override rather than a re-declaration of the whole `outline`. This is Eleventy Excellent stock; the clipping cases below are jedee's own. Every `a` also sets `border-radius: var(--border-radius-medium)`, since an outline follows the border radius, so link rings are rounded like the header controls. The meta-line links set `--focus-offset: 0` and pad the ring with padding instead (`meta.css`).
 
 ### The case that found it
 

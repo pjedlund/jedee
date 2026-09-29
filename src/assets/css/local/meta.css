@@ -1,6 +1,6 @@
 /*
 META LINE
-The dim type/date/revision line under a post or wiki title (partials/entry-header.njk, wiki.njk). Its links carry no underline and light up on hover instead.
+The dim type/date/revision line under a post or wiki title (partials/entry-header.njk, wiki.njk). Its links carry no underline and light up on hover instead: WCAG 1.4.1 only covers links inside running text, and this line is a row of labels, with the fade and the focus ring as the non-color cues.
 */
 .meta {
   --meta-color: var(--color-text-dim);
