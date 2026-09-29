@@ -17,7 +17,7 @@ A "Menu ⌄" button drops a two-column, table-of-contents-style panel of every p
   --megamenu-surface: color-mix(in oklab, var(--color-base-white) 7%, var(--color-bg));
 }
 
-/* The nav wrapper inherits the body's tall line-height (~38px), so the inline-flex button sits on that oversized baseline instead of the row's optical center. :has() scopes this to the enhanced state; the no-JS list keeps its block layout. */
+/* The nav wrapper inherits the body's tall line-height (~36px), so the inline-flex button sits on that oversized baseline instead of the row's optical center. :has() scopes this to the enhanced state; the no-JS list keeps its block layout. */
 .mainnav:has(.menu-toggle) {
   display: flex;
   align-items: center;

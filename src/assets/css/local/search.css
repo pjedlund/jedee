@@ -20,7 +20,7 @@ is-land:not(:defined) .site-search {
   display: none;
 }
 
-/* The header is-land inherits the body's tall line-height (~38px), which would sit the button on an oversized text baseline. Flex-center the wrapper so the magnifier lands level with the MENU trigger and the moon. */
+/* The header is-land inherits the body's tall line-height (~36px), which would sit the button on an oversized text baseline. Flex-center the wrapper so the magnifier lands level with the MENU trigger and the moon. */
 is-land:has(> .site-search) {
   display: flex;
   align-items: center;
