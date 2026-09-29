@@ -38,6 +38,7 @@ Each entry below says what a page covers and why you would open it. The traps an
 
 ## Images & media
 
+- [[Figures]] — `figure` and `figcaption`, images that follow a site's own light or dark theme, and where a caption sits relative to the text.
 - [[Alt text]] — informative versus decorative, and why `alt=""` is an answer rather than an omission.
 - [[Self-hosting remote images at build time]] — pulling a remote cover into the build so no visitor request leaves the site.
 - [[Hosting large originals off-repo]] — the deliberate inverse: 157 MB of scans kept in a bucket the build never touches.

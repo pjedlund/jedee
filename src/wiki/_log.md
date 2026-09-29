@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-09-29] ingest | Figures
+
+New page from the session that reworked wiki captions and gave figure shots dark twins. General part: `figure` and `figcaption`, why `<picture>` with a `prefers-color-scheme` source ignores a site's own theme switch, and the two-image alternative. In jedee: captions on the prose edge and its 60ch measure (subgrid back into `content`, the measure registered with `@property` so it resolves at the body size), and the `data-dark-shot` → `-dark.png` → preprocessor → CSS chain, with the hand-set and accent-token colors that stay light. Links to Alt text, The theme toggle, Typographic conventions, Line length, Layout breakouts and the eight pages whose shots have twins. Typographic conventions' caption line corrected: wiki captions are italic now, not upright.
+
 ## [2026-09-28] lint | Six oversized stylesheets split
 
 The last open item from the 2026-09-22 lint. `place-map`, `search`, `table`, `custom-card`, `breadcrumb` and `theme-toggle` were split along their seams into files included where the originals were; a declaration-level comparison of every built page before and after found no change except CSS that had shipped to pages which never used it. [[Tables]] shows the new include pair, [[The theme toggle]] names `sun-and-moon.css`, [[Text wrapping]] cites `breadcrumb-leaf.css`, and [[What jedee kept from Eleventy Excellent]] recounts twenty-eight local stylesheets.
