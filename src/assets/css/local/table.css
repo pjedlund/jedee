@@ -21,7 +21,7 @@
   --table-head-tracking: var(--tracking-wide);
   --table-cell-padding-block: var(--space-s);
   --table-cell-padding-inline: var(--space-s);
-  --table-edge-padding: var(--space-m-l); /* the caption's, first column's and last column's inset; free to change — a prose table takes the popout one below instead */
+  --table-edge-padding: var(--space-m-l); /* the caption's, first column's and last column's inset; kept equal to the prose one on purpose so every table matches (picked 2026-09-29) — a prose table takes the popout one below instead */
   --table-popout-edge-padding: var(--space-m-l); /* ⚠ keep this on the 2rem popout track: its 31px maximum is what lands a prose table's text on the prose's own edge */
   --table-cell-align: baseline;
   --table-caption-size: var(--size-step-min-1);
