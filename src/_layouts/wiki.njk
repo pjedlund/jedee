@@ -18,8 +18,8 @@ layout: base
         <span class="meta-item">{% svg "posts/calendar", "", "meta-icon" %}<time datetime="{{ date | toIsoString }}">{{ date | formatDate('Do [of] MMMM, YYYY') }}</time></span>
         {%- set revision = page.inputPath | gitRevision %}
         {%- if revision and meta.viewRepo.allow %}
-        {# The pipe rides with the link so a wrapped line never ends on it. #}
-        <span class="meta-item"><span class="meta-sep" aria-hidden="true">|</span><a data-meta-tight href="{{ settings.repos.site }}/commit/{{ revision.hash }}">{% svg 'platform/github', '', 'meta-icon' %}Revised <time datetime="{{ revision.date | toIsoString }}">{{ revision.date | formatDate('Do [of] MMMM, YYYY') }}</time></a></span>
+        {# The dot rides with the link so a wrapped line never ends on it. #}
+        <span class="meta-item"><span class="meta-sep" aria-hidden="true"></span><a data-meta-tight href="{{ settings.repos.site }}/commit/{{ revision.hash }}">{% svg 'platform/github', '', 'meta-icon' %}Revised <time datetime="{{ revision.date | toIsoString }}">{{ revision.date | formatDate('Do [of] MMMM, YYYY') }}</time></a></span>
         {%- endif %}
       </p>
     {% endif %}

@@ -7,7 +7,7 @@ The dim type/date/revision line under a post or wiki title (partials/entry-heade
   --meta-color-lit: var(--color-text-lit);
   --meta-glow-lit: var(--text-glow-lit);
   --meta-fade: 150ms;
-  --meta-underline: color-mix(in oklab, currentColor 30%, transparent);
+  --meta-underline: color-mix(in oklab, currentColor 40%, transparent);
   --meta-sep-color: color-mix(in oklab, var(--meta-color) 35%, transparent);
   --meta-link-pad-block: var(--space-2xs);
   --meta-link-pad-inline: var(--space-xs);
@@ -37,9 +37,15 @@ The dim type/date/revision line under a post or wiki title (partials/entry-heade
   text-decoration-color: currentColor;
 }
 
+/* A small dot between two related items; the negative start margin halves the cluster gap so the pair reads as one group. */
 .meta-sep {
-  margin-inline-end: var(--gutter);
-  color: var(--meta-sep-color);
+  display: inline-block;
+  inline-size: 0.25em;
+  block-size: 0.25em;
+  vertical-align: calc(0.5cap - 0.125em);
+  margin-inline: calc(var(--gutter) / -2) calc(var(--gutter) / 2);
+  border-radius: 50%;
+  background-color: var(--meta-sep-color);
 }
 
 
