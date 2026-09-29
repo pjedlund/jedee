@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light" data-dark-shot>
 <head>
 <meta charset="utf-8">
 <title>Line length — wiki mockup</title>
@@ -8,6 +8,8 @@
   @font-face { font-family: 'Source Code Pro'; src: url('../../assets/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }
 
   :root { --ink: #495464; --paper: #f4f4f2; --rule: #cbcdd2; --flag: #d0621e; }
+  /* The site's dark theme: color.text, color.bg, gray.700; the orange is shared. */
+  [data-theme="dark"] { --ink: #C8CACC; --paper: #141619; --rule: #383b3f; }
   body { margin: 0; padding: 40px; background: #ddd; }
   .specimen { inline-size: fit-content; background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 22px 28px 26px; }
   .label { font-family: 'Source Code Pro', ui-monospace, monospace; font-size: 13px; color: var(--ink); opacity: 0.6; margin: 0 0 8px; }
