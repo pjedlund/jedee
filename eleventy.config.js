@@ -150,6 +150,16 @@ export default async function(eleventyConfig) {
     return `${content}\n\n${defs.join('\n')}`;
   });
 
+  // A wiki figure whose shot has a <name>-dark.png twin gets both <img>s; wiki.css shows the one matching the theme.
+  eleventyConfig.addPreprocessor('wiki-dark-figures', 'md', (data, content) => {
+    if (!data.page.inputPath.startsWith('./src/wiki/')) return;
+    return content.replace(/<img\b[^>]*\bsrc="\/assets\/images\/wiki\/([\w-]+)\.png"[^>]*>/g, (tag, name) => {
+      if (!fs.existsSync(`./src/assets/images/wiki/${name}-dark.png`)) return tag;
+      const dark = tag.replace(`${name}.png`, `${name}-dark.png`).replace('<img', '<img data-wiki-dark');
+      return `${tag.replace('<img', '<img data-wiki-light')}\n  ${dark}`;
+    });
+  });
+
   eleventyConfig.addDataExtension('yaml', contents => yamlLoad(contents));
 
   // --------------------- Filters

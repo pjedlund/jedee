@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="light" data-dark-shot>
 <head>
 <meta charset="utf-8">
 <title>Layout shift — wiki mockup</title>
@@ -45,6 +45,10 @@
 
   /* ⚠ An iframe, not a copy: the reserve is a `@media (width < 27rem)` query and a media query reads the VIEWPORT, so a fixed-width div inside this 1400px page would never match it. Every space and type token is vw-based for the same reason. */
   iframe { display: block; border: 1px solid var(--color-bg-accent-2); border-radius: 4px; background: var(--color-bg); }
+  /* Dark shot: the dark accents are muted surface colors, too dim as text — the vivid pair reads at ~5:1. */
+  :root[data-theme='dark'] .col-head.inband b,
+  :root[data-theme='dark'] .differ .rows { color: var(--color-blue-vivid); }
+  :root[data-theme='dark'] .agree .rows { color: var(--color-green-vivid); }
 </style>
 </head>
 <body>

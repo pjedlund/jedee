@@ -14,6 +14,8 @@ export async function serveMockups(here) {
     const url = decodeURIComponent(req.url.split('?')[0]);
     const file = path.join(root, url.startsWith('/assets/') ? 'dist' : '', url);
     readFile(file, (err, data) => {
+      // ?theme=dark flips every data-theme="light" in the file, iframe srcdoc templates included — that is the whole dark pass.
+      if (!err && req.url.includes('theme=dark') && file.endsWith('.html')) data = String(data).replaceAll('data-theme="light"', 'data-theme="dark"');
       res.writeHead(err ? 404 : 200, { 'content-type': types[path.extname(file)] || 'application/octet-stream' });
       res.end(data);
     });

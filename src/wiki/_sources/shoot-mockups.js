@@ -1,6 +1,6 @@
 // Shoots every [data-shot] element in this folder's mockups to src/assets/images/wiki/<data-shot>.png. Run: npm run mockups (or `npm run mockups -- place-map` for the mockups whose filename contains that)
 import { fileURLToPath } from 'node:url';
-import { readdirSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import puppeteer from 'puppeteer';
 import { serveMockups, launchArgs } from './serve-mockups.js';
@@ -22,8 +22,15 @@ await page.setViewport({ width: 1400, height: 1400, deviceScaleFactor: 2 });
 
 const sizes = [];
 
-for (const file of mockups) {
-  await page.goto(`${base}/${file}`, { waitUntil: 'networkidle0' });
+// A mockup opts into a second, dark shot of each [data-shot] with data-dark-shot on <html>; it is saved as <data-shot>-dark.png.
+const passes = mockups.flatMap(file => {
+  const dark = readFileSync(path.join(here, file), 'utf8').includes('data-dark-shot');
+  return dark ? [{ file, theme: 'light' }, { file, theme: 'dark' }] : [{ file, theme: 'light' }];
+});
+
+for (const { file, theme } of passes) {
+  await page.emulateMediaFeatures([{ name: 'prefers-color-scheme', value: theme }]);
+  await page.goto(`${base}/${file}${theme === 'dark' ? '?theme=dark' : ''}`, { waitUntil: 'networkidle0' });
   // A mockup that freezes an animation sets window.__mockupReady = false up front and true once it has settled; one that does not is ready as soon as it loads.
   await page.waitForFunction(() => window.__mockupReady !== false, { timeout: 30000 });
 
@@ -39,6 +46,7 @@ for (const file of mockups) {
       return { name: el.dataset.shot, clip: { x, y, width, height } };
     })
   );
+  if (theme === 'dark') shots.forEach(s => (s.name += '-dark'));
 
   for (const { name, clip } of shots) {
     // omitBackground keeps rounded corners transparent; clipping to the element itself is what removes the box around it.

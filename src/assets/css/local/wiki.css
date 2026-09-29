@@ -29,7 +29,7 @@ _log.md is a run of dated records whose h2 is the whole record — "[2026-08-29]
 
 /*
 WIKI CAPTIONS
-Italic and left-aligned on the prose's edge. A breakout figure hands its caption the content column through subgrid, so the caption sits as far in from the figure's right edge as from its left.
+Italic and a step smaller than the prose, left-aligned on the prose's edge. A breakout figure hands its caption the content column through subgrid, so the caption sits as far in from the figure's right edge as from its left.
 */
 .prose figcaption {
   text-align: start;
@@ -49,6 +49,32 @@ Italic and left-aligned on the prose's edge. A breakout figure hands its caption
   .prose figure:is(.popout, .feature) > figcaption {
     grid-column: content;
   }
+}
+
+/*
+DARK FIGURES
+A shot with a dark twin ships both images (the wiki-dark-figures preprocessor); these rules show the one matching the theme, keyed like variables.css so the theme toggle wins over the system setting. The hidden one is lazy and never downloads.
+*/
+[data-wiki-dark] {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) [data-wiki-light] {
+    display: none;
+  }
+
+  :root:not([data-theme='light']) [data-wiki-dark] {
+    display: revert;
+  }
+}
+
+:root[data-theme='dark'] [data-wiki-light] {
+  display: none;
+}
+
+:root[data-theme='dark'] [data-wiki-dark] {
+  display: revert;
 }
 
 /*
