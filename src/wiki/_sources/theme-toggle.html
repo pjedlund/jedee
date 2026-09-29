@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="light" data-dark-shot>
 <head>
 <meta charset="utf-8">
 <title>The theme toggle — wiki mockup</title>
@@ -55,7 +55,7 @@
   <div class="strip" id="strip"></div>
 </div>
 
-<div class="specimen" data-shot="theme-toggle-sun-colors">
+<div class="specimen" data-shot="theme-toggle-sun-colors" data-light-only>
   <div class="swatches" id="swatches"></div>
 </div>
 
@@ -81,6 +81,8 @@
 
   // ⚠ Read BEFORE the strip exists — flipping the root theme here would otherwise start every glyph's transitions early.
   // The glyph color and the page ground carry no transition at all: they snap when data-theme flips, and only the shape animates. Both palettes come off the real stylesheet via a throwaway .theme-toggle rather than copied-in hexes.
+  // ⚠ The root stays light for the whole build — frame 0 is a light sun under it — so the dark pass only repaints the morph's paper, below.
+  const pass = document.documentElement.dataset.theme;
   const probe = Object.assign(document.createElement('span'), { className: 'theme-toggle' });
   document.body.append(probe);
   const palette = theme => {
@@ -103,6 +105,7 @@
   ];
 
   const strip = document.getElementById('strip');
+  if (pass === 'dark') Object.assign(strip.parentElement.style, { background: dark.bg, borderColor: dark.edge });
   frames.forEach(([t, stamp, note], i) => {
     const cell = document.createElement('div');
     cell.className = 'cell';
