@@ -165,6 +165,7 @@ export default async function(eleventyConfig) {
   // --------------------- Filters
   eleventyConfig.addFilter('toIsoString', filters.toISOString);
   eleventyConfig.addFilter('formatDate', filters.formatDate);
+  eleventyConfig.addFilter('gitRevision', filters.gitRevision);
   eleventyConfig.addFilter('markdownFormat', filters.markdownFormat);
   eleventyConfig.addFilter('splitlines', filters.splitlines);
   eleventyConfig.addFilter('striptags', filters.striptags);

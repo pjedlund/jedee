@@ -7,6 +7,7 @@ import { splitlines } from './filters/splitlines.js';
 import { striptags } from './filters/striptags.js';
 import { slugifyString } from './filters/slugify.js';
 import { unwikilink } from './filters/unwikilink.js';
+import { gitRevision } from './filters/git-revision.js';
 import { hostname } from './filters/hostname.js';
 import { located } from './filters/located.js';
 import { routeGeoJSON } from './filters/route-geojson.js';
@@ -34,6 +35,7 @@ export default {
   sortAlphabetically,
   slugifyString,
   unwikilink,
+  gitRevision,
   hostname,
   located,
   routeGeoJSON,

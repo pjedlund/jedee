@@ -1,4 +1,8 @@
 import dayjs from 'dayjs';
+import advancedFormat from 'dayjs/plugin/advancedFormat.js';
+
+// Enables `Do` (31st) in formatDate.
+dayjs.extend(advancedFormat);
 
 /** Converts the given date string to ISO8610 format. */
 export const toISOString = dateString => dayjs(dateString).toISOString();
