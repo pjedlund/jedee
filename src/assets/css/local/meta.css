@@ -37,15 +37,15 @@ The dim type/date/revision line under a post or wiki title (partials/entry-heade
   text-decoration-color: currentColor;
 }
 
-/* A small dot between two related items; the negative start margin halves the cluster gap so the pair reads as one group. */
+/* A small hollow circle between two related items; the negative start margin halves the cluster gap so the pair reads as one group. */
 .meta-sep {
   display: inline-block;
-  inline-size: 0.25em;
-  block-size: 0.25em;
-  vertical-align: calc(0.5cap - 0.125em);
+  inline-size: 0.35em;
+  block-size: 0.35em;
+  vertical-align: calc(0.5cap - 0.175em);
   margin-inline: calc(var(--gutter) / -2) calc(var(--gutter) / 2);
   border-radius: 50%;
-  background-color: var(--meta-sep-color);
+  border: 1px solid var(--meta-sep-color);
 }
 
 
