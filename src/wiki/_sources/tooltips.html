@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="light" data-dark-shot>
 <head>
 <meta charset="utf-8">
 <title>Tooltips — wiki mockup</title>
@@ -54,6 +54,11 @@
   }
   .caption b { font-weight: 400; opacity: 1; color: var(--color-accent-green); }
   .panel + .panel { margin-block-start: 26px; }
+  /* Dark shot: the dark accents are muted surface colors, too dim as icons and text — the vivid pair reads at ~5:1. */
+  :root[data-theme='dark'] .control { color: var(--color-blue-vivid); }
+  :root[data-theme='dark'] .caption b { color: var(--color-green-vivid); }
+  /* The caption's opacity would dim its colored label with it; the dark shot dims by color instead. */
+  :root[data-theme='dark'] .caption { opacity: 1; color: color-mix(in oklab, var(--color-text) 60%, var(--color-bg)); }
 </style>
 </head>
 <body>

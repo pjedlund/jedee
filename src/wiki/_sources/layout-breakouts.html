@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="light" data-dark-shot>
 <head>
 <meta charset="utf-8">
 <title>Layout breakouts — wiki mockup</title>
@@ -61,6 +61,11 @@
   .panel + .panel { margin-block-start: 26px; }
   /* The failing panel's own wrapper is a plain div — no class, so nothing here can accidentally rescue it. */
   .panel .verdict { color: var(--color-accent-blue); opacity: 1; }
+  /* Dark shot: the dark accents are muted surface colors, so the bars take light text and the verdict the vivid blue. */
+  :root[data-theme='dark'] .bar { color: var(--color-headline); }
+  :root[data-theme='dark'] .panel .verdict { color: var(--color-blue-vivid); }
+  /* The caption's opacity would dim its colored label with it; the dark shot dims by color instead. */
+  :root[data-theme='dark'] .caption { opacity: 1; color: color-mix(in oklab, var(--color-text) 60%, var(--color-bg)); }
 </style>
 </head>
 <body>
