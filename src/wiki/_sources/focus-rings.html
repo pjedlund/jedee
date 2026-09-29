@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light" data-dark-shot>
 <head>
 <meta charset="utf-8">
 <title>Focus rings and paint containment — wiki mockup</title>
@@ -14,6 +14,8 @@
     --color-bg: #f4f4f2;
     --rule: #cbcdd2;
   }
+  /* The site's dark theme: color.text, color.bg, gray.700. */
+  [data-theme="dark"] { --color-text: #c8cacc; --color-bg: #141619; --rule: #383b3f; }
 
   body { margin: 0; padding: 40px; background: #ddd; font-family: 'Source Sans', system-ui, sans-serif; }
 
@@ -48,6 +50,9 @@
     background-position: center;
     background-size: clamp(2.5rem, 15%, 5rem);
   }
+
+  /* custom-youtube.webc's dark surface. */
+  [data-theme="dark"] .video-wrapper { --yt-surface: color-mix(in oklab, white 7%, var(--color-bg)); }
 
   /* lite-yt-embed's own rule. `contain: content` is the whole subject of the page: it paint-clips anything drawn outside this box. */
   .lite-youtube {

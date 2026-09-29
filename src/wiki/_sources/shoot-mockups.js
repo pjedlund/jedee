@@ -22,7 +22,7 @@ await page.setViewport({ width: 1400, height: 1400, deviceScaleFactor: 2 });
 
 const sizes = [];
 
-// A mockup opts into a second, dark shot of each [data-shot] with data-dark-shot on <html>; it is saved as <data-shot>-dark.png.
+// A mockup opts into a second, dark shot of each [data-shot] with data-dark-shot on <html>; it is saved as <data-shot>-dark.png. data-light-only on a shot opts that one back out.
 const passes = mockups.flatMap(file => {
   const dark = readFileSync(path.join(here, file), 'utf8').includes('data-dark-shot');
   return dark ? [{ file, theme: 'light' }, { file, theme: 'dark' }] : [{ file, theme: 'light' }];
@@ -40,7 +40,9 @@ for (const { file, theme } of passes) {
     document.querySelectorAll('[data-shot]').forEach(el => (el.style.boxShadow = 'none'));
   });
 
-  const shots = await page.$$eval('[data-shot]', els =>
+  // A [data-shot] with data-light-only is left out of the dark pass: its subject is the light theme itself.
+  const selector = theme === 'dark' ? '[data-shot]:not([data-light-only])' : '[data-shot]';
+  const shots = await page.$$eval(selector, els =>
     els.map(el => {
       const { x, y, width, height } = el.getBoundingClientRect();
       return { name: el.dataset.shot, clip: { x, y, width, height } };

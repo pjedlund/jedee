@@ -8,7 +8,7 @@ window.mountFrame = function ({ mount, width, css = '', locals = [], onLoad }) {
   const iframe = document.createElement('iframe');
   iframe.width = width;
   iframe.setAttribute('scrolling', 'no');
-  iframe.srcdoc = `<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8">${sheets}<style>
+  iframe.srcdoc = `<!doctype html><html lang="en" data-theme="${document.documentElement.dataset.theme || 'light'}"><head><meta charset="utf-8">${sheets}<style>
     /* The bundles' own @font-face rules point at absolute /assets paths, dead under file:// — redeclare the two faces by relative path. */
     @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../assets/fonts/source-sans/source-sans.woff2') format('woff2'); }
     @font-face { font-family: 'Source Code Pro'; src: url('../../assets/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }
