@@ -68,6 +68,13 @@
   color: var(--color-text-accent);
 }
 
+/* The Plain list sample is a prose list with the browser's own markers, so only the markers differ from the Site sample beside it. */
+.styleguide [data-sample='plain'] li::marker {
+  content: normal;
+  color: inherit;
+  font-variant-numeric: tabular-nums;
+}
+
 /* Mirrors the site's capital labels (site-logo, breadcrumb, buttons). */
 .styleguide .type-caps {
   font-size: var(--size-step-min-2);
