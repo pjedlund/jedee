@@ -30,7 +30,7 @@ else this.initSinglePin();
   This mode used to group the list by activity type, with the group headings upgraded into filter toggles and mirrored as chips on the map surface. All of that came out on 2026-08-15, when the page became a single chronological index: the grouping was the only thing standing between the reader and a plain newest-first list of everything. Two lessons stayed behind. First, **reserve the map's space server-side** — the box was built and prepended on idle, so the whole page dropped by 16:9-of-the-column a second after paint; rendering an empty `.place-map-live` in the markup and having `buildBox()` adopt it takes the shift to zero. Second, **beware the double reverse**: the collection was already newest-first from `byCategory`, and the `located` filter reversed it again, so the visible list ran oldest-first for months without anyone noticing.
 - **Route** (activity pages) — a slotted `<script type="application/json" data-route>` holding a GeoJSON `LineString`. This is the newest mode and the rest of this page is about it.
 
-<figure class="feature" data-wiki-mockup>
+<figure class="popout" data-wiki-mockup>
   <img eleventy:formats="webp,png" src="/assets/images/wiki/place-map-modes.png" alt="Three maps side by side. The first has a single orange dot on a coastal town. The second is zoomed out over the Swedish west coast and Denmark with a scatter of orange dots. The third is a pale green forest map carrying an orange route line with its start triangle and finish circles." width="2196" height="588">
   <figcaption>The same element three times, told apart only by what is slotted inside it.</figcaption>
 </figure>

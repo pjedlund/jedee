@@ -27,12 +27,28 @@ _log.md is a run of dated records whose h2 is the whole record — "[2026-08-29]
   border-block-start: var(--border-thickness) solid var(--color-bg-accent-2);
 }
 
-/* Wiki captions run to 400 characters, so they are set upright, left-aligned and held to a measure; the site's short captions stay italic and centred. */
+/*
+WIKI CAPTIONS
+Italic and left-aligned on the prose's edge. A breakout figure hands its caption the content column through subgrid, so the caption sits as far in from the figure's right edge as from its left.
+*/
 .prose figcaption {
-  font-style: normal;
   text-align: start;
   text-wrap: pretty;
-  max-inline-size: 60ch;
+}
+
+@supports (grid-template-columns: subgrid) {
+  .prose figure:is(.popout, .feature) {
+    display: grid;
+    grid-template-columns: subgrid;
+  }
+
+  .prose figure:is(.popout, .feature) > * {
+    grid-column: 1 / -1;
+  }
+
+  .prose figure:is(.popout, .feature) > figcaption {
+    grid-column: content;
+  }
 }
 
 /*
