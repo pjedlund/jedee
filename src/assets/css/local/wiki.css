@@ -27,12 +27,68 @@ _log.md is a run of dated records whose h2 is the whole record — "[2026-08-29]
   border-block-start: var(--border-thickness) solid var(--color-bg-accent-2);
 }
 
-/* Wiki captions run to 400 characters, so they are set upright, left-aligned and held to a measure; the site's short captions stay italic and centred. */
+/*
+WIKI CAPTIONS
+Italic and left-aligned on the prose's own edge and measure, with an info icon hung in the margin, after Smashing Magazine's captions. A breakout figure hands its caption the content column through subgrid.
+*/
+
+/* ⚠ Registered as a length so 60ch resolves at the body size here and inherits as px; an unregistered 60ch would re-resolve at the caption's smaller size. */
+@property --wiki-prose-measure {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+
+.prose {
+  --wiki-prose-measure: 60ch;
+}
+
 .prose figcaption {
-  font-style: normal;
+  --wiki-caption-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 16v-4'/%3E%3Cpath d='M12 8h.01'/%3E%3C/svg%3E");
+  --wiki-caption-icon-size: 1.1em;
+  --wiki-caption-icon-gap: 0.5em;
+  --wiki-caption-icon-color: var(--color-text-dim);
+
+  position: relative;
   text-align: start;
   text-wrap: pretty;
-  max-inline-size: 60ch;
+  max-inline-size: var(--wiki-prose-measure);
+}
+
+.prose figcaption::before {
+  content: '';
+  position: absolute;
+  inset-inline-end: calc(100% + var(--wiki-caption-icon-gap));
+  inset-block-start: calc((1lh - var(--wiki-caption-icon-size)) / 2);
+  inline-size: var(--wiki-caption-icon-size);
+  block-size: var(--wiki-caption-icon-size);
+  background-color: var(--wiki-caption-icon-color);
+  mask: var(--wiki-caption-icon) center / contain no-repeat;
+}
+
+@supports (grid-template-columns: subgrid) {
+  .prose figure:is(.popout, .feature) {
+    display: grid;
+    grid-template-columns: subgrid;
+  }
+
+  .prose figure:is(.popout, .feature) > * {
+    grid-column: 1 / -1;
+  }
+
+  .prose figure:is(.popout, .feature) > figcaption {
+    grid-column: content;
+  }
+}
+
+/* A phone's page gutter is too narrow to hang the icon in, so it sits inline before the text. */
+@media (width < 34rem) {
+  .prose figcaption::before {
+    position: static;
+    display: inline-block;
+    vertical-align: calc((1cap - var(--wiki-caption-icon-size)) / 2);
+    margin-inline-end: var(--wiki-caption-icon-gap);
+  }
 }
 
 /*
