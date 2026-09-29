@@ -1,12 +1,14 @@
 /*
 META LINE
-The dim type/date/revision line under a post or wiki title (partials/entry-header.njk, wiki.njk). Its links carry no underline and light up on hover instead: WCAG 1.4.1 only covers links inside running text, and this line is a row of labels, with the fade and the focus ring as the non-color cues.
+The dim type/date/revision line under a post or wiki title (partials/entry-header.njk, wiki.njk). Its links carry a faint hairline underline that lights up with the label on hover.
 */
 .meta {
-  --meta-color: var(--color-text-dim);
+  --meta-color: color-mix(in oklab, var(--color-text-dim) 75%, var(--color-text));
   --meta-color-lit: var(--color-text-lit);
   --meta-glow-lit: var(--text-glow-lit);
   --meta-fade: 150ms;
+  --meta-underline: color-mix(in oklab, currentColor 40%, transparent);
+  --meta-sep-color: color-mix(in oklab, var(--meta-color) 35%, transparent);
   --meta-link-pad-block: var(--space-2xs);
   --meta-link-pad-inline: var(--space-xs);
 
@@ -21,15 +23,31 @@ The dim type/date/revision line under a post or wiki title (partials/entry-heade
   padding: var(--meta-link-pad-block) var(--meta-link-pad-inline);
   margin: calc(var(--meta-link-pad-block) * -1) calc(var(--meta-link-pad-inline) * -1);
   color: inherit;
-  text-decoration: none;
-  transition: color var(--meta-fade) ease-out, text-shadow var(--meta-fade) ease-out;
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.25em;
+  text-decoration-color: var(--meta-underline);
+  transition: color var(--meta-fade) ease-out, text-shadow var(--meta-fade) ease-out, text-decoration-color var(--meta-fade) ease-out;
 }
 
 .meta a:hover,
 .meta a:focus-visible {
   color: var(--meta-color-lit);
   text-shadow: var(--meta-glow-lit);
+  text-decoration-color: currentColor;
 }
+
+/* A small hollow circle between two related items; the negative start margin halves the cluster gap so the pair reads as one group. */
+.meta-sep {
+  display: inline-block;
+  inline-size: 0.35em;
+  block-size: 0.35em;
+  vertical-align: calc(0.5cap - 0.175em);
+  margin-inline: calc(var(--gutter) / -2) calc(var(--gutter) / 2);
+  border-radius: 50%;
+  border: 1px solid var(--meta-sep-color);
+}
+
 
 /* An icon + its label on the meta line, kept together. ⚠ Not inline-flex: a flex box takes its baseline from the icon's bottom edge and lifts the label off the line. */
 .meta-item {
