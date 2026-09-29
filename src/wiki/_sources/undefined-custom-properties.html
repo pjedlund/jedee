@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light" data-dark-shot>
 <head>
 <meta charset="utf-8">
 <title>Undefined custom properties — wiki mockup</title>
@@ -19,6 +19,8 @@
     --color-accent-green: #626449;
     --rule: #cbcdd2;
   }
+  /* The site's dark theme: gray.250, gray.900, the subdued blue and green, gray.700; orange and light are shared. */
+  [data-theme="dark"] { --color-text: #c8cacc; --color-bg: #141619; --color-accent-blue: #2f536e; --color-accent-green: #62644e; --rule: #383b3f; }
 
   body { margin: 0; padding: 40px; background: #ddd; font-family: 'Source Sans', system-ui, sans-serif; }
 

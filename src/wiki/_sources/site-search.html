@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light" data-dark-shot>
 <head>
 <meta charset="utf-8">
 <title>Site search — wiki mockup</title>
@@ -8,7 +8,9 @@
   @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../assets/fonts/source-sans/source-sans.woff2') format('woff2'); }
   @font-face { font-family: 'Source Code Pro'; src: url('../../assets/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }
 
-  :root { --ink: #23292F; --paper: #F4F4F2; --rule: #cbcdd2; --chrome: #e8e8e6; --chrome-rule: #d3d3d0; --muted: #68727F; }
+  :root { --ink: #23292F; --paper: #F4F4F2; --rule: #cbcdd2; --chrome: #e8e8e6; --chrome-rule: #d3d3d0; --muted: #68727F; --dot: #c8c8c4; --pill: #fff; }
+  /* The site's dark theme for the paper, and a dark browser chrome to match. */
+  [data-theme="dark"] { --ink: #c8cacc; --paper: #141619; --rule: #383b3f; --chrome: #26292d; --chrome-rule: #383b3f; --muted: #9aa0a6; --dot: #4a4e54; --pill: #1b1d20; }
 
   body { margin: 0; padding: 40px; background: #ddd; font: 14px/1.5 'Source Sans', system-ui, sans-serif; color: var(--ink); }
 
@@ -20,8 +22,8 @@
   /* Browser chrome drawn OUTSIDE the scaled iframe, so it stays crisp while the page inside is scaled. */
   .browser { border: 1px solid var(--chrome-rule); border-radius: 7px; overflow: hidden; background: var(--chrome); inline-size: fit-content; }
   .bar { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-block-end: 1px solid var(--chrome-rule); }
-  .bar .dot { inline-size: 8px; block-size: 8px; border-radius: 50%; background: #c8c8c4; flex: none; }
-  .bar .pill { flex: 1; background: #fff; border-radius: 999px; padding: 3px 10px; font-size: 10px; color: var(--muted); margin-inline-start: 4px; }
+  .bar .dot { inline-size: 8px; block-size: 8px; border-radius: 50%; background: var(--dot); flex: none; }
+  .bar .pill { flex: 1; background: var(--pill); border-radius: 999px; padding: 3px 10px; font-size: 10px; color: var(--muted); margin-inline-start: 4px; }
 
   /* The frame renders at its true width and is scaled down here — scaling, not resizing, is what keeps a 1280px page a 1280px page. */
   .viewport { overflow: hidden; }
@@ -122,7 +124,7 @@
   window.mountFrame({
     mount: document.querySelector('[data-frame="search"]'),
     width: 1280,
-    locals: ['nav-menu-cls', 'search'],
+    locals: ['nav-menu-cls', 'search', 'search-field', 'search-results'],
     onLoad: (doc, win) => {
       // The magnifier and the theme toggle hide behind `is-land:not(:defined)` — a control that cannot run should not show. Defining it is what the real page's is-land script does.
       win.customElements.define('is-land', class extends win.HTMLElement {});

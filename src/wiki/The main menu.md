@@ -24,7 +24,7 @@ The fallback that a hidden menu falls back *to* should not be the hidden layout 
 One disclosure: a `MENU ⌄` button drops a two-column, table-of-contents-style panel of every post type — icon, name, leader dots, count. It replaced a burger drawer. The markup is `partials/main-nav.njk`; the button lives in a `<template id="menu-template">` and is cloned by `scripts/bundle/nav-menu.js`, which inserts it **before** the list so tab order matches visual order. [[Site search]]'s panel anchors to the same header row, so each trigger closes the other.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/main-menu-open.png" alt="A browser window at 1280 pixels. In the header, a breadcrumb trail on the left and a MENU button on the right; below the button, an open panel listing sixteen post types in two columns, each row an icon, a name, a row of leader dots and a count." width="1392" height="718">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/main-menu-open.png" alt="A browser window at 1280 pixels. In the header, a breadcrumb trail on the left and a MENU button on the right; below the button, an open panel listing sixteen post types in two columns, each row an icon, a name, a row of leader dots and a count." width="1392" height="734">
   <figcaption>The disclosure open. Each row is icon, name, leader dots, count; the trigger fills with the panel's own surface so the two read as one sheet.</figcaption>
 </figure>
 
@@ -45,7 +45,7 @@ Everything else keys off the button's absence, so it also holds if the script fa
 Without the button the panel keeps its `<ul>` but becomes a right-aligned row of wrapping pills in normal flow — three rows at 1280px, six at 375px. The leader dots are dropped (an empty flexible spacer only reads as a leader when every row shares a width) and the padding tightens.
 
 <figure class="feature" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/main-menu-no-js.png" alt="Two browser windows side by side, both without JavaScript. At 1280 pixels the post-type links form a right-aligned row of pills wrapping onto three lines beside the breadcrumb. At 375 pixels the same links wrap onto six lines under the breadcrumb." width="1832" height="692">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/main-menu-no-js.png" alt="Two browser windows side by side, both without JavaScript. At 1280 pixels the post-type links form a right-aligned row of pills wrapping onto three lines beside the breadcrumb. At 375 pixels the same links wrap onto six lines under the breadcrumb." width="1832" height="702">
   <figcaption>The fallback at both ends. No button, so the panel is a plain row of pills in normal flow — right-aligned, no leader dots, and wrapping to fit.</figcaption>
 </figure>
 
@@ -72,7 +72,7 @@ The header row is a `.repel` holding the breadcrumb and a cluster with the nav a
 A fixed basis makes the row grow into what the trail leaves on a wide screen and wrap onto its own full-width line on a narrow one. The trail's own truncation is the `-webkit-line-clamp` described in [[Text wrapping]].
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/main-menu-breadcrumb-crush.png" alt="Two browser windows stacked, identical except for the header row's flex declarations. In the upper one the breadcrumb reads Photos then a single truncated letter; in the lower one it reads Photos then Pier 4, Ribersborg in full." width="1392" height="1114">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/main-menu-breadcrumb-crush.png" alt="Two browser windows stacked, identical except for the header row's flex declarations. In the upper one the breadcrumb reads Photos then a single truncated letter; in the lower one it reads Photos then Pier 4, Ribersborg in full." width="1392" height="1148">
   <figcaption>The same markup, the same width. Above, the cluster's pin relaxed to <code>flex: 1 1 auto</code> with the row still pinned to one line; below, the shipped pair. The trail is what pays for it.</figcaption>
 </figure>
 

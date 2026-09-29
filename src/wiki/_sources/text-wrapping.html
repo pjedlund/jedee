@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light" data-dark-shot>
 <head>
 <meta charset="utf-8">
 <title>Text wrapping specimens — wiki mockup</title>
@@ -16,6 +16,8 @@
     --flag: #d0621e;         /* --color-accent-orange */
   }
 
+  /* The site's dark theme: color.text, color.bg, gray.700; the orange is shared. */
+  [data-theme="dark"] { --ink: #C8CACC; --paper: #141619; --rule: #383b3f; }
   body { margin: 0; padding: 40px; background: #ddd; font-family: 'Source Sans', system-ui, sans-serif; }
 
   /* A specimen carries its own paper, the way the device frames carry their own bezel — so it reads deliberately on either theme of the wiki page. */
