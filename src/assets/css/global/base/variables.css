@@ -108,7 +108,7 @@
     --color-rule: var(--color-base-rule-dark);
     --color-rule-shadow: var(--color-base-black);
     --color-rule-highlight: var(--color-gray-800);
-    --color-bg-head: color-mix(in srgb, var(--color-base-dark) 5%, var(--color-bg));
+    --color-bg-head: color-mix(in srgb, var(--color-base-dark) 4%, var(--color-bg));
     /* border top for body */
     --color-border-top: var(--color-orange-900);
 
