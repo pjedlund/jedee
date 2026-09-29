@@ -29,11 +29,9 @@ _log.md is a run of dated records whose h2 is the whole record — "[2026-08-29]
 
 /*
 WIKI CAPTIONS
-Italic, a tad dimmer than the prose, and left-aligned on the prose's edge. A breakout figure hands its caption the content column through subgrid, so the caption sits as far in from the figure's right edge as from its left.
+Italic and a step smaller than the prose, left-aligned on the prose's edge. A breakout figure hands its caption the content column through subgrid, so the caption sits as far in from the figure's right edge as from its left.
 */
 .prose figcaption {
-  /* A tad dimmer than the prose, not the meta line's --color-text-dim, which sits at the AA floor. ⚠ Tuned on the page ground; a caption on another surface needs its own mix. */
-  color: color-mix(in oklab, var(--color-text) 85%, var(--color-bg));
   text-align: start;
   text-wrap: pretty;
 }
