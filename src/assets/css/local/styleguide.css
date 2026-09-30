@@ -4,7 +4,7 @@
 }
 
 /* Token labels only: running-text code and code blocks keep the site's size, since the type samples show the site's setting. */
-.styleguide :is(li, td, .type-sample-label) code {
+.styleguide :is(li, td, .type-sample-label) code:not(.rhythm-sample *) {
   font-size: var(--size-step-min-2);
 }
 
@@ -17,13 +17,14 @@
   --region-space-top: var(--space-l-xl);
 }
 
-.styleguide :is(h2, h3) {
+/* ⚠ :not(.rhythm-sample *) here and below: the vertical-rhythm samples are prose and must show the site's own headings, code and tables. */
+.styleguide :is(h2, h3):not(.rhythm-sample *) {
   font-size: var(--size-step-0);
   font-family: var(--font-base);
   text-transform: uppercase;
 }
 
-.styleguide h2 {
+.styleguide h2:not(.rhythm-sample *) {
   letter-spacing: var(--tracking-wide);
 }
 
@@ -84,7 +85,7 @@
 }
 
 /* The samples are taller than the text beside them, so baseline alignment sinks the token name to the sample's baseline. */
-.styleguide .table-wrapper {
+.styleguide .table-wrapper:not(.rhythm-sample *) {
   --table-cell-align: middle;
 }
 
@@ -104,4 +105,29 @@
   gap: var(--space-xs);
   margin-block-end: var(--space-s);
   padding-block-end: var(--space-s);
+}
+
+/*
+VERTICAL RHYTHM
+Two prose samples side by side (partials/rhythm-sample.njk), the second under local/rhythm-prototype.css. The lattice toggle is a checkbox and :has(), no script.
+*/
+.rhythm-demo {
+  --rhythm-grid-line: color-mix(in oklab, var(--color-accent-blue) 45%, transparent);
+  --rhythm-grid-quarter: color-mix(in oklab, var(--color-accent-blue) 14%, transparent);
+}
+
+/* No gutters: the grid column is the sample's page. */
+.rhythm-sample {
+  --gap: 0px;
+}
+
+/* Painted from the first block's top, the point the lattice is counted from. */
+.rhythm-demo:has(.rhythm-toggle :checked) .rhythm-sample > .wrapper-pass {
+  background-image:
+    repeating-linear-gradient(to bottom, var(--rhythm-grid-line) 0 1px, transparent 1px var(--line)),
+    repeating-linear-gradient(
+      to bottom,
+      var(--rhythm-grid-quarter) 0 1px,
+      transparent 1px calc(var(--line) / 4)
+    );
 }

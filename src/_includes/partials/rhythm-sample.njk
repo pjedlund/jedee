@@ -1,0 +1,59 @@
+<h2>A page in prose</h2>
+<p class="meta | cluster gutter-s-m"><span class="meta-item">Wiki</span><span class="meta-item"><span class="meta-sep" aria-hidden="true"></span>30th of September, 2026</span></p>
+<p>Running text sets the beat. Every line of it is one line-height tall, and whatever interrupts it should hand the beat back unchanged.</p>
+<p>A second paragraph, so the gap between two of them is on the page.</p>
+<h3>A list</h3>
+<ul>
+  <li>Short items sit a small step apart.</li>
+  <li>A longer item wraps onto a second line, and the step to the next item stays the same.</li>
+  <li>The last one.</li>
+</ul>
+<p>A paragraph after the list.</p>
+<figure style="--img-ratio: calc(1329 / 2000)">
+  <img src="/assets/images/gallery/asturias-2.jpg" alt="Clusters of small white star-shaped flowers with yellow centers against dark green leaves." width="2000" height="1329">
+  <figcaption>A caption is set a step smaller, so its lines are shorter than a body line.</figcaption>
+</figure>
+<p>A paragraph after the figure.</p>
+<div class="table-wrapper | popout" role="region" tabindex="0" aria-label="Sample table">
+  <table>
+    <caption>A table, three rows</caption>
+    <thead>
+      <tr><th scope="col">Element</th><th scope="col">Lines</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Paragraph</td><td>1</td></tr>
+      <tr><td>Caption</td><td>¾</td></tr>
+      <tr><td>Table row</td><td>1½</td></tr>
+    </tbody>
+  </table>
+</div>
+<blockquote>
+  <p>Space in typography is like time in music.</p>
+  <p>— <span class="small-caps">Robert Bringhurst</span>, <cite>The Elements of Typographic Style</cite></p>
+</blockquote>
+<pre class="language-css"><code class="language-css">.flow > * + * {
+  margin-block-start: var(--flow-space, 1em);
+}</code></pre>
+<p>A paragraph after the code.</p>
+<hr>
+<ol>
+  <li>A numbered item.</li>
+  <li>And another.</li>
+</ol>
+<details open>
+  <summary>A disclosure</summary>
+  <p>Its content, once opened.</p>
+</details>
+<div class="media-meta">
+  <dl>
+    <dt>Camera</dt><dd>Sony NEX-5N</dd>
+    <dt>Lens</dt><dd>50 mm f/1.8</dd>
+  </dl>
+</div>
+<p>A last paragraph with a note.<sup class="footnote-ref"><a>1</a></sup></p>
+<hr class="footnotes-sep">
+<section class="footnotes">
+  <ol class="footnotes-list">
+    <li class="footnote-item"><p>Footnotes are set a step smaller, like captions.</p></li>
+  </ol>
+</section>

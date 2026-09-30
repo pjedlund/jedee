@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en" data-theme="light" data-dark-shot>
+<head>
+<meta charset="utf-8">
+<title>Vertical rhythm — wiki mockup</title>
+<link rel="stylesheet" href="../../_includes/css/global.css">
+<style>
+  @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../assets/fonts/source-sans/source-sans.woff2') format('woff2'); }
+  @font-face { font-family: 'Source Code Pro'; font-weight: 200 900; src: url('../../assets/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }
+
+  body { margin: 0; padding: 40px; background: #ddd; border: none; }
+  .specimen { inline-size: fit-content; background: var(--color-bg); color: var(--color-text); border: 1px solid var(--color-bg-accent-2); border-radius: 6px; padding: 22px 28px 26px; font-family: 'Source Sans', sans-serif; }
+  .specimen + .specimen { margin-block-start: 40px; }
+  .mono { font-family: 'Source Code Pro', ui-monospace, monospace; font-size: 13px; line-height: 1.4; }
+  .pair { display: flex; gap: 36px; align-items: flex-start; }
+  .side { display: grid; grid-template-columns: auto auto; column-gap: 10px; }
+  .side-head { grid-column: 1 / -1; margin: 0 0 10px; }
+  .side-head b { display: block; font-family: 'Source Sans', sans-serif; font-size: 17px; }
+  .side-foot { grid-column: 1 / -1; margin: 10px 0 0; }
+  /* The drift column: one label per block, at the block's top edge. */
+  .labels { position: relative; inline-size: 104px; }
+  .labels > span { position: absolute; inset-inline-end: 0; translate: 0 -50%; white-space: nowrap; }
+  .labels .tag { opacity: 0.55; }
+  .on { color: var(--color-accent-green); }
+  .off { color: var(--color-accent-orange-text); font-weight: 700; }
+  :root[data-theme='dark'] .on { color: var(--color-green-vivid); }
+  /* ⚠ Iframes, not copies: every type and space token is vw-based, so the sample needs a real viewport of the width it claims. */
+  iframe { display: block; border: 1px solid var(--color-bg-accent-2); border-radius: 4px; background: var(--color-bg); }
+  /* A whole page is too tall for one figure, so each half is a window onto the full sample: the lattice is still counted from the page's first block. */
+  .window { overflow: hidden; border: 1px solid var(--color-bg-accent-2); border-radius: 4px; }
+  .window iframe { border: none; border-radius: 0; }
+  .key { display: flex; gap: 18px; margin: 12px 0 0; }
+  .key i { display: inline-block; inline-size: 18px; block-size: 0; vertical-align: middle; margin-inline-end: 6px; border-block-start: 2px solid color-mix(in oklab, var(--color-accent-blue) 45%, transparent); }
+  .key i.q { border-block-start: 2px solid color-mix(in oklab, var(--color-accent-blue) 14%, transparent); }
+</style>
+</head>
+<body>
+
+<div class="specimen" data-shot="vertical-rhythm-drift-top">
+  <div class="pair" id="pair-top"></div>
+  <p class="key mono"><span><i></i>one body line</span><span><i class="q"></i>a quarter line</span><span class="on">0</span><span>on the lattice</span><span class="off">+1.3</span><span>px off it</span></p>
+</div>
+
+<div class="specimen" data-shot="vertical-rhythm-drift-end">
+  <div class="pair" id="pair-end"></div>
+  <p class="key mono"><span><i></i>one body line</span><span><i class="q"></i>a quarter line</span><span class="on">0</span><span>on the lattice</span><span class="off">+1.3</span><span>px off it</span></p>
+</div>
+
+<div class="specimen" data-shot="vertical-rhythm-lattice">
+  <div id="lattice"></div>
+  <p class="key mono"><span><i></i>one body line</span><span><i class="q"></i>a quarter line</span></p>
+</div>
+
+<script>
+  window.__mockupReady = false;
+
+  // Width to shoot at; ?w=1360 measures the widest step of the type scale instead (the shooter never passes it).
+  const params = new URLSearchParams(location.search);
+  const width = Number(params.get('w')) || 375;
+
+  // ⚠ The bundle's @font-face rules point at absolute /assets paths, which this server maps to an unbuilt dist/, so the faces are redeclared relative. Without this the sample would quietly measure the metric-matched fallbacks.
+  const fonts = `
+    @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../assets/fonts/source-sans/source-sans.woff2') format('woff2'); }
+    @font-face { font-family: 'Source Sans'; font-style: italic; font-weight: 100 1000; src: url('../../assets/fonts/source-sans/source-sans-italic.woff2') format('woff2'); }
+    @font-face { font-family: 'Source Serif'; font-weight: 700; src: url('../../assets/fonts/source-serif/source-serif.woff2') format('woff2'); }
+    @font-face { font-family: 'Source Code Pro'; font-weight: 200 900; src: url('../../assets/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }`;
+
+  // Both sides load the same stylesheets, the prototype included; only data-rhythm differs, so any difference is the prototype's.
+  const sheets = ['../../_includes/css/global.css', ...['table', 'meta', 'media-meta', 'footnotes', 'rhythm-prototype'].map(name => `../../assets/css/local/${name}.css`)]
+    .map(href => `<link rel="stylesheet" href="${href}">`)
+    .join('');
+
+  // The grid is painted on .wrapper-pass, whose top is the first block's top: whole lines strong, quarter lines faint.
+  const grid = `
+    :root { --grid-line: color-mix(in oklab, var(--color-accent-blue) 45%, transparent); --grid-quarter: color-mix(in oklab, var(--color-accent-blue) 14%, transparent); }
+    body { border: none; background: var(--color-bg); }
+    .rhythm-sample { padding-block: 20px 28px; }
+    .grid-paint {
+      background-image:
+        repeating-linear-gradient(to bottom, var(--grid-line) 0 1px, transparent 1px var(--line)),
+        repeating-linear-gradient(to bottom, var(--grid-quarter) 0 1px, transparent 1px calc(var(--line) / 4));
+    }`;
+
+  const frameDoc = (body, proposed, extra = '') => `<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8">${sheets}
+    <style>${fonts}${grid}${extra}</style></head>
+    <body><div class="rhythm-sample | wrapper flow prose"${proposed ? ' data-rhythm="proposed"' : ''}>${body}</div></body></html>`;
+
+  const loadFrame = (f, html) =>
+    new Promise(resolve => {
+      f.addEventListener('load', async () => {
+        await f.contentDocument.fonts.ready;
+        f.style.blockSize = `${f.contentDocument.documentElement.scrollHeight}px`;
+        resolve(f.contentDocument);
+      }, { once: true });
+      f.srcdoc = html;
+    });
+
+  const nameOf = el =>
+    el.classList.contains('meta') ? 'meta'
+    : el.classList.contains('table-wrapper') ? 'table'
+    : el.classList.contains('media-meta') ? 'dl'
+    : el.classList.contains('footnotes') ? 'notes'
+    : el.tagName === 'BLOCKQUOTE' ? 'quote'
+    : el.tagName === 'DETAILS' ? 'details'
+    : el.tagName.toLowerCase();
+
+  // Each block's top against the quarter-line lattice, as the signed distance to the nearest lattice line.
+  const measure = doc => {
+    const pass = doc.querySelector('.wrapper-pass');
+    const origin = pass.getBoundingClientRect().top;
+    const line = parseFloat(getComputedStyle(pass).getPropertyValue('--line'));
+    const quarter = line / 4;
+    let prevBottom = null;
+    const rows = [...pass.children].map(el => {
+      const box = el.getBoundingClientRect();
+      const top = box.top - origin;
+      let drift = top % quarter;
+      if (drift > quarter / 2) drift -= quarter;
+      // Half a pixel of slack, which no screen shows, so the live side is not marked down for its own rounding: its lattice of fractional quarters (1lh is 28.16px) drifts about 0.05px a block through layout's 1/64px rounding. The prototype rounds its line to a whole pixel and lands exactly.
+      if (Math.abs(drift) < 0.5) drift = 0;
+      const gap = prevBottom === null ? 0 : box.top - prevBottom;
+      prevBottom = box.bottom;
+      return { name: nameOf(el), top, drift, gap, height: box.height };
+    });
+    return { line, rows };
+  };
+
+  const fmt = n => (n > 0 ? '+' : '−') + Math.abs(n).toFixed(1);
+
+  (async () => {
+    const sample = (await (await fetch('../../_includes/partials/rhythm-sample.njk')).text())
+      // The partial's paths are the built site's; from here the images live in the source tree.
+      .replaceAll('src="/assets/', 'src="../../assets/');
+
+    const report = { width };
+
+    // The two halves meet at the table: the page's blocks before it in the first figure, the table and everything after it in the second.
+    for (const part of ['top', 'end']) {
+      const pair = document.getElementById(`pair-${part}`);
+      for (const [key, title, proposed] of [['now', 'Now', false], ['proposed', 'Proposed', true]]) {
+        const side = document.createElement('div');
+        side.className = 'side';
+        side.innerHTML = `<p class="side-head mono"><b>${title}</b>${proposed ? 'rhythm-prototype.css' : 'the live prose CSS'} at ${width}px</p><div class="labels mono"></div>`;
+        const win = document.createElement('div');
+        win.className = 'window';
+        win.dataset.compare = `rhythm-${part}`;
+        const f = document.createElement('iframe');
+        f.width = width;
+        f.setAttribute('scrolling', 'no');
+        win.append(f);
+        side.append(win);
+        pair.append(side);
+
+        const doc = await loadFrame(f, frameDoc(`<div class="wrapper-pass | flow grid-paint">${sample}</div>`, proposed));
+        const m = measure(doc);
+        report[key] = m;
+
+        const offset = doc.querySelector('.wrapper-pass').getBoundingClientRect().top;
+        const split = m.rows.findIndex(r => r.name === 'table');
+        const cut = offset + m.rows[split].top - 14;
+        const [from, to] = part === 'top' ? [0, cut] : [cut, parseFloat(f.style.blockSize)];
+        f.style.marginBlockStart = `${-from}px`;
+        win.style.blockSize = `${to - from}px`;
+
+        const rows = part === 'top' ? m.rows.slice(0, split) : m.rows.slice(split);
+        const labels = side.querySelector('.labels');
+        labels.style.blockSize = win.style.blockSize;
+        rows.forEach(r => {
+          const s = document.createElement('span');
+          s.style.insetBlockStart = `${offset + r.top - from + 1}px`;
+          s.innerHTML = `<span class="tag">${r.name}</span> <b class="${r.drift ? 'off' : 'on'}">${r.drift ? fmt(r.drift) : '0'}</b>`;
+          labels.append(s);
+        });
+        const count = list => list.filter(r => !r.drift).length;
+        const foot = document.createElement('p');
+        foot.className = 'side-foot mono';
+        foot.textContent = part === 'top'
+          ? `${count(rows)} of ${rows.length} blocks on the lattice · 1 line = ${m.line.toFixed(2)}px`
+          : `${count(rows)} of ${rows.length} here · ${count(m.rows)} of ${m.rows.length} on the whole page`;
+        side.append(foot);
+      }
+    }
+
+    // The lattice close-up: body text, small text and table rows side by side, each column ticked at the top of every one of its own lines. The strong rule falls every three body lines, where all three kinds start together.
+    const cols = `
+      <div class="wrapper-pass">
+        <div class="lattice-head"><p>Body text: 1 line</p><p>Caption: ¾ line</p><p>Table row: 1½ lines</p></div>
+        <div class="lattice-cols">
+          <p style="--tick: var(--line)">Running text sets the beat. Every line of it is one line-height tall, and whatever interrupts it hands the beat back unchanged.</p>
+          <figure style="--tick: calc(var(--line) * 0.75)"><figcaption>Four lines of a caption take exactly three lines of the text beside it, so every third body line and every fourth caption line start together, and so do the lines after them.</figcaption></figure>
+          <div class="table-wrapper" style="--tick: calc(var(--line) * 1.5)"><table><tbody><tr><td>Row one</td></tr><tr><td>Row two</td></tr><tr><td>Row three</td></tr><tr><td>Row four</td></tr></tbody></table></div>
+        </div>
+      </div>`;
+    const colsCss = `
+      .lattice-head, .lattice-cols { display: grid; grid-template-columns: repeat(3, 1fr); column-gap: 40px; align-items: start; }
+      .lattice-head p { font-family: 'Source Code Pro', monospace; font-size: 13px; line-height: 1.4; margin: 0 0 12px; padding-inline-start: 18px; opacity: 0.7; }
+      .lattice-cols {
+        background-image:
+          repeating-linear-gradient(to bottom, var(--grid-line) 0 2px, transparent 2px calc(var(--line) * 3)),
+          repeating-linear-gradient(to bottom, var(--grid-quarter) 0 1px, transparent 1px var(--line));
+      }
+      .lattice-cols > * {
+        margin: 0;
+        padding-inline-start: 18px;
+        background: repeating-linear-gradient(to bottom, var(--color-accent-orange) 0 3px, transparent 3px var(--tick)) 0 0 / 8px 100% no-repeat;
+      }
+      .lattice-cols figcaption { margin: 0; text-align: start; }
+      .lattice-cols .table-wrapper { --table-edge-padding: 0.5em; }`;
+    const lf = document.createElement('iframe');
+    lf.width = 1000;
+    lf.setAttribute('scrolling', 'no');
+    document.getElementById('lattice').append(lf);
+    await loadFrame(lf, frameDoc(cols, true, colsCss));
+
+    window.__rhythmReport = report;
+    requestAnimationFrame(() => requestAnimationFrame(() => { window.__mockupReady = true; }));
+  })();
+</script>
+
+</body>
+</html>
