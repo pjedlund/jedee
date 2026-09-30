@@ -109,9 +109,10 @@ The hairline becomes an outline drawn over the image's own edge, for the same re
   margin-block-end: calc(round(up, var(--img-block-size), var(--line-quarter)) - var(--img-block-size));
 }
 
+/* ⚠ Padding, not margin: the built site wraps the image in a block <picture>, and its pad margin would collapse into a caption margin, the larger of the two winning and the pad vanishing. */
 [data-rhythm='proposed'] figcaption {
-  margin-block-start: var(--line-quarter);
-  padding-block-end: 0;
+  margin-block-start: 0;
+  padding-block: var(--line-quarter) 0;
 }
 
 /* BLOCKQUOTE

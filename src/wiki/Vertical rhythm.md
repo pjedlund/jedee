@@ -127,6 +127,8 @@ figure > :is(img, picture) {
 
 Without `--img-ratio` the margin is invalid, falls back to 0, and the figure sits off the lattice by its remainder: the soft default. The pad is at most a quarter line, 4.7px under the sample's photo on a phone. eleventy-img knows every image's width and height at build time, so the ratio could be written by the build rather than by hand. Typed `attr()`, which would read it straight from the `width` and `height` attributes, is in Chromium only. An embed with a fixed ratio, such as a 16:9 video, can use the same rule with a constant.
 
+⚠ The caption's quarter line under the image is padding, not margin. eleventy-img wraps the image in a block `<picture>`, and a margin on the caption would collapse with the pad under the picture: the larger of the two wins and the pad disappears. A bare `<img>` is inline and hides this, which is how the mockup missed it and the built style guide caught it.
+
 ⚠ It holds only while the image is as wide as the figure. An image narrower than its container, at its own intrinsic width, would need `min()` against that width.
 
 ⚠ The prose's 1px hairline around images is a border, and it adds 2px to the height. The prototype draws it as an outline with a negative offset, on the image's own edge.
@@ -156,7 +158,7 @@ Table: How the three sources space a page vertically
 | | spacing unit | tied to the line-height | non-text elements | rhythm |
 | --- | --- | --- | --- | --- |
 | CUBE CSS | the flow utility's `1em`: the font size of each element it spaces | no | left to each block | consistent, not measured |
-| Every Layout | a modular scale whose ratio is the line-height | at `--s1` and `--s2` | left to each layout | closest in intent |
+| Every Layout | a modular scale whose ratio is the line-height | from `--s1` to `--s3` | left to each layout | closest in intent |
 | Eleventy Excellent | Utopia's fluid space scale | no | stock styles at the body's leading | none |
 
 - **CUBE CSS.** Andy Bell's [flow utility](https://piccalil.li/quick-tip/flow-utility/) spaces siblings by `--flow-space`, `1em` by default: the font size of the element being spaced, so a larger element gets more room. Its rhythm is consistency: one rule, one direction, one custom property to override. The fluid [Utopia](https://utopia.fyi/) scales that CUBE projects use derive space from the font size at each end of the viewport range; line-height is not one of their inputs.
