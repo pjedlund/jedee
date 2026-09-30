@@ -1,5 +1,5 @@
 ---
-description: "Spacing a page in fractions of its body text's line-height, how far CSS can hold headings, lists, figures, tables and small text to that beat, and a quarter-line system for jedee tried on the style guide."
+description: "Spacing a page in fractions of its body text's line-height, how far CSS can hold headings, lists, figures, tables and small text to that beat, its musical side, Ariel Salminen's Scale.css, and a quarter-line system for jedee tried on the style guide."
 date: 2026-09-30
 ---
 
@@ -7,7 +7,7 @@ date: 2026-09-30
 
 There are two schools, and the difference is how much each one holds to the unit:
 
-- **A baseline grid** puts every line of every element on a fixed lattice, as in print. Richard Rutter carried it to CSS in [Compose to a vertical rhythm](https://24ways.org/2006/compose-to-a-vertical-rhythm/) (24 ways, 2006): line-height is the unit, smaller text gets a line-height that fits the unit, and borders are paid for out of padding. Vincent Bernat's [CSS & vertical rhythm for text, images, and tables](https://vincent.bernat.ch/en/blog/2026-css-vertical-rhythm) (2026) does it with the `rlh` unit, JavaScript padding for images, and [incremental leading](https://markboulton.co.uk/journal/incremental-leading/) for tables. With all three in place his text returns after each intrusion "precisely on beat and in phase", and he ends: "None of this is necessary. But once you start looking, you can't unsee it."
+- **A baseline grid** puts every line of every element on a fixed lattice, as in print. Richard Rutter carried it to CSS in [Compose to a vertical rhythm](https://24ways.org/2006/compose-to-a-vertical-rhythm/) (24 ways, 2006): line-height is the unit, smaller text gets a line-height that fits the unit, and borders are paid for out of padding. Vincent Bernat's [CSS & vertical rhythm for text, images, and tables](https://vincent.bernat.ch/en/blog/2026-css-vertical-rhythm) (2026) does it with the `rlh` unit, JavaScript padding for images, and [incremental leading](https://markboulton.co.uk/journal/incremental-leading/) for tables. With all three in place his text returns after each intrusion "precisely on beat and in phase", and he ends: "None of this is necessary. But once you start looking, you can't unsee it." Ariel Salminen's Scale.css (2012) belongs here too, with its proportions taken from music (see its section below).
 - **A spacing system** keeps every gap on one scale and in one direction, without promising that lines land on a grid. Harry Roberts' [single-direction margin declarations](https://csswizardry.com/2012/06/single-direction-margin-declarations/) (2012) is the classic statement: "This isn't just about something as pretentious as vertical rhythm, this is about spacing in general." The flow utility that jedee uses is this school (see [[Microformats]], where its one rule is quoted).
 
 ## The unit
@@ -150,6 +150,34 @@ A body row is one line and two quarter-line paddings, one and a half lines. That
 - **Disclosure.** A `<details>` puts half a line between its summary and what it opens.
 - **Footnotes.** Small text again, a quarter line apart.
 
+## Pitch and time
+
+A musical scale says which pitches a piece may use; its rhythm says when they fall. Type has the same two layers: a type scale sets the sizes, and a vertical rhythm sets the space around them. Bringhurst's rule for the first ([3.1.1](http://webtypography.net/3.1.1)) could be a composer's: "Use the old familiar scale, or use new scales of your own devising, but limit yourself, at first, to a modest set of distinct and related intervals."
+
+**Pitch.** Type scales step by the same ratios that tune musical intervals:
+
+- jedee's scale (Utopia, inherited from Eleventy Excellent) steps by 1.2 on a phone and by 1.25 on a wide screen: a minor third (6:5) opening out to a major third (5:4).
+- Every Layout's ratio of 1.5 is a perfect fifth (3:2).
+- Ariel Salminen's Scale.css (below) takes its sizes from the Pythagorean chromatic scale, where every interval is built from stacked fifths.
+
+**Time.** jedee has had the pitch layer from the start. What it lacks is the time layer: a beat. In the prototype the body line is the beat and the quarter line is its subdivision, and every other element is a note value or a rest counted in it.
+
+Table: The prototype's intervals read as rhythm
+| element | lines | as rhythm |
+| --- | --- | --- |
+| body text | 1 | the beat |
+| quarter line | ¼ | the subdivision everything is counted in |
+| gap between paragraphs | ¾ | a short rest |
+| space under a heading | ½ | a breath that ties the heading to its phrase |
+| space above an `h2` | 2 | a longer rest before a new section |
+| caption, meta, code or footnote line | ¾ | four against three: four lines in three beats |
+| table row | 1½ | three against two, a hemiola: two rows in three beats |
+| image of any height | any | a fermata: held as long as it needs, then the beat resumes |
+
+A strict baseline grid is playing to a click track: every note on the grid, nothing held longer than the grid allows. A soft rhythm is closer to a band keeping time together: every interval is measured, and a held note may run long without the band losing the beat. The figure under Small text shows the two cross-rhythms meeting every three beats.
+
+The words are an analogy, not a proof. A scale and a beat say what is in tune and in time; whether a page reads well is still decided by eye, the way a player decides by ear.
+
 ## CUBE CSS, Every Layout and Eleventy Excellent
 
 None of the three sets out to hold a vertical rhythm, and none has a unit for it.
@@ -166,6 +194,42 @@ Table: How the three sources space a page vertically
 - **Eleventy Excellent.** It has no rhythm unit. Its Utopia tokens run in pixels between two viewport widths, body text is at leading 1.4, and the paragraph gap `--space-m-l` is about half a line on a phone and four-fifths of one on a desktop. Heading space is `1.5em` of the heading's own size, and smaller text keeps the body's leading ratio, so its line boxes are not fractions of a body line. Table cells are padded by `--space-s` with 1px borders between rows. jedee inherited all of it and has since changed the leading to 1.45 and the table rules ([[What jedee kept from Eleventy Excellent]]).
 
 The `every-layout` skill used to write this site's compositions maps `--s1` to `--space-m`, 14–21px, which is about half a body line. Whatever Every Layout's scale has of a rhythm is lost in that translation. If the prototype below is adopted, the `cube-css` and `every-layout` skills should both name the line tokens.
+
+## Ariel Salminen's Scale.css
+
+Ariel Salminen's [On Typography](https://arielsalminen.com/2012/on-typography/) (2012) set out to make "a typographic scale out of a musical scale that would not only be very readable, but also aesthetically pleasing". It grew out of a [24 ways article on music, harmony and proportion](http://24ways.org/2011/composing-the-new-canon) (2011), and it credits [Iain Lamb](http://lamb.cc/typograph/) and [Alex Charchar](http://retinart.net/typography/typographicscale/). Salminen chose the Pythagorean chromatic scale and found that every combination tried came out "very similar to the centuries old Typographic Scale". Then came the space: "I added a 1.5em baseline grid into the mix and with the help of that calculated optimal white space needed for the headings, paragraphs and other elements." That is both layers, pitch and time.
+
+The result is [Scale.css](https://github.com/arielsalminen/Scale), set entirely in ems so that its breakpoints change little more than the body's font size: 12px, then 14, 16 and 18px. Its README tabulates the Pythagorean ratios the CSS draws on. In `css/scale.css`:
+
+- **The unit is the line**, `line-height: 1.5em` on the body. Paragraphs, lists, definition lists, blockquotes and images all end with `margin-bottom: 1.5em`, exactly one line under every block.
+- **Headings are tuned so their line boxes land on the line.** From 250px up an `h2` is set at 81/64 of the body with a line-height of 16/9, and 81/64 × 16/9 = 9/4: a 2.25em line box, one and a half lines. An `h3` (3/2 at a line-height of 1.5) comes to the same. The `h1` grows from 1½ lines to 2¼ and then 3. The heading margins are in the heading's own ems and do not land on the line.
+- **Code gets more room**: a code block ends with `3em` of its smaller type, about 1.9 lines.
+- **Lists** are indented by one line (`1.5em`) on the narrowest screens and hang in the margin from 479px, with `list-style-type: circle`. A blockquote is indented by 1.80203em, the A♯ of the ratio table.
+- **At the widest step, 1599px and up, the grid gives way.** The leading opens to `1.75em` while the gaps stay at `1.5em`, so long lines read looser instead of staying on the grid. A background grid image (`grid.gif`) is still in the file, commented out.
+
+Table: Scale.css, jedee now, and the prototype
+| | Scale.css (2012) | jedee now | prototype |
+| --- | --- | --- | --- |
+| unit | the line, 1.5em | none: Utopia space tokens | a quarter of the body line |
+| gap between paragraphs | 1 line | 0.53–0.76 line | ¾ line |
+| list indent | 1 line, hanging from 479px | 1 line (`1lh`) | as now |
+| unordered list marker | hollow circle | hollow ring (◦) | as now |
+| space under code | about 1.9 lines | the gap + 1em of code | the gap + ½ line |
+| heading line | ratios that multiply out to 1½, 2¼ or 3 lines | 1.2 × its size | the nearest quarter line |
+| sizes | Pythagorean ratios, in ems | Utopia, fluid | as now |
+| leading | 1.5, 1.75 from 1599px | 1.45 | 1.44–1.47 (a whole-pixel line) |
+| responsive by | the body's font size per breakpoint | `clamp()` tokens | as now |
+
+jedee already shares three of its choices: the one-line list indent, the hollow ring, and more space under code than above it. The prototype is closest to Scale.css in method: one unit for all the space, with the heading line boxes brought onto it, by ratios there and by `round()` here. It differs in the gap, which it keeps below a full line, and in counting in quarters, so that small text and table rows can run their own cross-rhythms. Scale.css's own widest step makes the case for a soft rhythm: faced with long lines, it chose the leading over the grid.
+
+**Later writing.** No newer piece on vertical rhythm turned up. The article points to a follow-up, "Scaling with EM units", which could not be found. [Prototyping Responsive Typography](https://arielsalminen.com/2013/prototyping-responsive-typography/) (2013) adds that leading should tighten on a narrow measure and loosen on a wide one, with media queries or Mat Marquis's Molten Leading plugin. [Typography for User Interfaces](https://arielsalminen.com/2016/typography-for-user-interfaces/) (2016) is about typefaces, x-height and system fonts. After that the practice shows in design-system tokens rather than articles, and there the space comes from the type scale on a pixel grid, not from the line:
+
+- [Vue Design System](https://github.com/arielsalminen/vue-design-system) (2018): space in steps of 4, 8, 16, 24, 48, 64 and 128px, line-heights of 1.6, 1.3 and 1, sizes from 11 to 64px.
+- Duet, the design system Salminen led from 2019 to 2021 ([`@duetds/tokens`](https://www.npmjs.com/package/@duetds/tokens) 2.2.2, June 2021): space from 2 to 72px, six of its steps the same numbers as font sizes (12, 16, 20, 36, 48 and 72px), line-heights of 1.5, 1.25 and 1.1. The body line, 16 × 1.5 = 24px, is not one of the space steps. Its documentation says the space scale is based on the type scale.
+
+That is the Utopia approach, the one jedee inherited: space from the sizes, not from the line.
+
+arielsalminen.com could not be opened from the session. The 2012 article is quoted from Johan's clip, the later posts are summarized from search results, and the tokens were read from GitHub and npm.
 
 ## In jedee
 
@@ -225,5 +289,8 @@ It changes no token and no global file. It works through `--flow-space`, the pub
 - **Adopting it.** The unit and its line-height would move to `.prose`. ⚠ A length line-height inherits as a length, so anything inside prose that sets its own font size without a line-height (a card, a webmention, an embed's caption) would inherit the body's 28px lines. Each needs its own line-height, from the small-text step or the ratio it has now.
 - **Image ratios.** Snapping figures needs `--img-ratio` on each figure. The eleventy-img transform could write it; nothing does yet.
 - **Page-level space.** Region padding, the header and the footer stay on the Utopia tokens. They frame the text rather than interrupt it.
+- **Leading by measure.** Salminen's 2013 post and Scale.css's widest step loosen the leading on long lines; jedee's leading is one number at every width. The prototype computes its line from the leading token, so a fluid leading would carry the whole lattice with it.
 
 Source: research session 2026-09-30. jedee's CSS was audited in the repository, and Eleventy Excellent's read from [its repository](https://github.com/madrilene/eleventy-excellent). Bernat's article and Roberts' post were read from their sources on GitHub, and the browser support dates are from the web-features data. The Every Layout and Piccalilli pages could not be fetched from the session; they are paraphrased, not quoted.
+
+Raw source: `src/_raw/On Typography.md` (Ariel Salminen, 2012, clipped 2026-09-30).
