@@ -62,7 +62,7 @@ Holding every element to a baseline grid costs something at each kind of interru
 
 In a single column of prose nobody compares baselines: there is no second column to compare them with. What the eye sees is proportion, whether a gap after a heading is always the same fraction of a line and whether a caption's leading sits right against the text's. Alignment only becomes visible where columns stand side by side.
 
-**Recommendation: a soft rhythm on a quarter-line lattice.** Every gap and every line box that is not body text is a whole number of quarter lines. That is strict wherever CSS makes it free: spacing, headings, small text, rules, tables, code. It lets an image of unknown height sit off the lattice by its remainder; everything after it keeps the same beat from a shifted start. Snapping images is possible without JavaScript once the image's ratio is known (below), so it is an option, not a requirement.
+**Recommendation: a soft rhythm on a quarter-line lattice.** Every gap and every line box that is not body text is a whole number of quarter lines. That is strict wherever CSS makes it free: spacing, headings, small text, rules, tables, code. It lets an image of unknown height sit off the lattice by its remainder; everything after it keeps the same beat from a shifted start. Snapping images is possible without JavaScript, from the ratio the image's own attributes give (below), so it is an option, not a requirement.
 
 ## Element by element
 
@@ -115,17 +115,13 @@ Given the ratio, CSS can pad it out. The figure becomes a size container, so `10
 ```css
 figure { container-type: inline-size; }
 
-figure > :is(img, picture) {
-  --img-block-size: calc(100cqi * var(--img-ratio));
+figure img {
+  --img-block-size: calc(100cqi * var(--img-ratio, attr(height type(<number>)) / attr(width type(<number>))));
   margin-block-end: calc(round(up, var(--img-block-size), var(--line-quarter)) - var(--img-block-size));
 }
 ```
 
-```html
-<figure style="--img-ratio: calc(1329 / 2000)">…</figure>
-```
-
-Without `--img-ratio` the margin is invalid, falls back to 0, and the figure sits off the lattice by its remainder: the soft default. The pad is at most a quarter line, 4.7px under the sample's photo on a phone. eleventy-img knows every image's width and height at build time, so the ratio could be written by the build rather than by hand. Typed `attr()`, which would read it straight from the `width` and `height` attributes, is in Chromium only. An embed with a fixed ratio, such as a 16:9 video, can use the same rule with a constant.
+The ratio is read from the image's own `width` and `height` attributes with typed `attr()`, which eleventy-img always writes, so no figure needs a hand-set ratio. Typed `attr()` is in Chrome and Edge 133 and Firefox 155, not yet in Safari. There the margin is invalid, falls back to 0, and the figure sits off the lattice by its remainder: the soft default. The pad is at most a quarter line, 4.7px under the sample's photo on a phone. `--img-ratio` on a figure still overrides, for an embed with a fixed ratio such as a 16:9 video. ⚠ `100cqi` assumes the image fills the figure's width; a narrower image is padded by the wrong amount.
 
 ⚠ The caption's quarter line under the image is padding, not margin. eleventy-img wraps the image in a block `<picture>`, and a margin on the caption would collapse with the pad under the picture: the larger of the two wins and the pad disappears. A bare `<img>` is inline and hides this, which is how the mockup missed it and the built style guide caught it.
 
@@ -275,6 +271,8 @@ Both figures are `src/wiki/_sources/vertical-rhythm.html`. It fetches the style 
 
 It changes no token and no global file. It works through `--flow-space`, the published property of the flow composition ([[Configuring a layout composition]]).
 
+The paragraph gap is three-quarters of a line, chosen over half a line on 2026-10-01: half a line kept the phone at today's 14px but made the space under a heading the same as the gap between paragraphs, so headings stopped sitting closer to their own text.
+
 ⚠ `prose.css` sets `--flow-space` on `pre`, the element after it, figures and headings. A value set on an element beats one it would inherit, so the prototype restates each of them.
 
 ⚠ The heading rules come last in the file. A heading's space above then wins over the space set by the element before it (a figure's line and a half, say), and the half line under a heading wins over the next element's own.
@@ -285,9 +283,7 @@ It changes no token and no global file. It works through `--flow-space`, the pub
 
 ### Not done
 
-- **The paragraph gap.** Three-quarters of a line is 21px on a phone where the gap is 15px now, and the same as now on a wide screen. Half a line would keep the phone as it is and halve the desktop gap. This is the change a reader would notice first, and it is Johan's call.
 - **Adopting it.** The unit and its line-height would move to `.prose`. ⚠ A length line-height inherits as a length, so anything inside prose that sets its own font size without a line-height (a card, a webmention, an embed's caption) would inherit the body's 28px lines. Each needs its own line-height, from the small-text step or the ratio it has now.
-- **Image ratios.** Snapping figures needs `--img-ratio` on each figure. The eleventy-img transform could write it; nothing does yet.
 - **Page-level space.** Region padding, the header and the footer stay on the Utopia tokens. They frame the text rather than interrupt it.
 - **Leading by measure.** Salminen's 2013 post and Scale.css's widest step loosen the leading on long lines; jedee's leading is one number at every width. The prototype computes its line from the leading token, so a fluid leading would carry the whole lattice with it.
 

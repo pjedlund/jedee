@@ -84,7 +84,7 @@ Items a quarter line apart. Lists and code blocks still get more space below tha
 }
 
 /* FIGURES
-The hairline becomes an outline drawn over the image's own edge, for the same reason. A figure that states its image's height-to-width ratio (style="--img-ratio: …") pads the image down to the next quarter line; without the ratio the padding is invalid, falls back to 0, and the figure sits off the lattice by its image's remainder. */
+The hairline becomes an outline drawn over the image's own edge, for the same reason. A figure pads its image down to the next quarter line. */
 [data-rhythm='proposed'] :is(figure, picture) {
   --flow-space: var(--line);
 }
@@ -103,8 +103,9 @@ The hairline becomes an outline drawn over the image's own edge, for the same re
   container-type: inline-size;
 }
 
-[data-rhythm='proposed'] figure > :is(img, picture) {
-  --img-block-size: calc(100cqi * var(--img-ratio));
+/* The ratio comes from the img's own width and height attributes; ⚠ typed attr() has no Safari yet, where the figure sits off by its remainder as before. --img-ratio on the figure still overrides. ponytail: assumes the image fills the figure's width; a narrower one pads by the wrong amount. */
+[data-rhythm='proposed'] figure img {
+  --img-block-size: calc(100cqi * var(--img-ratio, attr(height type(<number>)) / attr(width type(<number>))));
 
   margin-block-end: calc(round(up, var(--img-block-size), var(--line-quarter)) - var(--img-block-size));
 }
