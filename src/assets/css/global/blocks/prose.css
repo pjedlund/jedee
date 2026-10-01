@@ -42,7 +42,8 @@
 }
 
 /* Measure is in ch, so each type size finds its own line length and the short blocks hang from the start edge on purpose — never add margin-inline: auto here. See the wiki's "Line length". */
-.prose :is(p, li, dl, blockquote) {
+/* Plain lists take the measure on the list, so the bullet indent comes out of it rather than pushing items past the paragraphs' edge. */
+.prose :is(p, li, dl, blockquote, ul:not([class]), ol:not([class])) {
   max-inline-size: 60ch;
   text-wrap: pretty;
 }
