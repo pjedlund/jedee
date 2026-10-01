@@ -66,8 +66,7 @@
     {% include "partials/footer.njk" %}
     {% if eleventy.env.runMode === "serve" %}
       {% js "defer" %}{% include "scripts/font-check.js" %}{% endjs %}
-      {# Dev only: ?rhythm=off shows a rhythm page as it was before rhythm.css (wiki: Vertical rhythm). #}
-      <script>if (new URLSearchParams(location.search).get('rhythm') === 'off') document.querySelectorAll('[data-rhythm]').forEach(el => el.removeAttribute('data-rhythm'));</script>
+      <script>{% include "scripts/rhythm-compare.js" %}</script>
     {% endif %}
     {%- if meta.easteregg -%}
       <script type="module" src="/assets/scripts/components/custom-easteregg.js"></script>
