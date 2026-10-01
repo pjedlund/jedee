@@ -1,7 +1,7 @@
 ---
 description: "Cumulative Layout Shift: what it measures, why the element that moves is rarely the element at fault, and how a font-size-adjust fighting a size-adjust cost this site 0.18."
 date: 2026-09-06
-updated: 2026-09-10
+updated: 2026-10-01
 ---
 
 A page that moves under the reader is a specific kind of broken. You go to click a link and an image finishes loading above it, so you click an ad instead. You start reading a paragraph and a font swaps in, reflowing the line you were on. Nothing failed and nothing is slow — the page simply arrived in pieces, and the later pieces pushed the earlier ones around.
@@ -186,7 +186,7 @@ Table: The width of `1ch` in each family
 | Source Serif | 0.54187 | — |
 | Source Serif Fallback | 0.68000 | +25.49% |
 
-So `prose.css`'s `max-inline-size: 60ch` (about 72 characters in the web font, see [[Line length]]) and the `--tracking` values in `ch` all resolve differently while the fallback shows. **This turned out not to be the cause of any shift measured here** — converting every `ch` tracking value to `em` made letter-spacing identical between the two states and the footer still wrapped the same way, because the difference is around 1% of a sub-pixel value. Recorded because it is real and easy to assume is the culprit; it was measured and it is not.
+So `prose.css`'s `max-inline-size: 54ch` (about 63 characters in the web font, see [[Line length]]) and the `--tracking` values in `ch` all resolve differently while the fallback shows. **This turned out not to be the cause of any shift measured here** — converting every `ch` tracking value to `em` made letter-spacing identical between the two states and the footer still wrapped the same way, because the difference is around 1% of a sub-pixel value. Recorded because it is real and easy to assume is the culprit; it was measured and it is not.
 
 **What is *not* a factor: font size.** `size-adjust` is a pure ratio, so it is scale-invariant — the required value for the heading is 100.119% at 32 px, 100.103% at 64 px and 100.100% at 107 px. Fluid `clamp()` type does not weaken metric matching.
 

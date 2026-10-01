@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-10-01] enrich | Line length moved to 54ch
+
+Johan tried several line lengths and settled on `54ch`, replacing Eleventy Excellent's `60ch` in `prose.css`, the `.intro` lede in `post.css` and the caption measure in `wiki.css`. The same day plain lists started taking the measure on the list rather than each item, so list text no longer runs past the paragraphs' edge. [[Line length]] was re-measured on the dev server across eight wiki pages: about 63 characters a line from 768px up (it was about 72), 41 on a phone. The `line-length-ch` figure was re-shot at `54ch`, and its caption, alt text and image size updated. The `60ch` mentions on [[Figures]], [[Accessibility]], [[Text wrapping]], [[Typographic conventions]], [[Layout shift]], [[Vertical rhythm]] and the index now say `54ch`; the caption and band measurements on [[Figures]] and [[Line length]] were taken again rather than scaled.
+
 ## [2026-10-01] enrich | Vertical rhythm folded into prose
 
 The rhythm stopped being a scoped prototype: `global/blocks/prose-rhythm.css`, scoped to `.prose`, replaced the old spacing rules in `prose.css`, and the `data-rhythm` attribute, the page-level stylesheet and the dev-only `?rhythm=off` switch with its scroll-synced tabs went. Plain pages, listing pages and the webmentions box came with it. Because page-level stylesheets beat layered global CSS, the components whose own stylesheets set the same properties take the line steps there, with the old values as fallbacks: tables, media meta, activity stats, the event badge, the subtitle, the featured image and the video links. The two before/after figures are frozen, since the old CSS is gone. A sweep of 147 pages at two widths: 291 of 294 clean.

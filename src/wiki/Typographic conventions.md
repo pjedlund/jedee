@@ -1,7 +1,7 @@
 ---
 description: "The book-typography rules for figures, small caps, capitals, captions, line breaks, superscripts, ordinals, list markers, subtitles, kerning, hyphenation and hard spaces, where they come from, and what each costs in accessibility."
 date: 2026-09-10
-updated: 2026-09-30
+updated: 2026-10-01
 ---
 
 Typography carries a set of conventions older than the web, most of them written down in two books. Robert Bringhurst's *The Elements of Typographic Style* (1992; 4th edition 2012) is adapted rule by rule for CSS at [webtypography.net](http://webtypography.net/). Matthew Butterick's *Practical Typography* is a free online book. The two agree more than they differ, and where they differ Butterick is the milder. This page covers the part CSS can switch on, given fonts that carry the features; the switches themselves are on [[OpenType features]].
@@ -114,7 +114,7 @@ Set on 2026-09-10, after a research pass and an audit of the site. The decisions
   - The old-style zero has no slashed form, so `slashed-zero` over old-style figures does nothing. `.slashed-zero` therefore sets lining figures as well, which is what a code or serial number wants anyway.
 - **No small caps on `abbr`**, for two reasons. The glossary ([[Abbreviations]]) marks only its 31 terms (it has CLS but not CSS), so styled acronyms would sit beside unstyled ones. And `all-small-caps` would flatten RDFa.
 - **Capital labels** (site logo, breadcrumb, menu button, footer, buttons) share `--tracking-wide`, raised from 0.09ch to 0.12ch. That is about 5.7% of the size, since a Source Sans digit is 0.472 em wide.
-- **Captions** stay italic and centered, and are now balanced. The wiki's captions run long (a median of about 100 characters, up to 400), so `local/wiki.css` sets them left-aligned and `pretty`, on the prose's edge and its 60ch measure. They were upright until 2026-09-29, when Johan chose italic despite the readability case above; see [[Figures]].
+- **Captions** stay italic and centered, and are now balanced. The wiki's captions run long (a median of about 100 characters, up to 400), so `local/wiki.css` sets them left-aligned and `pretty`, on the prose's edge and its 54ch measure. They were upright until 2026-09-29, when Johan chose italic despite the readability case above; see [[Figures]].
 - **Quotations** balance. The rule is in `global-styles.css`, and again in `prose.css`, whose `pretty` rule on `p` would otherwise win.
 - **Footnote markers** are bare superscript figures.
   - `markdown.js` overrides markdown-it-footnote's `footnote_caption` rule to drop the brackets. The Source Sans subset has superscript digits, parentheses and colons, but no square brackets. `footnotes.css` then uses `font-variant-position: super`.
