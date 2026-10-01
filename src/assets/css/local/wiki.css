@@ -18,13 +18,13 @@ WIKI LOG ENTRIES
 _log.md is a run of dated records whose h2 is the whole record — "[2026-08-29] ingest | The PhotoSwipe lightbox" — not a chapter title. At the global h2 size each one wraps to two lines and the page reads as forty chapters. Scoped by data-wiki-log (set in wiki.njk) so ordinary wiki headings keep the display size.
 */
 .prose[data-wiki-log] h2 {
-  --flow-space: var(--space-xl);
+  --flow-space: var(--line-1h);
 
   font-size: var(--size-step-1);
-  line-height: var(--leading-standard);
-  padding-block-start: var(--space-m);
-  /* ⚠ Not var(--stroke): that resolves to --color-bg-accent, a surface token that is white in the light theme and vanishes as a line on the page. --color-bg-accent-2 is what the site's own <hr> uses. */
-  border-block-start: var(--border-thickness) solid var(--color-bg-accent-2);
+  line-height: round(nearest, calc(1em * var(--leading-standard)), var(--line-quarter));
+  padding-block-start: var(--line-half);
+  /* ⚠ Not var(--stroke): that resolves to --color-bg-accent, a surface token that is white in the light theme and vanishes as a line on the page. --color-bg-accent-2 is what the site's own <hr> uses. An inset shadow, not a border, so the rule adds no height to the rhythm. */
+  box-shadow: inset 0 var(--border-thickness) 0 var(--color-bg-accent-2);
 }
 
 /*

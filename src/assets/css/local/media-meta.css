@@ -6,11 +6,12 @@ Type-specific pieces stay with their type: `.photo-tech` below is the photograph
 .media-meta {
   --media-meta-label-color: var(--color-text-accent);
   --media-meta-column-gap: var(--space-s-m);
-  --media-meta-row-gap: var(--space-xs);
+  --media-meta-row-gap: var(--line-quarter, var(--space-xs));
 
   font-size: var(--size-step-min-1);
-  border-block-start: var(--stroke);
-  padding-block-start: var(--space-s-m);
+  /* An inset shadow, not a border, so the rule adds no height to the prose rhythm. */
+  box-shadow: inset 0 var(--border-thickness) 0 var(--color-bg-accent);
+  padding-block-start: var(--line-half, var(--space-s-m));
 }
 
 /* label | value grid — dt/dd flow straight into the two columns (no wrappers) */

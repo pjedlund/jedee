@@ -1,5 +1,8 @@
 <style>
   custom-peertube-link {
+    /* In prose the 16:9 player's pad goes into this gap, down to the next quarter line. */
+    --video-block-size: calc(100% * 9 / 16);
+    --flow-space: calc(var(--line-quarter, 1em) + round(up, var(--video-block-size), var(--line-quarter, 1px)) - var(--video-block-size));
     display: flex;
     align-items: flex-start;
     gap: var(--space-xs);

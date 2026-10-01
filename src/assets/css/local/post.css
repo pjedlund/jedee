@@ -5,13 +5,13 @@ article h1 {
 
 /* Subtitle under the page title (the <p> in <hgroup>): Source Sans italic, four steps below the h1. ⚠ --flow-space sits on the p itself, or prose's "space after a heading" rule wins. */
 hgroup > p {
-  --flow-space: var(--space-2xs);
+  --flow-space: var(--line-quarter, var(--space-2xs));
 
   font-family: var(--font-base);
   font-weight: var(--font-regular);
   font-style: italic;
   font-size: var(--size-step-2);
-  line-height: var(--leading-fine);
+  line-height: round(nearest, calc(1em * var(--leading-fine)), var(--line-quarter, 1px));
   color: var(--color-headline);
   text-wrap: balance;
 }
@@ -37,6 +37,7 @@ article h3 {
   max-inline-size: var(--max-img-width, 100%);
   block-size: auto;
   aspect-ratio: 16/9;
+  --img-ratio: 9 / 16; /* the prose rhythm pads the image by this, not the file's own ratio */
   object-fit: cover;
   object-position: center;
 }

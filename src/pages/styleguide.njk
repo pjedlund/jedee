@@ -310,6 +310,20 @@ colorGroups:
     </div>
   </section>
 
+  <section class="rhythm | flow region">
+    <h2 class="heading-line">Vertical rhythm</h2>
+    <p>Prose, where every gap, and every line of text that is not body text, is a whole number of quarter lines of body text (<code>global/blocks/prose-rhythm.css</code>). The wiki page <a href="/wiki/vertical-rhythm/">Vertical rhythm</a> explains and measures it.</p>
+
+    <div class="rhythm-demo | flow">
+      <label class="rhythm-toggle"><input type="checkbox"> Show the lattice: whole lines strong, quarter lines faint</label>
+      <div class="rhythm-sample | wrapper flow prose">
+        <div class="wrapper-pass | flow">
+          {% include "partials/rhythm-sample.njk" %}
+        </div>
+      </div>
+    </div>
+  </section>
+
   <div class="full sizes | section">
     <section class="section__inner wrapper flow region">
       <h2 class="heading-line">Sizes</h2>
@@ -391,4 +405,6 @@ colorGroups:
 {%- css "local" -%}
   {%- include 'css/styleguide.css' -%}
   {%- include 'css/footnotes.css' -%}
+  {%- include 'css/meta.css' -%}
+  {%- include 'css/media-meta.css' -%}
 {%- endcss -%}

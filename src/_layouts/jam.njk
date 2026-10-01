@@ -43,7 +43,7 @@ schema: BlogPosting
     {% if genre %}
       {# ⚠ A clipper property typed `text` gives one string, which a bare {% for %} walks character by character. #}
       {% set genres = [genre] if genre is string else genre %}
-      <ul class="my-s-m cluster gutter-s" role="list">
+      <ul class="cluster gutter-s" role="list">
         {% for name in genres | unwikilink %}
           <li>
             <a href="/jams/genres/{{ name | slugify }}/" class="button" data-small-button>{{ name }}</a>

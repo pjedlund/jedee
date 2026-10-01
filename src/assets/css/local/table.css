@@ -10,7 +10,6 @@
   --table-rule-highlight: var(--color-rule-highlight); /* its lower half; paired with the shadow so neither line dominates and the groove reads as cut in */
   --table-rule: var(--border-thickness) solid var(--table-rule-color);
   --table-border: none; /* the box around the table; var(--table-rule) brings it back */
-  --table-band-rule: calc(var(--border-thickness) * 2) solid var(--table-rule-color);
   --table-radius: var(--border-radius-medium);
   --table-font-size: 1em; /* body cells at the text size: Rutter warns against shrinking a table to fit */
   --table-head-size: var(--size-step-min-1); /* type.table.header sets the head a step below the body text, not level with it */
@@ -19,7 +18,7 @@
   --table-head-transform: none;
   --table-head-weight: var(--font-regular); /* small caps replace bold rather than add to it (Butterick) */
   --table-head-tracking: var(--tracking-wide);
-  --table-cell-padding-block: var(--space-s);
+  --table-cell-padding-block: var(--line-quarter, var(--space-s));
   --table-cell-padding-inline: var(--space-s);
   --table-edge-padding: var(--space-m-l); /* the caption's, first column's and last column's inset; kept equal to the prose one on purpose so every table matches (picked 2026-09-29) — a prose table takes the popout one below instead */
   --table-popout-edge-padding: var(--space-m-l); /* ⚠ keep this on the 2rem popout track: its 31px maximum is what lands a prose table's text on the prose's own edge */
@@ -83,7 +82,7 @@ td {
 }
 
 caption {
-  padding-block: var(--space-xs);
+  padding-block: var(--line-quarter, var(--space-xs));
   font-size: var(--table-caption-size);
   font-style: var(--table-caption-style);
 }
@@ -99,14 +98,16 @@ thead th {
   background: var(--table-head-bg);
 }
 
-thead,
-tfoot {
-  border-block: var(--table-band-rule);
+/* The band rules are painted inside the cells like the row rules, so they add no height to the prose rhythm. */
+:is(thead, tfoot) > tr > * {
+  box-shadow:
+    inset 0 calc(var(--border-thickness) * 2) 0 var(--table-rule-color),
+    inset 0 calc(var(--border-thickness) * -2) 0 var(--table-rule-color);
 }
 
 /* With no box around the table, the last body row closes it; a tfoot carries its own rule. */
-tbody:last-child {
-  border-block-end: var(--table-band-rule);
+tbody:last-child > tr:last-child > * {
+  box-shadow: inset 0 calc(var(--border-thickness) * -2) 0 var(--table-rule-color);
 }
 
 /* The stamped rule: a hairline with a lighter one directly under it, so the join reads as pressed into the page. Painted, not bordered — a collapsed border gives one color per edge. */
