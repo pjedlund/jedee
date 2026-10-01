@@ -71,7 +71,7 @@ Measured in the mockup below at 375px and 1360px, on the same prose sample under
 Table: What each element takes now and in the quarter-line prototype (375px / 1360px)
 | element | now | prototype | how |
 | --- | --- | --- | --- |
-| gap between paragraphs | 14.9 / 31.0 px | 21 / 30.75 px (¾ line) | `--flow-space` |
+| gap between paragraphs | 14.9 / 31.0 px | 14 / 20.5 px (½ line) | `--flow-space` |
 | space above an `h3` | 41.8 / 65.9 px | 42 / 61.5 px (1½ lines) | `--flow-space` on the heading |
 | space under a heading | 14.9–19.7 / 31.0 px | 14 / 20.5 px (½ line) | `:is(h1, h2, h3, h4) + *` |
 | heading line | 1.2 × its size | nearest quarter line to 1.2 × its size | `round()` |
@@ -167,7 +167,7 @@ Table: The prototype's intervals read as rhythm
 | --- | --- | --- |
 | body text | 1 | the beat |
 | quarter line | ¼ | the subdivision everything is counted in |
-| gap between paragraphs | ¾ | a short rest |
+| gap between paragraphs | ½ | a short rest |
 | space under a heading | ½ | a breath that ties the heading to its phrase |
 | space above an `h2` | 2 | a longer rest before a new section |
 | caption, meta, code or footnote line | ¾ | four against three: four lines in three beats |
@@ -211,7 +211,7 @@ Table: Scale.css, jedee now, and the prototype
 | | Scale.css (2012) | jedee now | prototype |
 | --- | --- | --- | --- |
 | unit | the line, 1.5em | none: Utopia space tokens | a quarter of the body line |
-| gap between paragraphs | 1 line | 0.53–0.76 line | ¾ line |
+| gap between paragraphs | 1 line | 0.53–0.76 line | ½ line |
 | list indent | 1 line, hanging from 479px | 1 line (`1lh`) | as now |
 | unordered list marker | hollow circle | hollow ring (◦) | as now |
 | space under code | about 1.9 lines | the gap + 1em of code | the gap + ½ line |
@@ -238,12 +238,12 @@ arielsalminen.com could not be opened from the session. The 2012 article is quot
 Everything vertical comes from one rule, `.flow > * + *` in `global/compositions/flow.css`, fed by Eleventy Excellent's Utopia tokens and the element rules in `global/blocks/prose.css`. Nothing is measured in lines.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/vertical-rhythm-drift-top.png" alt="Two copies of the same prose sample, 375 pixels wide, side by side over blue rules at every body line and fainter ones at every quarter line. A label beside each block gives its distance in pixels from the nearest quarter line. Left, the site's current CSS: the heading 0, meta line +1.3, the two paragraphs −2.5 and −1.6, the h3 −2.1, the list +1.8, the paragraph after it 0, the figure +1.0, the paragraph after the figure −1.5; two of nine blocks on the lattice. Right, the prototype: every label reads 0, nine of nine." width="2152" height="2320">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/vertical-rhythm-drift-top.png" alt="Two copies of the same prose sample, 375 pixels wide, side by side over blue rules at every body line and fainter ones at every quarter line. A label beside each block gives its distance in pixels from the nearest quarter line. Left, the site's current CSS: the heading 0, meta line +1.3, the two paragraphs −2.5 and −1.6, the h3 −2.1, the list +1.8, the paragraph after it 0, the figure +1.0, the paragraph after the figure −1.5; two of nine blocks on the lattice. Right, the prototype: every label reads 0, nine of nine." width="2152" height="2302">
   <figcaption>The first half of the sample on a phone. Each label is how far that block's top edge is from the nearest quarter line; half a pixel or less counts as on it.</figcaption>
 </figure>
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/vertical-rhythm-drift-end.png" alt="The second half of the same comparison. Left, the current CSS: table −0.7, blockquote −2.7, code block −3.1, paragraph −0.6, rule 0, numbered list +2.8, disclosure −1.9, photo metadata −1.1, paragraph 0, footnote rule +0.9, footnotes −3.4; four of twenty blocks on the lattice over the whole page. Right, the prototype: every label 0, twenty of twenty. The prototype's table rows, code block and rule are visibly more even." width="2152" height="2612">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/vertical-rhythm-drift-end.png" alt="The second half of the same comparison. Left, the current CSS: table −0.7, blockquote −2.7, code block −3.1, paragraph −0.6, rule 0, numbered list +2.8, disclosure −1.9, photo metadata −1.1, paragraph 0, footnote rule +0.9, footnotes −3.4; four of twenty blocks on the lattice over the whole page. Right, the prototype: every label 0, twenty of twenty. The prototype's table rows, code block and rule are visibly more even." width="2152" height="2530">
   <figcaption>The second half, from the table on. The lattice is still counted from the page's first block.</figcaption>
 </figure>
 
@@ -266,7 +266,7 @@ Both figures are `src/wiki/_sources/vertical-rhythm.html`. It fetches the style 
   --line-1h: calc(var(--line) * 1.5);
   --line-2: calc(var(--line) * 2);
 
-  --rhythm-gap: var(--line-3q);
+  --rhythm-gap: var(--line-half);
   --rhythm-after-heading: var(--line-half);
   --rhythm-small-leading: var(--line-3q);
   --flow-space: var(--rhythm-gap);
@@ -285,7 +285,7 @@ It changes no token and no global file. It works through `--flow-space`, the pub
 
 ### Not done
 
-- **The paragraph gap.** Three-quarters of a line is 21px on a phone where the gap is 15px now, and the same as now on a wide screen. Half a line would keep the phone as it is and halve the desktop gap. This is the change a reader would notice first, and it is Johan's call.
+- **The paragraph gap.** Half a line since 2026-10-01, on trial: 14px on a phone, as now, and 20.5px on a wide screen, two-thirds of today's 31px. Three-quarters, the first proposal, made the phone gap 21px. At half a line the space under a heading equals the paragraph gap, so a heading no longer sits closer to its text than paragraphs sit to each other.
 - **Adopting it.** The unit and its line-height would move to `.prose`. ⚠ A length line-height inherits as a length, so anything inside prose that sets its own font size without a line-height (a card, a webmention, an embed's caption) would inherit the body's 28px lines. Each needs its own line-height, from the small-text step or the ratio it has now.
 - **Image ratios.** Snapping figures needs `--img-ratio` on each figure. The eleventy-img transform could write it; nothing does yet.
 - **Page-level space.** Region padding, the header and the footer stay on the Utopia tokens. They frame the text rather than interrupt it.
