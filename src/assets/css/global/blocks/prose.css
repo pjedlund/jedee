@@ -98,7 +98,7 @@
   background-repeat: no-repeat;
   background-position: right 0.22em;
   background-size: 0.5em;
-  margin-inline-end: -0.12em; /* Trims the SVG's blank right margin, so a following period or space starts at the drawn arrow. */
+  margin-inline-end: -0.06em; /* Trims half the SVG's blank right margin, so a following period or space sits close to the drawn arrow. */
 }
 
 @media screen(ltsm) {
