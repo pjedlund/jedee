@@ -28,7 +28,7 @@ A proposal, not the site's CSS: every vertical gap, and every line box that is n
   --line-2: calc(var(--line) * 2);
 
   /* The knobs: every rule below reads one of these. */
-  --rhythm-gap: var(--line-half);
+  --rhythm-gap: var(--line-3q);
   --rhythm-after-heading: var(--line-half);
   --rhythm-small-leading: var(--line-3q);
   --rhythm-rule-color: var(--color-bg-accent-2);
