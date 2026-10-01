@@ -1,7 +1,7 @@
 ---
 description: "The two CSS text-wrap values that prevent widows in headings and paragraphs without JavaScript."
 date: 2026-08-01
-updated: 2026-09-28
+updated: 2026-10-01
 ---
 
 A **widow** (typography's term, loosely used) is a very short last line — usually one lone word — at the end of a paragraph or, most visibly, a heading. For most of the web's history there was no CSS for this; the standard fix was JavaScript that swapped the last space for a `&nbsp;` (the approach in [css-tricks' 2013 article](https://css-tricks.com/preventing-widows-in-post-titles/), which [Josh Crain](https://joshcrain.io/notes/2024/prevent-widows-in-post-titles/) cites as the state of things before `text-wrap`). Two values of the CSS `text-wrap` property now solve it natively:
@@ -35,7 +35,7 @@ Both, rendered in the site's own faces at the same measure. Each pair is one str
 Both values are shipped, at these places in the cascade:
 
 - `global/base/reset.css` — the broad defaults, in the `reset` layer: `* { text-wrap: pretty }` and `h1, h2, h3, h4 { text-wrap: balance }`. This is the whole site's baseline.
-- `global/blocks/prose.css` — `.prose :is(p, li, dl, blockquote)` repeats `text-wrap: pretty` alongside the `60ch` measure (what that measure actually sets is on [[Line length]]). Redundant with the reset in effect, but it keeps the prose block's typographic decisions self-contained.
+- `global/blocks/prose.css` — `.prose :is(p, li, dl, blockquote, ul:not([class]), ol:not([class]))` repeats `text-wrap: pretty` alongside the `54ch` measure (what that measure actually sets is on [[Line length]]). Redundant with the reset in effect, but it keeps the prose block's typographic decisions self-contained.
 - `local/post.css` — `.intro` (the lede under a post title) gets `text-wrap: balance`: a short, display-adjacent block, so it takes the heading treatment rather than the paragraph one.
 - `global/base/global-styles.css`: since 2026-09-10, `figcaption` and `blockquote` (with its `p`) take `balance`, since a centered caption and a quotation are short blocks like a heading. ⚠ Inside `.prose` the quote needs the rule again in `prose.css`. There, `.prose :is(p, …)` sets `pretty` in a later layer and matches the quote's paragraphs directly. The wiki's long captions go back to `pretty` in `local/wiki.css`; the reasoning is on [[Typographic conventions]].
 - `global/blocks/breadcrumb-leaf.css` — **the gotcha.** The current-page crumb must stay on one line, but the global `* { text-wrap: pretty }` reset re-enables wrapping *even against an explicit `white-space: nowrap`*. The block clamps with `-webkit-line-clamp: 1` instead, which wins where `nowrap` loses. Any future single-line truncation on this site has the same fight ahead of it — the reset's universal selector reaches everything.

@@ -54,6 +54,6 @@ Counted in both repositories' `src/assets/css/` on 2026-09-14.
 ### Decisions
 
 - **Low contrast on decoration is not a defect.** An `aria-hidden` icon beside a text label carries no information of its own, so neither 1.4.3 Contrast (Minimum) nor 1.4.11 Non-text Contrast applies to it. On the mega-menu pass (2026-08-01) one such icon was raised to 4.97:1 and then reverted; its contrast is a design choice, not a fix.
-- **AA, plus AAA where it comes cheap.** The 60ch measure sets about 72 characters per line, inside the width part of 1.4.8. Wiki pages expand their abbreviations through a shared glossary (3.1.4), and motion honors `prefers-reduced-motion` (2.3.3). None of this is a claim of AAA conformance.
+- **AA, plus AAA where it comes cheap.** The 54ch measure sets about 63 characters per line, inside the width part of 1.4.8. Wiki pages expand their abbreviations through a shared glossary (3.1.4), and motion honors `prefers-reduced-motion` (2.3.3). None of this is a claim of AAA conformance.
 
 Raw source: `src/pages/accessibility.md`, `src/_data/meta.js`, `src/assets/css/` in jedee and in Eleventy Excellent, and the pages linked above, read on 2026-09-14; WCAG 2.2 at w3.org.

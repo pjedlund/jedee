@@ -31,7 +31,7 @@ _log.md is a run of dated records whose h2 is the whole record — "[2026-08-29]
 WIKI CAPTIONS
 Italic and a step smaller than the prose, starting on the prose's edge and held to the paragraphs' measure, so its right edge lines up with theirs. A breakout figure hands its caption the content column through subgrid.
 */
-/* ⚠ Registered as a length so 60ch resolves at the body size on .prose and inherits as px; an unregistered 60ch would re-resolve at the caption's smaller size. */
+/* ⚠ Registered as a length so 54ch resolves at the body size on .prose and inherits as px; an unregistered 54ch would re-resolve at the caption's smaller size. */
 @property --wiki-prose-measure {
   syntax: '<length>';
   inherits: true;
@@ -39,7 +39,7 @@ Italic and a step smaller than the prose, starting on the prose's edge and held 
 }
 
 .prose {
-  --wiki-prose-measure: 60ch;
+  --wiki-prose-measure: 54ch;
 }
 
 .prose :is(figcaption, .meta) {

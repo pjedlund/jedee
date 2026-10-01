@@ -10,7 +10,7 @@ Around body content — an article, a note, a wiki page. Not around UI.
 
 ## What it sets
 
-- A 60ch measure on paragraphs, list items and quotes, with `text-wrap: pretty`.
+- A 54ch measure on paragraphs, lists and quotes, with `text-wrap: pretty`.
 - Old-style figures in running text, which is why `1234567890` has ascenders and descenders here. Tables switch to lining and tabular figures where digits meet columns; code switches them off entirely, because Source Code Pro has old-style figures too.
 - A narrower wrapper at 64rem, against the site's 85rem.
 
