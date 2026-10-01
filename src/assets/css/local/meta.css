@@ -54,6 +54,11 @@ The dim type/date/revision line under a post or wiki title (partials/entry-heade
   white-space: nowrap;
 }
 
+/* ⚠ The reset's `* { text-wrap: pretty }` turns wrapping back on for every child, so without this a link or date inside an item breaks across two lines. */
+.meta-item * {
+  text-wrap-mode: inherit;
+}
+
 /* Centres a 1em icon on the capital height, the optical middle of the label. */
 .meta-icon {
   inline-size: 1em;
