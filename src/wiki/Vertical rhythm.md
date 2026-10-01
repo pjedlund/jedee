@@ -135,7 +135,7 @@ A body row is one line and two quarter-line paddings, one and a half lines. That
 
 ### Blockquotes, code and rules
 
-- **Blockquote.** Its larger lines are rounded like a heading's, to the nearest quarter line to 1.3 × its size (33.75px on a phone, 52.5px wide). Its padding is three-quarters of a line, and the source line under the quote goes back to one body line.
+- **Blockquote.** Its larger lines keep the standard leading, 1.45 × its size rounded to the nearest quarter line (40.5px on a phone, 63px wide). Its padding is three-quarters of a line, and the source line under the quote goes back to one body line.
 - **Code block.** Small text at a three-quarter line, padded by the same. Its 1px frame is an inset box-shadow instead of a border.
 - **Rule.** An `hr` is a box one line tall with the hairline painted across its middle. The space on both sides is then the same, 33.75px on a phone, where now it is 15px above and 30px below.
 

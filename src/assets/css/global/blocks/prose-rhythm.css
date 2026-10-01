@@ -132,9 +132,9 @@ A line above, a line and a half after; the hairline is an outline over the image
 }
 
 /* BLOCKQUOTE
-Its larger lines snap like a heading's; the source line is body text again. */
+Its larger lines keep the standard leading, snapped to the nearest quarter line; the source line is body text again. */
 .prose blockquote {
-  line-height: round(nearest, 1.3em, var(--line-quarter));
+  line-height: round(nearest, calc(1em * var(--leading-standard)), var(--line-quarter));
   padding-block: var(--line-3q);
 }
 
