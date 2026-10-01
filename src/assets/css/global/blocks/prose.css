@@ -93,7 +93,7 @@
 .prose a[href^='http']:not([href*='johanedlund.se']):not([href*='localhost']):not(.no-indicator)::after {
   /* ⚠ An inline box holding a word joiner, not an empty inline-block: an atomic box can wrap alone onto the next line, the joiner glues the arrow to the link's last letter. */
   content: '\2060';
-  padding-inline-start: 0.55em;
+  padding-inline-start: 0.44em; /* ⚠ Narrower than the 0.5em image on purpose: it clips the SVG's blank left margin; below ~0.42em it clips the arrow. */
   background-image: url('/assets/images/template/external.svg');
   background-repeat: no-repeat;
   background-position: right 0.22em;
