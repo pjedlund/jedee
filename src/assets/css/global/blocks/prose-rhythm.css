@@ -146,6 +146,12 @@ Its larger lines snap like a heading's; the source line is body text again. */
   line-height: var(--line);
 }
 
+/* LARGER TEXT
+A lede set a step up (.intro text-step-1) keeps the standard leading, snapped to the nearest quarter line; ⚠ without this it inherits the body text's line as a length. */
+.prose .intro {
+  line-height: round(nearest, calc(1em * var(--leading-standard)), var(--line-quarter));
+}
+
 /* RULE
 One line tall with the hairline painted across its middle, so the space on both sides is equal. */
 .prose hr {
