@@ -109,7 +109,7 @@
 
 /*
 VERTICAL RHYTHM
-Two prose samples side by side (partials/rhythm-sample.njk), the second under local/rhythm-prototype.css. The lattice toggle is a checkbox and :has(), no script.
+Two prose samples side by side (partials/rhythm-sample.njk), the second under local/rhythm.css. The lattice toggle is a checkbox and :has(), no script.
 */
 .rhythm-demo {
   --rhythm-grid-line: color-mix(in oklab, var(--color-accent-blue) 45%, transparent);

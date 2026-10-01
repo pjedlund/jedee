@@ -66,7 +66,7 @@
     @font-face { font-family: 'Source Code Pro'; font-weight: 200 900; src: url('../../assets/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }`;
 
   // Both sides load the same stylesheets, the prototype included; only data-rhythm differs, so any difference is the prototype's.
-  const sheets = ['../../_includes/css/global.css', ...['table', 'meta', 'media-meta', 'footnotes', 'rhythm-prototype'].map(name => `../../assets/css/local/${name}.css`)]
+  const sheets = ['../../_includes/css/global.css', ...['table', 'meta', 'media-meta', 'footnotes', 'rhythm'].map(name => `../../assets/css/local/${name}.css`)]
     .map(href => `<link rel="stylesheet" href="${href}">`)
     .join('');
 
@@ -140,7 +140,7 @@
       for (const [key, title, proposed] of [['now', 'Now', false], ['proposed', 'Proposed', true]]) {
         const side = document.createElement('div');
         side.className = 'side';
-        side.innerHTML = `<p class="side-head mono"><b>${title}</b>${proposed ? 'rhythm-prototype.css' : 'the live prose CSS'} at ${width}px</p><div class="labels mono"></div>`;
+        side.innerHTML = `<p class="side-head mono"><b>${title}</b>${proposed ? 'rhythm.css' : 'the live prose CSS'} at ${width}px</p><div class="labels mono"></div>`;
         const win = document.createElement('div');
         win.className = 'window';
         win.dataset.compare = `rhythm-${part}`;

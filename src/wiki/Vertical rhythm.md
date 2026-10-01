@@ -12,7 +12,7 @@ There are two schools, and the difference is how much each one holds to the unit
 
 ## The unit
 
-The unit is one line of body text: its line-height as a length. At jedee's body size and leading that is 28.16px on a phone and 40.56px at 1360px and wider, because the body size is fluid, 19px to 28px ([[Design token sync]]).
+The unit is one line of body text: its line-height as a length. At jedee's body size and its site-wide leading of 1.45 that is 28.16px on a phone and 40.56px at 1360px and wider, because the body size is fluid, 19px to 28px ([[Design token sync]]). The rhythm's own leading is fluid too (below), so in rhythm pages it is 27px and 42px.
 
 CSS has two units for it, both [Baseline widely available](https://web-platform-dx.github.io/web-features/) since May 2026 (Chrome 109/111, Firefox 120, Safari 16.4):
 
@@ -42,12 +42,14 @@ A **registered custom property** gives the unit without either trap. A property 
 
 ```css
 .prose {
-  --line: round(1em * var(--leading-standard), 1px);  /* 28px, 41px */
+  --line: round(clamp(1.4em, 1.3635rem + 1.4951vw, 1.5em), 1px);  /* 27px, 42px */
   line-height: var(--line);
 }
 ```
 
-It is computed from the leading token rather than from `1lh`, which on this element would read the line-height it is setting. The cost is a leading that moves by up to half a pixel with the viewport: 1.44 on a phone, 1.47 at 1360px, instead of 1.45 everywhere.
+It is computed from the font size rather than from `1lh`, which on this element would read the line-height it is setting. Rounding moves the leading by up to half a pixel.
+
+**Leading by measure.** Longer lines need looser leading, as Salminen's 2013 post and Scale.css's widest step argue (below). jedee's prose lines run from about 40 characters on a phone to the 60ch measure on a wide screen, so the line is fluid: 1.4 of the body size at 320px, 1.5 at 1350px, the two ends of the Utopia type scale. The middle term of the `clamp()` is a straight line between 1.4 × 19px and 1.5 × 28px, the body size at those two widths; the `em` bounds hold the ratio between 1.4 and 1.5 whatever happens in between. ⚠ The middle term is tuned to `--size-step-0`'s two ends and has to be worked out again if they change. A fluid number (`1.4 + 0.1 × progress`) would need a length divided by a length, which not every browser does yet. Every step of the lattice is a fraction of the line, so the whole rhythm opens up with it.
 
 ## Strict grid or soft rhythm
 
@@ -71,13 +73,13 @@ Measured in the mockup below at 375px and 1360px, on the same prose sample under
 Table: What each element takes now and in the quarter-line prototype (375px / 1360px)
 | element | now | prototype | how |
 | --- | --- | --- | --- |
-| gap between paragraphs | 14.9 / 31.0 px | 21 / 30.75 px (¾ line) | `--flow-space` |
-| space above an `h3` | 41.8 / 65.9 px | 42 / 61.5 px (1½ lines) | `--flow-space` on the heading |
-| space under a heading | 14.9–19.7 / 31.0 px | 14 / 20.5 px (½ line) | `:is(h1, h2, h3, h4) + *` |
+| gap between paragraphs | 14.9 / 31.0 px | 20.25 / 31.5 px (¾ line) | `--flow-space` |
+| space above an `h3` | 41.8 / 65.9 px | 40.5 / 63 px (1½ lines) | `--flow-space` on the heading |
+| space under a heading | 14.9–19.7 / 31.0 px | 13.5 / 21 px (½ line) | `:is(h1, h2, h3, h4) + *` |
 | heading line | 1.2 × its size | nearest quarter line to 1.2 × its size | `round()` |
-| caption, meta, code, footnote line | 23.6 / 31.9 px (1.45) | 21 / 30.75 px (¾ line) | `line-height` |
+| caption, meta, code, footnote line | 23.6 / 31.9 px (1.45) | 20.25 / 31.5 px (¾ line) | `line-height` |
 | list items | `--space-s` apart | ¼ line apart | `padding-block-start` |
-| table body row | 48.6–49.6 / 68.5–69.5 px | 42 / 61.5 px (1½ lines) | cell padding ¼ line |
+| table body row | 48.6–49.6 / 68.5–69.5 px | 40.5 / 63 px (1½ lines) | cell padding ¼ line |
 | space above and below a rule | 15 and 30 / 32 and 62 px | 35 and 35 / 51 and 51 px | a one-line `hr`, rule painted in its middle |
 | blocks on the lattice | 4 / 2 of 20 | 20 / 20 of 20 | |
 
@@ -89,7 +91,7 @@ More space above than below, so a heading binds to the text it opens: two lines 
 h2 { line-height: round(nearest, 1.2em, var(--line-quarter)); }
 ```
 
-At 375px an `h2` of 41.4px gets 49px lines (1.18) and an `h3` of 27.9px gets 35px (1.26); at 1360px, 82px (1.21) and 51.25px (1.17). `round()` has been Baseline since 2024.
+At 375px an `h2` of 41.4px gets 47.25px lines (1.14) and an `h3` of 27.9px gets 33.75px (1.21); at 1360px, 84px (1.24) and 52.5px (1.20). `round()` has been Baseline since 2024.
 
 ⚠ The result is a length, and a length line-height inherits as a length, not as a ratio. Anything inside the heading at another size, such as inline `code`, sits in the heading's line box. That is what a heading wants.
 
@@ -99,10 +101,10 @@ Items a quarter line apart. jedee gives a list, a code block and a rule more spa
 
 ### Small text
 
-Captions, the meta line, table heads and captions, code blocks and footnotes are set a step smaller (16px on a phone, 22px wide). A three-quarter line fits them: 21px on a phone (1.29, the tight end of what text takes) and 30.75px wide (1.40). Four of their lines take exactly three body lines, so where small text stands beside body text the two meet every third body line. That is Mark Boulton's incremental leading, at a ratio of 4:3.
+Captions, the meta line, table heads and captions, code blocks and footnotes are set a step smaller (16px on a phone, 22px wide). A three-quarter line fits them: 20.25px on a phone (1.25, the tight end of what text takes) and 31.5px wide (1.43). Four of their lines take exactly three body lines, so where small text stands beside body text the two meet every third body line. That is Mark Boulton's incremental leading, at a ratio of 4:3.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/vertical-rhythm-lattice.png" alt="Three columns side by side over faint horizontal rules at every body line, with a stronger rule every three body lines. Each column has orange ticks at the top of each of its lines. Left, body text, ticked every line. Middle, an italic caption in smaller type, ticked every three-quarter line: its fifth tick meets the body text's fourth on the strong rule. Right, four table rows, ticked every one and a half lines: the third tick lands on the same strong rule." width="2116" height="748">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/vertical-rhythm-lattice.png" alt="Three columns side by side over faint horizontal rules at every body line, with a stronger rule every three body lines. Each column has orange ticks at the top of each of its lines. Left, body text, ticked every line. Middle, an italic caption in smaller type, ticked every three-quarter line: its fifth tick meets the body text's fourth on the strong rule. Right, four table rows, ticked every one and a half lines: the third tick lands on the same strong rule." width="2116" height="760">
   <figcaption>Body text, caption and table rows under the prototype. Each column is ticked at the top of every one of its own lines, and all three meet on the strong rule, three body lines down.</figcaption>
 </figure>
 
@@ -110,18 +112,16 @@ Captions, the meta line, table heads and captions, code blocks and footnotes are
 
 A figure gets a line above it and a line and a half after its caption; the caption is a quarter line under the image. The image itself is where the lattice gives way: its height is its width times its ratio, and nothing makes that a multiple of anything.
 
-Given the ratio, CSS can pad it out. The figure becomes a size container, so `100cqi` is the image's rendered width, and the padding is the difference between the image's height and the next quarter line:
+Given the ratio, CSS can pad it out. A percentage margin is measured against the width of the box the image fills, its `<picture>` or else the figure, so `100%` times the ratio is the image's rendered height, and the padding is the difference between that and the next quarter line:
 
 ```css
-figure { container-type: inline-size; }
-
-figure img {
-  --img-block-size: calc(100cqi * var(--img-ratio, attr(height type(<number>)) / attr(width type(<number>))));
+:is(figure, picture) img {
+  --img-block-size: calc(100% * var(--img-ratio, attr(height type(<number>)) / attr(width type(<number>))));
   margin-block-end: calc(round(up, var(--img-block-size), var(--line-quarter)) - var(--img-block-size));
 }
 ```
 
-The ratio is read from the image's own `width` and `height` attributes with typed `attr()`, which eleventy-img always writes, so no figure needs a hand-set ratio. Typed `attr()` is in Chrome and Edge 133 and Firefox 155, not yet in Safari. There the margin is invalid, falls back to 0, and the figure sits off the lattice by its remainder: the soft default. The pad is at most a quarter line, 4.7px under the sample's photo on a phone. `--img-ratio` on a figure still overrides, for an embed with a fixed ratio such as a 16:9 video. ⚠ `100cqi` assumes the image fills the figure's width; a narrower image is padded by the wrong amount.
+The ratio is read from the image's own `width` and `height` attributes with typed `attr()`, which eleventy-img always writes, so no figure needs a hand-set ratio. Typed `attr()` is in Chrome and Edge 133 and Firefox 155, not yet in Safari. There the margin is invalid, falls back to 0, and the figure sits off the lattice by its remainder: the soft default. The pad is at most a quarter line, 4.7px under the sample's photo on a phone. `--img-ratio` on a figure still overrides, for an embed with a fixed ratio such as a 16:9 video. The first version measured the figure as a size container (`100cqi`), which went wrong as soon as a wiki caption sat beside a narrower image on a phone; the percentage follows the image wherever it sits. A `<picture>` outside a figure is padded the same way; a bare `<img>` in a paragraph is not.
 
 ⚠ The caption's quarter line under the image is padding, not margin. eleventy-img wraps the image in a block `<picture>`, and a margin on the caption would collapse with the pad under the picture: the larger of the two wins and the pad disappears. A bare `<img>` is inline and hides this, which is how the mockup missed it and the built style guide caught it.
 
@@ -131,13 +131,13 @@ The ratio is read from the image's own `width` and `height` attributes with type
 
 ### Tables
 
-A body row is one line and two quarter-line paddings, one and a half lines. That is tighter than now (42px against 48.6px on a phone) and looser than Bernat's rows. The head and the caption are small text, a three-quarter line with the same padding, so a table of any length ends on the lattice without counting its rows. jedee already paints its row rules into the cells instead of bordering them, for their two-tone look ([[Tables]]), so they cost no height; the prototype paints the thicker band rules around the head and the last row the same way.
+A body row is one line and two quarter-line paddings, one and a half lines. That is tighter than now (40.5px against 48.6px on a phone) and looser than Bernat's rows. The head and the caption are small text, a three-quarter line with the same padding, so a table of any length ends on the lattice without counting its rows. jedee already paints its row rules into the cells instead of bordering them, for their two-tone look ([[Tables]]), so they cost no height; the prototype paints the thicker band rules around the head and the last row the same way.
 
 ### Blockquotes, code and rules
 
-- **Blockquote.** Its larger lines are rounded like a heading's, to the nearest quarter line to 1.3 × its size (35px on a phone, 61.5px wide). Its padding is three-quarters of a line, and the source line under the quote goes back to one body line.
+- **Blockquote.** Its larger lines are rounded like a heading's, to the nearest quarter line to 1.3 × its size (33.75px on a phone, 52.5px wide). Its padding is three-quarters of a line, and the source line under the quote goes back to one body line.
 - **Code block.** Small text at a three-quarter line, padded by the same. Its 1px frame is an inset box-shadow instead of a border.
-- **Rule.** An `hr` is a box one line tall with the hairline painted across its middle. The space on both sides is then the same, 35px on a phone, where now it is 15px above and 30px below.
+- **Rule.** An `hr` is a box one line tall with the hairline painted across its middle. The space on both sides is then the same, 33.75px on a phone, where now it is 15px above and 30px below.
 
 ### Meta lines, disclosures and footnotes
 
@@ -213,7 +213,7 @@ Table: Scale.css, jedee now, and the prototype
 | space under code | about 1.9 lines | the gap + 1em of code | the gap + ½ line |
 | heading line | ratios that multiply out to 1½, 2¼ or 3 lines | 1.2 × its size | the nearest quarter line |
 | sizes | Pythagorean ratios, in ems | Utopia, fluid | as now |
-| leading | 1.5, 1.75 from 1599px | 1.45 | 1.44–1.47 (a whole-pixel line) |
+| leading | 1.5, 1.75 from 1599px | 1.45 | 1.4 to 1.5 with the width (a whole-pixel line) |
 | responsive by | the body's font size per breakpoint | `clamp()` tokens | as now |
 
 jedee already shares three of its choices: the one-line list indent, the hollow ring, and more space under code than above it. The prototype is closest to Scale.css in method: one unit for all the space, with the heading line boxes brought onto it, by ratios there and by `round()` here. It differs in the gap, which it keeps below a full line, and in counting in quarters, so that small text and table rows can run their own cross-rhythms. Scale.css's own widest step makes the case for a soft rhythm: faced with long lines, it chose the leading over the grid.
@@ -234,12 +234,12 @@ arielsalminen.com could not be opened from the session. The 2012 article is quot
 Everything vertical comes from one rule, `.flow > * + *` in `global/compositions/flow.css`, fed by Eleventy Excellent's Utopia tokens and the element rules in `global/blocks/prose.css`. Nothing is measured in lines.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/vertical-rhythm-drift-top.png" alt="Two copies of the same prose sample, 375 pixels wide, side by side over blue rules at every body line and fainter ones at every quarter line. A label beside each block gives its distance in pixels from the nearest quarter line. Left, the site's current CSS: the heading 0, meta line +1.3, the two paragraphs −2.5 and −1.6, the h3 −2.1, the list +1.8, the paragraph after it 0, the figure +1.0, the paragraph after the figure −1.5; two of nine blocks on the lattice. Right, the prototype: every label reads 0, nine of nine." width="2152" height="2320">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/vertical-rhythm-drift-top.png" alt="Two copies of the same prose sample, 375 pixels wide, side by side over blue rules at every body line and fainter ones at every quarter line. A label beside each block gives its distance in pixels from the nearest quarter line. Left, the site's current CSS: the heading 0, meta line +1.3, the two paragraphs −2.5 and −1.6, the h3 −2.1, the list +1.8, the paragraph after it 0, the figure +1.0, the paragraph after the figure −1.5; two of nine blocks on the lattice. Right, the prototype: every label reads 0, nine of nine." width="2152" height="2302">
   <figcaption>The first half of the sample on a phone. Each label is how far that block's top edge is from the nearest quarter line; half a pixel or less counts as on it.</figcaption>
 </figure>
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/vertical-rhythm-drift-end.png" alt="The second half of the same comparison. Left, the current CSS: table −0.7, blockquote −2.7, code block −3.1, paragraph −0.6, rule 0, numbered list +2.8, disclosure −1.9, photo metadata −1.1, paragraph 0, footnote rule +0.9, footnotes −3.4; four of twenty blocks on the lattice over the whole page. Right, the prototype: every label 0, twenty of twenty. The prototype's table rows, code block and rule are visibly more even." width="2152" height="2612">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/vertical-rhythm-drift-end.png" alt="The second half of the same comparison. Left, the current CSS: table −0.7, blockquote −2.7, code block −3.1, paragraph −0.6, rule 0, numbered list +2.8, disclosure −1.9, photo metadata −1.1, paragraph 0, footnote rule +0.9, footnotes −3.4; four of twenty blocks on the lattice over the whole page. Right, the prototype: every label 0, twenty of twenty. The prototype's table rows, code block and rule are visibly more even." width="2152" height="2534">
   <figcaption>The second half, from the table on. The lattice is still counted from the page's first block.</figcaption>
 </figure>
 
@@ -247,13 +247,13 @@ Four of the sample's twenty blocks start on a quarter line at 375px, and two at 
 
 Both figures are `src/wiki/_sources/vertical-rhythm.html`. It fetches the style guide's sample (`src/_includes/partials/rhythm-sample.njk`), renders it in 375px iframes, once plain and once under the prototype, with the built `global.css` and the same local stylesheets on both, and measures every block's top from the page's first. `?w=1360` measures the widest step instead. Those runs are where the numbers on this page come from.
 
-### The prototype
+### The system
 
-`src/assets/css/local/rhythm-prototype.css` holds the system described above, every rule scoped to `[data-rhythm='proposed']`. The unit and its steps:
+`src/assets/css/local/rhythm.css` holds the system described above, every rule scoped to `[data-rhythm]`. Since 2026-10-01 that attribute is on the article in `post.njk` and `wiki.njk`, which load the stylesheet, so articles and wiki pages run on it; the style guide's second sample has it too. Every other post type and page keeps the flow tokens. The unit and its steps:
 
 ```css
-[data-rhythm='proposed'] {
-  --line: round(1em * var(--leading-standard), 1px);
+[data-rhythm] {
+  --line: round(clamp(1.4em, 1.3635rem + 1.4951vw, 1.5em), 1px);
   line-height: var(--line);
 
   --line-quarter: calc(var(--line) / 4);
@@ -271,6 +271,14 @@ Both figures are `src/wiki/_sources/vertical-rhythm.html`. It fetches the style 
 
 It changes no token and no global file. It works through `--flow-space`, the published property of the flow composition ([[Configuring a layout composition]]).
 
+⚠ **A length line-height inherits as a length.** Anything inside a rhythm page that sets its own font size without a line-height gets the body's line: the wiki's eyebrow and the entry footer's `text-step-min-*` lines came out at 1.9. They are on the small-text list now; a new small element inside an article needs the same.
+
+⚠ **Inline code stretches its line.** `code`, `kbd`, `samp`, `sup` and `sub` are another font or size, and on a length line-height their inline boxes push the line box a fraction of a pixel taller. The wiki's own page was 17 of 91 blocks on the lattice until they were given `line-height: 0`; then 91 of 91.
+
+⚠ **A code block inside a list item** keeps the browser's 1em above it, since a list item is not a flow container. It gets the paragraph gap instead. The wiki log's compact headings had their own leading, padding and border, and are on quarter lines in `wiki.css` now.
+
+Measured on 2026-10-01 at 375px and 1360px, every wiki page and article starts every block on the lattice except where an image sits outside a figure: the favicons page's icon grid and table, and the image in a paragraph in Eleventy Excellent's demo post.
+
 The paragraph gap is three-quarters of a line, chosen over half a line on 2026-10-01: half a line kept the phone at today's 14px but made the space under a heading the same as the gap between paragraphs, so headings stopped sitting closer to their own text.
 
 ⚠ `prose.css` sets `--flow-space` on `pre`, the element after it, figures and headings. A value set on an element beats one it would inherit, so the prototype restates each of them.
@@ -283,9 +291,8 @@ The paragraph gap is three-quarters of a line, chosen over half a line on 2026-1
 
 ### Not done
 
-- **Adopting it.** The unit and its line-height would move to `.prose`. ⚠ A length line-height inherits as a length, so anything inside prose that sets its own font size without a line-height (a card, a webmention, an embed's caption) would inherit the body's 28px lines. Each needs its own line-height, from the small-text step or the ratio it has now.
+- **The other post types.** Notes, photos, jams and the rest of the sixteen, the plain pages, the listing pages and the webmentions box still run on the flow tokens. Each one is a `data-rhythm` attribute and an include, then a check for small text that inherits the body line (below).
 - **Page-level space.** Region padding, the header and the footer stay on the Utopia tokens. They frame the text rather than interrupt it.
-- **Leading by measure.** Salminen's 2013 post and Scale.css's widest step loosen the leading on long lines; jedee's leading is one number at every width. The prototype computes its line from the leading token, so a fluid leading would carry the whole lattice with it.
 
 Source: research session 2026-09-30. jedee's CSS was audited in the repository, and Eleventy Excellent's read from [its repository](https://github.com/madrilene/eleventy-excellent). Bernat's article and Roberts' post were read from their sources on GitHub, and the browser support dates are from the web-features data. The Every Layout and Piccalilli pages could not be fetched from the session; they are paraphrased, not quoted.
 

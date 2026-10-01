@@ -1,6 +1,6 @@
 /*
-RHYTHM PROTOTYPE
-A proposal, not the site's CSS: every vertical gap, and every line box that is not body text, is a whole number of quarter lines of body text, so blocks start on one lattice whatever sits between them. Loaded by the style guide only, and every rule is scoped to [data-rhythm='proposed']. The wiki page "Vertical rhythm" explains each rule and measures it against the live prose.
+RHYTHM
+Every vertical gap, and every line box that is not body text, is a whole number of quarter lines of body text. On any element with data-rhythm: articles, wiki pages and the style guide's second sample. Wiki: Vertical rhythm.
 */
 
 /* ⚠ Registered as a length so 1lh resolves once, on the sample root at the body size, and inherits as px. Unregistered, each element resolves its own lh: the 2026-09-21 --flow-space: 1lh attempt gave a blockquote twice the gap of a paragraph (wiki: Typographic conventions).
@@ -15,9 +15,9 @@ A proposal, not the site's CSS: every vertical gap, and every line box that is n
   --line: 1lh;
 }
 
-/* ⚠ 1lh is a fraction (28.16px on a phone) and layout rounds every line box to 1/64px, so a lattice of fractional quarters drifts a little with each block: about 0.6px by the end of the style guide sample. A whole-pixel line, set as the line-height too, makes every quarter a multiple of 0.25px, which layout stores exactly. From the leading token rather than 1lh, which here would read the line-height it is setting. */
-[data-rhythm='proposed'] {
-  --line: round(1em * var(--leading-standard), 1px);
+/* ⚠ The line is a whole pixel, or a lattice of 1/64px-rounded fractions drifts ~0.05px a block. Fluid from 1.4 at the type scale's 320px end to 1.5 at its 1350px end, so longer lines get looser leading; ⚠ the middle term is tuned to --size-step-0's ends and needs redoing if they change. */
+[data-rhythm] {
+  --line: round(clamp(1.4em, 1.3635rem + 1.4951vw, 1.5em), 1px);
 
   line-height: var(--line);
 
@@ -37,18 +37,23 @@ A proposal, not the site's CSS: every vertical gap, and every line box that is n
 }
 
 /* SMALL TEXT
-Four lines of it take three lines of body text: 1.29 of the 16px phone size, 1.38 of the 22px wide one. */
-[data-rhythm='proposed'] :is(figcaption, .meta, .media-meta, .footnotes, caption, thead, pre) {
+Four lines of it take three lines of body text: about 1.25 of its size on a phone, 1.43 wide. */
+[data-rhythm] :is(figcaption, .meta, .media-meta, .footnotes, .wiki-eyebrow, [class*='text-step-min'], caption, thead, pre) {
   line-height: var(--rhythm-small-leading);
+}
+
+/* ⚠ Inline code, sup and sub are another font or size, and on a length line-height their boxes stretch a line by a fraction of a pixel; with no line-height of their own they can't. */
+[data-rhythm] :is(code, kbd, samp, sup, sub):not(pre *) {
+  line-height: 0;
 }
 
 /* META LINE
 A wrapped meta line gets a quarter line between its rows, so each row takes one line. */
-[data-rhythm='proposed'] .meta {
+[data-rhythm] .meta {
   row-gap: var(--line-quarter);
 }
 
-[data-rhythm='proposed'] .media-meta {
+[data-rhythm] .media-meta {
   --media-meta-row-gap: var(--line-quarter);
 
   padding-block-start: var(--line-half);
@@ -58,26 +63,31 @@ A wrapped meta line gets a quarter line between its rows, so each row takes one 
 
 /* LISTS AND CODE
 Items a quarter line apart. Lists and code blocks still get more space below than above, now half a line on top of the gap instead of the browser's 1em. */
-[data-rhythm='proposed'] :is(ul, ol):not([class]) li + li,
-[data-rhythm='proposed'] :is(ul, ol):not([class]) li > :is(ol, ul) {
+[data-rhythm] :is(ul, ol):not([class]) li + li,
+[data-rhythm] :is(ul, ol):not([class]) li > :is(ol, ul) {
   padding-block-start: var(--line-quarter);
 }
 
-[data-rhythm='proposed'] :is(ul:not([class]), ol:not([class]), pre) {
+[data-rhythm] :is(ul:not([class]), ol:not([class]), pre) {
   margin-block-end: var(--line-half);
 }
 
-[data-rhythm='proposed'] .footnotes-list > li + li {
+/* A code block inside a list item would keep the browser's 1em above it. */
+[data-rhythm] li > pre {
+  margin-block-start: var(--rhythm-gap);
+}
+
+[data-rhythm] .footnotes-list > li + li {
   margin-block-start: var(--line-quarter);
 }
 
 /* ⚠ prose.css sets its gap on pre and the element after it, and a value set on an element beats the one it would inherit from here, so both are restated. */
-[data-rhythm='proposed'] :is(pre, pre + *) {
+[data-rhythm] :is(pre, pre + *) {
   --flow-space: var(--rhythm-gap);
 }
 
 /* ⚠ A border adds its width to the height, so a 1px frame pushes everything after it 2px off the lattice. An inset shadow draws the same frame inside the padding. */
-[data-rhythm='proposed'] pre {
+[data-rhythm] pre {
   padding-block: var(--line-3q);
   border: none;
   box-shadow: inset 0 0 0 var(--code-border-size) var(--code-border-color);
@@ -85,111 +95,107 @@ Items a quarter line apart. Lists and code blocks still get more space below tha
 
 /* FIGURES
 The hairline becomes an outline drawn over the image's own edge, for the same reason. A figure pads its image down to the next quarter line. */
-[data-rhythm='proposed'] :is(figure, picture) {
+[data-rhythm] :is(figure, picture) {
   --flow-space: var(--line);
 }
 
-[data-rhythm='proposed'] :is(figure, picture) + * {
+[data-rhythm] :is(figure, picture) + * {
   --flow-space: var(--line-1h);
 }
 
-[data-rhythm='proposed'] :is(img, video) {
+[data-rhythm] :is(img, video) {
   border: none;
   outline: var(--stroke);
   outline-offset: calc(var(--border-thickness) * -1);
 }
 
-[data-rhythm='proposed'] figure {
-  container-type: inline-size;
-}
-
-/* The ratio comes from the img's own width and height attributes; ⚠ typed attr() has no Safari yet, where the figure sits off by its remainder as before. --img-ratio on the figure still overrides. ponytail: assumes the image fills the figure's width; a narrower one pads by the wrong amount. */
-[data-rhythm='proposed'] figure img {
-  --img-block-size: calc(100cqi * var(--img-ratio, attr(height type(<number>)) / attr(width type(<number>))));
+/* The ratio comes from the img's own width and height attributes, and a % margin measures the box the image fills (its <picture>, else the figure), so it holds when a caption sits beside the image. ⚠ Typed attr() has no Safari yet, where the figure sits off by its remainder as before. --img-ratio on the figure still overrides. */
+[data-rhythm] :is(figure, picture) img {
+  --img-block-size: calc(100% * var(--img-ratio, attr(height type(<number>)) / attr(width type(<number>))));
 
   margin-block-end: calc(round(up, var(--img-block-size), var(--line-quarter)) - var(--img-block-size));
 }
 
 /* ⚠ Padding, not margin: the built site wraps the image in a block <picture>, and its pad margin would collapse into a caption margin, the larger of the two winning and the pad vanishing. */
-[data-rhythm='proposed'] figcaption {
+[data-rhythm] figcaption {
   margin-block-start: 0;
   padding-block: var(--line-quarter) 0;
 }
 
 /* BLOCKQUOTE
 Its larger lines snap like a heading's; the source line is body text again, so it takes one line. */
-[data-rhythm='proposed'] blockquote {
+[data-rhythm] blockquote {
   line-height: round(nearest, 1.3em, var(--line-quarter));
   padding-block: var(--line-3q);
 }
 
-[data-rhythm='proposed'] blockquote > * + * {
+[data-rhythm] blockquote > * + * {
   margin-block-start: var(--line-half);
 }
 
-[data-rhythm='proposed'] blockquote > :last-child {
+[data-rhythm] blockquote > :last-child {
   line-height: var(--line);
 }
 
 /* TABLE
 A body row is one line and two quarter-line paddings. The band rules are painted inside the cells like the row rules already are, so they add no height. */
-[data-rhythm='proposed'] .table-wrapper {
+[data-rhythm] .table-wrapper {
   --table-cell-padding-block: var(--line-quarter);
 }
 
-[data-rhythm='proposed'] caption {
+[data-rhythm] caption {
   padding-block: var(--line-quarter);
 }
 
-[data-rhythm='proposed'] :is(thead, tfoot, tbody:last-child) {
+[data-rhythm] :is(thead, tfoot, tbody:last-child) {
   border-block: none;
 }
 
-[data-rhythm='proposed'] :is(thead, tfoot) > tr > * {
+[data-rhythm] :is(thead, tfoot) > tr > * {
   box-shadow:
     inset 0 calc(var(--border-thickness) * 2) 0 var(--table-rule-color),
     inset 0 calc(var(--border-thickness) * -2) 0 var(--table-rule-color);
 }
 
-[data-rhythm='proposed'] tbody:last-child > tr:last-child > * {
+[data-rhythm] tbody:last-child > tr:last-child > * {
   box-shadow: inset 0 calc(var(--border-thickness) * -2) 0 var(--table-rule-color);
 }
 
 /* RULE
 One line tall with the hairline painted across its middle, so the space above and below it is equal and nothing shifts. */
-[data-rhythm='proposed'] hr {
+[data-rhythm] hr {
   block-size: var(--line);
   margin-block-end: 0;
   background: linear-gradient(var(--rhythm-rule-color) 0 0) no-repeat 0 50% / 100% var(--border-thickness);
 }
 
 /* DETAILS */
-[data-rhythm='proposed'] details > summary + * {
+[data-rhythm] details > summary + * {
   margin-block-start: var(--line-half);
 }
 
 /* HEADINGS
 Last, so a heading's own space wins over the one set by the element before it, and the space after a heading wins over the next element's own. More space above than below, so a heading binds to the text it opens. Its line box snaps to the nearest quarter line, so a two-line heading keeps the lattice too. */
-[data-rhythm='proposed'] :is(h1, h2, h3, h4) {
+[data-rhythm] :is(h1, h2, h3, h4) {
   line-height: round(nearest, 1.2em, var(--line-quarter));
 }
 
-[data-rhythm='proposed'] h1 {
+[data-rhythm] h1 {
   line-height: round(nearest, 1.1em, var(--line-quarter));
 }
 
-[data-rhythm='proposed'] h2 {
+[data-rhythm] h2 {
   --flow-space: var(--line-2);
 }
 
-[data-rhythm='proposed'] h3 {
+[data-rhythm] h3 {
   --flow-space: var(--line-1h);
 }
 
-[data-rhythm='proposed'] h4 {
+[data-rhythm] h4 {
   --flow-space: var(--line);
 }
 
-[data-rhythm='proposed'] :is(h1, h2, h3, h4) + * {
+[data-rhythm] :is(h1, h2, h3, h4) + * {
   --flow-space: var(--rhythm-after-heading);
 }
