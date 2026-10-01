@@ -1,7 +1,8 @@
 <style>
   custom-youtube-link {
-    /* Tighten the flow gap from the player: the caption is a credit, not its own section. */
-    --flow-space: var(--space-s);
+    /* Tighten the flow gap from the player: the caption is a credit, not its own section. In prose it also takes the 16:9 player's pad down to the next quarter line. */
+    --video-block-size: calc(100% * 9 / 16);
+    --flow-space: calc(var(--line-quarter, var(--space-s)) + round(up, var(--video-block-size), var(--line-quarter, 1px)) - var(--video-block-size));
     display: flex;
     align-items: center;
     justify-content: center;

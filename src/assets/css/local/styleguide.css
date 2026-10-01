@@ -17,7 +17,7 @@
   --region-space-top: var(--space-l-xl);
 }
 
-/* ⚠ :not(.rhythm-sample *) here and below: the vertical-rhythm samples are prose and must show the site's own headings, code and tables. */
+/* ⚠ :not(.rhythm-sample *) here and below: the vertical-rhythm sample is prose and must show the site's own headings, code and tables. */
 .styleguide :is(h2, h3):not(.rhythm-sample *) {
   font-size: var(--size-step-0);
   font-family: var(--font-base);
@@ -66,6 +66,7 @@
 
 .styleguide .type-sample-label {
   font-size: var(--size-step-min-2);
+  line-height: var(--rhythm-small-leading, normal); /* ⚠ in prose it would inherit the body line as a length */
   color: var(--color-text-accent);
 }
 
@@ -109,7 +110,7 @@
 
 /*
 VERTICAL RHYTHM
-Two prose samples side by side (partials/rhythm-sample.njk), the second under local/rhythm.css. The lattice toggle is a checkbox and :has(), no script.
+A prose sample (partials/rhythm-sample.njk) with a lattice toggle: a checkbox and :has(), no script.
 */
 .rhythm-demo {
   --rhythm-grid-line: color-mix(in oklab, var(--color-accent-blue) 45%, transparent);

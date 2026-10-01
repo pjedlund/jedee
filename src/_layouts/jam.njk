@@ -4,7 +4,7 @@ schema: BlogPosting
 ---
 
 <div class="region" style="--region-space-top: var(--space-xl-2xl)">
-  <article class="wrapper flow prose h-entry" data-rhythm>
+  <article class="wrapper flow prose h-entry">
     {% include 'partials/entry-header.njk' %}
 
     {# Cover renders as a plain <img> (the Image transform self-hosts remote URLs and resolves local paths); never the {% image %} shortcode, which is local-only and errors on a remote URL. Alt text comes from `coverAlt` when the post writes one. `default` substitutes only on UNDEFINED, so `coverAlt: ""` is honoured as empty — the right answer for a cover that just repeats the title beside it. #}
@@ -43,7 +43,7 @@ schema: BlogPosting
     {% if genre %}
       {# ⚠ A clipper property typed `text` gives one string, which a bare {% for %} walks character by character. #}
       {% set genres = [genre] if genre is string else genre %}
-      <ul class="my-s-m cluster gutter-s" role="list">
+      <ul class="cluster gutter-s" role="list">
         {% for name in genres | unwikilink %}
           <li>
             <a href="/jams/genres/{{ name | slugify }}/" class="button" data-small-button>{{ name }}</a>
@@ -66,5 +66,4 @@ schema: BlogPosting
   {%- include 'css/footnotes.css' -%}
   {%- include 'css/cover.css' -%}
   {%- include 'css/webmentions.css' -%}
-  {%- include 'css/rhythm.css' -%}
 {%- endcss -%}

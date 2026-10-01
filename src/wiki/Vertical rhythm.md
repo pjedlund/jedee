@@ -229,9 +229,9 @@ arielsalminen.com could not be opened from the session. The 2012 article is quot
 
 ## In jedee
 
-### Now
+### Before
 
-Everything vertical comes from one rule, `.flow > * + *` in `global/compositions/flow.css`, fed by Eleventy Excellent's Utopia tokens and the element rules in `global/blocks/prose.css`. Nothing is measured in lines.
+Until 2026-10-01 everything vertical came from one rule, `.flow > * + *` in `global/compositions/flow.css`, fed by Eleventy Excellent's Utopia tokens and the element rules in `global/blocks/prose.css`. Nothing was measured in lines.
 
 <figure class="popout" data-wiki-mockup>
   <img eleventy:formats="webp,png" src="/assets/images/wiki/vertical-rhythm-drift-top.png" alt="Two copies of the same prose sample, 375 pixels wide, side by side over blue rules at every body line and fainter ones at every quarter line. A label beside each block gives its distance in pixels from the nearest quarter line. Left, the site's current CSS: the heading 0, meta line +1.3, the two paragraphs −2.5 and −1.6, the h3 −2.1, the list +1.8, the paragraph after it 0, the figure +1.0, the paragraph after the figure −1.5; two of nine blocks on the lattice. Right, the prototype: every label reads 0, nine of nine." width="2152" height="2302">
@@ -245,14 +245,14 @@ Everything vertical comes from one rule, `.flow > * + *` in `global/compositions
 
 Four of the sample's twenty blocks start on a quarter line at 375px, and two at 1360px, where the misses reach 4.3px. A quarter line is 7–10px, so no block can be more than 3.5–5px off, and a miss this size is not visible on its own. What is visible is the spread: the gap between paragraphs, the space around a rule, the height of a table row each follow their own token.
 
-Both figures are `src/wiki/_sources/vertical-rhythm.html`. It fetches the style guide's sample (`src/_includes/partials/rhythm-sample.njk`), renders it in 375px iframes, once plain and once under the prototype, with the built `global.css` and the same local stylesheets on both, and measures every block's top from the page's first. `?w=1360` measures the widest step instead. Those runs are where the numbers on this page come from.
+Both figures are `src/wiki/_sources/vertical-rhythm.html`, frozen since the old CSS left the site: re-shot now, both halves would be the same page. It fetches the style guide's sample (`src/_includes/partials/rhythm-sample.njk`), renders it in 375px iframes, once plain and once under the prototype, with the built `global.css` and the same local stylesheets on both, and measures every block's top from the page's first. `?w=1360` measures the widest step instead. Those runs are where the numbers on this page come from.
 
 ### The system
 
-`src/assets/css/local/rhythm.css` holds the system described above, every rule scoped to `[data-rhythm]`. Since 2026-10-01 that attribute is on the article of every post-type layout (all sixteen) and of `wiki.njk`, each of which loads the stylesheet; the style guide's second sample has it too. Plain pages, listing pages and the webmentions box keep the flow tokens. On the dev server, `?rhythm=off` shows a rhythm page without it, and two tabs of the same page scroll together block by block (`scripts/bundle/rhythm-compare.js`), for comparing before and after side by side. The unit and its steps:
+Prose is the system: `src/assets/css/global/blocks/prose-rhythm.css` holds every rule above, scoped to `.prose`, beside `prose.css`, whose old spacing rules it replaced. Every page that sets `.prose` runs on it, which is every post type, wiki page, plain page, listing page and the webmentions box. It was built as a scoped prototype (`[data-rhythm]`, a page-level stylesheet, a dev-only `?rhythm=off` switch with scroll-synced tabs for comparing) and folded in on 2026-10-01 once it covered everything. The unit and its steps:
 
 ```css
-[data-rhythm] {
+.prose {
   --line: round(clamp(1.4em, 1.3635rem + 1.4951vw, 1.5em), 1px);
   line-height: var(--line);
 
@@ -269,31 +269,30 @@ Both figures are `src/wiki/_sources/vertical-rhythm.html`. It fetches the style 
 }
 ```
 
-It changes no token and no global file. It works through `--flow-space`, the published property of the flow composition ([[Configuring a layout composition]]).
+It changes no token, and `flow.css` is untouched: it works through `--flow-space`, the published property of the flow composition ([[Configuring a layout composition]]).
 
-⚠ **A length line-height inherits as a length.** Anything inside a rhythm page that sets its own font size without a line-height gets the body's line: the wiki's eyebrow and the entry footer's `text-step-min-*` lines came out at 1.9. They are on the small-text list now; a new small element inside an article needs the same.
+⚠ **Global CSS is in cascade layers; page-level stylesheets are not, so they win whatever their selector.** A component whose own stylesheet sets the same property as the rhythm keeps its own value, so each such component takes the line steps in its own file, with the old value as the fallback outside prose: `table.css` (cell and caption padding, band rules painted into the cells), `media-meta.css`, `activity.css`, `event-status.css`, `post.css` (the subtitle and the 16:9 featured image), and the two video-link components. The `--line` registration still works from inside a layer.
+
+⚠ **A length line-height inherits as a length.** Anything inside prose that sets its own font size without a line-height gets the body's line: the wiki's eyebrow and the entry footer's `text-step-min-*` lines came out at 1.9. They are on the small-text list now; a new small element inside an article needs the same.
 
 ⚠ **Inline code stretches its line.** `code`, `kbd`, `samp`, `sup` and `sub` are another font or size, and on a length line-height their inline boxes push the line box a fraction of a pixel taller. The wiki's own page was 17 of 91 blocks on the lattice until they were given `line-height: 0`; then 91 of 91.
 
 ⚠ **A code block inside a list item** keeps the browser's 1em above it, since a list item is not a flow container. It gets the paragraph gap instead. The wiki log's compact headings had their own leading, padding and border, and are on quarter lines in `wiki.css` now.
 
-⚠ **Components bring their own spacing.** The other post types surfaced the rest, each now on quarter lines in `rhythm.css`: pills (the post-type pill in the meta line, tags, genre chips, download buttons) snapped to the nearest quarter line, with wrapped rows a quarter line apart and a pill in a list item made a flex item, since its text line added 2px under it; the rating's 16px row of stars given a small-text line; lists of pills stripped of a utility's or the browser's own margin; the footnote list's 1em bottom margin; the activity stats, the event status badge and the subtitle under a title; the external-link arrow, a 1em inline-block that stretched small-text lines by 0.75px, hung from the line's top. Video embeds are 16:9, so their pad goes into the gap above the credit line; Chrome's 54px audio player is set to the nearest quarter line; a featured image is cropped to 16:9 whatever the file's own ratio, so it is padded as 16:9.
+⚠ **Components bring their own spacing.** The other post types surfaced the rest, each now on quarter lines: pills (the post-type pill in the meta line, tags, genre chips, download buttons) snapped to the nearest quarter line, with wrapped rows a quarter line apart and a pill in a list item made a flex item, since its text line added 2px under it; the rating's 16px row of stars given a small-text line; lists of pills stripped of a utility's or the browser's own margin; the footnote list's 1em bottom margin; the activity stats, the event status badge and the subtitle under a title; the external-link arrow, a 1em inline-block that stretched small-text lines by 0.75px, hung from the line's top. Video embeds are 16:9, so their pad goes into the gap above the credit line; Chrome's 54px audio player is set to the nearest quarter line; a featured image is cropped to 16:9 whatever the file's own ratio, so it is padded as 16:9.
 
-Measured on 2026-10-01 at 375px and 1360px with a headless sweep of every wiki page and article and of two to four posts of each other type: every block lands on the lattice, or follows an image, map or embed and keeps the beat from there. The only page whose text after an image is shifted is the favicons page, by its icon grid.
+Measured on 2026-10-01 after the fold, at 375px and 1360px with a headless sweep of 147 pages (every wiki page and article, two to four posts of each other type, every plain and listing page, and posts with webmentions): 291 of 294 clean. Every block lands on the lattice or follows an image, map or embed; the favicons page's icon grid shifts the text after it, and the style guide's smallest labels are loose at the widest step, since no quarter-line leading suits that size at both ends.
 
 The paragraph gap is three-quarters of a line, chosen over half a line on 2026-10-01: half a line kept the phone at today's 14px but made the space under a heading the same as the gap between paragraphs, so headings stopped sitting closer to their own text.
-
-⚠ `prose.css` sets `--flow-space` on `pre`, the element after it, figures and headings. A value set on an element beats one it would inherit, so the prototype restates each of them.
 
 ⚠ The heading rules come last in the file. A heading's space above then wins over the space set by the element before it (a figure's line and a half, say), and the half line under a heading wins over the next element's own.
 
 ### On the style guide
 
-`/styleguide/` has a **Vertical rhythm** section with the two samples side by side, the site's styles and the prototype's, and a checkbox that paints the lattice behind both (a checkbox and `:has()`, no script). The rules the style guide sets on its own headings, code labels and tables skip the samples (`:not(.rhythm-sample *)`), so the first sample is the live prose.
+`/styleguide/` has a **Vertical rhythm** section with the prose sample (`partials/rhythm-sample.njk`) and a checkbox that paints the lattice behind it (a checkbox and `:has()`, no script).
 
 ### Not done
 
-- **Plain pages, listing pages and webmentions.** Still on the flow tokens. Each is a `data-rhythm` attribute and an include, then a check for small text that inherits the body line and for components with their own spacing (below).
 - **The external-link arrow.** Hung from the line's top so it no longer stretches small text, but it can still wrap onto a line of its own.
 - **Page-level space.** Region padding, the header and the footer stay on the Utopia tokens. They frame the text rather than interrupt it.
 

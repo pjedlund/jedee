@@ -1,0 +1,185 @@
+/*
+PROSE RHYTHM
+Every vertical gap in prose, and every line box that is not body text, is a whole number of quarter lines of body text. The rest of the prose block is prose.css; components with their own spacing take the line steps in their own stylesheets (meta, media-meta, table, activity, event-status, post, wiki). Wiki: Vertical rhythm.
+*/
+
+/* ⚠ Registered as a length so the line resolves once, at the prose's own size, and inherits as px; unregistered, each element would resolve its own (wiki: Typographic conventions). ⚠ The initial value must be absolute, or the registration is dropped whole, silently. */
+@property --line {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+
+/* ⚠ The line is a whole pixel, or a lattice of 1/64px-rounded fractions drifts ~0.05px a block. Fluid from 1.4 at the type scale's 320px end to 1.5 at its 1350px end; ⚠ the middle term is tuned to --size-step-0's ends and needs redoing if they change. */
+.prose {
+  --line: round(clamp(1.4em, 1.3635rem + 1.4951vw, 1.5em), 1px);
+  --line-quarter: calc(var(--line) / 4);
+  --line-half: calc(var(--line) / 2);
+  --line-3q: calc(var(--line) * 0.75);
+  --line-1h: calc(var(--line) * 1.5);
+  --line-2: calc(var(--line) * 2);
+
+  /* The knobs: every rule below reads one of these. */
+  --rhythm-gap: var(--line-3q);
+  --rhythm-after-heading: var(--line-half);
+  --rhythm-small-leading: var(--line-3q);
+  --rhythm-rule-color: var(--color-bg-accent-2);
+
+  --flow-space: var(--rhythm-gap);
+
+  line-height: var(--line);
+}
+
+/* SMALL TEXT
+Four lines of it take three lines of body text. ⚠ A length line-height inherits as a length, so anything in prose set smaller without a line-height of its own belongs on this list. */
+.prose :is(figcaption, caption, thead, pre, .meta, .media-meta, .footnotes, [class*='text-step-min'], .credit, .place-map-pending, .wiki-eyebrow, .activity-stats dt, .event-status, custom-youtube-link, custom-peertube-link) {
+  line-height: var(--rhythm-small-leading);
+}
+
+/* ⚠ Inline code, sup and sub are another font or size, and on a length line-height their boxes stretch a line by a fraction of a pixel; with no line-height of their own they can't. */
+.prose :is(code, kbd, samp, sup, sub):not(pre *) {
+  line-height: 0;
+}
+
+/* ⚠ The external-link arrow is a 1em inline-block on the baseline, which pushes a small-text line 0.75px taller; hung from the line's top it can't. */
+.prose a[href^='http']::after {
+  vertical-align: top;
+}
+
+/* PILLS
+The post-type pill, tags, genre chips and download buttons are padded text, 25px on a phone; snapped to the nearest quarter line, and wrapped rows a quarter line apart. ⚠ A pill in a list item sits on the item's text line, which adds 2px under it; as a flex item it is exactly its own height. */
+.prose :is(.meta .button, .cluster .button, .button[data-small-button]) {
+  block-size: round(nearest, calc(2 * var(--space-xs) + 1em + 2 * var(--border-thickness)), var(--line-quarter));
+  padding-block: 0;
+}
+
+.prose .cluster {
+  row-gap: var(--line-quarter);
+}
+
+.prose .cluster > li {
+  display: flex;
+}
+
+/* ⚠ The rating's stars are a 16px row, short of a small-text line, so a meta line that wraps onto them would leave the lattice. */
+.prose .meta-rating {
+  min-block-size: var(--rhythm-small-leading);
+}
+
+/* LISTS AND CODE
+Items a quarter line apart. Lists and code blocks get more space below than above: half a line on top of the gap. */
+.prose :is(ul, ol):not([class]) li + li,
+.prose :is(ul, ol):not([class]) li > :is(ol, ul) {
+  padding-block-start: var(--line-quarter);
+}
+
+.prose :is(ul:not([class]), ol:not([class]), pre) {
+  margin-block-end: var(--line-half);
+}
+
+/* A list with a class (pills, downloads, footnotes) gets the flow gap and none of the browser's 1em under it. */
+.prose :is(ul, ol)[class] {
+  margin-block-end: 0;
+}
+
+/* A code block inside a list item would keep the browser's 1em above it. */
+.prose li > pre {
+  margin-block-start: var(--rhythm-gap);
+}
+
+.prose .footnotes-list > li + li {
+  margin-block-start: var(--line-quarter);
+}
+
+/* ⚠ A border adds its width to the height, so a 1px frame pushes everything after it 2px off the lattice; an inset shadow draws the same frame inside the padding. */
+.prose pre {
+  padding-block: var(--line-3q);
+  border: none;
+  box-shadow: inset 0 0 0 var(--code-border-size) var(--code-border-color);
+}
+
+/* FIGURES
+A line above, a line and a half after; the hairline is an outline over the image's own edge, for the reason above. */
+.prose :is(figure, picture) {
+  --flow-space: var(--line);
+}
+
+.prose :is(figure, picture) + * {
+  --flow-space: var(--line-1h);
+}
+
+.prose :is(img, video) {
+  outline: var(--stroke);
+  outline-offset: calc(var(--border-thickness) * -1);
+}
+
+/* Pads the image down to the next quarter line. The ratio comes from the img's own width and height attributes, and a % margin measures the box the image fills, so it holds beside a caption too. ⚠ Typed attr() has no Safari yet, where the figure sits off by its remainder. --img-ratio overrides. */
+.prose :is(figure, picture) img {
+  --img-block-size: calc(100% * var(--img-ratio, attr(height type(<number>)) / attr(width type(<number>))));
+
+  margin-block-end: calc(round(up, var(--img-block-size), var(--line-quarter)) - var(--img-block-size));
+}
+
+/* ⚠ Padding, not margin: eleventy-img wraps the image in a block <picture>, and its pad margin would collapse into a caption margin. */
+.prose figcaption {
+  margin-block-start: 0;
+  padding-block: var(--line-quarter) 0;
+}
+
+/* Chrome's 54px audio player, snapped to the nearest quarter line. */
+.prose audio {
+  block-size: round(nearest, 54px, var(--line-quarter));
+}
+
+/* BLOCKQUOTE
+Its larger lines snap like a heading's; the source line is body text again. */
+.prose blockquote {
+  line-height: round(nearest, 1.3em, var(--line-quarter));
+  padding-block: var(--line-3q);
+}
+
+.prose blockquote > * + * {
+  margin-block-start: var(--line-half);
+}
+
+.prose blockquote > :last-child {
+  line-height: var(--line);
+}
+
+/* RULE
+One line tall with the hairline painted across its middle, so the space on both sides is equal. */
+.prose hr {
+  block-size: var(--line);
+  margin-block-end: 0;
+  background: linear-gradient(var(--rhythm-rule-color) 0 0) no-repeat 0 50% / 100% var(--border-thickness);
+}
+
+.prose details > summary + * {
+  margin-block-start: var(--line-half);
+}
+
+/* HEADINGS
+Last, so a heading's own space wins over the one set by the element before it, and the space after a heading wins over the next element's own. Line boxes snap to the nearest quarter line. */
+.prose :is(h1, h2, h3, h4) {
+  line-height: round(nearest, 1.2em, var(--line-quarter));
+}
+
+.prose h1 {
+  line-height: round(nearest, 1.1em, var(--line-quarter));
+}
+
+.prose h2 {
+  --flow-space: var(--line-2);
+}
+
+.prose h3 {
+  --flow-space: var(--line-1h);
+}
+
+.prose h4 {
+  --flow-space: var(--line);
+}
+
+.prose :is(h1, h2, h3, h4) + * {
+  --flow-space: var(--rhythm-after-heading);
+}

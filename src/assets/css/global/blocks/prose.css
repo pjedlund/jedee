@@ -1,7 +1,6 @@
 /* Based on Andy Bell, https://github.com/Andy-set-studio/personal-site-eleventy */
 
 .prose {
-  --flow-space: var(--space-m-l);
   --wrapper-width: 64rem;
 
   /* Old-style figures in running text (Bringhurst 3.2.1), set as slots so the numerals utilities add to them rather than replace them. */
@@ -30,21 +29,7 @@
   font-variant-numeric: normal;
 }
 
-/* Lists, code blocks and rules keep the browser's bottom margin on top of the flow gap, so they get more space below than above — on purpose (wiki: Typographic conventions). */
-.prose :is(pre, pre + *, figure, picture) {
-  --flow-space: var(--space-m-l);
-}
-
-.prose :is(figure + *, picture + *) {
-  --flow-space: var(--space-xl);
-}
-
-.prose :is(img, video) {
-  border: var(--stroke);
-}
-
 .prose :is(h2, h3, h4) {
-  --flow-space: 1.5em;
   overflow-wrap: anywhere;
   hyphens: auto;
 }
@@ -54,10 +39,6 @@
     overflow-wrap: unset;
     hyphens: unset;
   }
-}
-
-.prose :is(h1, h2, h3, h4) + *:not([class]):not(figure) {
-  --flow-space: var(--space-l);
 }
 
 /* Measure is in ch, so each type size finds its own line length and the short blocks hang from the start edge on purpose — never add margin-inline: auto here. See the wiki's "Line length". */
@@ -83,12 +64,6 @@
   background-color: var(--color-accent-green);
   /* Light text keeps the highlight bold and saturated while passing AA on the dark-olive green in both themes. */
   color: var(--color-light);
-}
-
-/* block space only for "regular lists" and sublists */
-.prose :is(ul, ol):not([class]) li + li,
-.prose :is(ul, ol):not([class]) li > :is(ol, ul) {
-  padding-block-start: var(--space-s);
 }
 
 /* marker only for "regular lists" */

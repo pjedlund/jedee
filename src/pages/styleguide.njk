@@ -312,26 +312,13 @@ colorGroups:
 
   <section class="rhythm | flow region">
     <h2 class="heading-line">Vertical rhythm</h2>
-    <p>Both samples are the same prose. The first has the prose styles most pages use; the second adds <code>local/rhythm.css</code>, the system articles and wiki pages use, where every gap, and every line of text that is not body text, is a whole number of quarter lines of body text. The wiki page <a href="/wiki/vertical-rhythm/">Vertical rhythm</a> explains and measures it.</p>
+    <p>Prose, where every gap, and every line of text that is not body text, is a whole number of quarter lines of body text (<code>global/blocks/prose-rhythm.css</code>). The wiki page <a href="/wiki/vertical-rhythm/">Vertical rhythm</a> explains and measures it.</p>
 
     <div class="rhythm-demo | flow">
       <label class="rhythm-toggle"><input type="checkbox"> Show the lattice: whole lines strong, quarter lines faint</label>
-      <div class="grid" data-layout="50-50">
-        <div class="flow">
-          <p class="type-sample-label">Now</p>
-          <div class="rhythm-sample | wrapper flow prose">
-            <div class="wrapper-pass | flow">
-              {% include "partials/rhythm-sample.njk" %}
-            </div>
-          </div>
-        </div>
-        <div class="flow">
-          <p class="type-sample-label">Proposed</p>
-          <div class="rhythm-sample | wrapper flow prose" data-rhythm>
-            <div class="wrapper-pass | flow">
-              {% include "partials/rhythm-sample.njk" %}
-            </div>
-          </div>
+      <div class="rhythm-sample | wrapper flow prose">
+        <div class="wrapper-pass | flow">
+          {% include "partials/rhythm-sample.njk" %}
         </div>
       </div>
     </div>
@@ -420,5 +407,4 @@ colorGroups:
   {%- include 'css/footnotes.css' -%}
   {%- include 'css/meta.css' -%}
   {%- include 'css/media-meta.css' -%}
-  {%- include 'css/rhythm.css' -%}
 {%- endcss -%}

@@ -10,7 +10,7 @@ Status drives the badge only, never the archive partition: a cancelled event sta
 
   display: inline-block;
   padding-inline: var(--space-xs);
-  padding-block: 0.2em;
+  padding-block: calc(var(--line-quarter, 0.4em) / 2);
   border-radius: var(--border-radius-medium);
   font-size: var(--size-step-min-1);
   font-weight: var(--font-bold);

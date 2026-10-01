@@ -36,12 +36,13 @@
 </head>
 <body>
 
-<div class="specimen" data-shot="vertical-rhythm-drift-top">
+<!-- ⚠ Frozen 2026-10-01: the two drift shots compare the old prose CSS with the rhythm, and the old CSS is gone from global.css, so re-shooting them would draw the same page twice. The PNGs are the record. -->
+<div class="specimen" data-frozen-shot="vertical-rhythm-drift-top">
   <div class="pair" id="pair-top"></div>
   <p class="key mono"><span><i></i>one body line</span><span><i class="q"></i>a quarter line</span><span class="on">0</span><span>on the lattice</span><span class="off">+1.3</span><span>px off it</span></p>
 </div>
 
-<div class="specimen" data-shot="vertical-rhythm-drift-end">
+<div class="specimen" data-frozen-shot="vertical-rhythm-drift-end">
   <div class="pair" id="pair-end"></div>
   <p class="key mono"><span><i></i>one body line</span><span><i class="q"></i>a quarter line</span><span class="on">0</span><span>on the lattice</span><span class="off">+1.3</span><span>px off it</span></p>
 </div>
@@ -66,7 +67,7 @@
     @font-face { font-family: 'Source Code Pro'; font-weight: 200 900; src: url('../../assets/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }`;
 
   // Both sides load the same stylesheets, the prototype included; only data-rhythm differs, so any difference is the prototype's.
-  const sheets = ['../../_includes/css/global.css', ...['table', 'meta', 'media-meta', 'footnotes', 'rhythm'].map(name => `../../assets/css/local/${name}.css`)]
+  const sheets = ['../../_includes/css/global.css', ...['table', 'meta', 'media-meta', 'footnotes'].map(name => `../../assets/css/local/${name}.css`)]
     .map(href => `<link rel="stylesheet" href="${href}">`)
     .join('');
 
