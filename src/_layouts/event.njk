@@ -4,7 +4,7 @@ schema: Event
 ---
 
 <div class="region" style="--region-space-top: var(--space-xl-2xl)">
-  <article class="wrapper flow prose h-entry">
+  <article class="wrapper flow prose h-entry" data-rhythm>
     {% include 'partials/entry-header.njk' %}
 
     {# The event IS the structured content: a visible h-event carrying the µf2 properties (spec §5). p-name mirrors the entry-header <h1> as a hidden <data> so the event name isn't rendered twice — the h1 is the visible name. The h-event nests INSIDE the article's h-entry root (the §6 entry-root promotion), so it parses as a child h-event of the entry. #}
@@ -41,4 +41,5 @@ schema: Event
   {%- include 'css/post.css' -%}
   {%- include 'css/footnotes.css' -%}
   {%- include 'css/event-status.css' -%}
+  {%- include 'css/rhythm.css' -%}
 {%- endcss -%}

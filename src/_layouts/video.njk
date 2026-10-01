@@ -4,7 +4,7 @@ schema: BlogPosting
 ---
 
 <div class="region" style="--region-space-top: var(--space-xl-2xl)">
-  <article class="wrapper flow prose h-entry">
+  <article class="wrapper flow prose h-entry" data-rhythm>
     {% include 'partials/entry-header.njk' %}
 
     {# One type, three rendering paths, selected by video.provider (spec §6). The two embed paths reuse the SHIPPED custom-youtube / custom-peertube WebC components — they render here because the WebC plugin runs with useTransform:true (so custom elements process in .njk, not only .webc). Self-hosted video carries u-video; embeds carry no file URL, so no u-video (documented µf2 limitation, spec §5). #}
@@ -31,4 +31,5 @@ schema: BlogPosting
 {%- css "local" -%}
   {%- include 'css/post.css' -%}
   {%- include 'css/footnotes.css' -%}
+  {%- include 'css/rhythm.css' -%}
 {%- endcss -%}

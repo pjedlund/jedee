@@ -4,7 +4,7 @@ schema: BlogPosting
 ---
 
 <div class="region" style="--region-space-top: var(--space-xl-2xl)">
-  <article class="wrapper flow prose h-entry">
+  <article class="wrapper flow prose h-entry" data-rhythm>
     {% include 'partials/entry-header.njk' %}
 
     <p>Liked <a class="u-like-of" href="{{ likeOf }}">{{ likeOf }}</a></p>
@@ -22,4 +22,5 @@ schema: BlogPosting
 {%- css "local" -%}
   {%- include 'css/post.css' -%}
   {%- include 'css/footnotes.css' -%}
+  {%- include 'css/rhythm.css' -%}
 {%- endcss -%}

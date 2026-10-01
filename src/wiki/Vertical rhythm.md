@@ -249,7 +249,7 @@ Both figures are `src/wiki/_sources/vertical-rhythm.html`. It fetches the style 
 
 ### The system
 
-`src/assets/css/local/rhythm.css` holds the system described above, every rule scoped to `[data-rhythm]`. Since 2026-10-01 that attribute is on the article in `post.njk` and `wiki.njk`, which load the stylesheet, so articles and wiki pages run on it; the style guide's second sample has it too. Every other post type and page keeps the flow tokens. The unit and its steps:
+`src/assets/css/local/rhythm.css` holds the system described above, every rule scoped to `[data-rhythm]`. Since 2026-10-01 that attribute is on the article of every post-type layout (all sixteen) and of `wiki.njk`, each of which loads the stylesheet; the style guide's second sample has it too. Plain pages, listing pages and the webmentions box keep the flow tokens. On the dev server, `?rhythm=off` shows a rhythm page without it, and two tabs of the same page scroll together block by block (`scripts/bundle/rhythm-compare.js`), for comparing before and after side by side. The unit and its steps:
 
 ```css
 [data-rhythm] {
@@ -277,7 +277,9 @@ It changes no token and no global file. It works through `--flow-space`, the pub
 
 ⚠ **A code block inside a list item** keeps the browser's 1em above it, since a list item is not a flow container. It gets the paragraph gap instead. The wiki log's compact headings had their own leading, padding and border, and are on quarter lines in `wiki.css` now.
 
-Measured on 2026-10-01 at 375px and 1360px, every wiki page and article starts every block on the lattice except where an image sits outside a figure: the favicons page's icon grid and table, and the image in a paragraph in Eleventy Excellent's demo post.
+⚠ **Components bring their own spacing.** The other post types surfaced the rest, each now on quarter lines in `rhythm.css`: pills (the post-type pill in the meta line, tags, genre chips, download buttons) snapped to the nearest quarter line, with wrapped rows a quarter line apart and a pill in a list item made a flex item, since its text line added 2px under it; the rating's 16px row of stars given a small-text line; lists of pills stripped of a utility's or the browser's own margin; the footnote list's 1em bottom margin; the activity stats, the event status badge and the subtitle under a title; the external-link arrow, a 1em inline-block that stretched small-text lines by 0.75px, hung from the line's top. Video embeds are 16:9, so their pad goes into the gap above the credit line; Chrome's 54px audio player is set to the nearest quarter line; a featured image is cropped to 16:9 whatever the file's own ratio, so it is padded as 16:9.
+
+Measured on 2026-10-01 at 375px and 1360px with a headless sweep of every wiki page and article and of two to four posts of each other type: every block lands on the lattice, or follows an image, map or embed and keeps the beat from there. The only page whose text after an image is shifted is the favicons page, by its icon grid.
 
 The paragraph gap is three-quarters of a line, chosen over half a line on 2026-10-01: half a line kept the phone at today's 14px but made the space under a heading the same as the gap between paragraphs, so headings stopped sitting closer to their own text.
 
@@ -291,7 +293,8 @@ The paragraph gap is three-quarters of a line, chosen over half a line on 2026-1
 
 ### Not done
 
-- **The other post types.** Notes, photos, jams and the rest of the sixteen, the plain pages, the listing pages and the webmentions box still run on the flow tokens. Each one is a `data-rhythm` attribute and an include, then a check for small text that inherits the body line (below).
+- **Plain pages, listing pages and webmentions.** Still on the flow tokens. Each is a `data-rhythm` attribute and an include, then a check for small text that inherits the body line and for components with their own spacing (below).
+- **The external-link arrow.** Hung from the line's top so it no longer stretches small text, but it can still wrap onto a line of its own.
 - **Page-level space.** Region padding, the header and the footer stay on the Utopia tokens. They frame the text rather than interrupt it.
 
 Source: research session 2026-09-30. jedee's CSS was audited in the repository, and Eleventy Excellent's read from [its repository](https://github.com/madrilene/eleventy-excellent). Bernat's article and Roberts' post were read from their sources on GitHub, and the browser support dates are from the web-features data. The Every Layout and Piccalilli pages could not be fetched from the session; they are paraphrased, not quoted.

@@ -4,7 +4,7 @@ schema: BlogPosting
 ---
 
 <div class="region" style="--region-space-top: var(--space-xl-2xl)">
-  <article class="wrapper flow prose h-entry">
+  <article class="wrapper flow prose h-entry" data-rhythm>
     {% include 'partials/entry-header.njk' %}
 
     <div class="e-content | wrapper-pass flow">
@@ -25,4 +25,5 @@ schema: BlogPosting
   {%- include 'css/post.css' -%}
   {%- include 'css/footnotes.css' -%}
   {%- include 'css/webmentions.css' -%}
+  {%- include 'css/rhythm.css' -%}
 {%- endcss -%}

@@ -4,7 +4,7 @@ schema: BlogPosting
 ---
 
 <div class="region" style="--region-space-top: var(--space-xl-2xl)">
-  <article class="wrapper flow prose h-entry">
+  <article class="wrapper flow prose h-entry" data-rhythm>
     {% include 'partials/entry-header.njk' %}
 
     {# The photo IS the content, so u-photo goes on the visible <img> — set via the image shortcode's imageClass param (6th positional arg, image.js:70). photo.src is a LOCAL asset, so {% image %} is correct here; the remote-cover plain-<img> pattern (reading/watching/jam) does not apply. #}
@@ -63,4 +63,5 @@ schema: BlogPosting
   {%- include 'css/footnotes.css' -%}
   {%- include 'css/webmentions.css' -%}
   {%- if photoExif and photoExif.gps and meta.mapApiKey and not photo.hideMap -%}{%- include 'css/place-map.css' -%}{%- include 'css/place-map-overlay.css' -%}{%- include 'css/place-map-places.css' -%}{%- endif -%}
+  {%- include 'css/rhythm.css' -%}
 {%- endcss -%}

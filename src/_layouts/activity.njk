@@ -4,7 +4,7 @@ schema: BlogPosting
 ---
 
 <div class="region" style="--region-space-top: var(--space-xl-2xl)">
-  <article class="wrapper flow prose h-entry">
+  <article class="wrapper flow prose h-entry" data-rhythm>
     {% include 'partials/entry-header.njk' %}
 
     {# Recorded route line. The .geojson sibling (from _local/generated/extract-route.py) is inlined into <place-map> route mode as a slotted JSON script; place-map.js draws the track + start/finish markers on idle. No-JS visitors get no map here, which is fine: the stats and the "View on Strava" link below carry the route. #}
@@ -85,4 +85,5 @@ schema: BlogPosting
   {%- include 'css/activity.css' -%}
   {%- include 'css/cover.css' -%}
   {%- if page.inputPath | routeGeoJSON -%}{%- include 'css/place-map.css' -%}{%- include 'css/place-map-overlay.css' -%}{%- include 'css/place-map-places.css' -%}{%- endif -%}
+  {%- include 'css/rhythm.css' -%}
 {%- endcss -%}

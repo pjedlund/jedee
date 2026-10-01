@@ -38,7 +38,7 @@ Every vertical gap, and every line box that is not body text, is a whole number 
 
 /* SMALL TEXT
 Four lines of it take three lines of body text: about 1.25 of its size on a phone, 1.43 wide. */
-[data-rhythm] :is(figcaption, .meta, .media-meta, .footnotes, .wiki-eyebrow, [class*='text-step-min'], caption, thead, pre) {
+[data-rhythm] :is(figcaption, .meta, .media-meta, .footnotes, .wiki-eyebrow, [class*='text-step-min'], .credit, .place-map-pending, .activity-stats dt, custom-youtube-link, custom-peertube-link, .event-status, caption, thead, pre) {
   line-height: var(--rhythm-small-leading);
 }
 
@@ -47,10 +47,40 @@ Four lines of it take three lines of body text: about 1.25 of its size on a phon
   line-height: 0;
 }
 
+/* ⚠ The external-link arrow is a 1em inline-block on the baseline, which pushes a small-text line 0.75px taller; hung from the line's top it can't. */
+[data-rhythm] a[href^='http']::after {
+  vertical-align: top;
+}
+
 /* META LINE
 A wrapped meta line gets a quarter line between its rows, so each row takes one line. */
 [data-rhythm] .meta {
   row-gap: var(--line-quarter);
+}
+
+/* Pills (the post-type pill, tags, genre chips) are padded text, 25px on a phone; snapped to the nearest quarter line, and wrapped rows of them a quarter line apart. */
+[data-rhythm] :is(.meta .button, .cluster .button, .button[data-small-button]) {
+  block-size: round(nearest, calc(2 * var(--space-xs) + 1em + 2 * var(--border-thickness)), var(--line-quarter));
+  padding-block: 0;
+}
+
+[data-rhythm] .cluster {
+  row-gap: var(--line-quarter);
+}
+
+/* ⚠ A pill in a list item sits on the item's text line, which adds 2px under it; as a flex item it is exactly its own height. */
+[data-rhythm] .cluster > li {
+  display: flex;
+}
+
+/* ⚠ The rating's stars are an svg row 16px tall, short of a small-text line, so a meta line that wraps onto them would leave the lattice. */
+[data-rhythm] .meta-rating {
+  min-block-size: var(--rhythm-small-leading);
+}
+
+/* Lists of pills keep a margin of their own (a utility, or a list's 1em); the flow gap is the only space they get. */
+[data-rhythm] :is(.my-s-m, .media-downloads) {
+  margin-block: var(--flow-space) 0;
 }
 
 [data-rhythm] .media-meta {
@@ -75,6 +105,10 @@ Items a quarter line apart. Lists and code blocks still get more space below tha
 /* A code block inside a list item would keep the browser's 1em above it. */
 [data-rhythm] li > pre {
   margin-block-start: var(--rhythm-gap);
+}
+
+[data-rhythm] .footnotes-list {
+  margin-block-end: 0;
 }
 
 [data-rhythm] .footnotes-list > li + li {
@@ -120,6 +154,40 @@ The hairline becomes an outline drawn over the image's own edge, for the same re
 [data-rhythm] figcaption {
   margin-block-start: 0;
   padding-block: var(--line-quarter) 0;
+}
+
+/* ⚠ post.css crops a featured image to 16:9 whatever the file's own ratio, so its pad has to use 16:9 too. */
+[data-rhythm] :is(h1, hgroup) + :is(picture, figure) img,
+[data-rhythm] :is(h1, hgroup) + .feature picture img {
+  --img-ratio: 9 / 16;
+}
+
+/* EMBEDS AND MEDIA
+A 16:9 video's pad goes into the gap above its credit line, which a % margin measures against the same width; Chrome's 54px audio player is snapped to the nearest quarter line. ponytail: maps and galleries stay soft, like images outside a figure. */
+[data-rhythm] :is(custom-youtube-link, custom-peertube-link) {
+  --video-block-size: calc(100% * 9 / 16);
+  --flow-space: calc(var(--line-quarter) + round(up, var(--video-block-size), var(--line-quarter)) - var(--video-block-size));
+}
+
+[data-rhythm] audio {
+  block-size: round(nearest, 54px, var(--line-quarter));
+}
+
+/* COMPONENTS
+Their own spacing, moved onto the lattice. */
+[data-rhythm] .activity-stats {
+  margin-block: 0;
+  row-gap: var(--line-half);
+}
+
+[data-rhythm] .event-status {
+  padding-block: calc(var(--line-quarter) / 2);
+}
+
+[data-rhythm] hgroup > p {
+  --flow-space: var(--line-quarter);
+
+  line-height: round(nearest, 1.2em, var(--line-quarter));
 }
 
 /* BLOCKQUOTE

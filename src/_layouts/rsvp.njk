@@ -4,7 +4,7 @@ schema: BlogPosting
 ---
 
 <div class="region" style="--region-space-top: var(--space-xl-2xl)">
-  <article class="wrapper flow prose h-entry">
+  <article class="wrapper flow prose h-entry" data-rhythm>
     {% include 'partials/entry-header.njk' %}
 
     {# &nbsp; after </data>: the HTML minifier strips a normal space directly following a <data> tag, which would join "yes" and "to". #}
@@ -23,4 +23,5 @@ schema: BlogPosting
 {%- css "local" -%}
   {%- include 'css/post.css' -%}
   {%- include 'css/footnotes.css' -%}
+  {%- include 'css/rhythm.css' -%}
 {%- endcss -%}

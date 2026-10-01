@@ -4,7 +4,7 @@ schema: BlogPosting
 ---
 
 <div class="region" style="--region-space-top: var(--space-xl-2xl)">
-  <article class="wrapper flow prose h-entry">
+  <article class="wrapper flow prose h-entry" data-rhythm>
     {% include 'partials/entry-header.njk' %}
 
     {# Cover renders as a plain <img> (the Image transform self-hosts remote URLs and resolves local paths); never the {% image %} shortcode, which is local-only and errors on a remote URL. Alt text comes from `coverAlt` when the post writes one. `default` substitutes only on UNDEFINED, so `coverAlt: ""` is honoured as empty — the right answer for a cover that just repeats the title beside it. #}
@@ -40,4 +40,5 @@ schema: BlogPosting
   {%- include 'css/post.css' -%}
   {%- include 'css/footnotes.css' -%}
   {%- include 'css/cover.css' -%}
+  {%- include 'css/rhythm.css' -%}
 {%- endcss -%}

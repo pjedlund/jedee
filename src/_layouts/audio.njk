@@ -6,7 +6,7 @@ schema: BlogPosting
 {# The audio type carries two flavours from one layout: podcast episodes (episode/season/ transcript, file in src/assets/audio) and field recordings (lat/lon, recorder/mic, file on R2). Every block below is guarded on the field that distinguishes them, so a post of either kind renders only what it actually has. #}
 
 <div class="region" style="--region-space-top: var(--space-xl-2xl)">
-  <article class="wrapper flow prose h-entry">
+  <article class="wrapper flow prose h-entry" data-rhythm>
     {% include 'partials/entry-header.njk' %}
 
     {# Artwork is a LOCAL asset → {% image %} (the Photo poster pattern, not the remote-cover plain <img> of reading/watching). Breaks out to .feature width:
@@ -113,4 +113,5 @@ schema: BlogPosting
   {%- include 'css/footnotes.css' -%}
   {%- if recorder or mic or audio.duration or place or audio.downloads -%}{%- include 'css/media-meta.css' -%}{%- endif -%}
   {%- if lat and lon and meta.mapApiKey and not hideMap -%}{%- include 'css/place-map.css' -%}{%- include 'css/place-map-overlay.css' -%}{%- include 'css/place-map-places.css' -%}{%- endif -%}
+  {%- include 'css/rhythm.css' -%}
 {%- endcss -%}
