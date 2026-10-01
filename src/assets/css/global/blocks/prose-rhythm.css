@@ -43,11 +43,6 @@ Every vertical gap in prose, and every line box that is not body text, is a whol
     line-height: 0;
   }
 
-  /* ⚠ The external-link arrow is a 1em inline-block on the baseline, which pushes a small-text line 0.75px taller; hung from the line's top it can't. */
-  .prose a[href^='http']::after {
-    vertical-align: top;
-  }
-
   /* PILLS
   The post-type pill, tags, genre chips and download buttons are padded text, 25px on a phone; snapped to the nearest quarter line, and wrapped rows a quarter line apart. ⚠ A pill in a list item sits on the item's text line, which adds 2px under it; as a flex item it is exactly its own height. */
   .prose :is(.meta .button, .cluster .button, .button[data-small-button]) {
