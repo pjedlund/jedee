@@ -50,14 +50,16 @@
   {%- endif %}
   {# The date, with a calendar glyph, on every post type. Kept here (not in date.njk) so it rides only the post meta line — date.njk is shared by every archive card too. #}
   {% if date %}
-    <span class="meta-item">{% svg 'posts/calendar', '', 'meta-icon' %}{% set definedDate = date %}{% include "partials/date.njk" %}</span>
+    <span class="meta-item">{% svg 'posts/calendar', '', 'meta-icon' %}{% set definedDate = date %}{% set dateFormat = 'Do [of] MMMM, YYYY' %}{% include "partials/date.njk" %}</span>
   {% endif %}
   {% if scoreMy %}
     {% set rating = scoreMy %}{% include "partials/rating.njk" %}
   {% endif %}
-  {% if updatedDate %}
-     | Updated: {{ updatedDate | formatDate('MMMM D, YYYY') }}
-  {% endif %}
+  {# Same as wiki.njk: the last commit to the file, linked on GitHub. #}
+  {%- set revision = page.inputPath | gitRevision %}
+  {%- if revision and meta.viewRepo.allow %}
+    <span class="meta-item"><a data-meta-tight href="{{ settings.repos.site }}/commit/{{ revision.hash }}">{% svg 'platform/github', '', 'meta-icon' %}Revised <time class="dt-updated" datetime="{{ revision.date | toIsoString }}">{{ revision.date | formatDate('Do [of] MMMM, YYYY') }}</time></a></span>
+  {%- endif %}
 </p>
 
 {% css "local" %}

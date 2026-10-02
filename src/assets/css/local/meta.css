@@ -11,6 +11,8 @@ The dim type/date/revision line under a post or wiki title (partials/entry-heade
   --meta-link-pad-block: var(--space-2xs);
   --meta-link-pad-inline: var(--space-xs);
 
+  /* Not prose: the line runs the full column instead of the paragraph measure, so it stays on one line wherever it fits. */
+  max-inline-size: none;
   font-size: var(--size-step-min-1);
   color: var(--meta-color);
 }
