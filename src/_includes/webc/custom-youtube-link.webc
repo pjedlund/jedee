@@ -3,14 +3,19 @@
     /* Tighten the flow gap from the player: the caption is a credit, not its own section. In prose it also takes the 16:9 player's pad down to the next quarter line. */
     --video-block-size: calc(100% * 9 / 16);
     --flow-space: calc(var(--line-quarter, var(--space-s)) + round(up, var(--video-block-size), var(--line-quarter, 1px)) - var(--video-block-size));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-xs);
+    --caption-icon-size: var(--size-step-0);
+    --caption-icon-gap: var(--space-xs);
+    display: block;
+    padding-inline-start: calc(var(--caption-icon-size) + var(--caption-icon-gap));
     font-size: var(--size-step-min-1);
   }
+  /* ⚠ Laid out like figcaption and its info icon (global-styles.css): as a flex row Chrome sized the link narrower than its text. */
   custom-youtube-link svg {
-    font-size: var(--size-step-0);
+    float: inline-start;
+    inline-size: var(--caption-icon-size);
+    block-size: var(--caption-icon-size);
+    margin-block-start: calc((1lh - var(--caption-icon-size)) / 2);
+    margin-inline-start: calc(-1 * (var(--caption-icon-size) + var(--caption-icon-gap)));
   }
 </style>
 
