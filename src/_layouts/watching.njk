@@ -26,7 +26,7 @@ schema: BlogPosting
 
     {% if url %}<data hidden class="u-watch-of" value="{{ url }}"></data>{% endif %}
 
-    <div class="e-content | flow">
+    <div class="e-content | wrapper-pass flow">
       {{ content | safe }}
     </div>
 

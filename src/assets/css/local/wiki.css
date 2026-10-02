@@ -44,23 +44,7 @@ Italic and a step smaller than the prose, starting on the prose's edge and held 
 
 .prose :is(figcaption, .meta) {
   max-inline-size: var(--wiki-prose-measure);
-  text-align: start;
   text-wrap: pretty;
-}
-
-@supports (grid-template-columns: subgrid) {
-  .prose figure:is(.popout, .feature) {
-    display: grid;
-    grid-template-columns: subgrid;
-  }
-
-  .prose figure:is(.popout, .feature) > * {
-    grid-column: 1 / -1;
-  }
-
-  .prose figure:is(.popout, .feature) > figcaption {
-    grid-column: content;
-  }
 }
 
 /*
