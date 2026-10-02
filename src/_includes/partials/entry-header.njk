@@ -50,13 +50,14 @@
   {%- endif %}
   {# The date, with a calendar glyph, on every post type. Kept here (not in date.njk) so it rides only the post meta line — date.njk is shared by every archive card too. #}
   {% if date %}
-    <span class="meta-item">{% svg 'posts/calendar', '', 'meta-icon' %}{% set definedDate = date %}{% include "partials/date.njk" %}</span>
+    <span class="meta-item">{% svg 'posts/calendar', '', 'meta-icon' %}{% set definedDate = date %}{% set dateFormat = 'Do [of] MMMM, YYYY' %}{% include "partials/date.njk" %}</span>
   {% endif %}
   {% if scoreMy %}
     {% set rating = scoreMy %}{% include "partials/rating.njk" %}
   {% endif %}
+  {# Same date style as the wiki's Revised item; the wiki's comes from git, a post's from its updatedDate. #}
   {% if updatedDate %}
-     | Updated: {{ updatedDate | formatDate('MMMM D, YYYY') }}
+    <span class="meta-item">{% svg 'posts/pencil', '', 'meta-icon' %}Revised <time class="dt-updated" datetime="{{ updatedDate | toIsoString }}">{{ updatedDate | formatDate('Do [of] MMMM, YYYY') }}</time></span>
   {% endif %}
 </p>
 
