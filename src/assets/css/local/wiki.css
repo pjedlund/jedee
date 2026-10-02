@@ -47,21 +47,6 @@ Italic and a step smaller than the prose, starting on the prose's edge and held 
   text-wrap: pretty;
 }
 
-@supports (grid-template-columns: subgrid) {
-  .prose figure:is(.popout, .feature) {
-    display: grid;
-    grid-template-columns: subgrid;
-  }
-
-  .prose figure:is(.popout, .feature) > * {
-    grid-column: 1 / -1;
-  }
-
-  .prose figure:is(.popout, .feature) > figcaption {
-    grid-column: content;
-  }
-}
-
 /*
 DARK FIGURES
 A shot with a dark twin ships both images (the wiki-dark-figures preprocessor); these rules show the one matching the theme, keyed like variables.css so the theme toggle wins over the system setting. The hidden one is lazy and never downloads.

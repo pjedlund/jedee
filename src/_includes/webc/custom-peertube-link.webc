@@ -4,13 +4,13 @@
     --flow-space: var(--line-quarter, 1em);
     --caption-icon-size: var(--size-step-0);
     --caption-icon-gap: var(--space-xs);
-    --caption-icon-color: var(--color-accent-blue);
+    --caption-icon-color: var(--color-text-subdued);
     --caption-icon-stroke: 0.2ex;
     display: block;
     padding-inline-start: calc(var(--caption-icon-size) + var(--caption-icon-gap));
     font-size: var(--size-step-min-1);
   }
-  /* ⚠ Laid out and coloured like figcaption and its info icon (global-styles.css): as a flex row Chrome sized the link narrower than its text. */
+  /* ⚠ Laid out like figcaption and its info icon (global-styles.css): as a flex row Chrome sized the link narrower than its text. */
   custom-peertube-link svg {
     float: inline-start;
     inline-size: var(--caption-icon-size);

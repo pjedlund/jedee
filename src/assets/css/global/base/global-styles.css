@@ -114,7 +114,7 @@ hr {
 }
 
 /* An image figure is as wide as its image, and the caption wraps inside that width instead of widening it. ⚠ Breakouts and non-image figures (a video embed has no width of its own) keep the full column. */
-figure:has(> picture, > img, > a > picture):not(.popout, .feature, .full) {
+figure:has(> picture, > img, > a > picture):not(.popout, .feature, .full, :is(.popout, .feature, .full) *) {
   inline-size: fit-content;
 }
 
@@ -122,11 +122,36 @@ figure:has(> picture, > img, > a > picture) > figcaption {
   contain: inline-size;
 }
 
-/* Icon gap, colour and line weight shared with custom-youtube-link and custom-peertube-link, so image and video captions read as one family. */
+/* A breakout figure keeps its caption in the text column: the figure, and a lightbox's wrappers around it, pass the page grid's columns through. */
+@supports (grid-template-columns: subgrid) {
+  :is(.wrapper, .wrapper-pass) > figure:is(.popout, .feature, .full),
+  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full):has(> is-land > photo-lightbox > figure),
+  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full) > is-land:has(> photo-lightbox > figure),
+  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full) > is-land > photo-lightbox:has(> figure),
+  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full) > is-land > photo-lightbox > figure {
+    display: grid;
+    grid-template-columns: subgrid;
+  }
+
+  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full) > is-land,
+  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full) > is-land > photo-lightbox,
+  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full) > is-land > photo-lightbox > figure,
+  :is(.wrapper, .wrapper-pass) > figure:is(.popout, .feature, .full) > :not(figcaption),
+  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full) > is-land > photo-lightbox > figure > :not(figcaption) {
+    grid-column: 1 / -1;
+  }
+
+  :is(.wrapper, .wrapper-pass) > figure:is(.popout, .feature, .full) > figcaption,
+  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full) > is-land > photo-lightbox > figure > figcaption {
+    grid-column: content;
+  }
+}
+
+/* Icon gap and line weight shared with custom-youtube-link and custom-peertube-link, so image and video captions read as one family. */
 figcaption {
   --caption-icon-size: 1em;
   --caption-icon-gap: var(--space-xs);
-  --caption-icon-color: var(--color-accent-blue);
+  --caption-icon-color: var(--color-text-subdued);
   --caption-icon-stroke: 0.2ex;
 
   margin-block-start: var(--space-s);
