@@ -42,7 +42,7 @@ Italic and a step smaller than the prose, starting on the prose's edge and held 
   --wiki-prose-measure: 54ch;
 }
 
-.prose :is(figcaption, .meta) {
+.prose figcaption {
   max-inline-size: var(--wiki-prose-measure);
   text-wrap: pretty;
 }

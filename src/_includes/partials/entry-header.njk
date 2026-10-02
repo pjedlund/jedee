@@ -55,10 +55,11 @@
   {% if scoreMy %}
     {% set rating = scoreMy %}{% include "partials/rating.njk" %}
   {% endif %}
-  {# Same date style as the wiki's Revised item; the wiki's comes from git, a post's from its updatedDate. #}
-  {% if updatedDate %}
-    <span class="meta-item">{% svg 'posts/pencil', '', 'meta-icon' %}Revised <time class="dt-updated" datetime="{{ updatedDate | toIsoString }}">{{ updatedDate | formatDate('Do [of] MMMM, YYYY') }}</time></span>
-  {% endif %}
+  {# Same as wiki.njk: the last commit to the file, linked on GitHub. #}
+  {%- set revision = page.inputPath | gitRevision %}
+  {%- if revision and meta.viewRepo.allow %}
+    <span class="meta-item"><a data-meta-tight href="{{ settings.repos.site }}/commit/{{ revision.hash }}">{% svg 'platform/github', '', 'meta-icon' %}Revised <time class="dt-updated" datetime="{{ revision.date | toIsoString }}">{{ revision.date | formatDate('Do [of] MMMM, YYYY') }}</time></a></span>
+  {%- endif %}
 </p>
 
 {% css "local" %}
