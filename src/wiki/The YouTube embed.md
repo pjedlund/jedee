@@ -1,7 +1,7 @@
 ---
 description: "The facade pattern that keeps a YouTube iframe off the page until someone clicks, and the two details jedee finishes — a self-hosted poster and a visible focus ring."
 date: 2026-07-31
-updated: 2026-08-26
+updated: 2026-10-02
 ---
 
 A standard YouTube embed is an `<iframe>` that pulls in several hundred kilobytes of JavaScript and contacts a number of Google domains before anyone presses play. On a page where the video is not the main point, that cost is paid by every visitor, most of whom will never watch it — and a third party gets to observe everyone who loads the page.
@@ -15,7 +15,7 @@ Two details are commonly left half-finished:
 
 ## In jedee
 
-`custom-youtube` is a thin wrapper around lite-youtube-embed. It renders on jam pages, on the video post type, and from raw markdown. A jam's `youtubeSlug` takes either one slug or a list, and the layout renders one player per slug.
+`custom-youtube` is a thin wrapper around lite-youtube-embed. It renders on jam pages, on the video post type, and from raw markdown. A jam's `youtubeSlug` takes either one slug or a list, and the layout renders one player per slug. The player takes the popout width ([[Layout breakouts]]) and its YouTube link stays in the text column, laid out like an image caption with a red icon in front ([[Figures]]). Markdown wraps a raw-HTML embed in a `<div>`, so that `<div>` passes the grid's columns through too.
 
 **Eleventy Excellent ships `custom-youtube`**; what follows is jedee's divergence — where the poster comes from, what you see before it arrives, and a focus bug that surfaced along the way.
 

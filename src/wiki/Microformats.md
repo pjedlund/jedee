@@ -1,6 +1,7 @@
 ---
 description: "The microformats2 class vocabulary that makes HTML machine-readable, and why those classes are data the stylesheet must never touch."
 date: 2026-08-01
+updated: 2026-10-02
 ---
 
 [Microformats2](https://microformats.org/wiki/microformats2) (mf2) makes ordinary HTML machine-readable by adding agreed-upon class names to the elements that already carry the content. There is no separate data file: the visible page *is* the data. A parser reads the classes and extracts a structured object from the markup underneath them.
@@ -41,7 +42,7 @@ The fix isn't removing the wrapper — parsers need it — but making one elemen
 
 ### `wrapper-pass` — the same root cause, a different consequence
 
-`post.njk` and `note.njk` use `class="e-content | wrapper-pass flow"`; most other layouts just `e-content | flow`. `wrapper-pass` (added June 2026, in `compositions/wrapper.css`) re-exposes the wrapper's named grid columns via `grid-template-columns: subgrid`, so breakout widths (`popout`, `feature`, `full`) work inside the body. Breakouts are grid-column assignments that only apply to direct children of `.wrapper` — so the same wrapper that broke the spacing also broke the breakouts, by the same demotion, needing a different fix. In browsers without subgrid, content simply stays at content width.
+Every post-type layout except `photo.njk` uses `class="e-content | wrapper-pass flow"` (only `post.njk` and `note.njk` did until 2026-10-02). `wrapper-pass` (added June 2026, in `compositions/wrapper.css`) re-exposes the wrapper's named grid columns via `grid-template-columns: subgrid`, so breakout widths (`popout`, `feature`, `full`) work inside the body. Breakouts are grid-column assignments that only apply to direct children of `.wrapper` — so the same wrapper that broke the spacing also broke the breakouts, by the same demotion, needing a different fix. In browsers without subgrid, content simply stays at content width.
 
 ### The entry root sits on the `<article>` — in all sixteen layouts
 

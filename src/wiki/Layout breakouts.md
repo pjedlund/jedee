@@ -1,7 +1,7 @@
 ---
 description: "A named-column grid that lets an element step wider than the text column it sits in, and the direct-child constraint that makes it awkward in practice."
 date: 2026-08-23
-updated: 2026-09-19
+updated: 2026-10-02
 ---
 
 A reading page wants one narrow column for prose and the occasional element wider than it — a diagram, a code block, a full-bleed image. The old way was negative margins, which fight the page's own padding and break at small widths.
@@ -93,7 +93,7 @@ Every post body hits the constraint, because the mf2 `e-content` wrapper (see [[
 }
 ```
 
-Used as `<div class="e-content | wrapper-pass flow">` in `post.njk` and `note.njk`, and without the mf2 class in `wiki.njk`. Two things in there are deliberate. The `:where()` keeps the "default back to content" rule at zero specificity, so a single class like `.popout` still beats it — mirroring how `.wrapper > *` loses to the breakout classes at the top level. And the whole block is inside `@supports`, so a browser without subgrid gets a plain content-column container and breakouts that render at content width: narrower than intended, never broken.
+Used as `<div class="e-content | wrapper-pass flow">` in every post-type layout except `photo.njk` (in `post.njk` and `note.njk` only, until videos went to popout width on 2026-10-02), and without the mf2 class in `wiki.njk`. Two things in there are deliberate. The `:where()` keeps the "default back to content" rule at zero specificity, so a single class like `.popout` still beats it — mirroring how `.wrapper > *` loses to the breakout classes at the top level. And the whole block is inside `@supports`, so a browser without subgrid gets a plain content-column container and breakouts that render at content width: narrower than intended, never broken.
 
 The other three cases are wrappers jedee doesn't control the shape of:
 

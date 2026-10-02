@@ -1,7 +1,7 @@
 ---
 description: "Styling data tables with modern CSS: markup that reads correctly unstyled, the browser defaults worth overriding, alignment and sticky headers, the scroll container a wide table needs, and rules painted as a gradient because a collapsed border gives one color per edge."
 date: 2026-09-15
-updated: 2026-09-28
+updated: 2026-10-02
 ---
 
 A table is for tabular data: values that relate along two axes at once, read across a row and down a column. That relationship is what `<table>` gives a screen reader, which announces the row and column headers as the reader moves from cell to cell, and it is lost the moment the grid is rebuilt from `div`s. A timetable, a price list or a comparison is tabular; a page layout is not.
@@ -123,7 +123,7 @@ The caption is a paragraph and not an attribute because markdown-it 14 reads a l
 
 ### Popout width
 
-The wrapper carries `.popout`, not the table, because the breakout classes only work on a direct grid child ([[Layout breakouts]]) and the wrapper is the element between the table and the grid. Post, note and wiki bodies sit in `.wrapper-pass`, so a table there lines up exactly with the code blocks, which break out the same way: both measured 913px wide from the same edge at a 1024px viewport. In a body without the pass-through the class does nothing and the table stays at content width. The style guide's Spacing section was one until 2026-09-15, which left its table 32px narrower on each side than the Sizes table above it; the section carries `.wrapper-pass` now. Both style-guide tables are hand-written HTML and lost their `.popout` on 2026-09-19, because the style guide's wrapper is the stock 85rem one and a breakout there steps out from a column that is already wide — see [[Layout breakouts]]. They sit at content width, equal to each other; the markdown tables in post, note and wiki bodies are the ones still in a breakout.
+The wrapper carries `.popout`, not the table, because the breakout classes only work on a direct grid child ([[Layout breakouts]]) and the wrapper is the element between the table and the grid. Post-type bodies (all but the photo type's) and wiki bodies sit in `.wrapper-pass`, so a table there lines up exactly with the code blocks, which break out the same way: both measured 913px wide from the same edge at a 1024px viewport. In a body without the pass-through the class does nothing and the table stays at content width. The style guide's Spacing section was one until 2026-09-15, which left its table 32px narrower on each side than the Sizes table above it; the section carries `.wrapper-pass` now. Both style-guide tables are hand-written HTML and lost their `.popout` on 2026-09-19, because the style guide's wrapper is the stock 85rem one and a breakout there steps out from a column that is already wide — see [[Layout breakouts]]. They sit at content width, equal to each other; the markdown tables in post, note and wiki bodies are the ones still in a breakout.
 
 ### One include for every layout
 

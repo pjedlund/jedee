@@ -1,6 +1,7 @@
 ---
 description: "The figure and figcaption elements, images that follow the site's light or dark theme, and where a caption sits relative to the text around it."
 date: 2026-09-29
+updated: 2026-10-02
 ---
 
 A `<figure>` holds content that the text refers to but that could move elsewhere without breaking the reading order: an image, a diagram, a code listing, a table. Its `<figcaption>` labels it, and becomes the figure's accessible name, so a screen reader announces the caption when it reaches the figure ([MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/figure)). The caption is not a replacement for the image's `alt`: the alt says what the image shows, the caption says why it is there. See [[Alt text]].
@@ -26,23 +27,88 @@ A caption is secondary text, and the usual typographic advice is to keep it in t
 
 ## In jedee
 
-Everything here is jedee's own and applies to the wiki only (`src/assets/css/local/wiki.css`). Eleventy Excellent's stock `figcaption` rule, centered, italic and one step smaller, still styles captions in posts.
+Eleventy Excellent ships one `figcaption` rule in `global/base/global-styles.css`: centered, italic, one step smaller, `text-wrap: balance`. Since 2026-10-02 jedee's version of that rule is left-aligned, starts with an info icon, and wraps with `pretty`; the [[Text wrapping]] reasoning for `balance` went with the centering. The rest of this section is jedee's own, and it covers every caption on the site: the markdown image title, the `{% image %}` shortcode, the lightbox component, a post's `credit:` under its featured image, and a `<figcaption>` written by hand.
+
+### The icon in the padding
+
+The caption reserves room for an icon with `padding-inline-start`, and the icon floats into that room with an equal negative margin. Every line of the caption starts at the same edge, so a two-line caption hangs under its own text, not under the icon.
+
+```css
+figcaption {
+  --caption-icon-size: 1em;
+  --caption-icon-gap: var(--space-xs);
+
+  padding-inline-start: calc(var(--caption-icon-size) + var(--caption-icon-gap));
+}
+
+figcaption::before {
+  content: '';
+  float: inline-start;
+  inline-size: var(--caption-icon-size);
+  block-size: var(--caption-icon-size);
+  margin-block-start: calc((1lh - var(--caption-icon-size)) / 2);
+  margin-inline-start: calc(-1 * (var(--caption-icon-size) + var(--caption-icon-gap)));
+}
+```
+
+A float never adds height to a line box, and an inline icon can, by pushing the line past its `line-height`. The caption therefore stays exactly one small-text line plus its quarter-line padding: 27px on a phone (20.25 + 6.75) and 42px wide (31.5 + 10.5), the same as before the icon, so [[Vertical rhythm]] is untouched. `1lh` is the caption's own line height, so the margin centers the icon on the first line at any size. A leading space before the text collapses at the start of a line, and a float doesn't count as content, so whitespace in the markup can't widen the gap either.
+
+### An icon drawn in CSS
+
+The link underline on the site is `text-decoration-thickness: 0.2ex`, so it thickens with the text. An icon from an SVG file scales its stroke with the icon's box instead. The info icon is drawn in CSS so its lines can be measured in `ex` too: a round border is the ring, and two background layers paint the dot and the stem.
+
+```css
+figcaption::before {
+  box-sizing: border-box;
+  border: var(--caption-icon-stroke) solid var(--caption-icon-color);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle closest-side, var(--caption-icon-color) 85%, transparent) 50% 22% / var(--caption-icon-stroke) var(--caption-icon-stroke) no-repeat,
+    linear-gradient(var(--caption-icon-color) 0 0) 50% 78% / var(--caption-icon-stroke) 32% no-repeat;
+}
+```
+
+`--caption-icon-stroke` is `0.2ex` and `--caption-icon-color` is `--color-text-subdued`. The YouTube and PeerTube icons under a video are SVG files ([[The YouTube embed]]), so they reach the same weight differently: `stroke-width: 0.2ex` on the `<svg>`, with `vector-effect: non-scaling-stroke` on its shapes so the viewBox doesn't scale it back up. The YouTube icon is `--color-red-vivid`. The video link uses the same padding-and-float layout as the caption. As a flex row (icon, gap, link) Chrome sized the link narrower than its own text: a 44-character title wrapped onto two lines inside a 1024px row with no `max-width` anywhere. A block with a floated icon has no such sizing step.
+
+### As wide as the image
+
+A figure whose content is an image is only as wide as that image, and the caption wraps inside that width instead of widening the figure:
+
+```css
+figure:has(> picture, > img, > a > picture):not(.popout, .feature, .full, :is(.popout, .feature, .full) *) {
+  inline-size: fit-content;
+}
+
+figure:has(> picture, > img, > a > picture) > figcaption {
+  contain: inline-size;
+}
+```
+
+`contain: inline-size` gives the caption no width of its own when the browser works out how wide `fit-content` is, so the image alone decides. A 400px image in a 1024px column gets a 400px figure and a 400px caption. A large image is unaffected: `fit-content` never exceeds the space available, and the reset's `max-inline-size: 100%` already holds the image there. The `:has()` keeps the rule off figures that hold a video or a table, which have no width of their own and would shrink to nothing. Breakouts are excluded because they are a column width by definition. A small image used to be centered with a `text-center` class on the figure; it now sits on the left edge with its caption.
+
+### Breakout captions on the prose edge
+
+A figure at `.popout`, `.feature` or `.full` width starts left of the text, and so would its caption. The figure passes the wrapper's named columns down through subgrid and puts the caption back in `content` ([[Layout breakouts]] covers the columns). The featured image at the top of a post is a lightbox, and its `.feature` class sits on a wrapper three elements above the figure, so each element in between passes the columns on as well:
+
+```css
+@supports (grid-template-columns: subgrid) {
+  :is(.wrapper, .wrapper-pass) > figure:is(.popout, .feature, .full),
+  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full):has(> is-land > photo-lightbox > figure),
+  /* …is-land, photo-lightbox and the figure inside them… */ {
+    display: grid;
+    grid-template-columns: subgrid;
+  }
+
+  /* each level in between, and everything in the figure but the caption: */ { grid-column: 1 / -1; }
+  /* the caption: */ { grid-column: content; }
+}
+```
+
+⚠ A subgrid item with no `grid-column` takes the first track only, with no error. The lightbox figure missed the `1 / -1` rule for a moment and rendered its image 80px wide, the width of the `feature` track. Measured on an article at a 1440px window: the paragraphs, the caption under a `.feature` image and the caption under the featured lightbox image all start at x = 200.5, while the images start at 88.5. Videos take the popout width the same way, with their link in `content`.
 
 ### Wiki captions
 
-Wiki captions are italic and one type step smaller than the prose, start on the prose's left edge, and stop at the paragraphs' `54ch` measure, so a caption's right edge lines up with the paragraphs above it rather than with the figure. Most wiki figures break out to `.popout` width (see [[Layout breakouts]]), so without help the caption would start at the figure's edge, 2rem left of the text. The figure passes the wrapper's named columns down through subgrid and puts the caption back in `content`:
-
-```css
-.prose figure:is(.popout, .feature) {
-  display: grid;
-  grid-template-columns: subgrid;
-}
-
-.prose figure:is(.popout, .feature) > * { grid-column: 1 / -1; }
-.prose figure:is(.popout, .feature) > figcaption { grid-column: content; }
-```
-
-⚠ `54ch` in the caption's own rule would be 54 of the *caption's* smaller characters, and the edge would silently land short of the paragraphs'. The measure is registered as a length, so it resolves once on `.prose`, at the body size, and inherits as pixels:
+Wiki captions also stop at the paragraphs' `54ch` measure, so a caption's right edge lines up with the paragraphs above it rather than with the figure. `54ch` in the caption's own rule would be 54 of the caption's smaller characters, so the measure is registered as a length, resolves once on `.prose` at the body size, and inherits as pixels:
 
 ```css
 @property --wiki-prose-measure {
@@ -52,10 +118,10 @@ Wiki captions are italic and one type step smaller than the prose, start on the 
 }
 
 .prose { --wiki-prose-measure: 54ch; }
-.prose :is(figcaption, .meta) { max-inline-size: var(--wiki-prose-measure); }
+.prose figcaption { max-inline-size: var(--wiki-prose-measure); }
 ```
 
-Measured on [[Layout breakouts]] at a 1440px window on 2026-10-01, after the measure moved to `54ch`: both the paragraphs and the captions run from x = 208 to 959, inside a figure from 176 to 1264. Three versions came before this one on the same day: a hanging info icon after Smashing Magazine's captions, a caption spanning the whole content column, and a dimmed color. All three were dropped.
+Measured on [[Layout breakouts]] at a 1440px window on 2026-10-01: both the paragraphs and the captions run from x = 208 to 959, inside a figure from 176 to 1264.
 
 ### Dark twins
 
@@ -87,4 +153,4 @@ A mockup with its own hand-picked palette, like the specimen cards on [[OpenType
 
 ⚠ A mockup loads the site's compiled stylesheets by name, so splitting a stylesheet breaks the mockups that load it without an error: they keep the first file and lose the rest. The search and place-map mockups ran on half their CSS for a day after one such split, and it only showed when they were re-shot.
 
-Raw source: `src/_raw/dev-notes/How wiki figures get dark twins.md`
+Raw sources: `src/_raw/dev-notes/How wiki figures get dark twins.md`, `src/_raw/dev-notes/How captions work.md`

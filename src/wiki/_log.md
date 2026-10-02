@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-10-02] ingest | Captions on Figures
+
+Captions went left-aligned site-wide with an info icon in front, so the "In jedee" section of [[Figures]] is rewritten: it no longer describes Eleventy Excellent's centered caption in posts and a wiki-only rule. It covers the icon floated into the caption's padding (no taller line, so [[Vertical rhythm]] holds), the icon drawn in CSS so its lines are `0.2ex` like the link underline, image figures shrinking to their image, and breakout and lightbox captions passed back to the prose edge through subgrid. The page's earlier note that a hanging icon had been tried and dropped went with the old section. Stale claims fixed elsewhere: `figcaption` no longer balances ([[Text wrapping]]); the video pad sits on the player ([[Vertical rhythm]]); `wrapper-pass` is on every post type but photo ([[Layout breakouts]], [[Microformats]], [[Tables]]); the player is at popout width ([[The YouTube embed]]). Source written from the session.
+
 ## [2026-10-01] enrich | Line length moved to 54ch
 
 Johan tried several line lengths and settled on `54ch`, replacing Eleventy Excellent's `60ch` in `prose.css`, the `.intro` lede in `post.css` and the caption measure in `wiki.css`. The same day plain lists started taking the measure on the list rather than each item, so list text no longer runs past the paragraphs' edge. [[Line length]] was re-measured on the dev server across eight wiki pages: about 63 characters a line from 768px up (it was about 72), 41 on a phone. The `line-length-ch` figure was re-shot at `54ch`, and its caption, alt text and image size updated. The `60ch` mentions on [[Figures]], [[Accessibility]], [[Text wrapping]], [[Typographic conventions]], [[Layout shift]], [[Vertical rhythm]] and the index now say `54ch`; the caption and band measurements on [[Figures]] and [[Line length]] were taken again rather than scaled.
