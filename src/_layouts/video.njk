@@ -9,7 +9,7 @@ schema: BlogPosting
 
     {# One type, three rendering paths, selected by video.provider (spec §6). The two embed paths reuse the SHIPPED custom-youtube / custom-peertube WebC components — they render here because the WebC plugin runs with useTransform:true (so custom elements process in .njk, not only .webc). Self-hosted video carries u-video; embeds carry no file URL, so no u-video (documented µf2 limitation, spec §5). #}
     {% if video.provider == "file" and video.src %}
-      <video class="u-video" controls preload="metadata"{% if video.poster %} poster="{{ video.poster | replace('./src', '') }}"{% endif %} src="{{ video.src | replace('./src', '') }}"></video>
+      <video class="u-video | popout" controls preload="metadata"{% if video.poster %} poster="{{ video.poster | replace('./src', '') }}"{% endif %} src="{{ video.src | replace('./src', '') }}"></video>
 
     {% elif video.provider == "youtube" %}
       <custom-youtube @slug="{{ video.slug }}" @poster="{{ video.slug | youtubePoster }}" @label="{{ title }}"></custom-youtube>
@@ -18,7 +18,7 @@ schema: BlogPosting
       <custom-peertube @instance="{{ video.instance }}" @embed-slug="{{ video.embedSlug }}" @slug="{{ video.slug }}" @label="{{ title }}"></custom-peertube>
     {% endif %}
 
-    <div class="e-content | flow">
+    <div class="e-content | wrapper-pass flow">
       {{ content | safe }}
     </div>
 

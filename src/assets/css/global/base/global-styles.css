@@ -122,10 +122,12 @@ figure:has(> picture, > img, > a > picture) > figcaption {
   contain: inline-size;
 }
 
-/* Same icon size and gap as custom-youtube-link and custom-peertube-link, so image and video captions start their text at one edge. */
+/* Icon gap, colour and line weight shared with custom-youtube-link and custom-peertube-link, so image and video captions read as one family. */
 figcaption {
-  --caption-icon-size: var(--size-step-0);
+  --caption-icon-size: 1em;
   --caption-icon-gap: var(--space-xs);
+  --caption-icon-color: var(--color-accent-blue);
+  --caption-icon-stroke: 0.2ex;
 
   margin-block-start: var(--space-s);
   font-size: var(--size-step-min-1);
@@ -137,16 +139,20 @@ figcaption {
   text-wrap: pretty;
 }
 
-/* Lucide's info icon, floated into the padding and centred on the first line by margin. ⚠ A float never makes a line taller, an inline icon can. */
+/* Lucide's info icon drawn in CSS, so its lines are ex-relative like the link underline: a ring, a stem and a dot. Floated into the padding and centred on the first line. ⚠ A float never makes a line taller, an inline icon can. */
 figcaption::before {
   content: '';
   float: inline-start;
+  box-sizing: border-box;
   inline-size: var(--caption-icon-size);
   block-size: var(--caption-icon-size);
   margin-block-start: calc((1lh - var(--caption-icon-size)) / 2);
   margin-inline-start: calc(-1 * (var(--caption-icon-size) + var(--caption-icon-gap)));
-  background-color: currentColor;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 16v-4M12 8h.01'/%3E%3C/svg%3E") center / contain no-repeat;
+  border: var(--caption-icon-stroke) solid var(--caption-icon-color);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle closest-side, var(--caption-icon-color) 85%, transparent) 50% 22% / var(--caption-icon-stroke) var(--caption-icon-stroke) no-repeat,
+    linear-gradient(var(--caption-icon-color) 0 0) 50% 78% / var(--caption-icon-stroke) 32% no-repeat;
 }
 
 /* figcaption:after {

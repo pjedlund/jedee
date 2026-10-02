@@ -1,21 +1,29 @@
 <style>
   custom-youtube-link {
-    /* Tighten the flow gap from the player: the caption is a credit, not its own section. In prose it also takes the 16:9 player's pad down to the next quarter line. */
-    --video-block-size: calc(100% * 9 / 16);
-    --flow-space: calc(var(--line-quarter, var(--space-s)) + round(up, var(--video-block-size), var(--line-quarter, 1px)) - var(--video-block-size));
+    /* A quarter line under the player, which pads itself down to the lattice. */
+    --flow-space: var(--line-quarter, var(--space-s));
     --caption-icon-size: var(--size-step-0);
     --caption-icon-gap: var(--space-xs);
+    --caption-icon-color: var(--color-accent-blue);
+    --caption-icon-stroke: 0.2ex;
     display: block;
     padding-inline-start: calc(var(--caption-icon-size) + var(--caption-icon-gap));
     font-size: var(--size-step-min-1);
   }
-  /* ⚠ Laid out like figcaption and its info icon (global-styles.css): as a flex row Chrome sized the link narrower than its text. */
+  /* ⚠ Laid out and coloured like figcaption and its info icon (global-styles.css): as a flex row Chrome sized the link narrower than its text. */
   custom-youtube-link svg {
     float: inline-start;
     inline-size: var(--caption-icon-size);
     block-size: var(--caption-icon-size);
     margin-block-start: calc((1lh - var(--caption-icon-size)) / 2);
     margin-inline-start: calc(-1 * (var(--caption-icon-size) + var(--caption-icon-gap)));
+    color: var(--caption-icon-color);
+    stroke-width: var(--caption-icon-stroke);
+  }
+
+  /* Keeps the stroke at 0.2ex of the text instead of scaling with the icon's viewBox. */
+  custom-youtube-link svg * {
+    vector-effect: non-scaling-stroke;
   }
 </style>
 

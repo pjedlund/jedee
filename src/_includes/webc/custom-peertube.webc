@@ -32,6 +32,30 @@
     width: 100%;
     border-radius: 0.2em;
   }
+  /* A grid, so the player's pad below never collapses into the caption link's margin. */
+  custom-peertube {
+    display: grid;
+  }
+  /* Pads the 16:9 player down to the next quarter line; a % margin measures the player's own column. */
+  custom-peertube > is-land {
+    --video-block-size: calc(100% * 9 / 16);
+    margin-block-end: calc(round(up, var(--video-block-size), var(--line-quarter, 1px)) - var(--video-block-size));
+  }
+  /* In the page grid the player takes the popout width and the caption link stays in the text column. A markdown body wraps the embed in a <div>, which passes the columns through too. */
+  @supports (grid-template-columns: subgrid) {
+    :is(.wrapper, .wrapper-pass) > div:has(> custom-peertube),
+    custom-peertube:is(:is(.wrapper, .wrapper-pass) > *, :is(.wrapper, .wrapper-pass) > div > *) {
+      grid-column: full;
+      display: grid;
+      grid-template-columns: subgrid;
+    }
+    custom-peertube:is(:is(.wrapper, .wrapper-pass) > *, :is(.wrapper, .wrapper-pass) > div > *) > is-land {
+      grid-column: popout;
+    }
+    custom-peertube:is(:is(.wrapper, .wrapper-pass) > *, :is(.wrapper, .wrapper-pass) > div > *) > custom-peertube-link {
+      grid-column: content;
+    }
+  }
 </style>
 
 <custom-peertube webc:root class="flow">

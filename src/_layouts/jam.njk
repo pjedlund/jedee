@@ -35,7 +35,7 @@ schema: BlogPosting
 
     {% if source %}<data hidden class="u-listen-of" value="{{ source }}"></data>{% endif %}
 
-    <div class="e-content | flow">
+    <div class="e-content | wrapper-pass flow">
       {{ content | safe }}
     </div>
 

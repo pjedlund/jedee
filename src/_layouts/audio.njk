@@ -29,7 +29,7 @@ schema: BlogPosting
       <audio class="u-audio" controls preload="metadata" src="{{ audio.src | replace('./src', '') }}"></audio>
     {% endif %}
 
-    <div class="e-content | flow">
+    <div class="e-content | wrapper-pass flow">
       {{ content | safe }}
     </div>
 
