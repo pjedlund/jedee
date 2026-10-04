@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-10-04] enrich | The place map: preloader and course symbols
+
+[[The place map]] rewritten where the session made it wrong: the pulsing `--map-water` box is gone, replaced by a forest-green box with the logo filling in ocean blue as a Flash-style counting preloader (timed from the first drawn frame, crossfading into the map); the start triangle is now centred on the start point, the line is cut at the triangle's apex and at the outer finish circle, and the symbols take the line's weight with IOF finish proportions. ⚠ The `place-map-route-symbols` figure still shows the old apex-on-the-track triangle and thin symbols, and its alt text describes them: re-shoot with `npm run mockups -- place-map` and update the alt. Source written from the session.
+
 ## [2026-10-02] ingest | Captions on Figures
 
 Captions went left-aligned site-wide with an info icon in front, so the "In jedee" section of [[Figures]] is rewritten: it no longer describes Eleventy Excellent's centered caption in posts and a wiki-only rule. It covers the icon floated into the caption's padding (no taller line, so [[Vertical rhythm]] holds), the icon drawn in CSS so its lines are `0.2ex` like the link underline, image figures shrinking to their image, and breakout and lightbox captions passed back to the prose edge through subgrid. The page's earlier note that a hanging icon had been tried and dropped went with the old section. Stale claims fixed elsewhere: `figcaption` no longer balances ([[Text wrapping]]); the video pad sits on the player ([[Vertical rhythm]]); `wrapper-pass` is on every post type but photo ([[Layout breakouts]], [[Microformats]], [[Tables]]); the player is at popout width ([[The YouTube embed]]). Source written from the session.
