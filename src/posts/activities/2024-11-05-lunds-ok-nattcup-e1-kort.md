@@ -1,5 +1,5 @@
 ---
-title: "Lunds OK nattcup e1, kort"
+title: "Lunds OK nattcup 2024 E1, kort bana"
 date: "2024-11-05T17:11:04+01:00"
 activityType: orienteering
 eventType: race
