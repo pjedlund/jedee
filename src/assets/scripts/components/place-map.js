@@ -449,36 +449,30 @@ class PlaceMap extends HTMLElement {
     const len = Math.hypot(p1.x - p0.x, p1.y - p0.y) || 1;
     const ux = (p1.x - p0.x) / len;
     const uy = (p1.y - p0.y) / len;
+    const bx = p0.x - ux * TRI_HEIGHT;
+    const by = p0.y - uy * TRI_HEIGHT;
     const lngLat = (x, y) => map.unproject([x, y]).toArray();
-    // Centred on the start, as on a printed map: the apex sits 2/3 of the height ahead, the base 1/3 behind.
-    const ax = p0.x + ux * TRI_HEIGHT * (2 / 3);
-    const ay = p0.y + uy * TRI_HEIGHT * (2 / 3);
-    const bx = p0.x - ux * (TRI_HEIGHT / 3);
-    const by = p0.y - uy * (TRI_HEIGHT / 3);
-    const apex = lngLat(ax, ay);
-    const tri = [apex, lngLat(bx - uy * TRI_HALF_WIDTH, by + ux * TRI_HALF_WIDTH), lngLat(bx + uy * TRI_HALF_WIDTH, by - ux * TRI_HALF_WIDTH), apex];
+    const tri = [coords[0], lngLat(bx - uy * TRI_HALF_WIDTH, by + ux * TRI_HALF_WIDTH), lngLat(bx + uy * TRI_HALF_WIDTH, by - ux * TRI_HALF_WIDTH), coords[0]];
     const pe = map.project(end);
     const ring = (r) => Array.from({ length: 49 }, (_, i) => lngLat(pe.x + r * Math.cos((i / 48) * 2 * Math.PI), pe.y + r * Math.sin((i / 48) * 2 * Math.PI)));
     const geo = (type, coordinates) => ({ type: 'Feature', properties: {}, geometry: { type, coordinates } });
-    // The line leaves the triangle at its apex distance and stops where the outer finish circle starts.
-    const route = this.trimEnd(this.trimEnd(coords, pe, FINISH_OUTER, lngLat).reverse(), p0, TRI_HEIGHT * (2 / 3), lngLat).reverse();
-    return { start: geo('LineString', tri), finish: geo('MultiLineString', [ring(FINISH_OUTER), ring(FINISH_INNER)]), route: geo('LineString', route) };
+    return { start: geo('LineString', tri), finish: geo('MultiLineString', [ring(FINISH_OUTER), ring(FINISH_INNER)]), route: geo('LineString', this.trimToFinish(coords, pe, lngLat)) };
   }
 
-  // Cut the route's END where it enters a circle of radius r (px at the fit zoom) around center; returns a new array.
-  trimEnd(coords, center, r, lngLat) {
+  // The route stops where the outer finish circle starts, as on a printed map: cut the last segment that crosses the circle.
+  trimToFinish(coords, pe, lngLat) {
     const { map } = this.mapObj;
-    const away = (c) => Math.hypot(map.project(c).x - center.x, map.project(c).y - center.y);
+    const away = (c) => Math.hypot(map.project(c).x - pe.x, map.project(c).y - pe.y);
     let i = coords.length - 1;
-    while (i > 0 && away(coords[i - 1]) < r) i--;
-    if (i === 0) return [...coords]; // the whole route fits inside the circle
+    while (i > 0 && away(coords[i - 1]) < FINISH_OUTER) i--;
+    if (i === 0) return coords; // the whole route fits inside the circle
     const a = map.project(coords[i - 1]);
     const b = map.project(coords[i]);
     let lo = 0;
     let hi = 1;
     for (let k = 0; k < 20; k++) {
       const t = (lo + hi) / 2;
-      if (Math.hypot(a.x + (b.x - a.x) * t - center.x, a.y + (b.y - a.y) * t - center.y) > r) lo = t;
+      if (Math.hypot(a.x + (b.x - a.x) * t - pe.x, a.y + (b.y - a.y) * t - pe.y) > FINISH_OUTER) lo = t;
       else hi = t;
     }
     return [...coords.slice(0, i), lngLat(a.x + (b.x - a.x) * lo, a.y + (b.y - a.y) * lo)];
