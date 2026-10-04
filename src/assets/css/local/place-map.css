@@ -59,11 +59,11 @@ place-map > :is(.place-map-live, .place-map-static) + :not(script) {
   }
 }
 
-/* Preloader: the logo fills clockwise with a 0–100 count in its hole, over the forest-green box; place-map.js sets --preloader-logo and --preloader-progress. */
+/* Preloader: the logo fills clockwise (from 30deg, so the stem fills last) with a 0–100 count in its hole, over the forest-green box; place-map.js sets --preloader-logo and --preloader-progress. */
 .place-map-preloader {
   --preloader-size: 5rem;
-  --preloader-fill: var(--color-accent-orange);
-  --preloader-track: color-mix(in oklab, var(--color-text) 15%, transparent);
+  --preloader-fill: color-mix(in oklab, var(--map-water), var(--color-blue-vivid) 60%); /* the ocean, deepened so it reads on the forest green */
+  --preloader-track: var(--map-land);
 
   position: absolute;
   inset: 0;
@@ -79,7 +79,7 @@ place-map > :is(.place-map-live, .place-map-static) + :not(script) {
 .place-map-preloader-logo {
   inline-size: var(--preloader-size);
   aspect-ratio: 1;
-  background: conic-gradient(var(--preloader-fill) calc(var(--preloader-progress, 0) * 1%), var(--preloader-track) 0);
+  background: conic-gradient(from 30deg, var(--preloader-fill) calc(var(--preloader-progress, 0) * 1%), var(--preloader-track) 0);
   mask: var(--preloader-logo) center / contain no-repeat;
 }
 .place-map-preloader span {
