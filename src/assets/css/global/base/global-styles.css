@@ -149,22 +149,22 @@ figure:has(> picture, > img, > a > picture) > figcaption {
 
 /* Icon gap and line weight shared with custom-youtube-link and custom-peertube-link, so image and video captions read as one family. */
 figcaption {
-  --caption-icon-size: 1em;
+  --caption-icon-size: 1cap;
   --caption-icon-gap: var(--space-xs);
   --caption-icon-color: var(--color-text-subdued);
+  --caption-icon-opacity: 0.6;
   --caption-icon-stroke: 0.2ex;
 
   margin-block-start: var(--space-s);
   font-size: var(--size-step-min-1);
   text-align: start;
   padding-block-end: var(--space-xs);
-  padding-inline-start: calc(var(--caption-icon-size) + var(--caption-icon-gap));
   /* text-emphasis: dot closed; */
   font-style: italic;
   text-wrap: pretty;
 }
 
-/* Lucide's info icon drawn in CSS, so its lines are ex-relative like the link underline: a ring, a stem and a dot. Floated into the padding and centred on the first line. ⚠ A float never makes a line taller, an inline icon can. */
+/* Lucide's info icon drawn in CSS, so its lines are ex-relative like the link underline: a ring, a stem and a dot. Cap-height, floated at the start of the first line so a second line runs under it. ⚠ A float never makes a line taller, an inline icon can. */
 figcaption::before {
   content: '';
   float: inline-start;
@@ -172,9 +172,10 @@ figcaption::before {
   inline-size: var(--caption-icon-size);
   block-size: var(--caption-icon-size);
   margin-block-start: calc((1lh - var(--caption-icon-size)) / 2);
-  margin-inline-start: calc(-1 * (var(--caption-icon-size) + var(--caption-icon-gap)));
+  margin-inline-end: var(--caption-icon-gap);
   border: var(--caption-icon-stroke) solid var(--caption-icon-color);
   border-radius: 50%;
+  opacity: var(--caption-icon-opacity);
   background:
     radial-gradient(circle closest-side, var(--caption-icon-color) 85%, transparent) 50% 22% / var(--caption-icon-stroke) var(--caption-icon-stroke) no-repeat,
     linear-gradient(var(--caption-icon-color) 0 0) 50% 78% / var(--caption-icon-stroke) 32% no-repeat;

@@ -234,7 +234,7 @@ Table: Line counts in the web font and the fallback, by viewport width
 **Document height was identical in both font states at every width tested.** The heading and the intro paragraph never change line count anywhere in the range — the two fonts disagree about the footer and nothing else.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/layout-shift-font-band.png" alt="The site footer rendered six times in a three-by-two grid: at 390, 412 and 432 pixels wide, each in the web font and in the metric-matched fallback. At 390 both states take three rows of links; at 432 both take two. Only at 412 do they disagree — two rows in the web font, three in the fallback — and every one of the six reports the same 96-pixel cluster height." width="2640" height="1280">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/layout-shift-font-band.png" alt="The site footer rendered six times in a three-by-two grid: at 390, 412 and 432 pixels wide, each in the web font and in the metric-matched fallback. At 390 both states take three rows of links; at 432 both take two. Only at 412 do they disagree — two rows in the web font, three in the fallback — and every one of the six reports the same 96-pixel cluster height." width="2556" height="1218">
   <figcaption>The band, re-measured rather than redrawn: each panel is the real footer in its own iframe at that viewport width, and the row counts are read back off the rendered geometry. Only the middle column disagrees. Note that all six report the same 96 px height — that is the reserve holding the box still while the links redistribute inside it, which is why the fix halves the shift instead of removing it.</figcaption>
 </figure>
 

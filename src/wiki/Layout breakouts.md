@@ -34,7 +34,7 @@ The current technique is [Ryan Mulligan's layout breakouts](https://ryanmulligan
 ```
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/layout-breakouts-tracks.png" alt="A diagram of the seven grid tracks in a row, labeled from the outside in: 1fr, 5rem, 2rem, --wrapper-width, 2rem, 5rem, 1fr. Below them four stacked bars of increasing width, each centered. The narrowest is dark and labeled &quot;grid-column: content (the default)&quot;. The three wider ones are orange and labeled .popout, .feature and .full, each reaching one track further out on both sides." width="2164" height="534">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/layout-breakouts-tracks.png" alt="A diagram of the seven grid tracks in a row, labeled from the outside in: 1fr, 5rem, 2rem, --wrapper-width, 2rem, 5rem, 1fr. Below them four stacked bars of increasing width, each centered. The narrowest is dark and labeled &quot;grid-column: content (the default)&quot;. The three wider ones are orange and labeled .popout, .feature and .full, each reaching one track further out on both sides." width="2080" height="458">
   <figcaption>The seven tracks, and the four spans available across them. Every bar is a real grid item in a real <code>.wrapper</code> — nothing here is positioned, and no bar knows how wide it is.</figcaption>
 </figure>
 
@@ -43,7 +43,7 @@ Two details do most of the work. The `[name-start]` / `[name-end]` line names me
 **The catch is that these classes only work on a direct child of the grid.** `grid-column` is a property of a grid *item*, and a grid item is a direct child. Wrap the content in anything — a container element, a component's own root, a plugin's output — and every breakout class inside it silently does nothing. There is no error; the element just renders at content width, which is exactly what it would do if the class were misspelled. This is the single thing that makes breakouts fiddly in real templates, and it has more than one answer depending on what did the wrapping.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/layout-breakouts-direct-child.png" alt="Three stacked panels, each showing a dark content-width bar above an orange bar marked .popout. In the first, labeled &quot;.wrapper &gt; .popout — steps out&quot;, the orange bar is wider than the dark one. In the second, labeled &quot;.wrapper &gt; div &gt; .popout — silently content width&quot;, the orange bar is exactly as wide as the dark one. In the third, labeled &quot;.wrapper &gt; .wrapper-pass &gt; .popout — steps out again&quot;, it is wider once more." width="1604" height="958">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/layout-breakouts-direct-child.png" alt="Three stacked panels, each showing a dark content-width bar above an orange bar marked .popout. In the first, labeled &quot;.wrapper &gt; .popout — steps out&quot;, the orange bar is wider than the dark one. In the second, labeled &quot;.wrapper &gt; div &gt; .popout — silently content width&quot;, the orange bar is exactly as wide as the dark one. In the third, labeled &quot;.wrapper &gt; .wrapper-pass &gt; .popout — steps out again&quot;, it is wider once more." width="1520" height="890">
   <figcaption>The same class, three depths. The middle panel is the failure: <code>.popout</code> is present and did nothing, which is indistinguishable from a typo.</figcaption>
 </figure>
 

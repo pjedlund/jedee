@@ -75,9 +75,43 @@ A shot with a dark twin ships both images (the wiki-dark-figures preprocessor); 
 
 /*
 MOCKUP SHOTS
-Shots whose subject has its own rounded, transparent corners — a device frame, a specimen card. Prose's image hairline and radius trace the PNG's bounding box and draw a second, squared box around it. Opt out per figure or figure group with data-wiki-mockup.
+Shot on transparency (shoot-mockups.js strips the specimen's paper) and set here on a borderless panel the color of a code block. A popout shot sits in the text column, so its left edge meets the prose on every screen, and the panel reaches a fixed inset past it; a feature shot is padded inside its own width. Needs the breakout subgrid from global-styles.css.
 */
+figure[data-wiki-mockup] {
+  --wiki-mockup-bg: var(--color-code-bg);
+  --wiki-mockup-radius: var(--border-radius-medium);
+  --wiki-mockup-pad: var(--line);
+  /* 2rem is the popout gutter at full width; ⚠ capped at the page gap so a phone never scrolls sideways. */
+  --wiki-mockup-inset: min(2rem, var(--gap));
+}
+
+figure[data-wiki-mockup]::before {
+  content: '';
+  grid-column: content;
+  grid-row: 1;
+  margin-inline: calc(-1 * var(--wiki-mockup-inset));
+  background: var(--wiki-mockup-bg);
+  border-radius: var(--wiki-mockup-radius);
+}
+
+figure[data-wiki-mockup] > :not(figcaption) {
+  grid-column: content;
+  grid-row: 1;
+  padding-block: var(--wiki-mockup-pad);
+}
+
+figure.feature[data-wiki-mockup]::before {
+  grid-column: 1 / -1;
+  margin-inline: 0;
+}
+
+figure.feature[data-wiki-mockup] > :not(figcaption) {
+  grid-column: 1 / -1;
+  padding-inline: var(--wiki-mockup-inset);
+}
+
 [data-wiki-mockup] img {
   border: none;
   border-radius: 0;
+  outline: none;
 }

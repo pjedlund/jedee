@@ -38,6 +38,8 @@ for (const { file, theme } of passes) {
   await page.evaluate(() => {
     document.body.style.background = 'transparent';
     document.querySelectorAll('[data-shot]').forEach(el => (el.style.boxShadow = 'none'));
+    // A specimen's paper, border and padding go too: wiki.css draws the panel around the figure, so it tracks the code-block color and the text edge.
+    document.querySelectorAll('.specimen[data-shot]').forEach(el => Object.assign(el.style, { background: 'transparent', border: '0', padding: '0', borderRadius: '0' }));
   });
 
   // A [data-shot] with data-light-only is left out of the dark pass: its subject is the light theme itself.

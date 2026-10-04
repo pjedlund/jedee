@@ -58,7 +58,7 @@ A lightbox trigger that is narrower than its column needs the **width cap on the
 `containerClass` goes on that outer wrapper and `imageClass` on the `<img>`, so one call sets both. This does not arise for feature-width images, whose wrapper is the column.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/photoswipe-hit-area.png" alt="The same photographed race map twice, both capped to the same width. Around the left one, a tinted dashed rectangle extends well past the picture to the full width of the column; around the right one, the same rectangle hugs the picture." width="1460" height="806">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/photoswipe-hit-area.png" alt="The same photographed race map twice, both capped to the same width. Around the left one, a tinted dashed rectangle extends well past the picture to the full width of the column; around the right one, the same rectangle hugs the picture." width="1360" height="708">
   <figcaption>The tint is the <code>&lt;a&gt;</code>'s own box, not a drawn annotation — the picture paints over it, so what shows is exactly the clickable emptiness beside it. Left, the cap is on the image alone; right, <code>.cover-zoom</code> puts it on the wrapper too.</figcaption>
 </figure>
 
@@ -100,7 +100,7 @@ this.lightbox = new PhotoSwipeLightbox({
 - PhotoSwipe handles the loading choreography itself — it grabs the thumbnail's `currentSrc` as a placeholder, plays the open animation, decodes the large image off-screen, then crossfades. No blank frames.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/photoswipe-overlay.png" alt="A browser-sized frame showing the lightbox open: the page dimmed behind a dark scrim, the full race map scan fitted to the height of the frame, and a zoom and a close button in the top right corner." width="1500" height="1032">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/photoswipe-overlay.png" alt="A browser-sized frame showing the lightbox open: the page dimmed behind a dark scrim, the full race map scan fitted to the height of the frame, and a zoom and a close button in the top right corner." width="1400" height="934">
   <figcaption>The overlay open over the page it came from. The image opens fitted, and the scrim leaves the page faintly visible rather than replacing it.</figcaption>
 </figure>
 

@@ -28,7 +28,7 @@ is-land lite-youtube .lyt-playbtn { --focus-offset: -4px; }
 ```
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/focus-ring-contained.png" alt="The same focused play button twice, side by side on the embed's pale placeholder surface. On the left, at the site's outset offset, there is no ring at all — only the red play glyph. On the right, with the offset inverted, a thick slate ring runs inside the edge of the embed." width="1412" height="512">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/focus-ring-contained.png" alt="The same focused play button twice, side by side on the embed's pale placeholder surface. On the left, at the site's outset offset, there is no ring at all — only the red play glyph. On the right, with the offset inverted, a thick slate ring runs inside the edge of the embed." width="1312" height="412">
   <figcaption>Both halves are focused. On the left the ring is drawn 0.3ch outside the box and <code>contain: content</code> clips it away, so the missing outline <em>is</em> the finding; on the right the same ring at <code>-4px</code> lands inside the box and survives.</figcaption>
 </figure>
 

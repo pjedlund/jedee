@@ -36,7 +36,7 @@ The optional `scope` argument limits which requests the worker may intercept, as
 Less than the name suggests, and that is the point rather than a disappointment. `display: standalone` removes the URL bar and the browser's toolbar; the page keeps its width and gains their height. The OS status bar stays.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/pwa-display-modes.png" alt="Two phone frames side by side showing the same page. On the left, in a browser, an address bar sits below the status bar and a toolbar of navigation icons across the bottom, leaving a shorter page area. On the right, installed, the page begins directly under the status bar and runs to the bottom edge with no browser furniture at all." width="1228" height="1124">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/pwa-display-modes.png" alt="Two phone frames side by side showing the same page. On the left, in a browser, an address bar sits below the status bar and a toolbar of navigation icons across the bottom, leaving a shorter page area. On the right, installed, the page begins directly under the status bar and runs to the bottom edge with no browser furniture at all." width="1120" height="1024">
   <figcaption>The same page, in a browser tab and installed. The two bands the left frame spends on browser furniture are the whole of what <code>display: standalone</code> gives back.</figcaption>
 </figure>
 

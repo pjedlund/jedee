@@ -48,7 +48,7 @@ The consequences split exactly along the inherit/initial line. `font-family` inh
 It hid for so long because on four of the five variants the border color is `color-mix(in oklab, var(--button-bg) 80%, var(--color-text))` — a slightly darker shade of the button's own background. A 3px border in nearly the background color reads as a slightly heavier button. On the ghost button, whose border is `--color-text`, it was plainly visible once anyone looked.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/undefined-border-width.png" alt="Two rows of the same five buttons at equal size. In the top row the border is 3px; on the dark, orange, blue and green buttons it reads as a slightly heavier edge in almost the button's own color, while the white ghost button has an obviously thick dark outline. In the bottom row every border is 1px and the ghost button's outline is a hairline." width="1396" height="404">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/undefined-border-width.png" alt="Two rows of the same five buttons at equal size. In the top row the border is 3px; on the dark, orange, blue and green buttons it reads as a slightly heavier edge in almost the button's own color, while the white ghost button has an obviously thick dark outline. In the bottom row every border is 1px and the ghost button's outline is a hairline." width="1296" height="304">
   <figcaption>The accident on top, the fix below. Four variants absorb the extra 2px into a border that is nearly their own background; the ghost button, whose border is <code>--color-text</code>, is where it shows.</figcaption>
 </figure>
 
