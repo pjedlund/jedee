@@ -7,7 +7,7 @@ Append-only. One entry per ingest / query-filed / lint, newest first. Entry form
 
 ## [2026-10-04] enrich | The place map: preloader and course symbols
 
-[[The place map]] rewritten where the session made it wrong: the pulsing `--map-water` box is gone, replaced by a forest-green box with the logo filling in ocean blue as a Flash-style counting preloader (timed from the first drawn frame, crossfading into the map); the start triangle is now centred on the start point, the line is cut at the triangle's apex and at the outer finish circle, and the symbols take the line's weight with IOF finish proportions. ⚠ The `place-map-route-symbols` figure still shows the old apex-on-the-track triangle and thin symbols, and its alt text describes them: re-shoot with `npm run mockups -- place-map` and update the alt. Source written from the session.
+[[The place map]] rewritten where the session made it wrong: the pulsing `--map-water` box is gone, replaced by a forest-green box with the logo filling in ocean blue as a Flash-style counting preloader (timed from the first drawn frame, crossfading into the map); the line is cut at the outer finish circle (a centred start triangle was tried the same day and reverted: the GPS fixes wander around the start, so it looked misplaced), the fit padding now follows the symbol sizes so the finish isn't clipped, and the symbols take the line's weight with IOF finish proportions. ⚠ The `place-map-route-symbols` figure still shows the old thin, smaller symbols: re-shoot with `npm run mockups -- place-map` and update the alt. Source written from the session.
 
 ## [2026-10-02] ingest | Captions on Figures
 
