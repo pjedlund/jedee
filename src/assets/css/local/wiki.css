@@ -75,18 +75,12 @@ A shot with a dark twin ships both images (the wiki-dark-figures preprocessor); 
 
 /*
 MOCKUP SHOTS
-Shot on transparency (shoot-mockups.js strips the specimen's paper) and set here on a borderless panel the color of a code block. In a popout figure the shot sits in the text column, so its left edge lines up with the paragraphs; a feature figure just pads it. Needs the breakout subgrid from global-styles.css.
+Shot on transparency (shoot-mockups.js strips the specimen's paper) and set here on a borderless panel the color of a code block. The same fixed padding on every side, popout or feature. Needs the breakout subgrid from global-styles.css.
 */
 figure[data-wiki-mockup] {
   --wiki-mockup-bg: var(--color-code-bg);
   --wiki-mockup-radius: var(--border-radius-medium);
   --wiki-mockup-pad: var(--line);
-  --wiki-mockup-min-inset: var(--space-s);
-}
-
-/* The page wrapper as a container, so 100cqi below is its width and the shot can find the text column's edge. */
-.wrapper:has(> figure[data-wiki-mockup], > .wrapper-pass > figure[data-wiki-mockup]) {
-  container-type: inline-size;
 }
 
 figure[data-wiki-mockup]::before {
@@ -97,17 +91,10 @@ figure[data-wiki-mockup]::before {
   border-radius: var(--wiki-mockup-radius);
 }
 
-/* Inset to the text column's edge — the wrapper's own content track, recomputed — but never less than the minimum, where a phone collapses the popout gutter to nothing. */
 figure[data-wiki-mockup] > :not(figcaption) {
   grid-column: 1 / -1;
   grid-row: 1;
-  padding-block: var(--wiki-mockup-pad);
-  padding-inline: max(var(--wiki-mockup-min-inset), (100% - min(var(--wrapper-width, 85rem), 100cqi - var(--gap) * 2)) / 2);
-}
-
-figure.feature[data-wiki-mockup] > :not(figcaption) {
-  grid-column: 1 / -1;
-  padding-inline: var(--wiki-mockup-pad);
+  padding: var(--wiki-mockup-pad);
 }
 
 [data-wiki-mockup] img {
