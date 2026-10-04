@@ -1,5 +1,5 @@
 ---
-title: "Kretsmästerskap och Natt-KM"
+title: "Kretsmästerskap och Natt-KM 2025"
 date: "2025-10-09T17:09:29+02:00"
 activityType: orienteering
 eventType: race

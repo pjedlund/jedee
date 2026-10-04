@@ -1,5 +1,5 @@
 ---
-title: "Sverigepremiären medel"
+title: "Sverigepremiären 2023 Medel"
 date: "2023-03-04T11:07:58+01:00"
 activityType: orienteering
 eventType: race

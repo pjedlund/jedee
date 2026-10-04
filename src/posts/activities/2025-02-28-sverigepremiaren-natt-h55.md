@@ -1,5 +1,5 @@
 ---
-title: "Sverigepremiären Natt H55"
+title: "Sverigepremiären 2025 Natt H55"
 date: "2025-02-28T19:39:28+01:00"
 activityType: orienteering
 eventType: race
