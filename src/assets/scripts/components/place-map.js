@@ -110,14 +110,15 @@ function preloader(box, map) {
   let loaded = false;
   map.once('idle', () => (loaded = true));
   return new Promise((resolve) => {
-    const t0 = performance.now();
-    let last = t0;
+    let t0; // the first drawn frame, not creation: MapLibre's setup can block the first frames
+    let last;
     let shown = 0;
     const step = (now) => {
-      const t = Math.max(0, now - t0);
+      t0 ??= last = now;
+      const t = now - t0;
       const tween = 50 - 50 * Math.cos(Math.PI * Math.min(1, t / COUNT_UP)); // ease-in-out sine, 0 → 100
       const goal = Math.min(tween, loaded ? 100 : 90 * (1 - Math.exp(-t / CREEP)));
-      shown += (goal - shown) * (1 - Math.exp(-Math.max(0, now - last) / EASE));
+      shown += (goal - shown) * (1 - Math.exp(-(now - last) / EASE));
       last = now;
       const n = loaded && tween >= 100 && shown > 99.5 ? 100 : Math.floor(shown);
       num.textContent = n;
@@ -126,7 +127,7 @@ function preloader(box, map) {
       setTimeout(() => {
         wrap.dataset.done = '';
         wrap.addEventListener('transitionend', () => wrap.remove(), { once: true });
-        setTimeout(() => wrap.remove(), 1000); // in case no transition runs
+        setTimeout(() => wrap.remove(), 1200); // in case no transition runs
         resolve();
       }, HOLD);
     };
@@ -460,7 +461,7 @@ class PlaceMap extends HTMLElement {
 
   // Sequenced intro, after the canvas fade in place-map.css: fade the start in, draw the line start → finish, then reveal the finish. Only runs when motion is allowed.
   routeIntro() {
-    const MAP_FADE = 700; // ⚠ matches the [data-map-loading] fade in place-map.css
+    const MAP_FADE = 800; // ⚠ matches the [data-map-loading] fade in place-map.css
     const MARK_FADE = 320;
     const LINE_DRAW = 7000; // calibration knob — bump for slower
     const { map, render } = this.mapObj;
