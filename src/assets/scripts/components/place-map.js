@@ -91,6 +91,42 @@ const popupHtml = (p) => {
   return p.date ? `<i class="place-popup-date">${p.date}</i>${name}` : name;
 };
 
+// Flash-style preloader: the ring eases along a ~0.6 s count to 100 but never past a target that creeps toward 90 until the map is idle, so a slow load counts honestly and an instant one still counts up. ⚠ The canvas stays hidden until it reaches 100.
+const COUNT_UP = 600; // calibration knob: the fastest a full count can run
+const CREEP = 3000; // calibration knob: how fast the fake target nears 90 while tiles load
+const EASE = 60;
+function preloader(box, map) {
+  const wrap = document.createElement('div');
+  wrap.className = 'place-map-preloader';
+  wrap.setAttribute('aria-hidden', 'true');
+  wrap.innerHTML = '<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="17" pathLength="100"/><circle class="place-map-preloader-bar" cx="20" cy="20" r="17" pathLength="100"/></svg><span>0</span>';
+  box.append(wrap);
+  const bar = wrap.querySelector('.place-map-preloader-bar');
+  const num = wrap.querySelector('span');
+  let loaded = false;
+  map.once('idle', () => (loaded = true));
+  return new Promise((resolve) => {
+    const t0 = performance.now();
+    let last = t0;
+    let shown = 0;
+    const step = (now) => {
+      const t = Math.max(0, now - t0);
+      const tween = 50 - 50 * Math.cos(Math.PI * Math.min(1, t / COUNT_UP)); // ease-in-out sine, 0 → 100
+      const goal = Math.min(tween, loaded ? 100 : 90 * (1 - Math.exp(-t / CREEP)));
+      shown += (goal - shown) * (1 - Math.exp(-Math.max(0, now - last) / EASE));
+      last = now;
+      const n = loaded && tween >= 100 && shown > 99.5 ? 100 : Math.floor(shown);
+      num.textContent = n;
+      bar.style.strokeDashoffset = 100 - shown;
+      if (n < 100) return requestAnimationFrame(step);
+      wrap.dataset.done = '';
+      setTimeout(() => wrap.remove(), 400);
+      resolve();
+    };
+    requestAnimationFrame(step);
+  });
+}
+
 // A native <select> as a MapLibre control — correct semantics for free, and it rides into the maximize overlay with the canvas.
 function tileSwitch(initial, onChange) {
   const wrap = document.createElement('div');
@@ -107,7 +143,7 @@ function tileSwitch(initial, onChange) {
 // Build one live map. `overlays()` returns the extra { sources, layers } drawn above the base; `render()` re-applies the whole style (theme flip, base switch, animation state).
 function makeMap(el, { center, zoom, bounds, place, base = 'Map', fitPadding = 28, overlays = () => ({ sources: {}, layers: [] }) }) {
   el.dataset.placeMapCanvas = '';
-  el.dataset.mapLoading = ''; // hides the canvas over a pulsing box until the first tiles are drawn
+  el.dataset.mapLoading = ''; // hides the canvas behind the preloader until the first tiles are drawn
   const map = new maplibregl.Map({
     container: el,
     style: { version: 8, sources: {}, layers: [] },
@@ -122,7 +158,7 @@ function makeMap(el, { center, zoom, bounds, place, base = 'Map', fitPadding = 2
     fadeDuration: REDUCED ? 0 : 300,
   });
   map.keyboard.disableRotation();
-  map.once('idle', () => delete el.dataset.mapLoading);
+  const revealed = preloader(el.parentElement, map).then(() => delete el.dataset.mapLoading);
   map.getCanvas().setAttribute('aria-label', place ? `Map of ${place}` : 'Map of this location');
   if (bounds && !el.clientWidth) map.once('resize', () => map.fitBounds(bounds, { padding: fitPadding, animate: false }));
 
@@ -173,7 +209,7 @@ function makeMap(el, { center, zoom, bounds, place, base = 'Map', fitPadding = 2
   new MutationObserver(onTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', onTheme);
 
-  return { map, render, fitZoom: map.getZoom(), color: (name) => cssColor(el, name) };
+  return { map, render, revealed, fitZoom: map.getZoom(), color: (name) => cssColor(el, name) };
 }
 
 // A dot layer for one or more places. Radius grows a little with zoom around the fit zoom, clamped 4–13 px.
@@ -390,7 +426,7 @@ class PlaceMap extends HTMLElement {
     symbols = this.routeSymbols(coords);
     if (!REDUCED) this.intro = { start: 0, finish: 0, progress: 0 };
     this.mapObj.render();
-    if (!REDUCED) this.mapObj.map.once('idle', () => this.routeIntro()); // draw the line only once the map has faded in
+    if (!REDUCED) this.mapObj.revealed.then(() => this.routeIntro()); // draw the line only once the map has faded in
     this.finishInit();
   }
 

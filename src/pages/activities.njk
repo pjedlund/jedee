@@ -5,16 +5,11 @@ description: 'A log of my activities.'
 permalink: 'activities/index.html'
 ---
 
-{% set archiveDescription %}
-  Running, orienteering and other physical activities. Newest first.
-{% endset %}
-
-{# The map + full activity index replaces the card grid entirely: one page, every activity, no pagination. See partials/place-map-activities.njk. #}
-{% set archiveBody %}
+{# No hero, no intro: the map is the first thing on the page. See partials/place-map-activities.njk. #}
+<div class="[ wrapper ] [ region ]">
+  <h1 class="visually-hidden">{{ title }}</h1>
   {% include "partials/place-map-activities.njk" %}
-{% endset %}
-
-{% include "partials/archive-listing.njk" %}
+</div>
 
 {% css "local" %}
   {% include 'css/place-map.css' %}

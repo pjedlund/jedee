@@ -30,8 +30,8 @@
             {%- set d = post.data %}
             {%- set day = post.date | formatDate('D MMM YYYY') %}
             {%- set p = d.activityType | pace(d.distanceKm, d.duration) %}
-            {#- data-date is the marker popup's first line; it matches the visible date. -#}
-            <tr data-activity="{{ d.activityType | slugify }}"{% if d.lat and d.lon %} data-lat="{{ d.lat }}" data-lon="{{ d.lon }}" data-date="{{ day }}"{% endif %}>
+            {#- data-date is the marker popup's first line: type, then the visible date. -#}
+            <tr data-activity="{{ d.activityType | slugify }}"{% if d.lat and d.lon %} data-lat="{{ d.lat }}" data-lon="{{ d.lon }}" data-date="{{ d.activityType | capitalize }}, {{ day }}"{% endif %}>
               {#- ⚠ No link in here: place-map reads the row's FIRST <a> as the activity. -#}
               <td class="activity-type" data-icon data-sort="{{ d.activityType }}">{% svg "activity/" + (d.activityType | slugify), "", "activity-type-icon" %}<span class="visually-hidden">{{ d.activityType | capitalize }}</span></td>
               <td data-sort="{{ post.date.getTime() }}"><time datetime="{{ post.date | toIsoString }}">{{ day }}</time></td>

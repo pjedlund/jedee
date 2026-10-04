@@ -39,7 +39,7 @@ place-map > :is(.place-map-live, .place-map-static) + :not(script) {
   inline-size: 100%;
   border: var(--stroke);
   border-radius: var(--border-radius-small);
-  background: var(--map-water); /* pre-tile surface */
+  background: var(--map-park); /* pre-tile surface: the forest green */
   overflow: hidden;
   isolation: isolate;
 }
@@ -49,7 +49,7 @@ place-map > :is(.place-map-live, .place-map-static) + :not(script) {
   isolation: isolate; /* keeps MapLibre's control z-indexes below the sibling maximize button */
 }
 
-/* Until the first tiles are drawn the canvas is hidden and the ocean-colored box breathes; then the map fades in. */
+/* Until the first tiles are drawn the canvas is hidden behind the preloader; then the map fades in. */
 .place-map-canvas[data-map-loading] {
   opacity: 0;
 }
@@ -57,17 +57,47 @@ place-map > :is(.place-map-live, .place-map-static) + :not(script) {
   .place-map-canvas {
     transition: opacity 500ms ease-out;
   }
-  .place-map-live:has(> [data-map-loading]) {
-    animation: place-map-pulse 1.6s ease-in-out infinite alternate;
-  }
-  @keyframes place-map-pulse {
-    to {
-      background-color: color-mix(in oklab, var(--map-water), var(--color-bg) 50%);
-    }
-  }
 }
 
-/* The map's own colors, read by place-map.js on every render — tweak here or live in devtools, then flip the theme to redraw. ⚠ Set on the canvas, not <place-map>: the canvas moves into the overlay outside it. The box gets them too, for its ocean-colored loading surface. */
+/* Preloader: a ring and a 0–100 count over the forest-green box, driven by place-map.js. */
+.place-map-preloader {
+  --preloader-size: 4rem;
+  --preloader-color: var(--color-text);
+
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--preloader-color);
+  pointer-events: none;
+  transition: opacity 300ms ease-out;
+}
+.place-map-preloader[data-done] {
+  opacity: 0;
+}
+.place-map-preloader > * {
+  grid-area: 1 / 1;
+}
+.place-map-preloader svg {
+  inline-size: var(--preloader-size);
+  block-size: var(--preloader-size);
+  rotate: -90deg; /* the count starts at twelve o'clock */
+  fill: none;
+  stroke: color-mix(in oklab, currentColor 15%, transparent);
+  stroke-width: 2;
+}
+.place-map-preloader .place-map-preloader-bar {
+  stroke: currentColor;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+}
+.place-map-preloader span {
+  font-family: var(--font-base);
+  font-size: var(--size-step-min-1);
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+/* The map's own colors, read by place-map.js on every render — tweak here or live in devtools, then flip the theme to redraw. ⚠ Set on the canvas, not <place-map>: the canvas moves into the overlay outside it. The box gets them too, for its forest-green loading surface. */
 .place-map-live,
 [data-place-map-canvas] {
   --map-land: var(--color-bg);
