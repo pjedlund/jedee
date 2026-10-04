@@ -49,52 +49,54 @@ place-map > :is(.place-map-live, .place-map-static) + :not(script) {
   isolation: isolate; /* keeps MapLibre's control z-indexes below the sibling maximize button */
 }
 
-/* Until the first tiles are drawn the canvas is hidden behind the preloader; then the map fades in. */
+/* Until the first tiles are drawn the canvas is hidden behind the preloader; then the map fades in as the preloader fades out. */
 .place-map-canvas[data-map-loading] {
   opacity: 0;
 }
 @media (prefers-reduced-motion: no-preference) {
   .place-map-canvas {
-    transition: opacity 500ms ease-out;
+    transition: opacity 700ms var(--ease-out-quad);
   }
 }
 
-/* Preloader: a ring and a 0–100 count over the forest-green box, driven by place-map.js. */
+/* Preloader: the logo fills clockwise with a 0–100 count in its hole, over the forest-green box; place-map.js sets --preloader-logo and --preloader-progress. */
 .place-map-preloader {
-  --preloader-size: 4rem;
-  --preloader-color: var(--color-text);
+  --preloader-size: 5rem;
+  --preloader-fill: var(--color-accent-orange);
+  --preloader-track: color-mix(in oklab, var(--color-text) 15%, transparent);
 
   position: absolute;
   inset: 0;
   display: grid;
   place-items: center;
-  color: var(--preloader-color);
+  color: var(--color-text);
   pointer-events: none;
-  transition: opacity 300ms ease-out;
-}
-.place-map-preloader[data-done] {
-  opacity: 0;
+  transition: opacity 600ms var(--ease-out-quad);
 }
 .place-map-preloader > * {
   grid-area: 1 / 1;
 }
-.place-map-preloader svg {
+.place-map-preloader-logo {
   inline-size: var(--preloader-size);
-  block-size: var(--preloader-size);
-  rotate: -90deg; /* the count starts at twelve o'clock */
-  fill: none;
-  stroke: color-mix(in oklab, currentColor 15%, transparent);
-  stroke-width: 2;
-}
-.place-map-preloader .place-map-preloader-bar {
-  stroke: currentColor;
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
+  aspect-ratio: 1;
+  background: conic-gradient(var(--preloader-fill) calc(var(--preloader-progress, 0) * 1%), var(--preloader-track) 0);
+  mask: var(--preloader-logo) center / contain no-repeat;
 }
 .place-map-preloader span {
   font-family: var(--font-base);
-  font-size: var(--size-step-min-1);
+  font-size: var(--size-step-min-2);
   font-variant-numeric: lining-nums tabular-nums;
+}
+.place-map-preloader[data-done] {
+  opacity: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .place-map-preloader {
+    transition-property: opacity, scale;
+  }
+  .place-map-preloader[data-done] {
+    scale: 1.15;
+  }
 }
 
 /* The map's own colors, read by place-map.js on every render — tweak here or live in devtools, then flip the theme to redraw. ⚠ Set on the canvas, not <place-map>: the canvas moves into the overlay outside it. The box gets them too, for its forest-green loading surface. */

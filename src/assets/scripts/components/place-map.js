@@ -91,17 +91,21 @@ const popupHtml = (p) => {
   return p.date ? `<i class="place-popup-date">${p.date}</i>${name}` : name;
 };
 
-// Flash-style preloader: the ring eases along a ~0.6 s count to 100 but never past a target that creeps toward 90 until the map is idle, so a slow load counts honestly and an instant one still counts up. ⚠ The canvas stays hidden until it reaches 100.
+// Flash-style preloader: the logo fills clockwise along a ~0.6 s count to 100 but never past a target that creeps toward 90 until the map is idle, so a slow load counts honestly and an instant one still counts up. ⚠ The canvas stays hidden until it reaches 100.
 const COUNT_UP = 600; // calibration knob: the fastest a full count can run
 const CREEP = 3000; // calibration knob: how fast the fake target nears 90 while tiles load
 const EASE = 60;
+const HOLD = 150; // a beat at 100 before the crossfade
+// ⚠ A copy of the path in src/assets/svg/misc/logo.svg: update both.
+const LOGO = 'm50 0 .588.003V0h9.706v30.882h-9.706v.009a19 19 0 0 0-.588-.009c-10.558 0-19.118 8.559-19.118 19.118S39.441 69.118 50 69.118 69.118 60.559 69.118 50V30.882C69.118 13.826 82.945 0 100 0v50c0 27.614-22.386 50-50 50S0 77.614 0 50 22.386 0 50 0';
+const LOGO_MASK = `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="${LOGO}"/></svg>`)}")`;
 function preloader(box, map) {
   const wrap = document.createElement('div');
   wrap.className = 'place-map-preloader';
   wrap.setAttribute('aria-hidden', 'true');
-  wrap.innerHTML = '<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="17" pathLength="100"/><circle class="place-map-preloader-bar" cx="20" cy="20" r="17" pathLength="100"/></svg><span>0</span>';
+  wrap.style.setProperty('--preloader-logo', LOGO_MASK);
+  wrap.innerHTML = '<div class="place-map-preloader-logo"></div><span>0</span>';
   box.append(wrap);
-  const bar = wrap.querySelector('.place-map-preloader-bar');
   const num = wrap.querySelector('span');
   let loaded = false;
   map.once('idle', () => (loaded = true));
@@ -117,11 +121,14 @@ function preloader(box, map) {
       last = now;
       const n = loaded && tween >= 100 && shown > 99.5 ? 100 : Math.floor(shown);
       num.textContent = n;
-      bar.style.strokeDashoffset = 100 - shown;
+      wrap.style.setProperty('--preloader-progress', n === 100 ? 100 : shown);
       if (n < 100) return requestAnimationFrame(step);
-      wrap.dataset.done = '';
-      setTimeout(() => wrap.remove(), 400);
-      resolve();
+      setTimeout(() => {
+        wrap.dataset.done = '';
+        wrap.addEventListener('transitionend', () => wrap.remove(), { once: true });
+        setTimeout(() => wrap.remove(), 1000); // in case no transition runs
+        resolve();
+      }, HOLD);
     };
     requestAnimationFrame(step);
   });
@@ -453,7 +460,7 @@ class PlaceMap extends HTMLElement {
 
   // Sequenced intro, after the canvas fade in place-map.css: fade the start in, draw the line start → finish, then reveal the finish. Only runs when motion is allowed.
   routeIntro() {
-    const MAP_FADE = 500; // ⚠ matches the [data-map-loading] fade in place-map.css
+    const MAP_FADE = 700; // ⚠ matches the [data-map-loading] fade in place-map.css
     const MARK_FADE = 320;
     const LINE_DRAW = 7000; // calibration knob — bump for slower
     const { map, render } = this.mapObj;
