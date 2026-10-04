@@ -81,6 +81,12 @@ figure[data-wiki-mockup] {
   --wiki-mockup-bg: var(--color-code-bg);
   --wiki-mockup-radius: var(--border-radius-medium);
   --wiki-mockup-pad: var(--line);
+  --wiki-mockup-min-inset: var(--space-s);
+}
+
+/* The page wrapper as a container, so 100cqi below is its width and the shot can find the text column's edge. */
+.wrapper:has(> figure[data-wiki-mockup], > .wrapper-pass > figure[data-wiki-mockup]) {
+  container-type: inline-size;
 }
 
 figure[data-wiki-mockup]::before {
@@ -91,10 +97,12 @@ figure[data-wiki-mockup]::before {
   border-radius: var(--wiki-mockup-radius);
 }
 
+/* Inset to the text column's edge — the wrapper's own content track, recomputed — but never less than the minimum, where a phone collapses the popout gutter to nothing. */
 figure[data-wiki-mockup] > :not(figcaption) {
-  grid-column: content;
+  grid-column: 1 / -1;
   grid-row: 1;
   padding-block: var(--wiki-mockup-pad);
+  padding-inline: max(var(--wiki-mockup-min-inset), (100% - min(var(--wrapper-width, 85rem), 100cqi - var(--gap) * 2)) / 2);
 }
 
 figure.feature[data-wiki-mockup] > :not(figcaption) {
