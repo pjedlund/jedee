@@ -1,5 +1,5 @@
 ---
-title: "FK Boken medel H55"
+title: "FK Boken Medel"
 date: "2025-03-23T10:13:55+01:00"
 activityType: orienteering
 eventType: race

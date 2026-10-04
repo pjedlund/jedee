@@ -1,5 +1,5 @@
 ---
-title: "Frostavallslöpet långdistans H55"
+title: "Frostavallslöpet 2024 Långdistans"
 date: "2024-09-08T08:15:46+02:00"
 activityType: orienteering
 eventType: race

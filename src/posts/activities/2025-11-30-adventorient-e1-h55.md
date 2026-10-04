@@ -1,5 +1,5 @@
 ---
-title: "AdventOrient E1 H55"
+title: "AdventOrient 2025 E1"
 date: "2025-11-30T09:14:02+01:00"
 activityType: orienteering
 eventType: race

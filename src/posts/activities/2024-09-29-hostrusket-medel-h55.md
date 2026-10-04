@@ -1,5 +1,5 @@
 ---
-title: "Höstrusket Medel H55"
+title: "Höstrusket 2024 Medel"
 date: "2024-09-29T08:05:51+02:00"
 activityType: orienteering
 eventType: race

@@ -1,5 +1,5 @@
 ---
-title: "Romeleträffen medel H55"
+title: "Romeleträffen 2025 Medel"
 date: "2025-04-05T08:54:56+02:00"
 activityType: orienteering
 eventType: race

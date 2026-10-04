@@ -1,5 +1,5 @@
 ---
-title: "Pepparkaksluffen Medel H55"
+title: "Pepparkaksluffen 2024 Medel"
 date: "2024-10-05T08:02:40+02:00"
 activityType: orienteering
 eventType: race

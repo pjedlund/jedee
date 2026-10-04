@@ -1,5 +1,5 @@
 ---
-title: "FK Åsen medeldistans Tollarp"
+title: "FK Åsen Medeldistans Tollarp"
 date: "2024-09-01T07:55:50+02:00"
 activityType: orienteering
 eventType: race

@@ -1,5 +1,5 @@
 ---
-title: "Veteran-SM 2025 Lång H55"
+title: "Veteran-SM 2025 Lång"
 date: "2025-09-14T09:58:54+02:00"
 activityType: orienteering
 eventType: race

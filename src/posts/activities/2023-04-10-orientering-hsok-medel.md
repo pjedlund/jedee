@@ -1,5 +1,5 @@
 ---
-title: "HSOK medel"
+title: "HSOK Medel"
 date: "2023-04-10T08:53:33+02:00"
 activityType: orienteering
 eventType: race
