@@ -26,11 +26,11 @@ const BASE_NAMES = ['Map', ...Object.keys(RASTER_BASES)];
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // Orienteering route symbols, sized in PIXELS AT THE FIT ZOOM then frozen to lat/lon so they scale with the map. Calibration knobs.
-const TRI_HEIGHT = 18;
-const TRI_HALF_WIDTH = 9;
-const FINISH_OUTER = 9;
-const FINISH_INNER = 4;
-const SYMBOL_WEIGHT = 2.5;
+const TRI_HEIGHT = 28;
+const TRI_HALF_WIDTH = 16; // equilateral with TRI_HEIGHT
+const FINISH_OUTER = 20;
+const FINISH_INNER = 14; // ~IOF proportions (5 mm inside 7 mm); ⚠ keep the gap wider than LINE_WEIGHT or the circles merge
+const LINE_WEIGHT = 4; // the route and both symbols
 
 maplibregl.addProtocol('pmtiles', new Protocol().tile);
 
@@ -404,7 +404,7 @@ class PlaceMap extends HTMLElement {
 
     // Animation state lives here so a theme flip or base switch mid-intro redraws in the same place.
     this.intro = { start: 1, finish: 1, progress: null };
-    let symbols = { start: null, finish: null };
+    let symbols = { start: null, finish: null, route: gj };
 
     this.buildBox();
     this.mapObj = makeMap(this.canvas, {
@@ -416,17 +416,17 @@ class PlaceMap extends HTMLElement {
         const color = this.mapObj.color('--color-route-line');
         const { start, finish, progress } = this.intro;
         const hidden = 'rgba(0,0,0,0)';
-        const line = (id, data, opacity) => [id, { type: 'geojson', data }, { id, type: 'line', source: id, layout: { 'line-join': 'round', 'line-cap': 'round' }, paint: { 'line-color': color, 'line-width': SYMBOL_WEIGHT, 'line-opacity': opacity, 'line-opacity-transition': { duration: 320 } } }];
+        const line = (id, data, opacity) => [id, { type: 'geojson', data }, { id, type: 'line', source: id, layout: { 'line-join': 'round', 'line-cap': 'round' }, paint: { 'line-color': color, 'line-width': LINE_WEIGHT, 'line-opacity': opacity, 'line-opacity-transition': { duration: 320 } } }];
         const parts = [line('route-start', symbols.start, start), line('route-finish', symbols.finish, finish)];
         const route = {
           id: 'route',
           type: 'line',
           source: 'route',
           layout: { 'line-join': 'round', 'line-cap': 'round' },
-          paint: { 'line-color': color, 'line-width': 4, 'line-opacity': 0.9, ...(progress === null ? {} : { 'line-gradient': ['step', ['line-progress'], color, Math.max(progress, 0.0001), hidden] }) },
+          paint: { 'line-color': color, 'line-width': LINE_WEIGHT, 'line-opacity': 0.9, ...(progress === null ? {} : { 'line-gradient': ['step', ['line-progress'], color, Math.max(progress, 0.0001), hidden] }) },
         };
         return {
-          sources: { route: { type: 'geojson', data: gj, lineMetrics: true }, ...Object.fromEntries(parts.map(([id, src]) => [id, src])) },
+          sources: { route: { type: 'geojson', data: symbols.route, lineMetrics: true }, ...Object.fromEntries(parts.map(([id, src]) => [id, src])) },
           layers: [route, ...parts.map(([, , layer]) => layer)],
         };
       },
@@ -456,7 +456,26 @@ class PlaceMap extends HTMLElement {
     const pe = map.project(end);
     const ring = (r) => Array.from({ length: 49 }, (_, i) => lngLat(pe.x + r * Math.cos((i / 48) * 2 * Math.PI), pe.y + r * Math.sin((i / 48) * 2 * Math.PI)));
     const geo = (type, coordinates) => ({ type: 'Feature', properties: {}, geometry: { type, coordinates } });
-    return { start: geo('LineString', tri), finish: geo('MultiLineString', [ring(FINISH_OUTER), ring(FINISH_INNER)]) };
+    return { start: geo('LineString', tri), finish: geo('MultiLineString', [ring(FINISH_OUTER), ring(FINISH_INNER)]), route: geo('LineString', this.trimToFinish(coords, pe, lngLat)) };
+  }
+
+  // The route stops where the outer finish circle starts, as on a printed map: cut the last segment that crosses the circle.
+  trimToFinish(coords, pe, lngLat) {
+    const { map } = this.mapObj;
+    const away = (c) => Math.hypot(map.project(c).x - pe.x, map.project(c).y - pe.y);
+    let i = coords.length - 1;
+    while (i > 0 && away(coords[i - 1]) < FINISH_OUTER) i--;
+    if (i === 0) return coords; // the whole route fits inside the circle
+    const a = map.project(coords[i - 1]);
+    const b = map.project(coords[i]);
+    let lo = 0;
+    let hi = 1;
+    for (let k = 0; k < 20; k++) {
+      const t = (lo + hi) / 2;
+      if (Math.hypot(a.x + (b.x - a.x) * t - pe.x, a.y + (b.y - a.y) * t - pe.y) > FINISH_OUTER) lo = t;
+      else hi = t;
+    }
+    return [...coords.slice(0, i), lngLat(a.x + (b.x - a.x) * lo, a.y + (b.y - a.y) * lo)];
   }
 
   // Sequenced intro, after the canvas fade in place-map.css: fade the start in, draw the line start → finish, then reveal the finish. Only runs when motion is allowed.
