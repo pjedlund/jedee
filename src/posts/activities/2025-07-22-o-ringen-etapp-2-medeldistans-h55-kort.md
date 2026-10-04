@@ -1,5 +1,5 @@
 ---
-title: "O-Ringen Jönköping, E2"
+title: "O-Ringen 2025 Jönköping, E2"
 date: "2025-07-22T08:01:52+02:00"
 activityType: orienteering
 eventType: race

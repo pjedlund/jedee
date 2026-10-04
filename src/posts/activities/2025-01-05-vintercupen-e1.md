@@ -1,5 +1,5 @@
 ---
-title: "Vintercupen E1"
+title: "Vintercupen 2025 E1"
 date: "2025-01-05T08:49:47+01:00"
 activityType: orienteering
 eventType: race

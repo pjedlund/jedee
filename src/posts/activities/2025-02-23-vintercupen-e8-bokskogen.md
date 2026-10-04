@@ -1,5 +1,5 @@
 ---
-title: "Vintercupen E8 Bokskogen"
+title: "Vintercupen 2025 E8 Bokskogen"
 date: "2025-02-23T08:59:34+01:00"
 activityType: orienteering
 eventType: race

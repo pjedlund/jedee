@@ -1,5 +1,5 @@
 ---
-title: "Vintercupen E3 Gyabjär"
+title: "Vintercupen 2026 E3 Gyabjär"
 date: "2026-01-18T09:00:06+01:00"
 activityType: orienteering
 eventType: race

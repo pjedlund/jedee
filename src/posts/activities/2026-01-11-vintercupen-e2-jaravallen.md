@@ -1,5 +1,5 @@
 ---
-title: "Vintercupen E2 Järavallen"
+title: "Vintercupen 2026 E2 Järavallen"
 date: "2026-01-11T09:03:23+01:00"
 activityType: orienteering
 eventType: race

@@ -1,5 +1,5 @@
 ---
-title: "Fyrklubbs CHK Snogeholm"
+title: "Fyrklubbs 2025 CHK Snogeholm"
 date: "2025-08-31T08:51:52+02:00"
 activityType: orienteering
 eventType: race

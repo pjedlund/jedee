@@ -1,5 +1,5 @@
 ---
-title: "Veteran-SM Medel H55"
+title: "Veteran-SM 2025 Medel H55"
 date: "2025-09-13T09:58:53+02:00"
 activityType: orienteering
 eventType: race

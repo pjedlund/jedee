@@ -1,5 +1,5 @@
 ---
-title: "Vintercupen E4 Svaneholms Norrskog"
+title: "Vintercupen 2026 E4 Svaneholms Norrskog"
 date: "2026-01-25T08:59:58+01:00"
 activityType: orienteering
 eventType: race
