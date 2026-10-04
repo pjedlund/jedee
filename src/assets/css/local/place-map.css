@@ -156,6 +156,10 @@ place-map > :is(.place-map-live, .place-map-static) + :not(script) {
   color: var(--color-text-accent);
   font-size: var(--size-step-min-2);
 }
+/* ⚠ The attribution is a <details>, so inside .prose (route maps) prose-rhythm's `details > summary + *` spacing gave it a half-line top margin. */
+[data-place-map-canvas].maplibregl-map .maplibregl-ctrl-attrib-inner {
+  margin: 0;
+}
 [data-place-map-canvas].maplibregl-map .maplibregl-ctrl-attrib a {
   color: var(--color-text);
 }
