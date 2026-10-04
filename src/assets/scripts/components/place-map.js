@@ -410,7 +410,7 @@ class PlaceMap extends HTMLElement {
     this.mapObj = makeMap(this.canvas, {
       bounds,
       place: this.place,
-      fitPadding: 20,
+      fitPadding: Math.max(TRI_HEIGHT, FINISH_OUTER) + LINE_WEIGHT + 12, // room for the symbols, which reach past the track's ends
       base: outsideCoverage(bounds) ? 'Topographic' : 'Map',
       overlays: () => {
         const color = this.mapObj.color('--color-route-line');
