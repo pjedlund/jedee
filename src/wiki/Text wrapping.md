@@ -17,12 +17,12 @@ p  { text-wrap: pretty; }  /* better paragraph endings — running text */
 Both, rendered in the site's own faces at the same measure. Each pair is one string set twice; the only thing that differs between the columns is the property.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/textwrap-balance.png" alt="The same heading twice at equal width. On the left, greedy wrapping leaves the word Machine alone on a third line. On the right, balance redistributes the words so all three lines are close to the same length." width="1398" height="398">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/textwrap-balance.png" alt="The same heading twice at equal width. On the left, greedy wrapping leaves the word Machine alone on a third line. On the right, balance redistributes the words so all three lines are close to the same length." width="1298" height="298">
   <figcaption><code>balance</code> on a heading. Greedy wrapping strands <em>Machine</em>; balance evens the three lines instead.</figcaption>
 </figure>
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/textwrap-pretty.png" alt="The same paragraph twice at equal width. On the left, greedy wrapping leaves the word entity alone on a fourth line. On the right, pretty pulls the preceding word down so the last line reads space entity." width="1398" height="386">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/textwrap-pretty.png" alt="The same paragraph twice at equal width. On the left, greedy wrapping leaves the word entity alone on a fourth line. On the right, pretty pulls the preceding word down so the last line reads space entity." width="1298" height="286">
   <figcaption><code>pretty</code> on running text. Greedy strands <em>entity.</em>; pretty pulls a word down onto the last line, at the same line count.</figcaption>
 </figure>
 

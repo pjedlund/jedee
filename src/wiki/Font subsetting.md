@@ -9,7 +9,7 @@ updated: 2026-09-22
 The cost is a failure that never announces itself. When a character is not in the font, the browser does not show an error or an empty box: it draws **that one character** in the next family of the `font-family` stack that has it, and the rest of the word in the web font. The result is a letter or a quote mark that looks slightly off, in a slightly different weight, on pages where nobody is looking for it.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/subsetting-fallback.png" alt="The same heading, I’m in “Düsseldorf” – again…, set twice in Source Serif Bold. In the upper line, from the old subset, six characters are underlined in orange: the apostrophe, both curly quotes, the ü, the en dash and the ellipsis. They are drawn in Georgia and look slightly heavier and differently shaped. The lower line, from the current subset, is uniform." width="1422" height="528">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/subsetting-fallback.png" alt="The same heading, I’m in “Düsseldorf” – again…, set twice in Source Serif Bold. In the upper line, from the old subset, six characters are underlined in orange: the apostrophe, both curly quotes, the ü, the en dash and the ellipsis. They are drawn in Georgia and look slightly heavier and differently shaped. The lower line, from the current subset, is uniform." width="1306" height="424">
   <figcaption>This site's heading font before and after the 2026-09-10 fix, from the two real font files. The underlined characters were missing from the old subset and were drawn in the fallback, Georgia.</figcaption>
 </figure>
 

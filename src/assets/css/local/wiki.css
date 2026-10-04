@@ -75,9 +75,35 @@ A shot with a dark twin ships both images (the wiki-dark-figures preprocessor); 
 
 /*
 MOCKUP SHOTS
-Shots whose subject has its own rounded, transparent corners — a device frame, a specimen card. Prose's image hairline and radius trace the PNG's bounding box and draw a second, squared box around it. Opt out per figure or figure group with data-wiki-mockup.
+Shot on transparency (shoot-mockups.js strips the specimen's paper) and set here on a borderless panel the color of a code block. In a popout figure the shot sits in the text column, so its left edge lines up with the paragraphs; a feature figure just pads it. Needs the breakout subgrid from global-styles.css.
 */
+figure[data-wiki-mockup] {
+  --wiki-mockup-bg: var(--color-code-bg);
+  --wiki-mockup-radius: var(--border-radius-medium);
+  --wiki-mockup-pad: var(--line);
+}
+
+figure[data-wiki-mockup]::before {
+  content: '';
+  grid-column: 1 / -1;
+  grid-row: 1;
+  background: var(--wiki-mockup-bg);
+  border-radius: var(--wiki-mockup-radius);
+}
+
+figure[data-wiki-mockup] > :not(figcaption) {
+  grid-column: content;
+  grid-row: 1;
+  padding-block: var(--wiki-mockup-pad);
+}
+
+figure.feature[data-wiki-mockup] > :not(figcaption) {
+  grid-column: 1 / -1;
+  padding-inline: var(--wiki-mockup-pad);
+}
+
 [data-wiki-mockup] img {
   border: none;
   border-radius: 0;
+  outline: none;
 }

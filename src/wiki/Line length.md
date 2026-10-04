@@ -27,7 +27,7 @@ p { max-inline-size: 54ch; }
 ⚠ **`54ch` is not 54 characters.** `1ch` is the advance width of the "0" glyph, and digits are wider than the average character in running text, which is full of narrow `i`, `l`, `t` and spaces. A `ch` measure therefore holds *more* characters than its number. How many more depends on the face: measure it rather than assume it.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/line-length-ch.png" alt="Above, a row of fifty-four zeros in Source Sans exactly fills a box 54ch wide, marked with an orange rule. Below, a paragraph set in a box of the same width, with the character count of each line in orange beside it: 62, 63, 68, 62, 64, and a last line of 34." width="1376" height="656">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/line-length-ch.png" alt="Above, a row of fifty-four zeros in Source Sans exactly fills a box 54ch wide, marked with an orange rule. Below, a paragraph set in a box of the same width, with the character count of each line in orange beside it: 62, 63, 68, 62, 64, and a last line of 34." width="1260" height="556">
   <figcaption>Fifty-four zeros are exactly <code>54ch</code>; the same box holds 62–68 characters of running text in Source Sans. The counts are measured from the rendered lines, not typed in.</figcaption>
 </figure>
 

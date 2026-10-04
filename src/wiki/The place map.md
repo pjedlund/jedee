@@ -31,7 +31,7 @@ else this.initSinglePin();
 - **Route** (activity pages) — a slotted `<script type="application/json" data-route>` holding a GeoJSON `LineString`. This is the newest mode and the rest of this page is about it.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/place-map-modes.png" alt="Three maps side by side. The first has a single orange dot on a coastal town. The second is zoomed out over the Swedish west coast and Denmark with a scatter of orange dots. The third is a pale green forest map carrying an orange route line with its start triangle and finish circles." width="2196" height="594">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/place-map-modes.png" alt="Three maps side by side. The first has a single orange dot on a coastal town. The second is zoomed out over the Swedish west coast and Denmark with a scatter of orange dots. The third is a pale green forest map carrying an orange route line with its start triangle and finish circles." width="2096" height="492">
   <figcaption>The same element three times, told apart only by what is slotted inside it.</figcaption>
 </figure>
 
@@ -72,7 +72,7 @@ The start and finish are the standard **orienteering course symbols** — a tria
 The start triangle's apex is pinned exactly on the first point and the body trails back along the reverse of the travel direction. The heading is measured to the first track point **at least ~25 m out**, not the next GPS fix — the opening fixes cluster on the spot and a two-point bearing there is pure noise, so the triangle would point a random way. The shapes are hollow and share the line's color, the site's accent orange. Orienteering overprint is purple, and a purple was tried — but the line has to read over several different tile sets, and it vanished on some of them; the accent orange reads on all of them. There's deliberately **no halo**. None are interactive, since the map isn't the screen-reader path here.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/place-map-route-symbols.png" alt="A pale green map of park paths with an orange route line running through it. Where the line begins, a hollow orange triangle with its apex on the track and its body trailing back; a few metres away, two hollow concentric orange circles marking the finish." width="1500" height="948">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/place-map-route-symbols.png" alt="A pale green map of park paths with an orange route line running through it. Where the line begins, a hollow orange triangle with its apex on the track and its body trailing back; a few metres away, two hollow concentric orange circles marking the finish." width="1400" height="846">
   <figcaption>The two orienteering symbols, zoomed in — the start and finish are about 25 metres apart on this course. Both are geographic shapes, so zooming grew them along with the line rather than leaving them at a fixed screen size.</figcaption>
 </figure>
 
