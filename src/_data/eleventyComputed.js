@@ -8,8 +8,9 @@ import {looksSwedish} from '../_config/utils/looks-swedish.js';
 
 const PAGINATION = /^page-\d+$/;
 
-// Section labels that aren't in the main nav.
+// Section labels titleCase gets wrong, or that aren't in the main nav.
 const EXTRA_LABELS = {
+  rsvps: 'RSVPs',
   tags: 'Tags',
 };
 

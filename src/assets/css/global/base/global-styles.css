@@ -196,7 +196,7 @@ a {
   /* font-weight: 500; */
   /* Rounds the focus ring to the header controls' corner; outlines follow border-radius. */
   border-radius: var(--border-radius-medium);
-  text-decoration-thickness: 0.2ex;
+  text-decoration-thickness: var(--underline-thickness);
   text-underline-offset: 0.3ch;
   text-decoration-color: var(--color-accent-orange);
   transition: color 0.2s ease-out, text-decoration-color 0.2s ease-out;
