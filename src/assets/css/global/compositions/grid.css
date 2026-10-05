@@ -33,6 +33,11 @@ to change how empty grid tracks are handled */
   --grid-min-item-size: clamp(16rem, 50vw, 28rem);
 }
 
+/* 18rem gives 4 columns of 3 grid columns each in the 97rem wrapper; ⚠ retune if --wrapper-width changes. */
+.grid[data-layout='33-33-33'] {
+  --grid-min-item-size: 18rem;
+}
+
 .grid[data-layout='thirds'] {
   --grid-placement: auto-fit;
   --grid-min-item-size: clamp(16rem, 33%, 20rem);

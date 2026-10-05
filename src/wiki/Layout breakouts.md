@@ -1,7 +1,7 @@
 ---
 description: "A named-column grid that lets an element step wider than the text column it sits in, and the direct-child constraint that makes it awkward in practice."
 date: 2026-08-23
-updated: 2026-10-02
+updated: 2026-10-05
 ---
 
 A reading page wants one narrow column for prose and the occasional element wider than it — a diagram, a code block, a full-bleed image. The old way was negative margins, which fight the page's own padding and break at small widths.
@@ -14,7 +14,7 @@ The current technique is [Ryan Mulligan's layout breakouts](https://ryanmulligan
   --full: minmax(var(--gap), 1fr);
   --content: min(var(--wrapper-width, 85rem), 100% - var(--gap) * 2);
   --popout: minmax(0, 2rem);
-  --feature: minmax(0, 5rem);
+  --feature: minmax(0, 6.25rem);
 
   display: grid;
   grid-template-columns:
@@ -34,7 +34,7 @@ The current technique is [Ryan Mulligan's layout breakouts](https://ryanmulligan
 ```
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/layout-breakouts-tracks.png" alt="A diagram of the seven grid tracks in a row, labeled from the outside in: 1fr, 5rem, 2rem, --wrapper-width, 2rem, 5rem, 1fr. Below them four stacked bars of increasing width, each centered. The narrowest is dark and labeled &quot;grid-column: content (the default)&quot;. The three wider ones are orange and labeled .popout, .feature and .full, each reaching one track further out on both sides." width="2080" height="458">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/layout-breakouts-tracks.png" alt="A diagram of the seven grid tracks in a row, labeled from the outside in: 1fr, 6.25rem, 2rem, --wrapper-width, 2rem, 6.25rem, 1fr. Below them four stacked bars of increasing width, each centered. The narrowest is dark and labeled &quot;grid-column: content (the default)&quot;. The three wider ones are orange and labeled .popout, .feature and .full, each reaching one track further out on both sides." width="2080" height="458">
   <figcaption>The seven tracks, and the four spans available across them. Every bar is a real grid item in a real <code>.wrapper</code> — nothing here is positioned, and no bar knows how wide it is.</figcaption>
 </figure>
 
@@ -53,29 +53,39 @@ Two details do most of the work. The `[name-start]` / `[name-end]` line names me
 
 The technique has a second way to go quietly wrong, and it is the opposite shape of the first. Here the class is on the right element, it is a direct grid child, and it still does nothing — on most screens.
 
-The outer tracks are sized `minmax(0, 2rem)` and `minmax(0, 5rem)`: a **zero** minimum and a fixed maximum. The content track, meanwhile, is `min(--wrapper-width, 100% - gap * 2)`, so below a certain width it grows with the container and takes all the space there is. Only once the container is wide enough for `--wrapper-width` to win that `min()` does any free space appear for the outer tracks to grow into. The threshold is exactly `--wrapper-width + 2 × --gap`, and **below it every breakout class renders at content width** — identical to no class at all.
+The outer tracks are sized `minmax(0, 2rem)` and `minmax(0, 6.25rem)`: a **zero** minimum and a fixed maximum. The content track, meanwhile, is `min(--wrapper-width, 100% - gap * 2)`, so below a certain width it grows with the container and takes all the space there is. Only once the container is wide enough for `--wrapper-width` to win that `min()` does any free space appear for the outer tracks to grow into. The threshold is exactly `--wrapper-width + 2 × --gap`, and **below it every breakout class renders at content width** — identical to no class at all.
 
 Past the threshold the free space is handed to the four growable inner tracks in step, so `.popout` reaches its full `2rem` a further `4 × 2rem = 128px` up, and `.feature` keeps growing after that. Measured against the stylesheet, at a viewport wide enough to pin `--gap` at its `3rem` maximum:
 
 | `--wrapper-width` | container | content column | `.popout` − content |
 | --- | --- | --- | --- |
-| 85rem | 1400 | 1304 | 0 |
-| 85rem | 1456 | 1360 | 0 |
-| 85rem | 1500 | 1360 | 22 |
-| 85rem | 1585 | 1360 | 64 |
+| 97rem | 1600 | 1504 | 0 |
+| 97rem | 1648 | 1552 | 0 |
+| 97rem | 1700 | 1552 | 26 |
+| 97rem | 1776 | 1552 | 64 |
 | 64rem | 1120 | 1024 | 0 |
 | 64rem | 1160 | 1024 | 20 |
 | 64rem | 1249 | 1024 | 64 |
 
-The practical consequence: **the wider you set `--wrapper-width`, the further off-screen you push your own breakouts.** At `64rem` the popout is live from 1120px, an ordinary laptop. At `85rem` it stays dead until 1456px and only reaches full width at 1585px — so on a 1440px laptop it is invisible, and on an external display it suddenly makes the element 4rem wider than the widest text on the page. A breakout in a wide container is therefore not a subtler version of a breakout in a narrow one; it is a class that does nothing most of the time and something unintended the rest.
+The practical consequence: **the wider you set `--wrapper-width`, the further off-screen you push your own breakouts.** At `64rem` the popout is live from 1120px, an ordinary laptop. At `97rem` it stays dead until 1648px and only reaches full width at 1776px — so on a 1440px laptop it is invisible, and on an external display it suddenly makes the element 4rem wider than the widest text on the page. A breakout in a wide container is therefore not a subtler version of a breakout in a narrow one; it is a class that does nothing most of the time and something unintended the rest.
 
 Which says what the classes are actually for: stepping out of a **reading measure**. A container already sized for a wide layout has nothing to break out of, and the right answer there is the content column itself.
 
 ## In jedee
 
-`src/assets/css/global/compositions/wrapper.css` is Eleventy Excellent stock, Ryan Mulligan's technique credited in the file. `--wrapper-width` defaults to `85rem` (`variables.css`) and `.prose` narrows it to `64rem`, so a post body's content column is the narrow one while the breakouts stay measured from it. That is a composition knob in the [[Configuring a layout composition]] sense — a block sets `--wrapper-width` rather than redeclaring `grid-template-columns`.
+`src/assets/css/global/compositions/wrapper.css` is Eleventy Excellent stock, Ryan Mulligan's technique credited in the file. `--wrapper-width` is `97rem` (`variables.css`, raised from EE's `85rem` — see the grid section below) and `.prose` narrows it to `64rem`, so a post body's content column is the narrow one while the breakouts stay measured from it. That is a composition knob in the [[Configuring a layout composition]] sense — a block sets `--wrapper-width` rather than redeclaring `grid-template-columns`.
 
 `.prose-wrapper`, which sets the same `64rem`, is EE stock that nothing in jedee uses: `.prose` does the job on the same element. One more entry for [[What jedee kept from Eleventy Excellent]]'s list of machinery left behind.
+
+### The 12-column grid
+
+The Penpot layout grid is 12 columns of 100px with 32px gutters, 1552px in all, and the wrapper is sized to match it: `--wrapper-width: 97rem`, raised from EE's `85rem` on 2026-10-05. The prose widths already sat on that grid. The prose column (`64rem`, 1024px) is exactly columns 3–10, and `.popout` adds one 32px gutter on each side. `.feature` was moved from `5rem` to `6.25rem` so that a prose feature spans columns 2–11 (1288px) instead of stopping halfway into a column.
+
+⚠ The breakout offsets are shared by both wrapper widths, so only the prose breakouts land on the grid. In the 97rem wrapper a `.feature` would reach 1752px, outside the grid altogether — one more reason the classes belong to prose.
+
+The card listings follow the same grid through `.grid`'s `data-layout` variants (`compositions/grid.css`). At 1552px, `33-33-33` gives four cards of three grid columns each, from an `18rem` minimum that is just too wide for a fifth. `50-50` gives three cards of four columns each, and a two-item `50-50` or `thirds` listing stretches to two cards of six columns each. The grid gap is `--space-s-m`, 31px at its maximum against Penpot's 32, so each card is about a pixel off the guide.
+
+⚠ None of those variants applied between 2026-09-06 and 2026-10-05. Removing the masonry script left `custom-masonry.webc` with `webc:root webc:keep` on a tag of its own name, which WebC renders as the tag nested inside itself. The outer copy had no `data-layout`, so every listing was squeezed into its first 16rem column. `webc:root="override"` renders it once.
 
 ### Four ways around the direct-child rule
 
@@ -107,7 +117,7 @@ The pattern across all four: find the element that is genuinely the direct child
 
 On 2026-09-19 the second failure mode above turned up in three places. `.prose` narrows `--wrapper-width` to `64rem`, but only when it is on the `.wrapper` element itself — the post layouts all do that, so their content column is 1024 and `.popout` is 1088. `partials/archive-listing.njk` puts `.prose` on a *child* instead (it is the intro paragraph's class, not the page's), so custom-property inheritance never reaches the grid and the archive wrapper stays at the stock `85rem`. Its content column is 1360, and the `.popout` on `/activities/`'s map-and-table block measured 1424 — wider than every line of prose on the page, and 161px short of the `.full` header it looked like it was competing with. Two styleguide tables had the same class in the same wide wrapper.
 
-All three had the class removed rather than the wrapper narrowed; 1360 is the width that page is designed at. The interesting part is the reporting: the misuse had been shipping for a while and was only visible above 1456px, so it took a wide display to see it at all. Every remaining `.popout` in the site is in a layout with `.prose` on the wrapper — the post types, the wiki, and the wiki's own figures — which is the rule the class is worth holding to.
+All three had the class removed rather than the wrapper narrowed; 1360 was the width that page was designed at (1552 since 2026-10-05). The interesting part is the reporting: the misuse had been shipping for a while and was only visible above 1456px, so it took a wide display to see it at all. Every remaining `.popout` in the site is in a layout with `.prose` on the wrapper — the post types, the wiki, and the wiki's own figures — which is the rule the class is worth holding to.
 
 One thing the removal disturbed, and a correction worth recording with it. `--table-edge-padding` (see [[Tables]]) is `var(--space-m-l)`, 31px at its maximum, applied as `padding-inline-start` to a table's caption and first column, and it is tuned against the `2rem` popout track: at popout width the table's box starts 32px outside the content column and that 31px puts the first column's text back on the content line. Two comments in `table.css` said so, and removing the breakout from the activities table looked at first like it had made them stale.
 
