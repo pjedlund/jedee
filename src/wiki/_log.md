@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-10-05] enrich | Layout shift: the footer band moved, the reserve is gone
+
+[[Layout shift]] re-measured on the built landing page: the footer's font band is now 419–439 px (was 409–430), so Lighthouse's 412 px sits just below it and the `@media (width < 27rem)` reserve covered only part of it. The query is deleted; the page keeps its code and its three lessons (pin the rows, reserve in rem, measure CLS not positions) as history. Table cut to the footer rows from today's sweep, the figure re-shot at 412/430/444 from a re-lifted `site-footer.js`, alt and caption rewritten. ⚠ Not the cause: the footer's version number (0.9.0, 0.10.0 and 1.0.0 give the same band); what moved it was not traced.
+
 ## [2026-10-05] enrich | The place map: route-symbols figure re-shot
 
 The `place-map-route-symbols` figure re-shot with the thick symbols and the line stopping at the finish, and its alt rewritten. The mockup's `data-zoom-to` dropped from 16 to 15: the symbols are sized at the fit zoom, which fell when the fit padding grew, so at 16 the finish circles overflowed the frame. The modes figure was re-shot in the same run.
