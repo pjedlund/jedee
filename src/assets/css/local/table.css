@@ -24,7 +24,6 @@
   --table-popout-edge-padding: var(--space-m-l); /* ⚠ keep this on the 2rem popout track: its 31px maximum is what lands a prose table's text on the prose's own edge */
   --table-cell-align: baseline;
   --table-caption-size: var(--size-step-min-1);
-  --table-caption-style: italic;
   --table-shadow: color-mix(in oklab, var(--color-text) 20%, transparent);
   --table-fixed-min-inline-size: 40rem;
   --table-row-hover: color-mix(in oklab, var(--color-text) 8%, transparent); /* linked rows only; it lies over the text, so keep it faint */
@@ -84,7 +83,6 @@ td {
 caption {
   padding-block: var(--line-quarter, var(--space-xs));
   font-size: var(--table-caption-size);
-  font-style: var(--table-caption-style);
 }
 
 thead th {

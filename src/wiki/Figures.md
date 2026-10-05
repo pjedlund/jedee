@@ -27,7 +27,7 @@ A caption is secondary text, and the usual typographic advice is to keep it in t
 
 ## In jedee
 
-Eleventy Excellent ships one `figcaption` rule in `global/base/global-styles.css`: centered, italic, one step smaller, `text-wrap: balance`. Since 2026-10-02 jedee's version of that rule is left-aligned, starts with an info icon, and wraps with `pretty`; the [[Text wrapping]] reasoning for `balance` went with the centering. The rest of this section is jedee's own, and it covers every caption on the site: the markdown image title, the `{% image %}` shortcode, the lightbox component, a post's `credit:` under its featured image, and a `<figcaption>` written by hand.
+Eleventy Excellent ships one `figcaption` rule in `global/base/global-styles.css`: centered, italic, one step smaller, `text-wrap: balance`. Since 2026-10-02 jedee's version of that rule is left-aligned, starts with an info icon, and wraps with `pretty`, and since 2026-10-05 it is upright rather than italic; the [[Text wrapping]] reasoning for `balance` went with the centering. The rest of this section is jedee's own, and it covers every caption on the site: the markdown image title, the `{% image %}` shortcode, the lightbox component, a post's `credit:` under its featured image, and a `<figcaption>` written by hand.
 
 ### The icon at the start of the line
 

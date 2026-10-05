@@ -122,7 +122,7 @@ Capital labels (logo, breadcrumb, menu button, footer, buttons) share `--trackin
 
 ### Captions and quotations
 
-Captions are italic, centered and balanced. Johan chose italic on 2026-09-29 despite the readability case above; see [[Figures]]. The wiki's captions run long, so `local/wiki.css` sets them left-aligned and `pretty`, on the prose's edge and its 54ch measure.
+Captions are upright, left-aligned and `pretty`, one step smaller than the text; see [[Figures]]. Johan chose italic on 2026-09-29 despite the readability case above, and reversed it on 2026-10-05 for that case: every figure and table caption is upright now. A word set in `<em>` inside a caption shows as italic again, which it could not while the caption itself was italic.
 
 Quotations balance. The rule is in `global-styles.css` and again in `prose.css`, whose `pretty` rule on `p` would otherwise win.
 

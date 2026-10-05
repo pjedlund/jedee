@@ -160,7 +160,6 @@ figcaption {
   text-align: start;
   padding-block-end: var(--space-xs);
   /* text-emphasis: dot closed; */
-  font-style: italic;
   text-wrap: pretty;
 }
 

@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-10-05] enrich | Captions go upright
+
+Every figure and table caption is upright now, reversing the 2026-09-29 italic choice on the readability case in [[Typographic conventions]]. Updated the caption lines in [[Typographic conventions]] (whose "italic, centered and balanced" was also stale since 2026-10-02), [[Figures]] and [[Tables]].
+
 ## [2026-10-05] enrich | Typographic conventions: In jedee rewritten under h3s
 
 [[Typographic conventions]]' "In jedee" section was one long list with nested lists. Now eleven h3 sections of short paragraphs (Figures, Small caps, Capitals, Captions and quotations, Footnote markers, Ordinals, List markers, Paragraph spacing, Subtitles, the webtypography.net fixes, Not done), about a third shorter. Two subtitle bullets that had drifted under the webtypography.net fixes moved back to Subtitles. ⚠ Paragraph spacing was stale since [[Vertical rhythm]] merged: it still described `--space-m-l` and the browser's 1em list margin; it now points at the quarter-line rhythm. The small-caps examples higher up are now set in the styles they describe. A sweep of every wiki page found no other nested lists.
