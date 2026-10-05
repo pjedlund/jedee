@@ -25,7 +25,7 @@ The dim type/date/revision line under a post or wiki title (partials/entry-heade
   margin: calc(var(--meta-link-pad-block) * -1) calc(var(--meta-link-pad-inline) * -1);
   color: inherit;
   text-decoration-line: underline;
-  text-decoration-thickness: 1px;
+  text-decoration-thickness: var(--underline-thickness);
   text-underline-offset: 0.25em;
   text-decoration-color: var(--meta-underline);
   transition: color var(--meta-fade) ease-out, text-shadow var(--meta-fade) ease-out, text-decoration-color var(--meta-fade) ease-out;

@@ -199,7 +199,7 @@ The page is short, so the footer is bottom-anchored — its top is `viewportHeig
 ```css
 @media (width < 27rem) {
   .site-footer .footer-links {
-    min-block-size: var(--footer-links-reserve); /* 6rem */
+    min-block-size: var(--footer-links-reserve); /* 6.2rem */
     align-content: flex-start;
   }
 }
