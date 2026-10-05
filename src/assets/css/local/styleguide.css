@@ -132,3 +132,8 @@ A prose sample (partials/rhythm-sample.njk) with a lattice toggle: a checkbox an
       transparent 1px calc(var(--line) / 4)
     );
 }
+
+/* The page sits in the wide 97rem wrapper, so its running text takes prose's 54ch measure; keep the two in step. */
+.styleguide p:not(.rhythm-sample *) {
+  max-inline-size: 54ch;
+}
