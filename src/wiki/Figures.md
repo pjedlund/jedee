@@ -27,7 +27,7 @@ A caption is secondary text, and the usual typographic advice is to keep it in t
 
 ## In jedee
 
-Eleventy Excellent ships one `figcaption` rule in `global/base/global-styles.css`: centered, italic, one step smaller, `text-wrap: balance`. Since 2026-10-02 jedee's version of that rule is left-aligned, starts with an info icon, and wraps with `pretty`; the [[Text wrapping]] reasoning for `balance` went with the centering. The rest of this section is jedee's own, and it covers every caption on the site: the markdown image title, the `{% image %}` shortcode, the lightbox component, a post's `credit:` under its featured image, and a `<figcaption>` written by hand.
+Eleventy Excellent ships one `figcaption` rule in `global/base/global-styles.css`: centered, italic, one step smaller, `text-wrap: balance`. Since 2026-10-02 jedee's version of that rule is left-aligned, starts with an info icon, and wraps with `pretty`, and since 2026-10-05 it is upright rather than italic; the [[Text wrapping]] reasoning for `balance` went with the centering. The rest of this section is jedee's own, and it covers every caption on the site: the markdown image title, the `{% image %}` shortcode, the lightbox component, a post's `credit:` under its featured image, and a `<figcaption>` written by hand.
 
 ### The icon at the start of the line
 
@@ -57,7 +57,7 @@ A float never adds height to a line box, and an inline icon can, by pushing the 
 
 ### An icon drawn in CSS
 
-The link underline on the site is `--underline-thickness`, 0.2ex, so it thickens with the text. An icon from an SVG file scales its stroke with the icon's box instead. The info icon is drawn in CSS so its lines can be measured in `ex` too: a round border is the ring, and two background layers paint the dot and the stem.
+The link underline on the site is `--underline-thickness`, 0.2ex, so it thickens with the text. It sits `0.3ch` below the text (the global `a` rule), so the gap scales with the text too; every underlined link uses both, the meta line's included since 2026-10-05, when its own `0.25em` offset went. An icon from an SVG file scales its stroke with the icon's box instead. The info icon is drawn in CSS so its lines can be measured in `ex` too: a round border is the ring, and two background layers paint the dot and the stem.
 
 ```css
 figcaption::before {

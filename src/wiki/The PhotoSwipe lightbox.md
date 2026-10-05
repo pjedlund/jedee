@@ -104,7 +104,7 @@ this.lightbox = new PhotoSwipeLightbox({
   <figcaption>The overlay open over the page it came from. The image opens fitted, and the scrim leaves the page faintly visible rather than replacing it.</figcaption>
 </figure>
 
-Adding a component that keeps its custom-element tag (`webc:root webc:keep`) requires a **single top-level node** in the `.webc` file, or the element renders doubled and initializes twice. Keep component styles in a `local` bundle, not a sibling `<style>`.
+Adding a component that keeps its custom-element tag (`webc:root webc:keep`) requires a **single top-level node** in the `.webc` file, or the element renders doubled and initializes twice. Give the kept tag a different name from the component, too: a same-named root with `webc:root webc:keep` nests in itself even when it is the only node ([[WebC]]). Keep component styles in a `local` bundle, not a sibling `<style>`.
 
 ### Invoking the component directly from a layout
 
