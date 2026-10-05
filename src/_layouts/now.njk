@@ -18,7 +18,7 @@ layout: base
   {% if list.posts.length %}
     <section class="region wrapper prose-wrapper flow" aria-labelledby="now-{{ loop.index }}">
       <h2 id="now-{{ loop.index }}">{{ list.heading }}</h2>
-      <custom-masonry layout="33-33-33">
+      <custom-masonry layout="halves">
         {% set cardPartial = list.card %}
         {% asyncEach item in list.posts %}
           {% set headingLevel = "h3" %}
