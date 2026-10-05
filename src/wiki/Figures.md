@@ -57,7 +57,7 @@ A float never adds height to a line box, and an inline icon can, by pushing the 
 
 ### An icon drawn in CSS
 
-The link underline on the site is `--underline-thickness`, 0.2ex, so it thickens with the text. An icon from an SVG file scales its stroke with the icon's box instead. The info icon is drawn in CSS so its lines can be measured in `ex` too: a round border is the ring, and two background layers paint the dot and the stem.
+The link underline on the site is `--underline-thickness`, 0.2ex, so it thickens with the text. It sits `0.3ch` below the text (the global `a` rule), so the gap scales with the text too; every underlined link uses both, the meta line's included since 2026-10-05, when its own `0.25em` offset went. An icon from an SVG file scales its stroke with the icon's box instead. The info icon is drawn in CSS so its lines can be measured in `ex` too: a round border is the ring, and two background layers paint the dot and the stem.
 
 ```css
 figcaption::before {
