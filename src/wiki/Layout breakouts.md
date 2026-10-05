@@ -75,7 +75,7 @@ Which says what the classes are actually for: stepping out of a **reading measur
 
 `src/assets/css/global/compositions/wrapper.css` is Eleventy Excellent stock, Ryan Mulligan's technique credited in the file. `--wrapper-width` is `97rem` (`variables.css`, raised from EE's `85rem` — see the grid section below) and `.prose` narrows it to `64rem`, so a post body's content column is the narrow one while the breakouts stay measured from it. That is a composition knob in the [[Configuring a layout composition]] sense — a block sets `--wrapper-width` rather than redeclaring `grid-template-columns`.
 
-`.prose-wrapper`, which sets the same `64rem`, is EE stock that nothing in jedee uses: `.prose` does the job on the same element. One more entry for [[What jedee kept from Eleventy Excellent]]'s list of machinery left behind.
+`.prose-wrapper`, which sets the same `64rem`, is EE stock. The post layouts use `.prose` instead, which does the same job on the same element; `.prose-wrapper` is used only on the card sections of `/now/` and the homepage's featured list.
 
 ### The 12-column grid
 
@@ -83,7 +83,7 @@ The Penpot layout grid is 12 columns of 100px with 32px gutters, 1552px in all, 
 
 ⚠ The breakout offsets are shared by both wrapper widths, so only the prose breakouts land on the grid. In the 97rem wrapper a `.feature` would reach 1752px, outside the grid altogether — one more reason the classes belong to prose.
 
-The card listings follow the same grid through `.grid`'s `data-layout` variants (`compositions/grid.css`). At 1552px, `33-33-33` gives four cards of three grid columns each, from an `18rem` minimum that is just too wide for a fifth. `50-50` gives three cards of four columns each, and a two-item `50-50` or `thirds` listing stretches to two cards of six columns each. The grid gap is `--space-s-m`, 31px at its maximum against Penpot's 32, so each card is about a pixel off the guide.
+The card listings follow the same grid through `.grid`'s `data-layout` variants (`compositions/grid.css`). At 1552px, `33-33-33` gives four cards of three grid columns each, from an `18rem` minimum that is just too wide for a fifth. `50-50` gives three cards of four columns each, and a two-item `50-50` or `thirds` listing stretches to two cards of six columns each. Inside the 1024px prose column, `halves` gives two cards of four columns each; it is `auto-fill`, so a lone card keeps that width instead of stretching (`/now/`). The grid gap is `--space-s-m`, 31px at its maximum against Penpot's 32, so each card is about a pixel off the guide.
 
 ⚠ None of those variants applied between 2026-09-06 and 2026-10-05. Removing the masonry script left `custom-masonry.webc` with `webc:root webc:keep` on a tag of its own name, which WebC renders as the tag nested inside itself. The outer copy had no `data-layout`, so every listing was squeezed into its first 16rem column. `webc:root="override"` renders it once.
 

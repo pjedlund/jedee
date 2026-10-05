@@ -18,7 +18,7 @@ layout: base
 {% if collections.featured.length and ((not settings.switches.hideFeatured) or (eleventy.env.runMode === "serve")) %}
   <section class="region wrapper prose-wrapper flow" aria-labelledby="featured-heading">
     <h2 id="featured-heading">Featured</h2>
-    <custom-masonry layout="33-33-33">
+    <custom-masonry layout="halves">
       {% asyncEach item in collections.featured.slice(0, 1) %}
         {% set headingLevel = "h3" %}
         {% include "partials/" + featuredCards[item.data.category] %}

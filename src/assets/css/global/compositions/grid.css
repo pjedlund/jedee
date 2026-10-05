@@ -42,3 +42,8 @@ to change how empty grid tracks are handled */
   --grid-placement: auto-fit;
   --grid-min-item-size: clamp(16rem, 33%, 20rem);
 }
+
+/* Two cards of 4 grid columns each in the 64rem prose column; auto-fill keeps a lone card at that width. */
+.grid[data-layout='halves'] {
+  --grid-min-item-size: min(28rem, 100%);
+}
