@@ -90,7 +90,10 @@ place-map > :is(.place-map-live, .place-map-static) + :not(script) {
 .place-map-preloader span {
   font-family: var(--font-base);
   font-size: var(--size-step-min-2);
-  font-variant-numeric: lining-nums tabular-nums;
+  --nums-figure: lining-nums;
+  --nums-spacing: tabular-nums;
+
+  font-variant-numeric: var(--nums-figure,) var(--nums-spacing,) var(--nums-fraction,) var(--nums-zero,);
 }
 .place-map-preloader[data-done] {
   opacity: 0;
