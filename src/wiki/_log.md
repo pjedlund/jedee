@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-10-05] enrich | The place map: route-symbols figure re-shot
+
+The `place-map-route-symbols` figure re-shot with the thick symbols and the line stopping at the finish, and its alt rewritten. The mockup's `data-zoom-to` dropped from 16 to 15: the symbols are sized at the fit zoom, which fell when the fit padding grew, so at 16 the finish circles overflowed the frame. The modes figure was re-shot in the same run.
+
 ## [2026-10-04] enrich | The place map: preloader and course symbols
 
 [[The place map]] rewritten where the session made it wrong: the pulsing `--map-water` box is gone, replaced by a forest-green box with the logo filling in ocean blue as a Flash-style counting preloader (timed from the first drawn frame, crossfading into the map); the line is cut at the outer finish circle (a centred start triangle was tried the same day and reverted: the GPS fixes wander around the start, so it looked misplaced), the fit padding now follows the symbol sizes so the finish isn't clipped, and the symbols take the line's weight with IOF finish proportions. ⚠ The `place-map-route-symbols` figure still shows the old thin, smaller symbols: re-shoot with `npm run mockups -- place-map` and update the alt. Later the same day: the attribution box on route maps was twice its height because prose-rhythm's `details > summary + *` margin reached MapLibre's `<details>`, now noted beside the script `display` trap. Source written from the session.
