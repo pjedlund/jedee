@@ -25,8 +25,8 @@ Figure *width* is a separate choice. **Tabular** figures all share one width, so
 
 Small caps are capitals drawn at about the height of lowercase letters, with strokes thickened to match. Bringhurst ([3.2.2](http://webtypography.net/3.2.2)) sets acronyms in running text in spaced small caps. Butterick ([small caps](https://practicaltypography.com/small-caps.html)) uses them sparingly, as a third kind of emphasis beside bold and italic. Both insist on real ones. A browser asked for small caps that a font lacks shrinks the capitals instead, which leaves them thin and pale.
 
-- `font-variant-caps: small-caps` turns lowercase into small caps and leaves capitals alone, so "Robert Bringhurst" keeps a full-size R and B.
-- `all-small-caps` also turns the capitals into small caps: the form for acronyms. It flattens mixed-case names, so RDFa and W3C both come out as uniform small capitals.
+- `font-variant-caps: small-caps` turns lowercase into small caps and leaves capitals alone, so <span class="small-caps">Robert Bringhurst</span> keeps a full-size R and B.
+- `all-small-caps` also turns the capitals into small caps: the form for acronyms. It flattens mixed-case names, so <span style="font-variant-caps: all-small-caps">RDFa</span> and <span style="font-variant-caps: all-small-caps">W3C</span> both come out as uniform small capitals.
 - `font-synthesis-small-caps: none` refuses the fake. Text in a face without small caps is shown as ordinary text instead.
 
 `font-variant-caps` changes only the drawing, not the characters, so a screen reader reads the source text.
