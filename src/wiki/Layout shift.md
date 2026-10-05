@@ -192,53 +192,51 @@ So `prose.css`'s `max-inline-size: 54ch` (about 63 characters in the web font, s
 
 ### The shift no descriptor can reach
 
-On the landing page at around 412 px the footer's link cluster wraps to **three rows in the fallback and two in the web font**, moving the footer 34 px and scoring **CLS 0.173**. That width is not arbitrary and the band is narrow — measured below. No `size-adjust` fixes it: tested down to 91.5%, 2.4% narrower than Capsize's own value, the row count never flips. A row of short uppercase link labels has a glyph mix nothing like the average the descriptor was fitted to, and the wrap sits right on a boundary at that width.
+Measured 2026-09-07: on the landing page at around 412 px the footer's link cluster wrapped to **three rows in the fallback and two in the web font**, moving the footer 34 px and scoring **CLS 0.173**. That width was not arbitrary and the band is narrow — measured below. No `size-adjust` fixes it: tested down to 91.5%, 2.4% narrower than Capsize's own value, the row count never flips. A row of short uppercase link labels has a glyph mix nothing like the average the descriptor was fitted to, and the wrap sits right on a boundary at that width.
 
-The page is short, so the footer is bottom-anchored — its top is `viewportHeight − footerHeight`, which makes the nav's height *its position*. The fix is to reserve the taller state across the band where the fonts disagree:
+The page is short, so the footer is bottom-anchored: its top is `viewportHeight − footerHeight`, which makes the link cluster's height *its position*.
+
+**A reserve was tried, and removed.** From 2026-09-07 to 2026-10-05 the footer carried the only width media query in `global/blocks/`, holding the three-row height below 27rem:
 
 ```css
 @media (width < 27rem) {
   .site-footer .footer-links {
-    min-block-size: var(--footer-links-reserve); /* 6.2rem */
+    min-block-size: 6.2rem;
     align-content: flex-start;
   }
 }
 ```
 
-`align-content` earns its line: centering the rows inside a taller box moves *every* row by half the slack when the row count changes, which is a shift of its own. Pinned to the top, only the links that actually change row move.
+It halved the shift at 412 px (0.1726 → 0.079): the box stood still, but the links still redistributed between three rows and two inside it, and that is a shift too. Three lessons from it hold for any reservation. Pin the rows to the top (`align-content: flex-start`), since centring moves every row when the count changes. Reserve in `rem`: `lh` and `ch` grow and shrink with the very font being compensated for, and an `lh` version did nothing. And measure CLS, not positions: stacking the nav into a column gave six rows in both fonts and an identical footer top, yet scored worse at 0.1055, because the score counts area and a taller footer scores higher on the small per-row differences that remain.
 
-**Reserve in `rem`.** An earlier version used `lh` and did nothing, because `lh` is font-dependent — it grows and shrinks with the very thing being compensated for, exactly like the `ch` units above. Any reservation meant to absorb a font difference has to be written in a unit the font cannot move.
+It came out because it was tuned to a band that moved. By 2026-10-05 the band sat about 10 px further right (below), so the query no longer touched the Lighthouse width and left the top 8 px of the band uncovered, while hard-coding two numbers that go stale with any change to the footer's text. The intrinsic fix is a footer without a wrap-sensitive row, which belongs to the footer redesign.
 
-**This halves the shift, it does not remove it** — 0.1726 → 0.079. The box is stable now, but the seven links still redistribute between three rows and two when the font lands, and that redistribution is itself a layout shift. Only an identical row count in both fonts would remove it, and no CSS achieves that across every width: shrinking the link padding makes 412 px agree and 380 px disagree instead.
-
-**Stacking the nav into a column measures worse, at 0.1055.** It was the option that looked cleanest, because it gives six rows in both fonts and the footer's *top* is then identical at every width. But impact fraction is area, and a much taller footer scores higher on the small per-row metric differences that remain. Both of these misjudgements came from the same mistake — comparing element *positions* between the two font states instead of measuring CLS. Position equality is necessary, not sufficient; the score counts every element that moved, not just the container.
-
-### The band is 22 px wide, and Lighthouse sits inside it
+### The band is about 20 px wide, and it moves
 
 Everything above measures the shift where it happens. The complementary question is where it *doesn't*, which turns out to be almost everywhere. Sweeping the landing page and forcing the fallback state directly — dropping the web family from each element's stack, leaving the rest of the declaration alone — gives this:
 
-Table: Line counts in the web font and the fallback, by viewport width
-| viewport | `h1` lines | intro lines | intro height Δ | footer rows, web / fallback |
-| --- | --- | --- | --- | --- |
-| 360 | 2 / 2 | 7 / 7 | 0 | 3 / 3 |
-| 390 | 2 / 2 | 7 / 7 | 0 | 3 / 3 |
-| 408 | — | — | — | 3 / 3 |
-| **410** | — | — | — | **2 / 3** |
-| **412** | 2 / 2 | 6 / 6 | 0.09 px | **2 / 3** |
-| **425** | — | — | — | **2 / 3** |
-| 432 | — | — | — | 2 / 2 |
-| 720 | 1 / 1 | 4 / 4 | 0 | 2 / 2 |
-| 1100 | 1 / 1 | 3 / 3 | 0.01 px | 1 / 1 |
-| 1280 | 1 / 1 | 3 / 3 | 0 | — |
+Table: Footer link rows in the web font and the fallback, by viewport width (2026-10-05)
+| viewport | footer rows, web / fallback |
+| --- | --- |
+| 360 | 3 / 3 |
+| 390 | 3 / 3 |
+| 412 | 3 / 3 |
+| 418 | 3 / 3 |
+| **419** | **2 / 3** |
+| **430** | **2 / 3** |
+| **439** | **2 / 3** |
+| 440 | 2 / 2 |
+| 720 | 2 / 2 |
+| 1100 | 1 / 1 |
 
-**Document height was identical in both font states at every width tested.** The heading and the intro paragraph never change line count anywhere in the range — the two fonts disagree about the footer and nothing else.
+**The fonts disagree about the footer and nothing else.** The 2026-09-07 sweep also counted the `h1` and the intro paragraph at 360, 390, 412, 720, 1100 and 1280 px: neither changed line count anywhere, and document height was identical in both font states at every width.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/layout-shift-font-band.png" alt="The site footer rendered six times in a three-by-two grid: at 390, 412 and 432 pixels wide, each in the web font and in the metric-matched fallback. At 390 both states take three rows of links; at 432 both take two. Only at 412 do they disagree — two rows in the web font, three in the fallback — and every one of the six reports the same 96-pixel cluster height." width="2556" height="1218">
-  <figcaption>The band, re-measured rather than redrawn: each panel is the real footer in its own iframe at that viewport width, and the row counts are read back off the rendered geometry. Only the middle column disagrees. Note that all six report the same 96 px height — that is the reserve holding the box still while the links redistribute inside it, which is why the fix halves the shift instead of removing it.</figcaption>
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/layout-shift-font-band.png" alt="The site footer rendered six times in a three-by-two grid: at 412, 430 and 444 pixels wide, each in the web font and in the metric-matched fallback. At 412 both states take three rows of links; at 444 both take two. Only at 430 do they disagree: two rows and 64 pixels in the web font, three rows and 99 in the fallback." width="2660" height="1210">
+  <figcaption>The band, re-measured rather than redrawn: each panel is the real footer in its own iframe at that viewport width, and the row counts and heights are read back off the rendered geometry. Only the middle column disagrees, and with no reserve its height follows the row count: that 35 px is how far the bottom-anchored footer moves.</figcaption>
 </figure>
 
-**The disagreement is a band roughly 409–430 px wide, and Lighthouse's mobile preset emulates 412 px** — inside it, near the lower edge. That is the whole reason the landing page carries a residual CLS on the mobile audit while measuring clean at 360, 390, 720 and up. It is not a mobile problem; it is a 22-pixel problem that the standard audit width happens to fall into. Anyone reproducing this at their own browser width will find nothing wrong.
+**The disagreement is a band from 419 to 439 px, and Lighthouse's mobile preset emulates 412 px**, now just below it. On 2026-09-07 the band was 409–430 and 412 sat inside it, which was the whole reason the mobile audit reported a residual CLS while every other width measured clean. The footer's version number is not what moved it (set to 0.9.0 or 1.0.0, the band stays put); the cause was not traced. It is not a mobile problem but a 20-pixel one whose position drifts with small changes to the footer's type, so a clean audit at 412 says nothing about the widths beside it.
 
 The residual metric error after the re-derived descriptors, measured as pure advance width on one unwrapped string:
 
@@ -330,7 +328,7 @@ The decision was to change nothing: the CSS is right for the platforms that have
 
 `src/wiki/_sources/layout-shift.html` draws the band above. Six `srcdoc` iframes, one per width and font state, each loading the compiled `global.css` and the real footer lifted verbatim into `site-footer.js`; the row counts and heights in the labels are read out of each frame's own geometry after its fonts settle, so the picture states what it measured rather than repeating the table.
 
-**An iframe, not a copy.** The reserve is a `@media (width < 27rem)` query and a media query reads the *viewport*, so a fixed-width `div` inside the 1400 px shooter page would never match it — and every space and type token here is `vw`-based for the same reason. `srcdoc` rather than `src`: a `srcdoc` frame inherits the parent's origin so its geometry can be read back, where a separate `file://` document is an opaque origin and `contentDocument` comes back `null`.
+**An iframe, not a copy.** The wrapper gutter and every space and type token here are `vw`-based, so they read the *viewport*; a fixed-width `div` inside the 1400 px shooter page would wrap at the wrong width. `srcdoc` rather than `src`: a `srcdoc` frame inherits the parent's origin so its geometry can be read back, where a separate `file://` document is an opaque origin and `contentDocument` comes back `null`.
 
 **The first attempt built the link row by hand, and all six columns agreed.** The real cluster sits inside `.wrapper`, whose gutter is `6vw` a side, and shares a flex container with the platform-icon nav — about 26 px of width that is the whole difference between wrapping at two rows and three. A simplified copy measures a different element and quietly reports no problem. Lift the markup.
 

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Layout shift — wiki mockup</title>
 
-<!-- ⚠ The site's compiled bundle, so the cluster inside every frame IS site-footer.css plus the cluster composition — including the `@media (width < 27rem)` reserve. It is a build artifact: run `npm start` or `npm run build` once if it is missing. -->
+<!-- ⚠ The site's compiled bundle, so the cluster inside every frame IS site-footer.css plus the cluster composition as built. It is a build artifact: run `npm start` or `npm run build` once if it is missing. -->
 <link rel="stylesheet" href="../../_includes/css/global.css">
 <script src="site-footer.js"></script>
 
@@ -43,7 +43,7 @@
   .agree .rows { color: var(--color-accent-green); }
   .differ .rows { color: var(--color-accent-blue); }
 
-  /* ⚠ An iframe, not a copy: the reserve is a `@media (width < 27rem)` query and a media query reads the VIEWPORT, so a fixed-width div inside this 1400px page would never match it. Every space and type token is vw-based for the same reason. */
+  /* ⚠ An iframe, not a copy: the wrapper gutter and every space and type token are vw-based, so they read the VIEWPORT; a fixed-width div inside this 1400px page would wrap at the wrong width. */
   iframe { display: block; border: 1px solid var(--color-bg-accent-2); border-radius: 4px; background: var(--color-bg); }
   /* Dark shot: the dark accents are muted surface colors, too dim as text — the vivid pair reads at ~5:1. */
   :root[data-theme='dark'] .col-head.inband b,
@@ -75,8 +75,8 @@
       html[data-font='fallback'] .footer-links, html[data-font='fallback'] .footer-links * { font-family: 'Source Sans Fallback', arial, sans-serif; }
     </style></head><body>${window.SITE_FOOTER}</body></html>`;
 
-  // 390 sits below the band, 412 inside it and is what Lighthouse's mobile preset emulates, 432 is 27rem — where the reserve stops applying.
-  const widths = [[390, 'below the band'], [412, 'Lighthouse mobile — in the band'], [432, 'above the band (27rem)']];
+  // 412 is what Lighthouse's mobile preset emulates, now just below the band; 430 is inside it, 444 above. Measured 2026-10-05.
+  const widths = [[412, 'Lighthouse mobile — below the band'], [430, 'in the band'], [444, 'above the band']];
   const states = [['web', 'web font'], ['fallback', 'fallback']];
 
   const grid = document.getElementById('grid');
