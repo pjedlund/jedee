@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-10-05] enrich | Typographic conventions: In jedee rewritten under h3s
+
+[[Typographic conventions]]' "In jedee" section was one long list with nested lists. Now eleven h3 sections of short paragraphs (Figures, Small caps, Capitals, Captions and quotations, Footnote markers, Ordinals, List markers, Paragraph spacing, Subtitles, the webtypography.net fixes, Not done), about a third shorter. Two subtitle bullets that had drifted under the webtypography.net fixes moved back to Subtitles. ⚠ Paragraph spacing was stale since [[Vertical rhythm]] merged: it still described `--space-m-l` and the browser's 1em list margin; it now points at the quarter-line rhythm. The small-caps examples higher up are now set in the styles they describe. A sweep of every wiki page found no other nested lists.
+
 ## [2026-10-05] enrich | Layout shift: the footer band moved, the reserve is gone
 
 [[Layout shift]] re-measured on the built landing page: the footer's font band is now 419–439 px (was 409–430), so Lighthouse's 412 px sits just below it and the `@media (width < 27rem)` reserve covered only part of it. The query is deleted; the page keeps its code and its three lessons (pin the rows, reserve in rem, measure CLS not positions) as history. Table cut to the footer rows from today's sweep, the figure re-shot at 412/430/444 from a re-lifted `site-footer.js`, alt and caption rewritten. ⚠ Not the cause: the footer's version number (0.9.0, 0.10.0 and 1.0.0 give the same band); what moved it was not traced.
