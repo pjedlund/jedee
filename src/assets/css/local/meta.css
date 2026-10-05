@@ -26,7 +26,6 @@ The dim type/date/revision line under a post or wiki title (partials/entry-heade
   color: inherit;
   text-decoration-line: underline;
   text-decoration-thickness: var(--underline-thickness);
-  text-underline-offset: 0.25em;
   text-decoration-color: var(--meta-underline);
   transition: color var(--meta-fade) ease-out, text-shadow var(--meta-fade) ease-out, text-decoration-color var(--meta-fade) ease-out;
 }
