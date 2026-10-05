@@ -1,4 +1,4 @@
-<!-- ⚠ Not a custom element any more: the masonry JS was removed 2026-09-06 over CLS, tag kept so call sites and CSS stay put. See the wiki "Layout shift". -->
-<custom-masonry class="grid" :data-layout="layout" webc:root webc:keep>
+<custom-masonry class="grid" :data-layout="layout" webc:root="override">
+  <!-- ⚠ Not a custom element any more: the masonry JS was removed 2026-09-06 over CLS, tag kept so call sites and CSS stay put. See the wiki "Layout shift". ⚠ Root must stay webc:root="override": plain webc:root webc:keep on a same-named tag renders it nested in itself. -->
   <slot></slot>
 </custom-masonry>
