@@ -1,6 +1,6 @@
 /*
 META LINE
-The dim type/date/revision line under a post or wiki title (partials/entry-header.njk, wiki.njk). Its links carry a faint hairline underline that lights up with the label on hover.
+The dim type/date/revision line under a post or wiki title (partials/entry-header.njk, wiki.njk). Its links carry a faint underline that lights up with the label on hover.
 */
 .meta {
   --meta-color: color-mix(in oklab, var(--color-text-dim) 75%, var(--color-text));
