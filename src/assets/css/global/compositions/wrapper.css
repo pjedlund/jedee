@@ -5,7 +5,7 @@
   --full: minmax(var(--gap), 1fr);
   --content: min(var(--wrapper-width, 85rem), 100% - var(--gap) * 2);
   --popout: minmax(0, 2rem);
-  --feature: minmax(0, 5rem);
+  --feature: minmax(0, 6.25rem);
 
   display: grid;
   grid-template-columns:
