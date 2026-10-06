@@ -1,0 +1,42 @@
+/*
+DEV GRID
+Dev server only (dev-grid.js): G toggles the column grid, V the prose rhythm lattice. A column is the wrapper's --feature track (6.25rem) and a gutter its --popout (2rem), so 12 fill the 97rem wrapper and the middle 8 the 64rem prose; the outer columns clip as the wrapper narrows, then the 8 scale with the prose.
+*/
+.dev-grid {
+  --dev-grid-col: 6.25;
+  --dev-grid-gutter: 2;
+  --dev-grid-color: color-mix(in oklab, var(--color-accent-orange) 14%, transparent);
+
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  container-type: inline-size;
+}
+
+.dev-grid > div {
+  --dev-grid-gap: clamp(1rem, 6vw, 3rem); /* ⚠ the .wrapper --gap */
+  --dev-grid-prose: min(64rem, 100cqi - var(--dev-grid-gap) * 2);
+  --dev-grid-tile: calc(var(--dev-grid-prose) * (var(--dev-grid-col) + var(--dev-grid-gutter)) / 64);
+  --dev-grid-edge: calc(var(--dev-grid-gutter) / 2 / (var(--dev-grid-col) + var(--dev-grid-gutter)) * 100%);
+
+  block-size: 100%;
+  inline-size: min(97rem, 100% - var(--dev-grid-gap) * 2);
+  margin-inline: auto;
+  /* Each tile is a column with half a gutter either side; shifted half a tile so the centre line falls in a gutter. */
+  background: linear-gradient(to right, transparent var(--dev-grid-edge), var(--dev-grid-color) 0 calc(100% - var(--dev-grid-edge)), transparent 0) calc(50% + var(--dev-grid-tile) / 2) 0 / var(--dev-grid-tile) 100%;
+}
+
+:root:not([data-dev-grid]) .dev-grid {
+  display: none;
+}
+
+/* Counted from the prose's first block and run to the page bottom; dev-grid.js measures both vars. ⚠ Pages whose prose has no .wrapper-pass get no lines. */
+[data-dev-rhythm] body {
+  background-image:
+    repeating-linear-gradient(to bottom, color-mix(in oklab, var(--color-accent-blue) 45%, transparent) 0 1px, transparent 1px var(--dev-rhythm-line)),
+    repeating-linear-gradient(to bottom, color-mix(in oklab, var(--color-accent-blue) 14%, transparent) 0 1px, transparent 1px calc(var(--dev-rhythm-line) / 4));
+  background-position: 0 var(--dev-rhythm-top);
+  background-size: 100% calc(100% - var(--dev-rhythm-top));
+  background-repeat: no-repeat;
+}
