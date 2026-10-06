@@ -58,6 +58,8 @@ pre[class*='language-'] {
 
 /* Specific Styles for <pre> Elements */
 pre {
+  --code-shadow: color-mix(in oklab, var(--color-text) 40%, transparent); /* twice the table one: at 20% the glow vanished on the dark code background */
+
   grid-column: popout !important;
   overflow-x: auto;
   padding: var(--space-l) var(--space-l);
@@ -67,6 +69,22 @@ pre {
   border-width: var(--code-border-size);
   border-style: var(--code-border-style);
   border-color: var(--code-border-color);
+
+  /* Scroll cues, as on tables (see the wiki page Tables): covers scroll with the code and hide each edge shadow once that edge is reached. */
+  background:
+    linear-gradient(to right, var(--color-code-bg) 30%, transparent),
+    linear-gradient(to left, var(--color-code-bg) 30%, transparent) 100% 0,
+    radial-gradient(farthest-side at 0 50%, var(--code-shadow), transparent),
+    radial-gradient(farthest-side at 100% 50%, var(--code-shadow), transparent) 100% 0;
+  background-color: var(--color-code-bg);
+  background-repeat: no-repeat;
+  background-size: 4em 100%, 4em 100%, 1.4em 100%, 1.4em 100%;
+  background-attachment: local, local, scroll, scroll;
+}
+
+/* ⚠ The inner code must stay see-through, or its own background hides the cues behind every line. */
+pre code {
+  background: none;
 }
 
 /* Style Adjustments for <code> within different contexts */
