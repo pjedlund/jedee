@@ -106,20 +106,6 @@ The docs list an `inset` key that is not there (the importer adds `inset: false`
 
 Mapping rules and the full trap list live in `_local/penpot/penpot-tokens.md` (gitignored). The same build script also regenerates the front matter of the repo-root `DESIGN.md`.
 
-## In Sketch
+## In Sketch (retired)
 
-A second mirror since 2026-08-31, built the same way and losing different things. `npm run sketch:tokens` → `src/_config/setup/build-sketch-tokens.js` → `_local/sketch/sketch-tokens.json`, fed into `_local/sketch/jedee.sketch` through Sketch's MCP server. 91 Color Variables, 7 text styles, 67 symbols.
-
-Sketch models none of the three above, so all three costs land at once. References are resolved in the build, making the file a snapshot rather than a live mirror. The light/dark semantic pair becomes two swatch groups, `Light/…` and `Dark/…`, and the component colors in `buttonColors.json` and `megamenuColors.json` are resolved once per theme, because their `core` entries reference `{color.text}` and `{color.semantic.blue}` — which is how `Light/Button/Default/Bg` and `Dark/Button/Default/Bg` correctly land on different hexes from one source line. And every state and theme is its own symbol: fourteen buttons per theme, where the CSS has one rule and a handful of custom-property overrides.
-
-The fluid problem resolves the same way it did for Penpot — frozen at `max`, so the file shows the desktop end of every scale. Two values had to be approximated rather than exported, both `color-mix()` results with no token behind them: the button border, bound to the fill swatch instead of `color-mix(in oklab, bg 80%, text)` and invisible at 1px, and the mega-menu's leader dots, drawn as a dashed 1px line on a 6px pitch rather than a repeating radial gradient.
-
-**A missing token showed up as a binding that reached too far.** `--color-accent-orange` is set in `variables.css` from a palette shade and had no entry in `semanticColors.json`, so nothing generated a swatch for it — and six hover symbols bound straight to `Palette/Orange/500`, skipping the semantic layer to grab a raw shade. The design file is a good place to notice this, because a binding is visible in a way a `var()` chain is not: the symbol names the thing it points at. Giving it a source is a one-line change that emits nothing into the CSS, since the Tailwind config does not read that file. Worth checking which side of the pair is actually wrong first — here the design file was faithfully reflecting a real gap in the token set.
-
-Its value is deliberately identical in both themes, which makes the light/dark pair look redundant and is not: a single-valued swatch needs one per theme even when they agree. Unlike `accent-blue` and `accent-green`, which flip to subdued variants and already reach both tools as the light_dark colors in `colors.json`.
-
-The one thing that got *better* under the constraint: because a symbol cannot carry a theme, the sixteen post-type icons were made theme-neutral and the row that holds one tints its icon slot. One icon set serves both themes, and the tint survives swapping which icon a row shows — which per-shape color overrides would not. The constraint pushed the color to the right place.
-
-Related: [[Undefined custom properties]] — the other way a token reference fails silently, on the CSS side rather than at the tool boundary. [[Three things called cache]] — another page where two systems share a name for different things.
-
-Raw sources: `src/_raw/dev-notes/How the Penpot token sync survives an import.md`, `src/_raw/dev-notes/How the shadow tokens got into Penpot.md`, `src/_raw/dev-notes/How the map colors came back from Penpot.md`
+Sketch was a second mirror from 2026-08-31 to 2026-10-06, built from its own script and retired in favour of Penpot alone. The lesson that outlives it: a tool that models none of references, themes or fluid sizes makes the file a snapshot, so every token change needs a re-run and re-push by hand.

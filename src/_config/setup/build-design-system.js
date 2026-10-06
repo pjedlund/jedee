@@ -6,7 +6,7 @@
  *   2. Run `npm run design:system`
  *   3. Ask Claude to publish the folder to the design system's url
  *
- * ⚠ The Artifact type CANNOT read DTCG. Its tokens.json wants a flat LIST per family — a name-to-value map makes the family render empty. This script is the DTCG-to-lists converter; the repo keeps DTCG as the source of truth, exactly as build-penpot-tokens.js and build-sketch-tokens.js do.
+ * ⚠ The Artifact type CANNOT read DTCG. Its tokens.json wants a flat LIST per family — a name-to-value map makes the family render empty. This script is the DTCG-to-lists converter; the repo keeps DTCG as the source of truth, exactly as build-penpot-tokens.js does.
  */
 
 import {readFile, writeFile, mkdir, copyFile, rm} from 'node:fs/promises';

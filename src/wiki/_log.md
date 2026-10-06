@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-10-06] enrich | Sketch retired
+
+[[Design token sync]] loses its Sketch section to a short retirement note: the `sketch:tokens` script and its build file are gone, and Penpot is the only design mirror.
+
 ## [2026-10-05] lint | Wiki against today's code
 
 A lint of the wiki against today's commits. [[WebC]]'s root rule gains the second way to double a component (a same-named root with `webc:root webc:keep`), and its `custom-masonry` line now says `webc:root="override"`; [[The PhotoSwipe lightbox]] points at it. [[Line length]] lists the style guide among the 54ch users. [[Figures]] records the underline's `0.3ch` offset beside its thickness. [[Layout breakouts]] was already current.
