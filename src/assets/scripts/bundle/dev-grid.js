@@ -7,6 +7,15 @@ grid.className = 'dev-grid';
 grid.append(document.createElement('div'));
 document.body.append(grid);
 
+// The rhythm lattice runs past the prose, so it needs the prose's line and start measured.
+const pass = document.querySelector('.prose > .wrapper-pass');
+if (pass) {
+  new ResizeObserver(() => {
+    root.style.setProperty('--dev-rhythm-top', `${pass.getBoundingClientRect().top + scrollY}px`);
+    root.style.setProperty('--dev-rhythm-line', getComputedStyle(pass).getPropertyValue('--line'));
+  }).observe(document.body);
+}
+
 for (const name of Object.values(keys)) {
   if (sessionStorage.getItem(name)) root.dataset[name] = '';
 }

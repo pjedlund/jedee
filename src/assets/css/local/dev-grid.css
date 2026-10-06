@@ -31,9 +31,12 @@ Dev server only (dev-grid.js): G toggles the column grid, V the prose rhythm lat
   display: none;
 }
 
-/* Counted from the first block's top, like the style guide's lattice; ⚠ pages whose prose has no .wrapper-pass get no lines. */
-[data-dev-rhythm] .prose > .wrapper-pass {
+/* Counted from the prose's first block and run to the page bottom; dev-grid.js measures both vars. ⚠ Pages whose prose has no .wrapper-pass get no lines. */
+[data-dev-rhythm] body {
   background-image:
-    repeating-linear-gradient(to bottom, color-mix(in oklab, var(--color-accent-blue) 45%, transparent) 0 1px, transparent 1px var(--line)),
-    repeating-linear-gradient(to bottom, color-mix(in oklab, var(--color-accent-blue) 14%, transparent) 0 1px, transparent 1px calc(var(--line) / 4));
+    repeating-linear-gradient(to bottom, color-mix(in oklab, var(--color-accent-blue) 45%, transparent) 0 1px, transparent 1px var(--dev-rhythm-line)),
+    repeating-linear-gradient(to bottom, color-mix(in oklab, var(--color-accent-blue) 14%, transparent) 0 1px, transparent 1px calc(var(--dev-rhythm-line) / 4));
+  background-position: 0 var(--dev-rhythm-top);
+  background-size: 100% calc(100% - var(--dev-rhythm-top));
+  background-repeat: no-repeat;
 }
