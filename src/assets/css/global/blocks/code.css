@@ -11,8 +11,9 @@
   --code-border-style: solid;
 }
 
+/* ⚠ Guarded so a dark toggle on a light-mode device keeps the dark palette above. */
 @media (prefers-color-scheme: light) {
-  :root {
+  :root:not([data-theme='dark']) {
     --color-code-orange: hsl(30, 95%, 30%);
     --color-code-blue: hsla(210, 95%, 25%, 0.8);
     --color-code-indigo: hsla(260, 50%, 65%, 0.9);
