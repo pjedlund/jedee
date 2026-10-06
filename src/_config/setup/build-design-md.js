@@ -319,7 +319,7 @@ async function build() {
 	}
 	// Derived constants from variables.css — kept here so the spec stays honest about what's actually in --gutter and --wrapper-width.
 	out.spacing.gutter = fluidMaxToPx(spacing['m-l']?.$value);
-	out.spacing.wrapper = '1360px';
+	out.spacing.wrapper = '1552px';
 
 	// ---- components ----
 	out.components = COMPONENTS;
