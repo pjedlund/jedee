@@ -13,7 +13,7 @@ There are two schools, and the difference is how much each one holds to the unit
 
 ## The unit
 
-The unit is one line of body text: its line-height as a length. At jedee's body size and its site-wide leading of 1.45 that is 28.16px on a phone and 40.56px at 1360px and wider, because the body size is fluid, 19px to 28px ([[Design token sync]]). The rhythm's own leading is fluid too (below), so in rhythm pages it is 27px and 42px.
+The unit is one line of body text: its line-height as a length. At jedee's body size and its site-wide leading of 1.45 that is 28.16px on a phone and 40.56px at 1552px and wider, because the body size is fluid, 19px to 28px ([[Design token sync]]). The rhythm's own leading is fluid too (below), so in rhythm pages it is 27px and 42px.
 
 CSS has two units for it, both [Baseline widely available](https://web-platform-dx.github.io/web-features/) since May 2026 (Chrome 109/111, Firefox 120, Safari 16.4):
 
