@@ -1,7 +1,7 @@
 ---
 description: "How a static site colors its code blocks at build time with Prism, and what happens to a fence whose language the highlighter has never heard of."
 date: 2026-08-23
-updated: 2026-09-14
+updated: 2026-10-06
 ---
 
 Syntax highlighting on a static site is a build-time job. The markdown processor hands each fenced code block to a highlighter, which wraps the interesting substrings in `<span class="token …">` elements; a stylesheet colors those classes. No JavaScript reaches the browser, and the highlighting is part of the HTML.
@@ -93,6 +93,8 @@ Table: The weakest color pair in each palette under simulated color blindness
 
 By this measure jedee's palette keeps its colors further apart than GitHub's color-blind themes do; both of GitHub's put a blue next to a purple that the simulation nearly merges. Two limits: the simulation models the most severe form of each condition, and a distance says nothing about which colors a reader with the condition finds comfortable. Reworking jedee's palette toward GitHub's is planned (TODO §33), and the check that produced the table is kept, local-only, at `_local/design/cvd-check.mjs`.
 
+⚠ The light palette sits in a `prefers-color-scheme: light` query guarded by `:root:not([data-theme='dark'])`. Without the guard, a reader whose device is in light mode and who switches the site to dark gets the light theme's dark blue, brown and deep red on the dark code background. That was the case until 2026-10-06, and it first showed on an iPhone, where it read as washed-out code.
+
 ### Inline code
 
 Inline code never reaches Prism. A backtick span is a markdown-it `code_inline` token with no language, so the only thing that styles it is `code.css`. jedee sets it as a raised chip, after the inline code on [arielsalminen.com](https://arielsalminen.com/2026/progressive-web-components/): a surface a shade off the page, rounded corners, and a very faint shadow. Her four values, swapped for jedee tokens:
@@ -128,6 +130,17 @@ Table: Where the chip's middle sits against the middle of the body text's capita
 | Source Sans + Source Code Pro (jedee) | 0.053em | 0.013em | −0.027em |
 
 The February value centers EE's 2024 pair almost exactly. EE has since changed fonts and kept the value, which leaves today's pair 0.032em low; that row is SF Mono on macOS, since `ui-monospace` is a different font on other systems. In jedee's fonts the chip sits 0.053em low without the nudge, about 1.5px at the largest body size. jedee keeps the letters on the baseline instead, a choice between two alignments rather than a fix: the nudge would move them 0.04em off the line the prose sits on. It was tried on 2026-09-15 and compared side by side (1.17px low without it at 24.9px text, 0.18px with it) and left out; the baseline won. The chip also stays `display: inline`. Measured, `inline-block` keeps the text on the baseline too, since an inline-block's baseline is its last line of text; what changes is that the vertical padding then counts toward the line's height (the test paragraph grew 0.84px), and a long span can no longer wrap onto the next line. The selector is EE's, and so was the plain `0.1em 0.4em` padding it replaces. The chip is jedee's own.
+
+### Scroll cues
+
+A code block too wide for its box scrolls sideways, and on a phone nothing says so: iOS hides the scrollbar until you touch the block. Since 2026-10-06 code blocks carry the same scroll cues as tables ([[Tables]]): a soft glow on each edge that has more code beyond it, gone once that edge is reached. It is Lea Verou's `background-attachment: local` technique, four backgrounds on the `<pre>`: two radial-gradient glows pinned to the box's edges (`scroll`), and two covers in `--color-code-bg` that move with the code (`local`) and slide over a glow when that end comes into view.
+
+Two things differ from the table version:
+
+- **The glow is twice as strong.** `--code-shadow` mixes 40% of `--color-text`, the table's `--table-shadow` 20%. At 20% the glow vanished on the near-black dark-theme code background. At 40% it reads in both themes, and in the light theme it looks about like the table's.
+- ⚠ **The `<code>` inside the `<pre>` must have no background.** `code.css` gives `code` and `pre` the same background color, so the inner element painted a solid band over every line and hid the glow behind the text. `pre code { background: none; }` clears it.
+
+The cue only shows when there is some way to scroll. A block that overflows by less than the 4em cover still has the cover sitting over most of its glow: on [[Vertical rhythm]] one block overflows by 21px at a 375px window and shows almost nothing. The blocks on this page, [[The interlinker's second render pass]] and [[The accessibility test]] overflow by hundreds of pixels and show it clearly.
 
 Related: [[The interlinker's second render pass]] — the other thing in this pipeline that rewrites content mid-build, and a reminder that markdown plugin order is load-bearing. [[Wikilinks]] — the interlinker deliberately ignores wikilinks inside code blocks, the other place fenced content gets special treatment.
 

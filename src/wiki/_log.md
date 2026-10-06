@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-10-06] enrich | Scroll cues on code blocks
+
+[[Syntax highlighting]] gains a *Scroll cues* section: code blocks now carry the tables' edge glow, at twice the strength, with `pre code` made see-through so the glow shows behind the text. Its Colors section records the fix for code drawn in light-theme colors when a light-mode device is toggled dark. [[Tables]] points across to it.
+
 ## [2026-10-06] enrich | Sketch retired
 
 [[Design token sync]] loses its Sketch section to a short retirement note: the `sketch:tokens` script and its build file are gone, and Penpot is the only design mirror.
