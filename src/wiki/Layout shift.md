@@ -268,6 +268,18 @@ Table: CLS and first paint, with and without a hero fade
 
 jedee's landing page now has the same kind of fade, staggered — `h1`, intro, then the header, and the logo's name types in once the header has landed (`css/local/hero-reveal.css`, on `[data-reveal]`) — as polish only. It sits under `prefers-reduced-motion: no-preference` and uses `animation-fill-mode: backwards`, not `both`: a translate held after the animation would leave the header a containing block for the fixed nav drawer. The real fix for the swap would be body text in system fonts, which is a design decision jedee has not taken.
 
+On a fast connection the same fade does move the score, because the font then lands *inside* the fade instead of after it. Netlify's Lighthouse run (simulated mobile throttling) on the landing page, the day before and the day after the staggered fade shipped:
+
+Table: Landing page in Netlify's Lighthouse run, before and after the fade
+| | 2026-10-06, no fade | 2026-10-07, staggered fade |
+| --- | --- | --- |
+| Performance | 93 | 98 |
+| CLS | 0.223 | 0.018 |
+| LCP | 1.8 s | 2.3 s |
+| FCP | 1.2 s | 1.0 s |
+
+Before, the swap reflowed the visible intro paragraph (0.113 on its own) and the `h1`; after, they were still at or near `opacity: 0` when it happened, and the only shift left is the footer, which does not fade (0.017). The price is LCP: the intro is the largest element and is not counted as painted until it starts to appear, half a second later. So the 3G finding and this one agree — the fade hides the swap only when the font is quicker than the fade.
+
 **Gating the reveal does zero the score** — an element at `opacity: 0` generates no `layout-shift` entry at all, which is worth knowing on its own. But it pays for that in first paint, and there is no usable middle:
 
 Table: Gating the reveal on font load: CLS against first paint
