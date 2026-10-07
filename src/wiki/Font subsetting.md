@@ -1,7 +1,7 @@
 ---
 description: "Shipping only the characters and styles a site needs from a web font, and how a missing character falls back to another font while a missing style is faked."
 date: 2026-09-10
-updated: 2026-09-22
+updated: 2026-10-07
 ---
 
 **Subsetting** a font means keeping only the characters a site needs and dropping the rest, so the file is a fraction of the full family's size. A complete Source Sans 3 carries Latin, Greek, Cyrillic, arrows and much more; a site written in English and Swedish needs about two hundred characters of it. The standard tool is fontTools' [`pyftsubset`](https://fonttools.readthedocs.io/en/latest/subset/), which glyphhanger and most build-time subsetting wrap. The other half of the technique is CSS [`unicode-range`](https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/unicode-range), which tells the browser which characters a face covers, so it can skip downloading a file the page has no characters for.
@@ -84,7 +84,7 @@ Table: The shipped font files, their character counts and their sources
 | --- | --- | --- | --- |
 | `source-serif/source-serif.woff2` | static, Bold 700 only | 109 | `SourceSerif4-Bold.otf.woff2` |
 | `source-serif/source-serif-bold-italic.woff2` | static, Bold Italic 700 only | 109 | `_source/TTF/SourceSerif4-BoldIt.ttf.woff2` |
-| `source-sans/source-sans.woff2` | variable | 208 | `_source/VF/SourceSans3VF-Upright.otf.woff2` |
+| `source-sans/source-sans.woff2` | variable | 210 | `_source/VF/SourceSans3VF-Upright.otf.woff2` |
 | `source-sans/source-sans-italic.woff2` | variable | 209 | `_source/VF/SourceSans3VF-Italic.otf.woff2` |
 | `source-sans/source-sans-cyrillic.woff2` | variable, `unicode-range` | 102 | `_source/VF/SourceSans3VF-Upright.otf.woff2` |
 | `source-sans/source-sans-italic-cyrillic.woff2` | variable, `unicode-range` | 102 | `_source/VF/SourceSans3VF-Italic.otf.woff2` |
@@ -96,7 +96,7 @@ The fallback faces behind each are the metric-matched Georgia, Arial and Courier
 
 **Checking while you work.** On the dev server only (`eleventy.env.runMode === "serve"` in `base.njk`), `src/assets/scripts/bundle/font-check.js` runs the blank-font test above on every page. It grays out and dot-underlines each character drawn by a fallback, outlines any element set in a style its family has no file for, gives both a hover title, and logs a count to the console. Emoji and pictographs such as `⚠` are skipped on purpose. On this page it flags nine characters, all in code where Source Code Pro lacks them (the symbols listed below, plus `Δ`), and the code keywords' missing italic.
 
-**The 2026-09-10 scan.** All 641 built pages, 34 characters falling back. The biggest was Source Serif having **no curly quotes at all**: with `typographer: true` in `src/_config/plugins/markdown.js`, every heading with an apostrophe drew its `’` in Georgia. Filled since: ‘ ’ “ ” – — … and `ü` in Source Serif; `~ ← ↑ → ↓ ↔ Δ` in Source Sans upright and italic. The YouTube captions on two jam pages had NFD accents from YouTube's own titles; `youtubeTitle` in `src/_config/filters/youtube-title.js` now normalizes to NFC (see [[The YouTube embed]]).
+**The 2026-09-10 scan.** All 641 built pages, 34 characters falling back. The biggest was Source Serif having **no curly quotes at all**: with `typographer: true` in `src/_config/plugins/markdown.js`, every heading with an apostrophe drew its `’` in Georgia. Filled since: ‘ ’ “ ” – — … and `ü` in Source Serif; `~ ← ↑ → ↓ ↔ Δ` in Source Sans upright and italic. On 2026-10-07 `⌘` and `⌥` went into Source Sans upright only, for the key caps in the keyboard-shortcuts dialog: 432 bytes. The YouTube captions on two jam pages had NFD accents from YouTube's own titles; `youtubeTitle` in `src/_config/filters/youtube-title.js` now normalizes to NFC (see [[The YouTube embed]]).
 
 Left falling back on purpose:
 
