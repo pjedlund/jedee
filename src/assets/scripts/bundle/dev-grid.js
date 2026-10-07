@@ -1,5 +1,5 @@
-// Dev server only: G toggles the column grid, V the rhythm lines (dev-grid.css). State lasts for the tab via sessionStorage.
-const keys = {g: 'devGrid', v: 'devRhythm'};
+// ⌥G toggles the column grid, ⌥R the rhythm lines (dev-grid.css). State lasts for the tab via sessionStorage.
+const keys = {KeyG: 'devGrid', KeyR: 'devRhythm'};
 const root = document.documentElement;
 
 const grid = document.createElement('div');
@@ -21,9 +21,11 @@ for (const name of Object.values(keys)) {
 }
 
 document.addEventListener('keydown', event => {
-  const name = keys[event.key.toLowerCase()];
-  if (!name || event.metaKey || event.ctrlKey || event.altKey) return;
+  // event.code, because on a Mac ⌥G arrives as event.key "©".
+  const name = keys[event.code];
+  if (!name || !event.altKey || event.metaKey || event.ctrlKey || event.shiftKey) return;
   if (event.target.closest('input, textarea, select, [contenteditable]')) return;
+  event.preventDefault();
   if (name in root.dataset) {
     delete root.dataset[name];
     sessionStorage.removeItem(name);

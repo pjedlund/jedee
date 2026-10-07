@@ -1,6 +1,6 @@
 /*
 DEV GRID
-Dev server only (dev-grid.js): G toggles the column grid, V the prose rhythm lattice. A column is the wrapper's --feature track (6.25rem) and a gutter its --popout (2rem), so 12 fill the 97rem wrapper and the middle 8 the 64rem prose; the outer columns clip as the wrapper narrows, then the 8 scale with the prose.
+⌥G (dev-grid.js) toggles the column grid, ⌥R the prose rhythm lattice. A column is the wrapper's --feature track (6.25rem) and a gutter its --popout (2rem), so 12 fill the 97rem wrapper and the middle 8 the 64rem prose; the outer columns clip as the wrapper narrows, then the 8 scale with the prose.
 */
 .dev-grid {
   --dev-grid-col: 6.25;
@@ -31,12 +31,14 @@ Dev server only (dev-grid.js): G toggles the column grid, V the prose rhythm lat
   display: none;
 }
 
-/* Counted from the prose's first block and run to the page bottom; dev-grid.js measures both vars. ⚠ Pages whose prose has no .wrapper-pass get no lines. */
+/* Phased to the prose's first block (dev-grid.js measures both vars) and run from the page top to the bottom. ⚠ Pages whose prose has no .wrapper-pass get no lines. */
 [data-dev-rhythm] body {
+  --dev-rhythm-start: calc(mod(var(--dev-rhythm-top), var(--dev-rhythm-line)) - var(--dev-rhythm-line));
+
   background-image:
     repeating-linear-gradient(to bottom, color-mix(in oklab, var(--color-accent-blue) 45%, transparent) 0 1px, transparent 1px var(--dev-rhythm-line)),
     repeating-linear-gradient(to bottom, color-mix(in oklab, var(--color-accent-blue) 14%, transparent) 0 1px, transparent 1px calc(var(--dev-rhythm-line) / 4));
-  background-position: 0 var(--dev-rhythm-top);
-  background-size: 100% calc(100% - var(--dev-rhythm-top));
+  background-position: 0 var(--dev-rhythm-start);
+  background-size: 100% calc(100% - var(--dev-rhythm-start));
   background-repeat: no-repeat;
 }

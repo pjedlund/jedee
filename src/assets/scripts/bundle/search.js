@@ -138,6 +138,13 @@ panel.addEventListener('keydown', event => {
   }
 });
 
+// ⌘K / Ctrl+K opens the search from anywhere on the page.
+document.addEventListener('keydown', event => {
+  if (event.key.toLowerCase() !== 'k' || !(event.metaKey || event.ctrlKey) || event.altKey || event.shiftKey) return;
+  event.preventDefault();
+  open();
+});
+
 document.addEventListener('click', event => {
   if (!root.contains(event.target)) close();
 });
