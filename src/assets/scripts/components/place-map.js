@@ -42,9 +42,14 @@ function pageTheme() {
 
 // Any CSS color (var(), color-mix(), oklab…) → "rgba(…)" MapLibre can parse, by painting one pixel.
 const probe = document.createElement('canvas').getContext('2d', { willReadFrequently: true });
+const probed = new Map(); // ⚠ each probe forces a page layout; keyed by the resolved value, so a theme flip misses the cache instead of going stale
 function cssColor(el, prop) {
   const value = getComputedStyle(el).getPropertyValue(prop).trim();
   if (!value) return undefined;
+  if (!probed.has(value)) probed.set(value, probeColor(el, value));
+  return probed.get(value);
+}
+function probeColor(el, value) {
   const span = document.createElement('span');
   span.style.color = value;
   el.append(span);
