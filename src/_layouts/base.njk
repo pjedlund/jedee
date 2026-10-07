@@ -65,9 +65,10 @@
 
     {% include "partials/footer.njk" %}
     {% if eleventy.env.runMode === "serve" %}
-      {% js "defer" %}{% include "scripts/font-check.js" %}{% include "scripts/dev-grid.js" %}{% endjs %}
-      {%- css "local" -%}{%- include 'css/dev-grid.css' -%}{%- endcss -%}
+      {% js "defer" %}{% include "scripts/font-check.js" %}{% endjs %}
     {% endif %}
+    {% js "defer" %}{% include "scripts/dev-grid.js" %}{% endjs %}
+    {%- css "local" -%}{%- include 'css/dev-grid.css' -%}{%- endcss -%}
     {%- if meta.easteregg -%}
       <script type="module" src="/assets/scripts/components/custom-easteregg.js"></script>
       <custom-easteregg{% if meta.eastereggKeyword %} keyword="{{ meta.eastereggKeyword }}"{% endif %}{% if meta.eastereggShape %} shape="{{ meta.eastereggShape }}"{% endif %}></custom-easteregg>

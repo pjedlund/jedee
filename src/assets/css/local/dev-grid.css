@@ -1,6 +1,6 @@
 /*
 DEV GRID
-Dev server only (dev-grid.js): G toggles the column grid, V the prose rhythm lattice. A column is the wrapper's --feature track (6.25rem) and a gutter its --popout (2rem), so 12 fill the 97rem wrapper and the middle 8 the 64rem prose; the outer columns clip as the wrapper narrows, then the 8 scale with the prose.
+⌥G (dev-grid.js) toggles the column grid, ⌥R the prose rhythm lattice. A column is the wrapper's --feature track (6.25rem) and a gutter its --popout (2rem), so 12 fill the 97rem wrapper and the middle 8 the 64rem prose; the outer columns clip as the wrapper narrows, then the 8 scale with the prose.
 */
 .dev-grid {
   --dev-grid-col: 6.25;
