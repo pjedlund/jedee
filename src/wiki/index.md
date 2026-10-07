@@ -78,6 +78,7 @@ Each entry below says what a page covers and why you would open it. The traps an
 - [[Tailwind]] — Tailwind used as a compiler that turns design tokens into custom properties, not as a utility framework.
 - [[Open Graph images]] — four sources of a sharing card, most specific first, and how the composited ones are drawn and kept current.
 - [[Layout shift]] — what CLS measures, why the element that moves is rarely the one at fault, and how to measure it without fooling yourself.
+- [[Forced layout]] — what makes a script stop and lay out the whole page, why doing it in a loop freezes the page, and how to record a page load well enough to find the line responsible.
 - [[Font subsetting]] — shipping only the characters a site needs, and how to find the ones you have missed.
 - [[is-land]] — holding JavaScript back until a condition is met, around markup that already works without it.
 - [[WebC]] — Eleventy's single-file component format, which expands a tag into HTML at build time and then gets out of the way.
