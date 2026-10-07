@@ -19,7 +19,7 @@ Two properties of that plugin decide how it is best used. It rewrites only `text
 
 ## In jedee
 
-`markdown-it-abbr` is Eleventy Excellent stock: it is already in the markdown pipeline (`src/_config/plugins/markdown.js`), and `abbr[title]` is already styled in `base/global-styles.css` with a 2px dotted underline and `cursor: help`. Neither had ever been used by the wiki. The only definition in the repo was a `*[WAV]:` line at the bottom of one audio post.
+`markdown-it-abbr` is Eleventy Excellent stock: it is already in the markdown pipeline (`src/_config/plugins/markdown.js`), and `abbr[title]` is already styled in `base/global-styles.css` with a 2px dotted underline and `cursor: help`; since 2026-10-07 the dots are dimmed to 40% of the text color, so a row of them reads as a hint rather than a string of links. Neither had ever been used by the wiki. The only definition in the repo was a `*[WAV]:` line at the bottom of one audio post.
 
 Definitions are per-document, which is the wrong shape for a wiki of fifty pages and growing. jedee's addition is one glossary in the wiki's directory data, `src/wiki/wiki.11tydata.js`:
 
