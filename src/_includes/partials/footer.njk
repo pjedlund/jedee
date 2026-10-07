@@ -21,6 +21,9 @@
         {% endfor %}
       </nav>
 
+      {# Unhidden by shortcuts.js, so it never shows without the script that makes it work. #}
+      <button type="button" class="footer-shortcuts" data-shortcuts-open aria-haspopup="dialog" hidden>Keyboard shortcuts</button>
+
       <nav class="cluster" aria-label="{{ meta.navigation.ariaPlatforms }}">
         <!-- gets the first item from the feed loop set in meta -->
         <a
