@@ -5,6 +5,12 @@ if (!/Mac|iPhone|iPad/.test(navigator.platform)) {
   for (const key of dialog.querySelectorAll('[data-pc]')) key.textContent = key.dataset.pc;
 }
 
+const opener = document.querySelector('[data-shortcuts-open]');
+if (opener) {
+  opener.hidden = false;
+  opener.addEventListener('click', () => dialog.showModal());
+}
+
 document.addEventListener('keydown', event => {
   // event.code, because on a Mac ⌥L arrives as event.key "¬".
   if (event.code !== 'KeyL' || !event.altKey || event.metaKey || event.ctrlKey || event.shiftKey) return;
