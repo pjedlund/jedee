@@ -2,7 +2,7 @@
 layout: base
 ---
 
-<div class="region wrapper flow prose" style="--region-space-top: var(--space-xl-2xl)">
+<div class="region wrapper flow prose" data-reveal style="--region-space-top: var(--space-xl-2xl)">
   <h1><span lang="sv">Hej hej!</span> I’m Johan.</h1>
   {{ content | safe }}
 </div>
@@ -26,3 +26,5 @@ layout: base
     </custom-masonry>
   </section>
 {% endif %}
+
+{%- css "local" -%}{%- include 'css/hero-reveal.css' -%}{%- endcss -%}
