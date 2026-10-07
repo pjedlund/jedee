@@ -167,6 +167,10 @@ Every webtypography.net rule was checked against the site on 2026-09-21. Four th
 - **Hyphenation limits** (2.4.1). `body` sets `hyphenate-limit-chars: auto 2 3`, inherited wherever `hyphens: auto` is on. Chrome honors it only some of the time ("forev-er" became "for-ever", "activi-ty" stays).
 - **Hard spaces between numbers and units** (2.4.6). A markdown-it rule in `markdown.js` joins a number and its unit (km, min, s, MB, °C and a few more) with a non-breaking space; code is left alone. The activity stats and the `withMiles` and `paceOrSpeed` filters do the same. The cost: on a phone, a table cell that used to split "0.34 / s" now scrolls sideways instead.
 
+### Link underlines
+
+Links set `text-decoration-skip-ink: auto` (the reset) with `text-underline-offset: 0.3ch`. Safari does break the underline around descenders in the shipped Source Sans subset, even though its outlines are CFF2: tested 2026-10-07 against the TrueType build and Arial, all three skipped. A "q" that seems to run straight through its underline at body size is a near miss — at 24 px the descender reaches about 5 px below the baseline and the line starts about 3.6 px below it, so a hair's difference in placement decides it. Raising the line by lowering the offset is the lever; it was left alone.
+
 ### Not done
 
 There is no `.figures` or `.balance` class, since the defaults cover them, and never `dlig`, which rewrites "he" and "she".

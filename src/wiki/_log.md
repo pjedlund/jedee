@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-10-07] enrich | Layout shift, Typographic conventions
+
+[[Layout shift]] gains why mxb.dev shows no font swap — system body text, one small preloaded display font, render-blocking external CSS, a service worker — and jedee's staggered landing fade as polish only, with the `backwards` fill-mode trap. [[Typographic conventions]] gains *Link underlines*: Safari skips ink fine on the CFF2 Source Sans subset; an uncut descender is a near miss on the offset.
+
 ## [2026-10-06] enrich | Scroll cues on code blocks
 
 [[Syntax highlighting]] gains a *Scroll cues* section: code blocks now carry the tables' edge glow, at twice the strength, with `pre code` made see-through so the glow shows behind the text. Its Colors section records the fix for code drawn in light-theme colors when a light-mode device is toggled dark. [[Tables]] points across to it.
