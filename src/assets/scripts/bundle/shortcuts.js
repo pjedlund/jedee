@@ -5,6 +5,13 @@ if (!/Mac|iPhone|iPad/.test(navigator.platform)) {
   for (const key of dialog.querySelectorAll('[data-pc]')) key.textContent = key.dataset.pc;
 }
 
+// A click on the backdrop closes, like Esc; `closedby="any"` does this natively where supported.
+dialog.addEventListener('click', event => {
+  const box = dialog.getBoundingClientRect();
+  const inside = event.clientX >= box.left && event.clientX <= box.right && event.clientY >= box.top && event.clientY <= box.bottom;
+  if (event.target === dialog && !inside) dialog.close();
+});
+
 const opener = document.querySelector('[data-shortcuts-open]');
 if (opener) {
   opener.hidden = false;
