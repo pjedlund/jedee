@@ -1,0 +1,13 @@
+/* Landing hero fades and slides up on load, after mxb.dev. ⚠ Cosmetic only: it does not hide or score away the font swap — see the wiki "Layout shift". */
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal] {
+    animation: hero-reveal 0.6s ease-out both;
+  }
+}
+
+@keyframes hero-reveal {
+  from {
+    opacity: 0;
+    translate: 0 1.25rem;
+  }
+}
