@@ -6,8 +6,6 @@
   --table-head-bg: var(--color-bg-head); /* opaque on purpose: a sticky head cell shows the scrolled rows through a translucent one */
   --table-stripe: transparent; /* off, after Rutter and Barker; color-mix(in oklab, var(--color-text) 4%, transparent) turns them on */
   --table-rule-color: var(--color-rule);
-  --table-rule-shadow: var(--color-rule-shadow); /* the stamped rule's upper half; darker than the page, which in dark mode the band color is not */
-  --table-rule-highlight: var(--color-rule-highlight); /* its lower half; paired with the shadow so neither line dominates and the groove reads as cut in */
   --table-rule: var(--border-thickness) solid var(--table-rule-color);
   --table-border: none; /* the box around the table; var(--table-rule) brings it back */
   --table-radius: var(--border-radius-medium);
@@ -108,12 +106,11 @@ tbody:last-child > tr:last-child > * {
   box-shadow: inset 0 calc(var(--border-thickness) * -2) 0 var(--table-rule-color);
 }
 
-/* The stamped rule: a hairline with a lighter one directly under it, so the join reads as pressed into the page. Painted, not bordered — a collapsed border gives one color per edge. */
+/* Row rules match the band rules: doubled, in --table-rule-color. Painted, not bordered, so they add no height and stay clear of the last row's closing box-shadow. */
 tbody tr + tr > * {
   --table-rule-layer: linear-gradient(
     to bottom,
-    var(--table-rule-shadow) 0 var(--border-thickness),
-    var(--table-rule-highlight) var(--border-thickness) calc(var(--border-thickness) * 2),
+    var(--table-rule-color) 0 calc(var(--border-thickness) * 2),
     transparent calc(var(--border-thickness) * 2)
   );
 }
