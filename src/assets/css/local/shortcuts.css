@@ -1,0 +1,54 @@
+/*
+SHORTCUTS
+The keyboard-shortcuts dialog (partials/shortcuts.njk): keys on the left, what they do on the right.
+*/
+.shortcuts {
+  --shortcuts-bg: var(--color-bg);
+  --shortcuts-padding: var(--space-l);
+  --shortcuts-width: 34rem;
+  --flow-space: var(--space-m);
+
+  inset: 0;
+  margin: auto;
+  inline-size: min(var(--shortcuts-width), 100% - var(--space-m) * 2);
+  padding: var(--shortcuts-padding);
+  background: var(--shortcuts-bg);
+  color: var(--color-text);
+  border: var(--stroke);
+  border-radius: var(--border-radius-medium);
+}
+
+.shortcuts h2 {
+  font-size: var(--size-step-2);
+}
+
+.shortcuts::backdrop {
+  background-image: var(--gradient-stripes);
+  opacity: 0.9;
+  filter: brightness(50%);
+}
+
+.shortcuts-list {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: var(--space-xs) var(--space-m);
+  align-items: baseline;
+}
+
+.shortcuts-list dd {
+  margin: 0;
+}
+
+.shortcuts kbd {
+  display: inline-block;
+  min-inline-size: 2em;
+  padding: 0.1em 0.45em;
+  font-family: var(--font-base);
+  font-size: var(--size-step-min-1);
+  color: var(--color-text);
+  text-align: center;
+  background: var(--color-bg-accent);
+  border: var(--border-thickness) solid color-mix(in oklab, var(--color-text) 25%, var(--color-bg));
+  border-block-end-width: calc(var(--border-thickness) * 2);
+  border-radius: var(--border-radius-small);
+}

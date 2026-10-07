@@ -1,0 +1,25 @@
+{# KEYBOARD SHORTCUTS — a native dialog that ⌥L opens (shortcuts.js). Mac symbols are the default; a `data-pc` label replaces each one on other systems. #}
+<dialog id="shortcuts" class="shortcuts | flow" aria-labelledby="shortcuts-title">
+  <h2 id="shortcuts-title">Keyboard shortcuts</h2>
+  <dl class="shortcuts-list">
+    <dt><kbd data-pc="Ctrl">⌘</kbd> <kbd>K</kbd></dt>
+    <dd>Open the search</dd>
+    <dt><kbd>↓</kbd> <kbd>↑</kbd></dt>
+    <dd>Move through the search results</dd>
+    <dt><kbd>Enter</kbd></dt>
+    <dd>Open the selected result</dd>
+    <dt><kbd>Esc</kbd></dt>
+    <dd>Close the search or this list</dd>
+    <dt><kbd data-pc="Alt">⌥</kbd> <kbd>G</kbd></dt>
+    <dd>Show or hide the layout grid</dd>
+    <dt><kbd data-pc="Alt">⌥</kbd> <kbd>R</kbd></dt>
+    <dd>Show or hide the rhythm lines</dd>
+    <dt><kbd data-pc="Alt">⌥</kbd> <kbd>L</kbd></dt>
+    <dd>Open this list</dd>
+  </dl>
+  <form method="dialog">
+    <button class="button">Close</button>
+  </form>
+</dialog>
+{% js "defer" %}{% include "scripts/shortcuts.js" %}{% endjs %}
+{%- css "local" -%}{%- include 'css/shortcuts.css' -%}{%- endcss -%}
