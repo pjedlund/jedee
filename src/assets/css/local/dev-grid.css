@@ -31,14 +31,34 @@ DEV GRID
   display: none;
 }
 
-/* Phased to the prose's first block (dev-grid.js measures both vars) and run from the page top to the bottom. ⚠ Pages whose prose has no .wrapper-pass get no lines. */
-[data-dev-rhythm] body {
+/* Drawn over the page, but darken (light) and lighten (dark) blending keeps text above the lines and card backgrounds below them. */
+.dev-rhythm {
   --dev-rhythm-start: calc(mod(var(--dev-rhythm-top), var(--dev-rhythm-line)) - var(--dev-rhythm-line));
 
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 9998;
+  pointer-events: none;
+  mix-blend-mode: darken;
   background-image:
     repeating-linear-gradient(to bottom, color-mix(in oklab, var(--color-accent-blue) 45%, transparent) 0 1px, transparent 1px var(--dev-rhythm-line)),
     repeating-linear-gradient(to bottom, color-mix(in oklab, var(--color-accent-blue) 14%, transparent) 0 1px, transparent 1px calc(var(--dev-rhythm-line) / 4));
   background-position: 0 var(--dev-rhythm-start);
   background-size: 100% calc(100% - var(--dev-rhythm-start));
   background-repeat: no-repeat;
+}
+
+:root:not([data-dev-rhythm]) .dev-rhythm {
+  display: none;
+}
+
+[data-theme='dark'] .dev-rhythm {
+  mix-blend-mode: lighten;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .dev-rhythm {
+    mix-blend-mode: lighten;
+  }
 }

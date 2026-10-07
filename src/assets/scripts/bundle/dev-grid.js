@@ -7,14 +7,16 @@ grid.className = 'dev-grid';
 grid.append(document.createElement('div'));
 document.body.append(grid);
 
-// The rhythm lattice runs past the prose, so it needs the prose's line and start measured.
+// The rhythm lattice is phased to the prose's first block; a page with no prose gets the body's line from the top.
+const rhythm = document.createElement('div');
+rhythm.className = 'dev-rhythm';
+document.body.append(rhythm);
 const pass = document.querySelector('.prose > .wrapper-pass');
-if (pass) {
-  new ResizeObserver(() => {
-    root.style.setProperty('--dev-rhythm-top', `${pass.getBoundingClientRect().top + scrollY}px`);
-    root.style.setProperty('--dev-rhythm-line', getComputedStyle(pass).getPropertyValue('--line'));
-  }).observe(document.body);
-}
+new ResizeObserver(() => {
+  root.style.setProperty('--dev-rhythm-top', `${pass ? pass.getBoundingClientRect().top + scrollY : 0}px`);
+  root.style.setProperty('--dev-rhythm-line', pass ? getComputedStyle(pass).getPropertyValue('--line') : getComputedStyle(document.body).lineHeight);
+  rhythm.style.blockSize = `${root.scrollHeight}px`;
+}).observe(document.body);
 
 for (const name of Object.values(keys)) {
   if (sessionStorage.getItem(name)) root.dataset[name] = '';
