@@ -14,6 +14,7 @@ Each entry below says what a page covers and why you would open it. The traps an
 - [[One JSON-LD envelope for sixteen types]] — one include that emits structured data for every post type, driven by front matter.
 - [[Per-type feeds]] — giving each kind of post its own Atom and JSON feed, and deciding which kinds do not need one.
 - [[Abbreviations]] — the `abbr` element, what a `title` attribute can and cannot be relied on for, and one glossary that serves every wiki page.
+- [[Keyboard shortcuts]] — which key combinations WCAG allows and which belong to the browser, reading an Option shortcut, and a shortcuts list in a native dialog.
 - [[The lang attribute]] — marking a page's language and its foreign-language passages, including titles detected at build time.
 - [[Web components]] — custom elements built in layers: working HTML and CSS first, JavaScript on top.
 

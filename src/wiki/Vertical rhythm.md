@@ -1,7 +1,7 @@
 ---
 description: "Spacing a page in fractions of its body text's line-height, how far CSS can hold headings, lists, figures, tables and small text to that beat, its musical side, Ariel Salminen's Scale.css, and a quarter-line system for jedee tried on the style guide."
 date: 2026-09-30
-updated: 2026-10-02
+updated: 2026-10-07
 ---
 
 **Vertical rhythm** is spacing a page in measured intervals of one unit, the line-height of its body text, so that the text resumes on the same beat after every interruption: a heading, a list, a figure, a table. Bringhurst puts it as a musical analogy: "Space in typography is like time in music. It is infinitely divisible, but a few proportional intervals can be much more useful than a limitless choice of arbitrary quantities." His rule for it is to [add and delete vertical space in measured intervals](http://webtypography.net/2.2.2).
@@ -291,6 +291,28 @@ The paragraph gap is three-quarters of a line, chosen over half a line on 2026-1
 ### On the style guide
 
 `/styleguide/` has a **Vertical rhythm** section with the prose sample (`partials/rhythm-sample.njk`) and a checkbox that paints the lattice behind it (a checkbox and `:has()`, no script).
+
+### On any page
+
+⌥R draws the same lattice over any page, and ⌥G the column grid ([[Keyboard shortcuts]]); both stay on for the tab. The script measures the line and the first block's top from `.prose > .wrapper-pass`, and starts the lines one line above the page top with `mod()`, so they run from the top of the page and still meet the prose's first line. A page with no prose, such as the landing page or an archive, gets the body's computed line height counted from the top. That is 27.55px rather than a whole pixel, so the lines there can look slightly uneven.
+
+The lines started out as the body's background, and every card, table row and section with a background of its own hid them. They are now a separate layer laid over the page and blended into it. In light mode the layer uses `mix-blend-mode: darken`, which keeps the darker of the two colors at each pixel: a blue line darkens a white card, but black text is already darker than the line, so the text stays on top. In dark mode it uses `lighten` for the same reason. The result reads as lines above the backgrounds and below the text, without either knowing the other exists.
+
+```css
+.dev-rhythm {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  pointer-events: none;
+  mix-blend-mode: darken;
+}
+
+[data-theme='dark'] .dev-rhythm {
+  mix-blend-mode: lighten;
+}
+```
+
+The overlay's code is `local/dev-grid.css` and `bundle/dev-grid.js`, shipped on every page since 2026-10-07 for about 2 KB.
 
 ### Not done
 

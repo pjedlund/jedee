@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-10-07] ingest | Keyboard shortcuts, Vertical rhythm
+
+New page [[Keyboard shortcuts]]: WCAG 2.1.4 and why a modifier combination is outside it, the browser keys a site should leave alone, matching ⌥ shortcuts on `event.code`, and a `<dialog>` that lists them, after Ariel Salminen's. Its In jedee section has the four site shortcuts and the footer button. [[Vertical rhythm]] gains *On any page*: the ⌥R overlay as a blended layer (`darken` in light, `lighten` in dark) that sits above backgrounds and below text. Links [[Font subsetting]] for the new ⌘ and ⌥.
+
 ## [2026-10-07] ingest | Forced layout
 
 New page [[Forced layout]]: what forces a mid-script layout, layout thrashing, the three fixes, and the recording kit that finds it — Network filmstrip, screen recording, HAR, Performance trace, Long Animation Frames. Its In jedee section is the activities map's empty box: 280 forced layouts from `cssColor()` probing each of 140 rows, fixed by caching per resolved value (1,600 ms → 31 ms). [[The place map]] now says the colors are cached and links here.
