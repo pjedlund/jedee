@@ -146,7 +146,7 @@ Every layout passes through `base.njk`, so no post type has to remember the incl
 
 ### What the stylesheet chose
 
-- No box around the table (`--table-border: none`) and no column rules. Body rows are separated by a stamped pair, below. The header and footer get a doubled rule in `--table-rule-color`, and so does the last body row: without a box the table would otherwise trail off. The wrapper keeps its rounded corners, which now only round the header's tint. Stripes are off.
+- No box around the table (`--table-border: none`) and no column rules. Every rule is the same doubled rule in `--table-rule-color`: above and below the header and footer, between body rows, and under the last body row, which closes the table since there is no box. The wrapper keeps its rounded corners, which now only round the header's tint. Stripes are off.
 - The header row is tinted with `--color-bg-head` and set in normal case at `--size-step-min-1`, a step below the body text, in the regular weight, letterspaced by `--tracking-wide`. Real small caps (`font-variant-caps: all-small-caps`) at the text size were the choice until 2026-09-19 — Bringhurst letterspaces capitals and small caps alike, Butterick treats small caps as an alternative to bold rather than an addition, and small caps drawn from lowercase letters avoid the screen-reader risk of `text-transform: uppercase` ([[Typographic conventions]]) — and letterspaced capitals at `--size-step-min-2` were tried before those. The size and weight now come from the design's `type.table.header` token, which carries no letter-spacing of its own; `--tracking-wide` resolves to 1.67px, which is exactly the value sitting on the design's own text shapes. The caption is upright at `--size-step-min-1`; it was italic until 2026-10-05, when every caption on the site went upright ([[Typographic conventions]]). Body cells keep the size of the text around the table: Rutter warns against shrinking table text to fit more in, and a step smaller was tried and reverted. Cells have `--space-s` above and below.
 - The rules use `--color-rule`, not `--stroke`. `--stroke` is drawn in `--color-bg-accent`, which is white in the light theme and disappears against the off-white page; the old stacked file used it, so its row rules were invisible in light mode. They were `--color-bg-accent-2` until 2026-09-19, when the design moved them onto a warmer hairline of their own.
 - The scroll shadows and covers are mixed from `--color-bg` and `--color-text` rather than the article's white, so they follow the theme. Code blocks reuse the same cues, with a stronger glow ([[Syntax highlighting]]).
@@ -164,18 +164,15 @@ Every layout passes through `base.njk`, so no post type has to remember the incl
 
 Every wiki table has had a `Table:` caption since 2026-09-15. Naming a region after its column headers is the fallback for a table written without one.
 
-### The stamped rule
+### Row rules
 
-Between body rows the single hairline became a pair on 2026-09-19: a dark 1px line with a lighter one directly under it, which reads as pressed into the page. The order carries the illusion — dark above light implies a light source above, so the surface is cut in rather than raised.
-
-**A collapsed border paints one color per edge**, so the pair cannot be a border at all. It is painted as a background gradient on the cells of every row after the first:
+Between body rows is the same doubled rule in `--table-rule-color` that frames the header and closes the last row, since 2026-10-07. **A collapsed border would add height and fight the last row's closing `box-shadow`**, so it is painted as a background gradient on the cells of every row after the first:
 
 ```css
 tbody tr + tr > * {
   --table-rule-layer: linear-gradient(
     to bottom,
-    var(--table-rule-shadow) 0 var(--border-thickness),
-    var(--table-rule-highlight) var(--border-thickness) calc(var(--border-thickness) * 2),
+    var(--table-rule-color) 0 calc(var(--border-thickness) * 2),
     transparent calc(var(--border-thickness) * 2)
   );
 }
@@ -192,9 +189,7 @@ tbody tr > * {
 
 It is on the cells rather than the row for the reason the stripe already was: a row background is hidden by the sticky row header's opaque background.
 
-**An engraved rule cannot be mirrored into a dark theme by swapping the colors.** Each half needs its own role — `--color-rule-shadow` and `--color-rule-highlight` — because the band color that works as the shadow on a light page is *lighter* than a near-black one, which inverts the groove. Measured on the first attempt: both halves above the page, 1.16 and 1.61. Recolouring the shared rule instead would have taken the 2px band rules to near-black and made the table's frame invisible.
-
-There is a floor. Against a `#141619` page, pure black is only 1.16 below it, where the light theme gets 1.33 below and 1.10 above. Dark cannot match that ratio, and pushing its highlight below 1.16 would put it within a unit of the band color, so the two halves are balanced instead (1.16 down, 1.33 up) and the dark-over-light order carries the engraving on its own.
+From 2026-09-19 to 2026-10-07 the row rule was a "stamped" pair instead — a dark 1px line over a lighter one, reading as pressed into the page — drawn from `--color-rule-shadow` and `--color-rule-highlight`. In dark mode the pair could not be mirrored by swapping colors (the band color is lighter than a near-black page, which inverts the groove) and bottomed out at 1.16 contrast below the page. Johan replaced it with the solid rule so rows and frame read as one system.
 
 ### An icon column
 
