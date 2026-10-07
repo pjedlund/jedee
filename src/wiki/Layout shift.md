@@ -264,6 +264,10 @@ Table: CLS and first paint, with and without a hero fade
 
 **The decorative fade does nothing for the score.** A layout shift is counted whether or not the moving element is mid-animation, and here the fade had finished long before the font arrived at ~1.4 s. If those sites look smooth it is because the reader's eye is elsewhere, not because the technique fixed anything.
 
+**Where a site shows no swap at all, look at its fonts, not its fade.** [mxb.dev](https://mxb.dev/) fades its hero in (`fadeInUp`, 0.5 s) and no swap is ever visible there, but the fade is not why. Read from its markup on 2026-10-07: body text is set in the system font stack, so paragraphs have nothing to swap; the only web font is one 31 KB display face, preloaded, whose first job is a five-word `h1` over a Georgia fallback; its two stylesheets are external and block first paint, which gives the preload time to land before anything is drawn (reasoned, not measured); and a service worker serves the font from cache after the first visit. jedee inlines its CSS in production, so it paints sooner and the font arrives after, and its body text is a web font — the swap has paragraphs to move.
+
+jedee's landing page now has the same kind of fade, staggered — `h1`, intro, then the header, and the logo's name types in once the header has landed (`css/local/hero-reveal.css`, on `[data-reveal]`) — as polish only. It sits under `prefers-reduced-motion: no-preference` and uses `animation-fill-mode: backwards`, not `both`: a translate held after the animation would leave the header a containing block for the fixed nav drawer. The real fix for the swap would be body text in system fonts, which is a design decision jedee has not taken.
+
 **Gating the reveal does zero the score** — an element at `opacity: 0` generates no `layout-shift` entry at all, which is worth knowing on its own. But it pays for that in first paint, and there is no usable middle:
 
 Table: Gating the reveal on font load: CLS against first paint
