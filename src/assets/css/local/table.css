@@ -50,6 +50,11 @@
 }
 
 /* The markdown renderer wraps every table in a prose body in .popout, where the inset has that job to do; a standalone table (activities, styleguide) is in no popout track and is free to take any inset. */
+/* A full line after a table, a step up from prose's three-quarter gap, so the next paragraph doesn't read as its caption. */
+.prose .table-wrapper + * {
+  --flow-space: var(--line);
+}
+
 .table-wrapper.popout {
   --table-edge-padding: var(--table-popout-edge-padding);
 }
