@@ -84,10 +84,25 @@ place-map > :is(.place-map-live, .place-map-static) + :not(script) {
   grid-area: 1 / 1;
 }
 .place-map-preloader-logo {
+  position: relative;
   inline-size: var(--preloader-size);
   aspect-ratio: 1;
   background: conic-gradient(from 30deg, var(--preloader-fill) calc(var(--preloader-progress, 0) * 1%), var(--preloader-track) 0);
   mask: var(--preloader-logo) center / contain no-repeat;
+}
+/* While waiting for the map script, a comet of the fill color sweeps round inside the logo; place-map.js sets data-counting when the count takes over. */
+.place-map-preloader-logo::before {
+  content: '';
+  position: absolute;
+  inset: -25%; /* the corners stay covered as it turns */
+  background: conic-gradient(transparent 60%, var(--preloader-fill));
+  transition: opacity 300ms var(--ease-out-quad);
+}
+.place-map-preloader[data-counting] .place-map-preloader-logo::before {
+  opacity: 0;
+}
+.place-map-preloader:not([data-counting]) span {
+  opacity: 0; /* a frozen 0 reads as stuck */
 }
 .place-map-preloader span {
   font-family: var(--font-base);
@@ -112,6 +127,23 @@ place-map > :is(.place-map-live, .place-map-static) + :not(script) {
   }
   .place-map-preloader[data-done] {
     scale: calc(2 / 1.2);
+  }
+  .place-map-preloader-logo::before {
+    animation: place-map-sweep 1200ms linear infinite; /* calibration knob: one turn */
+  }
+}
+/* Reduced motion: no sweep, just a dimmed logo until the count starts. */
+@media (prefers-reduced-motion: reduce) {
+  .place-map-preloader-logo::before {
+    display: none;
+  }
+  .place-map-preloader:not([data-counting]) .place-map-preloader-logo {
+    opacity: 0.5;
+  }
+}
+@keyframes place-map-sweep {
+  to {
+    rotate: 1turn;
   }
 }
 @keyframes place-map-surface-in {

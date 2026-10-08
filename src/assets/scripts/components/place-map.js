@@ -111,10 +111,11 @@ function preloader(box, map) {
   const num = wrap.querySelector('span');
   let loaded = false;
   map.once('idle', () => (loaded = true));
-  const revealed = Promise.all(wrap.getAnimations().map((a) => a.finished)).catch(() => {});
+  const revealed = Promise.all(wrap.getAnimations().map((a) => a.finished)).catch(() => {}); // ⚠ not { subtree: true }: the endless sweep would never finish
   return revealed.then(() => new Promise((r) => setTimeout(r, COUNT_PAUSE))).then(() => new Promise((resolve) => {
     let last; // the first drawn frame, not creation: MapLibre's setup can block the first frames
     let state = { p: 0, speed: 1 };
+    wrap.dataset.counting = ''; // the sweep hands over to the count
     const step = (now) => {
       state = countStep(state, now - (last ?? now), loaded);
       last = now;
