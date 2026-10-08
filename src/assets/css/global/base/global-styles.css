@@ -97,12 +97,16 @@ strong {
   font-weight: var(--font-bold);
 }
 
+/* Dots drawn as a background, since a dotted underline can't set its gap. ⚠ The row is placed from the bottom of the text box, not the baseline, so --abbr-lift places it, not an underline offset. */
 abbr[title] {
+  --abbr-dot: var(--underline-thickness); /* the link underline's thickness */
+  --abbr-gap: 0.4em; /* calibration knob: dot to dot */
+  --abbr-dot-color: color-mix(in oklab, currentColor 60%, transparent); /* dimmed: a hint, not a link */
+  --abbr-lift: 0.075em; /* calibration knob: centres the dots on a link underline */
+
   cursor: help;
-  text-decoration: underline dotted;
-  text-decoration-color: color-mix(in oklab, currentColor 40%, transparent); /* dimmed: a hint, not a link */
-  text-decoration-thickness: 2px;
-  text-underline-offset: 0.2em;
+  text-decoration: none;
+  background: radial-gradient(circle closest-side, var(--abbr-dot-color) calc(100% - 0.5px), transparent) 0 calc(100% - var(--abbr-lift)) / var(--abbr-gap) var(--abbr-dot) repeat-x;
 }
 
 hr {
