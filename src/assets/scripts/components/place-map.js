@@ -98,7 +98,7 @@ const popupHtml = (p) => {
 };
 
 // Flash-style preloader: the logo fills clockwise as the number counts 0 → 100 on one eased sequence; the map loading only sets its speed (preloader-count.js). ⚠ The canvas stays hidden until it reaches 100.
-const COUNT_PAUSE = 150; // calibration knob: the beat between the reveal and the count
+const COUNT_PAUSE = 100; // calibration knob: the beat between the reveal and the count
 function preloader(box, map) {
   let wrap = box.querySelector('.place-map-preloader'); // the activity index renders it in the HTML
   if (!wrap) {

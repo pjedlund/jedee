@@ -104,11 +104,11 @@ place-map > :is(.place-map-live, .place-map-static) + :not(script) {
 /* One thing at a time: the green box fades in, a pause, then the logo and number grow in from 200%. place-map.js starts the count once these have finished. ⚠ Fill mode stays `backwards`, or the held end state blocks the fade-out transition. */
 @media (prefers-reduced-motion: no-preference) {
   .place-map-live {
-    animation: place-map-surface-in 500ms var(--ease-out-quad) backwards;
+    animation: place-map-surface-in 350ms var(--ease-out-quad) backwards;
   }
   .place-map-preloader {
     transition-property: opacity, scale;
-    animation: place-map-preloader-in 700ms var(--ease-out-quad) 650ms backwards; /* calibration knob: the delay is the box fade plus a 150 ms pause */
+    animation: place-map-preloader-in 500ms var(--ease-out-quad) 450ms backwards; /* calibration knob: the delay is the box fade plus a 100 ms pause */
   }
   .place-map-preloader[data-done] {
     scale: calc(2 / 1.2);
