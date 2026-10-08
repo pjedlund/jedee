@@ -129,7 +129,12 @@ place-map > :is(.place-map-live, .place-map-static) + :not(script) {
     scale: calc(2 / 1.2);
   }
   .place-map-preloader-logo::before {
-    animation: place-map-sweep 1500ms linear infinite; /* calibration knob: one turn */
+    animation:
+      place-map-sweep 1500ms linear infinite, /* calibration knob: one turn */
+      place-map-comet-in 400ms var(--ease-out-quad) 1400ms backwards; /* calibration knob: the delay; broadband starts counting before it, so never sees the comet */
+  }
+  .place-map-preloader[data-counting] .place-map-preloader-logo::before {
+    animation-name: place-map-sweep; /* ⚠ drops the fade-in, else it would bring the comet back after the count starts */
   }
 }
 /* Reduced motion: no sweep, just a dimmed logo until the count starts. */
@@ -139,6 +144,11 @@ place-map > :is(.place-map-live, .place-map-static) + :not(script) {
   }
   .place-map-preloader:not([data-counting]) .place-map-preloader-logo {
     opacity: 0.5;
+  }
+}
+@keyframes place-map-comet-in {
+  from {
+    opacity: 0;
   }
 }
 @keyframes place-map-sweep {
