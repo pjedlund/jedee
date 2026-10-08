@@ -16,6 +16,7 @@
   --button-font-size: var(--size-step-0);
   --button-text-transform: none;
   --button-tracking: normal;
+  --focus-color: var(--color-text); /* ⚠ not the default currentColor: that is the button text, nearly the page color, so the ring vanished */
 
   display: inline-flex;
   align-items: center;
