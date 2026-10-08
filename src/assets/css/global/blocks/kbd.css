@@ -4,7 +4,7 @@ A key cap for a key the reader presses, in prose and the shortcuts dialog. A com
 */
 kbd:not(:has(kbd)) {
   --kbd-bg: var(--color-bg-accent);
-  --kbd-border: color-mix(in oklab, var(--color-text) 25%, var(--color-bg));
+  --kbd-border: color-mix(in oklab, var(--color-text) 30%, var(--kbd-bg)); /* mixed into the cap, not the page, so the edge stands out in both themes */
 
   padding: 0 0.35em;
   font-family: var(--font-base);
