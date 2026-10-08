@@ -59,11 +59,12 @@ place-map > :is(.place-map-live, .place-map-static) + :not(script) {
   }
 }
 
-/* Preloader: the logo fills clockwise (from 30deg, so the stem fills last) with a 0–100 count in its hole, over the forest-green box; place-map.js sets --preloader-logo and --preloader-progress. */
+/* Preloader: the logo fills clockwise (from 30deg, so the stem fills last) with a 0–100 count in its hole, over the forest-green box; place-map.js sets --preloader-progress. The activity index renders it in the HTML, so it shows before the script arrives. */
 .place-map-preloader {
   --preloader-size: 6rem; /* 120% of the first 5rem, for more room around the number */
   --preloader-fill: color-mix(in oklab, var(--map-park), var(--color-base-black) 12%); /* the forest green of the box, darkened a touch */
   --preloader-track: var(--map-land);
+  --preloader-logo: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='m50 0 .588.003V0h9.706v30.882h-9.706v.009a19 19 0 0 0-.588-.009c-10.558 0-19.118 8.559-19.118 19.118S39.441 69.118 50 69.118 69.118 60.559 69.118 50V30.882C69.118 13.826 82.945 0 100 0v50c0 27.614-22.386 50-50 50S0 77.614 0 50 22.386 0 50 0'/></svg>"); /* ⚠ a copy of the path in src/assets/svg/misc/logo.svg: update both */
 
   position: absolute;
   inset: 0;
@@ -73,9 +74,10 @@ place-map > :is(.place-map-live, .place-map-static) + :not(script) {
   pointer-events: none;
   transition: opacity 400ms var(--ease-out-quad);
 }
-@starting-style {
+/* Without JavaScript nothing would ever finish the count. */
+@media (scripting: none) {
   .place-map-preloader {
-    opacity: 0;
+    display: none;
   }
 }
 .place-map-preloader > * {
@@ -97,19 +99,30 @@ place-map > :is(.place-map-live, .place-map-static) + :not(script) {
 }
 .place-map-preloader[data-done] {
   opacity: 0;
-  transition-duration: 400ms;
 }
+
+/* One thing at a time: the green box fades in, a pause, then the logo and number grow in from 200%. place-map.js starts the count once these have finished. ⚠ Fill mode stays `backwards`, or the held end state blocks the fade-out transition. */
 @media (prefers-reduced-motion: no-preference) {
+  .place-map-live {
+    animation: place-map-surface-in 500ms var(--ease-out-quad) backwards;
+  }
   .place-map-preloader {
     transition-property: opacity, scale;
-  }
-  @starting-style {
-    .place-map-preloader {
-      scale: calc(2 / 1.2); /* 200% of the first 5rem */
-    }
+    animation: place-map-preloader-in 700ms var(--ease-out-quad) 650ms backwards; /* calibration knob: the delay is the box fade plus a 150 ms pause */
   }
   .place-map-preloader[data-done] {
     scale: calc(2 / 1.2);
+  }
+}
+@keyframes place-map-surface-in {
+  from {
+    background-color: transparent;
+  }
+}
+@keyframes place-map-preloader-in {
+  from {
+    opacity: 0;
+    scale: calc(2 / 1.2); /* 200% of the first 5rem */
   }
 }
 

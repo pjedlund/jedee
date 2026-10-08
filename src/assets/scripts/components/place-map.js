@@ -98,20 +98,21 @@ const popupHtml = (p) => {
 };
 
 // Flash-style preloader: the logo fills clockwise as the number counts 0 → 100 on one eased sequence; the map loading only sets its speed (preloader-count.js). ⚠ The canvas stays hidden until it reaches 100.
-// ⚠ A copy of the path in src/assets/svg/misc/logo.svg: update both.
-const LOGO = 'm50 0 .588.003V0h9.706v30.882h-9.706v.009a19 19 0 0 0-.588-.009c-10.558 0-19.118 8.559-19.118 19.118S39.441 69.118 50 69.118 69.118 60.559 69.118 50V30.882C69.118 13.826 82.945 0 100 0v50c0 27.614-22.386 50-50 50S0 77.614 0 50 22.386 0 50 0';
-const LOGO_MASK = `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="${LOGO}"/></svg>`)}")`;
+const COUNT_PAUSE = 150; // calibration knob: the beat between the reveal and the count
 function preloader(box, map) {
-  const wrap = document.createElement('div');
-  wrap.className = 'place-map-preloader';
-  wrap.setAttribute('aria-hidden', 'true');
-  wrap.style.setProperty('--preloader-logo', LOGO_MASK);
-  wrap.innerHTML = '<div class="place-map-preloader-logo"></div><span>0</span>';
-  box.append(wrap);
+  let wrap = box.querySelector('.place-map-preloader'); // the activity index renders it in the HTML
+  if (!wrap) {
+    wrap = document.createElement('div');
+    wrap.className = 'place-map-preloader';
+    wrap.setAttribute('aria-hidden', 'true');
+    wrap.innerHTML = '<div class="place-map-preloader-logo"></div><span>0</span>';
+    box.append(wrap);
+  }
   const num = wrap.querySelector('span');
   let loaded = false;
   map.once('idle', () => (loaded = true));
-  return new Promise((resolve) => {
+  const revealed = Promise.all(wrap.getAnimations().map((a) => a.finished)).catch(() => {});
+  return revealed.then(() => new Promise((r) => setTimeout(r, COUNT_PAUSE))).then(() => new Promise((resolve) => {
     let last; // the first drawn frame, not creation: MapLibre's setup can block the first frames
     let state = { p: 0, speed: 1 };
     const step = (now) => {
@@ -126,7 +127,7 @@ function preloader(box, map) {
       resolve();
     };
     requestAnimationFrame(step);
-  });
+  }));
 }
 
 // A native <select> as a MapLibre control — correct semantics for free, and it rides into the maximize overlay with the canvas.
@@ -300,14 +301,14 @@ class PlaceMap extends HTMLElement {
   buildBox() {
     this.box = this.querySelector('[data-place-map-box]');
     const adopted = Boolean(this.box);
-    if (adopted) this.box.replaceChildren(); // drop the no-JS caption
+    if (adopted) this.box.replaceChildren(...this.box.querySelectorAll('.place-map-preloader')); // drop the no-JS caption, keep the preloader already on screen
     else {
       this.box = document.createElement('div');
       this.box.className = 'place-map-live';
     }
     this.canvas = document.createElement('div');
     this.canvas.className = 'place-map-canvas';
-    this.box.append(this.canvas);
+    this.box.prepend(this.canvas); // ⚠ before the preloader, which must paint above it
 
     this.maxBtn = document.createElement('button');
     this.maxBtn.type = 'button';

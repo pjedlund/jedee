@@ -7,6 +7,7 @@
   {%- if collections.activity | located | length %}
     <div class="place-map-live" data-place-map-box>
       <p class="place-map-pending">Map of my activities</p>
+      <div class="place-map-preloader" aria-hidden="true"><div class="place-map-preloader-logo"></div><span>0</span></div>
     </div>
   {%- endif %}
   <sortable-table>
