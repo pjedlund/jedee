@@ -301,8 +301,9 @@ class PlaceMap extends HTMLElement {
   buildBox() {
     this.box = this.querySelector('[data-place-map-box]');
     const adopted = Boolean(this.box);
-    if (adopted) for (const c of [...this.box.children]) if (!c.matches('.place-map-preloader')) c.remove(); // drop the no-JS caption; ⚠ never re-insert the preloader, that restarts its reveal
-    else {
+    if (adopted) {
+      for (const c of [...this.box.children]) if (!c.matches('.place-map-preloader')) c.remove(); // drop the no-JS caption; ⚠ never re-insert the preloader, that restarts its reveal
+    } else {
       this.box = document.createElement('div');
       this.box.className = 'place-map-live';
     }
