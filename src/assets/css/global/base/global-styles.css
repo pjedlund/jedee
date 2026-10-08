@@ -101,7 +101,7 @@ strong {
 abbr[title] {
   --abbr-dot: var(--underline-thickness); /* the link underline's thickness */
   --abbr-gap: 0.25em; /* calibration knob: dot to dot; 10 under WCAG in body text */
-  --abbr-dot-color: color-mix(in oklab, currentColor 60%, transparent); /* dimmed: a hint, not a link */
+  --abbr-dot-color: color-mix(in oklab, currentColor 50%, transparent); /* dimmed: a hint, not a link */
   --abbr-lift: 0.075em; /* calibration knob: centres the dots on a link underline */
 
   cursor: help;
