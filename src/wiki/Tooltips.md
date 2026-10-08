@@ -1,6 +1,7 @@
 ---
 description: "A label that appears on hover or focus; why its text must never be the control's only accessible name, and why CSS alone is enough for the decorative case."
 date: 2026-09-02
+updated: 2026-10-08
 ---
 
 A tooltip is a small label that appears when a pointer rests on a control or the control takes keyboard focus. On the web it comes in three forms, and they are not interchangeable.
@@ -100,6 +101,10 @@ The weight tokens here are `--font-regular`, `--font-bold`, `--font-extra-bold`.
 `:hover:not(:focus)` is the usual trick and was rejected. It relies on a click focusing the button, which Chrome and Firefox do and Safari on macOS does not, so the behavior would be absent on one engine and the tooltip would additionally stay suppressed for as long as the button kept focus — including after the pointer left and came back.
 
 Instead the control's own script sets a `data-tooltip-dismissed` attribute on click and removes it on `pointerleave` or `blur`; the block hides on that attribute alongside `:active`. Four lines inside the existing theme-toggle click handler, correct in every engine, and keyboard-safe — nothing is blurred, so an Enter press leaves focus where it was. The attribute is part of the block's contract, so any control can opt in the same way.
+
+### Esc
+
+WCAG 1.4.13 does not exempt a tooltip for repeating a hidden label: anything that appears on hover or focus and covers other content has to be dismissible without moving the pointer or focus. The footer tooltips open upwards over the footer links, so they cover content. Since 2026-10-08 `bundle/tooltip.js`, included on every page from `base.njk`, listens for Esc on the document and sets the same `data-tooltip-dismissed` on whichever `[data-tooltip]` matches `:hover` or `:focus-visible`, clearing it on that control's next `pointerleave` or `blur`. Focus stays where it was. It runs alongside the other Esc handlers (the menu, the search, the shortcuts dialog), which close their own things.
 
 ### What is not built
 

@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-10-08] enrich | Tooltips
+
+New *Esc* section: WCAG 1.4.13 applies to the CSS tooltips too, since the footer ones cover links, so `bundle/tooltip.js` dismisses whichever tooltip is showing on Esc, reusing `data-tooltip-dismissed`.
+
 ## [2026-10-08] enrich | Focus rings and paint containment
 
 New paragraph on the ring's color: `currentColor` on a filled `.button` is the label, nearly the page color, so the ring vanished (found on the shortcuts dialog's Close button). `button.css` now sets `--focus-color: var(--color-text)`; the fill was ruled out by the ghost and icon buttons. Contrast measured on all nine style-guide buttons. Links [[Keyboard shortcuts]].
