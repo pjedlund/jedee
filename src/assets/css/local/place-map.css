@@ -61,8 +61,8 @@ place-map > :is(.place-map-live, .place-map-static) + :not(script) {
 
 /* Preloader: the logo fills clockwise (from 30deg, so the stem fills last) with a 0–100 count in its hole, over the forest-green box; place-map.js sets --preloader-logo and --preloader-progress. */
 .place-map-preloader {
-  --preloader-size: 5rem;
-  --preloader-fill: color-mix(in oklab, var(--map-park), var(--color-base-black) 25%); /* the forest green of the box, darkened */
+  --preloader-size: 6rem; /* 120% of the first 5rem, for more room around the number */
+  --preloader-fill: color-mix(in oklab, var(--map-park), var(--color-base-black) 12%); /* the forest green of the box, darkened a touch */
   --preloader-track: var(--map-land);
 
   position: absolute;
@@ -105,11 +105,11 @@ place-map > :is(.place-map-live, .place-map-static) + :not(script) {
   }
   @starting-style {
     .place-map-preloader {
-      scale: 1.5;
+      scale: calc(2 / 1.2); /* 200% of the first 5rem */
     }
   }
   .place-map-preloader[data-done] {
-    scale: 1.5;
+    scale: calc(2 / 1.2);
   }
 }
 
