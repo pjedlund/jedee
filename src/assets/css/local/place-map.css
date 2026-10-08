@@ -55,14 +55,14 @@ place-map > :is(.place-map-live, .place-map-static) + :not(script) {
 }
 @media (prefers-reduced-motion: no-preference) {
   .place-map-canvas {
-    transition: opacity 200ms var(--ease-out-quad); /* ⚠ matches MAP_FADE in place-map.js */
+    transition: opacity 400ms var(--ease-out-quad); /* ⚠ matches MAP_FADE in place-map.js */
   }
 }
 
 /* Preloader: the logo fills clockwise (from 30deg, so the stem fills last) with a 0–100 count in its hole, over the forest-green box; place-map.js sets --preloader-logo and --preloader-progress. */
 .place-map-preloader {
   --preloader-size: 5rem;
-  --preloader-fill: color-mix(in oklab, var(--map-water), var(--color-blue-vivid) 60%); /* the ocean, deepened so it reads on the forest green */
+  --preloader-fill: color-mix(in oklab, var(--map-park), var(--color-base-black) 25%); /* the forest green of the box, darkened */
   --preloader-track: var(--map-land);
 
   position: absolute;
@@ -71,7 +71,7 @@ place-map > :is(.place-map-live, .place-map-static) + :not(script) {
   place-items: center;
   color: var(--color-text);
   pointer-events: none;
-  transition: opacity 150ms var(--ease-out-quad);
+  transition: opacity 400ms var(--ease-out-quad);
 }
 @starting-style {
   .place-map-preloader {
@@ -97,14 +97,19 @@ place-map > :is(.place-map-live, .place-map-static) + :not(script) {
 }
 .place-map-preloader[data-done] {
   opacity: 0;
-  transition-duration: 200ms;
+  transition-duration: 400ms;
 }
 @media (prefers-reduced-motion: no-preference) {
   .place-map-preloader {
     transition-property: opacity, scale;
   }
+  @starting-style {
+    .place-map-preloader {
+      scale: 1.5;
+    }
+  }
   .place-map-preloader[data-done] {
-    scale: 1.15;
+    scale: 1.5;
   }
 }
 

@@ -474,7 +474,7 @@ class PlaceMap extends HTMLElement {
 
   // Sequenced intro, after the canvas fade in place-map.css: fade the start in, draw the line start → finish, then reveal the finish. Only runs when motion is allowed.
   routeIntro() {
-    const MAP_FADE = 200; // ⚠ matches the [data-map-loading] fade in place-map.css
+    const MAP_FADE = 400; // ⚠ matches the [data-map-loading] fade in place-map.css
     const MARK_FADE = 320;
     const LINE_DRAW = 7000; // calibration knob — bump for slower
     const { map, render } = this.mapObj;
