@@ -1,6 +1,7 @@
 ---
 description: "The abbr element and the markdown syntax for it; in jedee one glossary in directory data feeds every wiki page, and why the data key must not be called `abbreviations`."
 date: 2026-09-07
+updated: 2026-10-08
 ---
 
 `<abbr title="Cumulative Layout Shift">CLS</abbr>` marks a shortened form and carries its expansion. The element is old and uncontroversial; what it is worth is not.
@@ -19,7 +20,9 @@ Two properties of that plugin decide how it is best used. It rewrites only `text
 
 ## In jedee
 
-`markdown-it-abbr` is Eleventy Excellent stock: it is already in the markdown pipeline (`src/_config/plugins/markdown.js`), and `abbr[title]` is already styled in `base/global-styles.css` with a 2px dotted underline and `cursor: help`; since 2026-10-07 the dots are dimmed to 40% of the text color, so a row of them reads as a hint rather than a string of links. Neither had ever been used by the wiki. The only definition in the repo was a `*[WAV]:` line at the bottom of one audio post.
+`markdown-it-abbr` is Eleventy Excellent stock: it is already in the markdown pipeline (`src/_config/plugins/markdown.js`), and EE styles `abbr[title]` in `base/global-styles.css` with a dotted underline and `cursor: help`.
+
+The dots are jedee's own since 2026-10-08. A dotted `text-decoration` can't set the gap between its dots, so the row is a `radial-gradient` background repeated along the bottom of the text: each dot is as wide as a link underline is thick (`--underline-thickness`, `0.2ex`, so it grows with the text), dots sit `0.25em` apart (ten under WCAG in body text), and they are the text color at 50%, which comes out darker on the light theme and lighter on the dark one and reads as a hint rather than a link. ⚠ A background is placed from the bottom of the text box, not the baseline, so `--abbr-lift` (`0.075em`) lifts the row onto the line a link underline would take; it was measured against a link in Source Sans, and Source Serif headings come out the same. Neither had ever been used by the wiki. The only definition in the repo was a `*[WAV]:` line at the bottom of one audio post.
 
 Definitions are per-document, which is the wrong shape for a wiki of fifty pages and growing. jedee's addition is one glossary in the wiki's directory data, `src/wiki/wiki.11tydata.js`:
 

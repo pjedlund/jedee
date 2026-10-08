@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-10-08] enrich | Abbreviations
+
+The abbreviation dots rewritten as a spaced `radial-gradient` row: link-underline size, `0.25em` apart, 50% of the text color, and `--abbr-lift` to place them, since a background is measured from the text box rather than the baseline.
+
 ## [2026-10-08] enrich | Tooltips
 
 New *Esc* section: WCAG 1.4.13 applies to the CSS tooltips too, since the footer ones cover links, so `bundle/tooltip.js` dismisses whichever tooltip is showing on Esc, reusing `data-tooltip-dismissed`.
