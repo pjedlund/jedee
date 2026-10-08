@@ -55,7 +55,7 @@ place-map > :is(.place-map-live, .place-map-static) + :not(script) {
 }
 @media (prefers-reduced-motion: no-preference) {
   .place-map-canvas {
-    transition: opacity 800ms var(--ease-out-quad);
+    transition: opacity 200ms var(--ease-out-quad); /* ⚠ matches MAP_FADE in place-map.js */
   }
 }
 
@@ -71,7 +71,7 @@ place-map > :is(.place-map-live, .place-map-static) + :not(script) {
   place-items: center;
   color: var(--color-text);
   pointer-events: none;
-  transition: opacity 400ms var(--ease-out-quad);
+  transition: opacity 150ms var(--ease-out-quad);
 }
 @starting-style {
   .place-map-preloader {
@@ -97,7 +97,7 @@ place-map > :is(.place-map-live, .place-map-static) + :not(script) {
 }
 .place-map-preloader[data-done] {
   opacity: 0;
-  transition-duration: 800ms;
+  transition-duration: 200ms;
 }
 @media (prefers-reduced-motion: no-preference) {
   .place-map-preloader {

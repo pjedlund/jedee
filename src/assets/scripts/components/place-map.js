@@ -3,6 +3,7 @@
 import maplibregl from 'maplibre-gl';
 import { Protocol } from 'pmtiles';
 import { layers, namedFlavor } from '@protomaps/basemaps';
+import { countStep, easeInOutQuad } from '../preloader-count.js';
 
 const TILES_URL = 'https://pub-820f82fa11f94b03ab1d34e77b3572f6.r2.dev/maps/sweden-20260916.pmtiles';
 // ⚠ Outside this box the tile file is empty, so a map reaching past it opens on Topographic instead.
@@ -96,11 +97,7 @@ const popupHtml = (p) => {
   return p.date ? `<i class="place-popup-date">${p.date}</i>${name}` : name;
 };
 
-// Flash-style preloader: the logo fills clockwise along a ~0.6 s count to 100 but never past a target that creeps toward 90 until the map is idle, so a slow load counts honestly and an instant one still counts up. ⚠ The canvas stays hidden until it reaches 100.
-const COUNT_UP = 600; // calibration knob: the fastest a full count can run
-const CREEP = 3000; // calibration knob: how fast the fake target nears 90 while tiles load
-const EASE = 60;
-const HOLD = 150; // a beat at 100 before the crossfade
+// Flash-style preloader: the logo fills clockwise as the number counts 0 → 100 on one eased sequence; the map loading only sets its speed (preloader-count.js). ⚠ The canvas stays hidden until it reaches 100.
 // ⚠ A copy of the path in src/assets/svg/misc/logo.svg: update both.
 const LOGO = 'm50 0 .588.003V0h9.706v30.882h-9.706v.009a19 19 0 0 0-.588-.009c-10.558 0-19.118 8.559-19.118 19.118S39.441 69.118 50 69.118 69.118 60.559 69.118 50V30.882C69.118 13.826 82.945 0 100 0v50c0 27.614-22.386 50-50 50S0 77.614 0 50 22.386 0 50 0';
 const LOGO_MASK = `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="${LOGO}"/></svg>`)}")`;
@@ -115,26 +112,18 @@ function preloader(box, map) {
   let loaded = false;
   map.once('idle', () => (loaded = true));
   return new Promise((resolve) => {
-    let t0; // the first drawn frame, not creation: MapLibre's setup can block the first frames
-    let last;
-    let shown = 0;
+    let last; // the first drawn frame, not creation: MapLibre's setup can block the first frames
+    let state = { p: 0, speed: 1 };
     const step = (now) => {
-      t0 ??= last = now;
-      const t = now - t0;
-      const tween = 50 - 50 * Math.cos(Math.PI * Math.min(1, t / COUNT_UP)); // ease-in-out sine, 0 → 100
-      const goal = Math.min(tween, loaded ? 100 : 90 * (1 - Math.exp(-t / CREEP)));
-      shown += (goal - shown) * (1 - Math.exp(-(now - last) / EASE));
+      state = countStep(state, now - (last ?? now), loaded);
       last = now;
-      const n = loaded && tween >= 100 && shown > 99.5 ? 100 : Math.floor(shown);
-      num.textContent = n;
-      wrap.style.setProperty('--preloader-progress', n === 100 ? 100 : shown);
-      if (n < 100) return requestAnimationFrame(step);
-      setTimeout(() => {
-        wrap.dataset.done = '';
-        wrap.addEventListener('transitionend', () => wrap.remove(), { once: true });
-        setTimeout(() => wrap.remove(), 1200); // in case no transition runs
-        resolve();
-      }, HOLD);
+      num.textContent = state.n;
+      wrap.style.setProperty('--preloader-progress', easeInOutQuad(state.p) * 100);
+      if (state.n < 100) return requestAnimationFrame(step);
+      wrap.dataset.done = '';
+      wrap.addEventListener('transitionend', () => wrap.remove(), { once: true });
+      setTimeout(() => wrap.remove(), 1200); // in case no transition runs
+      resolve();
     };
     requestAnimationFrame(step);
   });
@@ -485,7 +474,7 @@ class PlaceMap extends HTMLElement {
 
   // Sequenced intro, after the canvas fade in place-map.css: fade the start in, draw the line start → finish, then reveal the finish. Only runs when motion is allowed.
   routeIntro() {
-    const MAP_FADE = 800; // ⚠ matches the [data-map-loading] fade in place-map.css
+    const MAP_FADE = 200; // ⚠ matches the [data-map-loading] fade in place-map.css
     const MARK_FADE = 320;
     const LINE_DRAW = 7000; // calibration knob — bump for slower
     const { map, render } = this.mapObj;
