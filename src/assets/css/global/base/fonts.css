@@ -36,6 +36,17 @@
   src: url('/assets/fonts/source-sans/source-sans.woff2') format('woff2');
 }
 
+/* Source Sans draws ⌘ and ⌥ a full em wide and ⌘ taller than the capitals; this face shrinks just those two to cap height. Same file, so no extra download. ⚠ Must come after the face above: the later of two matching faces wins. */
+@font-face {
+  font-family: 'Source Sans';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 1000;
+  src: url('/assets/fonts/source-sans/source-sans.woff2') format('woff2');
+  unicode-range: U+2318, U+2325;
+  size-adjust: 75%; /* calibration knob: 660 cap ÷ 876 ⌘ height */
+}
+
 /* ⚠ Same treatment as the serif: 92.5% scored 12/13 viewport widths against Capsize's 93.7639% at 10/13, overrides rescaled to keep the vertical box identical. */
 @font-face {
   font-family: 'Source Sans Fallback';
