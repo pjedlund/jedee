@@ -1,0 +1,33 @@
+/*
+KBD
+A key cap for a key the reader presses, in prose and the shortcuts dialog. A combination nests one <kbd> per key inside an outer <kbd>, which stays plain (HTML spec).
+*/
+kbd:not(:has(kbd)) {
+  --kbd-bg: var(--color-bg-accent);
+  --kbd-border: color-mix(in oklab, var(--color-text) 25%, var(--color-bg));
+
+  padding: 0 0.35em;
+  font-family: var(--font-base);
+  font-size: 0.85em;
+  color: var(--color-text);
+  background: var(--kbd-bg);
+  border: var(--border-thickness) solid var(--kbd-border);
+  border-block-end-width: calc(var(--border-thickness) * 2);
+  border-radius: var(--border-radius-small);
+}
+
+/* Each cap gets half the gap on both sides, so a + between two caps sits centred; the outer <kbd> cancels the halves at its ends. */
+kbd > kbd {
+  margin-inline: 0.075em;
+}
+
+/* The outer <kbd> holds only the + of a combination: body font (not the UA monospace) and a lighter tone than the caps. */
+kbd:has(kbd) {
+  margin-inline: -0.075em;
+  font-family: var(--font-base);
+  color: color-mix(in oklab, var(--color-text) 70%, var(--color-bg));
+}
+
+kbd {
+  white-space: nowrap;
+}

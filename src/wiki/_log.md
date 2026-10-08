@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-10-08] enrich | Keyboard shortcuts
+
+Keys in the wiki are now written as nested `<kbd>` and drawn as key caps by a site-wide `kbd.css`, moved out of the dialog's own CSS. The page gains the HTML-spec nesting and why a key cap differs from a code chip; [[Forced layout]], [[The place map]] and [[Vertical rhythm]] had their keystrokes converted too.
+
 ## [2026-10-08] enrich | The place map
 
 *Waiting for the first tiles* rewritten for the reworked preloader: the box fade, the logo reveal and a delayed comet sweep run from the first paint, then one eased count whose speed (never its number) the map load steers. Adds the two traps found on the way: re-inserting the preloader replays its reveal, and `getAnimations({ subtree: true })` would wait on the endless comet.
