@@ -1,7 +1,7 @@
 ---
 description: "The MapLibre map component, drawn from jedee's own Protomaps tiles, that upgrades server-rendered location data into a live map, and its three modes — single pin, a list of places, and a recorded route line."
 date: 2026-08-11
-updated: 2026-10-07
+updated: 2026-10-08
 ---
 
 An interactive web map is a JavaScript widget: a library like [Leaflet](https://leafletjs.com) or [MapLibre](https://maplibre.org) draws tiled imagery and vector shapes onto a scrollable canvas. That means it does nothing without JavaScript, and its keyboard and screen-reader story is often poor. The durable way to ship one is progressive enhancement — server-render the underlying data as ordinary HTML that stands on its own (a list of places with a link each, or a static map image), then let JavaScript find that markup and grow the live map above it. The HTML is the answer for no-JS visitors and assistive tech; the map is a convenience layered on top.
@@ -122,18 +122,21 @@ The whole style (base layers plus the dots, route and symbols) is rebuilt by one
 
 ### Waiting for the first tiles
 
-Tiles arrive over the network, so between the page's first paint and a drawn map there is a gap of a second or more. Four parts cover it:
+Tiles arrive over the network, so between the page's first paint and a drawn map there is a gap of a second or more — several on a slow connection, where the 289 KB map script alone takes a while. The preloader covers it as one movement in phases, one thing at a time, the way Flash intros baked their loading into the transition:
 
-- The box is filled with `--map-park`, the map's own forest green. A loading state that is already one of the map's colors reads as the map arriving rather than as a placeholder.
-- Over it, the site **logo fills clockwise** in a deepened version of the map's ocean blue, with a 0–100 count in its hole. The fill is a `conic-gradient` masked to the logo's shape (the path is copied into `place-map.js`, since `logo.svg` isn't published), starting at 30° so the stem fills last.
-- The count is a **Flash-style preloader**: it eases along a 0.6 s tween (`COUNT_UP`) but never past a target that creeps toward 90 (`CREEP`) until MapLibre reports its first `idle`, then jumps to 100. An instant load still counts smoothly through most numbers; a slow one waits honestly near the top. ⚠ The tween is timed from the first *drawn* frame, not from creation: MapLibre's setup blocks the first frames, and timing from creation ate a third of the count before anything was on screen.
-- The canvas carries `[data-map-loading]` until the count reaches 100, holds a beat, and then crossfades: the logo fades out over 800 ms as the map fades in over the same time. A route's intro waits for the fade (`revealed` in `place-map.js`), so the line is never drawn across an empty box.
+- **The box fades in** in `--map-park`, the map's own forest green (350 ms). A loading state that is already one of the map's colors reads as the map arriving rather than as a placeholder.
+- After a 100 ms pause, **the site logo grows in** from 200% to its resting 6rem with the number hidden (500 ms). On the activity index the preloader is in the page HTML, so this starts on the first paint without waiting for the script; elsewhere the script creates it. The logo is a `conic-gradient` masked to its shape (the path is copied into `place-map.css`, since `logo.svg` isn't published), filling from 30° so the stem fills last, in the box's green darkened 12%.
+- **If the script still hasn't arrived after 1.4 s, a comet sweeps** round inside the logo: a `::before` with a fading conic gradient, rotated by a CSS animation every 1.5 s. A plain rotation keeps turning while the main thread is busy, where a script-driven spinner would freeze. On broadband the count starts before the delay ends, so the comet never shows.
+- **The count** starts once the reveal has finished and the script has arrived: 0 → 100 along one easeInOutQuad sequence of about 1.8 s. The real load never sets the number. It only steers the sequence's *speed*: while MapLibre hasn't fired its first `idle`, the speed falls off gradually from early in the count, so a slow load stretches the whole count instead of piling up at 98–99, and the speed glides back once the map is ready. The maths is a pure function in `src/assets/scripts/preloader-count.js`, kept out of the bundled script so `_local/tests/preloader-count.test.js` can run it at a simulated 60 fps for several load times.
+- At 100 **the logo grows back to 200% and fades out** over 400 ms as the canvas (`[data-map-loading]` until then) fades in. A route's intro waits for that fade (`revealed` in `place-map.js`), so the line is never drawn across an empty box.
 
-All the knobs are named constants at the top of the preloader in `place-map.js` and custom properties on `.place-map-preloader` in `place-map.css`.
+⚠ The script adopts the server-rendered box and empties it, but must leave the preloader node where it is: taking it out and putting it back, as `replaceChildren()` does, counts as a new element and replays its reveal. The canvas is then prepended so the preloader stays on top. ⚠ The count waits on `getAnimations()` of the preloader itself, never `{ subtree: true }`, which would include the endless comet and never finish.
+
+The knobs: `COUNT`, `BRAKE` and `GLIDE` in `preloader-count.js`, `COUNT_PAUSE` and `MAP_FADE` in `place-map.js`, and the durations and delays on `.place-map-preloader` in `place-map.css`.
 
 **A caption meant for no-JS visitors will flash.** The activity index renders its map box server-side to reserve the space ([[Layout shift]]), and the caption inside it — *Map of my activities* — showed for as long as the island took to hydrate. It is now hidden under [`@media (scripting: enabled)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/scripting), the mirror of the `scripting: none` rule in [[The main menu]]: the text is only for the visitor who will never get a map, and `visibility: hidden` keeps the box's height either way. Pre-hydration text is worth a second look in general — it is written for a case that most visitors pass through rather than land in.
 
-Reduced motion removes the fades and the logo's exit grow; the count itself still runs, since a changing number isn't motion.
+Reduced motion removes the fades, the scaling and the comet (the logo shows dimmed until the count starts); the count itself still runs, since a changing number isn't motion. Without JavaScript the preloader is hidden under `@media (scripting: none)`, since nothing would ever finish it.
 
 ### One declaration, two themes
 

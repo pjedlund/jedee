@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-10-08] enrich | The place map
+
+*Waiting for the first tiles* rewritten for the reworked preloader: the box fade, the logo reveal and a delayed comet sweep run from the first paint, then one eased count whose speed (never its number) the map load steers. Adds the two traps found on the way: re-inserting the preloader replays its reveal, and `getAnimations({ subtree: true })` would wait on the endless comet.
+
 ## [2026-10-07] ingest | Keyboard shortcuts, Vertical rhythm
 
 New page [[Keyboard shortcuts]]: WCAG 2.1.4 and why a modifier combination is outside it, the browser keys a site should leave alone, matching ⌥ shortcuts on `event.code`, and a `<dialog>` that lists them, after Ariel Salminen's. Its In jedee section has the four site shortcuts and the footer button. [[Vertical rhythm]] gains *On any page*: the ⌥R overlay as a blended layer (`darken` in light, `lighten` in dark) that sits above backgrounds and below text. Links [[Font subsetting]] for the new ⌘ and ⌥.
