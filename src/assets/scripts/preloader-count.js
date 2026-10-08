@@ -1,5 +1,5 @@
 // The map preloader's count, kept apart from place-map.js so a unit test can run it without MapLibre. ⚠ Lives outside components/: every file there is built as its own script.
-const COUNT = 1200; // calibration knob: a full count when the map is ready in time
+const COUNT = 1800; // calibration knob: a full count when the map is ready in time
 const BRAKE = 0.1; // calibration knob: from here on the count slows while the map isn't ready; early, so the slowdown spreads over the whole count instead of piling up at 98–99
 const LIMIT = 0.97; // where an unready count heads, just past 99, slowing ever more (power 1.5) so it keeps ticking rather than parking
 const GLIDE = 150; // ms for the speed to ease to a new target, so braking and recovering are curves
