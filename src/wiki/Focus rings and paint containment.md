@@ -1,6 +1,7 @@
 ---
-description: "Why an outset focus ring vanishes inside anything that clips painting, and the inset override jedee uses on the YouTube play button."
+description: "Why an outset focus ring vanishes inside anything that clips painting, and the inset override jedee uses on the YouTube play button, and why a button's ring takes the text color."
 date: 2026-07-31
+updated: 2026-10-08
 ---
 
 A focus indicator is the visible mark showing which control the keyboard is on. It is required: [WCAG 2.4.7 Focus Visible](https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html) makes it a Level AA criterion, and WCAG 2.2 added [2.4.11 Focus Not Obscured](https://www.w3.org/WAI/WCAG22/Understanding/focus-not-obscured-minimum.html) specifically because an indicator that exists but cannot be seen is no better than none.
@@ -18,6 +19,8 @@ Put a focusable child that fills its container inside one of those, give it an o
 ## In jedee
 
 The site's focus ring is **outset** by design: `global-styles.css` suppresses the always-on ring with `:focus { outline: none }` and restores a strong one on `:focus-visible`, drawn with `--focus-color` and offset outward by `--focus-offset` (`0.3ch`). Tokenizing the offset is what makes the fix below a one-property override rather than a re-declaration of the whole `outline`. This is Eleventy Excellent stock; the clipping cases below are jedee's own. Every `a` also sets `border-radius: var(--border-radius-medium)`, since an outline follows the border radius, so link rings are rounded like the header controls. The meta-line links set `--focus-offset: 0` and pad the ring with padding instead (`meta.css`).
+
+**The ring's color.** Without `--focus-color` the ring falls back to `currentColor`, the element's own text color. On a link that is the text, which stands out from the page. On a filled `.button` it is the label, which is close to the page color, light on light and dark on dark, so the ring all but vanished; it showed on the Close button of the shortcuts dialog ([[Keyboard shortcuts]]). Since 2026-10-08 `button.css` sets `--focus-color: var(--color-text)` on every button. Its own fill would not do: the ghost and icon buttons are filled with the page color. The text color measures 7:1 against the page in light mode and 11:1 in dark, on all nine button styles in the style guide, against the 3:1 that WCAG 1.4.11 asks of a focus indicator. Where the ring matches the button's fill it still reads, because the offset leaves a strip of page between them.
 
 ### The case that found it
 

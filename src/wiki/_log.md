@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-10-08] enrich | Focus rings and paint containment
+
+New paragraph on the ring's color: `currentColor` on a filled `.button` is the label, nearly the page color, so the ring vanished (found on the shortcuts dialog's Close button). `button.css` now sets `--focus-color: var(--color-text)`; the fill was ruled out by the ghost and icon buttons. Contrast measured on all nine style-guide buttons. Links [[Keyboard shortcuts]].
+
 ## [2026-10-08] enrich | Keyboard shortcuts
 
 Keys in the wiki are now written as nested `<kbd>` and drawn as key caps by a site-wide `kbd.css`, moved out of the dialog's own CSS. The page gains the HTML-spec nesting and why a key cap differs from a code chip; [[Forced layout]], [[The place map]] and [[Vertical rhythm]] had their keystrokes converted too. Later the same day: the dialog's opening focus moved from Close to the heading, with the Chromium `autofocus` trap noted.
