@@ -22,6 +22,11 @@ The keyboard-shortcuts dialog (partials/shortcuts.njk): keys on the left, what t
   font-size: var(--size-step-2);
 }
 
+/* The heading takes the opening focus (autofocus) so a screen reader reads the title first; it can't be pressed, so no focus ring. */
+.shortcuts h2:focus-visible {
+  outline: none;
+}
+
 .shortcuts::backdrop {
   background-image: var(--gradient-stripes);
   opacity: 0.9;

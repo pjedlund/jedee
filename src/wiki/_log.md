@@ -7,7 +7,7 @@ Append-only. One entry per ingest / query-filed / lint, newest first. Entry form
 
 ## [2026-10-08] enrich | Keyboard shortcuts
 
-Keys in the wiki are now written as nested `<kbd>` and drawn as key caps by a site-wide `kbd.css`, moved out of the dialog's own CSS. The page gains the HTML-spec nesting and why a key cap differs from a code chip; [[Forced layout]], [[The place map]] and [[Vertical rhythm]] had their keystrokes converted too.
+Keys in the wiki are now written as nested `<kbd>` and drawn as key caps by a site-wide `kbd.css`, moved out of the dialog's own CSS. The page gains the HTML-spec nesting and why a key cap differs from a code chip; [[Forced layout]], [[The place map]] and [[Vertical rhythm]] had their keystrokes converted too. Later the same day: the dialog's opening focus moved from Close to the heading, with the Chromium `autofocus` trap noted.
 
 ## [2026-10-08] enrich | The place map
 

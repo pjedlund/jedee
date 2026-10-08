@@ -1,6 +1,6 @@
-{# KEYBOARD SHORTCUTS — a native dialog that ⌥L opens (shortcuts.js). Mac symbols are the default; a `data-pc` label replaces each one on other systems. #}
+{# KEYBOARD SHORTCUTS — a native dialog that ⌥L opens (shortcuts.js). Mac symbols are the default; a `data-pc` label replaces each one on other systems. The heading takes the opening focus, so a screen reader starts with the title rather than "Close, button". #}
 <dialog id="shortcuts" class="shortcuts | flow" aria-labelledby="shortcuts-title" closedby="any">
-  <h2 id="shortcuts-title">Keyboard shortcuts</h2>
+  <h2 id="shortcuts-title" tabindex="-1" autofocus>Keyboard shortcuts</h2>
   <dl class="shortcuts-list">
     <dt><kbd><kbd data-pc="Ctrl">⌘</kbd><kbd>K</kbd></kbd></dt>
     <dd>Open the search</dd>
