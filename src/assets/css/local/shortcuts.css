@@ -38,3 +38,11 @@ The keyboard-shortcuts dialog (partials/shortcuts.njk): keys on the left, what t
 .shortcuts-list dd {
   margin: 0;
 }
+
+/* Roomier caps than in prose, where they must not stretch the line; kbd.css draws the rest. */
+.shortcuts kbd:not(:has(kbd)) {
+  display: inline-block;
+  min-inline-size: 2em;
+  padding: 0.1em 0.45em;
+  text-align: center;
+}
