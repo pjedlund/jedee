@@ -95,7 +95,7 @@ place-map > :is(.place-map-live, .place-map-static) + :not(script) {
   content: '';
   position: absolute;
   inset: -25%; /* the corners stay covered as it turns */
-  background: conic-gradient(transparent 60%, var(--preloader-fill));
+  background: conic-gradient(transparent 60%, color-mix(in oklab, var(--preloader-fill) 60%, transparent)); /* calibration knob: the 60% strength */
   transition: opacity 300ms var(--ease-out-quad);
 }
 .place-map-preloader[data-counting] .place-map-preloader-logo::before {
@@ -129,7 +129,7 @@ place-map > :is(.place-map-live, .place-map-static) + :not(script) {
     scale: calc(2 / 1.2);
   }
   .place-map-preloader-logo::before {
-    animation: place-map-sweep 1200ms linear infinite; /* calibration knob: one turn */
+    animation: place-map-sweep 1500ms linear infinite; /* calibration knob: one turn */
   }
 }
 /* Reduced motion: no sweep, just a dimmed logo until the count starts. */
