@@ -16,8 +16,16 @@ kbd:not(:has(kbd)) {
   border-radius: var(--border-radius-small);
 }
 
-kbd > kbd + kbd {
-  margin-inline-start: 0.15em;
+/* Each cap gets half the gap on both sides, so a + between two caps sits centred; the outer <kbd> cancels the halves at its ends. */
+kbd > kbd {
+  margin-inline: 0.075em;
+}
+
+/* The outer <kbd> holds only the + of a combination: body font (not the UA monospace) and a lighter tone than the caps. */
+kbd:has(kbd) {
+  margin-inline: -0.075em;
+  font-family: var(--font-base);
+  color: color-mix(in oklab, var(--color-text) 70%, var(--color-bg));
 }
 
 kbd {
