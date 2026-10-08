@@ -38,17 +38,3 @@ The keyboard-shortcuts dialog (partials/shortcuts.njk): keys on the left, what t
 .shortcuts-list dd {
   margin: 0;
 }
-
-.shortcuts kbd {
-  display: inline-block;
-  min-inline-size: 2em;
-  padding: 0.1em 0.45em;
-  font-family: var(--font-base);
-  font-size: var(--size-step-min-1);
-  color: var(--color-text);
-  text-align: center;
-  background: var(--color-bg-accent);
-  border: var(--border-thickness) solid color-mix(in oklab, var(--color-text) 25%, var(--color-bg));
-  border-block-end-width: calc(var(--border-thickness) * 2);
-  border-radius: var(--border-radius-small);
-}
