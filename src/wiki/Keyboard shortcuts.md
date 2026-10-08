@@ -41,7 +41,7 @@ document.addEventListener('keydown', event => {
 
 ## Listing them
 
-A shortcut nobody knows about is wasted, so sites that have several list them. [Ariel Salminen's site](https://arielsalminen.com) puts hers in a modal opened with <kbd><kbd>⌥</kbd><kbd>L</kbd></kbd>, one sentence per key: "Press ⌥ + A to toggle the layout grid."
+A shortcut nobody knows about is wasted, so sites that have several list them. Ariel Salminen puts the shortcuts on [arielsalminen.com](https://arielsalminen.com) in a modal opened with <kbd><kbd>⌥</kbd><kbd>L</kbd></kbd>, one sentence per key: "Press ⌥ + A to toggle the layout grid."
 
 The native `<dialog>` does most of the work: `showModal()` makes the rest of the page inert, keeps focus inside, closes on <kbd>Esc</kbd> and returns focus to whatever opened it. A `<form method="dialog">` holding the Close button closes it with no script. The [`closedby="any"`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog) attribute adds closing on a click outside the box; where it is not yet supported, a click handler covers it by checking that the click landed outside the dialog's rectangle (a click on the backdrop is reported with the dialog itself as its target, and so is a click on the dialog's own padding). Keys are written with `<kbd>`, which is the element for user input. A combination nests one `<kbd>` per key inside an outer `<kbd>`, as the HTML spec suggests, and the common look is a key cap: a light chip with a thicker bottom edge, so it reads as something pressed rather than typed, unlike a code chip.
 
