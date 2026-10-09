@@ -31,7 +31,7 @@ Each entry below says what a page covers and why you would open it. The traps an
 - [[The main menu]] — a disclosure menu whose button is added by script, so the CSS has to detect its absence from the markup alone.
 - [[Choreographing CSS animations]] — sequencing a multi-step animation without JavaScript: named step times, `clip-path` wipes, and a caret that tracks the wipe.
 - [[Scroll-aware CSS during view transitions]] — a tested finding about what reaches the view-transition pseudo-elements. Not shipped.
-- [[Undefined custom properties]] — what a `var()` pointing at nothing actually does, which is not nothing.
+- [[Undefined custom properties]] — what a `var()` pointing at nothing actually does, which is not nothing, and how to check for it element by element.
 - [[Configuring a layout composition]] — setting a layout's published properties instead of redeclaring them, and how far that choice spreads.
 - [[Layout breakouts]] — a named-column grid that lets an element step wider than the text column, and the two conditions it needs to work.
 - [[Tables]] — markup that reads correctly unstyled, the browser defaults worth overriding, alignment, sticky headers, and what a table wider than the page needs. Ends with this site's activities table.

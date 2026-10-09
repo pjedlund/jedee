@@ -5,6 +5,14 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-10-09] enrich | Undefined custom properties
+
+Where the grep sweep stops (scope, false alarms) and the in-browser check that replaces it: resolve every `var()` chain on the elements each rule matches, per theme, after the islands hydrate, with a planted miss to prove the checker. Records the 2026-10-09 sweep of all nine island components (none found) and the trap that `on:visible` islands never hydrate in a hidden tab. Links [[is-land]].
+
+## [2026-10-09] enrich | The place map
+
+The preloader's dark-mode fill (`--map-park-shade` lightens instead of darkens) and the stem layer: a `linear-gradient` over the stem's rectangle wipes it left to right over the sweep's last 30°, replacing the slanted sliver. Also notes the switch from `on:idle` to `on:visible`.
+
 ## [2026-10-08] enrich | Abbreviations
 
 The abbreviation dots rewritten as a spaced `radial-gradient` row: link-underline size, `0.25em` apart, 50% of the text color, and `--abbr-lift` to place them, since a background is measured from the text box rather than the baseline.

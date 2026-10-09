@@ -1,7 +1,7 @@
 ---
 description: "A var() pointing at nothing does not skip the declaration — it makes the property unset, which means inherit or initial depending on the property."
 date: 2026-08-22
-updated: 2026-09-22
+updated: 2026-10-09
 ---
 
 CSS lets a stylesheet name its own values — `--brand-color: crimson` — and read them back anywhere with `var(--brand-color)`. These are **custom properties**, and they are the machinery behind design tokens, theming and dark mode. This page is about what happens when the name is wrong: a typo, a token that got renamed, a property that was never defined at all.
@@ -81,8 +81,22 @@ The reason they kept reappearing was not the stylesheet. The `cube-css` and `ele
 
 **How to sweep for it:** grep the source for `var(--…)` references and diff the names against the defined ones. A referenced-but-undefined property is always a mistake; only whether it is a *visible* mistake depends on the property. The moment to do this is after any token-system rewrite, which is precisely when such references get orphaned. The `lint` skill's design lane does exactly this diff on every full run: it builds the list of defined properties from the compiled CSS, then checks every `var()` against it.
 
+**Where the grep stops.** A text diff can only say whether `--x` is defined *somewhere*. Custom properties are scoped — inherited down from whichever element sets them — so a name defined on one block is still undefined on an element outside it, and the diff can't tell the two apart. It also reports false alarms: when a sweep of the [[is-land]] components ran on 2026-10-09 it flagged four names, and none were real. Two sat in comments, one was in Eleventy Excellent's island debug stylesheet (`tests/is-land.css`, whose import is commented out), and one was the innermost fallback of `var(--line-half, var(--gutter, var(--space-s-l)))` in `activity.css`, where `--line-half` itself resolves on every element the rule matches.
+
+**Checking in the browser instead.** The reliable test asks each element, not the source. A script run in the page walks `document.styleSheets` (into `@layer`, `@media` and `@supports`, skipping media that doesn't match), and for every declaration that uses `var()` it takes the elements the selector actually matches, then resolves the chain left to right with `getComputedStyle(el).getPropertyValue(name)`: a name resolves if it has a value on that element, or if its fallback resolves. Two details keep it honest. Strip state pseudo-classes (`:hover`, `:focus-visible`, `[open]`-style states) before `querySelectorAll`, so a hover rule is checked against the elements it would hover, and read pseudo-element rules from `getComputedStyle(el, '::before')`. And plant a known miss first — a `var(--nope)` and a `var(--nope, var(--also-nope))` — to prove the checker catches both. The first version passed the second one: its recursive check returned the missing name as a string, which counted as truthy.
+
+```js
+const resolves = (value, cs) => {
+  // first var() in value → name + optional fallback, then:
+  const ok = cs.getPropertyValue(name).trim() !== '' || (fallback && resolves(fallback, cs) === true);
+  return ok ? resolves(rest, cs) : name; // `=== true`, or a returned name reads as success
+};
+```
+
+Run it once per theme (the dark blocks define different properties) and only after every island has hydrated, since a component's CSS often arrives with its script. `on:visible` islands only hydrate once an `IntersectionObserver` reports them on screen, and a hidden or background tab never reports that — in a hidden browser pane they stay unhydrated however far the page is scrolled. A headless Chrome (puppeteer, already installed for the a11y tests) scrolls each island into view and runs the check reliably. The 2026-10-09 sweep covered all nine island components — place map, sortable table, photo lightbox, YouTube, PeerTube, search, theme toggle, the route map and the (unused) gallery — on real pages in both themes, and found no undefined property. The scripts are kept locally in `_local/generated/island-audit-2026-10-09/`.
+
 **EE stock vs jedee:** the two property names are upstream; the missing definitions, and therefore the bug, are jedee's own.
 
 Related: [[Design token sync]] — the other silent token failure, at the boundary with the design tool rather than inside the stylesheet. [[Text wrapping]] — another case where a global CSS rule produces a surprise in one specific block.
 
-Raw sources: `src/_raw/dev-notes/How an undefined custom property broke every button border.md`, `src/_raw/dev-notes/How the upstream token names came back.md`
+Raw sources: `src/_raw/dev-notes/How an undefined custom property broke every button border.md`, `src/_raw/dev-notes/How the upstream token names came back.md`, `src/_raw/dev-notes/How the island components were checked for undefined properties.md`
