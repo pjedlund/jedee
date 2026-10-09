@@ -43,7 +43,7 @@ Eight elements use it, all with one of two conditions — `on:idle` for anything
 Table: The islands in jedee: condition and origin
 | Island | Condition | Origin |
 | --- | --- | --- |
-| `webc/place-map.webc` | `on:idle` | jedee — see [[The place map]] |
+| `webc/place-map.webc` | `on:visible on:idle` | jedee — both must hold: `on:visible` alone fired before the template below the slotted table was parsed; see [[The place map]] |
 | `webc/sortable-table.webc` | `on:idle` | jedee — inside the place map's island on `/activities/`; see [[Tables]] |
 | `webc/photo-lightbox.webc` | `on:idle` | jedee — see [[The PhotoSwipe lightbox]] |
 | `partials/search.njk` | `on:idle` | jedee — see [[Site search]] |
