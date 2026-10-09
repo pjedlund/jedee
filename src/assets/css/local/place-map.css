@@ -62,7 +62,7 @@ place-map > :is(.place-map-live, .place-map-static) + :not(script) {
 /* Preloader: the logo fills clockwise (from 30deg, so the stem fills last) with a 0–100 count in its hole, over the forest-green box; place-map.js sets --preloader-progress. The activity index renders it in the HTML, so it shows before the script arrives. */
 .place-map-preloader {
   --preloader-size: 6rem; /* 120% of the first 5rem, for more room around the number */
-  --preloader-fill: color-mix(in oklab, var(--map-park), var(--color-base-black) 12%); /* the forest green of the box, darkened a touch */
+  --preloader-fill: color-mix(in oklab, var(--map-park), var(--map-park-shade) 12%); /* the forest green of the box, darkened a touch (lightened in dark mode) */
   --preloader-track: var(--map-land);
   --preloader-logo: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='m50 0 .588.003V0h9.706v30.882h-9.706v.009a19 19 0 0 0-.588-.009c-10.558 0-19.118 8.559-19.118 19.118S39.441 69.118 50 69.118 69.118 60.559 69.118 50V30.882C69.118 13.826 82.945 0 100 0v50c0 27.614-22.386 50-50 50S0 77.614 0 50 22.386 0 50 0'/></svg>"); /* ⚠ a copy of the path in src/assets/svg/misc/logo.svg: update both */
 
@@ -87,7 +87,10 @@ place-map > :is(.place-map-live, .place-map-static) + :not(script) {
   position: relative;
   inline-size: var(--preloader-size);
   aspect-ratio: 1;
-  background: conic-gradient(from 30deg, var(--preloader-fill) calc(var(--preloader-progress, 0) * 1%), var(--preloader-track) 0);
+  --preloader-stem: clamp(0, (var(--preloader-progress, 0) - 91.667) / 8.333, 1); /* 0→1 over the last 30deg of the sweep, which only the stem's box shows */
+  background:
+    linear-gradient(to right, var(--preloader-fill) calc(var(--preloader-stem) * 100%), var(--preloader-track) 0) calc(var(--preloader-size) * 0.5) 0 / calc(var(--preloader-size) * 0.103) calc(var(--preloader-size) * 0.31) no-repeat, /* the stem wipes left to right, as a straight edge, instead of the sweep's slanted wedge; ⚠ box = the stem in logo.svg */
+    conic-gradient(from 30deg, var(--preloader-fill) calc(var(--preloader-progress, 0) * 1%), var(--preloader-track) 0);
   mask: var(--preloader-logo) center / contain no-repeat;
 }
 /* While waiting for the map script, a comet of the fill color sweeps round inside the logo; place-map.js sets data-counting when the count takes over. */
@@ -181,6 +184,7 @@ place-map > :is(.place-map-live, .place-map-static) + :not(script) {
   --map-label-minor: var(--color-gray-400);
   --map-label-faint: var(--color-gray-300);
   --map-dot-stroke: var(--color-bg-accent);
+  --map-park-shade: var(--color-base-black); /* the preloader's fill is the park mixed with this */
 }
 [data-theme='dark'] :is(.place-map-live, [data-place-map-canvas]) {
   --map-water: color-mix(in srgb, color-mix(in srgb, var(--color-gray-900), var(--color-base-black) 50%), var(--color-blue-subdued) 20%);
@@ -189,6 +193,7 @@ place-map > :is(.place-map-live, .place-map-static) + :not(script) {
   --map-road-minor: color-mix(in srgb, var(--color-gray-900), var(--color-gray-700) 60%);
   --map-label-faint: var(--color-gray-500);
   --map-dot-stroke: var(--color-bg);
+  --map-park-shade: var(--color-base-white); /* calibration knob: dark needs a lighter fill, else it sinks into the dark track */
 }
 @media (prefers-color-scheme: dark) {
   html:not([data-theme='light']) :is(.place-map-live, [data-place-map-canvas]) {
@@ -198,6 +203,7 @@ place-map > :is(.place-map-live, .place-map-static) + :not(script) {
     --map-road-minor: color-mix(in srgb, var(--color-gray-900), var(--color-gray-700) 60%);
     --map-label-faint: var(--color-gray-500);
     --map-dot-stroke: var(--color-bg);
+    --map-park-shade: var(--color-base-white); /* calibration knob: dark needs a lighter fill, else it sinks into the dark track */
   }
 }
 
