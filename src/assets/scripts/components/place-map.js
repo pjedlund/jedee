@@ -99,7 +99,14 @@ const popupHtml = (p) => {
 
 // Flash-style preloader: the logo fills clockwise as the number counts 0 → 100 on one eased sequence; the map loading only sets its speed (preloader-count.js). ⚠ The canvas stays hidden until it reaches 100.
 const COUNT_PAUSE = 100; // calibration knob: the beat between the reveal and the count
+// Arrived by Back or Forward without the back/forward cache (an extension's unload handler is enough to lose it): the tiles are likely cached, so the count would only delay a map that is ready.
+const CAME_BACK = performance.getEntriesByType('navigation')[0]?.type === 'back_forward';
+
 function preloader(box, map) {
+  if (CAME_BACK) {
+    box.querySelector('.place-map-preloader')?.remove();
+    return new Promise((resolve) => map.once('idle', resolve)); // the canvas stays hidden until the first tiles are drawn
+  }
   let wrap = box.querySelector('.place-map-preloader'); // the activity index renders it in the HTML
   if (!wrap) {
     wrap = document.createElement('div');

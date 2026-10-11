@@ -138,6 +138,8 @@ The knobs: `COUNT`, `BRAKE` and `GLIDE` in `preloader-count.js`, `COUNT_PAUSE` a
 
 Reduced motion removes the fades, the scaling and the comet (the logo shows dimmed until the count starts); the count itself still runs, since a changing number isn't motion. Without JavaScript the preloader is hidden under `@media (scripting: none)`, since nothing would ever finish it.
 
+**Coming back skips it.** A page reached by Back or Forward that the browser had to reload (no back/forward cache) shows no preloader: the canvas stays hidden until the first tiles are drawn, which is usually well under a second, because the tiles are already in the HTTP cache. `place-map.js` checks the navigation type (`CAME_BACK`). The cache itself is lost to any `unload` handler in the page, and an extension's content script counts. On 2026-10-11 none of the site's own scripts had one, but a Helium extension did. ⚠ The dev server never gets the back/forward cache, because its live-reload connection blocks it.
+
 ### One declaration, two themes
 
 The map's colors are CSS custom properties — `--map-land`, `--map-water`, `--map-park` and seven more — set on `.place-map-live` and on the canvas, and read back by `place-map.js` on every render, so a theme flip or a devtools tweak redraws the map without touching JavaScript. They are declared in **three** blocks: a light one, a `[data-theme='dark']` one, and a `prefers-color-scheme: dark` copy of the second. The dark blocks override only the properties that actually differ.
