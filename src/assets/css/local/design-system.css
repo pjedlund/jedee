@@ -106,6 +106,21 @@
   font-size: inherit;
 }
 
+.design-system .role-swatch {
+  display: inline-block;
+  inline-size: 1.25em;
+  block-size: 1.25em;
+  margin-inline-end: var(--space-2xs);
+  vertical-align: middle;
+  border: var(--stroke);
+  border-radius: var(--border-radius-small);
+}
+
+/* A swatch and its hex, and a role's CSS name, each stay on one line. */
+.design-system .color-roles :is(td:has(.role-swatch), th code) {
+  white-space: nowrap;
+}
+
 .design-system .space {
   background-color: var(--color-text);
   display: block;

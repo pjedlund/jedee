@@ -4,6 +4,41 @@ draft: false
 permalink: /design-system/index.html
 layout: base
 eleventyExcludeFromCollections: true
+colorRoles:
+  - {token: bg, role: Page, use: 'The page itself.'}
+  - {token: bg-accent, role: Raised surface, use: 'Cards, inline code, footnotes, popups and form fields.'}
+  - {token: bg-accent-2, role: Divider, use: 'Heading lines, short rules and the rules in prose.'}
+  - {token: rule, role: Table rule, use: 'Hairlines between table rows, warmer than the gray ramp.'}
+  - {token: bg-head, role: Table head, use: 'The table head row, opaque so a sticky head hides the rows under it.'}
+  - {token: text, role: Text, use: 'Body text.'}
+  - {token: headline, role: Headline, use: 'Headings.'}
+  - {token: text-accent, role: Strong secondary text, use: 'Labels, metadata and captions that still need 4.5:1.'}
+  - {token: text-subdued, role: Quiet text, use: 'Table heads and caption icons.'}
+  - {token: accent-orange, role: Accent, use: 'Link underlines, the logo mark, focus and form accents. The same in both themes.'}
+  - {token: logo-icon, role: Logo mark, use: 'The mark in the header and breadcrumb.'}
+  - {token: border-top, role: Page edge, use: 'The band along the top of every page.'}
+tokenGroups:
+  - name: Color
+    files:
+      - {file: colorsBase, what: 'The few source colors everything else is generated from.'}
+      - {file: colors, what: 'The generated palettes: gray and orange scales, and the accent colors with their dark-mode variants.'}
+      - {file: semanticColors, what: 'The color roles above, per theme.'}
+      - {file: buttonColors, what: 'Button colors per variant and theme.'}
+      - {file: megamenuColors, what: 'Menu colors per theme.'}
+  - name: Type
+    files:
+      - {file: fonts, what: 'The three font stacks.'}
+      - {file: textSizes, what: 'The fluid type scale.'}
+      - {file: textLeading, what: 'Line heights.'}
+      - {file: textWeights, what: 'Font weights.'}
+      - {file: typography, what: 'Type styles that combine family, size, weight and line height.'}
+  - name: Space and shape
+    files:
+      - {file: spacing, what: 'The fluid space scale.'}
+      - {file: viewports, what: 'The smallest and largest window the fluid scales are tuned between.'}
+      - {file: borderRadius, what: 'Corner radii.'}
+      - {file: borderWidth, what: 'Border widths.'}
+      - {file: shadows, what: 'Shadows.'}
 customColors:
   - property: '--color-text'
   - property: '--color-text-accent'
@@ -321,7 +356,30 @@ colorGroups:
   </header>
   <div class="full colors | section">
     <section class="section__inner wrapper flow region" aria-labelledby="color">
-      <h3 class="heading-line">Palette</h3>
+      <h3 class="heading-line">Roles</h3>
+      <p>Every color has a job before it has a value. The page names the job; the theme picks the value. Values come from <code>semanticColors.json</code>.</p>
+      <div class="table-wrapper" role="region" tabindex="0" aria-labelledby="table-roles">
+      <table class="color-roles">
+        <caption id="table-roles">Color roles, in light and dark mode</caption>
+        <thead>
+          <tr><th scope="col">Role</th><th scope="col">Light</th><th scope="col">Dark</th><th scope="col">Used for</th></tr>
+        </thead>
+        <tbody>
+        {%- for r in colorRoles %}
+          {%- set light = designTokens.semanticColors.themes.light[r.token] | colorRef(designTokens.colors) %}
+          {%- set dark = designTokens.semanticColors.themes.dark[r.token] | colorRef(designTokens.colors) %}
+          <tr>
+            <th scope="row">{{ r.role }}<br /><code>--color-{{ r.token }}</code></th>
+            <td><span class="role-swatch" style="background-color: {{ light }}"></span><code>{{ light | lower }}</code></td>
+            <td><span class="role-swatch" style="background-color: {{ dark }}"></span><code>{{ dark | lower }}</code></td>
+            <td>{{ r.use }}</td>
+          </tr>
+        {%- endfor %}
+        </tbody>
+      </table>
+      </div>
+
+      <h3 class="heading-line | mt-l-xl">Palette</h3>
 
       {%- for group in colorGroups -%}
         {%- if group.description -%}<p{% if not loop.first %} class="mt-l-xl"{% endif %}>{{ group.description }}</p>{%- endif -%}
@@ -422,7 +480,16 @@ colorGroups:
     <h2 id="tokens">Tokens</h2>
   </header>
   <section class="flow region">
-    <p>Every value starts in <code>src/_data/designTokens</code>, in the W3C design tokens format. The build turns those files into the CSS custom properties used on this page, a token file for Penpot, and <code>DESIGN.md</code>.</p>
+    <p>Every value on this page starts in a design token file, in the <a href="https://www.designtokens.org/">W3C design tokens format</a>. The build turns them into the CSS custom properties the site uses, a token file for Penpot, and <code>DESIGN.md</code>, a written summary for people and tools.</p>
+    {# ⚠ Hand-written list: a new file in src/_data/designTokens needs a line in tokenGroups above. #}
+    {%- for group in tokenGroups %}
+    <h4>{{ group.name }}</h4>
+    <ul role="list" class="token-files | flow">
+      {%- for t in group.files %}
+        <li><a href="{{ settings.repos.site }}/blob/main/src/_data/designTokens/{{ t.file }}.json"><code>{{ t.file }}.json</code></a>: {{ t.what }}</li>
+      {%- endfor %}
+    </ul>
+    {%- endfor %}
   </section>
 </article>
 

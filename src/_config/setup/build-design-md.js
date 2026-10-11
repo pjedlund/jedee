@@ -7,6 +7,7 @@
 //   components      -> the COMPONENTS map below
 
 import {mkdir, readFile, writeFile} from 'node:fs/promises';
+import {colorRef} from '../filters/color-ref.js';
 import {dirname, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {dump as yamlDump, load as yamlLoad} from 'js-yaml';
@@ -149,26 +150,7 @@ function fluidMaxToPx(v) {
 	return v;
 }
 
-// Resolve a "{color.foo.bar}" reference against colors.json. Tries nested lookup first (gray.900), then falls back to a hyphen-joined top-level key (base.lightest → base-lightest).
-function resolveColorRef(ref, colors) {
-	const m = String(ref).match(/^\{([^}]+)\}$/);
-	if (!m) return ref;
-	const path = m[1];
-	if (!path.startsWith('color.')) return null;
-	const parts = path.slice('color.'.length).split('.');
-	let cur = colors;
-	for (const p of parts) {
-		if (cur && typeof cur === 'object' && p in cur) cur = cur[p];
-		else {
-			cur = null;
-			break;
-		}
-	}
-	if (cur && cur.$value) return cur.$value;
-	const hyphen = parts.join('-');
-	if (colors[hyphen]?.$value) return colors[hyphen].$value;
-	return null;
-}
+const resolveColorRef = colorRef; // shared with the design system page
 
 // Look up a hex by short palette name (e.g. "gray-100", "base-darkest", "blue").
 function paletteHex(name, colors) {
