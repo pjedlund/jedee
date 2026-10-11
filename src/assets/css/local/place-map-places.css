@@ -26,17 +26,9 @@ Places mode (the activity index and its route pages): the pending caption, per-t
   }
 }
 
-/* One color per activity type (data-activity on each row), read by place-map.js for that row's dot. */
-[data-activity='orienteering'] {
-  --place-color: var(--color-accent-orange);
-}
-
-[data-activity='hike'] {
-  --place-color: var(--color-green-vivid);
-}
-
-[data-activity='run'] {
-  --place-color: var(--color-blue-vivid);
+/* Each row's dot color, read by place-map.js; the colors per type are in variables.css. */
+[data-activity] {
+  --place-color: var(--activity-color);
 }
 
 /* Marker popups (click a dot → the place's name, linked), themed like the rest of the chrome. The tip is a border triangle, so its color goes on whichever side faces the box. */
@@ -101,7 +93,7 @@ Places mode (the activity index and its route pages): the pending caption, per-t
 /* ACTIVITY TYPE ICON — the table's first column. One icon per activityType (src/assets/svg/activity/), the name beside it for screen readers. */
 .activity-type {
   --activity-icon-size: 1em; /* the design draws the icon at the body text size */
-  --activity-icon-color: var(--color-text-accent); /* any type without a color below */
+  --activity-icon-color: var(--activity-color, var(--color-text-accent)); /* the type's color from variables.css, else gray */
 
   color: var(--activity-icon-color);
 }
@@ -111,19 +103,3 @@ Places mode (the activity index and its route pages): the pending caption, per-t
   block-size: var(--activity-icon-size);
 }
 
-/* Color per type, matching the Penpot design. The row carries data-activity; the palette values are the vivid pair each type already uses on the map. */
-[data-activity='run'] .activity-type {
-  --activity-icon-color: var(--color-blue-vivid);
-}
-
-[data-activity='orienteering'] .activity-type {
-  --activity-icon-color: var(--color-orange-500);
-}
-
-[data-activity='weight-training'] .activity-type {
-  --activity-icon-color: var(--color-red-vivid);
-}
-
-[data-activity='hike'] .activity-type {
-  --activity-icon-color: var(--color-green-vivid);
-}

@@ -45,7 +45,7 @@
     } -%}
     {%- set at = activityMeta[activityType] -%}
     {%- if at %}
-      <span class="meta-item">{% svg 'posts/' + at.icon, '', 'meta-icon' %}{{ at.label }}</span>
+      <span class="meta-item" data-activity="{{ activityType | slugify }}">{% svg 'posts/' + at.icon, '', 'meta-icon' %}{{ at.label }}</span>
     {%- endif %}
   {%- endif %}
   {# The date, with a calendar glyph, on every post type. Kept here (not in date.njk) so it rides only the post meta line — date.njk is shared by every archive card too. #}

@@ -356,7 +356,7 @@ class PlaceMap extends HTMLElement {
           date: el.dataset.date || '',
           name: a?.textContent.trim() || el.textContent.trim(),
           url: a?.getAttribute('href'),
-          color: cssColor(el, '--place-color'),
+          el,
         };
       })
       .filter((p) => Number.isFinite(p.lat) && Number.isFinite(p.lon));
@@ -365,14 +365,15 @@ class PlaceMap extends HTMLElement {
     const lons = places.map((p) => p.lon);
     const lats = places.map((p) => p.lat);
     const bounds = [Math.min(...lons), Math.min(...lats), Math.max(...lons), Math.max(...lats)];
-    const features = places.map((p) => point(p.lon, p.lat, { name: p.name, url: p.url, date: p.date, color: p.color }));
+    // ⚠ Colors are read on every render, not once: a type's color can differ per theme (orienteering does).
+    const features = () => places.map((p) => point(p.lon, p.lat, { name: p.name, url: p.url, date: p.date, color: cssColor(p.el, '--place-color') }));
 
     this.buildBox();
     this.mapObj = makeMap(this.canvas, {
       bounds,
       place: this.place,
       base: outsideCoverage(bounds) ? 'Topographic' : 'Map',
-      overlays: () => dotLayers(this.mapObj, features),
+      overlays: () => dotLayers(this.mapObj, features()),
     });
     const { map } = this.mapObj;
     this.mapObj.render();

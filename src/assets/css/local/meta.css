@@ -57,6 +57,11 @@ The dim type/date/revision line under a post or wiki title (partials/entry-heade
 }
 
 /* The GitHub mark's widest point is one small curve and "R" has a wide left side-bearing, so its gap reads 1px wider than the rest; this pulls it level. */
+/* Activity pages: the type's icon in its map color (variables.css). */
+[data-activity] > .meta-icon {
+  color: var(--activity-color);
+}
+
 [data-meta-tight] .meta-icon {
   --meta-icon-gap: calc(0.35em - 2px);
 }
