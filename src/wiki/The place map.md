@@ -1,7 +1,7 @@
 ---
 description: "The MapLibre map component, drawn from jedee's own Protomaps tiles, that upgrades server-rendered location data into a live map, and its three modes — single pin, a list of places, and a recorded route line."
 date: 2026-08-11
-updated: 2026-10-09
+updated: 2026-10-11
 ---
 
 An interactive web map is a JavaScript widget: a library like [Leaflet](https://leafletjs.com) or [MapLibre](https://maplibre.org) draws tiled imagery and vector shapes onto a scrollable canvas. That means it does nothing without JavaScript, and its keyboard and screen-reader story is often poor. The durable way to ship one is progressive enhancement — server-render the underlying data as ordinary HTML that stands on its own (a list of places with a link each, or a static map image), then let JavaScript find that markup and grow the live map above it. The HTML is the answer for no-JS visitors and assistive tech; the map is a convenience layered on top.
@@ -138,11 +138,17 @@ The knobs: `COUNT`, `BRAKE` and `GLIDE` in `preloader-count.js`, `COUNT_PAUSE` a
 
 Reduced motion removes the fades, the scaling and the comet (the logo shows dimmed until the count starts); the count itself still runs, since a changing number isn't motion. Without JavaScript the preloader is hidden under `@media (scripting: none)`, since nothing would ever finish it.
 
+**Coming back skips it.** A page reached by Back or Forward that the browser had to reload (no back/forward cache) shows no preloader: the canvas stays hidden until the first tiles are drawn, which is usually well under a second, because the tiles are already in the HTTP cache. `place-map.js` checks the navigation type (`CAME_BACK`). The cache itself is lost to any `unload` handler in the page, and an extension's content script counts. On 2026-10-11 none of the site's own scripts had one, but a Helium extension did. ⚠ The dev server never gets the back/forward cache, because its live-reload connection blocks it.
+
 ### One declaration, two themes
 
 The map's colors are CSS custom properties — `--map-land`, `--map-water`, `--map-park` and seven more — set on `.place-map-live` and on the canvas, and read back by `place-map.js` on every render, so a theme flip or a devtools tweak redraws the map without touching JavaScript. They are declared in **three** blocks: a light one, a `[data-theme='dark']` one, and a `prefers-color-scheme: dark` copy of the second. The dark blocks override only the properties that actually differ.
 
 **Every property the dark blocks leave out is served by the light block's single declaration, in both themes.** Raising the light park tint from 8% to 12% also raised the dark one, because dark had never declared `--map-park`; holding dark at 8% took a new declaration in each dark block. Before changing a themed custom property, check whether the other theme overrides it — one that appears once is shared, and the diff reads the same either way. The mirror of [[Undefined custom properties]], where the reference is the thing that is missing rather than the override.
+
+**The dots' colors are read on every render too.** Each activity type has one color, `--color-activity-*` in `variables.css`, used for its map dots, its icon in the table and its icon on the post's meta line. Orienteering changes shade per theme (`orange-600` in light mode, `orange-300` in dark) so it is never as light as the hike green. Under red–green color blindness, lightness is the only thing that tells the two apart: the old shared `orange-500` measured 5.8 from the green under simulation, and the new pair measures 11.0 in light mode and 15.1 in dark. Until 2026-10-11 the places mode read each dot's color once, when it built the dots, which was harmless while every color was the same in both themes. With a color that changes per theme, a theme flip left the map in the old theme's orange. ⚠ Any color that differs between themes has to be read inside `overlays()`, not once when the map is built.
+
+A route page's line takes the same color: the layout passes `@activity` to `<place-map>`, which renders it as `data-activity`, and `place-map-places.css` sets `--color-route-line` from the type's color. So an orienteering course is orange, a run blue and a hike green. ⚠ A plain attribute on `<place-map>` in the layout is dropped by WebC; only the props the component declares (`:data-*`) reach the element. ⚠ On the map, orienteering's shade follows the map under it rather than the page theme. Topographic tiles are always light and satellite imagery always dark, so a page-theme color put the light orange on light topo in dark mode and the dark orange over forest in light mode. `place-map.js` sets `data-map-surface` (light or dark) on `<place-map>` on every render, and `place-map-places.css` swaps `--place-color` and `--color-route-line` to `--color-activity-orienteering-on-light` or `-on-dark`. The table and meta-line icons sit on the page, so they keep following the theme.
 
 ### A base-layer style switch
 

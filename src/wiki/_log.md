@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-10-11] enrich | The place map
+
+One color per activity type for dots and icons; orienteering changes shade per theme to stay clear of the hike green under red–green color blindness (5.8 → 11.0 / 15.1). The places mode now reads dot colors on every render, since a per-theme color left the map in the old theme's orange after a flip.
+
 ## [2026-10-11] enrich | Open Graph images
 
 Notes now get the generated title card: a `titleCards` collection (articles + notes) feeds the generator, and the head's condition names both layouts. The "only articles" paragraph and the coverage list updated. Video and recipe followed on their artwork: maxres YouTube thumbnail before the letterboxed hqdefault, PeerTube left on the default.

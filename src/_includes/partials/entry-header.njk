@@ -45,7 +45,7 @@
     } -%}
     {%- set at = activityMeta[activityType] -%}
     {%- if at %}
-      <span class="meta-item">{% svg 'posts/' + at.icon, '', 'meta-icon' %}{{ at.label }}</span>
+      <span class="meta-item" data-activity="{{ activityType | slugify }}">{% svg 'posts/' + at.icon, '', 'meta-icon' %}{{ at.label }}</span>
     {%- endif %}
   {%- endif %}
   {# The date, with a calendar glyph, on every post type. Kept here (not in date.njk) so it rides only the post meta line — date.njk is shared by every archive card too. #}
@@ -55,8 +55,9 @@
   {% if scoreMy %}
     {% set rating = scoreMy %}{% include "partials/rating.njk" %}
   {% endif %}
-  {# Same as wiki.njk: the last commit to the file, linked on GitHub. #}
-  {%- set revision = page.inputPath | gitRevision %}
+  {# Same as wiki.njk: the last commit to the file, linked on GitHub. Left off types that are logged rather than revised. #}
+  {%- set unrevisedTypes = ['activity', 'bookmark', 'like', 'repost', 'reply', 'rsvp'] %}
+  {%- set revision = page.inputPath | gitRevision if not (category in unrevisedTypes) %}
   {%- if revision and meta.viewRepo.allow %}
     <span class="meta-item"><a data-meta-tight href="{{ settings.repos.site }}/commit/{{ revision.hash }}">{% svg 'platform/github', '', 'meta-icon' %}Revised <time class="dt-updated" datetime="{{ revision.date | toIsoString }}">{{ revision.date | formatDate('Do [of] MMMM, YYYY') }}</time></a></span>
   {%- endif %}

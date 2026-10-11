@@ -99,7 +99,14 @@ const popupHtml = (p) => {
 
 // Flash-style preloader: the logo fills clockwise as the number counts 0 → 100 on one eased sequence; the map loading only sets its speed (preloader-count.js). ⚠ The canvas stays hidden until it reaches 100.
 const COUNT_PAUSE = 100; // calibration knob: the beat between the reveal and the count
+// Arrived by Back or Forward without the back/forward cache (an extension's unload handler is enough to lose it): the tiles are likely cached, so the count would only delay a map that is ready.
+const CAME_BACK = performance.getEntriesByType('navigation')[0]?.type === 'back_forward';
+
 function preloader(box, map) {
+  if (CAME_BACK) {
+    box.querySelector('.place-map-preloader')?.remove();
+    return new Promise((resolve) => map.once('idle', resolve)); // the canvas stays hidden until the first tiles are drawn
+  }
   let wrap = box.querySelector('.place-map-preloader'); // the activity index renders it in the HTML
   if (!wrap) {
     wrap = document.createElement('div');
@@ -168,6 +175,8 @@ function makeMap(el, { center, zoom, bounds, place, base = 'Map', fitPadding = 2
 
   const state = { theme: pageTheme(), base };
   const render = () => {
+    // How light the drawn map is, for colors that need a light- and a dark-surface shade (place-map-places.css). Topographic is always light, satellite always dark.
+    el.closest('place-map')?.setAttribute('data-map-surface', state.base === 'Topographic' ? 'light' : state.base === 'Satellite' ? 'dark' : state.theme);
     const own = overlays();
     const style = {
       version: 8,
@@ -356,7 +365,7 @@ class PlaceMap extends HTMLElement {
           date: el.dataset.date || '',
           name: a?.textContent.trim() || el.textContent.trim(),
           url: a?.getAttribute('href'),
-          color: cssColor(el, '--place-color'),
+          el,
         };
       })
       .filter((p) => Number.isFinite(p.lat) && Number.isFinite(p.lon));
@@ -365,14 +374,15 @@ class PlaceMap extends HTMLElement {
     const lons = places.map((p) => p.lon);
     const lats = places.map((p) => p.lat);
     const bounds = [Math.min(...lons), Math.min(...lats), Math.max(...lons), Math.max(...lats)];
-    const features = places.map((p) => point(p.lon, p.lat, { name: p.name, url: p.url, date: p.date, color: p.color }));
+    // ⚠ Colors are read on every render, not once: a type's color can differ per theme (orienteering does).
+    const features = () => places.map((p) => point(p.lon, p.lat, { name: p.name, url: p.url, date: p.date, color: cssColor(p.el, '--place-color') }));
 
     this.buildBox();
     this.mapObj = makeMap(this.canvas, {
       bounds,
       place: this.place,
       base: outsideCoverage(bounds) ? 'Topographic' : 'Map',
-      overlays: () => dotLayers(this.mapObj, features),
+      overlays: () => dotLayers(this.mapObj, features()),
     });
     const { map } = this.mapObj;
     this.mapObj.render();

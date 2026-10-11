@@ -45,11 +45,18 @@
   /* Route start marker on the activity map. The accent green is a muted olive that reads gray on the map, so the "start" dot uses a saturated green of its own — one value works on both light and dark tile sets. */
   --color-route-start: var(--color-green-vivid);
 
-  /* Orienteering course (line + start/finish symbols) on the activity map. The site's accent orange — same color as the map's location markers — because it reads on every tile set (topo green, satellite, light and dark), where a purple vanished on some. */
+  /* A route line (track + start/finish symbols) on the activity map; place-map-places.css swaps in the activity type's color. This fallback is the accent orange, which reads on every tile set (topo green, satellite, light and dark), where a purple vanished on some. */
   --color-route-line: var(--color-accent-orange);
 
   /* One value for every page and both themes: the pale grey it used to take in light (1.67:1) and the deep brown in dark (2.01:1) both failed the 3:1 a graphic needs to be legible. */
   --color-logo-icon: var(--color-accent-orange);
+
+  /* One color per activity type: map dots, the table's icons and the page's meta icon. ⚠ Orienteering changes shade per theme so it never matches the green's lightness — the two are only told apart by lightness under red–green color blindness. */
+  --color-activity-orienteering-on-light: var(--color-orange-600);
+  --color-activity-orienteering-on-dark: var(--color-orange-300);
+  --color-activity-hike: var(--color-green-vivid);
+  --color-activity-run: var(--color-blue-vivid);
+  --color-activity-weight-training: var(--color-red-vivid);
   --color-border-height: 1rem;
 }
 
@@ -82,6 +89,7 @@
   --color-border-top: var(--color-base-light);
 
   --color-code-bg: color-mix(in oklab, var(--color-bg) 97%, var(--color-base-black));
+  --color-activity-orienteering: var(--color-activity-orienteering-on-light);
   --code-border-color: color-mix(in oklab, var(--color-bg) 96%, var(--color-base-black));
 
 }
@@ -111,6 +119,7 @@
     --color-border-top: var(--color-orange-900);
 
     --color-code-bg: color-mix(in oklab, var(--color-bg) 80%, var(--color-base-black));
+    --color-activity-orienteering: var(--color-activity-orienteering-on-dark);
     --code-border-color: color-mix(in oklab, var(--color-bg) 95%, var(--color-base-white));
   }
 }
@@ -138,5 +147,12 @@
   --color-border-top: var(--color-orange-900);
 
   --color-code-bg: color-mix(in oklab, var(--color-bg) 80%, var(--color-base-black));
+  --color-activity-orienteering: var(--color-activity-orienteering-on-dark);
   --code-border-color: color-mix(in oklab, var(--color-bg) 95%, var(--color-base-white));
 }
+
+/* Activity type → its color, for anything carrying data-activity (a table row, the meta line). */
+[data-activity='orienteering'] { --activity-color: var(--color-activity-orienteering); }
+[data-activity='hike'] { --activity-color: var(--color-activity-hike); }
+[data-activity='run'] { --activity-color: var(--color-activity-run); }
+[data-activity='weight-training'] { --activity-color: var(--color-activity-weight-training); }
