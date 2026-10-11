@@ -168,6 +168,8 @@ function makeMap(el, { center, zoom, bounds, place, base = 'Map', fitPadding = 2
 
   const state = { theme: pageTheme(), base };
   const render = () => {
+    // How light the drawn map is, for colors that need a light- and a dark-surface shade (place-map-places.css). Topographic is always light, satellite always dark.
+    el.closest('place-map')?.setAttribute('data-map-surface', state.base === 'Topographic' ? 'light' : state.base === 'Satellite' ? 'dark' : state.theme);
     const own = overlays();
     const style = {
       version: 8,

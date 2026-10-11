@@ -52,6 +52,8 @@
   --color-logo-icon: var(--color-accent-orange);
 
   /* One color per activity type: map dots, the table's icons and the page's meta icon. ⚠ Orienteering changes shade per theme so it never matches the green's lightness — the two are only told apart by lightness under red–green color blindness. */
+  --color-activity-orienteering-on-light: var(--color-orange-600);
+  --color-activity-orienteering-on-dark: var(--color-orange-300);
   --color-activity-hike: var(--color-green-vivid);
   --color-activity-run: var(--color-blue-vivid);
   --color-activity-weight-training: var(--color-red-vivid);
@@ -87,7 +89,7 @@
   --color-border-top: var(--color-base-light);
 
   --color-code-bg: color-mix(in oklab, var(--color-bg) 97%, var(--color-base-black));
-  --color-activity-orienteering: var(--color-orange-600);
+  --color-activity-orienteering: var(--color-activity-orienteering-on-light);
   --code-border-color: color-mix(in oklab, var(--color-bg) 96%, var(--color-base-black));
 
 }
@@ -117,7 +119,7 @@
     --color-border-top: var(--color-orange-900);
 
     --color-code-bg: color-mix(in oklab, var(--color-bg) 80%, var(--color-base-black));
-    --color-activity-orienteering: var(--color-orange-300);
+    --color-activity-orienteering: var(--color-activity-orienteering-on-dark);
     --code-border-color: color-mix(in oklab, var(--color-bg) 95%, var(--color-base-white));
   }
 }
@@ -145,7 +147,7 @@
   --color-border-top: var(--color-orange-900);
 
   --color-code-bg: color-mix(in oklab, var(--color-bg) 80%, var(--color-base-black));
-  --color-activity-orienteering: var(--color-orange-300);
+  --color-activity-orienteering: var(--color-activity-orienteering-on-dark);
   --code-border-color: color-mix(in oklab, var(--color-bg) 95%, var(--color-base-white));
 }
 

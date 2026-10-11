@@ -32,6 +32,19 @@ Places mode (the activity index and its route pages): the pending caption, per-t
   --color-route-line: var(--activity-color);
 }
 
+/* Orienteering's shade follows the map under it, not the page theme: Topographic is always light and Satellite always dark (data-map-surface, set by place-map.js). */
+[data-map-surface='light'] [data-activity='orienteering'],
+[data-map-surface='light'][data-activity='orienteering'] {
+  --place-color: var(--color-activity-orienteering-on-light);
+  --color-route-line: var(--color-activity-orienteering-on-light);
+}
+
+[data-map-surface='dark'] [data-activity='orienteering'],
+[data-map-surface='dark'][data-activity='orienteering'] {
+  --place-color: var(--color-activity-orienteering-on-dark);
+  --color-route-line: var(--color-activity-orienteering-on-dark);
+}
+
 /* Marker popups (click a dot → the place's name, linked), themed like the rest of the chrome. The tip is a border triangle, so its color goes on whichever side faces the box. */
 [data-place-map-canvas].maplibregl-map .maplibregl-popup {
   --place-popup-bg: var(--color-bg-accent);
