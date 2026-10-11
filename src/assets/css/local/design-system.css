@@ -17,8 +17,8 @@
   --region-space-top: var(--space-l-xl);
 }
 
-/* ⚠ :not(.rhythm-sample *) here and below: the vertical-rhythm sample is prose and must show the site's own headings, code and tables. */
-.design-system :is(h3, h4):not(.rhythm-sample *) {
+/* ⚠ :not(.rhythm-sample *) here and below: the vertical-rhythm sample is prose and must show the site's own headings, code and tables; the sample cards keep their own headlines too. */
+.design-system :is(h3, h4):not(.rhythm-sample *, custom-card *) {
   font-size: var(--size-step-0);
   font-family: var(--font-base);
   text-transform: uppercase;
@@ -119,6 +119,51 @@
 /* A swatch and its hex, and a role's CSS name, each stay on one line. */
 .design-system .color-roles :is(td:has(.role-swatch), th code) {
   white-space: nowrap;
+}
+
+.design-system .grid-columns {
+  --grid-column-color: color-mix(in oklab, var(--color-accent-orange) 18%, transparent);
+
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: calc(100% * 2 / 97); /* 2rem of the 97rem page */
+  block-size: var(--space-2xl-3xl);
+}
+
+.design-system .grid-columns span {
+  background-color: var(--grid-column-color);
+}
+
+.design-system .grid-columns [data-prose] {
+  --grid-column-color: color-mix(in oklab, var(--color-accent-orange) 40%, transparent);
+}
+
+.design-system .breakout-demo {
+  --flow-space: var(--space-3xs);
+}
+
+.design-system .breakout-band {
+  padding: var(--space-3xs) var(--space-s);
+  font-family: var(--font-mono);
+  font-size: var(--size-step-min-2);
+  background-color: color-mix(in oklab, var(--color-accent-orange) 18%, transparent);
+}
+
+.design-system .activity-swatches li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  color: var(--activity-color);
+}
+
+.design-system .activity-swatches svg {
+  inline-size: 1em;
+  block-size: 1em;
+}
+
+/* Only the icon takes the type's color: as text, the hike green is under 4.5:1. */
+.design-system .activity-swatches :is(span, code) {
+  color: var(--color-text);
 }
 
 .design-system .space {

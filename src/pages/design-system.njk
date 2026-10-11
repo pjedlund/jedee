@@ -56,7 +56,9 @@ parts:
   - {id: typography, title: Typography}
   - {id: links, title: Links and buttons}
   - {id: color, title: Color}
+  - {id: grid, title: Grid}
   - {id: spacing, title: Spacing}
+  - {id: patterns, title: Patterns}
   - {id: tokens, title: Tokens}
 colorGroups:
   - heading: 'Base palette'
@@ -435,6 +437,32 @@ colorGroups:
   </div>
   <header class="part | flow region">
     <p class="part-number">04</p>
+    <h2 id="grid">Grid</h2>
+  </header>
+  <section class="flow region">
+    <h3 class="heading-line">Columns</h3>
+    <p>Twelve columns of 6.25rem with 2rem gutters make the 97rem page; the middle eight make the 64rem column that prose sits in. As the window narrows, the outer columns go first, then the eight scale down with the text. <kbd>⌥</kbd> <kbd>G</kbd> lays the grid over any page while the site runs locally.</p>
+    <figure class="grid-figure">
+      <div class="grid-columns" aria-hidden="true">
+        {%- for i in range(12) %}<span{% if i >= 2 and i < 10 %} data-prose{% endif %}></span>{% endfor %}
+      </div>
+      <figcaption>The twelve columns, with the eight of the prose column darker.</figcaption>
+    </figure>
+  </section>
+  <section class="flow region">
+    <h3 class="heading-line">Breakouts</h3>
+    <p>Anything on the page can step out of its column by a fixed amount: <code>.popout</code> by a gutter each side, <code>.feature</code> by a column and a gutter, <code>.full</code> to the window's edges. The bands below are drawn by those classes at their real widths, around the 64rem prose column, as in a post; widen the window to see each step.</p>
+  </section>
+  {# A full-bleed strip is a wrapper of its own here, at the prose column's 64rem, so the bands break out as they do in a post. #}
+  <div class="breakout-demo | full wrapper prose-wrapper flow" aria-hidden="true">
+    <div class="breakout-band">content</div>
+    <div class="breakout-band | popout">.popout</div>
+    <div class="breakout-band | feature">.feature</div>
+    <div class="breakout-band | full">.full</div>
+  </div>
+
+  <header class="part | flow region">
+    <p class="part-number">05</p>
     <h2 id="spacing">Spacing</h2>
   </header>
   <section class="spacing | wrapper-pass flow region">
@@ -476,7 +504,49 @@ colorGroups:
     </div>
   </section>
   <header class="part | flow region">
-    <p class="part-number">05</p>
+    <p class="part-number">06</p>
+    <h2 id="patterns">Patterns</h2>
+  </header>
+  <section class="flow region">
+    <h3 class="heading-line">Meta line</h3>
+    <p>Under every post title: the post type linked to its archive, the activity type for activities, the date, and the last revision linked on GitHub. Each item is an icon and a label that never break apart.</p>
+    <p class="meta | cluster gutter-s-m">
+      <a class="meta-item" href="/activities/">{% svg 'posts/activity', '', 'meta-icon' %}Activities</a>
+      <span class="meta-item" data-activity="orienteering">{% svg 'posts/compass', '', 'meta-icon' %}Orienteering</span>
+      <span class="meta-item">{% svg 'posts/calendar', '', 'meta-icon' %}7th of December, 2025</span>
+    </p>
+  </section>
+  <section class="flow region">
+    <h3 class="heading-line">Activity colors</h3>
+    <p>Each activity type has one color, used for its map dots, its route lines and its icons. Orienteering changes shade so it is never as light as the hike green: the two are told apart by lightness alone under red–green color blindness. On a map it follows the map under it, so satellite takes the light orange and topographic the dark one.</p>
+    <ul class="activity-swatches | cluster" role="list">
+      {%- for a in ['orienteering', 'run', 'hike', 'weight-training'] %}
+        <li data-activity="{{ a }}">{% svg "activity/" + a, "", "activity-type-icon" %}<span>{{ a | replace('-', ' ') | capitalize }}</span><code>--color-activity-{{ a }}</code></li>
+      {%- endfor %}
+    </ul>
+  </section>
+  <section class="flow region">
+    <h3 class="heading-line">Cards</h3>
+    <p>Archive pages list posts as cards: one card per post type, each filling the same slots (image, date, headline, text, footer). These are the newest jam, book and note.</p>
+  </section>
+  <div class="card-samples | grid" data-layout="thirds">
+    {%- set cardSamples = [
+      {item: collections.jam | first, partial: 'card-jam.njk'},
+      {item: collections.reading | first, partial: 'card-reading.njk'},
+      {item: collections.note | first, partial: 'card-note.njk'}
+    ] %}
+    {%- for sample in cardSamples %}{% if sample.item %}
+      {%- set item = sample.item %}{% set headingLevel = 'h4' %}{% set definedDate = item.date %}
+      {% include "partials/" + sample.partial %}
+    {%- endif %}{% endfor %}
+  </div>
+  <section class="flow region">
+    <h3 class="heading-line">Maps</h3>
+    <p>Maps are drawn from the site's own map tiles in its own colors, and load only when scrolled to. A map shows places (the <a href="/activities/">activities</a> overview), a single pin (a photo's location) or a recorded route. The wiki page <a href="/wiki/the-place-map/">The place map</a> covers how.</p>
+  </section>
+
+  <header class="part | flow region">
+    <p class="part-number">07</p>
     <h2 id="tokens">Tokens</h2>
   </header>
   <section class="flow region">
