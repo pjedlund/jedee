@@ -117,7 +117,7 @@ Table: The techniques above, one line each
 
 - Header cells get `scope="col"`, and a column aligned with `---:` gets `text-align: end` instead of markdown-it's physical `right`.
 
-Markdown cannot mark a row header: the first column is always `<td>`. A table that needs row headers, like the style guide's two token tables, is written as HTML with the wrapper by hand.
+Markdown cannot mark a row header: the first column is always `<td>`. A table that needs row headers, like the design system page's two token tables, is written as HTML with the wrapper by hand.
 
 The caption is a paragraph and not an attribute because markdown-it 14 reads a line directly under a table as one more row. markdown-it-attrs' `{.class}`-under-the-table syntax therefore renders here as a table row with the braces in it.
 
@@ -159,7 +159,7 @@ Every layout passes through `base.njk`, so no post type has to remember the incl
 - Stripes are off (`--table-stripe: transparent`). Rutter advises against fills, keeping a light tint only where the layout cannot guide the eye, and Barker says rules or stripes, not both. They were on for part of 2026-09-15. When on, the stripe is a translucent image on the cells of every even body row, `linear-gradient(var(--table-stripe) 0 0)`, with `--table-stripe` at 4% of `--color-text`. A background on the row would be hidden by the sticky row header's opaque background, since cells paint above rows; on the cells, the row header keeps its opaque color under the tint and the scroll shadows still show through the other cells. Measured text contrast on a striped row: 6.58:1 in the light theme (6.97:1 unstriped) and 10.25:1 in the dark theme (11.03:1).
 - Every value that sets the look is a custom property at the top of `.table-wrapper`: the colors, the rules, the paddings, the cell alignment, the caption's size and style. The cells inherit them, and every table on the site sits in a wrapper. `--table-side: none` drops the frame's sides, and a tint in `--table-stripe`, such as `color-mix(in oklab, var(--color-text) 4%, transparent)`, brings the stripes back.
 - Equal-width columns are opt-in: `data-table-layout="fixed"` on the wrapper sets `table-layout: fixed` and `inline-size: max(var(--table-fixed-min-inline-size), 100%)`, 40rem by default, so a narrow screen scrolls the table instead of squeezing it. Only the style guide's two token tables use it. Wiki tables mix one-word columns with one-sentence columns, and content-sized columns are the point; a markdown table could not carry the attribute anyway (see above).
-- The style guide sets `--table-cell-align: middle`. Its sample cells are taller than the text beside them, and baseline alignment sank the token name and range to the sample's baseline. Wiki tables keep `baseline`.
+- The design system page sets `--table-cell-align: middle`. Its sample cells are taller than the text beside them, and baseline alignment sank the token name and range to the sample's baseline. Wiki tables keep `baseline`.
 - Not adopted: `caption-side: bottom`, since a table's title conventionally sits above it.
 
 Every wiki table has had a `Table:` caption since 2026-09-15. Naming a region after its column headers is the fallback for a table written without one.

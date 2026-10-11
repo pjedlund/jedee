@@ -288,9 +288,9 @@ The paragraph gap is three-quarters of a line, chosen over half a line on 2026-1
 
 ⚠ The heading rules come last in the file. A heading's space above then wins over the space set by the element before it (a figure's line and a half, say), and the half line under a heading wins over the next element's own.
 
-### On the style guide
+### On the design system page
 
-`/styleguide/` has a **Vertical rhythm** section with the prose sample (`partials/rhythm-sample.njk`) and a checkbox that paints the lattice behind it (a checkbox and `:has()`, no script).
+`/design-system/` has a **Vertical rhythm** section, under Typography, with the prose sample (`partials/rhythm-sample.njk`) and a checkbox that paints the lattice behind it (a checkbox and `:has()`, no script).
 
 ### On any page
 
