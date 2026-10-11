@@ -1,6 +1,0 @@
-{
-  "layout": "video",
-  "tags": "posts",
-  "category": "video",
-  "permalink": "/videos/{{ page.fileSlug | slugify }}/index.html"
-}

@@ -1,7 +1,7 @@
 ---
 description: "Generating per-post social preview images at build time by rendering an SVG template and converting it to JPEG — and why the output is committed to the repo rather than rebuilt on the server."
 date: 2026-09-05
-updated: 2026-09-09
+updated: 2026-10-11
 ---
 
 When a link is shared, the receiving platform reads the page's `<head>` for [Open Graph](https://ogp.me/) tags and draws a card from them. `og:image` is the picture on that card. It is fetched by a crawler that runs no JavaScript and does not wait, so the image has to be a real file at a real URL by the time the page is published — which makes it a build-time problem, not a page-time one.
@@ -20,7 +20,7 @@ Three pieces, plus a reset script.
 
 ```yaml
 pagination:
-  data: collections.article
+  data: collections.titleCards
   size: 1
   alias: post
 permalink: '/assets/og-images/{{ post.data.title | slugify }}-preview.svg'
@@ -81,7 +81,7 @@ The per-post template was aligned to match on the same day: Eleventy Excellent's
 
 **Right now the fallback is the card for the entire site.** Every one of the seven files in `src/posts/articles/` is `draft: true`, so `collections.article` holds two posts and neither is published. Zero pages on the live site use a generated card. That is a content accident rather than a design one, and it will unwind itself the moment an article ships — but it is worth knowing when weighing how much the fallback matters.
 
-**Only articles get a generated one.** Both the generator (`data: collections.article`) and the reference (`layout == 'post'`) are scoped to articles, and `articles` is the only post type whose data file sets `layout: post` — every other type has its own layout name (`note`, `photo`, `audio`, `activity`, `bookmark`, and so on). On vanilla EE, where articles and notes are nearly the whole site, that is a small gap; on a site with sixteen post types it means the generated-image feature covers a small minority of the pages people actually share. Widening it *by generating more cards* is not a template edit — it needs a second pagination source and a different condition in the head. See [[Anatomy of a post type]] for the other places a type has to be wired, and [[One JSON-LD envelope for sixteen types]] for the sibling problem solved the other way round.
+**Articles and notes get a generated one.** Until 2026-10-11 only articles did: both the generator and the reference in the head were scoped to `layout: post`, which no other type uses. Notes were added the way the paragraph below predicted. A `titleCards` collection in `eleventy.config.js` joins the article and note collections, the generator paginates over it, and the head's condition reads `layout == 'post' or layout == 'note'`. ⚠ The collection and that condition name the same types, so a third type has to be added in both places. On a site with sixteen post types, the rest still fall back to artwork or to the default card. See [[Anatomy of a post type]] for the other places a type has to be wired, and [[One JSON-LD envelope for sixteen types]] for the sibling problem solved the other way round.
 
 ### Artwork beats a generated card, where a type has artwork
 
@@ -133,7 +133,7 @@ Eleventy Excellent removed the Twitter-specific tags in v2, and mostly that is r
 
 Worth knowing before adding a fourth: the fallback fires rarely outside jams. 7 of 8 reading posts and 8 of 10 watching posts already carry an authored description. Any type can opt in by computing an `autoDescription`.
 
-**Coverage after this**: 120 jams, 10 films, 8 books and 2 photos carry their own card, `/jams/genres/` correctly still takes the default, and nothing falls through — every post of all four types has a cover. What is left, in the order the artwork makes easy: notes (22), then video (3) on the self-hosted YouTube poster, and recipe (1). Activities (180) and the five response types (60) are deliberately left on the default — nobody shares an activity, and for a response the platform's preview of the *target* page is the more useful card. **Notes need the generated card, not artwork**, and are straightforward: every post of every type carries a `title:` in front matter, all sixteen types and 416 posts, so a note card is the article card with a second pagination source.
+**Coverage after this**: 120 jams, 10 films, 8 books and 2 photos carry their own card, `/jams/genres/` correctly still takes the default, and nothing falls through — every post of all four types has a cover. Notes followed on 2026-10-11 (see above), and so did video and recipe, on their artwork through the same `ogImage` helper: a recipe's dish photo, a self-hosted video's poster, and a YouTube video's thumbnail. ⚠ The YouTube poster the player shows is `hqdefault`, which is 4:3 with black bars above and below a 16:9 video, so the share card tries `maxresdefault` first and falls back to `hqdefault` when a video has none. A PeerTube video has no poster to use and keeps the default card. The alt text for a video still reads "Still from" and the title, through an `ogAlt` key in its data file. Activities (180) and the five response types (60) are deliberately left on the default — nobody shares an activity, and for a response the platform's preview of the *target* page is the more useful card.
 
 **Nothing ever deletes an image.** The `existsSync` guard only ever adds, so a retitled or deleted article leaves its JPEG behind — committed, shipped in the build, referenced by nothing. When this page was written the folder held 17 JPEGs against 13 article files, seven of them belonging to Eleventy Excellent demo articles long since deleted. A second `clean:og` on 2026-09-09, forced by the template change below, took it to **2 JPEGs against a 2-post `collections.article`** — no orphans at all, the four that went being two Eleventy Excellent demo articles, `a-draft`, and the `what-is-web-accessibility` orphan this page had been carrying. The mechanism is unchanged; only the backlog was cleared, and it will accumulate again.
 

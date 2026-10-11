@@ -96,6 +96,8 @@ export default async function(eleventyConfig) {
   eleventyConfig.addCollection('tagList', tagList);
   eleventyConfig.addCollection('genreList', genreList);
   eleventyConfig.addCollection('featured', featured);
+  // The posts that get the generated title card (src/common/og-images.njk); head/meta-info.njk names the same layouts.
+  eleventyConfig.addCollection('titleCards', c => [...byCategory('article')(c), ...byCategory('note')(c)]);
   // /now's pickers: a list of paths inside one post folder → the posts, in order (same rules as Featured).
   eleventyConfig.addFilter('pickPosts', (items, type, posts) => resolvePicks(items, (posts ?? []).map(post => ({ type, post }))));
 
