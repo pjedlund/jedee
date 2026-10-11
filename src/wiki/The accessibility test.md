@@ -60,7 +60,7 @@ export const tests = {
   pa11y: {
     // Empty = test all pages. Four layout shapes are covered: chrome-and-prose (the first four), a media post (/audio/), a very long index inside a custom element (/activities/), and a post whose image opens in the lightbox (/jams/).
     // ⚠ Keep this list in step by hand when a post is renamed or deleted — a path that no longer exists scores zero errors and passes silently.
-    customPaths: ['/', '/about/', '/articles/', '/design-system/', '/audio/nybrostrand-beach/', '/activities/', '/jams/50ft-queenie/', '/reading/what-is-art/', '/watching/paris-texas/', '/now/'],
+    customPaths: ['/', '/accessibility/', '/articles/', '/design-system/', '/audio/nybrostrand-beach/', '/activities/', '/jams/50ft-queenie/', '/reading/a-confession/', '/watching/the-killing/', '/now/'],
     globalIgnore: [],
     chromePath: process.env.PA11Y_CHROME || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
   }
