@@ -11,7 +11,7 @@ schema: BlogPosting
     {% set routeJson = page.inputPath | routeGeoJSON %}
     {% if routeJson %}
       {#- @breakout puts the .popout class on the component's <is-land> root (the real grid child), so the route map breaks out one step wider than the prose column. A class here would land on the inner <place-map> (webc:root), a grid grandchild, and do nothing. #}
-      <place-map @breakout="popout" @place="this route">
+      <place-map @breakout="popout" @place="this route" @activity="{{ activityType | slugify }}">
         {#- ⚠ Empty 16:9 box rendered server-side so its aspect-ratio holds the space from first paint; place-map.js adopts it. #}
         <div class="place-map-live" data-place-map-box>
           <p class="place-map-pending">Map of this route</p>

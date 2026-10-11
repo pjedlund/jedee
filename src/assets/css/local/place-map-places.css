@@ -26,9 +26,10 @@ Places mode (the activity index and its route pages): the pending caption, per-t
   }
 }
 
-/* Each row's dot color, read by place-map.js; the colors per type are in variables.css. */
+/* Each row's dot and each route's line, in the type's color (variables.css); read by place-map.js. */
 [data-activity] {
   --place-color: var(--activity-color);
+  --color-route-line: var(--activity-color);
 }
 
 /* Marker popups (click a dot → the place's name, linked), themed like the rest of the chrome. The tip is a border triangle, so its color goes on whichever side faces the box. */
