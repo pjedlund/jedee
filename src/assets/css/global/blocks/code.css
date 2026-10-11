@@ -1,10 +1,9 @@
 :root {
   --color-code-orange: hsl(30, 95%, 50%); /* dark theme: L=50 → 7:1 on --color-code-bg (was 30% = 2.9:1, fails AA) */
-  --color-code-blue: hsla(210, 90%, 95%, 0.8);
-  --color-code-indigo: hsla(260, 48%, 56%, 0.8);
-  --color-code-violet: hsla(314, 70%, 60%, 0.9);
-  --color-code-pink: hsl(350, 70%, 60%);
-  --color-code-pink: hsl(350, 70%, 60%);
+  --color-code-blue: hsl(205, 100%, 70%);
+  /* ⚠ No red or green: blue and orange carry the differences, after GitHub's color-blind themes. Run _local/design/cvd-check.mjs after any change (wiki: Syntax highlighting). */
+  --color-code-purple: hsl(270, 75%, 70%);
+  --color-code-gold: hsl(45, 90%, 65%);
   --color-code-gray: hsla(0, 0%, 70%, 0.75); /* updated to maintain a 5:1*/
   --color-code-text: color-mix(in oklab, var(--color-text-accent) 90%, var(--color-base-black));
   --code-border-size: var(--border-thickness);
@@ -16,10 +15,9 @@
   :root:not([data-theme='dark']) {
     --color-code-orange: hsl(30, 95%, 30%);
     --color-code-blue: hsla(210, 95%, 25%, 0.8);
-    --color-code-indigo: hsla(260, 50%, 65%, 0.9);
-    --color-code-violet: hsla(314, 80%, 42%, 1); /* light theme: L=42 → 5:1 on light bg (was 45% = 4.4:1, just under AA) */
-    --color-code-pink: hsl(350, 90%, 30%);
-    --color-code-gray: hsla(0, 0%, 35%, 0.85);
+    --color-code-purple: hsl(260, 60%, 40%);
+    --color-code-gold: hsl(35, 80%, 20%);
+    --color-code-gray: hsl(0, 0%, 33%);
     --color-code-text: color-mix(in oklab, var(--color-text-accent) 90%, var(--color-base-black));
     --code-border-size: var(--border-thickness);
     --code-border-style: solid;
@@ -29,10 +27,9 @@
 :root[data-theme='light'] {
   --color-code-orange: hsl(30, 95%, 30%);
   --color-code-blue: hsla(210, 95%, 25%, 0.8);
-  --color-code-indigo: hsla(260, 50%, 65%, 0.9);
-  --color-code-violet: hsla(314, 80%, 42%, 1); /* light theme: L=42 → 5:1 on light bg (was 45% = 4.4:1, just under AA) */
-  --color-code-pink: hsl(350, 90%, 30%);
-  --color-code-gray: hsla(0, 0%, 35%, 0.85);
+  --color-code-purple: hsl(260, 60%, 40%);
+  --color-code-gold: hsl(35, 80%, 20%);
+  --color-code-gray: hsl(0, 0%, 33%);
   --color-code-text: color-mix(in oklab, var(--color-text-accent) 90%, var(--color-base-black));
   --code-border-size: var(--border-thickness);
   --code-border-style: solid;
@@ -141,7 +138,7 @@ pre[class*='language-'] {
 }
 
 .token.boolean {
-  color: var(--color-code-pink);
+  color: var(--color-code-gold);
 }
 
 .token.builtin {
@@ -173,11 +170,11 @@ pre[class*='language-'] {
 }
 
 .token.constant {
-  color: var(--color-code-pink);
+  color: var(--color-code-gold);
 }
 
 .token.deleted {
-  color: var(--color-code-pink);
+  color: var(--color-code-gold);
 }
 
 .token.doctype {
@@ -185,11 +182,11 @@ pre[class*='language-'] {
 }
 
 .token.entity {
-  color: var(--color-code-pink);
+  color: var(--color-code-gold);
 }
 
 .token.function {
-  color: var(--color-code-pink);
+  color: var(--color-code-gold);
 }
 
 .token.hexcode {
@@ -197,12 +194,12 @@ pre[class*='language-'] {
 }
 
 .token.id {
-  color: var(--color-code-pink);
+  color: var(--color-code-gold);
   font-weight: var(--font-bold);
 }
 
 .token.important {
-  color: var(--color-code-pink);
+  color: var(--color-code-gold);
   font-weight: var(--font-bold);
 }
 
@@ -211,7 +208,7 @@ pre[class*='language-'] {
 }
 
 .token.keyword {
-  color: var(--color-code-violet);
+  color: var(--color-code-purple);
 }
 
 .token.number {
@@ -247,7 +244,7 @@ pre[class*='language-'] {
 }
 
 .token.selector {
-  color: var(--color-code-pink);
+  color: var(--color-code-gold);
 }
 
 .token.string {
@@ -255,23 +252,23 @@ pre[class*='language-'] {
 }
 
 .token.symbol {
-  color: var(--color-code-pink);
+  color: var(--color-code-gold);
 }
 
 .token.tag {
-  color: var(--color-code-pink);
+  color: var(--color-code-gold);
 }
 
 .token.unit {
-  color: var(--color-code-pink);
+  color: var(--color-code-gold);
 }
 
 .token.url {
-  color: var(--color-code-violet);
+  color: var(--color-code-purple);
 }
 
 .token.variable {
-  color: var(--color-code-pink);
+  color: var(--color-code-gold);
 }
 
 /* CodePen iframe */

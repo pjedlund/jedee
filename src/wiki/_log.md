@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-10-11] enrich | Syntax highlighting
+
+Colors rewritten for the palette rework after GitHub's color-blind themes: pink became gold, violet became purple, indigo dropped, and the dark-mode blue tuned away from plain text (it was 1.5 apart). The measurement table now includes the plain code text and the new weakest pairs, 9.4 dark and 8.7 light.
+
 ## [2026-10-09] enrich | Undefined custom properties
 
 Where the grep sweep stops (scope, false alarms) and the in-browser check that replaces it: resolve every `var()` chain on the elements each rule matches, per theme, after the islands hydrate, with a planted miss to prove the checker. Records the 2026-10-09 sweep of all nine island components (none found) and the trap that `on:visible` islands never hydrate in a hidden tab. Links [[is-land]].
