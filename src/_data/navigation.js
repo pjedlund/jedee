@@ -27,8 +27,8 @@ export default {
   // Footer nav. Now joins it once the page exists.
   bottom: [
     {
-      text: 'Style Guide',
-      url: '/styleguide/'
+      text: 'Design System',
+      url: '/design-system/'
     },
     {
       text: 'Imprint',

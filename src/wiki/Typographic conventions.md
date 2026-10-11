@@ -98,7 +98,7 @@ WCAG says little here directly. [1.4.8](https://www.w3.org/WAI/WCAG22/Understand
 
 ## In jedee
 
-Set on 2026-09-10 after a research pass and an audit of the site; the decisions are in `_local/design/Plan - Typographic utility classes.md`. The `text-wrap` reset is Eleventy Excellent stock, the rest is jedee's own. The style guide (`/styleguide/`) shows each feature off and on under "Type features".
+Set on 2026-09-10 after a research pass and an audit of the site; the decisions are in `_local/design/Plan - Typographic utility classes.md`. The `text-wrap` reset is Eleventy Excellent stock, the rest is jedee's own. The design system page (`/design-system/`) shows each feature off and on under Typography → Type features.
 
 ### Figures
 

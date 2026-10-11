@@ -1,5 +1,5 @@
 /**
- * Converts a DTCG token object into a flat array of {name, value, min, max, description} items for use in Nunjucks templates (e.g. the styleguide).
+ * Converts a DTCG token object into a flat array of {name, value, min, max, description} items for use in Nunjucks templates (e.g. the design system page).
  *
  * @param {object} dtcgObject - DTCG-formatted token group
  * @returns {array} [{name, value, min, max, description}]

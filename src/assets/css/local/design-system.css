@@ -1,38 +1,50 @@
-.styleguide {
+.design-system {
   --region-space-top: var(--space-xl-2xl);
   --spot-color: color-mix(in oklab, var(--color-bg) 97%, var(--color-text));
 }
 
 /* Token labels only: running-text code and code blocks keep the site's size, since the type samples show the site's setting. */
-.styleguide :is(li, td, .type-sample-label) code:not(.rhythm-sample *) {
+.design-system :is(li, td, .type-sample-label) code:not(.rhythm-sample *) {
   font-size: var(--size-step-min-2);
 }
 
-.styleguide li p:has(code) {
+.design-system li p:has(code) {
   line-height: var(--leading-flat);
 }
 
-.styleguide section {
+.design-system section {
   --region-space-bottom: var(--space-l-xl);
   --region-space-top: var(--space-l-xl);
 }
 
 /* ⚠ :not(.rhythm-sample *) here and below: the vertical-rhythm sample is prose and must show the site's own headings, code and tables. */
-.styleguide :is(h2, h3):not(.rhythm-sample *) {
+.design-system :is(h3, h4):not(.rhythm-sample *) {
   font-size: var(--size-step-0);
   font-family: var(--font-base);
   text-transform: uppercase;
 }
 
-.styleguide h2:not(.rhythm-sample *) {
+.design-system h3:not(.rhythm-sample *) {
   letter-spacing: var(--tracking-wide);
 }
 
-.styleguide .colors {
+/* A numbered part: the number in the accent, the part's name at heading size, sitting close above its first section. */
+.design-system .part {
+  --region-space-bottom: 0;
+  --flow-space: var(--space-3xs);
+}
+
+.design-system .part-number {
+  font-size: var(--size-step-min-1);
+  font-weight: var(--font-bold);
+  color: var(--color-accent-orange-text);
+}
+
+.design-system .colors {
   --cluster-vertical-alignment: flex-start;
 }
 
-.styleguide .colors ul {
+.design-system .colors ul {
   --min: 10ch;
   --gap: var(--space-s-m);
 
@@ -42,14 +54,14 @@
   grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--min)), 1fr));
 }
 
-.styleguide .colors li {
+.design-system .colors li {
   display: grid;
   gap: var(--space-xs);
   grid-row: span 2;
   grid-template-rows: subgrid;
 }
 
-.styleguide .colors li div {
+.design-system .colors li div {
   max-inline-size: var(--max-img-width, 100%);
   block-size: auto;
   aspect-ratio: 16/9;
@@ -58,27 +70,27 @@
   border: var(--stroke);
 }
 
-.styleguide .type-sample {
+.design-system .type-sample {
   padding: var(--space-s-m);
   background-color: var(--spot-color);
   border-radius: var(--border-radius-medium);
 }
 
-.styleguide .type-sample-label {
+.design-system .type-sample-label {
   font-size: var(--size-step-min-2);
   line-height: var(--rhythm-small-leading, normal); /* ⚠ in prose it would inherit the body line as a length */
   color: var(--color-text-accent);
 }
 
 /* The Plain list sample is a prose list with the browser's own markers, so only the markers differ from the Site sample beside it. */
-.styleguide [data-sample='plain'] li::marker {
+.design-system [data-sample='plain'] li::marker {
   content: normal;
   color: inherit;
   font-variant-numeric: tabular-nums;
 }
 
 /* Mirrors the site's capital labels (site-logo, breadcrumb, buttons). */
-.styleguide .type-caps {
+.design-system .type-caps {
   font-size: var(--size-step-min-2);
   font-weight: var(--font-bold);
   letter-spacing: var(--tracking-wide);
@@ -86,20 +98,20 @@
 }
 
 /* The samples are taller than the text beside them, so baseline alignment sinks the token name to the sample's baseline. */
-.styleguide .table-wrapper:not(.rhythm-sample *) {
+.design-system .table-wrapper:not(.rhythm-sample *) {
   --table-cell-align: middle;
 }
 
-.styleguide .table-wrapper h3 {
+.design-system .table-wrapper h4 {
   font-size: inherit;
 }
 
-.styleguide .space {
+.design-system .space {
   background-color: var(--color-text);
   display: block;
 }
 
-.styleguide .tabs {
+.design-system .tabs {
   align-items: center;
   border-block-end: var(--stroke);
   display: flex;
@@ -134,6 +146,6 @@ A prose sample (partials/rhythm-sample.njk) with a lattice toggle: a checkbox an
 }
 
 /* The page sits in the wide 97rem wrapper, so its running text takes prose's 54ch measure; keep the two in step. */
-.styleguide p:not(.rhythm-sample *) {
+.design-system p:not(.rhythm-sample *) {
   max-inline-size: 54ch;
 }
