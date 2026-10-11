@@ -13,10 +13,10 @@
 /* ⚠ Guarded so a dark toggle on a light-mode device keeps the dark palette above. */
 @media (prefers-color-scheme: light) {
   :root:not([data-theme='dark']) {
-    --code-orange: hsl(30, 95%, 30%);
-    --code-blue: hsla(210, 95%, 25%, 0.8);
-    --code-purple: hsl(260, 60%, 40%);
-    --code-gold: hsl(35, 80%, 20%);
+    --code-orange: hsl(30, 95%, 26%);
+    --code-blue: hsl(215, 70%, 28%);
+    --code-purple: hsl(270, 60%, 44%);
+    --code-gold: hsl(35, 80%, 16%);
     --code-gray: hsl(0, 0%, 33%);
     --color-code-text: color-mix(in oklab, var(--color-text-accent) 90%, var(--color-base-black));
     --code-border-size: var(--border-thickness);
@@ -25,10 +25,10 @@
 }
 
 :root[data-theme='light'] {
-  --code-orange: hsl(30, 95%, 30%);
-  --code-blue: hsla(210, 95%, 25%, 0.8);
-  --code-purple: hsl(260, 60%, 40%);
-  --code-gold: hsl(35, 80%, 20%);
+  --code-orange: hsl(30, 95%, 26%);
+  --code-blue: hsl(215, 70%, 28%);
+  --code-purple: hsl(270, 60%, 44%);
+  --code-gold: hsl(35, 80%, 16%);
   --code-gray: hsl(0, 0%, 33%);
   --color-code-text: color-mix(in oklab, var(--color-text-accent) 90%, var(--color-base-black));
   --code-border-size: var(--border-thickness);
@@ -37,8 +37,8 @@
 
 /* Each syntax color takes a smidgeon of a theme color, so code sits in the site's palette. ⚠ Either knob moves every color pair: re-measure the rendered colors, as on the wiki page Syntax highlighting. */
 :root {
-  --code-tint: var(--color-text);
-  --code-tint-amount: 15%;
+  --code-tint: var(--color-accent-orange);
+  --code-tint-amount: 20%;
 
   --color-code-orange: color-mix(in oklab, var(--code-orange), var(--code-tint) var(--code-tint-amount));
   --color-code-blue: color-mix(in oklab, var(--code-blue), var(--code-tint) var(--code-tint-amount));

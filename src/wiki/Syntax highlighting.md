@@ -80,19 +80,19 @@ Table: Token colors in GitHub dark, GitHub's color-blind theme and jedee dark
 | class name | purple `#d2a8ff` | purple `#d2a8ff` | orange |
 | attribute name | blue `#79c0ff` | blue `#79c0ff` | blue, 205° |
 
-The light themes follow the same pattern: keyword `#cf222e` becomes `#bc4c00`, and a regular expression `#116329` becomes `#0550ae`. The rule to take from it is to keep red and green out of any pair that has to be told apart, and let blue and orange carry the difference. jedee took the rule rather than the colors. Its old pink, 350°, was the red GitHub removes, so it became gold. Its violet, 314°, leaned toward red and became a purple. The unused indigo was dropped. In light mode the gold is a dark brown, 35° at 20% lightness, which tells it apart from the orange by lightness. GitHub's light theme does the same with its two oranges.
+The light themes follow the same pattern: keyword `#cf222e` becomes `#bc4c00`, and a regular expression `#116329` becomes `#0550ae`. The rule to take from it is to keep red and green out of any pair that has to be told apart, and let blue and orange carry the difference. jedee took the rule rather than the colors. Its old pink, 350°, was the red GitHub removes, so it became gold. Its violet, 314°, leaned toward red and became a purple. The unused indigo was dropped. In light mode the gold is a dark brown, 35° at 16% lightness, which tells it apart from the orange by lightness. GitHub's light theme does the same with its two oranges.
 
 The choice was measured, not judged by eye. Each palette was run through [Machado et al.'s 2009 simulation](https://www.inf.ufrgs.br/~oliveira/pubs_files/CVD_Simulation/CVD_Simulation.html) of full protanopia and deuteranopia, with translucent colors first composited over the code block background. Every pair of colors was then compared by distance in OKLab (×100, where about 2 is the smallest difference most people can see). jedee's rows include the plain code text, because a token that looks like plain text is just as lost as two tokens that look alike:
 
 Table: The weakest color pair in each palette under simulated color blindness
 | Palette | Weakest pair, protanopia | Weakest pair, deuteranopia |
 | --- | --- | --- |
-| jedee dark | blue / text 9.5 | blue / purple 9.4 |
+| jedee dark, before the tint | blue / text 9.5 | blue / purple 9.4 |
 | GitHub dark, color-blind | class name / constant 3.2 | class name / constant 2.3 |
-| jedee light | gold / text 8.7 | gold / gray 9.5 |
+| jedee light, before the tint | gold / text 8.7 | gold / gray 9.5 |
 | GitHub light, color-blind | tag / class name 2.3 | tag / class name 2.4 |
 
-The table measures the five colors as they are written. On the page each one is then mixed with 15% of the theme's text color (`--code-tint` and `--code-tint-amount`), so code sits in the site's slate palette rather than beside it. The mix brings the weakest pairs down to 7.9 in dark mode and 8.0 in light, and nudges contrast up. Mixing in the orange accent instead was measured too: it warms everything but takes light-mode contrast down to 4.7:1 at 15%. ⚠ The checker models the colors before the mix, so after changing either knob, read the rendered colors from the page.
+On the page each color is then mixed with 20% of the site's orange accent (`--code-tint` and `--code-tint-amount`), so code sits in the site's palette rather than beside it. The mix pulls colors together, so the light theme's base colors were retuned for it: a darker orange, a deeper brown gold, a slate blue and a lighter purple. Measured after the mix, the weakest pairs are 7.2 in dark mode (blue / purple, deuteranopia) and 7.6 in light (orange / gray, deuteranopia), and every color clears 5.3:1 against the code background. A 15% mix of the slate text color was tried first and measured about the same; the orange was chosen instead. ⚠ Any change to either knob moves every pair, and a darker orange in light mode quickly merges with the gold, so re-measure the rendered colors after a change.
 
 Before the rework, jedee's weakest pairs were 5.8 in light mode and 6.0 in dark mode. Plain text was not in that check. Adding it showed that the old dark-mode blue, a near-white at 95% lightness, was 1.5 from the text color, so attribute names looked like their values to every reader. Every color now also clears 5:1 against the code block background in both themes, measured on the page. Two limits: the simulation models the most severe form of each condition, and a distance says nothing about which colors a reader with the condition finds comfortable. The check is kept, local-only, at `_local/design/cvd-check.mjs`; run it after any change to the palette.
 
