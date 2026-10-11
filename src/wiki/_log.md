@@ -7,7 +7,7 @@ Append-only. One entry per ingest / query-filed / lint, newest first. Entry form
 
 ## [2026-10-11] enrich | Open Graph images
 
-Notes now get the generated title card: a `titleCards` collection (articles + notes) feeds the generator, and the head's condition names both layouts. The "only articles" paragraph and the coverage list updated.
+Notes now get the generated title card: a `titleCards` collection (articles + notes) feeds the generator, and the head's condition names both layouts. The "only articles" paragraph and the coverage list updated. Video and recipe followed on their artwork: maxres YouTube thumbnail before the letterboxed hqdefault, PeerTube left on the default.
 
 ## [2026-10-11] enrich | Syntax highlighting
 

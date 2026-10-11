@@ -63,7 +63,7 @@
     {{- meta.siteName -}}
   {%- endif -%}"
 />
-{# Four sources, most specific first. `ogCard` is an artwork post's composited card (npm run og:cards); `ogImage` is the post's own artwork self-hosted at build time (src/_config/utils/og-image.js), set by the photo and jam data files and null everywhere else; then Eleventy Excellent's generated title card for articles and notes (collections.titleCards); then the site default. #}
+{# Four sources, most specific first. `ogCard` is an artwork post's composited card (npm run og:cards); `ogImage` is the post's own artwork self-hosted at build time (src/_config/utils/og-image.js), set by the photo, jam, video and recipe data files and null everywhere else; then Eleventy Excellent's generated title card for articles and notes (collections.titleCards); then the site default. #}
 <meta
   property="og:image"
   content="{%- if ogCard -%}
@@ -80,7 +80,7 @@
   {%- if ogCard -%}
     {{- title -}}, on a card beside its cover artwork
   {%- elif ogImage -%}
-    {{- photo.alt | default(coverAlt | default('Cover for ' + title)) -}}
+    {{- photo.alt | default(ogAlt | default(coverAlt | default('Cover for ' + title))) -}}
   {%- elif layout == 'post' or layout == 'note' -%}
     {{- title -}}
   {%- else -%}
