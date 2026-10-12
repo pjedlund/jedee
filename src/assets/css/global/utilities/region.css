@@ -9,3 +9,10 @@
   padding-block-start: var(--region-space-top, var(--region-space-fallback));
   padding-block-end: var(--region-space-bottom, var(--region-space-fallback));
 }
+
+/* The page's first region pads to a whole line below the 2½-line header, so the first text starts on the rhythm lattice (site-header.css, prose-rhythm.css). */
+@supports (width: round(1px, 1px)) {
+  main > .region:first-child {
+    padding-block-start: calc(round(var(--region-space-top, var(--region-space-fallback)) + var(--line-half), var(--line)) - var(--line-half));
+  }
+}
