@@ -253,16 +253,17 @@ Both figures are `src/wiki/_sources/vertical-rhythm.html`, frozen since the old 
 Prose is the system: `src/assets/css/global/blocks/prose-rhythm.css` holds every rule above, scoped to `.prose`, beside `prose.css`, whose old spacing rules it replaced. Every page that sets `.prose` runs on it, which is every post type, wiki page, plain page, listing page and the webmentions box. It was built as a scoped prototype (`[data-rhythm]`, a page-level stylesheet, a dev-only `?rhythm=off` switch with scroll-synced tabs for comparing) and folded in on 2026-10-01 once it covered everything. The unit and its steps:
 
 ```css
-.prose {
+body {
   --line: round(clamp(1.4em, 1.3635rem + 1.4951vw, 1.5em), 1px);
-  line-height: var(--line);
-
   --line-quarter: calc(var(--line) / 4);
   --line-half: calc(var(--line) / 2);
   --line-3q: calc(var(--line) * 0.75);
   --line-1h: calc(var(--line) * 1.5);
   --line-2: calc(var(--line) * 2);
+}
 
+.prose {
+  line-height: var(--line);
   --rhythm-gap: var(--line-3q);
   --rhythm-after-heading: var(--line-half);
   --rhythm-small-leading: var(--line-3q);
@@ -270,7 +271,7 @@ Prose is the system: `src/assets/css/global/blocks/prose-rhythm.css` holds every
 }
 ```
 
-It changes no token, and `flow.css` is untouched: it works through `--flow-space`, the published property of the flow composition ([[Configuring a layout composition]]).
+The unit sits on `body` rather than `.prose` since 2026-10-12, so the page chrome can use it too (see "The page above the prose" below). Body and prose share a font size, so the value is the same. It changes no token, and `flow.css` is untouched: it works through `--flow-space`, the published property of the flow composition ([[Configuring a layout composition]]).
 
 ⚠ **Global CSS is in cascade layers; page-level stylesheets are not, so they win whatever their selector.** A component whose own stylesheet sets the same property as the rhythm keeps its own value, so each such component takes the line steps in its own file, with the old value as the fallback outside prose: `table.css` (cell and caption padding, band rules painted into the cells), `media-meta.css`, `activity.css`, `event-status.css`, `post.css` (the subtitle and the 16:9 featured image), and the two video-link components. The `--line` registration still works from inside a layer.
 
@@ -294,7 +295,7 @@ The paragraph gap is three-quarters of a line, chosen over half a line on 2026-1
 
 ### On any page
 
-<kbd><kbd>⌥</kbd><kbd>R</kbd></kbd> draws the same lattice over any page, and <kbd><kbd>⌥</kbd><kbd>G</kbd></kbd> the column grid ([[Keyboard shortcuts]]); both stay on for the tab. The script measures the line and the first block's top from `.prose > .wrapper-pass`, and starts the lines one line above the page top with `mod()`, so they run from the top of the page and still meet the prose's first line. A page with no prose, such as the landing page or an archive, gets the body's computed line height counted from the top. That is 27.55px rather than a whole pixel, so the lines there can look slightly uneven.
+<kbd><kbd>⌥</kbd><kbd>R</kbd></kbd> draws the same lattice over any page, and <kbd><kbd>⌥</kbd><kbd>G</kbd></kbd> the column grid ([[Keyboard shortcuts]]); both stay on for the tab. The lines are drawn in the body's `--line` from the top of the page, so they are the same on every page; the script only stretches the layer to the page's height. Until 2026-10-12 they were phased to the prose's first block instead, and a page with no prose used the body's fractional line height, so the lines moved from page to page.
 
 The lines started out as the body's background, and every card, table row and section with a background of its own hid them. They are now a separate layer laid over the page and blended into it. In light mode the layer uses `mix-blend-mode: darken`, which keeps the darker of the two colors at each pixel: a blue line darkens a white card, but black text is already darker than the line, so the text stays on top. In dark mode it uses `lighten` for the same reason. The result reads as lines above the backgrounds and below the text, without either knowing the other exists.
 
@@ -316,7 +317,11 @@ The overlay's code is `local/dev-grid.css` and `bundle/dev-grid.js`, shipped on 
 
 ### Not done
 
-- **Page-level space.** Region padding, the header and the footer stay on the Utopia tokens. They frame the text rather than interrupt it.
+- **Page-level space.** Region padding and the footer stay on the Utopia tokens. They frame the text rather than interrupt it. Archive pages, which open with the blue banner, are not on the lattice.
+
+### The page above the prose
+
+Since 2026-10-12 the top of the page is counted in lines too. The color bar at the top is a border on `body`, half a line thick: a border takes up real space, so everything below starts after it, which is what the lattice needs (a shadow or an overlay would not push the page down). The site header is two lines tall, so its row is centred on line 1½ and its bottom rule lands on line 2½; the rule is an inset shadow because a 1px border would add a pixel. The first region on the page then rounds its top padding so the first text starts on a whole line (`utilities/region.css`). On a line with an odd number of pixels the half-line bar is a fraction of a pixel, and the screen rounds it.
 
 Source: research session 2026-09-30. jedee's CSS was audited in the repository, and Eleventy Excellent's read from [its repository](https://github.com/madrilene/eleventy-excellent). Bernat's article and Roberts' post were read from their sources on GitHub, and the browser support dates are from the web-features data. The Every Layout and Piccalilli pages could not be fetched from the session; they are paraphrased, not quoted.
 

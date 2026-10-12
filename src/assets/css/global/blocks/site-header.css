@@ -8,3 +8,23 @@ The full-width header band. The <header> spans the viewport while its contents s
 
   border-block-end: 1px solid var(--site-header-border-color);
 }
+
+/* Two lines tall under the half-line top bar, so its row centres on line 1½ and the bottom rule lands on line 2½. ⚠ An inset shadow, not the border: a border adds 1px and pushes the page off the lattice. */
+@supports (width: round(1px, 1px)) {
+  .site-header {
+    min-block-size: var(--line-2);
+    align-content: center;
+    border-block-end: none;
+    box-shadow: inset 0 -1px 0 var(--site-header-border-color);
+  }
+
+  .site-header .breadcrumb {
+    padding-block: 0;
+  }
+
+  /* ⚠ Its natural height, evened up or down so both edges centred on line 1½ fall on whole pixels; a fractional edge snaps and the frame sits visibly off-centre. */
+  .site-header .menu-toggle {
+    block-size: calc(var(--line) - round(var(--line) - (1em + 2 * var(--space-xs) + 2 * var(--border-thickness)), 2px));
+    padding-block: 0;
+  }
+}
