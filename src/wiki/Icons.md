@@ -41,7 +41,7 @@ Table: The icon folders
 | Folder | Holds | Source |
 | --- | --- | --- |
 | `posts/` | One icon per post type, used by the main menu, the meta line and search results | Phosphor fill |
-| `misc/` | Interface glyphs: gallery arrows, the menu caret, search, clear, the feed | Phosphor fill; search is Phosphor regular |
+| `misc/` | Interface glyphs: gallery arrows, the menu caret, search, clear, the feed | Phosphor fill; search and clear are Phosphor regular |
 | `activity/` | One icon per activity type, in the activities table and on the meta line | Phosphor fill |
 | `platform/` | Footer platform logos, the GitHub mark beside "Revised", the video-link icons | Simple Icons |
 
@@ -49,7 +49,7 @@ Each Phosphor file is the icon's path in a `viewBox="0 0 256 256"` with `width="
 
 The files kept their Lucide names when their contents changed, so no template or data file had to change, and `src/_data/navigation.js` still names a post type's icon by the old word. Several no longer describe what they draw: `chef-hat.svg` is a cooking pot, `dumbbell.svg` a barbell, `repeat-2.svg` Phosphor's repeat, `reply.svg` a bent arrow. The design system page lists every icon with its file name.
 
-**Search is the one outline icon**, a choice made on seeing the filled magnifier in place. It uses Phosphor's regular weight, which keeps it in the family.
+**Search and clear are the two outline icons**, a choice made on seeing their filled versions in place. Both use Phosphor's regular weight, which keeps them in the family; filled, the clear button's X is cut out of a rounded square.
 
 **Platform logos come from Simple Icons**, not Phosphor. Phosphor has no mark for Bluesky, Flickr, Ko-fi, PeerTube or Strava, and the two sets differ in size side by side: Phosphor pads a logo inside its 256 grid, Simple Icons runs it to the edge of 24.
 
