@@ -17,6 +17,15 @@ colorRoles:
   - {token: accent-orange, role: Accent, use: 'Link underlines, the logo mark, focus and form accents. The same in both themes.'}
   - {token: logo-icon, role: Logo mark, use: 'The mark in the header and breadcrumb.'}
   - {token: border-top, role: Page edge, use: 'The band along the top of every page.'}
+uiIcons:
+  - {file: arrow-left, use: 'Previous image in a gallery.'}
+  - {file: arrow-right, use: 'Next image in a gallery.'}
+  - {file: chev-down, use: 'The menu button.'}
+  - {file: x, use: 'Clears the search field. Outline, like search.'}
+  - {file: search, use: 'Site search. Outline, in Phosphor''s regular weight.'}
+  - {file: heart, use: 'The footer credit.'}
+  - {file: star, use: 'The button samples on this page.'}
+  - {file: rss, use: 'The feed link in the footer.'}
 tokenGroups:
   - name: Color
     files:
@@ -58,6 +67,7 @@ parts:
   - {id: color, title: Color}
   - {id: grid, title: Grid}
   - {id: spacing, title: Spacing}
+  - {id: icons, title: Icons}
   - {id: patterns, title: Patterns}
   - {id: tokens, title: Tokens}
 colorGroups:
@@ -505,6 +515,36 @@ colorGroups:
   </section>
   <header class="part | flow region">
     <p class="part-number">06</p>
+    <h2 id="icons">Icons</h2>
+  </header>
+  <section class="flow region">
+    <h3 class="heading-line">Post types</h3>
+    <p>Icons are filled, to match the solid logo mark. They come from <a href="https://phosphoricons.com/">Phosphor</a>'s fill weight, drawn on a 256 grid and colored by <code>currentColor</code>, so an icon takes the color of the text beside it. Each file sits in <code>src/assets/svg/</code> under its old name, and <code>{% raw %}{% svg %}{% endraw %}</code> inlines it.</p>
+    <ul class="icon-specimens | grid" role="list">
+      {%- for t in navigation.postTypes %}
+        <li>{% svg 'posts/' + t.icon %}<span>{{ t.text }}</span><code>{{ t.icon }}</code></li>
+      {%- endfor %}
+    </ul>
+  </section>
+  <section class="flow region">
+    <h3 class="heading-line">Interface</h3>
+    <ul class="icon-specimens | grid" role="list">
+      {%- for i in uiIcons %}
+        <li>{% svg 'misc/' + i.file %}<span>{{ i.use }}</span><code>{{ i.file }}</code></li>
+      {%- endfor %}
+    </ul>
+  </section>
+  <section class="flow region">
+    <h3 class="heading-line">Platforms</h3>
+    <p>Platform logos come from <a href="https://simpleicons.org/">Simple Icons</a>, each brand's own mark in one color. Phosphor has no mark for several of them, and two sets side by side in the footer would differ in size.</p>
+    <ul class="icon-specimens | grid" role="list">
+      {%- for key, url in personal.platforms %}
+        <li>{% svg 'platform/' + key %}<code>{{ key }}</code></li>
+      {%- endfor %}
+    </ul>
+  </section>
+  <header class="part | flow region">
+    <p class="part-number">07</p>
     <h2 id="patterns">Patterns</h2>
   </header>
   <section class="flow region">
@@ -546,7 +586,7 @@ colorGroups:
   </section>
 
   <header class="part | flow region">
-    <p class="part-number">07</p>
+    <p class="part-number">08</p>
     <h2 id="tokens">Tokens</h2>
   </header>
   <section class="flow region">

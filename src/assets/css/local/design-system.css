@@ -209,3 +209,25 @@ A prose sample (partials/rhythm-sample.njk) with a lattice toggle: a checkbox an
 .design-system p:not(.rhythm-sample *) {
   max-inline-size: 54ch;
 }
+
+/*
+ICON SPECIMENS
+Each icon large, with its name and file.
+*/
+.design-system .icon-specimens {
+  --grid-min-item-size: 9rem;
+  --gutter: var(--space-s);
+}
+
+.design-system .icon-specimens li {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2xs);
+  font-size: var(--size-step-min-1);
+}
+
+.design-system .icon-specimens svg {
+  inline-size: var(--size-step-3);
+  block-size: var(--size-step-3);
+}

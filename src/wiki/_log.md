@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-10-14] ingest | Icons
+
+New page on the switch from Lucide outlines to Phosphor's fill weight: eight filled sets compared by coverage of the site's 28 icons, search kept as an outline, platform logos from Simple Icons, the file names kept from Lucide, and the `stroke-width` rules that now do nothing. Links [[Alt text]], [[Tooltips]], [[The interlinker's second render pass]], [[Figures]] and [[The theme toggle]]. Same session: [[Anatomy of a post type]], [[Tables]] and [[Figures]] lost their Lucide and stroke claims; the main-menu, site-search and layout-shift figures were re-shot with the new icons.
+
 ## [2026-10-11] enrich | The place map
 
 One color per activity type for dots and icons; orienteering changes shade per theme to stay clear of the hike green under red–green color blindness (5.8 → 11.0 / 15.1). The places mode now reads dot colors on every render, since a per-theme color left the map in the old theme's orange after a flip.

@@ -1,7 +1,7 @@
 ---
 description: "Styling data tables with modern CSS: markup that reads correctly unstyled, the browser defaults worth overriding, alignment and sticky headers, the scroll container a wide table needs, and rules painted as a gradient because a collapsed border gives one color per edge."
 date: 2026-09-15
-updated: 2026-10-06
+updated: 2026-10-14
 ---
 
 A table is for tabular data: values that relate along two axes at once, read across a row and down a column. That relationship is what `<table>` gives a screen reader, which announces the row and column headers as the reader moves from cell to cell, and it is lost the moment the grid is rebuilt from `div`s. A timetable, a price list or a comparison is tabular; a page layout is not.
@@ -195,9 +195,9 @@ From 2026-09-19 to 2026-10-07 the row rule was a "stamped" pair instead — a da
 
 Type leads the table as one icon per activity type, with the type name beside it in a `.visually-hidden` span — that span is what a screen reader announces and what the column sorts on, so the icon can be `aria-hidden`. `data-icon` centers a head and its cells together, so the label and the icon under it share the column's center without either knowing the other's width, and holds the column at `inline-size: 1%` so it keeps the label's own width. Without that last part the column takes a share of whatever width the table has spare once every column is served, and the shared center — and with it the first column's inset — slides right by half the slack: 37px in from the box instead of 31px at a 1440px window, against 31px at the closing edge.
 
-The icons carry `stroke="currentColor"` and take their color from the row's existing `data-activity`, which keeps the SVGs theme-agnostic and the colors in CSS where the palette is.
+The icons are Phosphor's fill weight ([[Icons]]), carry `fill="currentColor"`, and take their color from the row's existing `data-activity`, which keeps the SVGs theme-agnostic and the colors in CSS where the palette is.
 
-**A design tool's SVG export is not a web asset.** Penpot fakes an inner stroke by doubling the stroke width and clipping half of it away: the geometry is repeated three times and every file carries `clipPath` ids of `a` and `b`. Inlined across 180 rows that is 180 duplicate ids in one document, and the files ran 7–30 KB each. Rebuilt as a single path at the real stroke width they are a few hundred bytes. The same trap applies to any tool that emulates a stroke alignment CSS and SVG do not have.
+**A design tool's SVG export is not a web asset.** The first activity icons were drawn in Penpot, and Penpot fakes an inner stroke by doubling the stroke width and clipping half of it away: the geometry is repeated three times and every file carries `clipPath` ids of `a` and `b`. Inlined across 180 rows that is 180 duplicate ids in one document, and the files ran 7–30 KB each. Rebuilt as a single path at the real stroke width they are a few hundred bytes. The same trap applies to any tool that emulates a stroke alignment CSS and SVG do not have.
 
 A type with no icon file fails the build by name. Deliberate: a silent fallback hides a new type instead of asking for its icon.
 

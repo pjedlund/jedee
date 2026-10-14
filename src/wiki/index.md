@@ -37,6 +37,7 @@ Each entry below says what a page covers and why you would open it. The traps an
 - [[Tables]] — markup that reads correctly unstyled, the browser defaults worth overriding, alignment, sticky headers, and what a table wider than the page needs. Ends with this site's activities table.
 - [[Tooltips]] — the three kinds of tooltip, and when each one is honest.
 - [[Design token sync]] — generating a design tool's tokens from the code that owns them, and what does not survive the trip.
+- [[Icons]] — outline versus filled icon sets, picking a set by how many of your icons it really has, inline SVG colored by `currentColor`, and the filled Phosphor set this site uses.
 
 ## Images & media
 

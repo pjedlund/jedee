@@ -232,7 +232,7 @@ Table: Footer link rows in the web font and the fallback, by viewport width (202
 **The fonts disagree about the footer and nothing else.** The 2026-09-07 sweep also counted the `h1` and the intro paragraph at 360, 390, 412, 720, 1100 and 1280 px: neither changed line count anywhere, and document height was identical in both font states at every width.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/layout-shift-font-band.png" alt="The site footer rendered six times in a three-by-two grid: at 412, 430 and 444 pixels wide, each in the web font and in the metric-matched fallback. At 412 both states take three rows of links; at 444 both take two. Only at 430 do they disagree: two rows and 64 pixels in the web font, three rows and 99 in the fallback." width="2660" height="1210">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/layout-shift-font-band.png" alt="The site footer rendered six times in a three-by-two grid: at 412, 430 and 444 pixels wide, each in the web font and in the metric-matched fallback. At 412 both states take three rows of links; at 444 both take two. Only at 430 do they disagree: two rows and 64 pixels in the web font, three rows and 99 in the fallback." width="2660" height="1202">
   <figcaption>The band, re-measured rather than redrawn: each panel is the real footer in its own iframe at that viewport width, and the row counts and heights are read back off the rendered geometry. Only the middle column disagrees, and with no reserve its height follows the row count: that 35 px is how far the bottom-anchored footer moves.</figcaption>
 </figure>
 
