@@ -2,7 +2,7 @@ export default {
   // The post-type mega-menu (the main nav). Each entry:
   //   text       — visible name
   //   url        — section archive URL
-  //   icon       — lucide glyph in src/assets/svg/posts/ (swap = one-word edit)
+  //   icon       — Phosphor fill glyph in src/assets/svg/posts/ (swap = one-word edit)
   //   collection — Eleventy collection key, used for the per-type count
   // NB: Jam is asymmetric — URL /jams/ but collection key `jam` (see collections.js). Order here is the reading order shown in the panel, not the POST_TYPES order.
   postTypes: [
@@ -21,7 +21,6 @@ export default {
     {text: 'RSVPs', url: '/rsvps/', icon: 'calendar-check', collection: 'rsvp'},
     {text: 'Audio', url: '/audio/', icon: 'mic', collection: 'audio'},
     {text: 'Videos', url: '/videos/', icon: 'video', collection: 'video'},
-    // Lucide has no running-figure glyph yet (open feature request, not shipped) — `activity` (the heartbeat/pulse glyph) is Lucide's own fitness-tracking icon and matches the section name directly.
     {text: 'Activities', url: '/activities/', icon: 'activity', collection: 'activity'}
   ],
   // Footer nav. Now joins it once the page exists.
