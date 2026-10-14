@@ -1,7 +1,7 @@
 ---
 description: "The nine places a new post type must be wired in before it works, and where the sixteen types legitimately diverge."
 date: 2026-07-31
-updated: 2026-09-22
+updated: 2026-10-14
 ---
 
 jedee has **sixteen** post types. Adding one is not a design problem but a wiring problem: there are nine places a type has to appear before it works, and fifteen of the sixteen fill them the same way. This page is the checklist and the places types legitimately diverge.
@@ -74,7 +74,7 @@ export const POST_TYPES = ['article', 'note', 'reading', /* … */ 'activity'];
 - **Layout** — `src/_layouts/<type>.njk`. All sixteen exist. All sixteen open with `<article class="wrapper flow prose h-entry">`; see [[Microformats]].
 - **Card** — `src/_includes/partials/card-<type>.njk`. Ten types have their own; the five response types share one, and activities have none — see [[The title-less post types]].
 - **Feed** — fourteen types have one; two deliberately don't (reposts, events). See [[Per-type feeds]].
-- **Navigation** — one entry in `src/_data/navigation.js` with a Lucide icon and the collection key for the count. All sixteen are listed. Jam is asymmetric: URL `/jams/`, collection key `jam`.
+- **Navigation** — one entry in `src/_data/navigation.js` with a Phosphor icon ([[Icons]]) and the collection key for the count. All sixteen are listed. Jam is asymmetric: URL `/jams/`, collection key `jam`.
 - **Schema** — a `schema:` line in the layout's front matter. See [[One JSON-LD envelope for sixteen types]].
 
 Source: the fifteen per-type specs in `_local/project_docs/`, checked against live code 2026-07-31.

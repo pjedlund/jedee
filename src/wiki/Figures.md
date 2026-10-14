@@ -1,7 +1,7 @@
 ---
 description: "The figure and figcaption elements, images that follow the site's light or dark theme, and where a caption sits relative to the text around it."
 date: 2026-09-29
-updated: 2026-10-04
+updated: 2026-10-14
 ---
 
 A `<figure>` holds content that the text refers to but that could move elsewhere without breaking the reading order: an image, a diagram, a code listing, a table. Its `<figcaption>` labels it, and becomes the figure's accessible name, so a screen reader announces the caption when it reaches the figure ([MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/figure)). The caption is not a replacement for the image's `alt`: the alt says what the image shows, the caption says why it is there. See [[Alt text]].
@@ -70,7 +70,7 @@ figcaption::before {
 }
 ```
 
-`--caption-icon-stroke` is `0.2ex` and `--caption-icon-color` is `--color-text-subdued`. The YouTube and PeerTube icons under a video are SVG files ([[The YouTube embed]]), so they reach the same weight differently: `stroke-width: 0.2ex` on the `<svg>`, with `vector-effect: non-scaling-stroke` on its shapes so the viewBox doesn't scale it back up. The YouTube icon is `--color-red-vivid`. The video link keeps the older hanging layout, an icon floated into reserved padding, so its title lines all start after the icon. As a flex row (icon, gap, link) Chrome sized the link narrower than its own text: a 44-character title wrapped onto two lines inside a 1024px row with no `max-width` anywhere. A block with a floated icon has no such sizing step.
+`--caption-icon-stroke` is `0.2ex` and `--caption-icon-color` is `--color-text-subdued`. The YouTube and PeerTube icons under a video are SVG files ([[The YouTube embed]]). Until 2026-10-14 they were outlines matched to this weight with `stroke-width: 0.2ex` and `vector-effect: non-scaling-stroke`; they are now filled brand marks ([[Icons]]), and those two rules are left over and draw nothing. The YouTube icon is `--color-red-vivid`. The video link keeps the older hanging layout, an icon floated into reserved padding, so its title lines all start after the icon. As a flex row (icon, gap, link) Chrome sized the link narrower than its own text: a 44-character title wrapped onto two lines inside a 1024px row with no `max-width` anywhere. A block with a floated icon has no such sizing step.
 
 ### As wide as the image
 
