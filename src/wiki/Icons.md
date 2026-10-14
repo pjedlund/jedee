@@ -51,7 +51,7 @@ The files kept their Lucide names when their contents changed, so no template or
 
 **Search and clear are the two outline icons**, a choice made on seeing their filled versions in place. Both use Phosphor's regular weight, which keeps them in the family; filled, the clear button's X is cut out of a rounded square.
 
-**Platform logos come from Simple Icons**, not Phosphor. Phosphor has no mark for Bluesky, Flickr, Ko-fi, PeerTube or Strava, and the two sets differ in size side by side: Phosphor pads a logo inside its 256 grid, Simple Icons runs it to the edge of 24.
+**Platform logos come from Simple Icons**, not Phosphor. Phosphor has no mark for Bluesky, Flickr, Ko-fi, PeerTube or Strava, and the two sets differ in size side by side: Phosphor pads a logo inside its 256 grid, Simple Icons runs it to the edge of 24. The X link shows the old Twitter bird, which Simple Icons still carries, rather than the X wordmark.
 
 Three post types sit uneasily in the filled set because their icons are open strokes: Reposts, Replies and Activities. They read as outlines in the menu.
 
