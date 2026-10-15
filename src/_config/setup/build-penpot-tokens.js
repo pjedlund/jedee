@@ -10,7 +10,7 @@
 
 import {readFile, writeFile} from 'node:fs/promises';
 import {dirname, resolve} from 'node:path';
-import {fileURLToPath} from 'node:url';
+import {fileURLToPath, pathToFileURL} from 'node:url';
 
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../../..');
 const TOKENS_DIR = resolve(REPO_ROOT, 'src/_data/designTokens');
@@ -57,7 +57,7 @@ function remToPx(v) {
 	return v;
 }
 
-async function build() {
+export async function build() {
 	const [colors, fonts, spacing, textSizes, textLeading, textWeights, borderRadius, borderWidth, shadows, viewports, semanticColors, typography, buttonColors, megamenuColors] = await Promise.all([
 		readJSON('colors.json'),
 		readJSON('fonts.json'),
@@ -237,15 +237,18 @@ function countTokens(setObj) {
 	return n;
 }
 
-const dtcg = await build();
-await writeFile(OUTPUT_PATH, JSON.stringify(dtcg, null, 2) + '\n', 'utf8');
+// Run the file directly to write Penpot's copy; `build` is imported by build-figma-tokens.js for Figma's copy.
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+	const dtcg = await build();
+	await writeFile(OUTPUT_PATH, JSON.stringify(dtcg, null, 2) + '\n', 'utf8');
 
-const lines = SET_ORDER.map((name) => `  ${name.padEnd(20)} ${String(countTokens(dtcg[name])).padStart(3)} tokens`);
-const total = SET_ORDER.reduce((sum, n) => sum + countTokens(dtcg[n]), 0);
+	const lines = SET_ORDER.map((name) => `  ${name.padEnd(20)} ${String(countTokens(dtcg[name])).padStart(3)} tokens`);
+	const total = SET_ORDER.reduce((sum, n) => sum + countTokens(dtcg[n]), 0);
 
-console.log(`Wrote ${OUTPUT_PATH.replace(REPO_ROOT + '/', '')}\n`);
-console.log('Set summary:');
-console.log(lines.join('\n'));
-console.log(`  ${''.padEnd(20)} ${'---'.padStart(3)}`);
-console.log(`  ${'Total'.padEnd(20)} ${String(total).padStart(3)} tokens\n`);
-console.log('Next: open JEDEE - design tokens in Penpot, Tokens panel → import → select the file above.');
+	console.log(`Wrote ${OUTPUT_PATH.replace(REPO_ROOT + '/', '')}\n`);
+	console.log('Set summary:');
+	console.log(lines.join('\n'));
+	console.log(`  ${''.padEnd(20)} ${'---'.padStart(3)}`);
+	console.log(`  ${'Total'.padEnd(20)} ${String(total).padStart(3)} tokens\n`);
+	console.log('Next: open JEDEE - design tokens in Penpot, Tokens panel → import → select the file above.');
+}
