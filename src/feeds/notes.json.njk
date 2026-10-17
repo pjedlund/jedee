@@ -1,4 +1,8 @@
 ---
+# pagination only gates the file: an empty type gets no feed
+pagination:
+  data: collections.note
+  size: 100000
 permalink: /notes/feed.json
 eleventyExcludeFromCollections: true
 excludeFromSitemap: true
