@@ -1,4 +1,8 @@
 ---
+# pagination only gates the file: an empty type gets no feed
+pagination:
+  data: collections.activity
+  size: 100000
 permalink: /activities/feed.json
 eleventyExcludeFromCollections: true
 excludeFromSitemap: true

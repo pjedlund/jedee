@@ -1,4 +1,8 @@
 ---
+# pagination only gates the file: an empty type gets no feed
+pagination:
+  data: collections.bookmark
+  size: 100000
 permalink: /bookmarks/feed.xml
 eleventyExcludeFromCollections: true
 excludeFromSitemap: true
