@@ -8,5 +8,5 @@ tags:
   - indieweb
   - microformats
   - webmention
-draft: true
+draft: false
 ---
