@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-10-17] lint | Sveltia 0.212, empty post types
+
+The end-of-day lint found three pages behind the day's changes. [[Sveltia CMS]] now gives 0.212.0 and why it stops there (0.212.1's config checks), events and recipes as creatable, and the tickbox threshold for the searched types; [[Per-type feeds]] shows the pagination gate that keeps an empty type from writing a feed; [[Anatomy of a post type]] drops the empty state the archive partial no longer has.
+
 ## [2026-10-14] ingest | Icons
 
 New page on the switch from Lucide outlines to Phosphor's fill weight: eight filled sets compared by coverage of the site's 28 icons, search kept as an outline, platform logos from Simple Icons, the file names kept from Lucide, and the `stroke-width` rules that now do nothing. Links [[Alt text]], [[Tooltips]], [[The interlinker's second render pass]], [[Figures]] and [[The theme toggle]]. Same session: [[Anatomy of a post type]], [[Tables]] and [[Figures]] lost their Lucide and stroke claims; the main-menu, site-search and layout-shift figures were re-shot with the new icons.

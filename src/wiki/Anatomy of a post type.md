@@ -1,7 +1,7 @@
 ---
 description: "The nine places a new post type must be wired in before it works, and where the sixteen types legitimately diverge."
 date: 2026-07-31
-updated: 2026-10-14
+updated: 2026-10-17
 ---
 
 jedee has **sixteen** post types. Adding one is not a design problem but a wiring problem: there are nine places a type has to appear before it works, and fifteen of the sixteen fill them the same way. This page is the checklist and the places types legitimately diverge.
@@ -54,7 +54,7 @@ export const POST_TYPES = ['article', 'note', 'reading', /* … */ 'activity'];
 
 ## One archive template, fifteen wrappers
 
-`src/_includes/partials/archive-listing.njk` is the whole archive page — heading, intro, masonry, pagination, empty state. A type's archive page in `src/pages/` is frontmatter plus five `{% set %}` lines:
+`src/_includes/partials/archive-listing.njk` is the whole archive page — heading, intro, masonry, pagination. A type with no published posts gets no archive page at all (and no feed), so there is no empty state. A type's archive page in `src/pages/` is frontmatter plus five `{% set %}` lines:
 
 ```njk
 {% set cardPartial = "card-note.njk" %}

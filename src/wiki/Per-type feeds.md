@@ -1,7 +1,7 @@
 ---
 description: "What a feed is, why splitting one per category helps subscribers, and how jedee gives fourteen of sixteen post types their own — plus what a feed silently drops."
 date: 2026-07-31
-updated: 2026-09-22
+updated: 2026-10-17
 ---
 
 A feed is a machine-readable list of a site's recent items that a reader application polls for updates — the mechanism for following a site without an account, an algorithm, or anyone's permission. Three formats are in use: [RSS](https://www.rssboard.org/rss-specification), [Atom](https://datatracker.ietf.org/doc/html/rfc4287) (an IETF standard, stricter and more precisely specified), and [JSON Feed](https://www.jsonfeed.org/) (the same idea expressed in JSON). Readers generally accept all three; a site advertises whichever it publishes with a `<link rel="alternate">` in the head.
@@ -18,6 +18,10 @@ Fourteen of the sixteen post types publish their own feed, so a reader can subsc
 
 ```njk
 ---
+# pagination only gates the file: an empty type gets no feed
+pagination:
+  data: collections.photo
+  size: 100000
 permalink: /photos/feed.xml
 eleventyExcludeFromCollections: true
 excludeFromSitemap: true
@@ -29,7 +33,7 @@ excludeFromSitemap: true
 {%- include "feeds/photo-atom-body.njk" -%}
 ```
 
-Set four variables, include a shared body. Exactly the shape [[Anatomy of a post type]] describes for archive pages, applied to feeds — the thirty files in `src/feeds/` are all this, and all the actual work lives in nine shared bodies in `src/_includes/feeds/`.
+Set four variables, include a shared body. The pagination block writes nothing itself: with one page of up to 100,000 posts it only decides whether the file exists, and a type with no published posts gets no feed at all. A `permalink:` can't do that check, because Eleventy works out permalinks before collections exist. Exactly the shape [[Anatomy of a post type]] describes for archive pages, applied to feeds — the thirty files in `src/feeds/` are all this, and all the actual work lives in nine shared bodies in `src/_includes/feeds/`.
 
 ⚠ **The `permalink:` front matter, not the filename, decides the output path.** A feed is almost always made by copying an existing one, and a copy that keeps `permalink: /notes/feed.xml` collides with the real Notes feed and errors the build. Every spec that describes adding a feed repeats this warning, which suggests it has been earned.
 
