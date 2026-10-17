@@ -208,7 +208,6 @@ collections:
 # @until 1.0.0 — switches.noindexSite in settings.yaml: flip to false at go-live, alongside hideNav. Laptop only, so neither is in the form.
 # @until 1.0.0 — switches.hideNav in settings.yaml: hides the main nav in production only; flip to false at go-live.
 # @until 1.0.0 — switches.hideFeatured in settings.yaml: hides Featured on the start page in production only; flip to false at go-live.
-# ⚠ search.types (not in the form): collection keys, SINGULAR (`article`, not `articles`) — a plural gives an empty index with a green build.
 singletons:
   - name: settings
     label: Site settings
@@ -266,6 +265,7 @@ singletons:
         widget: object
         fields:
           - { name: enabled, label: Site search, widget: boolean, hint: 'Off removes /search.json, the header magnifier, and their CSS and JS' }
+          - { name: types, label: Searched post types, widget: select, multiple: true, options: [{ label: Articles, value: article }, { label: Notes, value: note }, { label: Books, value: reading }, { label: Films, value: watching }, { label: Jams, value: jam }, { label: Photos, value: photo }, { label: Recipes, value: recipe }, { label: Events, value: event }, { label: Recordings, value: audio }, { label: Videos, value: video }, { label: Activities, value: activity }, { label: Pages tagged searchable, value: searchable }, { label: Bookmarks, value: bookmark }, { label: Likes, value: like }, { label: Replies, value: reply }, { label: Reposts, value: repost }, { label: RSVPs, value: rsvp }] }
   - name: featured
     label: Featured
     file: src/_data/featured.yaml
