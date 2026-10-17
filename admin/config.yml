@@ -19,7 +19,7 @@ slug:
   lowercase: false
   sanitize_replacement: ' '
 
-# Each type shows only the fields worth editing on a phone; `thumbnail` names the key whose image shows in the list, and it needn't be a form field. every other key in a post is kept as-is on save. New posts only in notes and articles — the rest come from Micropub or the Web Clipper.
+# Each type shows only the fields worth editing on a phone; `thumbnail` names the key whose image shows in the list, and it needn't be a form field. every other key in a post is kept as-is on save. New posts only in notes, articles, events and recipes — the rest come from Micropub or the Web Clipper.
 collections:
   - name: notes
     label: Notes
@@ -130,7 +130,7 @@ collections:
     label: Events
     label_singular: Event
     folder: src/posts/events
-    create: false
+    create: true
     sortable_fields: *by_date
     fields:
       - *title
@@ -150,7 +150,23 @@ collections:
       - *syndication
       - *draft
       - *body
-  - { name: recipes, label: Recipes, label_singular: Recipe, folder: src/posts/recipes, thumbnail: cover, create: false, sortable_fields: *by_date, fields: *post_fields }
+  - name: recipes
+    label: Recipes
+    label_singular: Recipe
+    folder: src/posts/recipes
+    thumbnail: cover
+    create: true
+    sortable_fields: *by_date
+    fields:
+      - *title
+      - *description
+      - *date
+      - { name: yield, label: Yields, widget: string, required: false, hint: 'e.g. 8 servings' }
+      - { name: totalTime, label: Total time, widget: string, required: false, hint: 'PT45M = 45 min, PT1H30M = 1 h 30 min', pattern: ['^PT(\d+H)?(\d+M)?$', 'Write it as PT1H30M'] }
+      - *tags
+      - *syndication
+      - *draft
+      - *body
 
   # Response types: the shared fields plus the link each one answers.
   - name: bookmarks
