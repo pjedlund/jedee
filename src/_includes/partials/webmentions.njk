@@ -22,6 +22,7 @@
 {% set reactions = reactionsPhoto.concat(reactionsNoPhoto) %}
 
 {% if reactions | length or replies | length %}
+  {%- css "local" -%}{%- include 'css/webmentions.css' -%}{%- endcss -%}
   <aside class="webmentions | wrapper flow region prose">
     <h2 id="webmentions">Webmentions</h2>
     <p class="text-step-min-1">

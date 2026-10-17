@@ -62,6 +62,9 @@
     {%- if content and content.includes('data-table-') -%}
       {%- css "local" -%}{%- include 'css/table-options.css' -%}{%- endcss -%}
     {%- endif -%}
+    {%- if content and content.includes('class="footnote') -%}
+      {%- css "local" -%}{%- include 'css/footnotes.css' -%}{%- endcss -%}
+    {%- endif -%}
 
     {% include "partials/footer.njk" %}
     {% if eleventy.env.runMode === "serve" %}

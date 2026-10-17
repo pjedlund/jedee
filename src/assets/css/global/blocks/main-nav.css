@@ -108,6 +108,13 @@ A "Menu ⌄" button drops a two-column, table-of-contents-style panel of every p
   box-shadow: var(--megamenu-shadow);
 }
 
+/* Three rows or fewer: one short column instead of two half-empty ones. */
+.menu-toggle + .megamenu:not(:has(> li:nth-child(4))) {
+  --megamenu-width: min(20rem, 100%);
+
+  grid-template-columns: 1fr;
+}
+
 /* forced-colors: drop shadows aren't painted, so give the panel an edge back */
 @media (forced-colors: active) {
   .menu-toggle + .megamenu {

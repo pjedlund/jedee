@@ -17,7 +17,7 @@ export const domain = new URL(url).hostname;
 export const siteDomain = new URL(identity.website).hostname;
 export const noindexSite = switches.noindexSite;
 export const siteType = 'Person'; // schema
-export const locale = 'en_EN';
+export const locale = 'en_US';
 export const lang = 'en';
 export const skipContent = 'Skip to content';
 // for the site content author, used in <head> meta and post h-card microformat

@@ -12,8 +12,9 @@ dialog.addEventListener('click', event => {
   if (event.target === dialog && !inside) dialog.close();
 });
 
+// The footer button only on keyboard-and-mouse devices; phones keep it hidden.
 const opener = document.querySelector('[data-shortcuts-open]');
-if (opener) {
+if (opener && matchMedia('(hover: hover) and (pointer: fine)').matches) {
   opener.hidden = false;
   opener.addEventListener('click', () => dialog.showModal());
 }

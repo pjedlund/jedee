@@ -14,7 +14,10 @@
     {% endif %}
     <div class="cluster">
       {# Soft-launch: nav hidden in production (meta.navigation.hideNav) but always revealed in local dev (`eleventy --serve`) so it stays testable. Parenthesised because Nunjucks parses `not A or B` as `not (A or B)`. #}
-      {% if (not meta.navigation.hideNav) or (eleventy.env.runMode === "serve") %}
+      {# No post type has posts → no nav, so MENU never opens an empty panel. #}
+      {% set navPostCount = 0 %}
+      {% for item in navigation.postTypes %}{% set navPostCount = navPostCount + collections[item.collection].length %}{% endfor %}
+      {% if navPostCount and ((not meta.navigation.hideNav) or (eleventy.env.runMode === "serve")) %}
         {% include "partials/main-nav.njk" %}
       {% endif %}
       {% if settings.search.enabled %}
