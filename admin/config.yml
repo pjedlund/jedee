@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://unpkg.com/@sveltia/cms@0.212.0/schema/sveltia-cms.json
+# yaml-language-server: $schema=https://unpkg.com/@sveltia/cms@0.248.0/schema/sveltia-cms.json
 # Sveltia CMS at /admin/ — see _local/design/Reference - Sveltia CMS as the edit layer.md. ⚠ Never add a `category` field: it's inherited from each folder's data file.
 
 backend:
@@ -19,7 +19,7 @@ slug:
   lowercase: false
   sanitize_replacement: ' '
 
-# Each type shows only the fields worth editing on a phone; `thumbnail` names the key whose image shows in the list, and it needn't be a form field. every other key in a post is kept as-is on save. New posts only in notes, articles, events and recipes — the rest come from Micropub or the Web Clipper.
+# Each type shows only the fields worth editing on a phone; `thumbnail` and `filter` must name a field in the form (a hidden one will do); every other key in a post is kept as-is on save. New posts only in notes, articles, events and recipes — the rest come from Micropub or the Web Clipper.
 collections:
   - name: notes
     label: Notes
@@ -30,8 +30,8 @@ collections:
     fields: &post_fields
       - &title { name: title, label: Title, widget: string }
       - &description { name: description, label: Description, widget: text, required: false }
-      # ⚠ Plain text on purpose: Sveltia's datetime field drops seconds on open (21:02:11 → 21:02:00), whatever its options.
-      - &date { name: date, label: Date, widget: string, hint: 'YYYY-MM-DD, or YYYY-MM-DDTHH:mm:ss+02:00', pattern: ['^\d{4}-\d{2}-\d{2}', 'Start with YYYY-MM-DD'] }
+      # Native picker in Swedish time with seconds; saved as YYYY-MM-DDTHH:mm:ss+02:00, but only once the date is edited.
+      - &date { name: date, label: Date, widget: datetime, input_timezone: Europe/Stockholm, step: 1 }
       - &tags { name: tags, label: Tags, widget: list, required: false }
       - &syndication { name: syndication, label: Also on (URLs), widget: list, required: false, hint: 'One URL per line — shown as "Also on" at the foot of the post' }
       - &draft { name: draft, label: Draft, widget: boolean, required: false }
@@ -48,11 +48,12 @@ collections:
     sortable_fields: *by_date
     fields:
       - *title
-      # ⚠ Leave photo.src and photo.downloads undeclared: they're kept as-is on save, and a field would rewrite src's path or retype the R2 byte counts.
+      # ⚠ Keep photo.src hidden and photo.downloads undeclared: an image field would rewrite src's path, a number field retype the R2 byte counts.
       - name: photo
         label: Photo
         widget: object
         fields:
+          - { name: src, widget: hidden } # only so `thumbnail` can name it
           - { name: alt, label: Alt text, widget: text }
           - { name: caption, label: Caption, widget: string, required: false }
           - { name: format, label: Format, widget: string, required: false, hint: 'e.g. 6×17' }
@@ -123,7 +124,14 @@ collections:
       - *syndication
       - *draft
       - *body
-  - { name: activities, label: Activities, label_singular: Activity, folder: src/posts/activities, thumbnail: cover, create: false, sortable_fields: *by_date, fields: *post_fields }
+  - name: activities
+    label: Activities
+    label_singular: Activity
+    folder: src/posts/activities
+    thumbnail: cover
+    create: false
+    sortable_fields: *by_date
+    fields: [*title, *description, *date, *tags, { name: cover, label: Cover, widget: image, required: false, media_folder: /src/assets/images/activities, public_folder: /assets/images/activities }, *syndication, *draft, *body]
   - { name: audio, label: Audio, label_singular: Recording, folder: src/posts/audio, create: false, sortable_fields: *by_date, fields: *post_fields }
   - { name: videos, label: Videos, label_singular: Video, folder: src/posts/videos, create: false, sortable_fields: *by_date, fields: *post_fields }
   - name: events
@@ -134,13 +142,12 @@ collections:
     sortable_fields: *by_date
     fields:
       - *title
-      # ⚠ start/end are plain text for the same reason as `date`: the datetime field drops seconds.
       - name: event
         label: Event
         widget: object
         fields:
-          - { name: start, label: Starts, widget: string, hint: 'YYYY-MM-DDTHH:mm:ss+02:00', pattern: ['^\d{4}-\d{2}-\d{2}', 'Start with YYYY-MM-DD'] }
-          - { name: end, label: Ends, widget: string, required: false, hint: 'YYYY-MM-DDTHH:mm:ss+02:00', pattern: ['^\d{4}-\d{2}-\d{2}', 'Start with YYYY-MM-DD'] }
+          - { name: start, label: Starts, widget: datetime, input_timezone: Europe/Stockholm, step: 1 }
+          - { name: end, label: Ends, widget: datetime, required: false, input_timezone: Europe/Stockholm, step: 1 }
           - { name: location, label: Location, widget: string, required: false }
           - { name: url, label: Event page (URL), widget: string, required: false }
           - { name: status, label: Status, widget: select, required: false, hint: 'Anything but scheduled shows as a badge', options: [scheduled, cancelled, postponed, rescheduled, moved-online] }
@@ -161,6 +168,7 @@ collections:
       - *title
       - *description
       - *date
+      - { name: cover, label: Cover, widget: image, required: false, media_folder: /src/assets/images/recipes, public_folder: /assets/images/recipes }
       - { name: yield, label: Yields, widget: string, required: false, hint: 'e.g. 8 servings' }
       - { name: totalTime, label: Total time, widget: string, required: false, hint: 'PT45M = 45 min, PT1H30M = 1 h 30 min', pattern: ['^PT(\d+H)?(\d+M)?$', 'Write it as PT1H30M'] }
       - *tags
@@ -217,6 +225,7 @@ collections:
     fields:
       - *title
       - *description
+      - { name: layout, widget: hidden } # only so `filter` can name it
       - { name: date, label: Last changed, widget: string, required: false, hint: 'YYYY-MM-DD. On Accessibility and Privacy, bump only when the text changes in substance', pattern: ['^\d{4}-\d{2}-\d{2}', 'Start with YYYY-MM-DD'] }
       - *body
 
