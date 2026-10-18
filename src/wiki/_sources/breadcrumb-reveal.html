@@ -61,7 +61,8 @@
     [1325, 'halfway through the wipe, caret on its edge'],
     [1650, 'the name is complete, caret parked at the end'],
     [2100, 'first blink, caret off (step-end, no fade)'],
-    [3400, 'backspacing — the caret rides the edge back'],
+    // ⚠ Not 3400, the backspace's midpoint: ease-in mirrors the typing's ease-out, so it shows the same half-name as 1325 — mockups:check rejected that pair too.
+    [3525, 'backspacing — the caret rides the edge back'],
     [3700, 'past the end: the bare logomark every other page shows'],
   ];
 
