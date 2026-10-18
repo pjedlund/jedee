@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-10-18] ingest | Sveltia 0.248
+
+[[Sveltia CMS]] follows the upgrade from 0.212.0 to 0.248.0: a space in slugs is allowed again after issue #1093, dates and event times are date pickers in Swedish time that leave an untouched date alone but drop the seconds of an edited one, activities and recipes have Cover fields, Pages declares a hidden `layout`, and photos have no thumbnail. The "Why 0.212.0" section became "The config checks since 0.212.1".
+
 ## [2026-10-17] lint | Sveltia 0.212, empty post types
 
 The end-of-day lint found three pages behind the day's changes. [[Sveltia CMS]] now gives 0.212.0 and why it stops there (0.212.1's config checks), events and recipes as creatable, and the tickbox threshold for the searched types; [[Per-type feeds]] shows the pagination gate that keeps an empty type from writing a feed; [[Anatomy of a post type]] drops the empty state the archive partial no longer has.
