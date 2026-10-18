@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-10-18] lint | Swedish pages and language twins
+
+The end-of-day lint found two pages behind the `lang: sv` and `translation:` work. [[The lang attribute]] now covers a whole Swedish page, language twins and their button, `hreflang` links and feed entries, and says when the hand-written `<div lang="sv">` is still right (a Swedish body under an English title). [[Webmentions]] notes that twins match each other's mentions.
+
 ## [2026-10-18] ingest | Eleventy Excellent 4.9.1
 
 After the 4.9.1 merge: [[is-land]] now gives version 5.0.1, loaded as its own cached module file instead of inlined into every head, has seven islands (the gallery partial is gone), and its autoinit section is now history. [[Tailwind]] describes globs expanded by `postcss-import`, rechecks the `cubeUtilities` layer (still there), and corrects the variants claim: `.md:text-right` sits outside every layer, before and after the upgrade. [[What jedee kept from Eleventy Excellent]] gets the new `@import` lines and two merge lessons: check for a newer point release first, and a cleanly merged file can need a dependency that was left behind.

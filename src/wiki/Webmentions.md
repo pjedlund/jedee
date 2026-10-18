@@ -1,6 +1,7 @@
 ---
 description: "The W3C notification protocol behind open-web replies and likes, and how jedee receives them while staying entirely static."
 date: 2026-07-31
+updated: 2026-10-18
 ---
 
 A [webmention](https://indieweb.org/Webmention) is a small notification one site sends another: a page over here links to a page over there. It became a [W3C Recommendation](https://www.w3.org/TR/webmention/) in 2017, and it is the open web's answer to comments and likes living on someone else's platform — the response is published on the responder's own site, and the webmention is only the notification that it exists.
@@ -49,7 +50,7 @@ The test matches only `brid.gy/post/…`. Bridgy's `/comment/`, `/like/`, and `/
 
 ### Rendering
 
-`partials/webmentions.njk` is included by three layouts only: `post.njk`, `note.njk`, `photo.njk`. Each sets the page's absolute URL first so the partial can match it against each mention's `wm-target`. Mentions then partition: anything with `content.text` becomes a reply card, pure reactions become a facepile of overlapping avatars.
+`partials/webmentions.njk` is included by three layouts only: `post.njk`, `note.njk`, `photo.njk`. Each sets the page's absolute URL first so the partial can match it against each mention's `wm-target`. A page with a language twin (see [[The lang attribute]]) matches the twin's URL too, so both versions show the same mentions; one source reacting the same way to both counts once (keyed on `wm-source` plus `wm-property`). A new layout gets this only by including the partial. Mentions then partition: anything with `content.text` becomes a reply card, pure reactions become a facepile of overlapping avatars.
 
 - **The empty state renders nothing** — the whole `<aside>` is gated on there being at least one reaction or reply.
 - **Reply cards are `h-cite`** wrapping the author's `h-card`, and deliberately carry **no `dt-published`** on the date: that property belongs to this site's own posts, not someone else's response. See [[Microformats]].
