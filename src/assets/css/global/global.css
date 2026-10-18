@@ -9,12 +9,12 @@
 @import 'base/variables.css' layer(variables);
 @import 'base/global-styles.css' layer(global);
 
-@import-glob 'compositions/*.css' layer(compositions);
-@import-glob 'blocks/*.css' layer(blocks);
+@import 'compositions/*.css' layer(compositions);
+@import 'blocks/*.css' layer(blocks);
 /* ⚠ cubeUtilities, not utilities: Tailwind 3 claims @layer utilities as its own directive and hoists these rules into tailwindUtilities. See the wiki, "Tailwind". */
-@import-glob 'utilities/*.css' layer(cubeUtilities);
+@import 'utilities/*.css' layer(cubeUtilities);
 
 /* debugging */
-/* @import-glob 'tests/*.css' layer(test); */
+/* @import 'tests/*.css' layer(test); */
 
 @import 'tailwindcss/utilities' layer(tailwindUtilities);
