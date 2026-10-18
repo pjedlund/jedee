@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-10-18] ingest | Eleventy Excellent 4.9.1
+
+After the 4.9.1 merge: [[is-land]] now gives version 5.0.1, loaded as its own cached module file instead of inlined into every head, has seven islands (the gallery partial is gone), and its autoinit section is now history. [[Tailwind]] describes globs expanded by `postcss-import`, rechecks the `cubeUtilities` layer (still there), and corrects the variants claim: `.md:text-right` sits outside every layer, before and after the upgrade. [[What jedee kept from Eleventy Excellent]] gets the new `@import` lines and two merge lessons: check for a newer point release first, and a cleanly merged file can need a dependency that was left behind.
+
 ## [2026-10-18] ingest | Sveltia 0.248
 
 [[Sveltia CMS]] follows the upgrade from 0.212.0 to 0.248.0: a space in slugs is allowed again after issue #1093, dates and event times are date pickers in Swedish time that leave an untouched date alone but drop the seconds of an edited one, activities and recipes have Cover fields, Pages declares a hidden `layout`, and photos have no thumbnail. The "Why 0.212.0" section became "The config checks since 0.212.1".

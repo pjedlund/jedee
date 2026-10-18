@@ -1,7 +1,7 @@
 ---
 description: "A systematic inventory of what jedee keeps unchanged from Eleventy Excellent and where it has deliberately diverged."
 date: 2026-07-31
-updated: 2026-09-28
+updated: 2026-10-18
 ---
 
 jedee is a fork of [Eleventy Excellent](https://eleventy-excellent.netlify.app/) by Lene Saile. Every other page in this wiki states EE-stock-versus-jedee where it happens to matter locally; this page states it systematically, so a claim on another page can be checked against one inventory.
@@ -24,9 +24,9 @@ These are EE's, unchanged, and this wiki should not describe them as jedee inven
   @import 'tailwindcss/components' layer(tailwindComponents);
   @import 'base/variables.css' layer(variables);
   @import 'base/global-styles.css' layer(global);
-  @import-glob 'compositions/*.css' layer(compositions);
-  @import-glob 'blocks/*.css' layer(blocks);
-  @import-glob 'utilities/*.css' layer(cubeUtilities);
+  @import 'compositions/*.css' layer(compositions);
+  @import 'blocks/*.css' layer(blocks);
+  @import 'utilities/*.css' layer(cubeUtilities);
   @import 'tailwindcss/utilities' layer(tailwindUtilities);
   ```
 
@@ -105,8 +105,12 @@ jedee already had its own `llms.njk`, sectioned by post type and fed from `setti
 
 **Orphans keep taking upstream's changes.** The details partial and script (the disclosure UI for EE's `/get-started/` docs) were both rewritten by the 4.8.0 merge with nothing on the site to show for it, which is why they were deleted on 2026-09-28 along with `local/details.css` and `meta.details`. Expect the next upstream merge to offer them back; decline.
 
+**Check for a newer point release before resolving anything.** The 4.9.0 merge on 2026-10-18 stopped at 26 conflicts, most from 4.9.0 splitting `scripts/bundle/` into `inline/` and `defer/`. 4.9.1, released two days later, put the scripts back in `bundle/` and kept only the part that mattered (is-land as its own module file), so merging 4.9.1 instead left 12 conflicts and no folder moves. `git fetch upstream --tags` and a look at the newest tag cost nothing.
+
+**A file that merges cleanly can still depend on something you didn't take.** 4.9.1 rewrote `custom-svg.webc` from `require()` to `import`, and it merged in silently. That syntax only works with the WebC 0.12 beta, which jedee left at 0.11.2, so the file went back to jedee's version, along with the YouTube and PeerTube components, whose `export` in `webc:setup` has the same need. When a dependency stays behind, search the merged files for whatever new syntax that dependency introduced.
+
 The ordinary merge also depends on the fork still sharing history with upstream. Between 4.6.0 and 4.7.0 upstream rewrote its history (same file trees, new commits), so 4.7.0 was applied as a diff by hand and recorded with `git merge -s ours`, which gave 4.8.0 a normal merge base again.
 
 Source: `/Users/johanedlund/Projects/eleventy-excellent/src/docs/` at tag `4.6.1` (docs dated 2026-03-30), every claim checked against both checkouts on 2026-07-31.
 
-Raw source: src/_raw/dev-notes/How the Eleventy Excellent 4.8 upgrade went.md (the "Taking a new release" section and the easter egg update, 2026-09-15); src/_raw/dev-notes/How hover prefetching was added.md (the speculation rules and the bundled confetti, 2026-09-15)
+Raw source: the 4.9.1 merge itself (commit `609987d`, 2026-10-18); src/_raw/dev-notes/How the Eleventy Excellent 4.8 upgrade went.md (the "Taking a new release" section and the easter egg update, 2026-09-15); src/_raw/dev-notes/How hover prefetching was added.md (the speculation rules and the bundled confetti, 2026-09-15)
