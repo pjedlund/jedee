@@ -5,8 +5,7 @@
 
 is-land[ready] {
   display: block;
-  background-color: rgba(114, 233, 110, 0.2);
-  outline: var(--island-outline);
+  outline: var(--island-ready);
 }
 is-land,
 .demo-component {

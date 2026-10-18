@@ -235,7 +235,8 @@ export default async function(eleventyConfig) {
     // Single-file (non-glob) source: must name the destination file explicitly. A trailing-slash dir target writes a file literally named `components`, clobbering the lite-youtube glob's directory (Eleventy 3.x behaviour).
     'node_modules/photoswipe/dist/photoswipe.css': `assets/components/photoswipe.css`,
     // MapLibre's JS is bundled into place-map.js by esbuild; only its stylesheet needs copying.
-    'node_modules/maplibre-gl/dist/maplibre-gl.css': `assets/components/maplibre-gl.css`
+    'node_modules/maplibre-gl/dist/maplibre-gl.css': `assets/components/maplibre-gl.css`,
+    'node_modules/@11ty/is-land/dist/is-land.min.js': `assets/components/is-land.min.js`
   });
 
   // ----------------------  ignore test files
