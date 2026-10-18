@@ -15,7 +15,7 @@
     "headline": "{{ title or meta.siteName }}",
     "description": "{{ description or meta.siteDescription }}",
     "image": "{{ meta.url }}{{ meta.opengraph_default }}",
-    "inLanguage": "{{ meta.locale }}",
+    "inLanguage": "{{ meta.locale | replace('_', '-') }}",
     "publisher": {
       "@type": "{{ meta.siteType }}",
       "name": "{{ meta.author.name }}",

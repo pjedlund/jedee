@@ -8,7 +8,7 @@
         "url": "{{ meta.url }}",
         "name": "{{ meta.siteName }}",
         "description": "{{ meta.siteDescription }}",
-        "inLanguage": "{{ meta.locale }}"
+        "inLanguage": "{{ meta.locale | replace('_', '-') }}"
       }
     ]
   }
