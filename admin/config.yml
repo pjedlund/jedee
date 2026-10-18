@@ -43,17 +43,16 @@ collections:
     label: Photos
     label_singular: Photo
     folder: src/posts/photos
-    thumbnail: photo.src # ⚠ untested: the ./src/… path may not resolve, since Sveltia reads a relative path from the post's own folder
+    thumbnail: false # ⚠ photo.src is a ./src/… build path Sveltia can't show, and image names don't follow post names
     create: false
     sortable_fields: *by_date
     fields:
       - *title
-      # ⚠ Keep photo.src hidden and photo.downloads undeclared: an image field would rewrite src's path, a number field retype the R2 byte counts.
+      # ⚠ Leave photo.src and photo.downloads undeclared: they're kept as-is on save, and a field would rewrite src's path or retype the R2 byte counts.
       - name: photo
         label: Photo
         widget: object
         fields:
-          - { name: src, widget: hidden } # only so `thumbnail` can name it
           - { name: alt, label: Alt text, widget: text }
           - { name: caption, label: Caption, widget: string, required: false }
           - { name: format, label: Format, widget: string, required: false, hint: 'e.g. 6×17' }
