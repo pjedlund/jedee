@@ -17,7 +17,7 @@ excludeFromSitemap: true
   </author>
   {%- for post in postslist | reverse -%}
   {%- set absolutePostUrl = post.url | absoluteUrl(meta.url) -%}
-    <entry>
+    <entry{% if post.data.lang %} xml:lang="{{ post.data.lang }}"{% endif %}>
       <title>{{ post.data.title }}</title>
       <link href="{{ absolutePostUrl }}" />
       <updated>{{ post.date | dateToRfc3339 }}</updated>

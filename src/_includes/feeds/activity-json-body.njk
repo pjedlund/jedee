@@ -31,6 +31,7 @@
     {
       "id": "{{ absolutePostUrl }}",
       "url": "{{ absolutePostUrl }}",
+      {% if post.data.lang %}"language": "{{ post.data.lang }}",{% endif %}
       "title": "{{ post.data.title }}",
       "content_html": {{ (activityHtml ~ post.content) | renderTransforms(post.data.page, meta.url) | dump | safe }},
       "date_published": "{{ post.date | dateToRfc3339 }}"

@@ -203,6 +203,7 @@ export default async function(eleventyConfig) {
   eleventyConfig.addFilter('webmentionGetForUrl', filters.webmentionGetForUrl);
   eleventyConfig.addFilter('webmentionisOwn', filters.webmentionisOwn);
   eleventyConfig.addFilter('webmentionSort', filters.webmentionSort);
+  eleventyConfig.addFilter('twinOf', filters.twinOf);
 
   // --------------------- Shortcodes
   eleventyConfig.addShortcode('svg', shortcodes.svgShortcode);

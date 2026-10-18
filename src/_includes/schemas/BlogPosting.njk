@@ -12,7 +12,7 @@
     "headline": "{{ title or meta.siteName }}",
     "description": "{{ discover.description or description or meta.siteDescription }}",
     "image": "{{ meta.url }}{% if discover.image %}/assets/images/{{ discover.image }}{% else %}{{ meta.opengraph_default }}{% endif %}",
-    "inLanguage": "{{ meta.locale | replace('_', '-') }}",
+    "inLanguage": "{{ 'sv-SE' if lang == 'sv' else (meta.locale | replace('_', '-')) }}",
     "publisher": {
       "@type": "{{ meta.siteType }}",
       "name": "{{ meta.author.name }}",

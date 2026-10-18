@@ -22,7 +22,7 @@
   {%- for post in feedCollection | reverse -%}
   {%- set absolutePostUrl = post.url | absoluteUrl(meta.url) -%}
   {%- set linkHtml %}{% include "feeds/link-line.njk" %}{% endset -%}
-    <entry>
+    <entry{% if post.data.lang %} xml:lang="{{ post.data.lang }}"{% endif %}>
       <title>{{ post.data.title }}</title>
       <link href="{{ absolutePostUrl }}" />
       <updated>{{ post.date | dateToRfc3339 }}</updated>
