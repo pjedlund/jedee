@@ -12,6 +12,13 @@
   <h1 class="p-name"{% if titleLang %} lang="{{ titleLang }}"{% endif %}>{{ title }}</h1>
 {% endif %}
 
+{# A language twin (front-matter `translation:`, see twin.js) gets a link right under the heading, labelled in the twin's own language. #}
+{%- set twin = collections.all | twinOf(page.url, translation) %}
+{%- if twin %}
+  {%- set twinLang = twin.data.lang or meta.lang %}
+  <p><a class="button" data-small-button href="{{ twin.url }}" hreflang="{{ twinLang }}" lang="{{ twinLang }}" rel="alternate">{{ 'Läs på svenska' if twinLang == 'sv' else 'Read in English' }}</a></p>
+{%- endif %}
+
 {# The featured image is always a lightbox. credit renders as the figcaption, outside the clickable area ("credit" was never a shortcode option — the old pass-through silently dropped it). sizes matches the .feature breakout width, same as the photo layout's hero. #}
 {% if image %}
   {%

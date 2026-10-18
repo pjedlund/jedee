@@ -23,6 +23,7 @@
     {
       "id": "{{ absolutePostUrl }}",
       "url": "{{ absolutePostUrl }}",
+      {% if post.data.lang %}"language": "{{ post.data.lang }}",{% endif %}
       "title": "{{ post.data.title }}",
       "content_html": {% if post.content %}{{ post.content | renderTransforms(post.data.page, meta.url) | dump | safe }}{% else %}""{% endif %},
       "date_published": "{{ post.date | dateToRfc3339 }}"

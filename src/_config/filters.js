@@ -24,6 +24,7 @@ import {
   webmentionisOwn,
   webmentionSort
 } from './filters/webmentions.js';
+import {twinOf} from './filters/twin.js';
 
 export default {
   toISOString,
@@ -57,5 +58,6 @@ export default {
   enclosureType,
   webmentionGetForUrl,
   webmentionisOwn,
-  webmentionSort
+  webmentionSort,
+  twinOf
 };

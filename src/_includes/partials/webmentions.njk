@@ -1,7 +1,9 @@
 {# Received webmentions, rendered at build: text mentions as reply cards, likes/reposts/bookmarks as a facepile, nothing when empty. The layout sets `webmentionUrl` first. See the wiki "Webmentions". #}
 {# ⚠ No shortcodes here or in webmention.njk: avatars are plain <img eleventy:ignore>, hotlinked through webmention.io. #}
 
-{% set allMentions = webmentions | webmentionGetForUrl(webmentionUrl) %}
+{# A page with a language twin (see twin.js) shows the mentions sent to either version. #}
+{% set twin = collections.all | twinOf(page.url, translation) %}
+{% set allMentions = webmentions | webmentionGetForUrl([webmentionUrl, twin.url | url | absoluteUrl(meta.url)] if twin else webmentionUrl) %}
 
 {% set reactionsPhoto = [] %}
 {% set reactionsNoPhoto = [] %}

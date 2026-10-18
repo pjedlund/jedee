@@ -29,7 +29,7 @@
       {%- if post.data.activityType %} · {{ post.data.activityType }}{% endif -%}
     </p>
   {% endset -%}
-    <entry>
+    <entry{% if post.data.lang %} xml:lang="{{ post.data.lang }}"{% endif %}>
       <title>{{ post.data.title }}</title>
       <link href="{{ absolutePostUrl }}" />
       <updated>{{ post.date | dateToRfc3339 }}</updated>
