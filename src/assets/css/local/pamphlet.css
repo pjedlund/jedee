@@ -13,8 +13,8 @@ Markup: partials/pamphlet.njk — .pamphlet > div is the object; inside it, span
   --pamphlet-max-width: 17rem;
   --pamphlet-gap: 1.4px; /* space between the 12 sheets; thickness = 12 × gap */
   --pamphlet-radius: 7px;
-  --pamphlet-tilt: 18deg;
-  --pamphlet-turn: 3deg;
+  --pamphlet-tilt: 10deg;
+  --pamphlet-turn: 2deg;
 
   container-type: inline-size;
 }
@@ -41,7 +41,7 @@ Markup: partials/pamphlet.njk — .pamphlet > div is the object; inside it, span
 
 @media (prefers-reduced-motion: no-preference) {
   .pamphlet > div {
-    transition: transform 0.9s var(--ease-out-quad);
+    transition: transform 0.5s var(--ease-out-quad);
   }
 }
 
