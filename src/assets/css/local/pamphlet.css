@@ -15,7 +15,7 @@ Markup: partials/pamphlet.njk, placed first inside the block of text it floats i
   --pamphlet-paper: #e9e1cf;
   --pamphlet-page: #d4cab5;
   --pamphlet-page-alt: #bfb39b;
-  --pamphlet-shadow: 0 1px 2px rgb(0 0 0 / 0.14), 2px 4px 10px -3px rgb(0 0 0 / 0.16); /* tight contact plus short soft, like the site's shadow tokens */
+  --pamphlet-shadow: var(--box-shadow-thumb);
   /* on the 8-column prose grid (column 6.25 + gutter 2, of 64): 3 columns wide, one gutter from the text */
   --pamphlet-columns: calc(100% * 22.75 / 64);
   --pamphlet-gutter: calc(100% * 2 / 64);
@@ -115,13 +115,12 @@ Markup: partials/pamphlet.njk, placed first inside the block of text it floats i
     linear-gradient(165deg, rgb(255 255 255 / 0.35), transparent 40%, rgb(40 30 20 / 0.34));
 }
 
-/* a near-black page needs a much denser shadow to show at all */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) .pamphlet {
-    --pamphlet-shadow: 0 2px 4px rgb(0 0 0 / 0.9), 4px 10px 24px -2px rgb(0 0 0 / 0.95);
+    --pamphlet-shadow: var(--box-shadow-thumb-dark);
   }
 }
 
 :root[data-theme='dark'] .pamphlet {
-  --pamphlet-shadow: 0 2px 4px rgb(0 0 0 / 0.9), 4px 10px 24px -2px rgb(0 0 0 / 0.95);
+  --pamphlet-shadow: var(--box-shadow-thumb-dark);
 }
