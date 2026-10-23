@@ -1,0 +1,9 @@
+{#- Pamphlet mock-up. Expects `pamphlet.svg` (a cover under src/assets/svg/, no extension) and `pamphlet.label`. ⚠ No blank lines: the output sits in markdown, where a blank line followed by indented HTML turns into a code block. -#}
+<div class="pamphlet">
+  <div>
+    <span></span>
+    {%- for i in range(12) %}<i style="--i: {{ i }}"></i>{% endfor %}
+    <div>{% svg pamphlet.svg, pamphlet.label %}</div>
+  </div>
+</div>
+{%- css "local" -%}{%- include 'css/pamphlet.css' -%}{%- endcss -%}
