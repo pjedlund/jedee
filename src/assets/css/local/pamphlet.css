@@ -1,7 +1,7 @@
 /*
 PAMPHLET
 A cover lying on a table, seen almost from straight above, built in 3D as a stack of thin sheets under the cover; on hover it settles flat.
-Markup: partials/pamphlet.njk — .pamphlet > div is the object; inside it, span is the shadow, i the sheets, div the cover.
+Markup: partials/pamphlet.njk — .pamphlet > div is the object; inside it, i are the sheets and div the cover.
 */
 
 .pamphlet {
@@ -9,7 +9,7 @@ Markup: partials/pamphlet.njk — .pamphlet > div is the object; inside it, span
   --pamphlet-paper: #f4efe4;
   --pamphlet-page: #ddd5c3;
   --pamphlet-page-alt: #c9bfaa;
-  --pamphlet-shadow: rgb(0 0 0 / 0.3);
+  --pamphlet-shadow: 0 1px 2px rgb(0 0 0 / 0.14), 2px 4px 10px -3px rgb(0 0 0 / 0.16); /* tight contact plus short soft, like the site's shadow tokens */
   --pamphlet-min-width: 13rem;
   --pamphlet-gap: 1.4px; /* space between the 12 sheets; thickness = 12 × gap */
   --pamphlet-radius: 7px;
@@ -61,14 +61,6 @@ Markup: partials/pamphlet.njk — .pamphlet > div is the object; inside it, span
   border-radius: var(--pamphlet-radius);
 }
 
-/* the shadow on the table */
-.pamphlet span {
-  inset: 1% -1% -3% 1%;
-  background: var(--pamphlet-shadow);
-  filter: blur(10px);
-  transform: translate(6px, 8px) translateZ(-1px);
-}
-
 /* the sheets; alternating shades make the edge read as pages */
 .pamphlet i {
   background: var(--pamphlet-page);
@@ -79,8 +71,10 @@ Markup: partials/pamphlet.njk — .pamphlet > div is the object; inside it, span
   background: var(--pamphlet-page-alt);
 }
 
+/* the bottom sheet lies on the table, so its shadow is the pamphlet's */
 .pamphlet i:first-of-type {
   background: var(--pamphlet-paper);
+  box-shadow: var(--pamphlet-shadow);
 }
 
 /* the cover */
@@ -109,10 +103,10 @@ Markup: partials/pamphlet.njk — .pamphlet > div is the object; inside it, span
 /* a near-black page needs a much denser shadow to show at all */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) .pamphlet {
-    --pamphlet-shadow: rgb(0 0 0 / 0.85);
+    --pamphlet-shadow: 0 1px 3px rgb(0 0 0 / 0.7), 3px 6px 14px -3px rgb(0 0 0 / 0.75);
   }
 }
 
 :root[data-theme='dark'] .pamphlet {
-  --pamphlet-shadow: rgb(0 0 0 / 0.85);
+  --pamphlet-shadow: 0 1px 3px rgb(0 0 0 / 0.7), 3px 6px 14px -3px rgb(0 0 0 / 0.75);
 }
