@@ -34,16 +34,18 @@ Markup: partials/pamphlet.njk — .pamphlet > div is the object; inside it, span
   transform: perspective(calc(var(--pamphlet-width) * 8)) rotateX(var(--pamphlet-tilt)) rotateZ(var(--pamphlet-turn));
 }
 
-/* flat by default; it lies tilted on the table only where hovering can settle it flat again */
+/* flat by default; it lies tilted on the table only beside the text, and only where hovering can settle it flat again */
 @media (hover: hover) {
-  .pamphlet {
-    --pamphlet-tilt: 10deg;
-    --pamphlet-turn: 2deg;
-  }
+  @container pamphlet-row (inline-size >= 45.66rem) {
+    .pamphlet {
+      --pamphlet-tilt: 10deg;
+      --pamphlet-turn: 2deg;
+    }
 
-  .pamphlet > div:hover {
-    --pamphlet-tilt: 0deg;
-    --pamphlet-turn: 0deg;
+    .pamphlet > div:hover {
+      --pamphlet-tilt: 0deg;
+      --pamphlet-turn: 0deg;
+    }
   }
 }
 
