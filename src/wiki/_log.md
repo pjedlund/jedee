@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-10-23] ingest | CSS 3D transforms, Floats
+
+From the session that built the pamphlet and book mock-ups. [[CSS 3D transforms]] covers objects built from flat layers with `preserve-3d`, a viewing distance and thickness that scale with the width, tilting about the near edge, painted-on light and a `box-shadow` on the bottom layer as the shadow, and hover-gated motion; its "In jedee" section describes the two partials. [[Floats]] covers wrapping text around a box, why a float on a grid item does nothing, `flow-root`, and a container query (set up through `:has()`) that decides when to stop floating, with the percentage row gap trap from the Sidebar version. Links earned: [[Layout breakouts]], [[Configuring a layout composition]], [[Line length]], [[Self-hosting remote images at build time]].
+
 ## [2026-10-18] lint | Swedish pages and language twins
 
 The end-of-day lint found two pages behind the `lang: sv` and `translation:` work. [[The lang attribute]] now covers a whole Swedish page, language twins and their button, `hreflang` links and feed entries, and says when the hand-written `<div lang="sv">` is still right (a Swedish body under an English title). [[Webmentions]] notes that twins match each other's mentions.

@@ -34,6 +34,8 @@ Each entry below says what a page covers and why you would open it. The traps an
 - [[Undefined custom properties]] — what a `var()` pointing at nothing actually does, which is not nothing, and how to check for it element by element.
 - [[Configuring a layout composition]] — setting a layout's published properties instead of redeclaring them, and how far that choice spreads.
 - [[Layout breakouts]] — a named-column grid that lets an element step wider than the text column, and the two conditions it needs to work.
+- [[Floats]] — the one job floats are still for, wrapping text around a box, what the container has to provide, and a container query that decides when to stop floating.
+- [[CSS 3D transforms]] — building a solid-looking object from flat layers, keeping its shape at every size, and painting on its light and shadow. The pamphlet and book mock-ups.
 - [[Tables]] — markup that reads correctly unstyled, the browser defaults worth overriding, alignment, sticky headers, and what a table wider than the page needs. Ends with this site's activities table.
 - [[Tooltips]] — the three kinds of tooltip, and when each one is honest.
 - [[Design token sync]] — generating a design tool's tokens from the code that owns them, and what does not survive the trip.
