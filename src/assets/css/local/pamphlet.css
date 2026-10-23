@@ -1,8 +1,14 @@
 /*
 PAMPHLET
-A cover lying on a table, seen almost from straight above, built in 3D as a stack of thin sheets under the cover; on hover it settles flat.
-Markup: partials/pamphlet.njk — .pamphlet > div is the object; inside it, i are the sheets and div the cover.
+A cover lying on a table, built in 3D as a stack of thin sheets under the cover, floated right into the text it sits in; seen from above, and on hover it settles flat.
+Markup: partials/pamphlet.njk, placed first inside the block of text it floats in — .pamphlet > div is the object; inside it, i are the sheets and div the cover.
 */
+
+/* the text block it sits in measures the room, and holds the float in */
+:has(> .pamphlet) {
+  container: pamphlet-flow / inline-size;
+  display: flow-root;
+}
 
 .pamphlet {
   /* the object's own colours: a new cream stock, the same in light and dark themes */
@@ -10,33 +16,30 @@ Markup: partials/pamphlet.njk — .pamphlet > div is the object; inside it, i ar
   --pamphlet-page: #ddd5c3;
   --pamphlet-page-alt: #c9bfaa;
   --pamphlet-shadow: 0 1px 2px rgb(0 0 0 / 0.14), 2px 4px 10px -3px rgb(0 0 0 / 0.16); /* tight contact plus short soft, like the site's shadow tokens */
+  /* on the 8-column prose grid (column 6.25 + gutter 2, of 64): 3 columns wide, one gutter from the text */
+  --pamphlet-columns: calc(100% * 22.75 / 64);
+  --pamphlet-gutter: calc(100% * 2 / 64);
   --pamphlet-min-width: 13rem;
   --pamphlet-gap: 1.4px; /* space between the 12 sheets; thickness = 12 × gap */
   --pamphlet-radius: 7px;
   --pamphlet-tilt: 0deg;
   --pamphlet-turn: 0deg;
 
-  /* in a .sidebar: its width beside the text; once stacked, no narrower than that or the min width, and kept to the start */
-  max-inline-size: max(var(--sidebar-target-width, 100%), var(--pamphlet-min-width));
-  margin-inline-end: auto;
+  inline-size: max(var(--pamphlet-columns), var(--pamphlet-min-width));
+  margin-block-end: var(--space-s-m);
   container-type: inline-size;
 }
 
-.pamphlet > div {
-  --pamphlet-width: 100cqi;
+/* floated beside the text only while the text keeps 28rem: 28 × 64 / 39.25 = 45.66rem of block; below that it sits flat above the text */
+@container pamphlet-flow (inline-size >= 45.66rem) {
+  .pamphlet {
+    float: inline-end;
+    inline-size: var(--pamphlet-columns);
+    margin-inline-start: var(--pamphlet-gutter);
+  }
 
-  position: relative;
-  inline-size: var(--pamphlet-width);
-  aspect-ratio: 2866 / 4436;
-  transform-style: preserve-3d;
-  transform-origin: 50% 100%; /* tilt about the near edge, so it keeps the column's width and only the far edge recedes */
-  /* a long viewing distance, scaled with the width, keeps the shape nearly undistorted at every size */
-  transform: perspective(calc(var(--pamphlet-width) * 8)) rotateX(var(--pamphlet-tilt)) rotateZ(var(--pamphlet-turn));
-}
-
-/* flat by default; it lies tilted on the table only beside the text, and only where hovering can settle it flat again */
-@media (hover: hover) {
-  @container pamphlet-row (inline-size >= 45.66rem) {
+  /* it lies tilted on the table only where hovering can settle it flat again */
+  @media (hover: hover) {
     .pamphlet {
       --pamphlet-tilt: 10deg;
       --pamphlet-turn: 2deg;
@@ -47,6 +50,18 @@ Markup: partials/pamphlet.njk — .pamphlet > div is the object; inside it, i ar
       --pamphlet-turn: 0deg;
     }
   }
+}
+
+.pamphlet > div {
+  --pamphlet-width: 100cqi;
+
+  position: relative;
+  inline-size: var(--pamphlet-width);
+  aspect-ratio: 2866 / 4436;
+  transform-style: preserve-3d;
+  transform-origin: 50% 100%; /* tilt about the near edge, so it keeps its width and only the far edge recedes */
+  /* a long viewing distance, scaled with the width, keeps the shape nearly undistorted at every size */
+  transform: perspective(calc(var(--pamphlet-width) * 8)) rotateX(var(--pamphlet-tilt)) rotateZ(var(--pamphlet-turn));
 }
 
 @media (prefers-reduced-motion: no-preference) {
