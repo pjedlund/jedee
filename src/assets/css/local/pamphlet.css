@@ -11,7 +11,7 @@ Markup: partials/pamphlet.njk, placed first inside the block of text it floats i
 }
 
 .pamphlet {
-  /* the object's own colours: a new cream stock, the same in light and dark themes */
+  /* the object's own colors: a new cream stock, the same in light and dark themes */
   --pamphlet-paper: #e9e1cf;
   --pamphlet-page: #d4cab5;
   --pamphlet-page-alt: #bfb39b;

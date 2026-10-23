@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-10-23] lint | Shadows and labelled icons
+
+The end-of-day lint found two pages behind the day's code. [[CSS 3D transforms]] described the pamphlet's old near-opaque two-layer shadow; it now names the `thumb` token the pamphlet and book use. [[Icons]] now says the `svg` shortcode adds `role="img"` with an accessible name.
+
 ## [2026-10-23] ingest | CSS 3D transforms, Floats
 
 From the session that built the pamphlet and book mock-ups. [[CSS 3D transforms]] covers objects built from flat layers with `preserve-3d`, a viewing distance and thickness that scale with the width, tilting about the near edge, painted-on light and a `box-shadow` on the bottom layer as the shadow, and hover-gated motion; its "In jedee" section describes the two partials. [[Floats]] covers wrapping text around a box, why a float on a grid item does nothing, `flow-root`, and a container query (set up through `:has()`) that decides when to stop floating, with the percentage row gap trap from the Sidebar version. Links earned: [[Layout breakouts]], [[Configuring a layout composition]], [[Line length]], [[Self-hosting remote images at build time]].

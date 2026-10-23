@@ -45,7 +45,7 @@ Table: The icon folders
 | `activity/` | One icon per activity type, in the activities table and on the meta line | Phosphor fill |
 | `platform/` | Footer platform logos, the GitHub mark beside "Revised", the video-link icons | Simple Icons |
 
-Each Phosphor file is the icon's path in a `viewBox="0 0 256 256"` with `width="1em" height="1em" fill="currentColor"`. `{% svg 'posts/camera' %}` inlines one, runs it through svgo and adds `aria-hidden="true"` unless an accessible name is passed ([[The interlinker's second render pass]] covers why the shortcode must stay synchronous). Eleventy Excellent ships the shortcode and the folder; the choice of set is jedee's.
+Each Phosphor file is the icon's path in a `viewBox="0 0 256 256"` with `width="1em" height="1em" fill="currentColor"`. `{% svg 'posts/camera' %}` inlines one, runs it through svgo and adds `aria-hidden="true"` unless an accessible name is passed, in which case it adds `role="img"` and the name as `aria-label` ([[The interlinker's second render pass]] covers why the shortcode must stay synchronous). Eleventy Excellent ships the shortcode and the folder; the choice of set is jedee's.
 
 The files kept their Lucide names when their contents changed, so no template or data file had to change, and `src/_data/navigation.js` still names a post type's icon by the old word. Several no longer describe what they draw: `chef-hat.svg` is a cooking pot, `dumbbell.svg` a barbell, `repeat-2.svg` Phosphor's repeat, `reply.svg` a bent arrow. The design system page lists every icon with its file name.
 

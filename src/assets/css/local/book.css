@@ -56,7 +56,7 @@ Markup: partials/book.njk — .book > div is the object; inside it, i is the bac
 /* back board */
 .book i {
   background: var(--book-back);
-  border-radius: 3px 1px 1px 3px;
+  border-radius: var(--border-radius-small) 1px 1px var(--border-radius-small);
   transform: translateZ(calc(var(--book-thickness) / -2));
   box-shadow: var(--book-shadow-back);
 }
@@ -73,7 +73,7 @@ Markup: partials/book.njk — .book > div is the object; inside it, i is the bac
 
 /* front cover */
 .book > div > div {
-  border-radius: 1px 3px 3px 1px;
+  border-radius: 1px var(--border-radius-small) var(--border-radius-small) 1px;
   overflow: hidden;
   transform: translateZ(calc(var(--book-thickness) / 2));
   box-shadow: var(--book-shadow);

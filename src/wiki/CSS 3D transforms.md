@@ -40,8 +40,8 @@ Thickness belongs in the same ratio: a thickness given as a share of the width (
 There is no lighting in CSS 3D, so the light is painted on:
 
 - **Light**: a pseudo-element over the top face with a gradient from a light tint in one corner to a shade in the opposite one. Plain semi-transparent white and brown layers work; `mix-blend-mode: soft-light` is almost invisible on a pale surface.
-- **Details**: a narrow gradient band does for a fold, a hardcover's groove beside the spine, or the darkening where a page block meets its boards. Alternating colours on stacked layers read as page edges.
-- **Shadow**: a `box-shadow` on the bottom layer lies in that layer's plane, so it reads as a shadow on the surface under the object. A separate blurred element behind it reads as the object hovering. Two layers, a tight contact shadow plus a short soft one, sit closest; on a near-black page the shadow needs to be close to opaque black to show at all.
+- **Details**: a narrow gradient band does for a fold, a hardcover's groove beside the spine, or the darkening where a page block meets its boards. Alternating colors on stacked layers read as page edges.
+- **Shadow**: a `box-shadow` on the bottom layer lies in that layer's plane, so it reads as a shadow on the surface under the object. A separate blurred element behind it reads as the object hovering. jedee's pamphlet and book take the site's `thumb` shadow, five equal layers from 1 to 16px after Tobias Ahlin, with a deeper `-dark` twin, because a light shadow vanishes on a near-black page.
 
 ## Motion
 
