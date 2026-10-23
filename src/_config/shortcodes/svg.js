@@ -19,6 +19,6 @@ export const svgShortcode = (svgName, ariaName = '', className = '', styleName =
 
   return data.replace(
     /<svg(.*?)>/,
-    `<svg$1 ${ariaName ? `aria-label="${ariaName}"` : 'aria-hidden="true"'} ${className ? `class="${className}"` : ''} ${styleName ? `style="${styleName}"` : ''} >`
+    `<svg$1 ${ariaName ? `role="img" aria-label="${ariaName}"` : 'aria-hidden="true"'} ${className ? `class="${className}"` : ''} ${styleName ? `style="${styleName}"` : ''} >`
   );
 };
