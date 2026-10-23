@@ -1,0 +1,126 @@
+/*
+PAMPHLET
+A cover lying on a table, built in 3D as a stack of thin sheets under the cover, floated right into the text it sits in; seen from above, and on hover it settles flat.
+Markup: partials/pamphlet.njk, placed first inside the block of text it floats in — .pamphlet > div is the object; inside it, i are the sheets and div the cover.
+*/
+
+/* the text block it sits in measures the room, and holds the float in */
+:has(> .pamphlet) {
+  container: pamphlet-flow / inline-size;
+  display: flow-root;
+}
+
+.pamphlet {
+  /* the object's own colours: a new cream stock, the same in light and dark themes */
+  --pamphlet-paper: #e9e1cf;
+  --pamphlet-page: #d4cab5;
+  --pamphlet-page-alt: #bfb39b;
+  --pamphlet-shadow: var(--box-shadow-thumb);
+  /* on the 8-column prose grid (column 6.25 + gutter 2, of 64): 3 columns wide, one gutter from the text */
+  --pamphlet-columns: calc(100% * 22.75 / 64);
+  --pamphlet-gutter: calc(100% * 2 / 64);
+  --pamphlet-min-width: 13rem;
+  --pamphlet-gap: 1.4px; /* space between the 12 sheets; thickness = 12 × gap */
+  --pamphlet-radius: 7px;
+  --pamphlet-tilt: 0deg;
+  --pamphlet-turn: 0deg;
+
+  inline-size: max(var(--pamphlet-columns), var(--pamphlet-min-width));
+  margin-block-end: var(--space-s-m);
+  container-type: inline-size;
+}
+
+/* floated beside the text only while the text keeps 28rem: 28 × 64 / 39.25 = 45.66rem of block; below that it sits flat above the text */
+@container pamphlet-flow (inline-size >= 45.66rem) {
+  .pamphlet {
+    float: inline-end;
+    inline-size: var(--pamphlet-columns);
+    margin-inline-start: var(--pamphlet-gutter);
+  }
+
+  /* it lies tilted on the table only where hovering can settle it flat again */
+  @media (hover: hover) {
+    .pamphlet {
+      --pamphlet-tilt: 10deg;
+      --pamphlet-turn: 2deg;
+    }
+
+    .pamphlet > div:hover {
+      --pamphlet-tilt: 0deg;
+      --pamphlet-turn: 0deg;
+    }
+  }
+}
+
+.pamphlet > div {
+  --pamphlet-width: 100cqi;
+
+  position: relative;
+  inline-size: var(--pamphlet-width);
+  aspect-ratio: 2866 / 4436;
+  transform-style: preserve-3d;
+  transform-origin: 50% 100%; /* tilt about the near edge, so it keeps its width and only the far edge recedes */
+  /* a long viewing distance, scaled with the width, keeps the shape nearly undistorted at every size */
+  transform: perspective(calc(var(--pamphlet-width) * 8)) rotateX(var(--pamphlet-tilt)) rotateZ(var(--pamphlet-turn));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .pamphlet > div {
+    transition: transform 0.5s var(--ease-out-quad);
+  }
+}
+
+.pamphlet > div > * {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--pamphlet-radius);
+}
+
+/* the sheets; alternating shades make the edge read as pages */
+.pamphlet i {
+  background: var(--pamphlet-page);
+  transform: translateZ(calc(var(--i) * var(--pamphlet-gap)));
+}
+
+.pamphlet i:nth-of-type(odd) {
+  background: var(--pamphlet-page-alt);
+}
+
+/* the bottom sheet lies on the table, so its shadow is the pamphlet's */
+.pamphlet i:first-of-type {
+  background: var(--pamphlet-paper);
+  box-shadow: var(--pamphlet-shadow);
+}
+
+/* the cover */
+.pamphlet > div > div {
+  background: var(--pamphlet-paper);
+  transform: translateZ(calc(12 * var(--pamphlet-gap)));
+}
+
+.pamphlet svg {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+/* light from the top left, falling off toward the bottom right, plus shade along the stapled fold */
+.pamphlet > div > div::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    linear-gradient(90deg, rgb(60 40 20 / 0.2), transparent 4%),
+    linear-gradient(165deg, rgb(255 255 255 / 0.35), transparent 40%, rgb(40 30 20 / 0.34));
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .pamphlet {
+    --pamphlet-shadow: var(--box-shadow-thumb-dark);
+  }
+}
+
+:root[data-theme='dark'] .pamphlet {
+  --pamphlet-shadow: var(--box-shadow-thumb-dark);
+}

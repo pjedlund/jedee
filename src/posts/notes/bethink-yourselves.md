@@ -5,7 +5,9 @@ date: 2026-06-01T21:08:20.943Z
 draft: false
 ---
 
+{% set pamphlet = { svg: "covers/betanken-eder", label: "Omslaget till Betänken Eder! av Leo Tolstoy, Stockholm 1904" } %}
 <div lang="sv">
+{% include "partials/pamphlet.njk" %}
 
 På sin tid suckade Jesus i förväntan och sade: 
 
