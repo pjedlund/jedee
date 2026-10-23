@@ -10,29 +10,37 @@ Markup: partials/pamphlet.njk — .pamphlet > div is the object; inside it, span
   --pamphlet-page: #ddd5c3;
   --pamphlet-page-alt: #c9bfaa;
   --pamphlet-shadow: rgb(0 0 0 / 0.3);
-  --pamphlet-max-width: 17rem;
+  --pamphlet-min-width: 13rem;
   --pamphlet-gap: 1.4px; /* space between the 12 sheets; thickness = 12 × gap */
   --pamphlet-radius: 7px;
-  --pamphlet-tilt: 10deg;
-  --pamphlet-turn: 2deg;
+  --pamphlet-tilt: 0deg;
+  --pamphlet-turn: 0deg;
 
+  /* in a .sidebar: its width beside the text; once stacked, no narrower than that or the min width, and kept to the start */
+  max-inline-size: max(var(--sidebar-target-width, 100%), var(--pamphlet-min-width));
+  margin-inline-end: auto;
   container-type: inline-size;
 }
 
 .pamphlet > div {
-  --pamphlet-width: min(100cqi, var(--pamphlet-max-width));
+  --pamphlet-width: 100cqi;
 
   position: relative;
   inline-size: var(--pamphlet-width);
   aspect-ratio: 2866 / 4436;
-  margin-inline: auto;
   transform-style: preserve-3d;
   transform-origin: 50% 100%; /* tilt about the near edge, so it keeps the column's width and only the far edge recedes */
   /* a long viewing distance, scaled with the width, keeps the shape nearly undistorted at every size */
   transform: perspective(calc(var(--pamphlet-width) * 8)) rotateX(var(--pamphlet-tilt)) rotateZ(var(--pamphlet-turn));
 }
 
+/* flat by default; it lies tilted on the table only where hovering can settle it flat again */
 @media (hover: hover) {
+  .pamphlet {
+    --pamphlet-tilt: 10deg;
+    --pamphlet-turn: 2deg;
+  }
+
   .pamphlet > div:hover {
     --pamphlet-tilt: 0deg;
     --pamphlet-turn: 0deg;

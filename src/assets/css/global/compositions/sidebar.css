@@ -15,12 +15,15 @@ between the sidebar and main content.
 
 --sidebar-content-min-width(50%): The minimum size of the main content area
 
+--sidebar-direction (row): row-reverse puts the first child on the right side by side, but still on top once they stack
+
 EXCEPTIONS
 .sidebar[data-direction='rtl']: flips the sidebar to be on the right
 */
 
 .sidebar {
   display: flex;
+  flex-direction: var(--sidebar-direction, row);
   flex-wrap: wrap;
   gap: var(--gutter, var(--space-s-m));
 }
