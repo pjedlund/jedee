@@ -584,6 +584,16 @@ colorGroups:
     <h3 class="heading-line">Maps</h3>
     <p>Maps are drawn from the site's own map tiles in its own colors, and load only when scrolled to. A map shows places (the <a href="/activities/">activities</a> overview), a single pin (a photo's location) or a recorded route. The wiki page <a href="/wiki/the-place-map/">The place map</a> covers how.</p>
   </section>
+  <section class="flow region">
+    <h3 class="heading-line">Pamphlet and book</h3>
+    <div>
+      {%- set pamphlet = { svg: "covers/betanken-eder", label: "Cover of Betänken Eder! by Leo Tolstoy, Stockholm 1904" } %}
+      {% include "partials/pamphlet.njk" %}
+      <p>A cover can be shown as the object it belongs to. A stapled pamphlet lies on the table, floated into the text it sits in across three of the prose grid's eight columns; where the text would get too narrow it lies flat above it instead. A hardcover stands with its pages showing. Both are built in CSS 3D around the cover, and settle face-on on hover.</p>
+    </div>
+    {%- set book = { src: "https://standardebooks.org/ebooks/leo-tolstoy/the-kingdom-of-god-is-within-you/leo-wiener/downloads/cover.jpg", alt: "Cover of The Kingdom of God Is Within You by Leo Tolstoy, translated by Leo Wiener" } %}
+    {% include "partials/book.njk" %}
+  </section>
 
   <header class="part | flow region">
     <p class="part-number">08</p>
