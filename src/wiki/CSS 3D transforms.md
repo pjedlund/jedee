@@ -41,7 +41,7 @@ There is no lighting in CSS 3D, so the light is painted on:
 
 - **Light**: a pseudo-element over the top face with a gradient from a light tint in one corner to a shade in the opposite one. Plain semi-transparent white and brown layers work; `mix-blend-mode: soft-light` is almost invisible on a pale surface.
 - **Details**: a narrow gradient band does for a fold, a hardcover's groove beside the spine, or the darkening where a page block meets its boards. Alternating colors on stacked layers read as page edges.
-- **Shadow**: a `box-shadow` on the bottom layer lies in that layer's plane, so it reads as a shadow on the surface under the object. A separate blurred element behind it reads as the object hovering. jedee's pamphlet and book take the site's `thumb` shadow, five equal layers from 1 to 16px after Tobias Ahlin, with a deeper `-dark` twin, because a light shadow vanishes on a near-black page.
+- **Shadow**: a `box-shadow` on the bottom layer lies in that layer's plane, so it reads as a shadow on the surface under the object. A separate blurred element behind it reads as the object hovering. jedee's book takes the site's `thumb` shadow, five equal layers from 1 to 16px after Tobias Ahlin, with a deeper `-dark` twin, because a light shadow vanishes on a near-black page. The pamphlet takes `thumb-cast`, the same layers pushed right to match its top-left light; on a light page the painted darkening on its cover is kept faint, so the shade falls on the page instead.
 
 ## Motion
 

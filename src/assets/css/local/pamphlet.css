@@ -11,11 +11,15 @@ Markup: partials/pamphlet.njk, placed first inside the block of text it floats i
 }
 
 .pamphlet {
-  /* the object's own colors: a new cream stock, the same in light and dark themes */
-  --pamphlet-paper: #e9e1cf;
-  --pamphlet-page: #d4cab5;
-  --pamphlet-page-alt: #bfb39b;
-  --pamphlet-shadow: var(--box-shadow-thumb);
+  /* the object's own colors: an aged cream a step darker than the 1904 scan, the same in light and dark themes */
+  --pamphlet-paper: #e0d0b0;
+  --pamphlet-page: color-mix(in oklab, var(--pamphlet-paper) 91%, #3a2a10);
+  --pamphlet-page-alt: color-mix(in oklab, var(--pamphlet-paper) 82%, #3a2a10);
+  --pamphlet-shadow: var(--box-shadow-thumb-cast);
+  /* painted light, as alphas: top-left highlight, darkening toward the bottom right, shade along the spine; tuned in _local/design/Reference - Shadow lab/pamphlet.html */
+  --pamphlet-highlight: 0.22;
+  --pamphlet-falloff: 0.1;
+  --pamphlet-spine: 0.15;
   /* on the 8-column prose grid (column 6.25 + gutter 2, of 64): 3 columns wide, one gutter from the text */
   --pamphlet-columns: calc(100% * 22.75 / 64);
   --pamphlet-gutter: calc(100% * 2 / 64);
@@ -111,16 +115,22 @@ Markup: partials/pamphlet.njk, placed first inside the block of text it floats i
   inset: 0;
   border-radius: inherit;
   background:
-    linear-gradient(90deg, rgb(60 40 20 / 0.2), transparent 4%),
-    linear-gradient(165deg, rgb(255 255 255 / 0.35), transparent 40%, rgb(40 30 20 / 0.34));
+    linear-gradient(90deg, rgb(60 40 20 / var(--pamphlet-spine)), transparent 4%),
+    linear-gradient(165deg, rgb(255 255 255 / var(--pamphlet-highlight)), transparent 40%, rgb(40 30 20 / var(--pamphlet-falloff)));
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) .pamphlet {
-    --pamphlet-shadow: var(--box-shadow-thumb-dark);
+    --pamphlet-shadow: var(--box-shadow-thumb-cast-dark);
+    --pamphlet-highlight: 0.35;
+    --pamphlet-falloff: 0.34;
+    --pamphlet-spine: 0.2;
   }
 }
 
 :root[data-theme='dark'] .pamphlet {
-  --pamphlet-shadow: var(--box-shadow-thumb-dark);
+  --pamphlet-shadow: var(--box-shadow-thumb-cast-dark);
+  --pamphlet-highlight: 0.35;
+  --pamphlet-falloff: 0.34;
+  --pamphlet-spine: 0.2;
 }

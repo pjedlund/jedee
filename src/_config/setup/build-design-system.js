@@ -169,11 +169,12 @@ const SHADOW_USAGE = {
 	panel: 'The mega-menu panel — the one thing that genuinely floats over the page.',
 	popup: 'The map popup and tooltips.',
 	chip: 'Inline code, the smallest lift there is.',
-	thumb: 'Images and covers lying on the page: five equal layers after Tobias Ahlin.'
+	thumb: 'Images and covers lying on the page: five equal layers after Tobias Ahlin.',
+	'thumb-cast': 'The pamphlet: thumb lit from the top left, falling right and stronger in light.'
 };
 const shadow = {
-	note: 'panel, popup and chip are two layers — a tight contact shadow plus a wide soft one; thumb is five equal layers. All are deeper in dark theme.',
-	tokens: ['panel', 'popup', 'chip', 'thumb'].map(k => ({
+	note: 'panel, popup and chip are two layers — a tight contact shadow plus a wide soft one; thumb and thumb-cast are five equal layers. All are deeper in dark theme.',
+	tokens: ['panel', 'popup', 'chip', 'thumb', 'thumb-cast'].map(k => ({
 		name: `shadow-${k}`,
 		value: {light: layers(shadowSrc[k]), dark: layers(shadowSrc[`${k}-dark`])},
 		usage: SHADOW_USAGE[k]
