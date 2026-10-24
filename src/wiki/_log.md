@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-10-24] ingest | Shadows
+
+From the sessions that turned the pamphlet and book onto shadow tokens. [[Shadows]] covers Tobias Ahlin's layered box-shadows, Josh Comeau's single light source, elevation scale and tinted shadows, Philipp Brumm's eased layers, why dark-mode shadows need several times the alpha, and keeping an object's painted light from fighting the shadow it casts; its "In jedee" section lists the five tokens and how `thumb` and `thumb-cast` were picked. Links earned: [[Tailwind]], [[Design token sync]], [[Tooltips]], [[Syntax highlighting]], [[CSS 3D transforms]].
+
 ## [2026-10-23] lint | Shadows and labelled icons
 
 The end-of-day lint found two pages behind the day's code. [[CSS 3D transforms]] described the pamphlet's old near-opaque two-layer shadow; it now names the `thumb` token the pamphlet and book use. [[Icons]] now says the `svg` shortcode adds `role="img"` with an accessible name.
