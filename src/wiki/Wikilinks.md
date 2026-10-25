@@ -43,7 +43,7 @@ Use the plain `[[Page Title]]` form inside a table, or put the link in the prose
 
 ### Dead wikilinks render as plain text
 
-**This changed on 2026-07-31 and the raw source note predates it.** The plugin's own default returns the raw `[[bracketed]]` string for an unresolvable link — and before reaching that default it substitutes `opts.stubUrl` (default `/stubs/`), so a dead link actually rendered as a live anchor to a page that doesn't exist. Both behaviors are wrong for this site, because published posts must never link into the private wiki (see the one-way rule in the LLM wiki section of `AGENTS.md`).
+**This changed on 2026-07-31 and the raw source note predates it.** The plugin's own default returns the raw `[[bracketed]]` string for an unresolvable link — and before reaching that default it substitutes `opts.stubUrl` (default `/stubs/`), so a dead link actually rendered as a live anchor to a page that doesn't exist. Both behaviors are wrong for this site: a wikilink should either reach a real page or read as plain text, and with the wiki dial at `private` or `local` every link from a post into the wiki is dead in a production build. (At the time the wiki was private and posts were barred from linking into it; since it went public, `AGENTS.md` allows it but rarely.)
 
 The fix is two coupled settings in `eleventy.config.js`:
 
