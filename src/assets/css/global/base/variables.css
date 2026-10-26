@@ -120,8 +120,8 @@
     --color-bg-accent-2: var(--color-gray-600);
     --color-rule: var(--color-base-rule-dark);
     --color-bg-head: color-mix(in srgb, var(--color-base-dark) 4%, var(--color-bg));
-    /* border top for body */
-    --color-border-top: var(--color-orange-900);
+    /* border top for body: a band a shade darker than the page (#0d0e10) */
+    --color-border-top: color-mix(in srgb, var(--color-gray-900) 64%, var(--color-base-black));
 
     --color-code-bg: color-mix(in oklab, var(--color-bg) 80%, var(--color-base-black));
     --color-activity-orienteering: var(--color-activity-orienteering-on-dark);
@@ -151,7 +151,7 @@
   --color-rule: var(--color-base-rule-dark);
   --color-bg-head: color-mix(in srgb, var(--color-base-dark) 15%, var(--color-bg));
   /* border top for body */
-  --color-border-top: var(--color-orange-900);
+  --color-border-top: color-mix(in srgb, var(--color-gray-900) 64%, var(--color-base-black));
 
   --color-code-bg: color-mix(in oklab, var(--color-bg) 80%, var(--color-base-black));
   --color-activity-orienteering: var(--color-activity-orienteering-on-dark);

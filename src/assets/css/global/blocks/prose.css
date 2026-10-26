@@ -89,6 +89,21 @@
   border-radius: var(--border-radius-medium);
 }
 
+/* Photos that open in the lightbox lie on the page like the book covers, so they take the same shadow. */
+.prose photo-lightbox img {
+  box-shadow: var(--box-shadow-thumb);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .prose photo-lightbox img {
+    box-shadow: var(--box-shadow-thumb-dark);
+  }
+}
+
+:root[data-theme='dark'] .prose photo-lightbox img {
+  box-shadow: var(--box-shadow-thumb-dark);
+}
+
 /* External-link icon: a small ↗ after any outbound link in prose. Internal links are relative (/about/) so they never match href^='http'; the own-domain / localhost exclusions cover the rare absolute self-link. Decorative — links open in the same tab, so no extra announcement. Reuses the static external.svg (its #888 stroke reads in both themes; a background image can't inherit currentColor).
    `.no-indicator` opts a link out — use it for any link whose content isn't words (an image-only outbound link like the photo lightbox or static map, which would otherwise draw a stray arrow under the picture). */
 .prose a[href^='http']:not([href*='johanedlund.se']):not([href*='localhost']):not(.no-indicator)::after {
