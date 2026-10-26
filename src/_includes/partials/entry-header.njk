@@ -39,8 +39,11 @@
     <span class="button" data-small-button data-button-variant="tertiary">draft</span>
   {%- endif %}
   {# The post type's icon (navigation.postTypes, matched on the folder's category), drawn large in the background beside the title (type-mark.css), positioned from the article. The breadcrumb already names the type and links its archive. #}
+  {# The viewBox is trimmed to the icon's drawn outline (iconBounds.json, `npm run icons:bounds`) and pinned top right, so the glyph itself — not its empty frame — meets the H1's right edge. #}
   {%- for pt in navigation.postTypes %}{% if pt.collection == category %}
-    <span class="type-mark" aria-hidden="true">{% svg 'posts/' + pt.icon, '', '' %}</span>
+    {%- set markSvg %}{% svg 'posts/' + pt.icon, '', '' %}{% endset %}
+    {%- if iconBounds[pt.icon] %}{% set markSvg = markSvg | replace('viewBox="0 0 256 256"', 'viewBox="' ~ iconBounds[pt.icon] ~ '" preserveAspectRatio="xMaxYMin meet"') %}{% endif %}
+    <span class="type-mark" aria-hidden="true">{{ markSvg | safe }}</span>
   {%- endif %}{% endfor %}
   {# Activity pages only: the activity type with its own glyph, to the left of the date. activityType is set only on activity posts, so this block never renders on other types. Small local icon+label map — Johan's four types ("Gym" is the weight-training label). #}
   {%- if activityType %}

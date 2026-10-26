@@ -1,6 +1,6 @@
 /*
 TYPE MARK
-A post type's icon drawn large beside the title, in the top bar's color, instead of in the meta line (entry-header.njk, every post type). Decoration only: aria-hidden, no pointer events, painted behind the page so the header and the featured image cover its ends.
+A post type's icon drawn large beside the title, a shade darker than the page, instead of in the meta line (entry-header.njk, every post type). Decoration only: aria-hidden, no pointer events, painted behind the page so the header and the featured image cover its ends.
 */
 
 .h-entry:has(.type-mark) {
@@ -8,17 +8,30 @@ A post type's icon drawn large beside the title, in the top bar's color, instead
 }
 
 .type-mark {
-  --type-mark-size: calc(var(--line, 1.5em) * 8.5);
+  /* Scales with the window between the two ends; the glyph fits this square, pinned to its top right. */
+  --type-mark-size: clamp(16rem, 22vw, 21rem);
+  --type-mark-color: color-mix(in oklab, var(--color-bg) 94%, var(--color-base-black));
 
   display: none;
   position: absolute;
-  /* ⚠ Up to the header's edge or a little into it, with the stem's foot tucked under the featured image. Tuned on a one-line title; a longer one leaves a gap above the image. */
-  inset-block-start: calc(var(--line, 1.5em) * -3);
-  /* The right edge of the content column: the article is the .wrapper, so --content is its width here. */
+  /* The foot stays half a line under where a one-line title's featured image starts (4¾ lines down), so a bigger mark grows up into the header. ⚠ A longer title pushes the image down and leaves a gap. */
+  inset-block-start: calc(var(--line, 1.5em) * 5.25 - var(--type-mark-size));
+  /* The right edge of the content column, where the H1 ends: the article is the .wrapper, so --content is its width here. */
   inset-inline-end: calc((100% - var(--content)) / 2);
   z-index: -1;
   pointer-events: none;
-  color: var(--color-border-top);
+  color: var(--type-mark-color);
+}
+
+/* Dark: the top bar's color, a shade below the page. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .type-mark {
+    --type-mark-color: var(--color-border-top);
+  }
+}
+
+:root[data-theme='dark'] .type-mark {
+  --type-mark-color: var(--color-border-top);
 }
 
 .type-mark svg {
