@@ -102,10 +102,11 @@ A "Menu ⌄" button drops a two-column, table-of-contents-style panel of every p
   align-items: stretch; /* without this, the cluster's align-items:center leaks in and stops a wrapped row from filling its track */
   grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
   column-gap: var(--space-l);
-  row-gap: var(--space-3xs);
+  row-gap: 0; /* each row is one line tall (below), so the rows sit on the lattice */
 
   inline-size: var(--megamenu-width);
-  padding: var(--space-s);
+  /* Half a line top and bottom keeps the first row on the lattice; the wider inline padding sets the rows off the panel's edge. */
+  padding: var(--line-half, var(--space-s)) var(--space-m);
   background: var(--megamenu-bg);
   border-radius: var(--border-radius-medium);
   /* No resting border — separation is the lighter surface plus the raised shadow (deeper in dark), and forced-colors gets a real edge back. */
@@ -152,6 +153,18 @@ A "Menu ⌄" button drops a two-column, table-of-contents-style panel of every p
 
 .megamenu[data-no-flash] {
   transition: none;
+}
+
+/* The open panel's rows: the trail's small type, one lattice line each, with the icon at the header icon size — bigger than the text, like the logomark beside the breadcrumb. */
+.menu-toggle + .megamenu a {
+  padding-block: 0;
+  font-size: var(--size-step-min-2);
+  line-height: var(--line, normal);
+}
+
+.menu-toggle + .megamenu a svg {
+  inline-size: var(--site-header-icon-size, 1.2em);
+  block-size: var(--site-header-icon-size, 1.2em);
 }
 
 .megamenu a {
