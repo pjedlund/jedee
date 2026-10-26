@@ -85,12 +85,12 @@ is-land:has(> .site-search) {
 
 .search-panel {
   --search-panel-width: min(40rem, 100%);
-  --search-panel-shadow: var(--box-shadow-panel);
+  --search-panel-shadow: var(--shadow-raised);
   --flow-space: var(--space-xs);
 
   position: absolute;
-  /* Matches the mega-menu: 100% drops to the header row's bottom edge, then pull back up by the space the short button leaves. */
-  inset-block-start: calc(100% - var(--space-m) - var(--space-2xs));
+  /* Matches the mega-menu: the row's bottom edge, a hair higher, lands just under the centred buttons. */
+  inset-block-start: calc(100% - var(--space-3xs));
   inset-inline-end: 0;
   z-index: 5;
 
@@ -99,10 +99,6 @@ is-land:has(> .site-search) {
   background: var(--search-surface);
   border-radius: var(--border-radius-medium);
   box-shadow: var(--search-panel-shadow);
-}
-
-:root[data-theme='dark'] .search-panel {
-  --search-panel-shadow: var(--box-shadow-panel-dark);
 }
 
 @media (forced-colors: active) {

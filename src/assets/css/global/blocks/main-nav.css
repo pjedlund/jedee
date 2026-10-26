@@ -93,8 +93,8 @@ A "Menu ⌄" button drops a two-column, table-of-contents-style panel of every p
   --megamenu-width: min(40rem, 100%);
 
   position: absolute;
-  /* 100% drops the panel to the row's bottom edge; the row is taller than the short button, so pull back up by that empty space. space-m + space-2xs tracks the gap fluidly — ~5px under the button at every width, no magic pixel. */
-  inset-block-start: calc(100% - var(--space-m) - var(--space-2xs));
+  /* The row's bottom edge, a hair higher: the buttons are centred in the row, so this lands ~7px under them at every width. ⚠ Not 100% minus the row's spare height — the lattice header has no breadcrumb padding, and that formula slid the panel over the button. */
+  inset-block-start: calc(100% - var(--space-3xs));
   inset-inline-end: 0;
   z-index: 5;
 
@@ -108,8 +108,8 @@ A "Menu ⌄" button drops a two-column, table-of-contents-style panel of every p
   padding: var(--space-s);
   background: var(--megamenu-bg);
   border-radius: var(--border-radius-medium);
-  /* No resting border — separation is the lighter surface plus a soft shadow. Light stays gentle, dark restores depth (below), and forced-colors gets a real edge back. */
-  --megamenu-shadow: var(--box-shadow-panel);
+  /* No resting border — separation is the lighter surface plus the raised shadow (deeper in dark), and forced-colors gets a real edge back. */
+  --megamenu-shadow: var(--shadow-raised);
   box-shadow: var(--megamenu-shadow);
 }
 
@@ -125,11 +125,6 @@ A "Menu ⌄" button drops a two-column, table-of-contents-style panel of every p
   .menu-toggle + .megamenu {
     border: 1px solid CanvasText;
   }
-}
-
-/* "Less shadow" was a light-theme ask; on dark the lift comes mostly from the surface anyway. */
-:root[data-theme='dark'] .menu-toggle + .megamenu {
-  --megamenu-shadow: var(--box-shadow-panel-dark);
 }
 
 /* closed / open — visibility, not opacity/transform alone, so closed links aren't Tab-focusable (nav-accessible layer 6) */
