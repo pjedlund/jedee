@@ -32,7 +32,7 @@ is-land:has(> .site-search) {
   /* Outer box matches .theme-toggle beside it; the glyph is the header icon size, and the padding takes up the difference. ⚠ Size the glyph from a token, not from `em` — the header's inherited font-size is ~27px, which rendered the magnifier half again as big as the sun. */
   --search-toggle-box: calc(var(--size-step-min-1) + var(--space-2xs) * 2);
   --search-toggle-size: var(--site-header-icon-size, var(--size-step-min-2));
-  --search-toggle-color: var(--color-text);
+  --search-toggle-color: var(--color-text-header-dim);
   --search-toggle-border-color: transparent;
 
   display: inline-flex;
@@ -58,8 +58,14 @@ is-land:has(> .site-search) {
   block-size: var(--search-toggle-size);
 }
 
-.search-toggle:hover {
-  --search-toggle-color: var(--color-accent-orange);
+.search-toggle:is(:hover, :focus-visible) {
+  --search-toggle-color: var(--color-text-strong);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .search-toggle {
+    transition: color var(--transition-duration) var(--transition-timing);
+  }
 }
 
 /* open: the same fill + hairline the MENU trigger takes when the mega-menu is open, so the two read as one control set */

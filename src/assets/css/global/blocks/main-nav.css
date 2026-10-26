@@ -29,7 +29,7 @@ A "Menu ⌄" button drops a two-column, table-of-contents-style panel of every p
   --menu-toggle-gap: var(--space-2xs);
   /* very faint hairline — the MENU label + chevron carry the affordance, not the edge */
   --menu-toggle-border-color: color-mix(in oklab, var(--color-text) 18%, var(--color-bg));
-  --menu-toggle-color: var(--color-text);
+  --menu-toggle-color: var(--color-text-header-dim);
 
   display: inline-flex;
   align-items: center;
@@ -47,8 +47,9 @@ A "Menu ⌄" button drops a two-column, table-of-contents-style panel of every p
   cursor: pointer;
 }
 
-.menu-toggle:hover {
+.menu-toggle:is(:hover, :focus-visible) {
   --menu-toggle-border-color: color-mix(in oklab, var(--color-text) 40%, var(--color-bg));
+  --menu-toggle-color: var(--color-text-strong);
 }
 
 /* open: fill with the panel surface so trigger and panel read as one sheet */
@@ -63,6 +64,10 @@ A "Menu ⌄" button drops a two-column, table-of-contents-style panel of every p
 }
 
 @media (prefers-reduced-motion: no-preference) {
+  .menu-toggle {
+    transition: color var(--transition-duration) var(--transition-timing);
+  }
+
   .menu-toggle svg {
     transition: rotate 0.2s var(--transition-timing, ease);
   }

@@ -12,11 +12,9 @@ Top-left wayfinding that replaces the old site logo: the home crumb is the logom
   --breadcrumb-mark: calc(var(--breadcrumb-mark-height) * 0.96);
   /* How far the square stands out past the mark on each side — handed back as negative margin so the square rings the logo without spacing the trail off it. */
   --breadcrumb-mark-slack: calc((var(--breadcrumb-box) - var(--breadcrumb-mark)) / 2);
-  /* 85% keeps the muted ancestor links + "by" above 4.5:1 (~5:1 in light); 60% rendered at 2.92:1. */
-  --breadcrumb-color-ancestor: color-mix(in oklab, var(--color-text) 85%, var(--color-bg));
-  /* The page you're on is quieter than the links that lead back. 82% is the lowest that clears 4.5:1 in light (~4.7:1); dark goes further, below. */
-  --breadcrumb-color-current: color-mix(in oklab, var(--color-text) 82%, var(--color-bg));
-  --breadcrumb-color-hover: var(--color-text);
+  --breadcrumb-color-ancestor: var(--color-text-header-dim);
+  --breadcrumb-color-current: var(--color-text-header-dim);
+  --breadcrumb-color-hover: var(--color-text-strong);
   --breadcrumb-color-separator: color-mix(in oklab, var(--color-text) 28%, var(--color-bg));
   /* The leaf's taller line box is what sets the header row's height, and the home page has no leaf — hence one shared line so the row doesn't jump between home and everywhere else. */
   --breadcrumb-leaf-leading: 1.35;
@@ -31,11 +29,6 @@ Top-left wayfinding that replaces the old site logo: the home crumb is the logom
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
   line-height: var(--leading-flat);
-}
-
-/* Dark mode can drop further while staying above 4.5:1 — 68% renders ~5.2:1. */
-:root[data-theme='dark'] .breadcrumb {
-  --breadcrumb-color-current: color-mix(in oklab, var(--color-text) 68%, var(--color-bg));
 }
 
 /* The breadcrumb shares the header row with the theme toggle / nav. Keep the row on one line: the trail shrinks (its leaf truncating) while the controls stay pinned to the end. The hook is on the header's repel (header.njk); main-nav.css relaxes both pins in the no-JS state. */
@@ -82,7 +75,13 @@ Top-left wayfinding that replaces the old site logo: the home crumb is the logom
   border-radius: var(--border-radius-medium);
   color: var(--breadcrumb-color-ancestor);
   text-decoration: none;
-  /* No `transition: color` on purpose: transitioning a color that resolves from color-mix(var(--color-text)…) sticks on the pre-toggle value when the theme flips (Chromium), leaving the link at a failing contrast. */
+}
+
+/* ⚠ Check the color after a theme flip if this changes: a color transition here once stuck on the old theme's value in Chromium (not reproducible 2026-10-26). */
+@media (prefers-reduced-motion: no-preference) {
+  .breadcrumb a {
+    transition: color var(--transition-duration) var(--transition-timing);
+  }
 }
 
 /* Contrast alone carries the hover — no underline. Every item in a breadcrumb is a link, so position says what's clickable and WCAG 1.4.1's in-body-text case doesn't apply; keyboard focus still gets the ring. */
