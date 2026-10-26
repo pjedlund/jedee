@@ -25,6 +25,29 @@ place-map {
   border-radius: var(--border-radius-small);
   box-shadow: var(--shadow-on-page);
 }
+/* One static map per theme (partials/place-map.njk), so dark never flashes the light map before the live one loads. ⚠ display:none also keeps the hidden one's lazy image from downloading — with JavaScript off, Chrome turns lazy loading off and fetches both. */
+.place-map-static .place-map-static-dark {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .place-map-static .place-map-static-light {
+    display: none;
+  }
+
+  :root:not([data-theme='light']) .place-map-static .place-map-static-dark {
+    display: block;
+  }
+}
+
+:root[data-theme='dark'] .place-map-static .place-map-static-light {
+  display: none;
+}
+
+:root[data-theme='dark'] .place-map-static .place-map-static-dark {
+  display: block;
+}
+
 /* once the live map is in, drop the static fallback */
 place-map[data-map-ready] > .place-map-static {
   display: none;
