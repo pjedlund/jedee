@@ -1,0 +1,35 @@
+/*
+TYPE MARK
+A post type's icon drawn large beside the title, in the top bar's color, instead of in the meta line (entry-header.njk, when a layout sets typeMark). Decoration only: aria-hidden, no pointer events, painted behind the page so the header and the featured image cover its ends.
+*/
+
+.h-entry:has(.type-mark) {
+  position: relative;
+}
+
+.type-mark {
+  --type-mark-size: calc(var(--line, 1.5em) * 8.5);
+
+  display: none;
+  position: absolute;
+  /* ⚠ Up to the header's edge or a little into it, with the stem's foot tucked under the featured image. Tuned on a one-line title; a longer one leaves a gap above the image. */
+  inset-block-start: calc(var(--line, 1.5em) * -3);
+  /* The right edge of the content column: the article is the .wrapper, so --content is its width here. */
+  inset-inline-end: calc((100% - var(--content)) / 2);
+  z-index: -1;
+  pointer-events: none;
+  color: var(--color-border-top);
+}
+
+.type-mark svg {
+  display: block;
+  inline-size: var(--type-mark-size);
+  block-size: var(--type-mark-size);
+}
+
+/* Only where the column leaves room beside the title; narrower, it would sit behind the text. */
+@media (min-width: 64rem) {
+  .type-mark {
+    display: block;
+  }
+}
