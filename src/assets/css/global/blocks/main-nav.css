@@ -102,7 +102,7 @@ A "Menu ⌄" button drops a two-column, table-of-contents-style panel of every p
   align-items: stretch; /* without this, the cluster's align-items:center leaks in and stops a wrapped row from filling its track */
   grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
   column-gap: var(--space-l);
-  row-gap: 0; /* each row is one line tall (below), so the rows sit on the lattice */
+  row-gap: 0; /* each row is 1¼ lines tall (below), so the rows sit on the lattice */
 
   inline-size: var(--megamenu-width);
   /* Half a line top and bottom keeps the first row on the lattice; the wider inline padding sets the rows off the panel's edge. */
@@ -155,10 +155,10 @@ A "Menu ⌄" button drops a two-column, table-of-contents-style panel of every p
   transition: none;
 }
 
-/* The open panel's rows: one lattice line each, the icon 1.2x the text — bigger than it, like the logomark beside the breadcrumb. */
+/* The open panel's rows: 1¼ lattice lines each, so every row starts on a quarter line; the icon 1.2x the text — bigger than it, like the logomark beside the breadcrumb. */
 .menu-toggle + .megamenu a {
   padding-block: 0;
-  line-height: var(--line, normal);
+  line-height: calc(var(--line, 1.2em) * 1.25);
 }
 
 .menu-toggle + .megamenu a svg {
