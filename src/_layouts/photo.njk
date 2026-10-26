@@ -32,7 +32,7 @@ schema: BlogPosting
     {# Capture/scan metadata + download original + public-domain line. Bare include (no async shortcodes inside) — see the interlinker trap note. #}
     {% include 'partials/photo-meta.njk' %}
 
-    {# Location map — a popout-width element (replaces the old sidebar thumbnail). The slotted static <a><img> is the no-JS fallback; <place-map> upgrades it to a live, maximizable map on idle. photoExif carries the GPS. #}
+    {# Location map — a feature-width element in the 6x12 panoramic frame (2:1), as on audio pages (replaces the old sidebar thumbnail). The slotted static <a><img> is the no-JS fallback; <place-map> upgrades it to a live, maximizable map on idle. photoExif carries the GPS. #}
     {% set ex = photoExif %}
     {% if ex and ex.gps and meta.mapApiKey and not photo.hideMap %}
       {# place-map.njk reads these caller-set variables rather than photoExif, so audio (and later video) can slot the same fallback in from plain front matter. #}
@@ -41,7 +41,7 @@ schema: BlogPosting
       {% set mapLon = ex.gps.lon %}
       {% set mapZoom = photo.mapZoom or 13 %}
       {% set mapSubject = "this photograph was taken" %}
-      <div class="popout">
+      <div class="feature" style="--place-map-ratio: 2 / 1">
         <place-map @lat="{{ mapLat }}" @lon="{{ mapLon }}" @zoom="{{ mapZoom }}" @place="{{ mapPlace }}">
           {% include "partials/place-map.njk" %}
         </place-map>
