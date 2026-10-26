@@ -98,7 +98,7 @@ Every vertical gap in prose, and every line box that is not body text, is a whol
   }
 
   /* FIGURES
-  A line above, a line and a half after; the hairline is an outline over the image's own edge, for the reason above. */
+  A line above, a line and a half after. A video's hairline is an outline over its own edge, for the reason above; images have none, the --shadow-on-page shadow edges them. */
   .prose :is(figure, picture) {
     --flow-space: var(--line);
   }
@@ -107,7 +107,7 @@ Every vertical gap in prose, and every line box that is not body text, is a whol
     --flow-space: var(--line-1h);
   }
 
-  .prose :is(img, video) {
+  .prose video {
     outline: var(--stroke);
     outline-offset: calc(var(--border-thickness) * -1);
   }
