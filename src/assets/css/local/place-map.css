@@ -17,9 +17,14 @@ place-map {
   inline-size: 100%;
   block-size: auto;
 }
+/* ⚠ --place-map-ratio must match .place-map-live's, or the swap to the live map shifts layout; the fetched image is 16:9, so other ratios crop it. */
 .place-map-static img {
+  aspect-ratio: var(--place-map-ratio, 16 / 9);
+  --img-ratio: calc(1 / (var(--place-map-ratio, 16 / 9))); /* the prose rhythm pads by this, not the fetched image's own ratio */
+  object-fit: cover;
   border: var(--stroke);
   border-radius: var(--border-radius-small);
+  box-shadow: var(--shadow-on-page);
 }
 /* once the live map is in, drop the static fallback */
 place-map[data-map-ready] > .place-map-static {
@@ -32,13 +37,14 @@ place-map > :is(.place-map-live, .place-map-static) + :not(script) {
   margin-block-start: var(--space-l);
 }
 
-/* Live inline map. Same 16:9 as the static fallback so the swap doesn't shift layout, and the box keeps its height when the canvas moves out to the overlay. position:relative anchors the maximize button. */
+/* Live inline map. Same ratio as the static fallback so the swap doesn't shift layout, and the box keeps its height when the canvas moves out to the overlay. position:relative anchors the maximize button. */
 .place-map-live {
   position: relative;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: var(--place-map-ratio, 16 / 9);
   inline-size: 100%;
   border: var(--stroke);
   border-radius: var(--border-radius-small);
+  box-shadow: var(--shadow-on-page);
   background: var(--map-park); /* pre-tile surface: the forest green */
   overflow: hidden;
   isolation: isolate;

@@ -89,13 +89,13 @@ schema: BlogPosting
       </section>
     {% endif %}
 
-    {# Location map — a popout <place-map>, same as the photo layout. The slotted static <a><img> is the no-JS fallback; <place-map> upgrades it to a live, maximizable map on idle. Coordinates come from front matter here (audio has no EXIF to read). #}
+    {# Location map — a feature-width <place-map> in the 6x12 panoramic frame (2:1) of the poster. The slotted static <a><img> is the no-JS fallback; <place-map> upgrades it to a live, maximizable map on idle. Coordinates come from front matter here (audio has no EXIF to read). #}
     {% if lat and lon and meta.mapApiKey and not hideMap %}
       {% set mapLat = lat %}
       {% set mapLon = lon %}
       {% set mapPlace = place or "" %}
       {% set mapSubject = "this recording was made" %}
-      <div class="popout">
+      <div class="feature" style="--place-map-ratio: 2 / 1">
         <place-map @lat="{{ mapLat }}" @lon="{{ mapLon }}" @zoom="{{ mapZoom or 13 }}" @place="{{ mapPlace }}">
           {% include "partials/place-map.njk" %}
         </place-map>
