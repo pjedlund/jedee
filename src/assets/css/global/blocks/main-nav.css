@@ -155,16 +155,15 @@ A "Menu ⌄" button drops a two-column, table-of-contents-style panel of every p
   transition: none;
 }
 
-/* The open panel's rows: the trail's small type, one lattice line each, with the icon at the header icon size — bigger than the text, like the logomark beside the breadcrumb. */
+/* The open panel's rows: one lattice line each, the icon 1.2x the text — bigger than it, like the logomark beside the breadcrumb. */
 .menu-toggle + .megamenu a {
   padding-block: 0;
-  font-size: var(--size-step-min-2);
   line-height: var(--line, normal);
 }
 
 .menu-toggle + .megamenu a svg {
-  inline-size: var(--site-header-icon-size, 1.2em);
-  block-size: var(--site-header-icon-size, 1.2em);
+  inline-size: 1.2em;
+  block-size: 1.2em;
 }
 
 .megamenu a {
