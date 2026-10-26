@@ -38,13 +38,9 @@
   {%- if draft -%}
     <span class="button" data-small-button data-button-variant="tertiary">draft</span>
   {%- endif %}
-  {# The post type, linked to its archive — icon and name come from navigation.postTypes, matched on the folder's category. A layout that sets typeMark shows the icon instead as a large decorative glyph beside the title (type-mark.css), positioned from the article. #}
+  {# The post type's icon (navigation.postTypes, matched on the folder's category), drawn large in the background beside the title (type-mark.css), positioned from the article. The breadcrumb already names the type and links its archive. #}
   {%- for pt in navigation.postTypes %}{% if pt.collection == category %}
-    {%- if typeMark %}
     <span class="type-mark" aria-hidden="true">{% svg 'posts/' + pt.icon, '', '' %}</span>
-    {%- else %}
-    <a class="meta-item" href="{{ pt.url }}">{% svg 'posts/' + pt.icon, '', 'meta-icon' %}{{ pt.text }}</a>
-    {%- endif %}
   {%- endif %}{% endfor %}
   {# Activity pages only: the activity type with its own glyph, to the left of the date. activityType is set only on activity posts, so this block never renders on other types. Small local icon+label map — Johan's four types ("Gym" is the weight-training label). #}
   {%- if activityType %}
@@ -76,4 +72,5 @@
 
 {% css "local" %}
   {% include "css/meta.css" %}
+  {% include "css/type-mark.css" %}
 {% endcss %}

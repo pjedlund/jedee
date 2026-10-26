@@ -1,6 +1,6 @@
 /*
 TYPE MARK
-A post type's icon drawn large beside the title, in the top bar's color, instead of in the meta line (entry-header.njk, when a layout sets typeMark). Decoration only: aria-hidden, no pointer events, painted behind the page so the header and the featured image cover its ends.
+A post type's icon drawn large beside the title, in the top bar's color, instead of in the meta line (entry-header.njk, every post type). Decoration only: aria-hidden, no pointer events, painted behind the page so the header and the featured image cover its ends.
 */
 
 .h-entry:has(.type-mark) {
