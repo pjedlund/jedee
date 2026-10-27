@@ -84,15 +84,15 @@ is-land:has(> .site-search) {
 /* ---------- the panel ---------- */
 
 .search-panel {
-  /* 4 grid columns; where that's under 20rem, the fewest whole columns that reach it; never wider than the row. */
-  --search-panel-width: min(100%, round(up, max(4 * var(--site-header-grid-tile), 20rem + var(--site-header-grid-gutter)), var(--site-header-grid-tile)) - var(--site-header-grid-gutter));
+  /* Same width rule as the mega-menu (main-nav.css). */
+  --search-panel-width: min(100%, 30rem);
   --search-panel-shadow: var(--shadow-raised);
   --flow-space: var(--space-xs);
 
   position: absolute;
   /* Matches the mega-menu: on the lattice just under the buttons. */
   inset-block-start: var(--site-header-panel-top, calc(100% - var(--space-3xs)));
-  inset-inline-end: var(--site-header-grid-end, 0);
+  inset-inline-end: 0;
   z-index: 5;
 
   inline-size: var(--search-panel-width);
