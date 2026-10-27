@@ -10,10 +10,10 @@ schema: BlogPosting
     {# Recorded route line. The .geojson sibling (from _local/generated/extract-route.py) is inlined into <place-map> route mode as a slotted JSON script; place-map.js draws the track + start/finish markers on idle. No-JS visitors get no map here, which is fine: the stats and the "View on Strava" link below carry the route. #}
     {% set routeJson = page.inputPath | routeGeoJSON %}
     {% if routeJson %}
-      {#- @breakout puts the .popout class on the component's <is-land> root (the real grid child), so the route map breaks out one step wider than the prose column. A class here would land on the inner <place-map> (webc:root), a grid grandchild, and do nothing. #}
-      <place-map @breakout="popout" @place="this route" @activity="{{ activityType | slugify }}">
-        {#- ⚠ Empty 16:9 box rendered server-side so its aspect-ratio holds the space from first paint; place-map.js adopts it. #}
-        <div class="place-map-live" data-place-map-box>
+      {#- @breakout puts .feature on the component's <is-land> root (the real grid child); a class here would land on a grid grandchild and do nothing. Feature width in the 6x12 panoramic frame (2:1), as on photo and audio pages. #}
+      <place-map @breakout="feature" @place="this route" @activity="{{ activityType | slugify }}">
+        {#- ⚠ Empty box rendered server-side so its aspect-ratio holds the space from first paint; place-map.js adopts it. #}
+        <div class="place-map-live" data-place-map-box style="--place-map-ratio: 2 / 1">
           <p class="place-map-pending">Map of this route</p>
         </div>
         <script type="application/json" data-route>{{ routeJson | safe }}</script>
