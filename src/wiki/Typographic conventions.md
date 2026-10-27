@@ -118,7 +118,7 @@ Four opt-in classes live in `global/utilities/numerals.css`: `.fraction`, `.slas
 
 ### Capitals
 
-Capital labels (logo, breadcrumb, menu button, footer, buttons) share `--tracking-wide`, 0.12ch. A Source Sans digit is 0.472em wide, so that is about 5.7% of the size, inside Bringhurst's 5–10%. A VoiceOver check of these `uppercase` labels is on the backlog.
+Capital labels (logo, breadcrumb, menu button, footer, buttons) share `--tracking-wide`, 0.16ch since 2026-10-27, up from 0.12ch. The `ch` unit is the width of a zero, which in Source Sans is 0.497em in the regular weight and 0.527em in the bold, so that is about 8% of the size, a little more in bold labels, inside Bringhurst's 5–10%. A VoiceOver check of these `uppercase` labels is on the backlog.
 
 ### Captions and quotations
 

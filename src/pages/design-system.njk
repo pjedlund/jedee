@@ -164,11 +164,11 @@ colorGroups:
       <div class="grid" data-layout="50-50">
         <div class="type-sample | flow">
           <p class="type-sample-label">Plain</p>
-          <p>Founded in 1994, the W3C made CSS 2.1 a recommendation in 2011. Code keeps its own figures: <code>--tracking-wide: 0.12ch</code>.</p>
+          <p>Founded in 1994, the W3C made CSS 2.1 a recommendation in 2011. Code keeps its own figures: <code>--tracking-wide: 0.16ch</code>.</p>
         </div>
         <div class="type-sample prose | flow">
           <p class="type-sample-label">Site</p>
-          <p>Founded in 1994, the <abbr title="World Wide Web Consortium">W3C</abbr> made CSS 2.1 a Recommendation in 2011. Code keeps its own figures: <code>--tracking-wide: 0.12ch</code>.</p>
+          <p>Founded in 1994, the <abbr title="World Wide Web Consortium">W3C</abbr> made CSS 2.1 a Recommendation in 2011. Code keeps its own figures: <code>--tracking-wide: 0.16ch</code>.</p>
         </div>
       </div>
     </div>
@@ -217,28 +217,28 @@ colorGroups:
 
     <div class="flow">
       <h4>Captions and quotes</h4>
-      <p>Captions and quotes are balanced so their lines come out even, not ending on one word. Short captions are italic and centred; long wiki captions are upright and left-aligned.</p>
+      <p>Quotes are balanced, so their lines come out even. Captions are upright and left-aligned, and set <code>pretty</code> so the last line never holds one word alone. The samples are held to a fixed measure so the difference shows at any screen width.</p>
       <div class="grid" data-layout="50-50">
         <div class="type-sample | flow">
           <p class="type-sample-label">Plain</p>
-          <figure><figcaption style="text-wrap: pretty">A caption long enough to run onto a second line under its picture, where the last word used to sit on its own.</figcaption></figure>
-          <blockquote style="text-wrap: pretty">Simple is almost always more effective than complex, and short.</blockquote>
+          <figure><figcaption style="text-wrap: wrap; max-inline-size: 31ch">A caption long enough to run onto a second line under its picture, where the last word used to sit on its own.</figcaption></figure>
+          <blockquote style="text-wrap: wrap; max-inline-size: 22ch">Simple is almost always more effective than complex, and short.</blockquote>
         </div>
         <div class="type-sample | flow">
           <p class="type-sample-label">Site</p>
-          <figure><figcaption>A caption long enough to run onto a second line under its picture, where the last word used to sit on its own.</figcaption></figure>
-          <blockquote>Simple is almost always more effective than complex, and short.</blockquote>
+          <figure><figcaption style="max-inline-size: 31ch">A caption long enough to run onto a second line under its picture, where the last word used to sit on its own.</figcaption></figure>
+          <blockquote style="max-inline-size: 22ch">Simple is almost always more effective than complex, and short.</blockquote>
         </div>
       </div>
     </div>
 
     <div class="flow">
       <h4>Capital labels</h4>
-      <p>Strings of capitals are letterspaced 5–10% of the size: <code>--tracking-wide</code> is 0.12ch, about 5.7%.</p>
+      <p>Strings of capitals are letterspaced 5–10% of the size: <code>--tracking-wide</code> is 0.16ch, about 8%.</p>
       <div class="grid" data-layout="50-50">
         <div class="type-sample | flow">
-          <p class="type-sample-label">Before (0.09ch)</p>
-          <p class="type-caps" style="letter-spacing: 0.09ch">Articles · Notes · Photos</p>
+          <p class="type-sample-label">Before (0.12ch)</p>
+          <p class="type-caps" style="letter-spacing: 0.12ch">Articles · Notes · Photos</p>
         </div>
         <div class="type-sample | flow">
           <p class="type-sample-label">Site</p>
