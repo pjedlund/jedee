@@ -85,7 +85,7 @@ is-land:has(> .site-search) {
 
 .search-panel {
   /* Same width rule as the mega-menu (main-nav.css). */
-  --search-panel-width: min(100%, 30rem);
+  --search-panel-width: min(40rem, 100%);
   --search-panel-shadow: var(--shadow-raised);
   --flow-space: var(--space-xs);
 
