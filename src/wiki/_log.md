@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-10-27] ingest | Viewport units
+
+From the session that fixed the header panels' width. [[Viewport units]] covers what `vw` measures, why `100vw` includes a classic scrollbar the page's content box does not, overlay versus classic scrollbars, the alternatives (`%`, `cqi`, a capped width), and Puppeteer's default `--hide-scrollbars`, which hides the bug from every headless test; its "In jedee" section is the one day the panels were snapped to a `100vw`-based grid, with measurements. [[The main menu]] gained a section on the panel's width: a 40rem cap around Every Layout's Grid, and why 30rem left it one column. Links earned: [[The main menu]], [[Site search]], [[The accessibility test]].
+
 ## [2026-10-24] ingest | Shadows
 
 From the sessions that turned the pamphlet and book onto shadow tokens. [[Shadows]] covers Tobias Ahlin's layered box-shadows, Josh Comeau's single light source, elevation scale and tinted shadows, Philipp Brumm's eased layers, why dark-mode shadows need several times the alpha, and keeping an object's painted light from fighting the shadow it casts; its "In jedee" section lists the five tokens and how `thumb` and `thumb-cast` were picked. Links earned: [[Tailwind]], [[Design token sync]], [[Tooltips]], [[Syntax highlighting]], [[CSS 3D transforms]].

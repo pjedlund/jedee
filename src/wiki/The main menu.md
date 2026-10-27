@@ -1,6 +1,7 @@
 ---
 description: "A disclosure menu built so the fallback is the base layer: the button is injected from a template, and the CSS detects its absence structurally rather than asking whether scripts can run."
 date: 2026-08-03
+updated: 2026-10-27
 ---
 
 A site menu that collapses behind a button is one of the few interface patterns that genuinely needs JavaScript, which makes it a standing test of whether a site's enhancement layers are real. The robust arrangement, set out in [Manuel Matuzović's *Building the main navigation for a website*](https://web.dev/articles/website-navigation), is to build the list first and add the button last: plain `<a>` elements, wrapped in `<ul role="list">`, inside a labeled `<nav>` landmark, with the toggle **injected by script from a `<template>`**. Nothing hides the list except a button that, by construction, only exists when the script that operates it has run.
@@ -39,6 +40,22 @@ The critical-path file `css/local/nav-menu-cls.css` is the one place `scripting`
 ```
 
 Everything else keys off the button's absence, so it also holds if the script fails.
+
+### The panel's width
+
+The open panel is absolutely positioned under the button, so nothing in the page gives it a width; it has to be told one. It gets a cap and nothing else:
+
+```css
+.menu-toggle + .megamenu {
+  --megamenu-width: min(40rem, 100%);
+  inset-inline-end: 0;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+}
+```
+
+The columns are Every Layout's Grid: as many 15rem tracks as fit, stretched to share the rest. That gives two columns from a window of about 600px and one below it, without a breakpoint. The cap is the only fixed number, and it has to leave room for the tracks. At `min(30rem, 100%)` two 15rem tracks plus the `--space-l` gap and the panel's padding never fit, and the menu was one long column at every width.
+
+For one day the width came from the dev grid instead: five columns wide, snapped to the nearest column line. The grid's unit was derived from `100vw`, which counts a scrollbar the header row does not, and with an always-visible scrollbar the panel landed a column off, past the left edge of the window on narrow screens. That is written up on [[Viewport units]]. The [[Site search|search panel]] shares the header row and the same rule, at 30rem.
 
 ### The no-JS layout
 
