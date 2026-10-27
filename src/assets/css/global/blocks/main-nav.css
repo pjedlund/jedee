@@ -89,13 +89,13 @@ A "Menu ⌄" button drops a two-column, table-of-contents-style panel of every p
 /* JS-enhanced: the panel becomes an absolute dropdown under the trigger. This only matches once the button precedes the list, i.e. post-JS. */
 .menu-toggle + .megamenu {
   --megamenu-bg: var(--megamenu-surface);
-  /* 5 grid columns; where that's under 30rem (two link columns), the fewest whole columns that reach it; never wider than the row. */
-  --megamenu-width: min(100%, round(up, max(5 * var(--site-header-grid-tile), 30rem + var(--site-header-grid-gutter)), var(--site-header-grid-tile)) - var(--site-header-grid-gutter));
+  /* 40rem, or the row on narrow screens; the Grid inside drops to one column on its own. ⚠ Don't size or snap it from 100vw — that counts a classic scrollbar the row doesn't, and pushed the panel off the left edge. */
+  --megamenu-width: min(40rem, 100%);
 
   position: absolute;
   /* On the lattice just under the buttons (site-header.css); without round() support, just under the centred buttons. ⚠ Not 100% minus the row's spare height — the lattice header has no breadcrumb padding, and that formula slid the panel over the button. */
   inset-block-start: var(--site-header-panel-top, calc(100% - var(--space-3xs)));
-  inset-inline-end: var(--site-header-grid-end, 0);
+  inset-inline-end: 0;
   z-index: 5;
 
   display: grid; /* nav-menu.js also sets this inline, to beat the pre-JS display:none */
