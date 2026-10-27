@@ -8,12 +8,13 @@ Top-left wayfinding that replaces the old site logo: the home crumb is the logom
   --breadcrumb-gap: var(--space-xs);
   /* The crumb links' box, and so their focus ring: the MENU trigger's block padding around one line. The home crumb uses it on BOTH axes to ring the logomark in a square. */
   --breadcrumb-box: calc(1em + var(--space-xs) * 2 + var(--border-thickness) * 2);
-  --breadcrumb-mark: 0.96em;
+  --breadcrumb-mark-height: var(--site-header-icon-size, 1em);
+  --breadcrumb-mark: calc(var(--breadcrumb-mark-height) * 0.96);
   /* How far the square stands out past the mark on each side — handed back as negative margin so the square rings the logo without spacing the trail off it. */
   --breadcrumb-mark-slack: calc((var(--breadcrumb-box) - var(--breadcrumb-mark)) / 2);
-  /* 85% keeps the muted ancestor links + "by" above 4.5:1 (~5:1 in light); 60% rendered at 2.92:1. */
-  --breadcrumb-color-ancestor: color-mix(in oklab, var(--color-text) 85%, var(--color-bg));
-  --breadcrumb-color-current: var(--color-text);
+  --breadcrumb-color-ancestor: var(--color-text-header-dim);
+  --breadcrumb-color-current: var(--color-text-header-dim);
+  --breadcrumb-color-hover: var(--color-text-strong);
   --breadcrumb-color-separator: color-mix(in oklab, var(--color-text) 28%, var(--color-bg));
   /* The leaf's taller line box is what sets the header row's height, and the home page has no leaf — hence one shared line so the row doesn't jump between home and everywhere else. */
   --breadcrumb-leaf-leading: 1.35;
@@ -74,13 +75,19 @@ Top-left wayfinding that replaces the old site logo: the home crumb is the logom
   border-radius: var(--border-radius-medium);
   color: var(--breadcrumb-color-ancestor);
   text-decoration: none;
-  /* No `transition: color` on purpose: transitioning a color that resolves from color-mix(var(--color-text)…) sticks on the pre-toggle value when the theme flips (Chromium), leaving the link at a failing contrast. */
+}
+
+/* ⚠ Check the color after a theme flip if this changes: a color transition here once stuck on the old theme's value in Chromium (not reproducible 2026-10-26). */
+@media (prefers-reduced-motion: no-preference) {
+  .breadcrumb a {
+    transition: color var(--transition-duration) var(--transition-timing);
+  }
 }
 
 /* Contrast alone carries the hover — no underline. Every item in a breadcrumb is a link, so position says what's clickable and WCAG 1.4.1's in-body-text case doesn't apply; keyboard focus still gets the ring. */
 .breadcrumb a:hover,
 .breadcrumb a:focus-visible {
-  color: var(--breadcrumb-color-current);
+  color: var(--breadcrumb-color-hover);
 }
 
 /* home crumb = the logomark, in a square: the ring is already the box's height, so matching the width rings the mark evenly on all four sides instead of hugging its 15px width. */
@@ -91,10 +98,10 @@ Top-left wayfinding that replaces the old site logo: the home crumb is the logom
   margin-inline: calc(var(--breadcrumb-mark-slack) * -1);
 }
 
-/* Sized to the trail's cap height rather than a little above it, so every crumb rings up identically. */
+/* Header icon size, not the trail's cap height: the mark matches the magnifier and the sun/moon. */
 .breadcrumb-home svg {
   inline-size: var(--breadcrumb-mark);
-  block-size: 1em;
+  block-size: var(--breadcrumb-mark-height);
   fill: var(--color-logo-icon);
   /* no fill transition — see the note on `.breadcrumb a` */
 }

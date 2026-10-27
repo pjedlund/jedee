@@ -29,10 +29,10 @@ is-land:has(> .site-search) {
 /* ---------- the magnifier ---------- */
 
 .search-toggle {
-  /* Outer box matches .theme-toggle beside it; the glyph is one step smaller than the box was built for, so the padding takes up the difference. ⚠ Size the glyph from a token, not from `em` — the header's inherited font-size is ~27px, which rendered the magnifier half again as big as the sun. */
+  /* Outer box matches .theme-toggle beside it; the glyph is the header icon size, and the padding takes up the difference. ⚠ Size the glyph from a token, not from `em` — the header's inherited font-size is ~27px, which rendered the magnifier half again as big as the sun. */
   --search-toggle-box: calc(var(--size-step-min-1) + var(--space-2xs) * 2);
-  --search-toggle-size: var(--size-step-min-2);
-  --search-toggle-color: var(--color-text);
+  --search-toggle-size: var(--site-header-icon-size, var(--size-step-min-2));
+  --search-toggle-color: var(--color-text-header-dim);
   --search-toggle-border-color: transparent;
 
   display: inline-flex;
@@ -58,8 +58,14 @@ is-land:has(> .site-search) {
   block-size: var(--search-toggle-size);
 }
 
-.search-toggle:hover {
-  --search-toggle-color: var(--color-accent-orange);
+.search-toggle:is(:hover, :focus-visible) {
+  --search-toggle-color: var(--color-text-strong);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .search-toggle {
+    transition: color var(--transition-duration) var(--transition-timing);
+  }
 }
 
 /* open: the same fill + hairline the MENU trigger takes when the mega-menu is open, so the two read as one control set */
@@ -78,14 +84,15 @@ is-land:has(> .site-search) {
 /* ---------- the panel ---------- */
 
 .search-panel {
-  --search-panel-width: min(40rem, 100%);
-  --search-panel-shadow: var(--box-shadow-panel);
+  /* 4 grid columns; where that's under 20rem, the fewest whole columns that reach it; never wider than the row. */
+  --search-panel-width: min(100%, round(up, max(4 * var(--site-header-grid-tile), 20rem + var(--site-header-grid-gutter)), var(--site-header-grid-tile)) - var(--site-header-grid-gutter));
+  --search-panel-shadow: var(--shadow-raised);
   --flow-space: var(--space-xs);
 
   position: absolute;
-  /* Matches the mega-menu: 100% drops to the header row's bottom edge, then pull back up by the space the short button leaves. */
-  inset-block-start: calc(100% - var(--space-m) - var(--space-2xs));
-  inset-inline-end: 0;
+  /* Matches the mega-menu: on the lattice just under the buttons. */
+  inset-block-start: var(--site-header-panel-top, calc(100% - var(--space-3xs)));
+  inset-inline-end: var(--site-header-grid-end, 0);
   z-index: 5;
 
   inline-size: var(--search-panel-width);
@@ -93,10 +100,6 @@ is-land:has(> .site-search) {
   background: var(--search-surface);
   border-radius: var(--border-radius-medium);
   box-shadow: var(--search-panel-shadow);
-}
-
-:root[data-theme='dark'] .search-panel {
-  --search-panel-shadow: var(--box-shadow-panel-dark);
 }
 
 @media (forced-colors: active) {

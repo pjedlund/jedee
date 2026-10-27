@@ -4,12 +4,12 @@ Single icon button in the header, showing the CURRENT theme: sun in light, moon 
 Progressive enhancement: hidden until <is-land> upgrades — a toggle that can't run shouldn't show. The no-flash theme itself is set by the inline theme-toggle.js.
 */
 .theme-toggle {
-  /* Outer box sized to sit alongside the wordmark logo in the header; the glyph is one step smaller than that box, and the padding takes up the difference. */
+  /* Outer box sized to sit alongside the wordmark logo in the header; the glyph is the header icon size, and the padding takes up the difference. */
   --theme-toggle-box: calc(var(--size-step-min-1) + var(--space-2xs) * 2);
-  --theme-toggle-size: var(--size-step-min-2);
-  /* The sun is orange, matching the logomark at the other end of the header; the moon is plain text color (dark override below). Hover deepens the sun by mixing toward the text color — a nudge, not a jump. */
-  --theme-toggle-color: var(--color-accent-orange);
-  --theme-toggle-color-hover: color-mix(in oklab, var(--color-accent-orange) 82%, var(--color-text));
+  --theme-toggle-size: var(--site-header-icon-size, var(--size-step-min-2));
+  /* Dim like the rest of the header chrome, brightening on hover; only the logomark keeps the accent. */
+  --theme-toggle-color: var(--color-text-header-dim);
+  --theme-toggle-color-hover: var(--color-text-strong);
 
   /* Open Props elastic/standard easings, inlined to avoid a runtime @import */
   --ease-3: cubic-bezier(0.25, 0, 0.3, 1);
@@ -44,10 +44,10 @@ Progressive enhancement: hidden until <is-land> upgrades — a toggle that can't
   stroke-linecap: round;
 }
 
-/* Moon: pale silver cooled by a whisper of blue, hover keeps the accent orange. ⚠ Mixed from blue-VIVID — accent-blue is desaturated enough that 12% of it barely tints. Why 12%: wiki, "The theme toggle". */
-:root[data-theme='dark'] .theme-toggle {
-  --theme-toggle-color: color-mix(in oklab, var(--color-text) 88%, var(--color-blue-vivid));
-  --theme-toggle-color-hover: var(--color-accent-orange);
+@media (prefers-reduced-motion: no-preference) {
+  .theme-toggle {
+    transition: color var(--transition-duration) var(--transition-timing);
+  }
 }
 
 /* no JS / before hydration: hide the control entirely */

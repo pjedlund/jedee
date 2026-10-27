@@ -98,18 +98,13 @@ Every vertical gap in prose, and every line box that is not body text, is a whol
   }
 
   /* FIGURES
-  A line above, a line and a half after; the hairline is an outline over the image's own edge, for the reason above. */
+  A line above, a line and a half after. No hairline on images or videos: the --shadow-on-page shadow edges images. */
   .prose :is(figure, picture) {
     --flow-space: var(--line);
   }
 
   .prose :is(figure, picture) + * {
     --flow-space: var(--line-1h);
-  }
-
-  .prose :is(img, video) {
-    outline: var(--stroke);
-    outline-offset: calc(var(--border-thickness) * -1);
   }
 
   /* Pads the image down to the next quarter line. The ratio comes from the img's own width and height attributes, and a % margin measures the box the image fills, so it holds beside a caption too. ⚠ Typed attr() has no Safari yet, where the figure sits off by its remainder. --img-ratio overrides. */

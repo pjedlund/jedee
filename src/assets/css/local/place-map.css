@@ -17,28 +17,55 @@ place-map {
   inline-size: 100%;
   block-size: auto;
 }
+/* ⚠ --place-map-ratio must match .place-map-live's, or the swap to the live map shifts layout; the fetched image is 16:9, so other ratios crop it. */
 .place-map-static img {
-  border: var(--stroke);
+  aspect-ratio: var(--place-map-ratio, 16 / 9);
+  --img-ratio: calc(1 / (var(--place-map-ratio, 16 / 9))); /* the prose rhythm pads by this, not the fetched image's own ratio */
+  object-fit: cover;
   border-radius: var(--border-radius-small);
+  box-shadow: var(--shadow-on-page);
 }
+/* One static map per theme (partials/place-map.njk), so dark never flashes the light map before the live one loads. ⚠ display:none also keeps the hidden one's lazy image from downloading — with JavaScript off, Chrome turns lazy loading off and fetches both. */
+.place-map-static .place-map-static-dark {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .place-map-static .place-map-static-light {
+    display: none;
+  }
+
+  :root:not([data-theme='light']) .place-map-static .place-map-static-dark {
+    display: block;
+  }
+}
+
+:root[data-theme='dark'] .place-map-static .place-map-static-light {
+  display: none;
+}
+
+:root[data-theme='dark'] .place-map-static .place-map-static-dark {
+  display: block;
+}
+
 /* once the live map is in, drop the static fallback */
 place-map[data-map-ready] > .place-map-static {
   display: none;
 }
 
-/* Whatever follows the map inside <place-map> — the activities table here — needs air, or the map's border sits straight on the table's top rule. ⚠ :not(script) — on an activity page the next sibling is the route GeoJSON, and display:block prints it as text. */
+/* Whatever follows the map inside <place-map> — the activities table here — needs air, or the map sits straight on the table's top rule. ⚠ :not(script) — on an activity page the next sibling is the route GeoJSON, and display:block prints it as text. */
 place-map > :is(.place-map-live, .place-map-static) + :not(script) {
   display: block;
   margin-block-start: var(--space-l);
 }
 
-/* Live inline map. Same 16:9 as the static fallback so the swap doesn't shift layout, and the box keeps its height when the canvas moves out to the overlay. position:relative anchors the maximize button. */
+/* Live inline map. Same ratio as the static fallback so the swap doesn't shift layout, and the box keeps its height when the canvas moves out to the overlay. position:relative anchors the maximize button. */
 .place-map-live {
   position: relative;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: var(--place-map-ratio, 16 / 9);
   inline-size: 100%;
-  border: var(--stroke);
   border-radius: var(--border-radius-small);
+  box-shadow: var(--shadow-on-page);
   background: var(--map-park); /* pre-tile surface: the forest green */
   overflow: hidden;
   isolation: isolate;

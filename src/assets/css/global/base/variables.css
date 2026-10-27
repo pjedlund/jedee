@@ -79,6 +79,12 @@
   --color-text-dim: color-mix(in srgb, var(--color-gray-500) 60%, var(--color-gray-400));
   /* A dim link lighting up on hover: orange in light, white with a faint glow in dark. */
   --color-text-lit: var(--color-accent-orange-text);
+  /* Header text and icons at rest, brightening to --color-text-strong on hover. 82% is the lowest that keeps 4.5:1 in light (4.6:1); dark is 68% (5.2:1). */
+  --color-text-header-dim: color-mix(in oklab, var(--color-base-darkest) 82%, var(--color-base-lightest));
+  --color-text-strong: var(--color-base-darkest);
+  /* Two shadow tiers, deeper in dark: on-page for images and maps lying on the page, raised for panels floating above it (mega-menu, search). */
+  --shadow-on-page: var(--box-shadow-thumb);
+  --shadow-raised: var(--box-shadow-panel);
   --text-glow-lit: none;
   --color-bg-accent: var(--color-base-white);
   --color-bg-accent-2: var(--color-gray-300);
@@ -110,13 +116,17 @@
     --color-text-subdued: var(--color-gray-300);
     --color-text-dim: var(--color-gray-400);
     --color-text-lit: var(--color-base-white);
+    --color-text-header-dim: color-mix(in oklab, var(--color-gray-250) 68%, var(--color-gray-900));
+    --color-text-strong: var(--color-base-lightest);
+    --shadow-on-page: var(--box-shadow-thumb-dark);
+    --shadow-raised: var(--box-shadow-panel-dark);
     --text-glow-lit: 0 0 0.5em color-mix(in srgb, var(--color-base-white) 35%, transparent);
     --color-bg-accent: var(--color-gray-700);
     --color-bg-accent-2: var(--color-gray-600);
     --color-rule: var(--color-base-rule-dark);
     --color-bg-head: color-mix(in srgb, var(--color-base-dark) 4%, var(--color-bg));
-    /* border top for body */
-    --color-border-top: var(--color-orange-900);
+    /* border top for body: a band a shade darker than the page (#0d0e10) */
+    --color-border-top: color-mix(in srgb, var(--color-gray-900) 64%, var(--color-base-black));
 
     --color-code-bg: color-mix(in oklab, var(--color-bg) 80%, var(--color-base-black));
     --color-activity-orienteering: var(--color-activity-orienteering-on-dark);
@@ -138,13 +148,17 @@
   --color-text-subdued: var(--color-gray-300);
   --color-text-dim: var(--color-gray-400);
   --color-text-lit: var(--color-base-white);
+  --color-text-header-dim: color-mix(in oklab, var(--color-gray-250) 68%, var(--color-gray-900));
+  --color-text-strong: var(--color-base-lightest);
+  --shadow-on-page: var(--box-shadow-thumb-dark);
+  --shadow-raised: var(--box-shadow-panel-dark);
   --text-glow-lit: 0 0 0.5em color-mix(in srgb, var(--color-base-white) 35%, transparent);
   --color-bg-accent: var(--color-gray-700);
   --color-bg-accent-2: var(--color-gray-600);
   --color-rule: var(--color-base-rule-dark);
   --color-bg-head: color-mix(in srgb, var(--color-base-dark) 15%, var(--color-bg));
   /* border top for body */
-  --color-border-top: var(--color-orange-900);
+  --color-border-top: color-mix(in srgb, var(--color-gray-900) 64%, var(--color-base-black));
 
   --color-code-bg: color-mix(in oklab, var(--color-bg) 80%, var(--color-base-black));
   --color-activity-orienteering: var(--color-activity-orienteering-on-dark);

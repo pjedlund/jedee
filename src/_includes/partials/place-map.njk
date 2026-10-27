@@ -4,9 +4,12 @@
 {%- set mz = mapZoom or 13 -%}
 {%- set mapSubject = mapSubject or "this was recorded" -%}
 {%- set center = mapLon ~ "," ~ mapLat -%}
-{# style=positron (minimal light-grey, theme-agnostic); marker = --color-accent-orange (#d0621e). #}
-{%- set mapSrc = "https://maps.geoapify.com/v1/staticmap?style=positron&width=1280&height=720&center=lonlat:" ~ center ~ "&zoom=" ~ mz ~ "&marker=lonlat:" ~ center ~ ";type:material;color:%23d0621e;size:large&apiKey=" ~ meta.mapApiKey -%}
+{# Two styles, one per theme (place-map.css shows the right one): positron (light grey) and dark-matter. Marker = --color-accent-orange (#d0621e). #}
+{%- set mapQuery = "&width=1280&height=720&center=lonlat:" ~ center ~ "&zoom=" ~ mz ~ "&marker=lonlat:" ~ center ~ ";type:material;color:%23d0621e;size:large&apiKey=" ~ meta.mapApiKey -%}
+{%- set mapSrc = "https://maps.geoapify.com/v1/staticmap?style=positron" ~ mapQuery -%}
+{%- set mapSrcDark = "https://maps.geoapify.com/v1/staticmap?style=dark-matter" ~ mapQuery -%}
 {%- set mapOsm = "https://www.openstreetmap.org/?mlat=" ~ mapLat ~ "&mlon=" ~ mapLon ~ "#map=" ~ mz ~ "/" ~ mapLat ~ "/" ~ mapLon -%}
 <a class="place-map-static no-indicator" href="{{ mapOsm }}" target="_blank" rel="noopener">
-  <img eleventy:optional="placeholder" src="{{ mapSrc | safe }}" alt="Map showing where {{ mapSubject }}{% if mapPlace %}, near {{ mapPlace }}{% endif %}" loading="lazy" eleventy:widths="640,1280" sizes="(min-width: 82rem) 72rem, 100vw">
+  <img class="place-map-static-light" eleventy:optional="placeholder" src="{{ mapSrc | safe }}" alt="Map showing where {{ mapSubject }}{% if mapPlace %}, near {{ mapPlace }}{% endif %}" loading="lazy" eleventy:widths="640,1280" sizes="(min-width: 82rem) 72rem, 100vw">
+  <img class="place-map-static-dark" eleventy:optional="placeholder" src="{{ mapSrcDark | safe }}" alt="Map showing where {{ mapSubject }}{% if mapPlace %}, near {{ mapPlace }}{% endif %}" loading="lazy" eleventy:widths="640,1280" sizes="(min-width: 82rem) 72rem, 100vw">
 </a>

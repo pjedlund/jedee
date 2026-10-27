@@ -4,18 +4,23 @@ The full-width header band. The <header> spans the viewport while its contents s
 */
 
 .site-header {
-  --site-header-border-color: color-mix(in oklab, var(--color-text) 12%, var(--color-bg));
-
-  border-block-end: 1px solid var(--site-header-border-color);
+  /* One size for every glyph in the header row — logomark, magnifier, sun/moon; the MENU caret keeps its own smaller size. */
+  --site-header-icon-size: calc(var(--size-step-min-2) * 1.2);
+  /* The dev grid (⌥G, dev-grid.css) in header terms: a 6.25-unit column and a 2-unit gutter, where 64 units are the prose width. Panels size and snap to it. */
+  --site-header-grid-unit: calc(min(64rem, 100vw - var(--gap) * 2) / 64);
+  --site-header-grid-gutter: calc(var(--site-header-grid-unit) * 2);
+  --site-header-grid-tile: calc(var(--site-header-grid-unit) * 8.25);
+  /* Distance from the row's right edge back to the nearest column edge: zero at full width, where the row ends on one. ⚠ The 0.5px keeps float error from rounding a whole column down. */
+  --site-header-grid-end: calc(50% + var(--site-header-grid-gutter) / 2 - round(down, 50% + var(--site-header-grid-gutter) / 2 + 0.5px, var(--site-header-grid-tile)));
 }
 
-/* Two lines tall under the half-line top bar, so its row centres on line 1½ and the bottom rule lands on line 2½. ⚠ An inset shadow, not the border: a border adds 1px and pushes the page off the lattice. */
+/* Two lines tall under the half-line top bar, so its row centres on line 1½. No bottom rule: the band ends in space, not a line. */
 @supports (width: round(1px, 1px)) {
   .site-header {
     min-block-size: var(--line-2);
     align-content: center;
-    border-block-end: none;
-    box-shadow: inset 0 -1px 0 var(--site-header-border-color);
+    /* Panels (mega-menu, search) open a quarter line above the header's bottom edge — line 2 of the lattice — measured from the centred row they're positioned in. */
+    --site-header-panel-top: calc(50% + var(--line-2) / 2 - var(--line-quarter));
   }
 
   .site-header .breadcrumb {
