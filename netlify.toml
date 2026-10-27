@@ -11,7 +11,8 @@ for = "/*"
   X-Content-Type-Options = "nosniff"
   X-Frame-Options = "DENY"
   Referrer-Policy = "strict-origin-when-cross-origin"
-  Permissions-Policy = "autoplay=(), camera=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), publickey-credentials-get=()"
+  # ⚠ autoplay must list YouTube's origins, plus self (Chrome only delegates what the page holds), or Chrome ignores the facade's click and every embed needs a second click.
+  Permissions-Policy = "autoplay=(self \"https://www.youtube.com\" \"https://www.youtube-nocookie.com\"), camera=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), publickey-credentials-get=()"
 
 [[headers]]
 for = "*.woff2"
