@@ -1,7 +1,7 @@
 ---
 description: "How a static site colors its code blocks at build time with Prism, and what happens to a fence whose language the highlighter has never heard of."
 date: 2026-08-23
-updated: 2026-10-11
+updated: 2026-10-27
 ---
 
 Syntax highlighting on a static site is a build-time job. The markdown processor hands each fenced code block to a highlighter, which wraps the interesting substrings in `<span class="token …">` elements; a stylesheet colors those classes. No JavaScript reaches the browser, and the highlighting is part of the HTML.
@@ -105,7 +105,7 @@ Inline code never reaches Prism. A backtick span is a markdown-it `code_inline` 
 Table: Inline code: Ariel Salminen's chip and jedee's
 | Ariel | jedee |
 | --- | --- |
-| `background: var(--color-surface)` | `--color-bg-accent` mixed halfway toward `--color-bg`, since the plain surface read too strong in both themes |
+| `background: var(--color-surface)` | `--color-bg-accent` mixed 65% into `--color-bg` (half and half until 2026-10-08), since the plain surface read too strong in both themes |
 | `border-radius: var(--border-radius)` | `--border-radius-medium`, the same radius as a code block |
 | `box-shadow: var(--box-shadow-dimmed)` | `--box-shadow-chip`, and `-chip-dark` on the dark theme, a new pair in `shadows.json`, smaller than `popup` |
 | `padding: .188rem .5rem` | `--space-3xs --space-xs` |
@@ -113,7 +113,7 @@ Table: Inline code: Ariel Salminen's chip and jedee's
 
 ```css
 :where(:not(pre)) > code {
-  --inline-code-bg: color-mix(in oklab, var(--color-bg-accent) 50%, var(--color-bg));
+  --inline-code-bg: color-mix(in oklab, var(--color-bg-accent) 65%, var(--color-bg));
   --inline-code-shadow: var(--box-shadow-chip);
 
   padding: var(--space-3xs) var(--space-xs);

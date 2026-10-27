@@ -1,6 +1,7 @@
 ---
 description: "The optional typographic behaviors built into a font file (ligatures, small caps, figure styles, alternates) and how CSS switches them on."
 date: 2026-09-10
+updated: 2026-10-27
 ---
 
 A modern font file carries more than one shape per character. **OpenType features** are named switches inside the file, each a four-letter tag, that substitute or reposition glyphs: `liga` joins "f" and "i" into one ligature, `smcp` swaps lowercase for small capitals, `onum` swaps lining figures for old-style ones. The tags are defined in the [OpenType feature registry](https://learn.microsoft.com/en-us/typography/opentype/spec/featuretags); which of them a given font implements is up to its designer.
@@ -37,7 +38,7 @@ CSS has two levels. The **`font-variant-*` properties** name the effect, and are
 
 Since 2026-09-10 the site sets a few features of its own: old-style proportional figures in `.prose`, small caps through one `.small-caps` class, and real superscripts for footnote markers (`font-variant-position: super`). The rules, and the conventions behind them, are on [[Typographic conventions]].
 
-`font-variant-numeric: tabular-nums` sits in two places: the menu's post counts (`global/blocks/main-nav.css:204`) and the activity figures (`local/activity.css:21`). Source Serif and Source Sans already have tabular figures by default: every digit is the same width (542 units in Serif, 472 in Sans upright, 456 in italic). So the menu's rule changes nothing. The activity rule did nothing either until `.prose` set old-style figures. Inside an activity post, `tabular-nums` now replaces the inherited value and puts the stats back to lining figures.
+The menu's post counts set `font-variant-numeric: tabular-nums` directly (`global/blocks/main-nav.css`). The activity figures (`local/activity.css`), tables in prose and the map preloader's count fill the `--nums-spacing` slot instead, described on [[Typographic conventions]]. Source Serif and Source Sans already have tabular figures by default: every digit is the same width (542 units in Serif, 472 in Sans upright, 456 in italic). So the menu's rule changes nothing. Inside an activity post the slot keeps the prose's `--nums-figure: oldstyle-nums`, so the stats are old-style tabular figures.
 
 What the shipped subsets can do, checked by rendering each feature on and off from the site's own files (every pair verified by `npm run mockups:check` to render differently) and by comparing glyph outlines:
 
@@ -57,7 +58,7 @@ What the shipped subsets can do, checked by rendering each feature on and off fr
 - **Opt-in, working:** small caps (`smcp` covers a–z, å ä ö ü and the digits; `c2sc` turns capitals into small caps too), old-style (`onum`) and proportional (`pnum`) figures, diagonal fractions (`frac`, with `numr`/`dnom`), superscript and subscript (`sups`, `subs`, `sinf`), ordinals (`ordn`), slashed zero (`zero`), and case-sensitive forms (`case`, which raises brackets, hyphens and dashes for all-caps text).
 - **Dropped by the subset:** the full font's two stylistic sets, which turn out to be Cyrillic alternates (Bulgarian, and Serbian/Macedonian), with nothing to act on here. The accent-positioning features (`mark`, `mkmk`, `ccmp`) went too, since the subset has no combining marks.
 
-**Source Sans** (`source-sans.woff2` and `-italic.woff2`, variable, 206/207 characters):
+**Source Sans** (`source-sans.woff2` and `-italic.woff2`, variable, 210/209 characters):
 
 - **On by default:** `liga` covers only ff, ft and fft. There is no fi or fl ligature because Source Sans' f is drawn so it doesn't collide. `ccmp` joins l·l (the Catalan *ela geminada*).
 - **Opt-in, working:** small caps across Latin-1 (`smcp`, `c2sc`), `onum`, `pnum`, titling figures (`titl`), `frac`, `sups`/`subs`/`sinf`, `ordn`, `zero`, `case`.

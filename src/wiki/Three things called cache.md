@@ -1,7 +1,7 @@
 ---
 description: "The unrelated stores that share the name cache — build, browser, service worker — which of them ever reach a visitor, and jedee's inlining approach to cache-busting."
 date: 2026-07-31
-updated: 2026-09-19
+updated: 2026-10-27
 ---
 
 *Cache* is among the most overloaded words in web development. On a single site it can name several unrelated stores, living in different places, owned by different parties and cleared in completely different ways. Conflating them makes debugging miserable, because "clear the cache" then has several possible meanings and usually only one of them is the one that would help.
@@ -33,10 +33,10 @@ Each build fetches things from the open web. Re-downloading them every deploy wo
 [[plugins]]
 package = "netlify-plugin-cache"
   [plugins.inputs]
-  paths = [ ".cache" ]
+  paths = [ ".cache", "dist/assets/images" ]
 ```
 
-`.cache/` is `@11ty/eleventy-fetch`'s store. Three build steps fill it: remote cover images pulled in and self-hosted by the image transform (see [[Self-hosting remote images at build time]]), webmentions fetched by `src/_data/webmentions.js`, and a static map image per photo post from Geoapify.
+`.cache/` is `@11ty/eleventy-fetch`'s store. Three build steps fill it: remote cover images pulled in and self-hosted by the image transform (see [[Self-hosting remote images at build time]]), webmentions fetched by `src/_data/webmentions.js`, and a static map image per photo post from Geoapify. The second path, `dist/assets/images/`, is eleventy-img's output for local images, which it skips re-encoding when the file already exists; see [[Netlify]].
 
 **The cache is excluded from Netlify's secret scanning, and it has to be.** The Geoapify URL carries `MAP_API_KEY` in its query string, and eleventy-fetch stores request URLs verbatim. Netlify scans build-generated files for leaked secrets and would flag it:
 
@@ -47,7 +47,7 @@ package = "netlify-plugin-cache"
 
 Safe because `.cache/` is never deployed — only `dist/` ships, and the built output never contains the key, which lives in the Netlify UI. If a deploy is unexpectedly slow, check the build log for whether this cache was restored.
 
-### The browser cache: only fonts get a long life
+### The browser cache: only fonts and hashed files get a long life
 
 Cache headers come entirely from `netlify.toml`; there is no `_headers` file.
 
@@ -58,7 +58,7 @@ for = "*.woff2"
   Cache-Control = "max-age=31536000,public,must-revalidate"
 ```
 
-Only the fonts get a year. **Everything else** — pages, images, feeds, the favicon — falls to Netlify's default of `public, max-age=0, must-revalidate` plus an ETag. The component scripts (`/assets/scripts/components/*.js`) once shared the fonts' year-long header but no longer do; they now carry an explicit `max-age=0,public,must-revalidate`, for the reason in the next section.
+The fonts get a year, and so do `/img/*` (eleventy-img's output) and `/bundle/*`, as `public, max-age=31536000, immutable`, because their filenames change with their content. **Everything else** — pages, images, feeds, the favicon — falls to Netlify's default of `public, max-age=0, must-revalidate` plus an ETag. The component scripts (`/assets/scripts/components/*.js`) once shared the fonts' year-long header but no longer do; they now carry an explicit `max-age=0,public,must-revalidate`, for the reason in the next section.
 
 `max-age=0, must-revalidate` reads like "don't cache", and isn't. The browser keeps its copy and revalidates cheaply: it sends the ETag, and the server answers `304 Not Modified` with no body if nothing changed. So an unchanged page costs a round-trip, not a download. The year-long files skip even that. For the next page, a hover prefetch removes the round-trip too: see [[Prefetching]].
 
@@ -66,7 +66,7 @@ Only the fonts get a year. **Everything else** — pages, images, feeds, the fav
 
 jedee takes the second option above and gets the guarantee for free, because in a production build the CSS and JS **ride inside the HTML**. `head/css-inline.njk` inlines the whole stylesheet as a `<style>` block; the site's JavaScript is inlined the same way. There is no stylesheet request to go stale. Since the HTML revalidates on every visit, so does everything inlined in it.
 
-**The `/bundle/<hash>.css` paths are dev-only.** Eleventy's bundle plugin can emit content-hashed files and does — but `css-inline.njk` only *links* them under `npm start`, so a refresh picks up edits. A production build emits no `/bundle/` directory at all. That's why there's no `[[headers]]` rule for it: in production there is nothing at that path.
+**The `/bundle/<hash>.css` paths are dev-only.** Eleventy's bundle plugin can emit content-hashed files and does — but `css-inline.njk` only *links* them under `npm start`, so a refresh picks up edits. A production build emits no `/bundle/` directory at all. The year-long `/bundle/*` rule in `netlify.toml` (since 2026-08-01) therefore has nothing to act on in production.
 
 **So a dev build is the wrong place to measure page weight.** The two builds put the same CSS in different places, and a page that looks like 50 kB with three stylesheet links under `npm start` is 85 kB with everything inline in production. Measuring [[WebC|a component's inline CSS]] on the dev output in September 2026 produced both a percentage and a cacheability argument that a production build contradicted.
 

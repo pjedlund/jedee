@@ -1,6 +1,7 @@
 ---
 description: "The W3C publishing API that lets any client post to any site, and how a static site uses it to gain an editor without giving up the static build."
 date: 2026-09-06
+updated: 2026-10-27
 ---
 
 [Micropub](https://www.w3.org/TR/micropub/) (W3C Recommendation, 2017) is a publishing API: a client sends a post to a server, and the server decides where it lives and what it looks like. Its point is the split. The app you write in and the site you publish to stop being the same product, so one editor can post to any site that implements the spec, and one site can accept posts from any client — [Quill](https://quill.p3k.io/), [Sparkles](https://sparkles.sploot.com/), iA Writer, a shortcut on a phone.
@@ -17,7 +18,7 @@ The consequence worth naming is that this makes the authoring tool a second auth
 
 ## In jedee
 
-One Netlify Function at `/api/micropub` (`netlify/functions/micropub.js`, ~470 lines), the site's first. It turns an incoming `h-entry` into a shape-correct `.md` committed through the GitHub Contents API — the same kind of file, in the same `src/posts/<type>/` folder, that an Obsidian Web Clipper clip produces. The two are complementary authoring paths over one content layer; see [[Web Clipper templates]].
+One Netlify Function at `/api/micropub` (`netlify/functions/micropub.js`, 441 lines on 2026-10-27), the site's first. It turns an incoming `h-entry` into a shape-correct `.md` committed through the GitHub Contents API — the same kind of file, in the same `src/posts/<type>/` folder, that an Obsidian Web Clipper clip produces. The two are complementary authoring paths over one content layer; see [[Web Clipper templates]].
 
 The engine is `@benjifs/micropub` 2.0.1 plus `@benjifs/github-store`, used **vendor-but-patch**: the engine's conventions are steered through its documented constructor options rather than by editing its source. Three of those conventions do not match this site, and each needed a seam.
 

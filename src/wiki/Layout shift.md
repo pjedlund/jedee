@@ -1,7 +1,7 @@
 ---
 description: "Cumulative Layout Shift: what it measures, why the element that moves is rarely the element at fault, and how a font-size-adjust fighting a size-adjust cost this site 0.18."
 date: 2026-09-06
-updated: 2026-10-01
+updated: 2026-10-27
 ---
 
 A page that moves under the reader is a specific kind of broken. You go to click a link and an image finishes loading above it, so you click an ad instead. You start reading a paragraph and a font swaps in, reflowing the line you were on. Nothing failed and nothing is slow — the page simply arrived in pieces, and the later pieces pushed the earlier ones around.
@@ -25,7 +25,7 @@ The other option is `font-display: optional`: the browser uses the web font only
 
 ## In jedee
 
-Eleventy Excellent ships the whole standard kit: both fonts are `rel="preload"`ed in `head/preloads.njk`, all four web `@font-face` blocks set `font-display: swap`, and `base/fonts.css` carries a metric-matched fallback face for each — `Source Serif Fallback` over Georgia, `Source Sans Fallback` over Arial, with the `size-adjust` / `ascent-override` / `descent-override` triple filled in by [Capsize](https://github.com/seek-oss/capsize). Images go through eleventy-img, which writes `width` and `height`. [[The YouTube embed]] reserves its box with a steady placeholder rather than letting the poster arrive into nothing. jedee has changed exactly one thing about the kit, and it is a *removal* — see below.
+Eleventy Excellent ships the whole standard kit: both fonts are `rel="preload"`ed in `head/preloads.njk`, every web `@font-face` block sets `font-display: swap` (four during the measurements below; eight on 2026-10-27, after Source Sans gained two Cyrillic faces on 2026-09-14 and a ⌘/⌥ face on 2026-10-08), and `base/fonts.css` carries a metric-matched fallback face for each family — `Source Serif Fallback` over Georgia, `Source Sans Fallback` over Arial, `Source Code Pro Fallback` over Courier New, with the `size-adjust` / `ascent-override` / `descent-override` triple filled in by [Capsize](https://github.com/seek-oss/capsize). Images go through eleventy-img, which writes `width` and `height`. [[The YouTube embed]] reserves its box with a steady placeholder rather than letting the poster arrive into nothing. jedee's main change to the kit is a *removal* — see below.
 
 All of which makes the measured result more interesting, not less.
 
@@ -150,7 +150,7 @@ Table: `font-display` and `font-size-adjust` combinations on four pages
 | `swap` + `font-size-adjust` | 0.1345 | 0.0589 | 0.0303 | 0.0544 |
 | **`swap`, no `font-size-adjust`** | **0.0041** | **0.0012** | **0.0022** | **0.0008** |
 
-So the site is back on `swap`, with `font-size-adjust: from-font` removed from `global-styles.css` — a deliberate divergence from Eleventy Excellent, and the only change jedee makes to Lene's font kit. Readers get the real typography on their first visit *and* a CLS an order of magnitude under the 0.1 "good" threshold. `base/fonts.css` carries a one-line warning against re-adding the declaration on the next upstream merge.
+So the site is back on `swap`, with `font-size-adjust: from-font` removed from `global-styles.css` — a deliberate divergence from Eleventy Excellent, and the one thing jedee removes from Lene's font kit. Readers get the real typography on their first visit *and* a CLS an order of magnitude under the 0.1 "good" threshold. `base/fonts.css` carries a one-line warning against re-adding the declaration on the next upstream merge.
 
 **A second mis-derivation existed and was fixed a day later, after an initial "leave it alone" call that a bad measurement had supported.** Both fallback faces were tuned to fonts this site does not ship, so both `size-adjust` values were re-derived by scoring the real page across viewport widths — `Source Serif Fallback` 110.8118% → **100.8%** (17/17 widths, was 12) and `Source Sans Fallback` 93.7639% → **92.5%** (12/13, was 10). Only `size-adjust` moved; the ascent and descent overrides are Capsize's, rescaled by the inverse ratio so the vertical box is byte-identical, since this site uses unitless line-heights and the vertical overrides are largely inert. The serif value is worth **CLS 0.0997 → 0.0020 at 720 px**, where the heading took two lines in Georgia against one in Source Serif.
 

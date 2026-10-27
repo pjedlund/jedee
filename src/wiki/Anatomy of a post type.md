@@ -1,7 +1,7 @@
 ---
 description: "The nine places a new post type must be wired in before it works, and where the sixteen types legitimately diverge."
 date: 2026-07-31
-updated: 2026-10-17
+updated: 2026-10-27
 ---
 
 jedee has **sixteen** post types. Adding one is not a design problem but a wiring problem: there are nine places a type has to appear before it works, and fifteen of the sixteen fill them the same way. This page is the checklist and the places types legitimately diverge.
@@ -25,7 +25,7 @@ Every type is a folder under `src/posts/` with a data file of the same name, and
 
 This is a **jedee divergence** — Eleventy Excellent ships two types (`articles`, `notes`) and tags them directly.
 
-**Four types are configured in JavaScript, not JSON.** Twelve types have a `<type>.json`; photos, jams, reading and watching have a `<type>.11tydata.js`, an ES module carrying the same four keys plus computed ones. Photo's was the first, with a fifth key:
+**Six types are configured in JavaScript, not JSON.** Ten types have a `<type>.json`; photos, jams, reading, watching, recipes and videos have a `<type>.11tydata.js`, an ES module carrying the same four keys plus computed ones. Photo's was the first, with a fifth key:
 
 ```js
 eleventyComputed: {
@@ -33,7 +33,7 @@ eleventyComputed: {
 }
 ```
 
-It was ported from `photos.json` so EXIF could be read from the file at build time — and `photoExif` is a **top-level** key rather than nested under `photo`, because a computed key that reads its own parent is a self-reference in the data cascade. Worth knowing before writing a script that globs `src/posts/*/*.json` expecting sixteen hits: it finds twelve. Jams, reading and watching followed photo into JavaScript on 2026-08-29 and 2026-09-09, for lightbox covers and Open Graph cards.
+It was ported from `photos.json` so EXIF could be read from the file at build time — and `photoExif` is a **top-level** key rather than nested under `photo`, because a computed key that reads its own parent is a self-reference in the data cascade. Worth knowing before writing a script that globs `src/posts/*/*.json` expecting sixteen hits: it finds ten. Jams, reading and watching followed photo into JavaScript on 2026-08-29 and 2026-09-09, for lightbox covers and Open Graph cards, and recipes and videos on 2026-10-11, so their Open Graph cards could use their own artwork.
 
 ## Registration: one array, explicit aliases
 

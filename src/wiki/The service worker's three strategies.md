@@ -1,6 +1,7 @@
 ---
-description: "What a service worker intercepts, the five conventional caching strategies, and the roughly 25 hand-written lines that make jedee offline-capable using three of them."
+description: "What a service worker intercepts, the five conventional caching strategies, and the roughly 80 hand-written lines that make jedee offline-capable using three of them."
 date: 2026-07-31
+updated: 2026-10-27
 ---
 
 A [service worker](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API) is a script the browser runs in the background, separate from any page, able to intercept the site's own network requests. That interception is what makes offline browsing possible: the worker answers from a cache it controls when the network is gone or slow.
@@ -13,7 +14,7 @@ It is small enough to hand-write. Libraries like [Workbox](https://developer.chr
 
 ## In jedee
 
-jedee is an installable PWA, and a visited page is served back fully styled when the network is gone. That's about 25 lines of hand-written JavaScript in `src/pages/serviceworker.njk`, registered by a six-line inline script at the foot of `base.njk`. No Workbox, no npm package, no build step. Of the five strategies, it uses three.
+jedee is an installable PWA, and a visited page is served back fully styled when the network is gone. That's about 80 lines of hand-written JavaScript, comments aside, in `src/pages/serviceworker.njk`, registered by a six-line inline script at the foot of `base.njk`. No Workbox, no npm package, no build step. Of the five strategies, it uses three.
 
 Table: The service worker's strategies and what each is used for
 | Strategy | Behavior | Used for |
@@ -63,10 +64,10 @@ Two entries fill the cache. **Precache on install** is a small stable set — `/
 
 ### Why not Workbox
 
-Google's library is the standard answer, and it's deliberately not here. The whole need is 25 lines of vanilla JavaScript, and the one genuinely awkward thing to do by hand — precaching hashed paths with generated revisions — **stops being a problem the moment runtime caching exists**, since cache-first grabs hashed assets on first load anyway.
+Google's library is the standard answer, and it's deliberately not here. The whole need is about 80 lines of vanilla JavaScript, and the one genuinely awkward thing to do by hand — precaching hashed paths with generated revisions — **stops being a problem the moment runtime caching exists**, since cache-first grabs hashed assets on first load anyway.
 
 Workbox earns its keep where a precache manifest has to expand automatically as a forker adds post types across many sites. That's a template-reuse problem a single site doesn't have.
 
 Related: [[Three things called cache]] — the SW cache sits in front of the browser cache. [[Progressive web apps]] — the manifest and the installability half, and where this worker came from. [[Prefetching]] — pages are network-first here, so it's the hover prefetch, not this cache, that makes an online click fast.
 
-Source: `_local/project_docs/pwa-caching-pattern.html` (runtime caching shipped 23 Jun 2026, commit `0275458`), re-verified against `src/pages/serviceworker.njk` on 2026-07-31.
+Source: `_local/project_docs/pwa-caching-pattern.html` (runtime caching shipped 23 Jun 2026, commits `105b0b7` and `01f1003`), re-verified against `src/pages/serviceworker.njk` on 2026-07-31.

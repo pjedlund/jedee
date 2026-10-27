@@ -1,6 +1,7 @@
 ---
 description: "Why a link checker that scans source instead of rendered output reports things that were never links, and how an all-false-positive report hid a real defect on jedee."
 date: 2026-08-03
+updated: 2026-10-27
 ---
 
 A link checker finds the links in a site and verifies that their targets exist. There are two places to do it, and the choice decides which mistakes the checker is capable of making.
@@ -39,9 +40,9 @@ Until 2026-08-03 the console report carried **13 warnings, all 13 false positive
 
 ### The defect it was hiding
 
-Detection also drives backlinks. Two wiki pages use `[[Anna Karenina]]` as a code example, and since detection ignored the backticks, both counted as real links to the published `/reading/anna-karenina/` post. That post rendered a Backlinks nav pointing at two **wiki** URLs — a straight violation of the one-way rule, which exists to keep the private wiki out of published pages.
+Detection also drives backlinks. Two wiki pages use `[[Anna Karenina]]` as a code example, and since detection ignored the backticks, both counted as real links to the published `/reading/anna-karenina/` post. That post rendered a Backlinks nav pointing at two **wiki** URLs — a straight violation of the one-way rule as it stood then, which kept the still-private wiki out of published pages. (The wiki has been public since 2026-09-05, and a post may now link into it, though rarely.)
 
-Production was safe by luck of configuration: the wiki only builds when the wiki dial in `settings.yaml` is `local` or `public`, and production sits at `local`, so the pages generating those backlinks were not in the production build. Any local or public build leaked it.
+Production was safe by luck of configuration: the wiki only builds when the wiki dial in `settings.yaml` is `local` or `public`, and production then sat at `local`, so the pages generating those backlinks were not in the production build. Any local or public build leaked it.
 
 It was not found by reading the warnings. It was found by diffing the whole built site against a pre-patch baseline. The warning count alone would have shown the fix "working" and said nothing about this.
 

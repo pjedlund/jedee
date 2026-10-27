@@ -1,7 +1,7 @@
 ---
 description: "Generating a design tool's tokens from the code that is their source of truth, and the three ways the two sides drift apart anyway."
 date: 2026-08-22
-updated: 2026-09-18
+updated: 2026-10-27
 ---
 
 A **design token** is a named design value — a color, a spacing step, a radius — held somewhere both a stylesheet and a design tool can read. **Design token sync** is keeping those two copies in agreement. The interchange format is [DTCG](https://tr.designtokens.org/format/), a W3C community-group JSON schema that [Tokens Studio](https://tokens.studio/) popularized and that Figma, Penpot and others now import.
@@ -104,7 +104,7 @@ The docs list an `inset` key that is not there (the importer adds `inset: false`
 
 **Penpot's layout settles asynchronously.** A read immediately after a write returns stale geometry — after binding padding and changing text weight across ten variants, a verification read gave 95×30 for boards that settled at 97×30, and one variant reported a 1px difference from its siblings that a later read showed was not there. Token application is documented as async (~100 ms); reflow takes longer and isn't signalled. Read again before reporting a size.
 
-Mapping rules and the full trap list live in `_local/penpot/penpot-tokens.md` (gitignored). The same build script also regenerates the front matter of the repo-root `DESIGN.md`.
+Mapping rules and the full trap list live in `_local/penpot/penpot-tokens.md` (gitignored). `npm run penpot:tokens` also runs a second script, `build-design-md.js`, which regenerates the front matter of the repo-root `DESIGN.md`.
 
 ## In Sketch (retired)
 

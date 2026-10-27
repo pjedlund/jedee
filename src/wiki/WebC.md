@@ -1,6 +1,7 @@
 ---
 description: "Eleventy's single-file component format — what it emits, how its attributes and slots differ from a browser custom element, and the root rule that decides whether the host tag survives."
 date: 2026-09-19
+updated: 2026-10-27
 ---
 
 [WebC](https://github.com/11ty/webc) is a single-file component format for [Eleventy](https://www.11ty.dev/docs/languages/webc/): a `.webc` file holds markup, optional `<style>` and `<script>`, and is invoked from a template by writing its filename as a tag. It is easy to mistake for a browser [[Web components|web component]], and the confusion is worth clearing up first, because the two answer different questions.
@@ -34,7 +35,7 @@ eleventyConfig.addPlugin(plugins.webc, {
 
 `components` makes every file in that folder available as a tag without importing it. `useTransform: true` is the load-bearing one: it runs WebC as a transform over the *output* of the other template languages, which is why a `<custom-card>` written in a Nunjucks layout expands at all. Without it, WebC components only work inside `.webc` templates, and this site has none — every page is Nunjucks or markdown. Both settings are Eleventy Excellent stock.
 
-Ten components live in `src/_includes/webc/`. Seven came from Eleventy Excellent, three of them still byte-identical to upstream (`custom-card`, `custom-peertube`, `custom-peertube-link`) and four diverged (`custom-masonry`, `custom-svg`, `custom-youtube`, `custom-youtube-link`). Three are jedee's own, and all three are the same shape: an [[is-land]] wrapping a kept custom element, for behavior that should not load until the browser is idle.
+Ten components live in `src/_includes/webc/`. Seven came from Eleventy Excellent: only `custom-card` is still byte-identical to upstream, and six diverged (`custom-masonry`, `custom-svg`, `custom-youtube`, `custom-youtube-link`, and since 2026-10-02 `custom-peertube` and `custom-peertube-link`, whose captions and popout width changed in their own `<style>` blocks). Three are jedee's own, and all three are the same shape: an [[is-land]] wrapping a kept custom element, for behavior that should not load until the browser is idle.
 
 | Component | Whose | Emits | Upgraded by |
 | --- | --- | --- | --- |

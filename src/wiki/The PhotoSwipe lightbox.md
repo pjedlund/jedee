@@ -1,7 +1,7 @@
 ---
 description: "What a lightbox has to get right — a no-JS fallback, trapped focus, a responsive zoom target — and jedee's PhotoSwipe shortcode built on the Eleventy Image pipeline."
 date: 2026-07-31
-updated: 2026-08-29
+updated: 2026-10-27
 ---
 
 A lightbox shows a larger version of an image in an overlay above the page. The pattern is old and easy to do badly, and the failures share one root: the overlay is a piece of application UI assembled out of elements that were never a dialog.
@@ -39,7 +39,7 @@ That works inside a post body only because `e-content` passes the wrapper's name
 - any post with an `image:` field, via `entry-header.njk`, with `credit:` as the caption;
 - an activity's `cover:` — the photographed race map — via `activity.njk`. See [[The activities archive]].
 
-The shortcode is local-only: it prepends `./src` to its source and breaks on a remote URL (see [[Self-hosting remote images at build time]]). That rules it out for the reading / watching / jam / recipe covers, which are remote service URLs, and is why activity covers — always local scans — were for a while the only cover with a lightbox. The constraint belongs to the shortcode rather than to the lightbox, though: a layout can invoke the component directly with any URL, which is what the photo and jam pages do.
+The shortcode is local-only: it prepends `./src` to its source and breaks on a remote URL (see [[Self-hosting remote images at build time]]). That rules it out for the reading / watching / jam / recipe covers, which are remote service URLs, and is why activity covers — always local scans — were for a while the only cover with a lightbox. The constraint belongs to the shortcode rather than to the lightbox, though: a layout can invoke the component directly with any URL, which is what the photo, jam, reading and watching pages do (book covers and film posters since 2026-08-30).
 
 ### The clickable area is the wrapper's job, not the image's
 
@@ -122,7 +122,7 @@ Skipping the shortcode lifts the local-only restriction, at the cost of assembli
 
 **The dimensions have to be read at build time**, because PhotoSwipe needs them up front. That read pays for itself: once `eleventy-img` has opened the remote file to measure it, self-hosting it costs nothing extra, so the zoomed view never touches the vendor's CDN — the same bargain [[The YouTube embed]] strikes with its poster. `src/_config/utils/cover-zoom.js` returns `{url, width, height}`, or `null` when the artwork is no bigger than the displayed cover and there is nothing to zoom into.
 
-**It has to run as computed data, not as a filter.** Nunjucks cannot await an async filter inside `{% set %}` or `{% if %}`, and a layout that decides *whether* to wrap the image needs a plain value to test. `jams.11tydata.js` computes it before the template runs; `photos.11tydata.js` does the same for EXIF.
+**It has to run as computed data, not as a filter.** Nunjucks cannot await an async filter inside `{% set %}` or `{% if %}`, and a layout that decides *whether* to wrap the image needs a plain value to test. `jams.11tydata.js`, `reading.11tydata.js` and `watching.11tydata.js` compute it before the template runs; `photos.11tydata.js` does the same for EXIF.
 
 ⚠ **`slot="image"` must sit on a wrapper, never on the `<img>` itself.** WebC drops a slotted node carrying `eleventy:`-namespaced attributes, and the failure is silent — clean build, no warning, an `<a>` with correct `href` and `data-pswp-*` and nothing inside it. Wrap the image in a `<div slot="image">` and let the `<img>` keep its transform directives. This never arises through the shortcode, whose `{% image %}` output is a `<picture slot="image">` with the directives already consumed.
 

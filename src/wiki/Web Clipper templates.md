@@ -1,6 +1,7 @@
 ---
 description: "Where a browser clipper gets its data and why the tool constrains the front matter, plus jedee's one-JSON-template-per-source setup."
 date: 2026-07-31
+updated: 2026-10-27
 ---
 
 A large share of the posts on a personal site are about *someone else's* thing: an album, a film, a book, a page worth keeping. Typing that metadata by hand is usually the reason those posts never get written, so the practical question is how to turn a source page into a post in the site's own format with as few steps as possible.
@@ -28,7 +29,7 @@ Right-click a source page and the clipper writes a frontmatter-complete markdown
   "noteContentFormat": "{{schema:@MusicAlbum:track.itemListElement|map:…|template:\"- [${name}](${url})\\n\"}}",
   "properties": [
     {"name": "artist", "value": "{{schema:@MusicAlbum:byArtist.name|wikilink}}", "type": "text"},
-    {"name": "genre",  "value": "{{schema:@MusicAlbum:keywords|wikilink}}", "type": "multitext"}
+    {"name": "genre",  "value": "{{schema:@MusicAlbum:keywords|slice:0,-1|wikilink}}", "type": "multitext"}
   ],
   "triggers": ["/bandcamp\\.com/album/"],
   "noteNameFormat": "{{schema:@MusicAlbum:name|safe_name}}",
@@ -38,6 +39,7 @@ Right-click a source page and the clipper writes a frontmatter-complete markdown
 
 - **`path` decides the post type.** `category`, `layout`, and `permalink` are inherited from that folder's data file — the template never emits them. (Note the terminology collision: Micropub's `category` means *tags*, while this stack's `category` is the post *type* — see [[Micropub]].)
 - **`noteNameFormat` is the filename — title only, through `|safe_name`**, because the filename is both the Obsidian wikilink target and the Eleventy slug. No author or year suffix. `safe_name` strips filesystem-illegal characters, nothing more.
+- **`slice:0,-1` drops the last keyword**, because Bandcamp ends its `keywords` with the artist's hometown, which would otherwise import as a genre.
 - **`cover` is a remote URL as plain `text`** — the build self-hosts it ([[Self-hosting remote images at build time]]).
 
 ### The three traps

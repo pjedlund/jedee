@@ -1,7 +1,7 @@
 ---
 description: "The two CSS text-wrap values that prevent widows in headings and paragraphs without JavaScript."
 date: 2026-08-01
-updated: 2026-10-02
+updated: 2026-10-27
 ---
 
 A **widow** (typography's term, loosely used) is a very short last line — usually one lone word — at the end of a paragraph or, most visibly, a heading. For most of the web's history there was no CSS for this; the standard fix was JavaScript that swapped the last space for a `&nbsp;` (the approach in [css-tricks' 2013 article](https://css-tricks.com/preventing-widows-in-post-titles/), which [Josh Crain](https://joshcrain.io/notes/2024/prevent-widows-in-post-titles/) cites as the state of things before `text-wrap`). Two values of the CSS `text-wrap` property now solve it natively:
@@ -40,7 +40,7 @@ Both values are shipped, at these places in the cascade:
 - `global/base/global-styles.css`: `blockquote` (with its `p`) takes `balance`, since a quotation is a short block like a heading. `figcaption` took `balance` too while captions were centered, from 2026-09-10; since they went left-aligned on 2026-10-02 it is back on `pretty` ([[Figures]]). ⚠ Inside `.prose` the quote needs the rule again in `prose.css`. There, `.prose :is(p, …)` sets `pretty` in a later layer and matches the quote's paragraphs directly.
 - `global/blocks/breadcrumb-leaf.css` — **the gotcha.** The current-page crumb must stay on one line, but the global `* { text-wrap: pretty }` reset re-enables wrapping *even against an explicit `white-space: nowrap`*. The block clamps with `-webkit-line-clamp: 1` instead, which wins where `nowrap` loses. Any future single-line truncation on this site has the same fight ahead of it — the reset's universal selector reaches everything.
 
-**EE stock vs jedee:** the reset and `prose.css` declarations are Eleventy Excellent's stock typography. jedee's own additions are the `.intro` balance and the breadcrumb line-clamp workaround.
+**EE stock vs jedee:** the two reset rules and the `prose.css` `pretty` are Eleventy Excellent's stock typography. jedee's own additions are the `.intro` balance, the quotation `balance` in `global-styles.css` and again in `prose.css`, the `figcaption` rule, the subtitle's `balance` (`hgroup > p` in `local/post.css`), and the breadcrumb line-clamp workaround.
 
 Related: [[Microformats]] — the other page where a universal-selector reset interacts with a specific block in a non-obvious way (there `margin: 0`, here `text-wrap`).
 

@@ -1,7 +1,7 @@
 ---
 description: "The microformats2 class vocabulary that makes HTML machine-readable, and why those classes are data the stylesheet must never touch."
 date: 2026-08-01
-updated: 2026-10-02
+updated: 2026-10-27
 ---
 
 [Microformats2](https://microformats.org/wiki/microformats2) (mf2) makes ordinary HTML machine-readable by adding agreed-upon class names to the elements that already carry the content. There is no separate data file: the visible page *is* the data. A parser reads the classes and extracts a structured object from the markup underneath them.
@@ -20,7 +20,7 @@ The `|` in the class list is a CUBE CSS convention with no effect in the browser
 
 ### The bug: a wrapper demotes content to grandchildren
 
-Vertical rhythm comes from exactly one rule — the Every Layout Stack, in `compositions/flow.css`:
+Spacing between siblings comes from one rule — the Every Layout Stack, in `compositions/flow.css` (the prose lattice built on top of it is [[Vertical rhythm]]):
 
 ```css
 .flow > * + * {

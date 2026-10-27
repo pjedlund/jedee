@@ -1,7 +1,7 @@
 ---
 description: "What a rule engine can and cannot check, why coverage matters more than the tool, and how jedee runs pa11y-ci against a locally served build."
 date: 2026-07-31
-updated: 2026-09-14
+updated: 2026-10-27
 ---
 
 Automated accessibility testing runs a rule engine over rendered pages and reports violations of machine-checkable [WCAG](https://www.w3.org/WAI/standards-guidelines/wcag/) criteria: missing alt text, insufficient contrast, unlabeled form controls, a missing `lang` on the `<html>` element ([[The lang attribute]]), broken heading order. Two engines do most of the work in practice — [axe-core](https://github.com/dequelabs/axe-core) and HTML CodeSniffer. [pa11y](https://pa11y.org/) is a command-line wrapper that drives a headless browser and runs one of them; `pa11y-ci` is the batch version, taking a list of URLs and exiting non-zero when any of them fails.
@@ -62,6 +62,7 @@ export const tests = {
     // ⚠ Keep this list in step by hand when a post is renamed or deleted — a path that no longer exists scores zero errors and passes silently.
     customPaths: ['/', '/accessibility/', '/articles/', '/design-system/', '/audio/nybrostrand-beach/', '/activities/', '/jams/50ft-queenie/', '/reading/a-confession/', '/watching/the-killing/', '/now/'],
     globalIgnore: [],
+    // Point pa11y at an already-installed Chrome. Do not empty this: puppeteer then hunts for its own pinned build and fails with "Could not find Chrome (ver. …)" — see the wiki, "The accessibility test". Override with PA11Y_CHROME= where Chrome lives elsewhere.
     chromePath: process.env.PA11Y_CHROME || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
   }
 };
@@ -110,7 +111,7 @@ The fix is to point pa11y at a Chrome that is already on the machine, which the 
 chromePath: process.env.PA11Y_CHROME || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
 ```
 
-`src/common/pa11y.njk` feeds that into `executablePath` inside the `chromeLaunchConfig` it already emitted — the same executable the two-theme script further down this page had been using all along, which is the small irony here: the answer was on this page, in another section, for weeks. Empty falls back to puppeteer's own resolution, so other machines are unaffected. The accepted trade-off is that a system Chrome auto-updates rather than being pinned; for a rule engine that runs inside the page, that is a low risk.
+`src/common/pa11y.njk` feeds that into `executablePath` inside the `chromeLaunchConfig` it already emitted — the same executable the two-theme script further down this page had been using all along, which is the small irony here: the answer was on this page, in another section, for weeks. Empty falls back to puppeteer's own resolution, which on this machine means the "Could not find Chrome" failure above, so the value should not be emptied; `PA11Y_CHROME=` covers a machine where Chrome lives elsewhere. The accepted trade-off is that a system Chrome auto-updates rather than being pinned; for a rule engine that runs inside the page, that is a low risk.
 
 Worth distinguishing from the failure above: this one is loud — a non-zero exit and no results table. The dead-path failure is the quiet one.
 
@@ -141,7 +142,7 @@ await page.emulateMediaFeatures([{name: 'prefers-color-scheme', value: 'dark'}])
 
 The same run covers the dark-mode gap above, since `prefers-color-scheme` emulation is a per-page setting and with no script running there is no `data-theme` stamp to fight — the page takes the `@media` path, which is exactly what a no-JS visitor gets. jedee's version lives at `_local/tests/a11y-nojs.js` and needs `npm start` running first, because the main nav is only revealed in serve mode. First run, 2026-08-04: clean on `/`, `/about/` and `/articles/` in both themes.
 
-It also turned up something the JS-on suite misses on a page it *does* test: the primary button on `/styleguide/` is 3.45:1 at 19px, needing 4.5:1, in both themes. Its text color is a `color-mix()`, and the rule engine appears not to read the resulting `oklab()` any better than a hand-written parser does — worth remembering that **a passing contrast rule over mixed colors may mean "could not read", not "fine"**.
+It also turned up something the JS-on suite misses on a page it *does* test: the primary button on the style guide, which became `/design-system/` on 2026-10-11, measured 3.45:1 at 19px on 2026-08-04, needing 4.5:1, in both themes. Its text color is a `color-mix()`, and the rule engine appears not to read the resulting `oklab()` any better than a hand-written parser does — worth remembering that **a passing contrast rule over mixed colors may mean "could not read", not "fine"**.
 
 ### Suppressing a finding
 

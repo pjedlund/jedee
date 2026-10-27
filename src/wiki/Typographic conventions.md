@@ -1,7 +1,7 @@
 ---
 description: "The book-typography rules for figures, small caps, capitals, captions, line breaks, superscripts, ordinals, list markers, subtitles, kerning, hyphenation and hard spaces, where they come from, and what each costs in accessibility."
 date: 2026-09-10
-updated: 2026-10-05
+updated: 2026-10-27
 ---
 
 Typography carries a set of conventions older than the web, most of them written down in two books. Robert Bringhurst's *The Elements of Typographic Style* (1992; 4th edition 2012) is adapted rule by rule for CSS at [webtypography.net](http://webtypography.net/). Matthew Butterick's *Practical Typography* is a free online book. The two agree more than they differ, and where they differ Butterick is the milder. This page covers the part CSS can switch on, given fonts that carry the features; the switches themselves are on [[OpenType features]].
@@ -112,7 +112,7 @@ Four opt-in classes live in `global/utilities/numerals.css`: `.fraction`, `.slas
 
 ### Small caps
 
-`.small-caps` (`global/utilities/small-caps.css`) is for the opening words of an article or a name: small caps plus `--tracking-wide` letterspacing. Write it as `<span class="small-caps">…</span>`, or as `{.small-caps}` at the end of a markdown paragraph. Not `*text*{.small-caps}`: Source Sans italic has no small caps. Fakes are refused site-wide by `font-synthesis: none` on `body`; see [[Font subsetting]].
+`.small-caps` (`global/utilities/small-caps.css`) is for the opening words of an article or a name: small caps plus `--tracking-wide` letterspacing. Write it as `<span class="small-caps">…</span>`, or as `{.small-caps}` at the end of a markdown paragraph. Not `*text*{.small-caps}`: Source Sans italic has no small caps. The class refuses fake small caps itself with `font-synthesis-small-caps: none`; `body` allows synthesis again since 2026-09-14, and the dev server's font check flags a faked style instead. See [[Font subsetting]].
 
 `abbr` gets no small caps. The glossary ([[Abbreviations]]) marks only its own terms, so styled acronyms would sit beside unstyled ones, and `all-small-caps` would flatten RDFa.
 

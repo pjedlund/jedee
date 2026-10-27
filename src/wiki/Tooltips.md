@@ -1,7 +1,7 @@
 ---
 description: "A label that appears on hover or focus; why its text must never be the control's only accessible name, and why CSS alone is enough for the decorative case."
 date: 2026-09-02
-updated: 2026-10-08
+updated: 2026-10-27
 ---
 
 A tooltip is a small label that appears when a pointer rests on a control or the control takes keyboard focus. On the web it comes in three forms, and they are not interchangeable.
@@ -70,11 +70,11 @@ Fading a tooltip with `opacity` alone leaves it in the hit-testing and layout pi
 
 One CUBE block, `src/assets/css/global/blocks/tooltip.css`, about 55 lines. The block itself is CSS only; a control may opt into one extra behavior with a line of its own script (see "Dismissing after use" below). Not Eleventy Excellent stock — EE ships no tooltip. Adapted from the header tooltip on [arielsalminen.com](https://arielsalminen.com/), retokenized and given the triggers below.
 
-Ten controls use it. In the header, the breadcrumb logomark (`Home`) and the light/dark toggle (see [[The theme toggle]]), both icon-only and at opposite edges. In the footer, the whole icon row — the Atom feed link and seven platform links, all of them icon-only with a `visually-hidden` label. Both header controls previously carried a `title`, which was removed: with `data-tooltip` in place the browser draws its own native tooltip alongside the styled one.
+Eleven controls use it. In the header, the breadcrumb logomark (`Home`), the search magnifier and the light/dark toggle (see [[The theme toggle]]), all icon-only, the first and last at opposite edges. In the footer, the whole icon row — the Atom feed link and seven platform links, all of them icon-only with a `visually-hidden` label. Both header controls previously carried a `title`, which was removed: with `data-tooltip` in place the browser draws its own native tooltip alongside the styled one. The star rating on book and film posts and cards (`partials/rating.njk`) uses the block too, on a `<span>` that also carries a visually hidden "Rated … out of 5".
 
 The theme toggle is the divergence case described above. Its accessible name is a fixed "Toggle dark mode" with `aria-pressed` carrying the state, while its tooltip is set by `theme-toggle.js` on every theme change — "Show dark mode" in light, "Show light mode" in dark. The markup carries no `data-tooltip` at all; the script adds it, which is honest, since the button is already hidden until its island upgrades.
 
-The colors need no dark-mode rules. Background is `--color-text` and text is `--color-bg`, so the label inverts against the page in both themes on its own; only the shadow swaps (`--box-shadow-popup` → `--box-shadow-popup-dark`), the same way the mega-menu panel does it.
+The colors need no dark-mode rules. Background is `--color-text` and text is `--color-bg`, so the label inverts against the page in both themes on its own; only the shadow swaps (`--box-shadow-popup` → `--box-shadow-popup-dark`), the same way the place map's popup does it ([[Shadows]]).
 
 Three behaviors the source design did not have:
 
@@ -110,7 +110,7 @@ WCAG 1.4.13 does not exempt a tooltip for repeating a hidden label: anything tha
 
 No `bottom`/`left`/`right` placements beyond the three that a real control needed, no arrow, no delay knob, no JS repositioning — nothing measures the viewport, so placement is the author's call rather than automatic. The MENU button briefly had a tooltip and lost it — it already carries a visible label, so the tooltip was pure decoration there. It left the padding behind (`var(--space-xs) var(--space-s)`, taken from `.menu-toggle`) so the label reads at the same density as the header's one bordered control.
 
-Related: [[The theme toggle]] — the other half of the header's right-hand cluster, and the control the first tooltip was built for. [[Focus rings and paint containment]] — the other case where a decoration positioned outside a control's box gets clipped or overflows by surprise.
+Related: [[Accessibility]] — where this page sits among the site's accessibility work. [[The theme toggle]] — the other half of the header's right-hand cluster, and the control the first tooltip was built for. [[Focus rings and paint containment]] — the other case where a decoration positioned outside a control's box gets clipped or overflows by surprise.
 
 The figure is `src/wiki/_sources/tooltips.html`, drawn with real controls against the site's compiled `global.css` — the offsets, the two nudge properties and all three placement exceptions are the block's rather than a redrawing. The one thing the mockup overrides is visibility: a tooltip exists only on `:hover` / `:focus-visible`, and a screenshot has neither.
 

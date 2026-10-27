@@ -1,6 +1,7 @@
 ---
 description: "Icon sets, outline versus filled styles, inline SVG colored by currentColor, labeling icons for assistive technology, and the filled Phosphor set this site uses."
 date: 2026-10-14
+updated: 2026-10-27
 ---
 
 An icon on a web page is a small picture standing in for a word: a type of post, an action, a place to go. Almost every site takes its icons from a published **icon set** rather than drawing them, because a set is drawn to one grid, one corner radius and one line weight, and those shared rules are what make thirty unrelated pictures read as a family.
@@ -42,7 +43,7 @@ Table: The icon folders
 | --- | --- | --- |
 | `posts/` | One icon per post type, used by the main menu, the meta line and search results | Phosphor fill |
 | `misc/` | Interface glyphs: gallery arrows, the menu caret, search, clear, the feed | Phosphor fill; search and clear are Phosphor regular |
-| `activity/` | One icon per activity type, in the activities table and on the meta line | Phosphor fill |
+| `activity/` | One icon per activity type, in the activities table and on the design system page; the meta line uses the `posts/` glyphs instead | Phosphor fill |
 | `platform/` | Footer platform logos, the GitHub mark beside "Revised", the video-link icons | Simple Icons |
 
 Each Phosphor file is the icon's path in a `viewBox="0 0 256 256"` with `width="1em" height="1em" fill="currentColor"`. `{% svg 'posts/camera' %}` inlines one, runs it through svgo and adds `aria-hidden="true"` unless an accessible name is passed, in which case it adds `role="img"` and the name as `aria-label` ([[The interlinker's second render pass]] covers why the shortcode must stay synchronous). Eleventy Excellent ships the shortcode and the folder; the choice of set is jedee's.

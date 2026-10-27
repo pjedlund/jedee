@@ -1,6 +1,7 @@
 ---
 description: "Why hotlinking a third-party image costs privacy, reliability and control, and how jedee fetches and self-hosts every remote cover at build time."
 date: 2026-07-31
+updated: 2026-10-27
 ---
 
 Pointing an `<img>` at a file on someone else's server — hotlinking — is the path of least resistance whenever the content came from elsewhere: an album cover, a book jacket, a film poster, a video thumbnail. It costs nothing to write and has four distinct problems.
@@ -61,7 +62,7 @@ The settled strategy is: **remote URL in `cover:`, plain `<img>`, build self-hos
 
 The second refusal (25 May 2026) has a reason worth keeping: **the Obsidian Web Clipper cannot download a `cover:` image.** It writes front matter and body text, and the local-images plugin pulls down *body* images only, never a front-matter cover. So "always bundled" would mean reviving the dropped script or adding a manual step to every clip — to buy something the build already delivers. The authoring tool set the shape of the convention, the same way it did for [[Per-type feeds]]; see [[Web Clipper templates]] for the tool itself and [[The authoring tool decides the data model]] for the pattern.
 
-**The escape hatch, when a cover must be permanent.** `dist/` is gitignored, so covers are refetched every build and the *repo* is not an archive of them — only the deployed site is. For any single post worth keeping forever, download the cover into `src/assets/images/reading/` and point `cover:` at that local path. It renders through the identical plain-`<img>` (the transform handles local paths too), gets committed, and adds no machinery. `The Kingdom of God is Within You.md` is the one post using it today.
+**The escape hatch, when a cover must be permanent.** `dist/` is gitignored, so covers are refetched every build and the *repo* is not an archive of them — only the deployed site is. For any single post worth keeping forever, download the cover into `src/assets/images/reading/` and point `cover:` at that local path. It renders through the identical plain-`<img>` (the transform handles local paths too), gets committed, and adds no machinery. No reading post used it on 2026-10-27; the local covers then were the activities' race maps (22), the imported This Is My Jam covers (20) and one recipe.
 
 ### Two details that bite later
 

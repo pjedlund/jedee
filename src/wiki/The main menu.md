@@ -70,7 +70,7 @@ Before that, the panel kept its dropdown layout: two columns of `minmax(15rem, 1
 
 ### The flexbox trap next to it
 
-The header row is a `.repel` holding the breadcrumb and a cluster with the nav and theme toggle. `breadcrumb.css` pins that cluster with `flex: none`, because with JavaScript on it holds only a small button and a moon. Relaxing that pin to `flex: 1 1 auto` for the fallback truncated the breadcrumb to a letter and an ellipsis.
+The header row is a `.repel` holding the [[Breadcrumb|breadcrumb]] and a cluster with the nav and theme toggle. `breadcrumb.css` pins that cluster with `flex: none`, because with JavaScript on it holds only a small button and a moon. Relaxing that pin to `flex: 1 1 auto` for the fallback truncated the breadcrumb to a letter and an ellipsis.
 
 **Flexbox distributes shrinkage in proportion to base size.** With `flex-basis: auto` the pill row's base is its max-content — roughly 2000px — against the trail's ~200px, so the deficit was split in that ratio and the breadcrumb surrendered nearly half its width despite having none to spare.
 

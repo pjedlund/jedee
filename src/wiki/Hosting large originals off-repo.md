@@ -1,6 +1,7 @@
 ---
 description: "Why write-once binaries do not belong in git, and how jedee serves multi-megabyte photo originals from a Cloudflare R2 bucket the build never touches."
 date: 2026-07-31
+updated: 2026-10-27
 ---
 
 Git stores every version of every file forever. That is exactly the behavior you want for text and exactly the one you don't want for large binaries: a 150 MB scan committed once is 150 MB in the repository permanently, and replacing it adds another 150 MB rather than a diff. Everyone who clones pays for all of it, and the repository stops being cheap to copy — which is most of what makes git pleasant to use.
@@ -20,18 +21,21 @@ This is the deliberate inverse of [[Self-hosting remote images at build time]]: 
 ### The frontmatter contract
 
 ```yaml
-downloads:
-  - label: Full-size JPEG (9437×3375, 11 MB)
-    url: https://pub-…r2.dev/photos/120-R012-F01-S01-E01.jpg
-    format: JPEG
-    width: 9437
-    height: 3375
-    bytes: 11456471
-  - label: Original (TIFF, 146MB)
-    url: https://pub-…r2.dev/photos/120-R012-F01-S01-E01-positive.tif
-    format: TIFF
-    bytes: 146448308
+photo:
+  downloads:
+    - label: Full-size JPEG (9437×3375, 11 MB)
+      url: https://pub-…r2.dev/photos/120-R012-F01-S01-E01.jpg
+      format: JPEG
+      width: 9437
+      height: 3375
+      bytes: 11456471
+    - label: Original (TIFF, 146MB)
+      url: https://pub-…r2.dev/photos/120-R012-F01-S01-E01-positive.tif
+      format: TIFF
+      bytes: 146448308
 ```
+
+`downloads` sits under `photo:`, beside `src` and `alt`; `photo.njk` reads `photo.downloads`, so a top-level `downloads:` is ignored and the page renders with no lightbox and no download links.
 
 - **The order is a contract.** `downloads[0]` is always the full-size raster; it carries `width`/`height` and drives both the lightbox and the Resolution row in the metadata block. `downloads[1]` is the archival scan.
 - ⚠ **`bytes` must match the served `content-length`.** It records the exact size of the file in the bucket; re-upload a file and the frontmatter has to follow.

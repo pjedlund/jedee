@@ -1,7 +1,7 @@
 ---
 description: "Custom elements, and the case for building them in two layers: HTML and CSS that render on their own, then JavaScript that upgrades them."
 date: 2026-09-14
-updated: 2026-09-17
+updated: 2026-10-27
 ---
 
 A **web component** is an HTML element the page author defines. The browser supplies three separate pieces: the Custom Elements API (`customElements.define('my-thing', MyThing)` registers a class for a tag name, which must contain a hyphen), Shadow DOM (a private subtree with its own scoped styles), and `<template>` / `<slot>` for markup to stamp out. None of the three needs the others. A tag with a hyphen in it is valid HTML whether or not anything ever defines it; until it is defined it is an unknown element that CSS can still style.
@@ -42,7 +42,7 @@ Table: The custom tags in jedee and what their JavaScript does
 | `<photo-lightbox>` | jedee | wires PhotoSwipe to the single `<a>` inside it — see [[The PhotoSwipe lightbox]] |
 | `<lite-youtube>` | `lite-youtube-embed`, EE stock | swaps the poster for the player on click — see [[The YouTube embed]] |
 | `<custom-easteregg>` | EE stock | listens for a typed keyword; renders nothing itself |
-| `<custom-card>`, `<custom-youtube>`, `<custom-masonry>` | nothing | never defined — tag names kept as CSS hooks |
+| `<custom-card>`, `<custom-youtube>`, `<custom-youtube-link>`, `<custom-peertube>`, `<custom-peertube-link>`, `<custom-masonry>` | nothing | never defined — tag names kept as CSS hooks |
 
 The first five are composite components by the book: without JavaScript the place map is a table of places, the sortable table is the same table in date order, the lightbox is a link to the full image, and the YouTube embed is a link to the video. The last row is the base layer with no enhancement layer at all. `<custom-masonry>` got there by subtraction: its masonry script was removed on 2026-09-06 because it shifted the layout ([[Layout shift]]), and the tag stayed so call sites and CSS did not have to change.
 

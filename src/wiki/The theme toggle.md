@@ -1,7 +1,7 @@
 ---
 description: "The three states a theme control has to represent, the blocking script that prevents a flash of the wrong one, and jedee's single SVG masked from sun to moon."
 date: 2026-07-31
-updated: 2026-09-28
+updated: 2026-10-27
 ---
 
 Dark mode reaches a page two ways. [`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) reports the operating system's setting and handles most visitors with no interface at all. A toggle exists for everyone else — someone whose system is dark but who wants this one site light — and the moment a site has one it has three states to represent rather than two: light, dark, and *follow the system*, which is not the same as either of the others.
@@ -37,7 +37,7 @@ In light mode the mask circle sits at `cx="24"`, outside the disc, so the mask d
   <figcaption>The morph, frozen at five instants. The middle frame is the whole point: for a moment the moon is a plain disc, because a moon is all it ever is — a disc with a circle masked out of it. The color and the page behind it carry no transition, so they have already changed by the second tile while the shape is still most of the way a sun.</figcaption>
 </figure>
 
-The mockup is `src/wiki/_sources/theme-toggle.html`. It links the site's compiled `global.css`, so the easings, the durations, the mask geometry and both palettes in the picture are this stylesheet's rather than a copy, and each frame is a real transition paused and seeked with `getAnimations()`. The glyph is drawn far larger than its shipped 24px, where the mask circle's whole travel is about three pixels. The first tile is the light resting state, before the click; the other four are past it, which is why they wear the dark page color and the moon's blue-gray from their first millisecond — neither the icon color nor the background is in any transition list, so both snap while only the shape animates. The colors themselves are the subject further down.
+The mockup is `src/wiki/_sources/theme-toggle.html`. It links the site's compiled `global.css`, so the easings, the durations, the mask geometry and both palettes in the picture are this stylesheet's rather than a copy, and each frame is a real transition paused and seeked with `getAnimations()`. The glyph is drawn far larger than its shipped 24px, where the mask circle's whole travel is about three pixels. The first tile is the light resting state, before the click; the other four are past it, which is why they wear the dark page color and the moon's blue-gray from their first millisecond — when the figure was shot, neither the icon color nor the background was in any transition list, so both snapped while only the shape animated. Since 2026-10-26 the button fades its color with `transition: color`, and the icon is no longer orange or blue-gray; the colors are the subject further down.
 
 ⚠ **A transition only exists where a value changes.** The first version rendered each frame with `data-theme="dark"` already on it, so nothing ever transitioned and `getAnimations()` had nothing to seek — all five frames came out as the finished moon. They have to be built in the light state, flipped, and *then* frozen. Reading a computed value in between is what forces the recalc that creates the transitions.
 
@@ -76,13 +76,15 @@ The choice lives in `localStorage` under `theme-preference` and is applied as `d
 
 - **The accessible name is a visually-hidden label**; the SVG is `aria-hidden`. State rides on `aria-pressed`, where pressed = dark mode active.
 - **The button is wrapped in an [[is-land]] island, `on:idle`** and hidden by CSS until the island upgrades (`is-land:not(:defined) .theme-toggle { display: none; }`) — a toggle that can't run shouldn't show. The theme itself doesn't depend on the button; the inline script sets it.
-- **The hit area stays at the WCAG 2.5.8 minimum of 24×24px on purpose.** A bigger target would be empty space pushing the icon away from the nav. Sized with `--theme-toggle-size: var(--size-step-min-1)` to sit alongside the wordmark.
+- **The hit area stays at the WCAG 2.5.8 minimum of 24×24px on purpose.** A bigger target would be empty space pushing the icon away from the nav. The glyph takes the header's shared icon size, `--theme-toggle-size: var(--site-header-icon-size, var(--size-step-min-2))`, the same as the logomark and the search magnifier.
 
 ### Why the icon can't be yellow
 
-The **sun** is `--color-accent-orange` (`#d0621e`), the same orange as the breadcrumb logomark at the other end of the header, and hover only deepens it — `color-mix(in oklab, var(--color-accent-orange) 82%, var(--color-text))`. Mixing toward the *text* color rather than a fixed second color is what lets one declaration work in both themes: it darkens on the light page and lightens on the dark one, which is the direction that preserves contrast each way.
+Since 2026-10-26 the icon is neither orange nor blue. Like the rest of the header chrome it rests at `--color-text-header-dim` in both themes and brightens to `--color-text-strong` on hover and keyboard focus; only the logomark keeps the accent orange. The rest of this section is how the earlier colors were chosen, kept because the contrast reasoning still holds for any colored icon in this header.
 
-The **moon** is not orange — a night-sky object rather than a warm one. It is `--color-text` cooled by 12% `--color-blue-vivid` (`#b9c3cd`), with the accent orange kept for its hover. So the two glyphs do not share a color, and the dark override is where that is expressed.
+The **sun** was `--color-accent-orange` (`#d0621e`), the same orange as the breadcrumb logomark at the other end of the header, and hover only deepened it — `color-mix(in oklab, var(--color-accent-orange) 82%, var(--color-text))`. Mixing toward the *text* color rather than a fixed second color is what lets one declaration work in both themes: it darkens on the light page and lightens on the dark one, which is the direction that preserves contrast each way.
+
+The **moon** was not orange — a night-sky object rather than a warm one. It was `--color-text` cooled by 12% `--color-blue-vivid` (`#b9c3cd`), with the accent orange kept for its hover. So the two glyphs did not share a color, and the dark override was where that was expressed.
 
 The tint is a nod to perception rather than physics. The lunar surface is gray-brown with an albedo close to worn asphalt, and moonlight is reflected sunlight, so spectrally it is faintly *warm*. We see night as blue because of the [Purkinje effect](https://en.wikipedia.org/wiki/Purkinje_effect): in dim light vision shifts to the rods, whose peak sensitivity lies further toward blue-green. An icon should follow the perception.
 
@@ -116,7 +118,7 @@ Table: Contrast of the lighter oranges on each theme's background
 
 This is a general constraint, not a palette flaw: a light background and a yellow object cannot both be true at 3:1, which is why yellow suns live on dark headers. orange-500 is the lightest shade that clears the bar in the theme where the sun is shown.
 
-The eight states as shipped, measured on the painted pixels rather than derived:
+The eight states as shipped, measured on the painted pixels rather than derived. These figures predate the 2026-10-26 recolor and have not been re-measured:
 
 Table: Contrast of the logomark and the toggle icon in all eight states
 | | light rest | light hover | dark rest | dark hover |

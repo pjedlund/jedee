@@ -1,7 +1,7 @@
 ---
 description: "The MapLibre map component, drawn from jedee's own Protomaps tiles, that upgrades server-rendered location data into a live map, and its three modes — single pin, a list of places, and a recorded route line."
 date: 2026-08-11
-updated: 2026-10-11
+updated: 2026-10-27
 ---
 
 An interactive web map is a JavaScript widget: a library like [Leaflet](https://leafletjs.com) or [MapLibre](https://maplibre.org) draws tiled imagery and vector shapes onto a scrollable canvas. That means it does nothing without JavaScript, and its keyboard and screen-reader story is often poor. The durable way to ship one is progressive enhancement — server-render the underlying data as ordinary HTML that stands on its own (a list of places with a link each, or a static map image), then let JavaScript find that markup and grow the live map above it. The HTML is the answer for no-JS visitors and assistive tech; the map is a convenience layered on top.
@@ -24,7 +24,7 @@ else if (placeList) this.initPlaces(placeList);
 else this.initSinglePin();
 ```
 
-- **Single pin** (photo pages) — `data-lat`/`data-lon` on the element, with a static `<a><img>` Geoapify map image as the slotted fallback.
+- **Single pin** (photo and audio pages) — `data-lat`/`data-lon` on the element, with a static Geoapify map as the slotted fallback: one `<a>` holding two images, positron for the light theme and dark-matter for the dark, of which `place-map.css` shows the one for the current theme (since 2026-10-26). Both layouts put the map at feature width in a 2:1 frame by wrapping it in a `<div class="feature">` that sets `--place-map-ratio: 2 / 1`, not through `@breakout`.
 - **Places** (the activity index) — a slotted `[data-place-list]`: since 2026-09-15 the activities table, one `<tr data-lat data-lon>` per located activity, each dot named and linked from the row's first link ([[Tables]]). The table *is* the data source and the no-JS / screen-reader path: map markers have poor keyboard and SR handling (Leaflet's were broken upstream; MapLibre's dots are painted on a canvas and not focusable at all), so nobody is forced through the map to reach a post. JavaScript reads the rows that carry coordinates and drops one dot each into the box above; rows without coordinates stay in the table, unmapped. Each row's `data-activity` sets a `--place-color` in `place-map-places.css`, from the type's `--color-activity-*` token (see below), resolved once per distinct value and shared by every row with that color: orienteering orange, hikes `green-vivid`, runs `blue-vivid`. Resolving it once per row forced 280 page layouts and froze the page for over a second ([[Forced layout]]).
 
   This mode used to group the list by activity type, with the group headings upgraded into filter toggles and mirrored as chips on the map surface. All of that came out on 2026-08-15, when the page became a single chronological index: the grouping was the only thing standing between the reader and a plain newest-first list of everything. Two lessons stayed behind. First, **reserve the map's space server-side** — the box was built and prepended on idle, so the whole page dropped by 16:9-of-the-column a second after paint; rendering an empty `.place-map-live` in the markup and having `buildBox()` adopt it takes the shift to zero. Second, **beware the double reverse**: the collection was already newest-first from `byCategory`, and the `located` filter reversed it again, so the visible list ran oldest-first for months without anyone noticing.
@@ -59,7 +59,10 @@ It takes `page.inputPath`, **not** `page.fileSlug`. Eleventy strips a leading da
 ```njk
 {% set routeJson = page.inputPath | routeGeoJSON %}
 {% if routeJson %}
-  <place-map @place="this route">
+  <place-map @breakout="popout" @place="this route" @activity="{{ activityType | slugify }}">
+    <div class="place-map-live" data-place-map-box>
+      <p class="place-map-pending">Map of this route</p>
+    </div>
     <script type="application/json" data-route>{{ routeJson | safe }}</script>
   </place-map>
 {% endif %}

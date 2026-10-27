@@ -1,7 +1,7 @@
 ---
 description: "Spacing a page in fractions of its body text's line-height, how far CSS can hold headings, lists, figures, tables and small text to that beat, its musical side, Ariel Salminen's Scale.css, and a quarter-line system for jedee tried on the style guide."
 date: 2026-09-30
-updated: 2026-10-07
+updated: 2026-10-27
 ---
 
 **Vertical rhythm** is spacing a page in measured intervals of one unit, the line-height of its body text, so that the text resumes on the same beat after every interruption: a heading, a list, a figure, a table. Bringhurst puts it as a musical analogy: "Space in typography is like time in music. It is infinitely divisible, but a few proportional intervals can be much more useful than a limitless choice of arbitrary quantities." His rule for it is to [add and delete vertical space in measured intervals](http://webtypography.net/2.2.2).
@@ -128,7 +128,7 @@ The ratio is read from the image's own `width` and `height` attributes with type
 
 ⚠ It holds only while the image is as wide as the figure. An image narrower than its container, at its own intrinsic width, would need `min()` against that width.
 
-⚠ The prose's 1px hairline around images is a border, and it adds 2px to the height. The prototype draws it as an outline with a negative offset, on the image's own edge.
+Prose images used to have a 1px hairline, which the prototype drew as an outline with a negative offset so it added no height. Since 2026-10-26 images and videos have no hairline at all: the `--shadow-on-page` shadow edges an image, and a shadow takes no space.
 
 ### Tables
 
@@ -281,7 +281,7 @@ The unit sits on `body` rather than `.prose` since 2026-10-12, so the page chrom
 
 ⚠ **A code block inside a list item** keeps the browser's 1em above it, since a list item is not a flow container. It gets the paragraph gap instead. The wiki log's compact headings had their own leading, padding and border, and are on quarter lines in `wiki.css` now.
 
-⚠ **Components bring their own spacing.** The other post types surfaced the rest, each now on quarter lines: pills (the post-type pill in the meta line, tags, genre chips, download buttons) snapped to the nearest quarter line, with wrapped rows a quarter line apart and a pill in a list item made a flex item, since its text line added 2px under it; the rating's 16px row of stars given a small-text line; lists of pills stripped of a utility's or the browser's own margin; the footnote list's 1em bottom margin; the activity stats, the event status badge and the subtitle under a title; the external-link arrow, once a 1em inline-block that stretched small-text lines by 0.75px, now an inline box on the prose's own line-height, which can't. Video embeds are 16:9, so the player pads itself down to the next quarter line with a percentage margin and the credit link sits a quarter line under it (the pad moved from the link onto the player on 2026-10-02, when the player went to popout width and stopped sharing the link's width); Chrome's 54px audio player is set to the nearest quarter line; a featured image is cropped to 16:9 whatever the file's own ratio, so it is padded as 16:9.
+⚠ **Components bring their own spacing.** The other post types surfaced the rest, each now on quarter lines: pills (the draft badge in the meta line, tags, genre chips, download buttons) snapped to the nearest quarter line, with wrapped rows a quarter line apart and a pill in a list item made a flex item, since its text line added 2px under it; the rating's 16px row of stars given a small-text line; lists of pills stripped of a utility's or the browser's own margin; the footnote list's 1em bottom margin; the activity stats, the event status badge and the subtitle under a title; the external-link arrow, once a 1em inline-block that stretched small-text lines by 0.75px, now an inline box on the prose's own line-height, which can't. Video embeds are 16:9, so the player pads itself down to the next quarter line with a percentage margin and the credit link sits a quarter line under it (the pad moved from the link onto the player on 2026-10-02, when the player went to popout width and stopped sharing the link's width); Chrome's 54px audio player is set to the nearest quarter line; a featured image is cropped to 16:9 whatever the file's own ratio, so it is padded as 16:9.
 
 Measured on 2026-10-01 after the fold, at 375px and 1360px with a headless sweep of 147 pages (every wiki page and article, two to four posts of each other type, every plain and listing page, and posts with webmentions): 291 of 294 clean. Every block lands on the lattice or follows an image, map or embed; the favicons page's icon grid shifts the text after it, and the style guide's smallest labels are loose at the widest step, since no quarter-line leading suits that size at both ends.
 
@@ -321,7 +321,7 @@ The overlay's code is `local/dev-grid.css` and `bundle/dev-grid.js`, shipped on 
 
 ### The page above the prose
 
-Since 2026-10-12 the top of the page is counted in lines too. The color bar at the top is a border on `body`, half a line thick: a border takes up real space, so everything below starts after it, which is what the lattice needs (a shadow or an overlay would not push the page down). The site header is two lines tall, so its row is centred on line 1½ and its bottom rule lands on line 2½; the rule is an inset shadow because a 1px border would add a pixel. The first region on the page then rounds its top padding so the first text starts on a whole line (`utilities/region.css`). On a line with an odd number of pixels the half-line bar is a fraction of a pixel, and the screen rounds it.
+Since 2026-10-12 the top of the page is counted in lines too. The color bar at the top is a border on `body`: a border takes up real space, so everything below starts after it, which is what the lattice needs (a shadow or an overlay would not push the page down). It was half a line thick at first and has been a quarter line since 2026-10-14. The site header is two lines tall under it, and since 2026-10-26 it has no bottom rule: the band ends in space. The first region on the page then rounds its top padding to the lattice (`utilities/region.css`); that rounding still subtracts half a line, the old bar's thickness, and has not been re-checked against the quarter-line bar. Where a line's pixels don't divide by four the bar is a fraction of a pixel, and the screen rounds it.
 
 Source: research session 2026-09-30. jedee's CSS was audited in the repository, and Eleventy Excellent's read from [its repository](https://github.com/madrilene/eleventy-excellent). Bernat's article and Roberts' post were read from their sources on GitHub, and the browser support dates are from the web-features data. The Every Layout and Piccalilli pages could not be fetched from the session; they are paraphrased, not quoted.
 

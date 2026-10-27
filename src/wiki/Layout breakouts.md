@@ -1,7 +1,7 @@
 ---
 description: "A named-column grid that lets an element step wider than the text column it sits in, and the direct-child constraint that makes it awkward in practice."
 date: 2026-08-23
-updated: 2026-10-05
+updated: 2026-10-27
 ---
 
 A reading page wants one narrow column for prose and the occasional element wider than it — a diagram, a code block, a full-bleed image. The old way was negative margins, which fight the page's own padding and break at small widths.
@@ -75,7 +75,7 @@ Which says what the classes are actually for: stepping out of a **reading measur
 
 `src/assets/css/global/compositions/wrapper.css` is Eleventy Excellent stock, Ryan Mulligan's technique credited in the file. `--wrapper-width` is `97rem` (`variables.css`, raised from EE's `85rem` — see the grid section below) and `.prose` narrows it to `64rem`, so a post body's content column is the narrow one while the breakouts stay measured from it. That is a composition knob in the [[Configuring a layout composition]] sense — a block sets `--wrapper-width` rather than redeclaring `grid-template-columns`.
 
-`.prose-wrapper`, which sets the same `64rem`, is EE stock. The post layouts use `.prose` instead, which does the same job on the same element; `.prose-wrapper` is used only on the card sections of `/now/` and the homepage's featured list.
+`.prose-wrapper`, which sets the same `64rem`, is EE stock. The post layouts use `.prose` instead, which does the same job on the same element; `.prose-wrapper` is used only on the card sections of `/now/`, the homepage's featured list and `/design-system/`.
 
 ### The 12-column grid
 
@@ -107,7 +107,7 @@ Used as `<div class="e-content | wrapper-pass flow">` in every post-type layout 
 
 The other three cases are wrappers jedee doesn't control the shape of:
 
-- **A markup wrapper of your own** — `audio.njk` and `photo.njk` put the location map in a plain `<div class="popout">`, the direct child, and let the component sit inside it.
+- **A markup wrapper of your own** — `audio.njk` and `photo.njk` put the location map in a plain `<div class="feature">` (`.popout` until 2026-10-26), the direct child, and let the component sit inside it.
 - **A shortcode's generated markup** — the image/lightbox shortcode takes a `containerClass` parameter that lands on the outer `<div>` it emits rather than on the inner `<picture>`, for exactly this reason. The `<div>` is load-bearing anyway: markdown-it rejects a bare `<photo-lightbox @…>` line because the `@`-prefixed WebC props aren't valid HTML attributes.
 - **A WebC component root** — `<place-map>` puts `webc:root` on the inner element, so a `class="popout"` on the invocation merges onto *that*, a grid grandchild under the component's own `<is-land>`. The component takes a `@breakout` prop instead and applies the class to the `<is-land>` root, which is the real grid child. See [[The place map]].
 

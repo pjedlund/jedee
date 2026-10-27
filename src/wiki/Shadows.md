@@ -1,6 +1,7 @@
 ---
 description: "Layered box-shadows that look like real shadows, one light source for the whole site, tinting and dark mode, and keeping an object's painted light from fighting the shadow it casts."
 date: 2026-10-24
+updated: 2026-10-27
 ---
 
 A single `box-shadow` is a blurred copy of the element's outline, moved and colored. It has one offset, one blur and one color, so it falls off in a straight ramp: either a tight dark edge or a wide gray haze, never the dense-near, soft-far shape of a shadow in a room. The fix that has become standard is to stack several shadows on the same element, each larger and fainter than the last.
@@ -51,14 +52,14 @@ An object built in CSS, a book or a sheet of paper, often carries two kinds of s
 
 ## In jedee
 
-The shadows are tokens in `src/_data/designTokens/shadows.json`, stored as Penpot-shaped layers (offset, blur, spread, 8-digit hex color) and composed into `--box-shadow-*` custom properties by `dtcgShadowToTailwind()` (see [[Tailwind]]); the same file feeds the Penpot export (see [[Design token sync]]). Each token has a `-dark` twin, swapped in by the component's own dark-theme rule. The rule in `DESIGN.md` is that nothing invents a shadow: a component takes one of these.
+The shadows are tokens in `src/_data/designTokens/shadows.json`, stored as Penpot-shaped layers (offset, blur, spread, 8-digit hex color) and composed into `--box-shadow-*` custom properties by `dtcgShadowToTailwind()` (see [[Tailwind]]); the same file feeds the Penpot export (see [[Design token sync]]). Each token has a `-dark` twin. Since 2026-10-26 two theme-level aliases in `global/base/variables.css` carry the common cases: `--shadow-on-page` (`thumb`) for images and maps lying on the page, and `--shadow-raised` (`panel`) for panels floating above it. The theme rules swap each to its `-dark` twin, so a component that reads an alias needs no dark-theme rule of its own; the others still swap their twin in their own dark-theme rule. The rule in `DESIGN.md` is that nothing invents a shadow: a component takes one of these.
 
 | Token | Shape | Used by |
 |---|---|---|
-| `panel` | two layers, tight contact plus wide soft | the mega-menu and the search panel |
+| `panel` | two layers, tight contact plus wide soft | the mega-menu and the search panel (through `--shadow-raised`), and the book's back cover |
 | `popup` | `panel` scaled down | tooltips (see [[Tooltips]]) and the map popup |
 | `chip` | smaller again | inline code (see [[Syntax highlighting]]) |
-| `thumb` | Ahlin's five layers, straight down | the book's cover, and covers and images lying on the page |
+| `thumb` | Ahlin's five layers, straight down | the book's cover, and every prose image and the place map (through `--shadow-on-page`) |
 | `thumb-cast` | `thumb` pushed right by half the drop, stronger in light | the pamphlet (see [[CSS 3D transforms]]) |
 
 `thumb` was picked from a local comparison page that put Ahlin's layers, Comeau's low, medium and high, Brumm's eased layers, the existing `popup` and a value from the Penpot file on six album covers from near-black to near-white, two photos and two plain squares, in both themes. In light mode it is tinted with `#414958`, a dark blue-gray from the site's text color, at 0.075 a layer; in dark mode it is black at 0.18 a layer.

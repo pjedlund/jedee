@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-10-27] lint | Full pass after the header week
+
+Every page read against the current code. 53 findings; fixed the same day on 39 pages, among them the photo `downloads:` example (nested under `photo:`, which is what the layout reads), the 10-26 header changes on Vertical rhythm, Shadows, The theme toggle, Layout breakouts, The place map and Site search, the removed `font-synthesis` rule on Typographic conventions, the public wiki on Link checking, `/styleguide/` → `/design-system/` on The accessibility test, and a dozen stale snippets and counts. Microformats no longer contradicts [[Vertical rhythm]]. Orphans linked: [[Breadcrumb]] from [[The main menu]], [[Netlify]] from [[Prefetching]], [[Shadows]] and [[Accessibility]] from [[Tooltips]]; Format on save stays index-only. Left in TODO: the ⚠ ration on about fifteen pages, re-shooting the header and theme-toggle figures, and four re-measurements.
+
 ## [2026-10-27] ingest | Viewport units
 
 From the session that fixed the header panels' width. [[Viewport units]] covers what `vw` measures, why `100vw` includes a classic scrollbar the page's content box does not, overlay versus classic scrollbars, the alternatives (`%`, `cqi`, a capped width), and Puppeteer's default `--hide-scrollbars`, which hides the bug from every headless test; its "In jedee" section is the one day the panels were snapped to a `100vw`-based grid, with measurements. [[The main menu]] gained a section on the panel's width: a 40rem cap around Every Layout's Grid, and why 30rem left it one column. Links earned: [[The main menu]], [[Site search]], [[The accessibility test]].

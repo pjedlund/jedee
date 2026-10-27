@@ -1,6 +1,7 @@
 ---
 description: "How the permalink pattern in each folder data file reconciles Obsidian filenames with clean web URLs."
 date: 2026-07-31
+updated: 2026-10-27
 ---
 
 The posts folder is an Obsidian vault as well as an Eleventy source, and the two want opposite things from a filename. Obsidian wants `Anna Karenina.md`, because `[[Anna Karenina]]` has to resolve by filename. The web wants `/reading/anna-karenina/`. The permalink pattern in each folder data file is what reconciles them.
@@ -11,7 +12,7 @@ The posts folder is an Obsidian vault as well as an Eleventy source, and the two
 "permalink": "/notes/{{ page.fileSlug | slugify }}/index.html"
 ```
 
-Eleven of the sixteen types use exactly this (ten in JSON, plus photo in its `.11tydata.js` — see [[Anatomy of a post type]]). `page.fileSlug` is the filename without its extension; `slugify` lowercases it, strips punctuation and diacritics, and joins words with hyphens. So the file keeps its Title Case, spaces and umlauts for Obsidian, and the URL comes out clean without anything being written twice.
+Eleven of the sixteen types use exactly this (eight in JSON, plus photo, recipe and video in their `.11tydata.js` — see [[Anatomy of a post type]]). `page.fileSlug` is the filename without its extension; `slugify` lowercases it, strips punctuation and diacritics, and joins words with hyphens. So the file keeps its Title Case, spaces and umlauts for Obsidian, and the URL comes out clean without anything being written twice.
 
 ⚠ The `nice-permalinks` skill documents an `{{ id }}`-based pattern. It does not apply here — jedee posts carry no `id:` field, and `page.fileSlug` is the convention.
 

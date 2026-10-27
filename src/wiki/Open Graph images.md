@@ -1,7 +1,7 @@
 ---
 description: "Generating per-post social preview images at build time by rendering an SVG template and converting it to JPEG — and why the output is committed to the repo rather than rebuilt on the server."
 date: 2026-09-05
-updated: 2026-10-11
+updated: 2026-10-27
 ---
 
 When a link is shared, the receiving platform reads the page's `<head>` for [Open Graph](https://ogp.me/) tags and draws a card from them. `og:image` is the picture on that card. It is fetched by a crawler that runs no JavaScript and does not wait, so the image has to be a real file at a real URL by the time the page is published — which makes it a build-time problem, not a page-time one.
@@ -39,12 +39,18 @@ The `!existsSync` guard is the whole caching strategy: an image that already exi
 **`src/_includes/head/meta-info.njk`** references it, with a fallback:
 
 ```njk
-content="{%- if layout == 'post' -%}
+content="{%- if ogCard -%}
+  {{- meta.url -}}{{- ogCard -}}
+{%- elif ogImage -%}
+  {{- meta.url -}}{{- ogImage.url -}}
+{%- elif layout == 'post' or layout == 'note' -%}
   {{- meta.url -}}/assets/og-images/{{ title | slugify }}-preview.jpeg
 {%- else -%}
   {{- meta.url -}}{{- meta.opengraph_default -}}
 {%- endif -%}"
 ```
+
+Eleventy Excellent's version has only the `layout == 'post'` branch and the default; the `ogCard` and `ogImage` branches and `layout == 'note'` are jedee's, covered below.
 
 `npm run clean:og` deletes `src/assets/og-images/` so the next build regenerates everything. It is the only way to refresh an image, because of that `existsSync` guard.
 
@@ -52,7 +58,7 @@ content="{%- if layout == 'post' -%}
 
 ## In jedee
 
-The pipeline itself is Eleventy Excellent stock, unmodified — template, event and script. The **fallback image** is not, as of 2026-09-09; that and the content around the pipeline are where the findings are.
+The event and the conversion script are Eleventy Excellent stock, unmodified. The template and the head are not: the template paginates `collections.titleCards` and carries the site's own mark and orange, and the head picks from four sources (both below). The **fallback image** is jedee's own as of 2026-09-09; that and the content around the pipeline are where the findings are.
 
 ### The fallback was Eleventy Excellent's own promo card
 
@@ -79,7 +85,7 @@ The per-post template was aligned to match on the same day: Eleventy Excellent's
 
 **Not `meta.domain`.** That is derived from `meta.url`, which is `http://localhost:8080` unless the environment sets `URL` — so the first card was stamped **localhost**. `author.website` is the hardcoded canonical and is what the signature reads. Anything generated on a laptop that wants the live domain has to reach past `meta.url` for it.
 
-**Right now the fallback is the card for the entire site.** Every one of the seven files in `src/posts/articles/` is `draft: true`, so `collections.article` holds two posts and neither is published. Zero pages on the live site use a generated card. That is a content accident rather than a design one, and it will unwind itself the moment an article ships — but it is worth knowing when weighing how much the fallback matters.
+**Until 2026-10-11 the fallback was the card for every article-shaped page.** Every article in `src/posts/articles/` was `draft: true`, so no page on the live site used a generated card. Notes changed that (below): on 2026-10-27 `src/assets/og-images/` held 15 generated JPEGs for articles and notes.
 
 **Articles and notes get a generated one.** Until 2026-10-11 only articles did: both the generator and the reference in the head were scoped to `layout: post`, which no other type uses. Notes were added the way the paragraph below predicted. A `titleCards` collection in `eleventy.config.js` joins the article and note collections, the generator paginates over it, and the head's condition reads `layout == 'post' or layout == 'note'`. ⚠ The collection and that condition name the same types, so a third type has to be added in both places. On a site with sixteen post types, the rest still fall back to artwork or to the default card. See [[Anatomy of a post type]] for the other places a type has to be wired, and [[One JSON-LD envelope for sixteen types]] for the sibling problem solved the other way round.
 
@@ -87,7 +93,7 @@ The per-post template was aligned to match on the same day: Eleventy Excellent's
 
 Photo, jam, watching and reading were widened on 2026-09-09: a shared photo previews as the photograph, and a shared record, film or book as a card built around its cover. That is 140 pages, and the head now picks from four sources, most specific first — the composited card, then the post's own artwork, then Eleventy Excellent's generated title card, then the site default.
 
-For **photo** the artwork is the whole card, and nothing is generated at all. That is the cheap end of this and worth preferring wherever it works: no committed JPEG, nothing to strand on a retitle, no `existsSync` guard to clear, no font dependency. `src/_config/utils/og-image.js` takes either shape of source — a photo's local `./src/…` path or a remote cover URL — and returns `{url, width, height}` for a 1200px JPEG, or `null` to fall through. It is **computed data, not a filter**: Nunjucks cannot await an async filter inside the `{% if %}` that picks the tag's value, and a `<meta>` needs a plain string. It is deliberately *not* shared with `coverZoom`, which computes the same artwork for the lightbox — that one returns `null` below 448px, a rule about whether zooming is worth it that has nothing to say about a social card.
+For **photo** the artwork is the whole card, and nothing is generated at all. That is the cheap end of this and worth preferring wherever it works: no committed JPEG, nothing to strand on a retitle, no `existsSync` guard to clear, no font dependency. `src/_config/utils/og-image.js` takes either shape of source — a photo's local `./src/…` path or a remote cover URL — and returns `{url, width, height}` for a 1200px JPEG, or `null` when there is nothing usable, in which case the head falls through to the generated card and then to the default. It is **computed data, not a filter**: Nunjucks cannot await an async filter inside the `{% if %}` that picks the tag's value, and a `<meta>` needs a plain string. It is deliberately *not* shared with `coverZoom`, which computes the same artwork for the lightbox — that one returns `null` below 448px, a rule about whether zooming is worth it that has nothing to say about a social card.
 
 For **jam, watching and reading** the bare cover was correct but small — a square album cover or a portrait poster is a stamp in a feed built for a wide card. `src/_config/setup/generate-og-cards.js` (`npm run og:cards [type] [slug…]`) draws the composited version instead — art on the left, an orange eyebrow naming the kind, title and credit on the right, the signature mark bottom-right. **This one does commit a file per post**: 138 of them, ~12 MB, generated on the laptop and carrying every cost in the list. That was a deliberate trade for how much better a wide card reads, made after looking at both side by side, not a default.
 
@@ -96,8 +102,6 @@ The three share one generator rather than three copies, because only two things 
 **The art is sized by HEIGHT, not width.** An album cover is square but a film poster and a book cover are portrait, so the fixed 438×438 box the first version used letterboxed both. `height: 438px; width: auto` puts a square at 438×438 and a 2:3 poster at 292×438, and every type sits in the same band with the text column simply gaining room on the portrait ones.
 
 **The output folder keys off the post's `category`, not its posts folder** — `og-images/jam/`, not `jams/`. The two differ for exactly this type (`category: jam`, `src/posts/jams/`), which is the same asymmetry the URL has.
-
-`src/_config/utils/og-image.js` takes either shape of source — a photo's local `./src/…` path or a jam's remote cover URL — and returns `{url, width, height}` for a 1200px JPEG, or `null` when there is nothing usable, in which case the head falls through to the generated card and then to the default. It is **computed data, not a filter**: Nunjucks cannot await an async filter inside the `{% if %}` that picks the tag's value, and a `<meta>` needs a plain string. It is deliberately *not* shared with `coverZoom`, which computes the same artwork for the lightbox — that one returns `null` below 448px, a rule about whether zooming is worth it that has nothing to say about a social card.
 
 **`og:image:width` and `og:image:height` were hardcoded to 1200×630 for every page on the site**, generated card or not. That was already wrong for anything non-landscape, and it mattered more on this theme than most, because for a platform reading no `twitter:card` the declared ratio is the only thing saying whether to draw a wide card or a small square one. They now follow the actual file.
 

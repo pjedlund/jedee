@@ -1,6 +1,7 @@
 ---
 description: "How the interlinker re-renders every page mid-build to resolve wikilinks, and the async-shortcode failure that timing can cause."
 date: 2026-07-31
+updated: 2026-10-27
 ---
 
 A [[Wikilinks|wikilink]] names its target by title — `[[Page Title]]` — rather than by path, so something has to work out where that title actually lives before a page can be built. On an [Eleventy](https://www.11ty.dev/) site that job belongs to a plugin, and the way this one does the lookup — by rendering every page a second time, mid-build — is the root of the worst failure this site has had. It is worth understanding before putting any conditional around an include.
@@ -23,10 +24,10 @@ The `{% svg %}` shortcode had been declared `async`, with an `await` around svgo
 
 The soft-launch commit (`3975491`, 2026-05-31) then wrapped the nav include in `{% if not meta.navigation.hideNav %}` to hide the nav until 1.0.0, and set `hideNav: true` in the same commit. The nav didn't just hide, it vanished from the built HTML entirely — and nobody noticed for three days, **because the same commit that broke it also hid it on purpose.** Empty and hidden look identical. `git bisect` landed exactly on that commit; swapping the wrapped include back to a bare one restored the nav, which is what isolated the cause. Vanilla Eleventy Excellent has no interlinker and an identical `main-nav.njk`, and that side-by-side ruled out include depth, svgo, and the Eleventy/Nunjucks version.
 
-Fixed in `ffd4a17` (2026-06-03) by dropping the `async`/`await`, with the reason recorded in the file:
+Fixed in `ffd4a17` (2026-06-03) by dropping the `async`/`await`, with the reason recorded in the file (`src/_config/shortcodes/svg.js`, cut to one line on 2026-09-28):
 
 ```js
-// NOTE: svgo's optimize() and readFileSync are both synchronous, so this shortcode must stay synchronous too. A leftover `async`/`await` ... made it return a Promise, which the interlinker plugin silently drops inside deeply-nested includes (base→header→main-nav) — blanking the whole nav. Keep this sync.
+// ⚠ Keep this synchronous: the interlinker plugin drops an async shortcode's Promise inside {% if %}-wrapped includes, and the nav renders empty.
 ```
 
 ## Rules that follow

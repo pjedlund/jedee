@@ -1,6 +1,7 @@
 ---
 description: "Fetching the next page before the click with the Speculation Rules API: eagerness and limits, how it works alongside a service worker, and why jedee uses Eleventy Excellent's hover rule rather than a script or a list built from analytics."
 date: 2026-09-15
+updated: 2026-10-27
 ---
 
 Prefetching means downloading a page the visitor is likely to open next, before they open it, so the click shows it without waiting for the network. Only the HTML document is fetched; the images, scripts and stylesheets of that page are not.
@@ -66,7 +67,7 @@ The rule is Eleventy Excellent's, added in 4.8 (upstream commit `1107a1b`): `src
 
 The built pages carried 510 links to feeds (`.xml`) and 136 to full-size `.jpeg` images under `/assets/`; hovering those would download files nobody asked to open. `/admin/` is [[Sveltia CMS]] and `/api/` the [[Micropub]] endpoint. No page links to either today, and excluding them costs nothing. `/*` already keeps other sites' links out, since the pattern resolves against the page's own origin. The exclusions can be checked in any browser console, prefetching or not: `new URLPattern('/*.xml', location.origin).test(location.origin + '/reading/feed.xml')` is `true`.
 
-It pays off here because of how the rest is cached. Pages are network-first in the service worker, and Netlify serves HTML `max-age=0, must-revalidate` ([[Three things called cache]]), so every online click waits for at least a round-trip. The CSS is inlined into the HTML and the worker already holds the fonts, so the HTML is what a click waits for, and it is the one thing a prefetch fetches.
+It pays off here because of how the rest is cached. Pages are network-first in the service worker, and [[Netlify]] serves HTML `max-age=0, must-revalidate` ([[Three things called cache]]), so every online click waits for at least a round-trip. The CSS is inlined into the HTML and the worker already holds the fonts, so the HTML is what a click waits for, and it is the one thing a prefetch fetches.
 
 - Works for returning visitors, through the worker. Verified in Chrome on the live site on 2026-09-15.
 - The worker copies every page it fetches from the network into its cache. If a prefetch reaches the worker as a navigation, a page that was only hovered is saved for offline use too. Not verified; harmless either way, since the cache is cleared on every deploy.

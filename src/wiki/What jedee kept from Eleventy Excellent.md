@@ -1,7 +1,7 @@
 ---
 description: "A systematic inventory of what jedee keeps unchanged from Eleventy Excellent and where it has deliberately diverged."
 date: 2026-07-31
-updated: 2026-10-18
+updated: 2026-10-27
 ---
 
 jedee is a fork of [Eleventy Excellent](https://eleventy-excellent.netlify.app/) by Lene Saile. Every other page in this wiki states EE-stock-versus-jedee where it happens to matter locally; this page states it systematically, so a claim on another page can be checked against one inventory.
@@ -49,8 +49,8 @@ Table: What jedee extended from the stock starter
 | WebC components | five | eight — adds `photo-lightbox.webc` ([[The PhotoSwipe lightbox]]), `place-map.webc` and `sortable-table.webc` |
 | Header chrome | `navigation.drawerNav` and `navigation.subMenu` booleans in `meta.js` | neither key exists; replaced by `breadcrumb` and `hideNav`, and one `nav-menu.js` in place of EE's `nav-drawer.js` + `nav-sub.js` |
 | Wikilinks | not shipped at all | `@photogabble/eleventy-plugin-interlinker` — see [[Wikilinks]] |
-| Per-page CSS | ten files in `css/local/` | twenty-eight |
-| npm scripts | adds `screenshots` | drops `screenshots`; adds `design:md`, `penpot:tokens`, `fallback-font-style`, `test:unit` |
+| Per-page CSS | ten files in `css/local/` | thirty-four on 2026-10-27 |
+| npm scripts | adds `screenshots` | drops `screenshots`; adds, among others, `design:md`, `penpot:tokens`, `figma:tokens`, `fallback-font-style`, `test:unit`, `mockups`, `flags` |
 
 **The interlinker is the consequential addition.** Vanilla EE does not ship it, which is exactly what made a vanilla checkout the decisive control when jedee's navigation rendered blank — see [[The interlinker's second render pass]]. Any oddity that only reproduces here and not upstream should be tested against that checkout before anything else.
 
@@ -76,12 +76,13 @@ So jedee removed almost exactly the set Lene marks as optional, and nothing beyo
 
 ## ⚠ Left behind by those deletions
 
-Two pieces of EE machinery are still in the tree with nothing referencing them. Both are the residue of a deletion, not a decision:
+One piece of EE machinery is still in the tree with nothing referencing it, the residue of a deletion, not a decision:
 
-- **`partials/gallery.njk` + `scripts/bundle/dialog.js`** — EE's `<dialog>`-based lightbox, superseded by PhotoSwipe. No layout includes it.
-Each is a handful of kilobytes of source that compiles but ships to no page — the JS-and-partial equivalent of the orphan `local/*.css` problem. Nothing is broken; the note exists so the next reader doesn't take their presence as evidence the features are in use.
+- **`scripts/bundle/dialog.js`** — the script half of EE's `<dialog>`-based lightbox, superseded by PhotoSwipe. Its partial, `partials/gallery.njk`, was deleted on 2026-10-17; nothing loads the script.
 
-`scripts/components/custom-easteregg.js` was a third until 2026-09-11, when the easter egg was switched on in `settings.yaml` (`easteregg: true`). `base.njk` gates it behind `{% if meta.easteregg %}` (stock EE behavior), so it now loads on every page. Since 2026-09-15 it carries `canvas-confetti` inside it, as in EE 4.8, instead of fetching it from esm.run when the keyword is typed: 12 KB (4.9 KB compressed) on every page, where it was 1.9 KB.
+It is a few kilobytes of source that compiles but ships to no page — the JS equivalent of the orphan `local/*.css` problem. Nothing is broken; the note exists so the next reader doesn't take its presence as evidence the feature is in use.
+
+`scripts/components/custom-easteregg.js` was another until 2026-09-11, when the easter egg was switched on in `settings.yaml` (`easteregg: true`). `base.njk` gates it behind `{% if meta.easteregg %}` (stock EE behavior), so it now loads on every page. Since 2026-09-15 it carries `canvas-confetti` inside it, as in EE 4.8, instead of fetching it from esm.run when the keyword is typed: 12 KB (4.9 KB compressed) on every page, where it was 1.9 KB.
 
 ## Taking a new release
 

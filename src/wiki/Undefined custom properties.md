@@ -1,7 +1,7 @@
 ---
 description: "A var() pointing at nothing does not skip the declaration — it makes the property unset, which means inherit or initial depending on the property."
 date: 2026-08-22
-updated: 2026-10-09
+updated: 2026-10-27
 ---
 
 CSS lets a stylesheet name its own values — `--brand-color: crimson` — and read them back anywhere with `var(--brand-color)`. These are **custom properties**, and they are the machinery behind design tokens, theming and dark mode. This page is about what happens when the name is wrong: a typo, a token that got renamed, a property that was never defined at all.
@@ -54,10 +54,10 @@ It hid for so long because on four of the five variants the border color is `col
 
 The mockup is `src/wiki/_sources/undefined-custom-properties.html`, rendering the real `button.css` at the real palette; `npm run mockups` re-shoots it. Both rows are drawn in equal-width columns, so the border width is the only thing that differs between them — sizing each button to its own content would have let the 3px row grow and passed that off as part of the finding.
 
-The fix defined it once, beside the existing border convention:
+The fix defined it once, beside the existing border convention. It was a plain `1px` at first; it now reads the `--border-width-thin` token, also 1px:
 
 ```css
---border-thickness: 1px;
+--border-thickness: var(--border-width-thin);
 --stroke: var(--border-thickness) solid var(--color-bg-accent);
 ```
 

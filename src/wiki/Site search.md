@@ -1,7 +1,7 @@
 ---
 description: "Searching a static site without a server or a search library: a JSON index written at build time, fetched once and filtered in the browser."
 date: 2026-09-02
-updated: 2026-09-22
+updated: 2026-10-27
 ---
 
 A static site has no server to ask, so search has to happen somewhere else. Three places are available, and the choice is mostly about how many entries there are.
@@ -126,7 +126,7 @@ The search panel and the mega-menu both anchor to the header row (`.repel.ontop`
 
 `search.css` redeclares the panel surface rather than reading the nav's `--megamenu-surface`, because that property is declared on `.mainnav` — which does not exist at all in a production build while the soft-launch dial hides the nav. An inherited custom property that is only sometimes in scope is the failure in [[Undefined custom properties]].
 
-The panel also had no `font-size` of its own at first, so it inherited the header's ~26px and every `em`-sized icon scaled off that: the magnifier rendered at 34px beside the theme toggle's 21px. It now sits on `--size-step-min-1` with `0.95em` icons throughout, which is what the mega-menu uses, so the two read as the same object.
+The panel also had no `font-size` of its own at first, so it inherited the header's ~26px and every `em`-sized icon scaled off that: the magnifier rendered at 34px beside the theme toggle's 21px. The result rows now sit on `--size-step-min-1` with `0.95em` icons (`search-results.css`). That matched the mega-menu's rows until 2026-10-26, when the open mega-menu's icons went to `1.2em` of the text (`main-nav.css`).
 
 ### Contrast on a lifted panel
 
@@ -136,6 +136,6 @@ Measure these with an oklab→sRGB conversion, not a regex over `getComputedStyl
 
 pa11y only ever sees the panel closed, since it does not click ([[The accessibility test]]). The combobox, the listbox and the options exist only in the open state and have to be checked by hand.
 
-Related: [[The main menu]] — the other header disclosure, whose surface, shadow, drop distance and reduced-motion gate this one reuses. [[The activities archive]] — the type the `only` map exists for, and where the 112 orienteering entries come from.
+Related: [[The main menu]] — the other header disclosure, whose surface, shadow, drop distance and reduced-motion gate this one reuses. [[The activities archive]] — the type the `only` map exists for, and where the 113 orienteering entries come from.
 
 Raw sources: `src/_raw/Building Search Index with Eleventy.md`, `src/_raw/dev-notes/How the search panel opens and clears.md`

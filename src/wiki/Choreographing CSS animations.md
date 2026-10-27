@@ -1,6 +1,7 @@
 ---
 description: "Sequencing a multi-step animation in CSS alone — a delay chain expressed as named step times, fill modes, clip-path wipes, and a caret that tracks the wipe edge."
 date: 2026-08-28
+updated: 2026-10-27
 ---
 
 A multi-step animation — wipe something away, reveal something else, blink, wipe again — does not need JavaScript to sequence it. CSS gives every element one animation clock, and several animations can run on it at once, comma-separated, each with its own duration, easing and delay. Chaining the delays is the whole technique.
@@ -110,7 +111,7 @@ The mockup is `src/wiki/_sources/breadcrumb-reveal.html`, and it is made with th
 
 `src/assets/css/local/breadcrumb-reveal.css` is a `local` bundle, included from `src/_includes/partials/breadcrumb.njk` inside the same condition that renders the markup, so neither the two spans nor the CSS exist on any other page. The name span is `aria-hidden`: the home crumb already carries a visually-hidden "Johan Edlund, home" label, and a second copy would be read twice.
 
-`meta.navigation.nameReveal` in `src/_data/meta.js` is the site-wide switch, beside the existing `breadcrumb` and `hideNav` toggles. It gates the markup and the stylesheet include together — verified in the built output rather than in the template: with it off, `dist/index.html` contains neither.
+`switches.nameReveal` in `src/_data/settings.yaml` (Site settings → Name reveal in [[Sveltia CMS]]) is the site-wide switch, beside the `breadcrumb` and `hideNav` toggles; `src/_data/meta.js` passes it on as `meta.navigation.nameReveal`, which the templates read. It gates the markup and the stylesheet include together — verified in the built output rather than in the template: with it off, `dist/index.html` contains neither.
 
 The knobs, all on `.breadcrumb-reveal`: `--reveal-delay`, `--reveal-in`, `--reveal-blink` (one on/off cycle, run twice), `--reveal-out`, `--reveal-caret-width`, `--reveal-caret-gap`. The three step times are derived from them as above.
 
