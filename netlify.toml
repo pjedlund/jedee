@@ -38,7 +38,8 @@ for = "/assets/scripts/components/*.js"
 
 [build]
   # build:11ty, NOT the full `build` script: `build` runs `clean` (rimraf dist) first, which would delete the image cache netlify-plugin-cache just restored. Netlify checks out a fresh tree each deploy, so there's no stale local dist to clean anyway — clean only matters for repeated LOCAL builds.
-  command = "npm run build:11ty"
+  # ⚠ Netlify keeps dist/ between builds and takes header rules from a dist/netlify.toml if one exists, so delete any stale copy first.
+  command = "rm -f dist/netlify.toml && npm run build:11ty"
   publish = "dist"
 
 # Secrets scanning: the photo static-map fetch (Geoapify) puts MAP_API_KEY in the request URL, and eleventy-fetch caches that URL verbatim under .cache/ (persisted across builds by netlify-plugin-cache above). The deployed output never contains the key, but Netlify scans build-generated files — so exclude the non-deployed cache, else the key trips Smart Detection / a secret-marked var fails the deploy. MAP_API_KEY itself stays in the Netlify UI (Builds scope), NOT here — this file is committed to git.
