@@ -1,0 +1,14 @@
+{
+  "$type": "opacity",
+  "$description": "Penpot-only: layer-opacity switches that show one of two stacked shapes per theme, for things a token can't recolor (the light and dark static maps on the Audio post type board). Bind a shape's opacity to one of these. The site does this with <picture>/prefers-color-scheme, so no CSS reads this file. Pushed into theme/light and theme/dark by build-penpot-tokens.js, names verbatim.",
+  "themes": {
+    "light": {
+      "visibility.light-only": "1",
+      "visibility.dark-only": "0"
+    },
+    "dark": {
+      "visibility.light-only": "0",
+      "visibility.dark-only": "1"
+    }
+  }
+}
