@@ -1,7 +1,7 @@
 ---
 description: "Generating a design tool's tokens from the code that is their source of truth, and the three ways the two sides drift apart anyway."
 date: 2026-08-22
-updated: 2026-10-27
+updated: 2026-10-28
 ---
 
 A **design token** is a named design value — a color, a spacing step, a radius — held somewhere both a stylesheet and a design tool can read. **Design token sync** is keeping those two copies in agreement. The interchange format is [DTCG](https://tr.designtokens.org/format/), a W3C community-group JSON schema that [Tokens Studio](https://tokens.studio/) popularized and that Figma, Penpot and others now import.
@@ -25,7 +25,7 @@ The fix is not to remember the extras. It is to give each one a source in the re
 
 The deeper problem is that CSS has units a design tool has no concept of, and generating a number for the tool means choosing what to lose.
 
-- **Font-relative units** (`ch`, `em`, `ex`) resolve against font metrics the browser computes. A design tool has no equivalent, so there is nothing to export — only a fixed number matched by eye against a rendering.
+- **Font-relative units** (`ch`, `em`, `ex`) resolve against font metrics the browser computes. A design tool has no equivalent, so there is nothing to export — only a fixed number matched by eye against a rendering. And because the CSS value scales with the text, one CSS value becomes one px token *per size it is used at*: the unit's job moves into the token names.
 - **Fluid values** (`clamp()`, Utopia scales) have no analogue either. Exporting the maximum is the usual compromise; the design file then shows the large end of every scale and never the small one.
 - **Computed colors** (`color-mix()`, `oklch()` arithmetic) must be flattened to a literal. The literal is correct for exactly the inputs it was computed from, and goes stale the moment an upstream value changes — a generator that redoes the arithmetic itself is the only version that cannot drift.
 - **Absolute units can still be rejected.** A tool may accept a unit on import and refuse it when the token is *bound* to a shape, which produces a validation error pointing at the token rather than at the unit.
@@ -47,6 +47,14 @@ A design tool's color token holds a color. It does not hold a *calculation* over
 **Stacking rebuilds it.** Alpha compositing in sRGB and `color-mix()` in sRGB are the same arithmetic, so a shape bound to token A with a copy above it bound to token B at 8% opacity renders exactly `color-mix(in srgb, A, B 8%)` — and the percentage is now a number in the tool, editable without breaking either binding. Nested mixes stack as more layers, in the order the CSS nests them.
 
 ⚠ **The percentage has to be the layer's opacity, not the fill's.** Binding a token writes it into the shape's first fill and resets that fill's opacity to 1; editing that fill's opacity afterwards silently drops the binding, leaving the resolved color behind and the token gone.
+
+## A thing no token can recolor
+
+Some things on a page change between themes without being a color at all. A static map is two different images; a native `<audio>` player is drawn by the browser, which picks its own light or dark chrome from `color-scheme`. The site switches them with `<picture>` and `prefers-color-scheme`, or leaves them to the browser. A design tool's theme only swaps token values, so neither has anything to bind to.
+
+**Opacity tokens switch them.** Stack a light and a dark version, and bind each one's layer opacity to an opacity token that is `1` in one theme set and `0` in the other: `visibility.light-only` (1 in light, 0 in dark) and `visibility.dark-only` (the reverse). Switching the tool's theme then shows exactly one of the pair, with nothing to toggle by hand. Browser chrome that is a flat color can instead get ordinary color tokens sampled from the browser in each theme. These are design-tool-only tokens: no stylesheet reads them, so they need a source in the repo for the same reason as any other hand-made token — the next import deletes them otherwise.
+
+The opacity has to be the layer's, for the reason given above: a token on a fill resets that fill's opacity.
 
 ## A mockup states the same value twice
 
@@ -80,6 +88,7 @@ Two details in that fix are load-bearing. The names are emitted **verbatim**, wi
 
 - **Radii export as px, not rem.** Penpot imports `0.1875rem` and resolves it correctly, but its border-radius *binding* validator rejects rem: a bound corner warns "Reference in {radius.x} is not valid or is not in any active set", which points at the set when the unit is the problem. The build converts rem → px at a 16px base for radii only. The CSS keeps rem.
 - **Letter-spacing is `ch` and cannot be exported.** Headings use `--tracking: -0.04ch`, font-relative so it scales with each heading. The Penpot value was matched by eye instead: `-5` on `type.heading.1`. Measured on the same string at 107px/700, that renders 864.66px against 870.91px for the CSS `-0.04ch` — 0.7% apart — while a literal `-5px` in CSS gives 820.18px, 5% tighter. So the mismatched number is the correct one. Part of the gap is the typeface (Penpot uses Google's `Source Serif 4`, the site a static subset, about 2% apart in width at that size) and part is unexplained: a literal `-5px` on `Source Serif 4` gives 838.59px, not Penpot's 864.66px. `heading.2` (`-3.2`) and `heading.3` (`-2.1`) are `heading.1` scaled by font size, which reproduces what `ch` does; they have not been checked against a rendering because no h2 or h3 exists in the file.
+- **Capital labels are `--tracking-wide`, 0.16ch, at three sizes.** Measured as px with 1ch = 0.497em in Source Sans 3, that is 0.16 × 0.497 × size: `font.letterSpacing.label` 1.27 for 16px labels (breadcrumb, Menu, footer, tags, small buttons), `.table` 1.75 for 22px table heads, `.wide` 2.23 for 28px text such as the event card's month. They feed `type.label` (16px, bold, uppercase) and `type.table.header` (22px, regular, as `table.css` sets it). Until 2026-10-28 the library held a hand-made `wide` of 1.2 and a `widest` of 1.67, which matched no size the site uses and would have gone on the next import; `typography.json` now holds all three.
 - **Fluid Utopia values collapse to their maximum.** `{min: 10, max: 14}` exports as `"14px"`, for spacing and font sizes alike.
 
 **Penpot's plugin API cannot create a shadow token.** `set.addToken({type: 'shadow', ...})` rejects every shape, including the one Penpot itself stores:
@@ -104,8 +113,16 @@ The docs list an `inset` key that is not there (the importer adds `inset: false`
 
 **Penpot's layout settles asynchronously.** A read immediately after a write returns stale geometry — after binding padding and changing text weight across ten variants, a verification read gave 95×30 for boards that settled at 97×30, and one variant reported a 1px difference from its siblings that a later read showed was not there. Token application is documented as async (~100 ms); reflow takes longer and isn't signalled. Read again before reporting a size.
 
+**Theme switches for the Audio post type board.** Its static place map is a light and a dark image stacked, bound to `visibility.light-only` and `visibility.dark-only`; Chrome's player is drawn with `ui.audio.bg` and `ui.audio.fg` (`#F1F3F4` and black in light, `#3A3A3A` and white in dark, sampled from Chrome). The sources are `themeVisibility.json` and `audioPlayerColors.json`, read by `build-penpot-tokens.js` through the same verbatim-name loop as `buttonColors.json`.
+
+**Read the active theme before calling a color stale.** The library's Dark theme was on, so a mega-menu drawn in dark values looked out of date when it was right. Re-applying every bound color token to "refresh" it then unbound them, because `applyToken` with the token a shape already has switches the binding off — 85 bindings went, with the colors left looking unchanged. They came back from a map of each resolved hex to its Dark token. Penpot's plugin API has no undo; `penpot.history.undoBlockBegin()` / `undoBlockFinish()` only groups a script's own edits into one ⌘Z.
+
+**A check against the design-system page.** On 2026-10-28 the library held 162 of the 176 tokens the build emits with the same name and value. The rest were the dark top band (pointed at a Penpot-only `color.gray.1000`), the letter-spacing above, and the theme-switch and thumbnail-shadow tokens the library had not yet imported; five tokens existed only in Penpot. `/design-system/` is generated from the same JSON, so comparing against the export is comparing against the page.
+
 Mapping rules and the full trap list live in `_local/penpot/penpot-tokens.md` (gitignored). `npm run penpot:tokens` also runs a second script, `build-design-md.js`, which regenerates the front matter of the repo-root `DESIGN.md`.
 
 ## In Sketch (retired)
 
 Sketch was a second mirror from 2026-08-31 to 2026-10-06, built from its own script and retired in favour of Penpot alone. The lesson that outlives it: a tool that models none of references, themes or fluid sizes makes the file a snapshot, so every token change needs a re-run and re-push by hand.
+
+Raw source: `src/_raw/dev-notes/How the Penpot library was checked against the design system.md`

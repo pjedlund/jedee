@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-10-28] ingest | Design token sync
+
+Enriched from a Penpot MCP session: the Penpot library checked against `/design-system/` (162 of 176 tokens matched). Adds a `ch` value as one px token per size it is used at, with jedee's three `--tracking-wide` tokens and the new `type.label` and `type.table.header`; a section on switching things no token can recolor (stacked light and dark images, Chrome's audio player) through 1/0 opacity tokens per theme set; and the 85 bindings a "refresh" switched off because the library's Dark theme was on. No new links.
+
 ## [2026-10-28] lint | Leftovers from the 10-27 pass
 
 The six open items from the full pass. The ⚠ marker is back to its ration on every page: one per page for a failure that happens without saying so, two on [[Vertical rhythm]], [[Figures]] and [[The place map]], which each cover two systems; the rest became plain prose or bold. The header figures on [[The main menu]] and [[Site search]] are re-shot from a freshly lifted header, and the two [[The theme toggle]] figures after its mockup was fixed to read the light palette with the toggle's color transition off. New measurements: the theme toggle icon clears 4.5:1 in all four states (4.63, 6.97, 5.24, 16.46); the primary button on `/design-system/` still measures 3.45:1 and only counts as large text from about 1024px wide ([[The accessibility test]]); the place map script is 289 KB brotli on the live site; and Eleventy 3.1.7 still keeps about 0.8 MB per page rendered ([[The dev server's memory]]). Checking the header comments turned up a real offset: since 10-14 the first text on every page sat a quarter line off the lattice, because region.css still made up for the old half-line top bar. Fixed in the code, not on a page.
