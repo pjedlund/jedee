@@ -58,7 +58,7 @@ export default async function(eleventyConfig) {
     });
   }
 
-  // ⚠ Keep these ignored or every build retriggers itself: `eleventy.before` rewrites both dirs, and the wiki dial turns .gitignore off. See the wiki "Watch loops".
+  // ⚠ Keep these ignored or every build retriggers itself: `eleventy.before` rewrites both dirs; .gitignore covers them today, this is the net if it stops. See the wiki "Watch loops".
   eleventyConfig.watchIgnores.add('src/_includes/css/**');
   eleventyConfig.watchIgnores.add('src/_includes/scripts/**');
   // ⚠ Global CSS stays out of the watcher: watchGlobalCss recompiles it and the dev server swaps it in place, where a rebuild would cost every page. See the wiki "The dev server's memory".

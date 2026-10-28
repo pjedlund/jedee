@@ -54,7 +54,7 @@ The regular Atom feed took it instead, and the podcast moved to `/audio/podcast.
 
 The move was free: the podcast feed had never been submitted to a directory — its channel artwork is still the site's OpenGraph default, which is the tell — so nothing anywhere pointed at the old URL. Worth noting the general shape, since a section can only have one canonical feed URL: the format with the *narrower, more deliberate* audience is the one that can afford to move.
 
-⚠ The regular audio and video feeds use the plain shared body, so they syndicate the post's writing and **not the media file**. A subscriber reads about the recording and follows the link to hear it. That's a real limitation and a deliberate one — Atom's `<link rel="enclosure">` and JSON Feed's `attachments` would both carry it, but that needs a body variant, and the podcast feed already does the job for anyone who wants the file itself.
+The regular audio and video feeds use the plain shared body, so they syndicate the post's writing and **not the media file**. A subscriber reads about the recording and follows the link to hear it. That's a real limitation and a deliberate one — Atom's `<link rel="enclosure">` and JSON Feed's `attachments` would both carry it, but that needs a body variant, and the podcast feed already does the job for anyone who wants the file itself.
 
 ### The wrinkle: a feed only sees the body
 

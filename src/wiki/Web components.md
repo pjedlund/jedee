@@ -25,7 +25,7 @@ Table: Ariel Salminen's three kinds of progressive web component
 
 The composite kind is what Jeremy Keith called [HTML web components](https://adactio.com/journal/20618) in 2023: the custom element adds behavior to markup that already works. She presents the three as a design stance rather than a library feature.
 
-Her library, [Elena](https://elenajs.com/), is the worked example: 2.6 kB, no dependencies, at `v1.0.0-rc.7` when the article was published. Its server-rendering rule follows from the two layers. A component with no `render()` method is fully server-renderable, because it *is* its HTML; one with `render()` renders its first state without JavaScript and needs the script for interaction. ⚠ The article announces a release candidate, so the package list and API may have moved since.
+Her library, [Elena](https://elenajs.com/), is the worked example: 2.6 kB, no dependencies, at `v1.0.0-rc.7` when the article was published. Its server-rendering rule follows from the two layers. A component with no `render()` method is fully server-renderable, because it *is* its HTML; one with `render()` renders its first state without JavaScript and needs the script for interaction. The article announces a release candidate, so the package list and API may have moved since.
 
 ## In jedee
 
@@ -46,6 +46,6 @@ Table: The custom tags in jedee and what their JavaScript does
 
 The first five are composite components by the book: without JavaScript the place map is a table of places, the sortable table is the same table in date order, the lightbox is a link to the full image, and the YouTube embed is a link to the video. The last row is the base layer with no enhancement layer at all. `<custom-masonry>` got there by subtraction: its masonry script was removed on 2026-09-06 because it shifted the layout ([[Layout shift]]), and the tag stayed so call sites and CSS did not have to change.
 
-⚠ The `.webc` files in `src/_includes/webc/` are not web components, despite the name. WebC is Eleventy's build-time component syntax and outputs plain HTML; whether a browser custom element exists afterwards depends only on whether some script calls `customElements.define` for that tag.
+The `.webc` files in `src/_includes/webc/` are not web components, despite the name. WebC is Eleventy's build-time component syntax and outputs plain HTML; whether a browser custom element exists afterwards depends only on whether some script calls `customElements.define` for that tag.
 
 Raw source: `src/_raw/Progressive Web Components.md`, plus the custom tags in a production `dist/` and the `customElements.define` calls in `src/assets/scripts/components/` and `node_modules/`, read on 2026-09-14.

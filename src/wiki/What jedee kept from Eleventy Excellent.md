@@ -8,7 +8,7 @@ jedee is a fork of [Eleventy Excellent](https://eleventy-excellent.netlify.app/)
 
 The source is Lene's own documentation collection, `src/docs/` in the upstream checkout at `/Users/johanedlund/Projects/eleventy-excellent` — 22 files, about 3,800 words, read in place and never edited. The checkout sits on tag `4.6.1`; jedee merged **4.6.0** in May 2026, one patch behind. Since then jedee has also merged 4.7.0 (August 2026) and 4.8.0 (15 September 2026); [Taking a new release](#taking-a-new-release) covers what the 4.8.0 merge showed about upgrading a fork.
 
-⚠ **The docs are dated 30 March 2026 and are already stale in Lene's own repo.** `details.md` describes a `<custom-details>` WebC component at length — and the string `custom-details` appears nowhere in the 4.6.1 source tree except inside that doc file. The component was folded back into a plain `<details>`/`<summary>` partial and the doc was never updated. Treat every claim here as verified against code on **2026-07-31**, not as a transcription of Lene's prose.
+**The docs are dated 30 March 2026 and are already stale in Lene's own repo.** `details.md` describes a `<custom-details>` WebC component at length — and the string `custom-details` appears nowhere in the 4.6.1 source tree except inside that doc file. The component was folded back into a plain `<details>`/`<summary>` partial and the doc was never updated. Treat every claim here as verified against code on **2026-07-31**, not as a transcription of Lene's prose.
 
 ## Stock and untouched
 

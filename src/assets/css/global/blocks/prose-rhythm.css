@@ -46,7 +46,7 @@ Every vertical gap in prose, and every line box that is not body text, is a whol
   }
 
   /* PILLS
-  The post-type pill, tags, genre chips and download buttons are padded text, 25px on a phone; snapped to the nearest quarter line, and wrapped rows a quarter line apart. ⚠ A pill in a list item sits on the item's text line, which adds 2px under it; as a flex item it is exactly its own height. */
+  Tags, genre chips and download buttons are padded text, 25px on a phone; snapped to the nearest quarter line, and wrapped rows a quarter line apart. ⚠ A pill in a list item sits on the item's text line, which adds 2px under it; as a flex item it is exactly its own height. */
   .prose :is(.meta .button, .cluster .button, .button[data-small-button]) {
     block-size: round(nearest, calc(2 * var(--space-xs) + 1em + 2 * var(--border-thickness)), var(--line-quarter));
     padding-block: 0;

@@ -28,7 +28,7 @@ body {
   accent-color: var(--color-accent-orange);
   /* Wherever hyphens: auto is on, leave two letters behind and take three forward (Bringhurst 2.4.1). */
   hyphenate-limit-chars: auto 2 3;
-  /* Half a line, so the header below starts on the page's lattice (prose-rhythm.css); the token is the fallback where the lattice is off. */
+  /* A quarter line; the first region pads the page back onto the lattice below the header (region.css). The token is the fallback where the lattice is off. */
   border-block-start: var(--line-quarter, var(--color-border-height)) solid var(--color-border-top);
 }
 

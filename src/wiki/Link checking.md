@@ -60,7 +60,7 @@ export const stripTemplatedHrefs = markdown =>
 
 Three details carry weight. Fences are stripped first, so the inline pass cannot chew into one. Inline spans are bounded to a **single line** — an unpaired backtick in prose would otherwise pair with the next one paragraphs away and silently swallow every real wikilink in between, costing backlinks with nothing to show for it. And replacements are whitespace rather than deletions, so text on either side cannot be glued into a match nobody wrote.
 
-⚠ **This is a monkey-patch of plugin internals, not a supported hook.** Three things about it are worth knowing before touching it:
+**This is a monkey-patch of plugin internals, not a supported hook.** Three things about it are worth knowing before touching it:
 
 1. **The resolver is the wrong place**, which is where the work started. A resolving function decides how to *render* a link that has already been found — it runs after detection and after the dead link has been recorded, so it cannot suppress anything. See [[Wikilinks]] for what the resolver legitimately does.
 2. **A deep import throws.** `import … from '@photogabble/eleventy-plugin-interlinker/src/wikilink-parser.js'` fails with `ERR_PACKAGE_PATH_NOT_EXPORTED`: the package's `exports` map publishes only `./index.js`, which does not re-export the parser classes. Loading them by *file path* works, because `exports` constrains package specifiers and not file URLs — and it resolves to the same absolute path the plugin imports internally, so it is the same module instance and the prototype patch is visible to the plugin.

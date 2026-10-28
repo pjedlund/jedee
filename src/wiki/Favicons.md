@@ -77,7 +77,7 @@ await sharpsToIco([sharp(icoBuffer)], `${outputDir}/favicon.ico`, {sizes: [32]})
 
 EE's stock script is immune, because it hands over a bare `sharp(svgBuffer)` with nothing pending. The trap only exists once padding is added.
 
-**⚠ EE's stock outputs are wrong in three ways that only show on a device.** Its maskable is `resize(512).extend(50)` — a **612px** file the manifest declares as `512x512` — and it is transparent, which is the one thing a maskable icon cannot be. Its `apple-touch-icon` is transparent too. None of this fails a build or a Lighthouse pass.
+**EE's stock outputs are wrong in three ways that only show on a device.** Its maskable is `resize(512).extend(50)` — a **612px** file the manifest declares as `512x512` — and it is transparent, which is the one thing a maskable icon cannot be. Its `apple-touch-icon` is transparent too. None of this fails a build or a Lighthouse pass.
 
 **The four shapes, side by side.** The tab mark and the app tile are the two treatments; the app tile then differs only in its corners, and only because of who is doing the masking.
 

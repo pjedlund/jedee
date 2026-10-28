@@ -1,7 +1,7 @@
 ---
 description: "What a rule engine can and cannot check, why coverage matters more than the tool, and how jedee runs pa11y-ci against a locally served build."
 date: 2026-07-31
-updated: 2026-10-27
+updated: 2026-10-28
 ---
 
 Automated accessibility testing runs a rule engine over rendered pages and reports violations of machine-checkable [WCAG](https://www.w3.org/WAI/standards-guidelines/wcag/) criteria: missing alt text, insufficient contrast, unlabeled form controls, a missing `lang` on the `<html>` element ([[The lang attribute]]), broken heading order. Two engines do most of the work in practice — [axe-core](https://github.com/dequelabs/axe-core) and HTML CodeSniffer. [pa11y](https://pa11y.org/) is a command-line wrapper that drives a headless browser and runs one of them; `pa11y-ci` is the batch version, taking a list of URLs and exiting non-zero when any of them fails.
@@ -142,7 +142,7 @@ await page.emulateMediaFeatures([{name: 'prefers-color-scheme', value: 'dark'}])
 
 The same run covers the dark-mode gap above, since `prefers-color-scheme` emulation is a per-page setting and with no script running there is no `data-theme` stamp to fight — the page takes the `@media` path, which is exactly what a no-JS visitor gets. jedee's version lives at `_local/tests/a11y-nojs.js` and needs `npm start` running first, because the main nav is only revealed in serve mode. First run, 2026-08-04: clean on `/`, `/about/` and `/articles/` in both themes.
 
-It also turned up something the JS-on suite misses on a page it *does* test: the primary button on the style guide, which became `/design-system/` on 2026-10-11, measured 3.45:1 at 19px on 2026-08-04, needing 4.5:1, in both themes. Its text color is a `color-mix()`, and the rule engine appears not to read the resulting `oklab()` any better than a hand-written parser does — worth remembering that **a passing contrast rule over mixed colors may mean "could not read", not "fine"**.
+It also turned up something the JS-on suite misses on a page it *does* test: the primary button on the style guide, which became `/design-system/` on 2026-10-11, measures 3.45:1 in both themes (`#f6f1f1` on `#d0621e`, re-measured 2026-10-28). Its regular-weight text is fluid, 19px at 320px wide and 24px from about 1024px, so it counts as large text (3:1) only on wide screens and fails 4.5:1 below that. Its text color is a `color-mix()`, and the rule engine appears not to read the resulting `oklab()` any better than a hand-written parser does — worth remembering that **a passing contrast rule over mixed colors may mean "could not read", not "fine"**.
 
 ### Suppressing a finding
 

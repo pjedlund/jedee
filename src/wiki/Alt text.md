@@ -56,7 +56,7 @@ Table: What a cover's alt text renders as, by front matter
 
 The empty case is the one that motivated the choice. A book cover or film poster sitting directly under the title it depicts is decorative by the definition above, and `alt="Cover for Anna Karenina"` beneath a heading reading *Anna Karenina* announces the title twice.
 
-### ⚠ An empty alt looks like a missing one in the built HTML
+### An empty alt looks like a missing one in the built HTML
 
 Checking the decorative case by grepping the output is misleading. `alt=""` does not appear:
 

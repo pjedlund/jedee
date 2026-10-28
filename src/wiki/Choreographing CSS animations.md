@@ -107,7 +107,7 @@ The start page — and only the start page — types its own name. The header's 
 
 The mockup is `src/wiki/_sources/breadcrumb-reveal.html`, and it is made with the technique in the section above: six copies of the real header, every animation in each paused and seeked to a different `currentTime`, so nothing is running when the shot is taken and the stale-frame trap cannot arise. It links the site's compiled `global.css` and this block's own `breadcrumb-reveal.css`, so the type, the logomark and every step time in the picture are the shipped ones rather than a copy. `npm run mockups` re-shoots it.
 
-⚠ **The first frame is 1.080s, not 1.000s, and the gate is why.** At the instant the wipe starts the frame is blank, and so is the frame past the end — `npm run mockups:check` rejected the two as pixel-identical, which is the right answer: they are the same picture even though they mean different things. The one second of dead time before the first glyph is prose, not a frame.
+**The first frame is 1.080s, not 1.000s, and the gate is why.** At the instant the wipe starts the frame is blank, and so is the frame past the end — `npm run mockups:check` rejected the two as pixel-identical, which is the right answer: they are the same picture even though they mean different things. The one second of dead time before the first glyph is prose, not a frame.
 
 `src/assets/css/local/breadcrumb-reveal.css` is a `local` bundle, included from `src/_includes/partials/breadcrumb.njk` inside the same condition that renders the markup, so neither the two spans nor the CSS exist on any other page. The name span is `aria-hidden`: the home crumb already carries a visually-hidden "Johan Edlund, home" label, and a second copy would be read twice.
 

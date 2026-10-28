@@ -8,7 +8,7 @@ The full-width header band. The <header> spans the viewport while its contents s
   --site-header-icon-size: calc(var(--size-step-min-2) * 1.2);
 }
 
-/* Two lines tall under the half-line top bar, so its row centres on line 1½. No bottom rule: the band ends in space, not a line. */
+/* Two lines tall under the quarter-line top bar, so its row centres on line 1¼. No bottom rule: the band ends in space, not a line. */
 @supports (width: round(1px, 1px)) {
   .site-header {
     min-block-size: var(--line-2);
