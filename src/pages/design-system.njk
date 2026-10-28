@@ -584,7 +584,7 @@ colorGroups:
     <h3 class="heading-line">Maps</h3>
     <p>Maps are drawn from the site's own map tiles in its own colors, and load only when scrolled to. A map shows places (the <a href="/activities/">activities</a> overview), a single pin (a photo's location) or a recorded route. The wiki page <a href="/wiki/the-place-map/">The place map</a> covers how.</p>
     {%- set mapLat = 55.43287 %}{%- set mapLon = 13.93232 %}{%- set mapPlace = "Nybrostrand Beach, Skåne" %}{%- set mapSubject = "a field recording was made" %}
-    <div style="--place-map-ratio: 2 / 1; --flow-space: var(--space-l)">
+    <div style="--place-map-ratio: 2 / 1; --flow-space: var(--space-xl)">
       <place-map @lat="{{ mapLat }}" @lon="{{ mapLon }}" @zoom="13" @place="{{ mapPlace }}">
         {% include "partials/place-map.njk" %}
       </place-map>
