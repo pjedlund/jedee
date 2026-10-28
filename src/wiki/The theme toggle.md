@@ -1,7 +1,7 @@
 ---
 description: "The three states a theme control has to represent, the blocking script that prevents a flash of the wrong one, and jedee's single SVG masked from sun to moon."
 date: 2026-07-31
-updated: 2026-10-27
+updated: 2026-10-28
 ---
 
 Dark mode reaches a page two ways. [`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) reports the operating system's setting and handles most visitors with no interface at all. A toggle exists for everyone else — someone whose system is dark but who wants this one site light — and the moment a site has one it has three states to represent rather than two: light, dark, and *follow the system*, which is not the same as either of the others.
@@ -118,13 +118,13 @@ Table: Contrast of the lighter oranges on each theme's background
 
 This is a general constraint, not a palette flaw: a light background and a yellow object cannot both be true at 3:1, which is why yellow suns live on dark headers. orange-500 is the lightest shade that clears the bar in the theme where the sun is shown.
 
-The eight states as shipped, measured on the painted pixels rather than derived. These figures predate the 2026-10-26 recolor and have not been re-measured:
+The eight states as shipped, measured on the resolved colors against each theme's page color (re-measured 2026-10-28, after the 10-26 recolor). The icon now clears 4.5:1 in every state, the logomark clears 3:1:
 
 Table: Contrast of the logomark and the toggle icon in all eight states
 | | light rest | light hover | dark rest | dark hover |
 |---|---|---|---|---|
 | logomark | 3.50 | 3.94 | 4.70 | 5.56 |
-| toggle icon | 3.50 | 3.94 | 10.14 | 4.70 |
+| toggle icon | 4.63 | 6.97 | 5.24 | 16.46 |
 
 ### Current state, not target state
 

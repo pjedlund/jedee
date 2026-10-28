@@ -22,8 +22,8 @@ CSS has two units for it, both [Baseline widely available](https://web-platform-
 
 Each has a trap on a site built like this one:
 
-- ⚠ **`lh` resolves on every element separately.** `--flow-space: 1lh` gives a paragraph one of its own lines and a blockquote, set larger, one of *its* lines. jedee tried exactly that on 2026-09-21 and a blockquote got 61px above it against 31px for a paragraph ([[Typographic conventions]]).
-- ⚠ **`rlh` is only the body line if the body type is set on the root.** Bernat sets `html { font-size: 112.5%; line-height: 1.5 }`. jedee sets its type on `body` and leaves the root at the browser's 16px, which every `rem`-based token assumes. `1rlh` here is the `normal` line-height of the browser's default serif, 18px in Chromium: not a body line, and not even the site's font.
+- **`lh` resolves on every element separately.** `--flow-space: 1lh` gives a paragraph one of its own lines and a blockquote, set larger, one of *its* lines. jedee tried exactly that on 2026-09-21 and a blockquote got 61px above it against 31px for a paragraph ([[Typographic conventions]]).
+- **`rlh` is only the body line if the body type is set on the root.** Bernat sets `html { font-size: 112.5%; line-height: 1.5 }`. jedee sets its type on `body` and leaves the root at the browser's 16px, which every `rem`-based token assumes. `1rlh` here is the `normal` line-height of the browser's default serif, 18px in Chromium: not a body line, and not even the site's font.
 
 A **registered custom property** gives the unit without either trap. A property registered as a `<length>` computes to pixels on the element that sets it, and descendants inherit the pixels, not the expression. The wiki's caption measure is built the same way ([[Figures]]).
 
@@ -37,7 +37,7 @@ A **registered custom property** gives the unit without either trap. A property 
 .prose { --line: 1lh; }  /* 28.16px, inherited as 28.16px by a blockquote too */
 ```
 
-⚠ **The initial value must not depend on anything.** `initial-value: 1.5rem` is refused because a `rem` depends on the root's font size, and a refused `@property` rule is dropped whole, silently. `--line` then stays an ordinary custom property holding the text `1lh`, and every element resolves it again: the first trap, back in place. Found while building the prototype below; `0px` works.
+**The initial value must not depend on anything.** `initial-value: 1.5rem` is refused because a `rem` depends on the root's font size, and a refused `@property` rule is dropped whole, silently. `--line` then stays an ordinary custom property holding the text `1lh`, and every element resolves it again: the first trap, back in place. Found while building the prototype below; `0px` works.
 
 ⚠ **A fractional line drifts.** Layout stores lengths in 1/64px steps, so a 28.16px line box is stored as 28.156px and a three-quarter line as 21.109px. Each block comes out a few hundredths of a pixel off the lattice, and it adds up: about 0.6px by the end of the style guide sample. Rounding the unit to a whole pixel and setting it as the line-height too makes every quarter line a multiple of 0.25px, which layout stores exactly:
 
@@ -50,7 +50,7 @@ A **registered custom property** gives the unit without either trap. A property 
 
 It is computed from the font size rather than from `1lh`, which on this element would read the line-height it is setting. Rounding moves the leading by up to half a pixel.
 
-**Leading by measure.** Longer lines need looser leading, as Salminen's 2013 post and Scale.css's widest step argue (below). jedee's prose lines run from about 40 characters on a phone to the 54ch measure on a wide screen, so the line is fluid: 1.4 of the body size at 320px, 1.5 at 1350px, the two ends of the Utopia type scale. The middle term of the `clamp()` is a straight line between 1.4 × 19px and 1.5 × 28px, the body size at those two widths; the `em` bounds hold the ratio between 1.4 and 1.5 whatever happens in between. ⚠ The middle term is tuned to `--size-step-0`'s two ends and has to be worked out again if they change. A fluid number (`1.4 + 0.1 × progress`) would need a length divided by a length, which not every browser does yet. Every step of the lattice is a fraction of the line, so the whole rhythm opens up with it.
+**Leading by measure.** Longer lines need looser leading, as Salminen's 2013 post and Scale.css's widest step argue (below). jedee's prose lines run from about 40 characters on a phone to the 54ch measure on a wide screen, so the line is fluid: 1.4 of the body size at 320px, 1.5 at 1350px, the two ends of the Utopia type scale. The middle term of the `clamp()` is a straight line between 1.4 × 19px and 1.5 × 28px, the body size at those two widths; the `em` bounds hold the ratio between 1.4 and 1.5 whatever happens in between. The middle term is tuned to `--size-step-0`'s two ends and has to be worked out again if they change. A fluid number (`1.4 + 0.1 × progress`) would need a length divided by a length, which not every browser does yet. Every step of the lattice is a fraction of the line, so the whole rhythm opens up with it.
 
 ## Strict grid or soft rhythm
 
@@ -94,7 +94,7 @@ h2 { line-height: round(nearest, 1.2em, var(--line-quarter)); }
 
 At 375px an `h2` of 41.4px gets 47.25px lines (1.14) and an `h3` of 27.9px gets 33.75px (1.21); at 1360px, 84px (1.24) and 52.5px (1.20). `round()` has been Baseline since 2024.
 
-⚠ The result is a length, and a length line-height inherits as a length, not as a ratio. Anything inside the heading at another size, such as inline `code`, sits in the heading's line box. That is what a heading wants.
+The result is a length, and a length line-height inherits as a length, not as a ratio. Anything inside the heading at another size, such as inline `code`, sits in the heading's line box. That is what a heading wants.
 
 ### Lists
 
@@ -124,9 +124,9 @@ Given the ratio, CSS can pad it out. A percentage margin is measured against the
 
 The ratio is read from the image's own `width` and `height` attributes with typed `attr()`, which eleventy-img always writes, so no figure needs a hand-set ratio. Typed `attr()` is in Chrome and Edge 133 and Firefox 155, not yet in Safari. There the margin is invalid, falls back to 0, and the figure sits off the lattice by its remainder: the soft default. The pad is at most a quarter line, 4.7px under the sample's photo on a phone. `--img-ratio` on a figure still overrides, for an embed with a fixed ratio such as a 16:9 video. The first version measured the figure as a size container (`100cqi`), which went wrong as soon as a wiki caption sat beside a narrower image on a phone; the percentage follows the image wherever it sits. A `<picture>` outside a figure is padded the same way; a bare `<img>` in a paragraph is not.
 
-⚠ The caption's quarter line under the image is padding, not margin. eleventy-img wraps the image in a block `<picture>`, and a margin on the caption would collapse with the pad under the picture: the larger of the two wins and the pad disappears. A bare `<img>` is inline and hides this, which is how the mockup missed it and the built style guide caught it.
+The caption's quarter line under the image is padding, not margin. eleventy-img wraps the image in a block `<picture>`, and a margin on the caption would collapse with the pad under the picture: the larger of the two wins and the pad disappears. A bare `<img>` is inline and hides this, which is how the mockup missed it and the built style guide caught it.
 
-⚠ It holds only while the image is as wide as the figure. An image narrower than its container, at its own intrinsic width, would need `min()` against that width.
+It holds only while the image is as wide as the figure. An image narrower than its container, at its own intrinsic width, would need `min()` against that width.
 
 Prose images used to have a 1px hairline, which the prototype drew as an outline with a negative offset so it added no height. Since 2026-10-26 images and videos have no hairline at all: the `--shadow-on-page` shadow edges an image, and a shadow takes no space.
 
@@ -275,19 +275,19 @@ The unit sits on `body` rather than `.prose` since 2026-10-12, so the page chrom
 
 ⚠ **Global CSS is in cascade layers; page-level stylesheets are not, so they win whatever their selector.** A component whose own stylesheet sets the same property as the rhythm keeps its own value, so each such component takes the line steps in its own file, with the old value as the fallback outside prose: `table.css` (cell and caption padding, band rules painted into the cells), `media-meta.css`, `activity.css`, `event-status.css`, `post.css` (the subtitle and the 16:9 featured image), and the two video-link components. The `--line` registration still works from inside a layer.
 
-⚠ **A length line-height inherits as a length.** Anything inside prose that sets its own font size without a line-height gets the body's line: the wiki's eyebrow and the entry footer's `text-step-min-*` lines came out at 1.9. They are on the small-text list now; a new small element inside an article needs the same.
+**A length line-height inherits as a length.** Anything inside prose that sets its own font size without a line-height gets the body's line: the wiki's eyebrow and the entry footer's `text-step-min-*` lines came out at 1.9. They are on the small-text list now; a new small element inside an article needs the same.
 
-⚠ **Inline code stretches its line.** `code`, `kbd`, `samp`, `sup` and `sub` are another font or size, and on a length line-height their inline boxes push the line box a fraction of a pixel taller. The wiki's own page was 17 of 91 blocks on the lattice until they were given `line-height: 0`; then 91 of 91.
+**Inline code stretches its line.** `code`, `kbd`, `samp`, `sup` and `sub` are another font or size, and on a length line-height their inline boxes push the line box a fraction of a pixel taller. The wiki's own page was 17 of 91 blocks on the lattice until they were given `line-height: 0`; then 91 of 91.
 
-⚠ **A code block inside a list item** keeps the browser's 1em above it, since a list item is not a flow container. It gets the paragraph gap instead. The wiki log's compact headings had their own leading, padding and border, and are on quarter lines in `wiki.css` now.
+**A code block inside a list item** keeps the browser's 1em above it, since a list item is not a flow container. It gets the paragraph gap instead. The wiki log's compact headings had their own leading, padding and border, and are on quarter lines in `wiki.css` now.
 
-⚠ **Components bring their own spacing.** The other post types surfaced the rest, each now on quarter lines: pills (the draft badge in the meta line, tags, genre chips, download buttons) snapped to the nearest quarter line, with wrapped rows a quarter line apart and a pill in a list item made a flex item, since its text line added 2px under it; the rating's 16px row of stars given a small-text line; lists of pills stripped of a utility's or the browser's own margin; the footnote list's 1em bottom margin; the activity stats, the event status badge and the subtitle under a title; the external-link arrow, once a 1em inline-block that stretched small-text lines by 0.75px, now an inline box on the prose's own line-height, which can't. Video embeds are 16:9, so the player pads itself down to the next quarter line with a percentage margin and the credit link sits a quarter line under it (the pad moved from the link onto the player on 2026-10-02, when the player went to popout width and stopped sharing the link's width); Chrome's 54px audio player is set to the nearest quarter line; a featured image is cropped to 16:9 whatever the file's own ratio, so it is padded as 16:9.
+**Components bring their own spacing.** The other post types surfaced the rest, each now on quarter lines: pills (the draft badge in the meta line, tags, genre chips, download buttons) snapped to the nearest quarter line, with wrapped rows a quarter line apart and a pill in a list item made a flex item, since its text line added 2px under it; the rating's 16px row of stars given a small-text line; lists of pills stripped of a utility's or the browser's own margin; the footnote list's 1em bottom margin; the activity stats, the event status badge and the subtitle under a title; the external-link arrow, once a 1em inline-block that stretched small-text lines by 0.75px, now an inline box on the prose's own line-height, which can't. Video embeds are 16:9, so the player pads itself down to the next quarter line with a percentage margin and the credit link sits a quarter line under it (the pad moved from the link onto the player on 2026-10-02, when the player went to popout width and stopped sharing the link's width); Chrome's 54px audio player is set to the nearest quarter line; a featured image is cropped to 16:9 whatever the file's own ratio, so it is padded as 16:9.
 
 Measured on 2026-10-01 after the fold, at 375px and 1360px with a headless sweep of 147 pages (every wiki page and article, two to four posts of each other type, every plain and listing page, and posts with webmentions): 291 of 294 clean. Every block lands on the lattice or follows an image, map or embed; the favicons page's icon grid shifts the text after it, and the style guide's smallest labels are loose at the widest step, since no quarter-line leading suits that size at both ends.
 
 The paragraph gap is three-quarters of a line, chosen over half a line on 2026-10-01: half a line kept the phone at today's 14px but made the space under a heading the same as the gap between paragraphs, so headings stopped sitting closer to their own text.
 
-⚠ The heading rules come last in the file. A heading's space above then wins over the space set by the element before it (a figure's line and a half, say), and the half line under a heading wins over the next element's own.
+The heading rules come last in the file. A heading's space above then wins over the space set by the element before it (a figure's line and a half, say), and the half line under a heading wins over the next element's own.
 
 ### On the design system page
 

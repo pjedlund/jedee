@@ -84,6 +84,8 @@
   // ⚠ The root stays light for the whole build — frame 0 is a light sun under it — so the dark pass only repaints the morph's paper, below.
   const pass = document.documentElement.dataset.theme;
   const probe = Object.assign(document.createElement('span'), { className: 'theme-toggle' });
+  // ⚠ The toggle's color transition would otherwise hand back the previous theme's color.
+  probe.style.transition = 'none';
   document.body.append(probe);
   const palette = theme => {
     document.documentElement.dataset.theme = theme;

@@ -64,7 +64,7 @@ tbody tr:nth-child(even) {
 
 A table with many columns, or almost any table on a phone, pushes the whole page sideways. The fix is to let the table scroll on its own inside a wrapper with `overflow-x: auto`.
 
-⚠ **That wrapper is inaccessible on its own.** A keyboard user cannot scroll a box they cannot focus, and a screen reader has nothing to announce. Roselli's pattern makes it focusable and a named landmark, and the three attributes only work together:
+**That wrapper is inaccessible on its own.** A keyboard user cannot scroll a box they cannot focus, and a screen reader has nothing to announce. Roselli's pattern makes it focusable and a named landmark, and the three attributes only work together:
 
 ```html
 <div class="table-wrapper" role="region" tabindex="0" aria-labelledby="trains">

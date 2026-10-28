@@ -19,7 +19,7 @@ Figure *width* is a separate choice. **Tabular** figures all share one width, so
 .prose table { font-variant-numeric: lining-nums tabular-nums; }
 ```
 
-⚠ `font-variant-numeric` is one property holding both choices, so a child that sets only `tabular-nums` also resets the figure style to lining. That is usually what a column wants, and it is also how a single keyword quietly undoes a parent's old-style setting.
+`font-variant-numeric` is one property holding both choices, so a child that sets only `tabular-nums` also resets the figure style to lining. That is usually what a column wants, and it is also how a single keyword quietly undoes a parent's old-style setting.
 
 ## Small caps
 
@@ -108,7 +108,7 @@ Four opt-in classes live in `global/utilities/numerals.css`: `.fraction`, `.slas
 
 - `.fraction` goes on the fraction alone: `<span class="fraction">3/4</span>`. Source Sans' `frac` changes every digit, full stop, comma and parenthesis it covers, so on a whole sentence it turned the closing full stop into a raised dot. It stays off by default, as the OpenType registry advises: none of the built site's digit–slash–digit sequences is a fraction ("12/13" widths, "206/207" characters).
 - `.slashed-zero` also sets lining figures, because the old-style zero has no slashed form.
-- ⚠ Three of the names are also Tailwind classes, and Tailwind's later layer replaced the whole value. Its `fontVariantNumeric` plugin is switched off; see [[Tailwind]].
+- Three of the names are also Tailwind classes, and Tailwind's later layer replaced the whole value. Its `fontVariantNumeric` plugin is switched off; see [[Tailwind]].
 
 ### Small caps
 
@@ -134,7 +134,7 @@ Footnote markers are bare superscript figures, drawn with `font-variant-position
 
 Ordinals follow Chicago: words up to one hundred ("the ninth time"), figures on the baseline above that. There is deliberately no `.ordinal` class.
 
-⚠ Source Sans' `ordn` raises every lowercase letter it covers, with no check for a preceding digit, so `font-variant-numeric: ordinal` on a sentence raises the whole sentence: the same trap as `frac`. If a raised suffix is ever wanted, put `font-variant-position: super` on a span around the suffix alone. The subset has superscript a–z, and the `--nums-*` slots stay untouched.
+Source Sans' `ordn` raises every lowercase letter it covers, with no check for a preceding digit, so `font-variant-numeric: ordinal` on a sentence raises the whole sentence: the same trap as `frac`. If a raised suffix is ever wanted, put `font-variant-position: super` on a span around the suffix alone. The subset has superscript a–z, and the `--nums-*` slots stay untouched.
 
 Older content was not swept for figure ordinals; there were four at the time of writing, two of them in clipped titles.
 
@@ -154,7 +154,7 @@ Paragraphs are separated by space, not indented, so Bringhurst's indent rule (2.
 
 A `subtitle:` in a post's front matter renders under the title in an `<hgroup>`, from `partials/entry-header.njk`, on every post type. The `<p>` sits outside `p-name`, so the microformats title stays the title alone; see [[Microformats]]. Subtitles are written in title case with short words lowercase, like the title.
 
-It is set in Source Sans italic at `--size-step-2`, in the headline color, balanced (`local/post.css`). Three serif versions came first; the italic sans read as a second voice rather than a smaller title. ⚠ Its `--flow-space` is set on the `<p>` itself: set on the `<hgroup>`, it lost to `.prose`'s larger space after a heading.
+It is set in Source Sans italic at `--size-step-2`, in the headline color, balanced (`local/post.css`). Three serif versions came first; the italic sans read as a second voice rather than a smaller title. Its `--flow-space` is set on the `<p>` itself: set on the `<hgroup>`, it lost to `.prose`'s larger space after a heading.
 
 Books have a Subtitle field in [[Sveltia CMS]]. Films don't, since Letterboxd has no subtitle for the Web Clipper to fill it from, but a film can still take `subtitle:` by hand.
 

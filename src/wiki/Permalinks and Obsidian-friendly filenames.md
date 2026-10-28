@@ -14,7 +14,7 @@ The posts folder is an Obsidian vault as well as an Eleventy source, and the two
 
 Eleven of the sixteen types use exactly this (eight in JSON, plus photo, recipe and video in their `.11tydata.js` — see [[Anatomy of a post type]]). `page.fileSlug` is the filename without its extension; `slugify` lowercases it, strips punctuation and diacritics, and joins words with hyphens. So the file keeps its Title Case, spaces and umlauts for Obsidian, and the URL comes out clean without anything being written twice.
 
-⚠ The `nice-permalinks` skill documents an `{{ id }}`-based pattern. It does not apply here — jedee posts carry no `id:` field, and `page.fileSlug` is the convention.
+The `nice-permalinks` skill documents an `{{ id }}`-based pattern. It does not apply here — jedee posts carry no `id:` field, and `page.fileSlug` is the convention.
 
 ## Four types take an override
 

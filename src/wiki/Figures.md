@@ -174,7 +174,7 @@ figure[data-wiki-mockup] > :not(figcaption) {
 }
 ```
 
-2rem is the popout gutter at full width, so on a wide screen the panel fills the popout figure exactly. ⚠ The cap at `--gap` keeps a phone from scrolling sideways; at 375px the panel reaches the screen edges. A feature figure spans its whole width instead and pads the shot by the same inset, since a shot that wide can't line up with the text anyway. Measured on [[The main menu]] on 2026-10-04: the shot and the paragraphs both start at x = 19, 22, 36, 48 and 199 for windows of 320, 375, 600, 900 and 1440px.
+2rem is the popout gutter at full width, so on a wide screen the panel fills the popout figure exactly. The cap at `--gap` keeps a phone from scrolling sideways; at 375px the panel reaches the screen edges. A feature figure spans its whole width instead and pads the shot by the same inset, since a shot that wide can't line up with the text anyway. Measured on [[The main menu]] on 2026-10-04: the shot and the paragraphs both start at x = 19, 22, 36, 48 and 199 for windows of 320, 375, 600, 900 and 1440px.
 
 ⚠ A mockup loads the site's compiled stylesheets by name, so splitting a stylesheet breaks the mockups that load it without an error: they keep the first file and lose the rest. The search and place-map mockups ran on half their CSS for a day after one such split, and it only showed when they were re-shot.
 

@@ -101,11 +101,11 @@ The fallback faces behind each are the metric-matched Georgia, Arial and Courier
 Left falling back on purpose:
 
 - **Emoji.** No text font has them, and the system emoji font is the right one.
-- **`⚠`**, on 50 wiki pages. It is in no Source font, so the wiki's own warning marker always comes from a system font. Decorative; left.
+- **`⚠`**, on most wiki pages. It is in no Source font, so the wiki's own warning marker always comes from a system font. Decorative; left.
 - **`⁂`, `❖`, `↩︎`** (the last is the footnote back-link). Also in no Source font.
 - **Code-block symbols** (`→ ← │ ⌄ ⚠`). The code font is a trimmed variable subset with no full variable source bundled; fixing it means downloading Source Code Pro's variable release first.
 
-Source Serif was deliberately kept small: the Latin-1 block was added and taken back out the same day. Add accented letters to it one at a time, when a heading actually needs one. ⚠ Add each one to the Bold Italic too: the two files share one character list, and a character in only one of them falls back in the other.
+Source Serif was deliberately kept small: the Latin-1 block was added and taken back out the same day. Add accented letters to it one at a time, when a heading actually needs one. Add each one to the Bold Italic too: the two files share one character list, and a character in only one of them falls back in the other.
 
 **Styles.** `body` set `font-synthesis: none` for one day, 2026-09-13 to 09-14. It came out again once the dev-server checker could *show* fakes instead. Refusing a fake turns a missing italic upright, so the emphasis is lost, and the Georgia and Arial fallbacks, loaded as Regular only, lost their bold while the web fonts loaded. `.small-caps` still refuses fake small caps on its own. Checking the shipped files against the CSS turned up two faux italics and no faux bold:
 
