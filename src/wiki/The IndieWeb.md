@@ -44,7 +44,7 @@ Taken together the criticism is not that the blocks are badly designed. It is th
 
 ## In jedee
 
-Every block above is wired, which places this site squarely on the far side of every barrier the criticism names.
+Every block above is wired here. That bears the criticism out rather than answering it: what it took is spelled out after the list.
 
 - **microformats2** on all sixteen post-type layouts, including the response types that carry `u-like-of` and `in-reply-to`.
 - **Webmentions received** through a hosted endpoint and fetched at build time, with Bridgy backfeed — see [[Webmentions]].
