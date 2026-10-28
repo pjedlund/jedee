@@ -58,7 +58,7 @@ function remToPx(v) {
 }
 
 export async function build() {
-	const [colors, fonts, spacing, textSizes, textLeading, textWeights, borderRadius, borderWidth, shadows, viewports, semanticColors, typography, buttonColors, megamenuColors] = await Promise.all([
+	const [colors, fonts, spacing, textSizes, textLeading, textWeights, borderRadius, borderWidth, shadows, viewports, semanticColors, typography, buttonColors, megamenuColors, audioPlayerColors, themeVisibility] = await Promise.all([
 		readJSON('colors.json'),
 		readJSON('fonts.json'),
 		readJSON('spacing.json'),
@@ -73,6 +73,8 @@ export async function build() {
 		readJSON('typography.json'),
 		readJSON('buttonColors.json'),
 		readJSON('megamenuColors.json'),
+		readJSON('audioPlayerColors.json'),
+		readJSON('themeVisibility.json'),
 	]);
 
 	const out = {};
@@ -124,8 +126,8 @@ export async function build() {
 	for (const [name, value] of Object.entries(semanticColors.themes?.dark ?? {})) {
 		setLeaf(themeDark, `color.${name}`, token(value, semanticType));
 	}
-	// Component colors (buttons, mega-menu). Names emitted verbatim — no color.* prefix — to match the bindings the Penpot components already carry. `core` goes to its own core set, `themes` holds the color-mix() results, flattened per theme.
-	for (const componentColors of [buttonColors, megamenuColors]) {
+	// Component colors (buttons, mega-menu, audio player) and the theme-visibility opacity switches. Names emitted verbatim — no color.* prefix — to match the bindings the Penpot components already carry. `core` goes to its own core set, `themes` holds the color-mix() results, flattened per theme.
+	for (const componentColors of [buttonColors, megamenuColors, audioPlayerColors, themeVisibility]) {
 		const componentType = componentColors.$type ?? 'color';
 		const coreSetName = componentColors.$penpotCoreSet;
 		if (coreSetName) {
