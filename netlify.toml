@@ -2,7 +2,7 @@
 package = "netlify-plugin-cache"
   [plugins.inputs]
   # .cache = the eleventy-fetch cache (remote cover images, webmentions). dist/assets/images = eleventy-img's optimized LOCAL output (activity race-map scans, photos): v7 skips the sharp work whenever the target file already exists on disk, so persisting this folder across deploys avoids re-optimizing ~83 MB of unchanged maps on every build. This only helps because the build below no longer wipes dist first — see the [build] command.
-  paths = [ ".cache", "dist/assets/images" ]
+  paths = [ ".cache", "dist/assets/images", "dist/img" ]
 
 [[headers]]
 for = "/*"
@@ -38,8 +38,8 @@ for = "/assets/scripts/components/*.js"
 
 [build]
   # build:11ty, NOT the full `build` script: `build` runs `clean` (rimraf dist) first, which would delete the image cache netlify-plugin-cache just restored. Netlify checks out a fresh tree each deploy, so there's no stale local dist to clean anyway — clean only matters for repeated LOCAL builds.
-  # ⚠ Netlify keeps dist/ between builds and takes header rules from a dist/netlify.toml if one exists, so delete any stale copy first.
-  command = "rm -f dist/netlify.toml && npm run build:11ty"
+  # ⚠ Netlify keeps dist/ between builds, so empty it except the two image caches, or deleted pages stay live and a stale dist/netlify.toml overrides the header rules.
+  command = "mkdir -p dist/assets && find dist -mindepth 1 -maxdepth 1 ! -name assets ! -name img -exec rm -rf {} + && find dist/assets -mindepth 1 -maxdepth 1 ! -name images -exec rm -rf {} + && npm run build:11ty"
   publish = "dist"
 
 # Secrets scanning: the photo static-map fetch (Geoapify) puts MAP_API_KEY in the request URL, and eleventy-fetch caches that URL verbatim under .cache/ (persisted across builds by netlify-plugin-cache above). The deployed output never contains the key, but Netlify scans build-generated files — so exclude the non-deployed cache, else the key trips Smart Detection / a secret-marked var fails the deploy. MAP_API_KEY itself stays in the Netlify UI (Builds scope), NOT here — this file is committed to git.
