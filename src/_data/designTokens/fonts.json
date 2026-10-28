@@ -11,7 +11,7 @@
     "penpot": "Source Sans 3"
   },
   "mono": {
-    "$value": ["Source Code Pro", "Source Code Pro Fallback", "Dank Mono", "Fira Code", "Fira Mono", "Menlo", "Consolas", "Monaco", "monospace"],
+    "$value": ["Source Code Pro", "Source Code Pro Fallback", "monospace"],
     "$description": "Source Code Pro with Courier New as fallback",
     "penpot": "Source Code Pro"
   }

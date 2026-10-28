@@ -12,6 +12,11 @@
   line-height: var(--leading-flat);
 }
 
+/* Source Code Pro sets wider and taller than the two text faces, so its specimen runs a step down. */
+.design-system .font[data-font='mono'] {
+  font-size: var(--size-step-min-1);
+}
+
 .design-system section {
   --region-space-bottom: var(--space-l-xl);
   --region-space-top: var(--space-l-xl);

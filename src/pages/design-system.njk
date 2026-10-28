@@ -108,7 +108,7 @@ colorGroups:
 
     <ul class="fonts flow">
       {%- for font in designTokens.fonts | dtcgItems -%}
-        <li class="font" style="font-family: var(--font-{{ font.name | slugify }})">
+        <li class="font" data-font="{{ font.name | slugify }}" style="font-family: var(--font-{{ font.name | slugify }})">
           <h4 style="font-family: var(--font-{{ font.name | slugify }})">{{ font.name }}</h4>
           <p>{{ font.description }}</p>
           <p><strong>Font Families</strong>: {{ font.value | join(', ') }}</p>

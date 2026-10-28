@@ -12,7 +12,7 @@ The reason to do it this way rather than write the custom properties by hand is 
 
 Andy Bell's argument for it is that Tailwind generates utilities **on demand**, where the earlier tools he used and wrote generated every utility up front and bloated the output. He is candid about the seam: routing the `:root` token block through `addComponents` so it lands on Tailwind's components layer is, in his words, "a bit of a hack". Both of the sources below are worth reading in full — his [A CSS project boilerplate](https://piccalil.li/blog/a-css-project-boilerplate/) (2024-02-12) is the detailed one, and Lene Saile's [What is Tailwind CSS doing here?](https://eleventy-excellent.netlify.app/blog/what-is-tailwind-css-doing-here/) (2023-11-30) is the short answer written for people who had just discovered their Tailwind classes did not work.
 
-This surprises people, which is why Eleventy Excellent ships [a post explaining it](https://eleventy-excellent.netlify.app/blog/what-is-tailwind-css-doing-here/): normal Tailwind classes do not work on a site built this way, and that looks like a broken install rather than a deliberate configuration.
+This surprises people, which is why Eleventy Excellent ships that post: normal Tailwind classes do not work on a site built this way, and that looks like a broken install rather than a deliberate configuration.
 
 ## What the configuration actually does
 
