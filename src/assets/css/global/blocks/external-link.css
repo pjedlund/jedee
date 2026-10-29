@@ -1,0 +1,32 @@
+/*
+EXTERNAL LINK
+A small ↗ after outbound text links in prose and on the design-system page; it is dim at rest and takes off up and to the right, in the link's hover orange, on hover. Internal links are relative (/about/), so they never match href^='http'. Decorative — links open in the same tab, so no extra announcement.
+`.no-indicator` opts a link out — use it for any link whose content isn't words (an image-only link would draw a stray arrow under the picture).
+*/
+:is(.prose, .design-system) a[href^='http']:not([href*='johanedlund.se']):not([href*='localhost']):not(.no-indicator)::after {
+  --external-lift: 0.15em; /* how far the arrow takes off on hover */
+  --external-top: 0.22em;
+
+  /* ⚠ An inline box holding a word joiner, not an empty inline-block: an atomic box can wrap alone onto the next line, the joiner glues the arrow to the link's last letter. ⚠ So no transform either; the take-off moves the mask instead. */
+  content: '\2060';
+  padding-inline: 0.44em var(--external-lift); /* ⚠ Start narrower than the 0.5em mask on purpose: it clips the SVG's blank left margin; below ~0.42em it clips the arrow. The end padding is the take-off room. */
+  margin-inline-end: calc(-0.06em - var(--external-lift)); /* Gives the take-off room back, and trims half the SVG's blank right margin so a following period sits close. */
+  background-color: color-mix(in oklab, currentColor 45%, transparent);
+  mask: url('/assets/images/template/external.svg') no-repeat right var(--external-lift) top var(--external-top) / 0.5em;
+  transition: background-color 0.2s ease-out;
+}
+
+:is(.prose, .design-system) a[href^='http']:hover::after {
+  background-color: var(--color-accent-orange);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :is(.prose, .design-system) a[href^='http']::after {
+    transition: background-color 0.2s ease-out, mask-position 0.3s var(--ease-out-quad);
+  }
+
+  :is(.prose, .design-system) a[href^='http']:hover::after {
+    mask-position: right 0 top calc(var(--external-top) - var(--external-lift));
+    transition-timing-function: ease-out, cubic-bezier(0.5, 0, 0.75, 0); /* eases in like a plane leaving the runway, lands softly on the way back */
+  }
+}
