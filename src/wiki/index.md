@@ -27,6 +27,7 @@ Each entry below says what a page covers and why you would open it. The traps an
 - [[Vertical rhythm]] — spacing a page in fractions of its body line, what it costs for images, tables and small text, its musical side, how Ariel Salminen's Scale.css, CUBE CSS, Every Layout and Eleventy Excellent handle it, and a quarter-line prototype on the style guide.
 - [[The theme toggle]] — one SVG sun masked into a moon, and the inline script that prevents a flash of the wrong theme.
 - [[Focus rings and paint containment]] — why an outline drawn outside its element disappears inside anything that clips.
+- [[Smooth scrolling]] — `scroll-behavior` for jump links, the `html:focus-within` version that keeps find-on-page instant, and why it needs focusable targets.
 - [[Breadcrumb]] — a trail of links in a labeled `nav`, the structured data that mirrors it, and keeping a header row on one line.
 - [[The main menu]] — a disclosure menu whose button is added by script, so the CSS has to detect its absence from the markup alone.
 - [[Viewport units]] — what `100vw` measures, why it is wider than the page when a scrollbar takes room, and why a headless test never shows it.
@@ -42,6 +43,7 @@ Each entry below says what a page covers and why you would open it. The traps an
 - [[Tooltips]] — the three kinds of tooltip, and when each one is honest.
 - [[Design token sync]] — generating a design tool's tokens from the code that owns them, what does not survive the trip, and switching non-color things with the theme.
 - [[Icons]] — outline versus filled icon sets, picking a set by how many of your icons it really has, inline SVG colored by `currentColor`, and the filled Phosphor set this site uses.
+- [[External-link icons]] — the arrow after an outbound link: when to announce it, drawing it as a mask so it can change color, and moving it without letting it wrap alone.
 
 ## Images & media
 

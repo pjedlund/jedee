@@ -5,6 +5,14 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-10-29] ingest | Smooth scrolling
+
+New page, from the session that found the design-system page's section buttons jumping instead of scrolling. Covers `scroll-behavior`, Christian Schaefer's `html:focus-within` find-on-page fix as Chris Coyier published it, the measurement showing it never fires for a jump link to a plain heading in Chrome, and the `tabindex="-1"` fix now on the design-system page's eight section headings. Links nothing yet; [[External-link icons]] came from the same session.
+
+## [2026-10-29] ingest | External-link icons
+
+New page, from the session that gave the outbound-link arrow a dim resting color, a hover take-off in the link's orange, and a place on the design-system page. Covers the SVG-as-mask technique, why the arrow moves its mask rather than taking a transform, and the `:not()` specificity trap fixed with `:where()`. Says what is Eleventy Excellent's site-wide version and what jedee changed. Links [[Abbreviations]] and [[Choreographing CSS animations]].
+
 ## [2026-10-28] ingest | Design token sync
 
 Enriched from a Penpot MCP session: the Penpot library checked against `/design-system/` (162 of 176 tokens matched). Adds a `ch` value as one px token per size it is used at, with jedee's three `--tracking-wide` tokens and the new `type.label` and `type.table.header`; a section on switching things no token can recolor (stacked light and dark images, Chrome's audio player) through 1/0 opacity tokens per theme set; and the 85 bindings a "refresh" switched off because the library's Dark theme was on. No new links.
