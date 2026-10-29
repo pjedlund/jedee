@@ -4,7 +4,7 @@ A small ↗ after outbound text links in prose and on the design-system page; it
 `.no-indicator` opts a link out — use it for any link whose content isn't words (an image-only link would draw a stray arrow under the picture).
 */
 :is(.prose, .design-system) a[href^='http']:where(:not([href*='johanedlund.se'], [href*='localhost'], .no-indicator))::after { /* ⚠ :where() keeps the exclusions out of specificity, or this rule beats the hover and motion rules below */
-  --external-lift: 0.15em; /* how far the arrow takes off on hover */
+  --external-lift: 0.1em; /* how far the arrow takes off on hover */
   --external-top: 0.22em;
 
   /* ⚠ An inline box holding a word joiner, not an empty inline-block: an atomic box can wrap alone onto the next line, the joiner glues the arrow to the link's last letter. ⚠ So no transform either; the take-off moves the mask instead. */
