@@ -1,4 +1,4 @@
-// <place-map> — upgrades a slotted static map into a live, maximizable MapLibre map drawn from our own Protomaps tiles. esbuild bundles MapLibre into this file, so nothing loads until the is-land hydrates on idle. The inline map never wheel-zooms, so the page keeps scrolling; the maximize button grows THE SAME instance into a modal overlay where wheel + pinch turn on.
+// <place-map> — fills a slotted empty box with a live, maximizable MapLibre map drawn from our own Protomaps tiles. esbuild bundles MapLibre into this file, so nothing loads until the is-land hydrates on idle. The inline map never wheel-zooms, so the page keeps scrolling; the maximize button grows THE SAME instance into a modal overlay where wheel + pinch turn on.
 // Three modes, decided by the slotted markup: single pin (data-lat/data-lon on the element), places (a slotted [data-place-list] whose [data-lat] rows are the data AND the no-JS path), route (a slotted GeoJSON LineString).
 import maplibregl from 'maplibre-gl';
 import { Protocol } from 'pmtiles';
@@ -307,7 +307,7 @@ class PlaceMap extends HTMLElement {
     else this.initSinglePin();
   }
 
-  // The live inline slot; its aspect-ratio holds the box, so moving the canvas to the overlay never shifts the page. The activity index renders the box server-side and it's adopted here.
+  // The live inline slot; its aspect-ratio holds the box, so moving the canvas to the overlay never shifts the page. Every page renders the box server-side and it's adopted here.
   buildBox() {
     this.box = this.querySelector('[data-place-map-box]');
     const adopted = Boolean(this.box);
@@ -337,7 +337,7 @@ class PlaceMap extends HTMLElement {
   }
 
   initSinglePin() {
-    if (!this.dataset.lat) return; // no coords → leave the static map
+    if (!this.dataset.lat) return; // no coords → leave the empty box
     const lat = Number(this.dataset.lat);
     const lon = Number(this.dataset.lon);
     if (!Number.isFinite(lat) || !Number.isFinite(lon)) return;

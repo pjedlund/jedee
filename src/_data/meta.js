@@ -122,8 +122,6 @@ export const indieweb = {
 export const webmentions = {
   fallbackAvatar: '/assets/images/template/webmention-avatar.svg'
 };
-// Geoapify static maps for photo posts, fetched and self-hosted at build time, so the key never reaches the page. Set MAP_API_KEY (.env + Netlify) to activate; until then the place name links to OpenStreetMap instead.
-export const mapApiKey = process.env.MAP_API_KEY || '';
 export const greenweb = {
   // https://carbontxt.org/
   disclosures: [

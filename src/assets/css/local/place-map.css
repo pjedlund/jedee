@@ -1,6 +1,6 @@
 /*
 PLACE-MAP
-A reusable MapLibre map drawn from our own Protomaps tiles, authored like an image (place-map.webc + place-map.js). The slotted static <a><img> is the no-JS fallback; on idle the JS swaps in a live map (drag + zoom buttons; wheel/pinch off so the page keeps scrolling). The maximize button grows THE SAME map into a modal overlay where wheel + pinch turn on.
+A reusable MapLibre map drawn from our own Protomaps tiles, authored like an image (place-map.webc + place-map.js). Each page renders an empty box; once it scrolls into view the JS fills it with a live map (drag + zoom buttons; wheel/pinch off so the page keeps scrolling). The maximize button grows THE SAME map into a modal overlay where wheel + pinch turn on.
 MapLibre's stylesheet loads after this bundle, so its overrides are scoped under the [data-place-map-canvas] hook (set in JS) to win on specificity instead of !important.
 */
 
@@ -8,58 +8,13 @@ place-map {
   display: block;
 }
 
-/* static fallback (no-JS / pre-hydration): a self-hosted map image linking to OSM */
-.place-map-static {
-  display: block;
-}
-.place-map-static :is(img, picture) {
-  display: block;
-  inline-size: 100%;
-  block-size: auto;
-}
-/* ⚠ --place-map-ratio must match .place-map-live's, or the swap to the live map shifts layout; the fetched image is 16:9, so other ratios crop it. */
-.place-map-static img {
-  aspect-ratio: var(--place-map-ratio, 16 / 9);
-  --img-ratio: calc(1 / (var(--place-map-ratio, 16 / 9))); /* the prose rhythm pads by this, not the fetched image's own ratio */
-  object-fit: cover;
-  border-radius: var(--border-radius-small);
-  box-shadow: var(--shadow-on-page);
-}
-/* One static map per theme (partials/place-map.njk), so dark never flashes the light map before the live one loads. ⚠ display:none also keeps the hidden one's lazy image from downloading — with JavaScript off, Chrome turns lazy loading off and fetches both. */
-.place-map-static .place-map-static-dark {
-  display: none;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) .place-map-static .place-map-static-light {
-    display: none;
-  }
-
-  :root:not([data-theme='light']) .place-map-static .place-map-static-dark {
-    display: block;
-  }
-}
-
-:root[data-theme='dark'] .place-map-static .place-map-static-light {
-  display: none;
-}
-
-:root[data-theme='dark'] .place-map-static .place-map-static-dark {
-  display: block;
-}
-
-/* once the live map is in, drop the static fallback */
-place-map[data-map-ready] > .place-map-static {
-  display: none;
-}
-
-/* Whatever follows the map inside <place-map> — the activities table here — needs air, or the map sits straight on the table's top rule. ⚠ :not(script) — on an activity page the next sibling is the route GeoJSON, and display:block prints it as text. */
-place-map > :is(.place-map-live, .place-map-static) + :not(script) {
+/* Whatever follows the map inside <place-map> — the activities table here — needs air, or the map sits straight on the table's top rule. ⚠ :not(script, link) — the next sibling can be the route GeoJSON (display:block prints it as text) or the island's injected stylesheet (a phantom gap). */
+place-map > .place-map-live + :not(script, link) {
   display: block;
   margin-block-start: var(--space-l);
 }
 
-/* Live inline map. Same ratio as the static fallback so the swap doesn't shift layout, and the box keeps its height when the canvas moves out to the overlay. position:relative anchors the maximize button. */
+/* Live inline map. Rendered server-side so its ratio holds the space from first paint, and the box keeps its height when the canvas moves out to the overlay. position:relative anchors the maximize button. */
 .place-map-live {
   position: relative;
   aspect-ratio: var(--place-map-ratio, 16 / 9);
@@ -69,6 +24,9 @@ place-map > :is(.place-map-live, .place-map-static) + :not(script) {
   background: var(--map-park); /* pre-tile surface: the forest green */
   overflow: hidden;
   isolation: isolate;
+  /* Pads the box down to the next quarter line, as prose-rhythm.css does for images; a % margin measures the box's own column. */
+  --place-map-block-size: calc(100% / (var(--place-map-ratio, 16 / 9)));
+  margin-block-end: calc(round(up, var(--place-map-block-size), var(--line-quarter, 1px)) - var(--place-map-block-size));
 }
 .place-map-canvas {
   block-size: 100%;

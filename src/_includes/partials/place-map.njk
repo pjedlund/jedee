@@ -1,15 +1,4 @@
-{# Static map for a post's location, linked to OpenStreetMap; the no-JS fallback for <place-map>. Expects mapLat, mapLon, meta.mapApiKey; optionally mapZoom, mapPlace, mapSubject (the alt text's "where this ___"). #}
-{# ⚠ A plain Nunjucks <img>, never {% image %} or WebC: the image transform runs before WebC, so only this gets self-hosted. #}
-{# ⚠ `src | safe` keeps the URL's literal `&` (escaped, the fetch 404s and fails the build); `eleventy:optional` turns a failed fetch into a placeholder. #}
-{%- set mz = mapZoom or 13 -%}
-{%- set mapSubject = mapSubject or "this was recorded" -%}
-{%- set center = mapLon ~ "," ~ mapLat -%}
-{# Two styles, one per theme (place-map.css shows the right one): positron (light grey) and dark-matter. Marker = --color-accent-orange (#d0621e). #}
-{%- set mapQuery = "&width=1280&height=720&center=lonlat:" ~ center ~ "&zoom=" ~ mz ~ "&marker=lonlat:" ~ center ~ ";type:material;color:%23d0621e;size:large&apiKey=" ~ meta.mapApiKey -%}
-{%- set mapSrc = "https://maps.geoapify.com/v1/staticmap?style=positron" ~ mapQuery -%}
-{%- set mapSrcDark = "https://maps.geoapify.com/v1/staticmap?style=dark-matter" ~ mapQuery -%}
-{%- set mapOsm = "https://www.openstreetmap.org/?mlat=" ~ mapLat ~ "&mlon=" ~ mapLon ~ "#map=" ~ mz ~ "/" ~ mapLat ~ "/" ~ mapLon -%}
-<a class="place-map-static no-indicator" href="{{ mapOsm }}" target="_blank" rel="noopener">
-  <img class="place-map-static-light" eleventy:optional="placeholder" src="{{ mapSrc | safe }}" alt="Map showing where {{ mapSubject }}{% if mapPlace %}, near {{ mapPlace }}{% endif %}" loading="lazy" eleventy:widths="640,1280" sizes="(min-width: 82rem) 72rem, 100vw">
-  <img class="place-map-static-dark" eleventy:optional="placeholder" src="{{ mapSrcDark | safe }}" alt="Map showing where {{ mapSubject }}{% if mapPlace %}, near {{ mapPlace }}{% endif %}" loading="lazy" eleventy:widths="640,1280" sizes="(min-width: 82rem) 72rem, 100vw">
-</a>
+{# Empty map box for a post's location, rendered so its aspect-ratio holds the space from first paint; place-map.js adopts it and starts the preloader. Expects mapPlace (optional). No-JS visitors get the place name's OpenStreetMap link in the meta line instead. #}
+<div class="place-map-live" data-place-map-box>
+  <p class="place-map-pending">Map of {{ mapPlace or "this place" }}</p>
+</div>

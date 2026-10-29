@@ -13,7 +13,7 @@ Two properties of this model shape everything else. The build machine starts cle
 
 **The build command is `npm run build:11ty`, not `npm run build`.** `build` starts by deleting `dist/`, which on Netlify would throw away the optimized images the cache plugin has just restored into it. A fresh checkout has no stale `dist/` to clean, so the step is only useful for repeated builds on a laptop. The Node version comes from `.nvmrc`.
 
-**The cache plugin carries two folders between deploys**: `.cache/` (eleventy-fetch's downloads — remote covers, webmentions, the static maps) and `dist/assets/images/` (eleventy-img's output, which it skips re-encoding when the file already exists). [[Three things called cache]] covers this cache next to the browser's and the service worker's, including why `.cache/` is excluded from Netlify's secret scanning: the static-map URLs stored there carry the map API key.
+**The cache plugin carries two folders between deploys**: `.cache/` (eleventy-fetch's downloads — remote covers and webmentions) and `dist/assets/images/` (eleventy-img's output, which it skips re-encoding when the file already exists). [[Three things called cache]] covers this cache next to the browser's and the service worker's, including why `.cache/` is excluded from Netlify's secret scanning: the retired static-map URLs still stored there carry the map API key.
 
 **Headers.** Besides the security headers on `/*`, `netlify.toml` sets caching per path:
 
