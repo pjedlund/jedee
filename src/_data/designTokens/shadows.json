@@ -1,6 +1,6 @@
 {
   "$type": "shadow",
-  "$description": "The site's shadow recipes, stored as layers because that is Penpot's own shape — offsetX / offsetY / blur / spread / color, with 8-digit hex so the alpha travels. panel/popup/chip are two-layer (tight contact plus wide soft); `panel` lifts the mega-menu; `popup` is the same recipe scaled down for the place-map popup and tooltips; `chip` is smaller again, for inline code. `thumb` is Tobias Ahlin's five equal layers (1–16px) for images and covers lying on the page, tinted blue-gray in light; `thumb-cast` is the same five layers for an object lit from the top left, falling right by half the drop and stronger in light (the pamphlet; its dark twin equals thumb-dark); picked in _local/design/Reference - Shadow lab. All go deeper on dark. tailwind.config.js composes the layers into --box-shadow-*; build-penpot-tokens.js emits each into theme/light and its -dark twin into theme/dark under the same name.",
+  "$description": "The site's shadow recipes, stored as layers because that is Penpot's own shape — offsetX / offsetY / blur / spread / color, with 8-digit hex so the alpha travels. panel/popup/chip are two-layer (tight contact plus wide soft); `panel` lifts the mega-menu; `popup` is the same recipe scaled down for the place-map popup and tooltips; `chip` is smaller again, for inline code. `thumb` is Tobias Ahlin's five equal layers (1–16px) for images and covers lying on the page, tinted blue-gray in light; `thumb-cast` is the same five layers for an object lit from the top left, falling right by half the drop and stronger in light (the pamphlet; its dark twin equals thumb-dark); `avatar` is thumb cut to its three smallest layers (reach 4px), a lower lift for the webmention facepile; picked in _local/design/Reference - Shadow lab. All go deeper on dark. tailwind.config.js composes the layers into --box-shadow-*; build-penpot-tokens.js emits each into theme/light and its -dark twin into theme/dark under the same name.",
   "panel": {
     "$value": [
       {"offsetX": "0", "offsetY": "2", "blur": "6", "spread": "-4", "color": "#0000000F"},
@@ -71,6 +71,20 @@
       {"offsetX": "0", "offsetY": "4", "blur": "4", "spread": "0", "color": "#0000002E"},
       {"offsetX": "0", "offsetY": "8", "blur": "8", "spread": "0", "color": "#0000002E"},
       {"offsetX": "0", "offsetY": "16", "blur": "16", "spread": "0", "color": "#0000002E"}
+    ]
+  },
+  "avatar": {
+    "$value": [
+      {"offsetX": "0", "offsetY": "1", "blur": "1", "spread": "0", "color": "#41495813"},
+      {"offsetX": "0", "offsetY": "2", "blur": "2", "spread": "0", "color": "#41495813"},
+      {"offsetX": "0", "offsetY": "4", "blur": "4", "spread": "0", "color": "#41495813"}
+    ]
+  },
+  "avatar-dark": {
+    "$value": [
+      {"offsetX": "0", "offsetY": "1", "blur": "1", "spread": "0", "color": "#0000002E"},
+      {"offsetX": "0", "offsetY": "2", "blur": "2", "spread": "0", "color": "#0000002E"},
+      {"offsetX": "0", "offsetY": "4", "blur": "4", "spread": "0", "color": "#0000002E"}
     ]
   }
 }
