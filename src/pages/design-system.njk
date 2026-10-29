@@ -101,7 +101,8 @@ colorGroups:
   </header>
   <header class="part | flow region">
     <p class="part-number">01</p>
-    <h2 id="typography">Typography</h2>
+    {# ⚠ tabindex="-1" on each section heading lets a jump link focus it: that is what turns on the smooth scroll (html:focus-within in reset.css) and moves keyboard focus to the section. #}
+    <h2 id="typography" tabindex="-1">Typography</h2>
   </header>
   <section class="fonts | flow region">
     <h3 class="heading-line">Fonts</h3>
@@ -328,7 +329,7 @@ colorGroups:
   </section>
   <header class="part | flow region">
     <p class="part-number">02</p>
-    <h2 id="links">Links and buttons</h2>
+    <h2 id="links" tabindex="-1">Links and buttons</h2>
   </header>
   <section class="flow region region-space-m">
     <h3 class="heading-line">Buttons</h3>
@@ -364,7 +365,7 @@ colorGroups:
   </section>
   <header class="part | flow region">
     <p class="part-number">03</p>
-    <h2 id="color">Color</h2>
+    <h2 id="color" tabindex="-1">Color</h2>
   </header>
   <div class="full colors | section">
     <section class="section__inner wrapper flow region" aria-labelledby="color">
@@ -447,7 +448,7 @@ colorGroups:
   </div>
   <header class="part | flow region">
     <p class="part-number">04</p>
-    <h2 id="grid">Grid</h2>
+    <h2 id="grid" tabindex="-1">Grid</h2>
   </header>
   <section class="flow region">
     <h3 class="heading-line">Columns</h3>
@@ -473,7 +474,7 @@ colorGroups:
 
   <header class="part | flow region">
     <p class="part-number">05</p>
-    <h2 id="spacing">Spacing</h2>
+    <h2 id="spacing" tabindex="-1">Spacing</h2>
   </header>
   <section class="spacing | wrapper-pass flow region">
     <h3 class="heading-line">Scale</h3>
@@ -515,7 +516,7 @@ colorGroups:
   </section>
   <header class="part | flow region">
     <p class="part-number">06</p>
-    <h2 id="icons">Icons</h2>
+    <h2 id="icons" tabindex="-1">Icons</h2>
   </header>
   <section class="flow region">
     <h3 class="heading-line">Post types</h3>
@@ -545,7 +546,7 @@ colorGroups:
   </section>
   <header class="part | flow region">
     <p class="part-number">07</p>
-    <h2 id="patterns">Patterns</h2>
+    <h2 id="patterns" tabindex="-1">Patterns</h2>
   </header>
   <section class="flow region">
     <h3 class="heading-line">Meta line</h3>
@@ -603,7 +604,7 @@ colorGroups:
 
   <header class="part | flow region">
     <p class="part-number">08</p>
-    <h2 id="tokens">Tokens</h2>
+    <h2 id="tokens" tabindex="-1">Tokens</h2>
   </header>
   <section class="flow region">
     <p>Every value on this page starts in a design token file, in the <a href="https://www.designtokens.org/">W3C design tokens format</a>. The build turns them into the CSS custom properties the site uses, a token file for Penpot, and <code>DESIGN.md</code>, a written summary for people and tools.</p>
