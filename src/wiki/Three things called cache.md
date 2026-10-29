@@ -1,7 +1,7 @@
 ---
 description: "The unrelated stores that share the name cache — build, browser, service worker — which of them ever reach a visitor, and jedee's inlining approach to cache-busting."
 date: 2026-07-31
-updated: 2026-10-27
+updated: 2026-10-29
 ---
 
 *Cache* is among the most overloaded words in web development. On a single site it can name several unrelated stores, living in different places, owned by different parties and cleared in completely different ways. Conflating them makes debugging miserable, because "clear the cache" then has several possible meanings and usually only one of them is the one that would help.
@@ -36,9 +36,9 @@ package = "netlify-plugin-cache"
   paths = [ ".cache", "dist/assets/images" ]
 ```
 
-`.cache/` is `@11ty/eleventy-fetch`'s store. Three build steps fill it: remote cover images pulled in and self-hosted by the image transform (see [[Self-hosting remote images at build time]]), webmentions fetched by `src/_data/webmentions.js`, and a static map image per photo post from Geoapify. The second path, `dist/assets/images/`, is eleventy-img's output for local images, which it skips re-encoding when the file already exists; see [[Netlify]].
+`.cache/` is `@11ty/eleventy-fetch`'s store. Two build steps fill it: remote cover images pulled in and self-hosted by the image transform (see [[Self-hosting remote images at build time]]), and webmentions fetched by `src/_data/webmentions.js`. Until 2026-10-29 a third filled it too: a static map picture per photo and audio post from Geoapify. The second path, `dist/assets/images/`, is eleventy-img's output for local images, which it skips re-encoding when the file already exists; see [[Netlify]].
 
-**The cache is excluded from Netlify's secret scanning, and it has to be.** The Geoapify URL carries `MAP_API_KEY` in its query string, and eleventy-fetch stores request URLs verbatim. Netlify scans build-generated files for leaked secrets and would flag it:
+**The cache is excluded from Netlify's secret scanning.** The old Geoapify URLs carry `MAP_API_KEY` in their query string, eleventy-fetch stores request URLs verbatim, and the persisted cache keeps those entries after the maps were retired. Netlify scans build-generated files for leaked secrets and would flag them:
 
 ```toml
 [build.environment]

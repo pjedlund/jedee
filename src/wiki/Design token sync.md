@@ -50,7 +50,7 @@ A design tool's color token holds a color. It does not hold a *calculation* over
 
 ## A thing no token can recolor
 
-Some things on a page change between themes without being a color at all. A static map is two different images; a native `<audio>` player is drawn by the browser, which picks its own light or dark chrome from `color-scheme`. The site switches them with `<picture>` and `prefers-color-scheme`, or leaves them to the browser. A design tool's theme only swaps token values, so neither has anything to bind to.
+Some things on a page change between themes without being a color at all. A map picture in the design file is two different images; a native `<audio>` player is drawn by the browser, which picks its own light or dark chrome from `color-scheme`. The site switches them with `<picture>` and `prefers-color-scheme`, or leaves them to the browser. A design tool's theme only swaps token values, so neither has anything to bind to.
 
 **Opacity tokens switch them.** Stack a light and a dark version, and bind each one's layer opacity to an opacity token that is `1` in one theme set and `0` in the other: `visibility.light-only` (1 in light, 0 in dark) and `visibility.dark-only` (the reverse). Switching the tool's theme then shows exactly one of the pair, with nothing to toggle by hand. Browser chrome that is a flat color can instead get ordinary color tokens sampled from the browser in each theme. These are design-tool-only tokens: no stylesheet reads them, so they need a source in the repo for the same reason as any other hand-made token — the next import deletes them otherwise.
 

@@ -1,7 +1,7 @@
 ---
 description: "The MapLibre map component, drawn from jedee's own Protomaps tiles, that upgrades server-rendered location data into a live map, and its three modes — single pin, a list of places, and a recorded route line."
 date: 2026-08-11
-updated: 2026-10-28
+updated: 2026-10-29
 ---
 
 An interactive web map is a JavaScript widget: a library like [Leaflet](https://leafletjs.com) or [MapLibre](https://maplibre.org) draws tiled imagery and vector shapes onto a scrollable canvas. That means it does nothing without JavaScript, and its keyboard and screen-reader story is often poor. The durable way to ship one is progressive enhancement — server-render the underlying data as ordinary HTML that stands on its own (a list of places with a link each, or a static map image), then let JavaScript find that markup and grow the live map above it. The HTML is the answer for no-JS visitors and assistive tech; the map is a convenience layered on top.
@@ -24,7 +24,7 @@ else if (placeList) this.initPlaces(placeList);
 else this.initSinglePin();
 ```
 
-- **Single pin** (photo and audio pages) — `data-lat`/`data-lon` on the element, with a static Geoapify map as the slotted fallback: one `<a>` holding two images, positron for the light theme and dark-matter for the dark, of which `place-map.css` shows the one for the current theme (since 2026-10-26). Both layouts put the map at feature width in a 2:1 frame by wrapping it in a `<div class="feature">` that sets `--place-map-ratio: 2 / 1`, not through `@breakout`.
+- **Single pin** (photo and audio pages) — `data-lat`/`data-lon` on the element, with an empty `.place-map-live` box slotted in, as on the other two modes. Until 2026-10-29 the slot held a static Geoapify picture of the map instead; it looked nothing like the live map (grey roads, no parks), and the preloader covers the wait anyway. No-JS visitors get the place name in the meta line, which links to OpenStreetMap. Both layouts put the map at feature width in a 2:1 frame by wrapping it in a `<div class="feature">` that sets `--place-map-ratio: 2 / 1`, not through `@breakout`.
 - **Places** (the activity index) — a slotted `[data-place-list]`: since 2026-09-15 the activities table, one `<tr data-lat data-lon>` per located activity, each dot named and linked from the row's first link ([[Tables]]). The table *is* the data source and the no-JS / screen-reader path: map markers have poor keyboard and SR handling (Leaflet's were broken upstream; MapLibre's dots are painted on a canvas and not focusable at all), so nobody is forced through the map to reach a post. JavaScript reads the rows that carry coordinates and drops one dot each into the box above; rows without coordinates stay in the table, unmapped. Each row's `data-activity` sets a `--place-color` in `place-map-places.css`, from the type's `--color-activity-*` token (see below), resolved once per distinct value and shared by every row with that color: orienteering orange, hikes `green-vivid`, runs `blue-vivid`. Resolving it once per row forced 280 page layouts and froze the page for over a second ([[Forced layout]]).
 
   This mode used to group the list by activity type, with the group headings upgraded into filter toggles and mirrored as chips on the map surface. All of that came out on 2026-08-15, when the page became a single chronological index: the grouping was the only thing standing between the reader and a plain newest-first list of everything. Two lessons stayed behind. First, **reserve the map's space server-side** — the box was built and prepended on idle, so the whole page dropped by 16:9-of-the-column a second after paint; rendering an empty `.place-map-live` in the markup and having `buildBox()` adopt it takes the shift to zero. Second, **beware the double reverse**: the collection was already newest-first from `byCategory`, and the `located` filter reversed it again, so the visible list ran oldest-first for months without anyone noticing.
@@ -59,8 +59,8 @@ It takes `page.inputPath`, **not** `page.fileSlug`. Eleventy strips a leading da
 ```njk
 {% set routeJson = page.inputPath | routeGeoJSON %}
 {% if routeJson %}
-  <place-map @breakout="popout" @place="this route" @activity="{{ activityType | slugify }}">
-    <div class="place-map-live" data-place-map-box>
+  <place-map @breakout="feature" @place="this route" @activity="{{ activityType | slugify }}">
+    <div class="place-map-live" data-place-map-box style="--place-map-ratio: 2 / 1">
       <p class="place-map-pending">Map of this route</p>
     </div>
     <script type="application/json" data-route>{{ routeJson | safe }}</script>
@@ -85,9 +85,9 @@ The no-JS answer for a route is the honest one: no map, but the stats and the **
 
 ### Widening the map: the breakout must go on the `<is-land>`
 
-The route map sits one step wider than the prose column — the `.popout` [[Layout breakouts|breakout]] — so the track has room to read. Getting the breakout class onto the right element is the trap. `<place-map>` is a WebC component whose template is `<is-land on:visible on:idle><place-map webc:root webc:keep>…`. Because `webc:root` is on the **inner** `<place-map>`, any attribute on the invocation (`class="popout"`) merges onto that inner element — which is a grid *grand*child (the `<is-land>` wraps it), and breakout classes only work on a direct grid child. So a class on the invocation silently does nothing; the map stays at content width.
+The route map sits at `.feature` width — two steps wider than the prose column, see [[Layout breakouts]] — in the same 2:1 panoramic frame as the photo and audio location maps, set by `--place-map-ratio: 2 / 1` on the box (changed from popout at 16:9 on 2026-10-27). Getting the breakout class onto the right element is the trap. `<place-map>` is a WebC component whose template is `<is-land on:visible on:idle><place-map webc:root webc:keep>…`. Because `webc:root` is on the **inner** `<place-map>`, any attribute on the invocation (`class="popout"`) merges onto that inner element — which is a grid *grand*child (the `<is-land>` wraps it), and breakout classes only work on a direct grid child. So a class on the invocation silently does nothing; the map stays at content width.
 
-The fix routes the class onto the `<is-land>` itself via a prop: the component takes `:class="breakout || ''"` on its `<is-land>`, and `activity.njk` passes `@breakout="popout"`. Two details that bite: the `|| ''` guard is load-bearing — a bare `:class="breakout"` throws `Cannot read properties of undefined (reading 'toString')` at build time for every caller that omits the prop (the places index, the single-pin photo maps), and `|| false` renders a literal `class="false"` because WebC stringifies a falsy `:class` rather than dropping it; only `|| ''` cleanly omits the attribute. The breakout also collapses back to content width on narrow screens automatically — that is the `.wrapper` grid working as designed, not a bug.
+The fix routes the class onto the `<is-land>` itself via a prop: the component takes `:class="breakout || ''"` on its `<is-land>`, and `activity.njk` passes `@breakout="feature"`. Two details that bite: the `|| ''` guard is load-bearing — a bare `:class="breakout"` throws `Cannot read properties of undefined (reading 'toString')` at build time for every caller that omits the prop (the places index, the single-pin photo maps), and `|| false` renders a literal `class="false"` because WebC stringifies a falsy `:class` rather than dropping it; only `|| ''` cleanly omits the attribute. The breakout also collapses back to content width on narrow screens automatically — that is the `.wrapper` grid working as designed, not a bug.
 
 ### A `<script>` is only hidden by a default, and a default is easy to beat
 
@@ -96,13 +96,13 @@ The route JSON is slotted into the component as an ordinary `<script type="appli
 That is what happened here. The component's stylesheet gives whatever follows the map some air:
 
 ```css
-place-map > :is(.place-map-live, .place-map-static) + * {
+place-map > .place-map-live + * {
   display: block;
   margin-block-start: var(--space-l);
 }
 ```
 
-The `display: block` is deliberate: on `/activities/` the element after the map is `<sortable-table>`, an unregistered custom element, so it is `display: inline` by default and would ignore `margin-block-start` entirely. On an activity page the element after the map is the route script instead — same selector, same rule — and about 4 kB of coordinates printed under the map in the body text. Narrowed to `+ :not(script)`.
+The `display: block` is deliberate: on `/activities/` the element after the map is `<sortable-table>`, an unregistered custom element, so it is `display: inline` by default and would ignore `margin-block-start` entirely. On an activity page the element after the map is the route script instead — same selector, same rule — and about 4 kB of coordinates printed under the map in the body text. Narrowed to `+ :not(script)`, and on 2026-10-29 to `+ :not(script, link)`: once the single-pin maps lost their static picture, the stylesheet `<link>` that the island injects became the next sibling, and its margin left a 26px gap under the map.
 
 Two things worth keeping. The first is that `display: block` on a `+ *` selector is a wider hazard than it looks: the sibling combinator picks the next *element*, and `<script>`, `<template>`, `<style>` and `<link>` are all elements that happen to be hidden only by a default. The second is a small relief — `:not(script)` takes the specificity of its argument, a type selector, so the fix raised the selector from (0,1,1) to (0,1,2) rather than lowering it, and nothing that had been winning against it started losing.
 
