@@ -11,7 +11,7 @@ Markup: partials/book.njk, placed first inside the block of text it floats in â€
 }
 
 .book {
-  --book-width: 15rem;
+  --book-width: 13rem;
   --book-ratio: 2 / 3;
   --book-depth: 0.18; /* thickness as a share of the width; about a 400-page hardcover */
   --book-back: #3a3631;
@@ -27,10 +27,10 @@ Markup: partials/book.njk, placed first inside the block of text it floats in â€
   container-type: inline-size;
 }
 
-/* the pamphlet's measures: 3 of the prose grid's 8 columns, one gutter from the text, and only while the text keeps 28rem; below that it stands above the text */
-@container book-flow (inline-size >= 45.66rem) {
+/* the pamphlet's measures: 2 of the prose grid's 8 columns, one gutter from the text, and only while the text keeps 28rem; below that it stands above the text */
+@container book-flow (inline-size >= 42.32rem) {
   .book {
-    --book-width: calc(100% * 22.75 / 64);
+    --book-width: max(calc(100% * 14.5 / 64), 13rem);
 
     float: inline-end;
     margin-inline-start: calc(100% * 2 / 64);
