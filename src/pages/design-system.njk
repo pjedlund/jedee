@@ -579,9 +579,11 @@ colorGroups:
   </section>
   <section class="flow region">
     <h3 class="heading-line">Book</h3>
-    <p>A hardcover stands with its pages showing. Like the pamphlet it is built in CSS 3D around the cover, and settles face-on on hover.</p>
-    {%- set book = { src: "https://standardebooks.org/ebooks/leo-tolstoy/the-kingdom-of-god-is-within-you/leo-wiener/downloads/cover.jpg", alt: "Cover of The Kingdom of God Is Within You by Leo Tolstoy, translated by Leo Wiener" } %}
-    {% include "partials/book.njk" %}
+    <div>
+      {%- set book = { src: "https://standardebooks.org/ebooks/leo-tolstoy/the-kingdom-of-god-is-within-you/leo-wiener/downloads/cover.jpg", alt: "Cover of The Kingdom of God Is Within You by Leo Tolstoy, translated by Leo Wiener" } %}
+      {% include "partials/book.njk" %}
+      <p>A hardcover stands with its pages showing. Like the pamphlet it is built in CSS 3D around the cover, and settles face-on on hover.</p>
+    </div>
   </section>
 
   <header class="part | flow region">
