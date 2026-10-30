@@ -20,8 +20,8 @@ Markup: partials/pamphlet.njk, placed first inside the block of text it floats i
   --pamphlet-highlight: 0.22;
   --pamphlet-falloff: 0.1;
   --pamphlet-spine: 0.15;
-  /* on the 8-column prose grid (column 6.25 + gutter 2, of 64): 3 columns wide, one gutter from the text */
-  --pamphlet-columns: calc(100% * 22.75 / 64);
+  /* on the 8-column prose grid (column 6.25 + gutter 2, of 64): 2 columns wide, one gutter from the text */
+  --pamphlet-columns: calc(100% * 14.5 / 64);
   --pamphlet-gutter: calc(100% * 2 / 64);
   --pamphlet-min-width: 13rem;
   --pamphlet-gap: 1.4px; /* space between the 12 sheets; thickness = 12 × gap */
@@ -34,11 +34,10 @@ Markup: partials/pamphlet.njk, placed first inside the block of text it floats i
   container-type: inline-size;
 }
 
-/* floated beside the text only while the text keeps 28rem: 28 × 64 / 39.25 = 45.66rem of block; below that it sits flat above the text */
-@container pamphlet-flow (inline-size >= 45.66rem) {
+/* floated beside the text only while the text keeps 28rem beside the 13rem minimum: (28 + 13) × 64 / 62 = 42.32rem of block; below that it sits flat above the text */
+@container pamphlet-flow (inline-size >= 42.32rem) {
   .pamphlet {
     float: inline-end;
-    inline-size: var(--pamphlet-columns);
     margin-inline-start: var(--pamphlet-gutter);
   }
 

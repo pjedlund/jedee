@@ -291,7 +291,7 @@ The heading rules come last in the file. A heading's space above then wins over 
 
 ### On the design system page
 
-`/design-system/` has a **Vertical rhythm** section, under Typography, with the prose sample (`partials/rhythm-sample.njk`) and a checkbox that paints the lattice behind it (a checkbox and `:has()`, no script).
+`/design-system/` has a **Vertical rhythm** section, under Typography, with the prose sample (`partials/rhythm-sample.njk`) and a checkbox that lays the lattice over it, across the image and the table too (a checkbox and `:has()`, no script).
 
 ### On any page
 

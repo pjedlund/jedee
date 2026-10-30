@@ -1,11 +1,17 @@
 /*
 BOOK
-A hardcover standing on the page, built in 3D after Sebastien Castiel's CSS book (https://dev.to/scastiel/create-an-animated-3d-book-in-css-step-by-step-26ic), with the pamphlet's light and shadows; turned to show its pages, it faces the reader on hover.
-Markup: partials/book.njk — .book > div is the object; inside it, i is the back board, b the page block and div the front cover.
+A hardcover standing on the page, built in 3D after Sebastien Castiel's CSS book (https://dev.to/scastiel/create-an-animated-3d-book-in-css-step-by-step-26ic), with the pamphlet's light and shadows; turned to show its pages, it faces the reader on hover. Floated right into the text it sits in, like the pamphlet.
+Markup: partials/book.njk, placed first inside the block of text it floats in — .book > div is the object; inside it, i is the back board, b the page block and div the front cover.
 */
 
+/* the text block it sits in measures the room, and holds the float in */
+:has(> .book) {
+  container: book-flow / inline-size;
+  display: flow-root;
+}
+
 .book {
-  --book-width: 15rem;
+  --book-width: 13rem;
   --book-ratio: 2 / 3;
   --book-depth: 0.18; /* thickness as a share of the width; about a 400-page hardcover */
   --book-back: #3a3631;
@@ -17,7 +23,18 @@ Markup: partials/book.njk — .book > div is the object; inside it, i is the bac
 
   inline-size: var(--book-width);
   max-inline-size: 100%;
+  margin-block-end: var(--space-s-m);
   container-type: inline-size;
+}
+
+/* the pamphlet's measures: 2 of the prose grid's 8 columns, one gutter from the text, and only while the text keeps 28rem; below that it stands above the text */
+@container book-flow (inline-size >= 42.32rem) {
+  .book {
+    --book-width: max(calc(100% * 14.5 / 64), 13rem);
+
+    float: inline-end;
+    margin-inline-start: calc(100% * 2 / 64);
+  }
 }
 
 .book > div {
@@ -35,6 +52,11 @@ Markup: partials/book.njk — .book > div is the object; inside it, i is the bac
 @media (hover: hover) {
   .book {
     --book-turn: -32deg;
+  }
+
+  /* ⚠ the turn brings the near edge forward, 6% of the width past the box at top and bottom */
+  .book > div {
+    margin-block: calc(var(--book-size) * 0.06);
   }
 
   .book > div:hover {
