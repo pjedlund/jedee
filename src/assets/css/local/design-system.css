@@ -187,11 +187,22 @@
 
 /*
 VERTICAL RHYTHM
-A prose sample (partials/rhythm-sample.njk) with a lattice toggle: a checkbox and :has(), no script.
+A prose sample (partials/rhythm-sample.njk) with a toggle for the rhythm lines: a checkbox and :has(), no script.
 */
 .rhythm-demo {
   --rhythm-grid-line: color-mix(in oklab, var(--color-accent-blue) 45%, transparent);
   --rhythm-grid-quarter: color-mix(in oklab, var(--color-accent-blue) 14%, transparent);
+  --rhythm-blend: darken;
+}
+
+[data-theme='dark'] .rhythm-demo {
+  --rhythm-blend: lighten;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .rhythm-demo {
+    --rhythm-blend: lighten;
+  }
 }
 
 /* No gutters: the grid column is the sample's page. */
@@ -199,8 +210,17 @@ A prose sample (partials/rhythm-sample.njk) with a lattice toggle: a checkbox an
   --gap: 0px;
 }
 
-/* Painted from the first block's top, the point the lattice is counted from. */
 .rhythm-demo:has(.rhythm-toggle :checked) .rhythm-sample > .wrapper-pass {
+  position: relative;
+}
+
+/* Laid over the sample from the first block's top, the point the lines are counted from; blended like .dev-rhythm, so they cross images and tables and stay under the text. */
+.rhythm-demo:has(.rhythm-toggle :checked) .rhythm-sample > .wrapper-pass::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: var(--rhythm-blend);
   background-image:
     repeating-linear-gradient(to bottom, var(--rhythm-grid-line) 0 1px, transparent 1px var(--line)),
     repeating-linear-gradient(

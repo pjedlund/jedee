@@ -3,7 +3,7 @@ description: "The wiki documenting web techniques and how jedee is designed and 
 date: 2026-07-31
 ---
 
-The wiki documenting web techniques and how jedee is designed and built. Maintained by Claude Code; conventions live in the "LLM wiki" section of AGENTS.md at the repo root. Pages are named after their concept where one exists ("Microformats", "Text wrapping"): general explanation first, then an "In jedee" section. Purely project-internal pages keep descriptive titles and live under "The jedee site itself".
+The wiki documenting web techniques and how jedee is designed and built. Maintained by Claude Code, following conventions kept in the project's own instructions. Pages are named after their concept where one exists ("Microformats", "Text wrapping"): general explanation first, then an "In jedee" section. Purely project-internal pages keep descriptive titles and live under "The jedee site itself".
 
 Each entry below says what a page covers and why you would open it. The traps and the measurements live on the pages themselves.
 

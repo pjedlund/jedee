@@ -26,28 +26,6 @@ uiIcons:
   - {file: heart, use: 'The footer credit.'}
   - {file: star, use: 'The button samples on this page.'}
   - {file: rss, use: 'The feed link in the footer.'}
-tokenGroups:
-  - name: Color
-    files:
-      - {file: colorsBase, what: 'The few source colors everything else is generated from.'}
-      - {file: colors, what: 'The generated palettes: gray and orange scales, and the accent colors with their dark-mode variants.'}
-      - {file: semanticColors, what: 'The color roles above, per theme.'}
-      - {file: buttonColors, what: 'Button colors per variant and theme.'}
-      - {file: megamenuColors, what: 'Menu colors per theme.'}
-  - name: Type
-    files:
-      - {file: fonts, what: 'The three font stacks.'}
-      - {file: textSizes, what: 'The fluid type scale.'}
-      - {file: textLeading, what: 'Line heights.'}
-      - {file: textWeights, what: 'Font weights.'}
-      - {file: typography, what: 'Type styles that combine family, size, weight and line height.'}
-  - name: Space and shape
-    files:
-      - {file: spacing, what: 'The fluid space scale.'}
-      - {file: viewports, what: 'The smallest and largest window the fluid scales are tuned between.'}
-      - {file: borderRadius, what: 'Corner radii.'}
-      - {file: borderWidth, what: 'Border widths.'}
-      - {file: shadows, what: 'Shadows.'}
 customColors:
   - property: '--color-text'
   - property: '--color-text-accent'
@@ -316,10 +294,10 @@ colorGroups:
   </section>
   <section class="rhythm | flow region">
     <h3 class="heading-line">Vertical rhythm</h3>
-    <p>Prose, where every gap, and every line of text that is not body text, is a whole number of quarter lines of body text (<code>global/blocks/prose-rhythm.css</code>). The wiki page <a href="/wiki/vertical-rhythm/">Vertical rhythm</a> explains and measures it.</p>
+    <p>Prose, where every gap, and every line of text that is not body text, is a whole number of quarter lines of body text (<code>global/blocks/prose-rhythm.css</code>). The wiki page <a href="/wiki/vertical-rhythm/">Vertical rhythm</a> explains and measures it. <kbd><kbd data-pc="Alt">⌥</kbd><kbd>R</kbd></kbd> draws the same lines over any page, counted from the top of the page.</p>
 
     <div class="rhythm-demo | flow">
-      <label class="rhythm-toggle"><input type="checkbox"> Show the lattice: whole lines strong, quarter lines faint</label>
+      <label class="rhythm-toggle"><input type="checkbox"> Show the rhythm lines: whole lines strong, quarter lines faint</label>
       <div class="rhythm-sample | wrapper flow prose">
         <div class="wrapper-pass | flow">
           {% include "partials/rhythm-sample.njk" %}
@@ -452,7 +430,7 @@ colorGroups:
   </header>
   <section class="flow region">
     <h3 class="heading-line">Columns</h3>
-    <p>Twelve columns of 6.25rem with 2rem gutters make the 97rem page; the middle eight make the 64rem column that prose sits in. As the window narrows, the outer columns go first, then the eight scale down with the text. <kbd>⌥</kbd> <kbd>G</kbd> lays the grid over any page while the site runs locally.</p>
+    <p>Twelve columns of 6.25rem with 2rem gutters make the 97rem page; the middle eight make the 64rem column that prose sits in. As the window narrows, the outer columns go first, then the eight scale down with the text. <kbd><kbd data-pc="Alt">⌥</kbd><kbd>G</kbd></kbd> lays the grid over any page.</p>
     <figure class="grid-figure">
       <div class="grid-columns" aria-hidden="true">
         {%- for i in range(12) %}<span{% if i >= 2 and i < 10 %} data-prose{% endif %}></span>{% endfor %}
@@ -607,16 +585,7 @@ colorGroups:
     <h2 id="tokens" tabindex="-1">Tokens</h2>
   </header>
   <section class="flow region">
-    <p>Every value on this page starts in a design token file, in the <a href="https://www.designtokens.org/">W3C design tokens format</a>. The build turns them into the CSS custom properties the site uses, a token file for Penpot, and <code>DESIGN.md</code>, a written summary for people and tools.</p>
-    {# ⚠ Hand-written list: a new file in src/_data/designTokens needs a line in tokenGroups above. #}
-    {%- for group in tokenGroups %}
-    <h4>{{ group.name }}</h4>
-    <ul role="list" class="token-files | flow">
-      {%- for t in group.files %}
-        <li><a href="{{ settings.repos.site }}/blob/main/src/_data/designTokens/{{ t.file }}.json"><code>{{ t.file }}.json</code></a>: {{ t.what }}</li>
-      {%- endfor %}
-    </ul>
-    {%- endfor %}
+    <p>Every value on this page starts in a <a href="{{ settings.repos.site }}/tree/main/src/_data/designTokens">design token file</a>, in the <a href="https://www.designtokens.org/">W3C design tokens format</a>. The build turns them into the CSS custom properties the site uses, token files for Penpot and Figma, and <code>DESIGN.md</code>, a written summary for people and tools.</p>
   </section>
 </article>
 

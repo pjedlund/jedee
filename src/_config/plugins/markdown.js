@@ -17,6 +17,8 @@ export const markdownLib = markdownIt({
   typographer: true
 })
   .disable('code')
+  // ⚠ Bare words only autolink on these endings; the default list of every two-letter country code turned AGENTS.md into a link to a website.
+  .use(md => md.linkify.tlds(['com', 'net', 'org', 'io', 'cc', 'se', 'dev', 'app']))
   .use(markdownItAttrs)
   // Prism has no Nunjucks grammar, so ````njk` fences are rendered as jinja2 — close enough, and it highlights the surrounding HTML too. Must run before markdown-it-prism.
   .use(md => {
