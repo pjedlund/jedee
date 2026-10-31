@@ -1,6 +1,6 @@
 // Compares two builds of the site: node tests/compare-builds.mjs <before> <after> [--shots] [--allowed file] [--sample file]
-// Addresses: every page, feed and text file in <before> must exist in <after>, and nothing new may appear. Markup: the HTML must match once scripts, styles and a few moving parts are removed. Pictures (--shots): the sample pages are photographed in both builds and compared pixel by pixel.
-// tests/compare-allowed.json declares the intended differences: {"added": [{path, reason}], "changed": [{path, reason}]}, plus an optional "removed". A "changed" path is excused for markup and pictures. Every allowance used is printed.
+// Addresses: every page, feed and text file (including _redirects and _headers) in <before> must exist in <after>, and nothing new may appear. Markup: the HTML must match once scripts (JSON-LD kept), styles and a few moving parts are removed. Text files: feeds, sitemap, manifest, search index and redirects must match as written. Pictures (--shots): the sample pages are photographed in both builds and compared pixel by pixel.
+// tests/compare-allowed.json declares the intended differences: {"added": [{path, reason}], "changed": [{path, reason}]}, plus an optional "removed". A "changed" path is excused for markup, text and pictures. Every allowance used is printed.
 import { createServer } from 'node:http';
 import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
@@ -35,13 +35,14 @@ const fail = text => failures.push(text);
 
 // --- addresses
 const addressTypes = new Set(['.html', '.xml', '.json', '.txt', '.webmanifest']);
+const addressNames = new Set(['_redirects', '_headers']);
 function addresses(dir) {
   const found = [];
   const walk = sub => {
     for (const entry of readdirSync(path.join(dir, sub), { withFileTypes: true })) {
       const rel = path.posix.join(sub, entry.name);
       if (entry.isDirectory()) walk(rel);
-      else if (addressTypes.has(path.extname(entry.name))) found.push(rel);
+      else if (addressTypes.has(path.extname(entry.name)) || addressNames.has(entry.name)) found.push(rel);
     }
   };
   walk('');
@@ -66,7 +67,7 @@ for (const p of added) {
 function normalise(html) {
   return html
     .replace(/(<style\b[^>]*>)[\s\S]*?(<\/style>)/gi, '$1$2')
-    .replace(/(<script\b[^>]*>)[\s\S]*?(<\/script>)/gi, '$1$2')
+    .replace(/(<script\b([^>]*)>)([\s\S]*?)(<\/script>)/gi, (all, open, attrs, body, close) => (/application\/ld\+json/i.test(attrs) ? all : `${open}${close}`))
     .replace(/\/bundle\/[\w-]+\.(css|js)/g, '/bundle/HASH.$1')
     .replace(/\/commit\/[0-9a-f]{40}/g, '/commit/HASH')
     .replace(/(Revised <time\b)[^>]*>[^<]*(<\/time>)/g, '$1>$2')
@@ -102,6 +103,27 @@ if (markupDiffs.length) {
   fail(`${markupDiffs.length} page(s) with different markup. First ${Math.min(20, markupDiffs.length)}:\n${markupDiffs.slice(0, 20).map(({ p, diff }) => `${p}\n${diff}`).join('\n')}`);
 }
 
+// --- text files
+// Compared exactly as written: nothing in them moves between two builds of the same code. ⚠ Add a rule only for a stamp that does (a feed's updated date, say); today none is needed.
+const textDiffs = [];
+for (const p of [...before].filter(p => !p.endsWith('.html') && after.has(p)).sort()) {
+  const a = readFileSync(path.join(beforeDir, p), 'utf8');
+  const b = readFileSync(path.join(afterDir, p), 'utf8');
+  if (a === b) continue;
+  if (allowedChanged.has(canon(p))) useAllowance('changed text', p, allowedChanged.get(canon(p)));
+  else textDiffs.push({ p, diff: shortDiff(a, b) });
+}
+if (textDiffs.length) {
+  fail(`${textDiffs.length} feed or text file(s) with different content. First ${Math.min(20, textDiffs.length)}:\n${textDiffs.slice(0, 20).map(({ p, diff }) => `${p}\n${diff}`).join('\n')}`);
+}
+
+// --- the menu must be in the builds
+// ⚠ Production hides the main menu and Featured. A build made without SHOW_HIDDEN=1 (npm run rebuild sets it) would compare nothing there, so it fails here instead.
+for (const [name, dir] of [['old', beforeDir], ['new', afterDir]]) {
+  const home = path.join(dir, 'index.html');
+  if (!existsSync(home) || !readFileSync(home, 'utf8').includes('id="mainnav"')) fail(`the ${name} build's home page has no id="mainnav": rebuild with SHOW_HIDDEN=1 BUILD_DRAFTS=1 (npm run rebuild does)`);
+}
+
 // --- pictures
 const types = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.mjs': 'text/javascript', '.json': 'application/json', '.xml': 'application/xml', '.txt': 'text/plain', '.webmanifest': 'application/manifest+json', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.avif': 'image/avif', '.gif': 'image/gif', '.ico': 'image/x-icon', '.woff2': 'font/woff2', '.woff': 'font/woff', '.mp3': 'audio/mpeg' };
 
@@ -125,6 +147,9 @@ async function serveFolder(dir) {
 const maxHeight = 6000;
 const channelTolerance = 16;
 const failAbove = 0.001;
+// ⚠ A small change on a tall page (a menu label, a colour on one button) is a tiny share of all pixels, so a patch of this size with this many changed pixels fails on its own.
+const patchSize = 48;
+const patchLimit = 40;
 
 async function photograph(browser, base, p, width, scheme) {
   const page = await browser.newPage();
@@ -158,11 +183,15 @@ async function comparePixels(a, b, diffFile) {
   if (w1 !== w2 || h1 !== h2) return { share: 1, note: `different size: ${w1}x${h1} against ${w2}x${h2}` };
   const diff = Buffer.from(left.data);
   let count = 0;
+  const patches = new Map();
   for (let i = 0; i < left.data.length; i += channels) {
     let worst = 0;
     for (let c = 0; c < 3; c++) worst = Math.max(worst, Math.abs(left.data[i + c] - right.data[i + c]));
     if (worst > channelTolerance) {
       count++;
+      const pixel = i / channels;
+      const key = `${Math.floor((pixel % w1) / patchSize)},${Math.floor(pixel / w1 / patchSize)}`;
+      patches.set(key, (patches.get(key) || 0) + 1);
       diff[i] = 255;
       diff[i + 1] = 0;
       diff[i + 2] = 0;
@@ -175,7 +204,8 @@ async function comparePixels(a, b, diffFile) {
     mkdirSync(path.dirname(diffFile), { recursive: true });
     await sharp(diff, { raw: { width: w1, height: h1, channels } }).png().toFile(diffFile);
   }
-  return { share: count / (w1 * h1) };
+  const dense = [...patches].filter(([, n]) => n >= patchLimit).map(([key]) => key.split(',').map(n => n * patchSize));
+  return { share: count / (w1 * h1), dense };
 }
 
 if (args.includes('--shots')) {
@@ -202,8 +232,8 @@ if (args.includes('--shots')) {
           results.push({ label, p, problem: `could not load (before: ${a.error ?? 'ok'}, after: ${b.error ?? 'ok'})` });
           continue;
         }
-        const { share, note } = await comparePixels(a.png, b.png, path.join(outDir, `${slug}.png`));
-        if (share > failAbove) results.push({ label, p, problem: `${note ?? `${(share * 100).toFixed(2)}% of pixels differ`}; diff image: _local/compare/${slug}.png` });
+        const { share, note, dense = [] } = await comparePixels(a.png, b.png, path.join(outDir, `${slug}.png`));
+        if (share > failAbove || dense.length) results.push({ label, p, problem: `${note ?? `${(share * 100).toFixed(3)}% of pixels differ${dense.length ? `, ${dense.length} dense patch(es), first at x ${dense[0][0]} y ${dense[0][1]}` : ''}`}; diff image: _local/compare/${slug}.png` });
       } catch (error) {
         results.push({ label, p, problem: `error: ${error.message}` });
       }

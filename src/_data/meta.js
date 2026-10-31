@@ -82,6 +82,8 @@ export const dialog = {
   next: 'Next',
   previous: 'Previous'
 };
+// ⚠ SHOW_HIDDEN=1 turns hideNav and hideFeatured off so a test build can see the menu and Featured; leave it unset in production.
+const showHidden = Boolean(process.env.SHOW_HIDDEN);
 export const navigation = {
   navLabel: 'Menu',
   homeTooltip: 'Home',
@@ -91,8 +93,9 @@ export const navigation = {
   // Header chrome — three independent switches (header.njk), set in settings.yaml.
   breadcrumb: switches.breadcrumb,
   nameReveal: switches.nameReveal,
-  hideNav: switches.hideNav
+  hideNav: switches.hideNav && !showHidden
 };
+export const hideFeatured = switches.hideFeatured && !showHidden;
 // Static ACCESSIBLE NAME for the header light/dark toggle; aria-pressed carries the state. ⚠ Don't make this change with the theme — a toggle button's name must stay put, or screen readers announce the state twice and disagree with themselves.
 export const themeToggleLabel = 'Toggle dark mode';
 // Visible tooltip only, so it may say what a click WILL do. Swapped by theme-toggle.js on every theme change.
