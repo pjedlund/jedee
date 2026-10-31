@@ -1,3 +1,4 @@
+@layer blocks {
 :root {
   --code-orange: hsl(30, 95%, 50%); /* dark theme: L=50 → 7:1 on --color-code-bg (was 30% = 2.9:1, fails AA) */
   --code-blue: hsl(205, 100%, 70%);
@@ -310,4 +311,5 @@ pre[class*='language-'] {
 .cp_embed_wrapper iframe {
   grid-area: container;
   width: 100%;
+}
 }

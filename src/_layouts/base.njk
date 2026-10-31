@@ -52,10 +52,18 @@
         aria-current=page
       {% endif %}
     {% endset %}
+    {# ⚠ Keep the `content and` guard: unguarded, .includes() throws in a render where content is undefined and every wikilink on the site silently turns into plain text. #}
+    {# ⚠ Before the header, so these keep their old place ahead of the header's and footer's pieces in the blocks layer. `content` here already holds the layouts and their partials. #}
+    {%- if content and r/class=["'](?:[^"']*\s)?button[\s"']/.test(content) -%}
+      {# ⚠ button.css is its own block everywhere it's loaded, or a page with the footer and the dialog carries it twice. #}
+      {%- css "local" -%}{%- include 'css/button.css' -%}{%- endcss -%}
+    {%- endif -%}
+    {%- if content and (content.includes('<code') or content.includes('<pre') or content.includes('codepen')) -%}
+      {%- css "local" -%}{%- include 'css/code.css' -%}{%- endcss -%}
+    {%- endif -%}
     {% include "partials/header.njk" %}
 
     <main id="main" class="flow">{{ content | safe }}</main>
-    {# ⚠ Keep the `content and` guard: unguarded, .includes() throws in a render where content is undefined and every wikilink on the site silently turns into plain text. #}
     {%- if content and content.includes('<table') -%}
       {%- css "local" -%}{%- include 'css/table.css' -%}{%- include 'css/table-columns.css' -%}{%- endcss -%}
     {%- endif -%}

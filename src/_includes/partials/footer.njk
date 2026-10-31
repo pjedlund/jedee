@@ -74,5 +74,7 @@
       by {{ meta.creator.name }} </aside> #}
   </div>
 </footer>
+{# ⚠ button.css keeps a block of its own: base.njk loads it the same way. #}
+{%- css "local" -%}{%- include 'css/button.css' -%}{%- endcss -%}
 {%- css "local" -%}{%- include 'css/site-footer.css' -%}{%- endcss -%}
 {%- endif -%}
