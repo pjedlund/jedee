@@ -67,6 +67,8 @@ switches:
   hideFeatured: true
   hideNav: true
   noindexSite: true
+pwa:
+  workerPath: /serviceworker.js
 analytics:
   umamiId: 75b79efd-f4b0-4425-aace-9fa8230aa1c3
 wiki:

@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import {load as yamlLoad} from 'js-yaml';
 import {loadLogo, loadThemeConfig, themeDir, themeName} from '../_config/utils/theme.js';
 import {loadWords, siteSettings} from '../_config/utils/site.js';
+import {resolvePwa} from '../_config/utils/pwa.js';
 import {resolveSwitches} from '../_config/utils/switches.js';
 
 // The values live in settings.yaml; this file gives them Lene's names so her templates still fit. ⚠ Named exports only — a default export here is silently ignored.
@@ -12,6 +13,8 @@ const {identity, profiles} = settings;
 const flags = settings.switches ?? {};
 // The parts of the site that are on unless settings say false (utils/switches.js); `flags` holds the rest of settings.switches under their own names below.
 export const switches = resolveSwitches(settings);
+// The service worker's address, protected caches and push code (utils/pwa.js).
+export const pwa = resolvePwa(settings);
 const site = siteSettings();
 const words = loadWords();
 const relMe = Object.values(profiles).filter(profile => profile.relMe).map(profile => profile.url);

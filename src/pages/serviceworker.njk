@@ -1,21 +1,15 @@
 ---
-permalink: /serviceworker.js
+permalink: '{{ meta.pwa.workerPath }}'
 eleventyExcludeFromCollections: true
 ---
 //service worker by Max Böck https://github.com/maxboeck/eleventastic/blob/master/src/serviceworker.njk
-//extended with runtime caching: visited pages + their assets are cached and
-//served offline, so the offline page is only the fallback for never-seen URLs.
+//extended with runtime caching: visited pages and their assets are served offline, the offline page is the fallback for never-seen URLs.
 const CACHE_NAME = 'cache-{{ buildTime|toIsoString}}'
+// Caches a site keeps across updates (settings.pwa.keepCaches), such as a log the visitor's data lives in.
+const KEEP_CACHES = {{ meta.pwa.keepCaches | dump | safe }}
 const OFFLINE_PAGE_URL = '/offline/'
 
-// Warm the cache on install with the offline fallback and a couple of stable
-// entry points. Everything else (fonts, images, component scripts) is cached at
-// runtime as it's first requested, so nothing has to be hardcoded here.
-// NOTE: this used to say the hashed /bundle/<hash>.css paths get picked up the
-// same way. They don't exist to pick up — css-inline.njk only links them when
-// runMode === "serve", and a production build inlines the CSS into the HTML
-// instead. In dev, where the paths do exist, IGNORED_HOSTS makes this worker
-// intercept nothing at all. Corrected 2026-07-31.
+// Warmed on install; everything else is cached as it is first requested. A file missing from this list is skipped, so it never stops the worker installing.
 const PRECACHE_RESOURCES = [
   '/',
   '/favicon.ico',
@@ -26,10 +20,7 @@ const PRECACHE_RESOURCES = [
   '/apple-touch-icon.png'
 ]
 
-// Hosts the worker passes straight through — no caching, no offline
-// interception — so the dev server's live reload and freshly-edited assets are
-// never masked by the cache. The worker still registers on localhost; it just
-// does nothing there. Empty in production.
+// Passed straight through, so the dev server's live reload is never masked by the cache. Empty in production.
 const IGNORED_HOSTS = ['localhost', '127.0.0.1']
 
 // On Install
@@ -38,19 +29,13 @@ self.addEventListener('install', (event) => {
     (async () => {
       const cache = await caches.open(CACHE_NAME)
 
-      // add all resources we want to precache first
-      if (PRECACHE_RESOURCES.length) {
-        await cache.addAll(PRECACHE_RESOURCES)
-      }
+      // One by one: addAll fails wholesale when a single file is missing.
+      await Promise.all(PRECACHE_RESOURCES.map((resource) => cache.add(resource).catch(() => {})))
 
-      // then add the offline page.
-      // Setting {cache: 'reload'} in the new request will ensure that the
-      // response isn't fulfilled from the HTTP cache; i.e., it will be from
-      // the network.
+      // {cache: 'reload'} fetches the offline page from the network, not the HTTP cache.
       await cache.add(new Request(OFFLINE_PAGE_URL, { cache: 'reload' }))
     })()
   )
-  // Force the waiting service worker to become the active service worker.
   self.skipWaiting()
 })
 
@@ -58,17 +43,16 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     (async () => {
-      // Enable navigation preload if it's supported.
-      // See https://developers.google.com/web/updates/2017/02/navigation-preload
+      // Navigation preload, where supported: https://developers.google.com/web/updates/2017/02/navigation-preload
       if ('navigationPreload' in self.registration) {
         await self.registration.navigationPreload.enable()
       }
 
-      // clear out any old caches that might still be around
+      // Clear out old caches, but not the ones the site keeps.
       const cacheNames = await caches.keys()
       await Promise.all(
         cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
+          if (cacheName !== CACHE_NAME && !KEEP_CACHES.includes(cacheName)) {
             return caches.delete(cacheName)
           }
         })
@@ -76,12 +60,10 @@ self.addEventListener('activate', (event) => {
     })()
   )
 
-  // Tell the active service worker to take control of the page immediately.
   self.clients.claim()
 })
 
-// Put a copy in the cache without blocking the response or letting a failed
-// put (redirects, partial 206s) swallow a good network response.
+// ⚠ Never let a failed put (redirects, partial 206s) swallow a good network response.
 const cacheCopy = (event, response) => {
   const copy = response.clone()
   event.waitUntil(
@@ -94,18 +76,14 @@ self.addEventListener('fetch', (event) => {
   const { request } = event
   const url = new URL(request.url)
 
-  // Dev bypass: skip the worker entirely on localhost so live reload and
-  // freshly-edited assets are never served stale from the cache.
   if (IGNORED_HOSTS.includes(url.hostname)) return
 
-  // Only same-origin GETs are cacheable; let everything else hit the network
-  // untouched (POSTs, hotlinked cross-origin avatars, etc.).
+  // Only same-origin GETs are cached; POSTs and cross-origin requests go to the network untouched.
   if (request.method !== 'GET' || url.origin !== self.location.origin) {
     return
   }
 
-  // Page navigations: network-first so content stays fresh, but keep a copy.
-  // Offline → the cached page if we've visited it, else the offline fallback.
+  // Pages: network-first, keeping a copy. Offline: the cached page, else the offline fallback.
   if (request.mode === 'navigate') {
     event.respondWith(
       (async () => {
@@ -122,10 +100,7 @@ self.addEventListener('fetch', (event) => {
     return
   }
 
-  // Static assets (css/js/fonts/images): cache-first, fill the cache on miss.
-  // ponytail: unbounded cache, but CACHE_NAME is versioned per build and old
-  // caches are deleted on activate, so every deploy clears it. Add per-type
-  // expiration (or Workbox) only if the cache ever grows uncomfortable.
+  // ponytail: Assets are cache-first, filled on a miss. The cache is unbounded, but its name changes every build, so each deploy clears it.
   event.respondWith(
     (async () => {
       const cached = await caches.match(request)
@@ -136,3 +111,6 @@ self.addEventListener('fetch', (event) => {
     })()
   )
 })
+{%- if meta.pwa.push %}
+{% include meta.pwa.push %}
+{%- endif %}

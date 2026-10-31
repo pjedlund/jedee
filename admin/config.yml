@@ -301,6 +301,13 @@ singletons:
           - { name: webmentions, label: Webmentions, widget: boolean, hint: 'Off: no webmention link in the head, nothing fetched at build time, and none shown on posts' }
           - { name: micropub, label: Micropub and IndieAuth links, widget: boolean, hint: 'Off: the three links in the head go. ⚠ The Netlify function that takes the posts is still deployed' }
           - { name: relMe, label: rel=me and fediverse:creator, widget: boolean, hint: 'Off: no rel="me" on profile links, in the head or the footer, and no fediverse:creator tag' }
+      - name: pwa
+        label: Service worker
+        widget: object
+        fields:
+          - { name: workerPath, label: Service worker address, widget: string, required: false, hint: 'Starts with / and ends in .js. Empty = /serviceworker.js. ⚠ A worker only covers the folder it is in, so a nested address like /app/sw.js leaves the rest of the site out' }
+          - { name: keepCaches, label: Caches to keep, widget: list, required: false, hint: 'Names of caches the worker must not delete when it updates, such as one that holds a log the visitor made. Empty = none' }
+          - { name: push, label: Push notification code, widget: string, required: false, hint: 'A path under src/_includes, such as pwa/push.js. Empty = no push code. A path with no file stops the build' }
       - name: analytics
         label: Analytics
         widget: object

@@ -114,7 +114,7 @@
     {%- if meta.switches.serviceWorker -%}
       <script>
         if ('serviceWorker' in navigator) {
-          navigator.serviceWorker.register('/serviceworker.js')
+          navigator.serviceWorker.register('{{ meta.pwa.workerPath }}')
         }
       </script>
     {%- endif -%}
