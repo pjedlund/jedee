@@ -19,6 +19,14 @@ if (!beforeDir || !afterDir) {
   process.exit(2);
 }
 
+for (const [name, dir] of [['before', beforeDir], ['after', afterDir]]) {
+  if (existsSync(dir)) continue;
+  const rel = path.relative(root, dir);
+  console.error(`The ${name} build (${rel}) doesn't exist.`);
+  console.error(rel === '_local/baseline' ? 'Make a baseline first: run `npm run rebuild`, then copy dist to _local/baseline (cp -R dist _local/baseline).' : 'Build it first (npm run rebuild makes dist).');
+  process.exit(2);
+}
+
 const allowedFile = path.resolve(flagValue('--allowed') || path.join(here, 'compare-allowed.json'));
 const allowed = existsSync(allowedFile) ? JSON.parse(readFileSync(allowedFile, 'utf8')) : {};
 // A path may be written as a page address ("/notes/") or as a file ("notes/index.html"); both are stored as the address.

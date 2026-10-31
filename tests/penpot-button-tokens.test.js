@@ -17,9 +17,10 @@
 //
 // Run: npm run test:unit   (or: node --test tests/penpot-button-tokens.test.js)
 
-import { test } from 'node:test'
+import { test, after } from 'node:test'
 import assert from 'node:assert/strict'
-import { readFile } from 'node:fs/promises'
+import { readFile, mkdtemp, rm } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
 import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
 import { dirname, resolve } from 'node:path'
@@ -29,7 +30,9 @@ import { TOKENS_DIR } from '../src/_config/utils/theme.js'
 const run = promisify(execFile)
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const BUILD = resolve(REPO_ROOT, 'src/_config/setup/build-penpot-tokens.js')
-const OUTPUT = resolve(REPO_ROOT, '_local/penpot/penpot-tokens.dtcg.json')
+const TEMP = await mkdtemp(resolve(tmpdir(), 'penpot-tokens-'))
+const OUTPUT = resolve(TEMP, 'penpot/penpot-tokens.dtcg.json')
+after(() => rm(TEMP, { recursive: true, force: true }))
 const SOURCE = resolve(REPO_ROOT, TOKENS_DIR, 'buttonColors.json')
 
 // Flatten a DTCG set into { 'dotted.token.name': value }.
@@ -49,7 +52,7 @@ function flatten(set) {
 }
 
 async function generate() {
-  await run('node', [BUILD], { cwd: REPO_ROOT })
+  await run('node', [BUILD], { cwd: REPO_ROOT, env: { ...process.env, PENPOT_TOKENS_OUT: OUTPUT } })
   return JSON.parse(await readFile(OUTPUT, 'utf8'))
 }
 

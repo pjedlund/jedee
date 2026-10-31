@@ -6,7 +6,7 @@ import { makeTempSite } from './lib/temp-site.mjs'
 import { resolvePwa } from '../src/_config/utils/pwa.js'
 
 // Runs the worker source with a made-up browser. Caches are plain Maps; `failAdd` names files whose download fails.
-function loadWorker(source, { failAdd = [], stores = new Map() } = {}) {
+function loadWorker(source, { failAdd = [], stores = new Map(), fetchStub = async () => { throw new TypeError('offline') } } = {}) {
   const handlers = {}
   const shown = []
   const added = []
@@ -15,6 +15,7 @@ function loadWorker(source, { failAdd = [], stores = new Map() } = {}) {
     open: async name => {
       if (!stores.has(name)) stores.set(name, new Map())
       return {
+        match: async request => stores.get(name).get(typeof request === 'string' ? request : request.url),
         add: async request => {
           const url = typeof request === 'string' ? request : request.url
           if (failAdd.includes(url)) throw new TypeError('Failed to fetch')
@@ -25,6 +26,10 @@ function loadWorker(source, { failAdd = [], stores = new Map() } = {}) {
           added.push(...urls)
         },
       }
+    },
+    match: async request => {
+      const key = typeof request === 'string' ? request : request.url
+      for (const store of stores.values()) if (store.has(key)) return store.get(key)
     },
     keys: async () => [...stores.keys()],
     delete: async name => stores.delete(name),
@@ -42,7 +47,7 @@ function loadWorker(source, { failAdd = [], stores = new Map() } = {}) {
     location: { origin: 'https://example.test' },
     skipWaiting: () => {},
   }
-  vm.runInNewContext(source, { self, caches, clients, Request: class { constructor(url) { this.url = url } }, URL, Response })
+  vm.runInNewContext(source, { self, caches, clients, fetch: fetchStub, Request: class { constructor(url) { this.url = url } }, URL, Response })
   const fire = async (type, event = {}) => {
     let done
     handlers[type]({ ...event, waitUntil: promise => { done = promise } })
@@ -145,9 +150,21 @@ test('install survives a missing file in the list', async () => {
   assert.ok(worker.added.some(url => url === '/offline/'), 'the offline page was not cached')
 })
 
-test('install still stops when the offline page is missing', async () => {
+test('install still completes when the offline page is missing', async () => {
   const worker = loadWorker(plain.read('serviceworker.js'), { failAdd: ['/offline/'] })
-  await assert.rejects(worker.fire('install'))
+  await worker.fire('install')
+  assert.ok(worker.added.includes('/'), 'the other files were not cached')
+  assert.ok(!worker.added.includes('/offline/'))
+})
+
+test('an address that exists only in a kept cache is not answered from it', async () => {
+  const kept = new Map([['https://example.test/log.json', 'kept copy']])
+  const stores = new Map([['dimma-alerts', kept]])
+  const worker = loadWorker(pushed.read('serviceworker.js'), { stores, fetchStub: async () => 'network copy' })
+  let answer
+  const request = { url: 'https://example.test/log.json', method: 'GET', mode: 'cors' }
+  worker.handlers.fetch({ request, respondWith: promise => { answer = promise }, waitUntil: () => {} })
+  assert.equal(await answer, 'network copy')
 })
 
 test('the files the worker lists exist in a sample-theme site', () => {

@@ -25,3 +25,10 @@ export const loadTokens = file => readJson(`${TOKENS_DIR}/${file}`);
 export const loadThemeConfig = () => readJson(`${themeDir()}/theme.json`);
 
 export const loadLogo = () => fs.readFileSync(path.join(ROOT, themeDir(), 'logo.svg'), 'utf8');
+
+// The logo's outline for the share cards: every path's d="…", joined. ⚠ A logo with no double-quoted d="…" stops the build.
+export const logoOutline = (svg, file = 'logo.svg') => {
+	const paths = [...svg.matchAll(/\sd="([^"]+)"/g)].map(match => match[1]);
+	if (!paths.length) throw new Error(`${file} has no path with a double-quoted d="…", so the share cards have no logo mark.`);
+	return paths.join(' ');
+};

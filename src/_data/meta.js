@@ -1,7 +1,7 @@
 import 'dotenv/config'; // ⚠ config-time importers (the webmentions filter) load this before eleventy.config.js reads .env
 import fs from 'node:fs';
 import {load as yamlLoad} from 'js-yaml';
-import {loadLogo, loadThemeConfig, themeDir, themeName} from '../_config/utils/theme.js';
+import {loadLogo, loadThemeConfig, logoOutline, themeDir, themeName} from '../_config/utils/theme.js';
 import {loadWords, siteSettings} from '../_config/utils/site.js';
 import {resolvePwa} from '../_config/utils/pwa.js';
 import {resolveSwitches} from '../_config/utils/switches.js';
@@ -50,7 +50,7 @@ export const creator = {
   x: profiles.x?.url
 };
 export const pathToSvgLogo = `${themeDir()}/logo.svg`; // used for favicon generation and the share cards
-export const logoMark = loadLogo().match(/\sd="([^"]+)"/)[1]; // the logo's outline, for the generated share cards
+export const logoMark = logoOutline(loadLogo(), `${themeDir()}/logo.svg`); // the logo's outline, for the generated share cards
 // The active theme's folder name; templates reach its files by "themes/" + meta.theme + "/home.njk".
 export const theme = themeName();
 const themeConfig = loadThemeConfig();

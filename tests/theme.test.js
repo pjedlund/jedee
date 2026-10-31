@@ -127,3 +127,10 @@ test('an edited token reaches the next CSS build', async t => {
   const output = execFileSync(process.execPath, ['--input-type=module', '-e', script], { cwd: site.dir, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
   assert.match(output, /true/, 'the second build still has the old colour');
 });
+
+test('logoOutline joins every path and stops with the file name when there is none', async () => {
+  const { logoOutline } = await import('../src/_config/utils/theme.js');
+  assert.equal(logoOutline('<svg><path d="M0 0h1"/></svg>'), 'M0 0h1');
+  assert.equal(logoOutline('<svg><path d="M0 0h1"/><path fill="red" d="M2 2h1"/></svg>'), 'M0 0h1 M2 2h1');
+  assert.throws(() => logoOutline("<svg><path d='M0 0'/></svg>", 'themes/x/logo.svg'), /themes\/x\/logo\.svg/);
+});

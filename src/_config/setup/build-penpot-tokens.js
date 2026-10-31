@@ -8,13 +8,14 @@
 //   light_dark colors  -> the value to theme/light, .subdued to theme/dark
 // ⚠ Type names are plural (fontFamilies…) because Penpot's importer expects them; if themes import empty, set their members by hand in Penpot's Themes tab.
 
-import {writeFile} from 'node:fs/promises';
+import {mkdir, writeFile} from 'node:fs/promises';
 import {dirname, resolve} from 'node:path';
 import {fileURLToPath, pathToFileURL} from 'node:url';
 import {loadTokens} from '../utils/theme.js';
 
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../../..');
-const OUTPUT_PATH = resolve(REPO_ROOT, '_local/penpot/penpot-tokens.dtcg.json');
+// The test points PENPOT_TOKENS_OUT at a temp file so it never overwrites the real export.
+const OUTPUT_PATH = process.env.PENPOT_TOKENS_OUT || resolve(REPO_ROOT, '_local/penpot/penpot-tokens.dtcg.json');
 
 // Top-level keys in colors.json that have a .subdued sibling and represent the light/dark semantic colors.
 const LIGHT_DARK_COLOR_NAMES = ['red', 'blue', 'green'];
@@ -240,6 +241,7 @@ function countTokens(setObj) {
 // Run the file directly to write Penpot's copy; `build` is imported by build-figma-tokens.js for Figma's copy.
 if (import.meta.url === pathToFileURL(process.argv[1]).href) {
 	const dtcg = await build();
+	await mkdir(dirname(OUTPUT_PATH), {recursive: true});
 	await writeFile(OUTPUT_PATH, JSON.stringify(dtcg, null, 2) + '\n', 'utf8');
 
 	const lines = SET_ORDER.map((name) => `  ${name.padEnd(20)} ${String(countTokens(dtcg[name])).padStart(3)} tokens`);

@@ -3,7 +3,7 @@
 // asserts the entry root, authorship, and per-type interaction property all
 // parse INSIDE the h-entry — and that received webmentions do NOT pollute it.
 //
-// Requires a prior build:  BUILD_DRAFTS=1 npm run build
+// Requires a prior build:  npm run rebuild
 // Run:  npm run test:unit            (auto-discovered by the tests/*.test.js glob)
 
 import { test } from 'node:test'
@@ -68,7 +68,7 @@ function entryOf(html) {
 
 if (!existsSync(DIST)) {
   test('microformats: dist not built', (t) =>
-    t.skip('Run `BUILD_DRAFTS=1 npm run build` before this suite'))
+    t.skip('Run `npm run rebuild` before this suite'))
 } else {
   for (const [type, sectionDir] of Object.entries(TYPE_DIR)) {
     test(`h-entry root — ${type}`, (t) => {
@@ -76,7 +76,7 @@ if (!existsSync(DIST)) {
       // A prod build (no BUILD_DRAFTS) omits draft-only types — every sample of
       // repost/rsvp/audio/video/recipe/event is currently draft:true, so those
       // sections build empty. Nothing to check ⇒ skip (as the suite already does
-      // when dist/ is absent), don't red-X. `BUILD_DRAFTS=1 npm run build` covers them.
+      // when dist/ is absent), don't red-X. `npm run rebuild` covers them.
       if (!html) {
         t.skip(`no built sample under dist/${sectionDir}/ — build with BUILD_DRAFTS=1 to cover ${type}`)
         return

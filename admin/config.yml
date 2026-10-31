@@ -294,7 +294,7 @@ singletons:
           - { name: themeToggle, label: Light and dark button, widget: boolean, hint: 'Off: no button in the header; the page follows the light or dark setting of the device' }
           - { name: footer, label: Footer, widget: boolean }
           - { name: shortcuts, label: Keyboard shortcuts dialog, widget: boolean, hint: 'Off: no dialog, no script and no footer button' }
-          - { name: tooltips, label: Tooltips, widget: boolean, hint: 'Off: no tooltip script. The tooltip styles stay in the page' }
+          - { name: tooltips, label: Tooltips, widget: boolean, hint: 'Off: no tooltip script, no tooltip styles and no hover labels' }
           - { name: devGrid, label: Layout grid for development, widget: boolean, hint: 'Off: no grid script or styles (Alt+G and Alt+R do nothing)' }
           - { name: serviceWorker, label: Offline support, widget: boolean, hint: 'Off: no service worker file and nothing registers it' }
           - { name: feeds, label: Feeds, widget: boolean, hint: 'Off: no feed files at all, no feed links in the head, and no feed button in the footer' }

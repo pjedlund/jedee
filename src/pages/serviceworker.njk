@@ -9,7 +9,7 @@ const CACHE_NAME = 'cache-{{ buildTime|toIsoString}}'
 const KEEP_CACHES = {{ meta.pwa.keepCaches | dump | safe }}
 const OFFLINE_PAGE_URL = '/offline/'
 
-// Warmed on install; everything else is cached as it is first requested. A file missing from this list is skipped, so it never stops the worker installing.
+// Warmed on install; everything else is cached as it is first requested. A file missing from this list, the offline page included, is skipped, so it never stops the worker installing.
 const PRECACHE_RESOURCES = [
   '/',
   '/favicon.ico',
@@ -33,7 +33,7 @@ self.addEventListener('install', (event) => {
       await Promise.all(PRECACHE_RESOURCES.map((resource) => cache.add(resource).catch(() => {})))
 
       // {cache: 'reload'} fetches the offline page from the network, not the HTTP cache.
-      await cache.add(new Request(OFFLINE_PAGE_URL, { cache: 'reload' }))
+      await cache.add(new Request(OFFLINE_PAGE_URL, { cache: 'reload' })).catch(() => {})
     })()
   )
   self.skipWaiting()
@@ -93,7 +93,8 @@ self.addEventListener('fetch', (event) => {
           cacheCopy(event, response)
           return response
         } catch (error) {
-          return (await caches.match(request)) || (await caches.match(OFFLINE_PAGE_URL))
+          const cache = await caches.open(CACHE_NAME)
+          return (await cache.match(request)) || (await cache.match(OFFLINE_PAGE_URL))
         }
       })()
     )
@@ -103,7 +104,8 @@ self.addEventListener('fetch', (event) => {
   // ponytail: Assets are cache-first, filled on a miss. The cache is unbounded, but its name changes every build, so each deploy clears it.
   event.respondWith(
     (async () => {
-      const cached = await caches.match(request)
+      const cache = await caches.open(CACHE_NAME)
+      const cached = await cache.match(request)
       if (cached) return cached
       const response = await fetch(request)
       if (response.ok) cacheCopy(event, response)
