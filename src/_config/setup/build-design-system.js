@@ -70,7 +70,10 @@ function matchBrace(s, open) {
 	return s.length;
 }
 
-const raw = collectRootVars(globalCss);
+// ⚠ These pieces carry their own :root variables, not in global.css any more, and the tokens still list them.
+let pieceCss = '';
+for (const name of ['activity-colors', 'code', 'main-nav', 'place-map', 'tooltip']) pieceCss += await readFile(resolve(REPO_ROOT, 'src/_includes/css', `${name}.css`), 'utf8');
+const raw = collectRootVars(globalCss + pieceCss);
 const themeVars = {light: raw.light, dark: {...raw.light, ...raw.dark}};
 
 // A token may point at another through var(); the design system wants the literal, except between colors where an alias is the better record.
@@ -255,7 +258,7 @@ await writeFile(resolve(OUT, 'tokens.json'), JSON.stringify(tokens, null, 2));
 
 // The site's own stylesheet rides in as bundle.css, which the type preloads into every preview — so a preview is styled by the real CSS, not a reconstruction. ⚠ Fonts sit a level up from components/.
 // ⚠ custom-card, the chrome and the small pieces ship as per-page bundles, not in global.css — a preview linking its own stylesheet would be inert here, so they are concatenated in.
-const localBundles = ['custom-card', 'button', 'code', 'external-link', 'prose-rhythm', 'prose', 'nav-menu-cls', 'breadcrumb-leaf', 'breadcrumb', 'main-nav', 'site-header', 'site-logo', 'sun-and-moon', 'theme-toggle', 'site-footer', 'tooltip', 'kbd', 'section', 'textgradient'].map(name => `${name}.css`);
+const localBundles = ['custom-card', 'activity-colors', 'button', 'code', 'external-link', 'prose-rhythm', 'prose', 'nav-menu-cls', 'breadcrumb-leaf', 'breadcrumb', 'main-nav', 'site-header', 'site-logo', 'sun-and-moon', 'theme-toggle', 'site-footer', 'tooltip', 'kbd', 'section', 'textgradient'].map(name => `${name}.css`);
 let localCss = '';
 for (const f of localBundles) localCss += `\n${await readFile(resolve(REPO_ROOT, 'src/_includes/css', f), 'utf8')}`;
 const bundleCss = (globalCss + localCss).replace(/url\(\/assets\/fonts\/[^/)]*\/([^/)]+\.woff2)\)/g, 'url(../fonts/$1)');

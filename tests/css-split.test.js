@@ -7,7 +7,8 @@ const PAGE = 'privacy/index.html'
 const NOTE = '---\ntitle: A small note\ndate: 2026-01-01\n---\n\nHello.\n'
 const STANDALONE = body => `---\ntitle: A plain page\nlayout: page\npermalink: /plain/\n---\n\n${body}\n`
 
-const CHROME = ['.site-header', '.mainnav', '.breadcrumb', '.theme-toggle', '.site-footer', '[data-tooltip']
+// ⚠ .mainnav alone proves nothing: nav-menu-cls.css supplies it too, so .megamenu-label stands for main-nav.css.
+const CHROME = ['.site-header', '.mainnav', '.megamenu-label', '.breadcrumb', '.theme-toggle', '.site-footer', '[data-tooltip']
 const SMALL_PIECES = { kbd: 'kbd:not(:has(kbd))', section: '.section__inner', textgradient: '.gradient-text' }
 
 const styleOf = (site, file) => [...site.read(file).matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi)].map(match => match[1]).join('\n')
@@ -55,4 +56,52 @@ test('the shortcuts dialog brings the key caps with it', async t => {
   t.after(() => site.cleanup())
   await site.build()
   assert.ok(styleOf(site, PAGE).includes(SMALL_PIECES.kbd))
+})
+
+// ⚠ A default page has a footer and a dialog that both bring buttons, so a bare page turns off everything around the content.
+const BARE = { header: false, footer: false, shortcuts: false, tooltips: false, easteregg: false, themeToggle: false }
+const BARE_PAGE = '---\ntitle: Bare\nlayout: base\npermalink: /bare/\n---\n\n<p>Just words.</p>\n'
+// ⚠ As a class, not as the start of .prose-wrapper, which is a composition and stays.
+const PROSE = /\.prose(?![\w-])/
+const copies = (text, piece) => text.split(piece).length - 1
+
+test('bare page has no article or code CSS', async t => {
+  const site = await makeTempSite({ settings: { switches: BARE }, files: { 'src/pages/bare.njk': BARE_PAGE } })
+  t.after(() => site.cleanup())
+  await site.build()
+  const style = styleOf(site, 'bare/index.html')
+  assert.doesNotMatch(style, PROSE)
+  for (const piece of ['pre[class', '.button', 'activity', 'place-map', '.token']) assert.ok(!style.includes(piece), `${piece} is in the CSS of a bare page`)
+  assert.ok(style.includes('--line:'), 'the line unit is part of the basics: the page chrome is spaced by it')
+  assert.ok(style.includes('@property --line'), 'the line unit has lost its registration')
+})
+
+test('article page has them', async t => {
+  const site = await makeTempSite()
+  t.after(() => site.cleanup())
+  await site.build()
+  const style = styleOf(site, PAGE)
+  assert.match(style, PROSE)
+  assert.ok(style.includes('.prose hr'), 'the rhythm is missing')
+  assert.ok(/\.design-system\)[^{]*a\[href\^=/.test(style), 'the external-link arrow is missing')
+  assert.ok(style.includes('.button'), 'the footer brings its buttons')
+  assert.ok(!style.includes('.token'), 'a page with no code has the code CSS')
+})
+
+test('code, buttons and activity colors follow the content, each once', async t => {
+  const body = '<pre class="language-css"><code class="language-css">a {}</code></pre> <a href="/" class="no-indicator button">Go</a> <span data-activity="run">Run</span>'
+  const site = await makeTempSite({ files: { 'src/pages/plain.md': STANDALONE(body) } })
+  t.after(() => site.cleanup())
+  await site.build()
+  const style = styleOf(site, 'plain/index.html')
+  for (const piece of ['.token.keyword', '.button[data-ghost-button]:hover', '[data-activity=run]', '.prose hr']) assert.equal(copies(style, piece), 1, `${piece} should be on the page once`)
+  assert.ok(!styleOf(site, PAGE).includes('[data-activity=run]'), 'activity colors on a page with no activity')
+})
+
+test('a map brings its default line color', async t => {
+  const site = await makeTempSite({ settings: { switches: BARE }, files: { 'src/pages/bare.njk': BARE_PAGE } })
+  t.after(() => site.cleanup())
+  await site.build()
+  assert.ok(!styleOf(site, 'bare/index.html').includes('--color-route-line'), 'the map\'s colors are on a page with no map')
+  assert.ok(styleOf(site, 'design-system/index.html').includes('--color-route-line:'), 'a page with a map lost the map\'s colors')
 })

@@ -69,6 +69,9 @@
       {%- css "local" -%}{%- include 'css/prose-rhythm.css' -%}{%- endcss -%}
       {%- css "local" -%}{%- include 'css/prose.css' -%}{%- endcss -%}
     {%- endif -%}
+    {%- if content and content.includes('data-activity=') -%}
+      {%- css "local" -%}{%- include 'css/activity-colors.css' -%}{%- endcss -%}
+    {%- endif -%}
     {% include "partials/header.njk" %}
 
     <main id="main" class="flow">{{ content | safe }}</main>
