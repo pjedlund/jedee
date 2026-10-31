@@ -23,3 +23,5 @@ const readJson = file => JSON.parse(fs.readFileSync(path.join(ROOT, file), 'utf8
 export const loadTokens = file => readJson(`${TOKENS_DIR}/${file}`);
 
 export const loadThemeConfig = () => readJson(`${themeDir()}/theme.json`);
+
+export const loadLogo = () => fs.readFileSync(path.join(ROOT, themeDir(), 'logo.svg'), 'utf8');

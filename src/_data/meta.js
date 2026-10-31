@@ -1,7 +1,7 @@
 import 'dotenv/config'; // ⚠ config-time importers (the webmentions filter) load this before eleventy.config.js reads .env
 import fs from 'node:fs';
 import {load as yamlLoad} from 'js-yaml';
-import {loadThemeConfig, themeName} from '../_config/utils/theme.js';
+import {loadLogo, loadThemeConfig, themeDir, themeName} from '../_config/utils/theme.js';
 
 // The values live in settings.yaml; this file gives them Lene's names so her templates still fit. ⚠ Named exports only — a default export here is silently ignored.
 // ⚠ settings.yaml has no comments on purpose: Sveltia (/admin/ → Site settings) drops them on save. Its notes are the hints in admin/config.yml.
@@ -39,7 +39,8 @@ export const creator = {
   mastodon: profiles.mastodon?.url,
   x: profiles.x?.url
 };
-export const pathToSvgLogo = 'src/assets/svg/misc/logo.svg'; // used for favicon generation
+export const pathToSvgLogo = `${themeDir()}/logo.svg`; // used for favicon generation and the share cards
+export const logoMark = loadLogo().match(/\sd="([^"]+)"/)[1]; // the logo's outline, for the generated share cards
 // The active theme's folder name; templates reach its files by "themes/" + meta.theme + "/home.njk".
 export const theme = themeName();
 const themeConfig = loadThemeConfig();
@@ -47,6 +48,7 @@ export const themeColor = themeConfig.themeColor; // the brand tone; manifest th
 export const themeLight = themeConfig.themeLight; // <meta theme-color> in light mode, the manifest's background_color, and the knockout mark on the app icons
 export const themeDark = themeConfig.themeDark; // <meta theme-color> in dark mode
 export const themePreloads = themeConfig.preloads; // font files head/preloads.njk asks for early
+export const themeOg = themeConfig.og; // share cards: colours, font names and files
 export const opengraph_default = '/assets/images/template/opengraph-default.jpg'; // fallback/default meta image
 export const opengraph_default_alt = 'Johan Edlund — personal website'; // alt text for default meta image
 export const blog = {

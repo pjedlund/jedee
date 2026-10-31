@@ -2,5 +2,13 @@
   "themeColor": "#1f5f5b",
   "themeLight": "#f6f8f7",
   "themeDark": "#1f5f5b",
-  "preloads": []
+  "preloads": [],
+  "og": {
+    "background": "#f6f8f7",
+    "text": "#1f5f5b",
+    "muted": "#a9c0bd",
+    "accent": "#4588d7",
+    "display": {"family": "Arial"},
+    "body": {"family": "Arial"}
+  }
 }

@@ -92,7 +92,8 @@ Each folder has a directory data file that sets its defaults (layout, `category`
 
 A site's look is a theme: a folder in `src/_includes/themes/`, chosen at build time by `theme:` in `settings.yaml`. A name with no folder stops the build. `src/_config/utils/theme.js` is the one place that knows where the active theme is. `sample` is a neutral theme to copy for a new one.
 
-- `theme.json`: the colours for `<meta theme-color>` and the manifest, and which fonts to preload; `meta.js` reads it
+- `theme.json`: the colours for `<meta theme-color>` and the manifest, which fonts to preload, and an `og` block for the share cards (colours, font names, and font files for the scripts; a font with no `file` is a system font); `meta.js` reads it
+- `logo.svg`: the logo, inlined by `{% svg "logo" %}`; its root `fill` and its one `d` are read by the favicon and share-card scripts
 - `tokens/*.json`: the design tokens (below)
 - `fonts/`: the font files, published at `/assets/fonts/` whichever theme is active; a theme with no fonts has no folder
 - `fonts.css`: the `@font-face` rules, in the `fonts` layer

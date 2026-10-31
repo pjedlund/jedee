@@ -6,5 +6,13 @@
     {"href": "/assets/fonts/source-serif/source-serif.woff2", "type": "font/woff2"},
     {"href": "/assets/fonts/source-sans/source-sans.woff2", "type": "font/woff2"},
     {"href": "/assets/fonts/source-sans/source-sans-italic.woff2", "type": "font/woff2"}
-  ]
+  ],
+  "og": {
+    "background": "#F4F4F2",
+    "text": "#495464",
+    "muted": "#bbbfca",
+    "accent": "#d0621e",
+    "display": {"family": "Source Serif 4", "weight": "700", "file": "source-serif/source-serif.woff2"},
+    "body": {"family": "Source Sans 3", "weight": "100 1000", "file": "source-sans/source-sans.woff2"}
+  }
 }

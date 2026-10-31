@@ -10,10 +10,12 @@
 
 import {optimize} from 'svgo';
 import {readFileSync} from 'node:fs';
+import {loadLogo} from '../utils/theme.js';
 
 // ⚠ Keep this synchronous: the interlinker plugin drops an async shortcode's Promise inside {% if %}-wrapped includes, and the nav renders empty.
 export const svgShortcode = (svgName, ariaName = '', className = '', styleName = '') => {
-  const svgData = readFileSync(`./src/assets/svg/${svgName}.svg`, 'utf8');
+  // "logo" is the active theme's; everything else lives in src/assets/svg.
+  const svgData = svgName === 'logo' ? loadLogo() : readFileSync(`./src/assets/svg/${svgName}.svg`, 'utf8');
 
   const {data} = optimize(svgData);
 
