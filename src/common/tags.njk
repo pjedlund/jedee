@@ -1,6 +1,10 @@
 ---
 layout: tags
 permalink: /tags/index.html
+# pagination only gates the file: nothing in tagList, no page
+pagination:
+  data: collections.tagList
+  size: 100000
 eleventyComputed:
   title: '{{ meta.blog.tagPlural }}'
 ---

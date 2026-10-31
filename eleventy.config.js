@@ -19,7 +19,7 @@ import fs from 'node:fs';
 const settings = yamlLoad(fs.readFileSync('./src/_data/settings.yaml', 'utf8'));
 
 //  config import
-import { POST_TYPES, byCategory, showInSitemap, tagList, genreList, featured, resolvePicks } from './src/_config/collections.js';
+import { POST_TYPES, POST_TYPE_DIRS, enabledPostTypes, byCategory, showInSitemap, tagList, genreList, featured, resolvePicks } from './src/_config/collections.js';
 import events from './src/_config/events.js';
 import filters from './src/_config/filters.js';
 import plugins from './src/_config/plugins.js';
@@ -260,6 +260,15 @@ export default async function(eleventyConfig) {
     eleventyConfig.ignores.add('src/feeds/**');
   }
   if (!switches.serviceWorker) eleventyConfig.ignores.add('src/pages/serviceworker.njk');
+
+  // A switched-off post type builds nothing: no posts, no archive page, no feeds. ⚠ A type name in settings.postTypes that doesn't exist stops the build.
+  const postTypesOn = enabledPostTypes(settings);
+  for (const [type, dir] of Object.entries(POST_TYPE_DIRS)) {
+    if (postTypesOn.includes(type)) continue;
+    eleventyConfig.ignores.add(`src/posts/${dir}/**`);
+    eleventyConfig.ignores.add(`src/pages/${dir}.njk`);
+    eleventyConfig.ignores.add(`src/feeds/${dir}*`);
+  }
 
   // ----------------------  ignore test files
   if (process.env.ELEVENTY_ENV != 'test') {

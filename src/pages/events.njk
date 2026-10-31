@@ -3,6 +3,10 @@ layout: base
 title: Events
 description: Events I'm hosting — upcoming and past.
 permalink: '/events/index.html'
+# pagination only gates the file: nothing in event, no page
+pagination:
+  data: collections.event
+  size: 100000
 ---
 
 {# Two-section archive (spec §7). Unlike other types this does NOT reuse archive-listing.njk: the collection is partitioned at build time into Upcoming (soonest first) and Past (most-recent first) via the events.js date filters. "Now" is frozen at build (static site). Cancelled events are NOT filtered out — status drives the badge, date drives the section. No pagination for v1 (if Past grows long, paginate it, not Upcoming). No feed (spec §8). Section headings are <h2>, so cards render <h3>. #}

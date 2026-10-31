@@ -277,6 +277,7 @@ singletons:
           - { name: locale, label: Locale, widget: string, hint: 'For og:locale and the structured data, written en_US or sv_SE' }
           - { name: type, label: Who the site is for, widget: select, options: [{ label: A person, value: Person }, { label: A club or organisation, value: Organization }], hint: 'What the structured data calls the owner of the site: a Person or an Organization' }
       - { name: theme, label: Theme, widget: select, options: [jedee, sample], hint: "The site's look: a folder in src/_includes/themes. A new theme needs a line here, in admin/config.yml. A name with no folder stops the build" }
+      - { name: postTypes, label: Post types, widget: select, multiple: true, required: false, dropdown_threshold: 20, hint: 'The types the site builds. Empty = all 16. A type left out has no posts, archive page, feed or menu link, and a Featured or /now pick of it is skipped', options: [{ label: Articles, value: article }, { label: Notes, value: note }, { label: Books, value: reading }, { label: Films, value: watching }, { label: Jams, value: jam }, { label: Photos, value: photo }, { label: Recipes, value: recipe }, { label: Events, value: event }, { label: Bookmarks, value: bookmark }, { label: Replies, value: reply }, { label: Reposts, value: repost }, { label: Likes, value: like }, { label: RSVPs, value: rsvp }, { label: Recordings, value: audio }, { label: Videos, value: video }, { label: Activities, value: activity }] }
       - name: switches
         label: Switches
         widget: object

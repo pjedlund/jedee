@@ -17,7 +17,7 @@ const DEFAULTS = { string: '', list: [], boolean: false };
 const config = YAML.parse(fs.readFileSync(`${ROOT}/admin/config.yml`, 'utf8'));
 const fieldsByType = {};
 const numericSelect = (f) => f.widget === 'select' && f.options?.every((o) => typeof (o?.value ?? o) === 'number'); // star ratings: labels are stars, values numbers
-const expand = (fields, prefix = '') => fields.flatMap((f) => (f.widget === 'object' ? expand(f.fields, `${prefix}${f.name}.`) : [{ ...f, name: prefix + f.name, ...(numericSelect(f) && { widget: 'number' }) }])); // object → its subfields as key paths (photo.alt), like Sveltia
+const expand = (fields, prefix = '') => fields.flatMap((f) => (f.widget === 'object' ? expand(f.fields, `${prefix}${f.name}.`) : [{ ...f, name: prefix + f.name, ...(numericSelect(f) && { widget: 'number' }), ...(f.widget === 'select' && f.multiple && { widget: 'list' }) }])); // a multi-select saves a list; object → its subfields as key paths (photo.alt), like Sveltia
 for (const c of config.collections) {
   const fields = expand(c.fields.filter((f) => f.widget !== 'markdown' && f.widget !== 'richtext'));
   fields.filter((f) => !KIND[f.widget]).forEach((f) => console.warn(`⚠ ${c.name}.${f.name}: widget "${f.widget}" isn't emulated — add it to KIND before trusting this report`));
@@ -127,6 +127,10 @@ if (settingsSingleton) {
   const before = flatten(jsyaml.load(text));
   const after = flatten(jsyaml.load(sveltiaSaveData(text, settingsSingleton.fields).text));
   for (const key of Object.keys(before)) if (!(key in after)) console.log(`   ! ${settingsSingleton.file}: a save drops ${key}`);
+  // postTypes is left out of the file for JEDEE (missing means all), so check a list of them survives a save too.
+  const withTypes = `${text.trimEnd()}\npostTypes:\n  - note\n  - recipe\n`;
+  if (!isDeepStrictEqual(jsyaml.load(sveltiaSaveData(withTypes, settingsSingleton.fields).text).postTypes, ['note', 'recipe'])) console.log(`   ! ${settingsSingleton.file}: a save changes postTypes`);
+  if (!settingsSingleton.fields.some(([field]) => field === 'postTypes')) console.log(`   ! ${settingsSingleton.file}: postTypes has no field in admin/config.yml`);
   for (const name of SWITCHES) {
     if (!settingsSingleton.fields.some(([field]) => field === `switches.${name}`)) console.log(`   ! ${settingsSingleton.file}: switches.${name} has no field in admin/config.yml`);
     if (!(`switches.${name}` in before)) console.log(`   ! ${settingsSingleton.file}: switches.${name} is not in the file, so a save would write false`);
