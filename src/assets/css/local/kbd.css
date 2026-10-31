@@ -2,6 +2,7 @@
 KBD
 A key cap for a key the reader presses, in prose and the shortcuts dialog. A combination nests one <kbd> per key inside an outer <kbd>, which stays plain (HTML spec).
 */
+@layer blocks {
 kbd:not(:has(kbd)) {
   --kbd-bg: var(--color-bg-accent);
   --kbd-border: color-mix(in oklab, var(--color-text) 30%, var(--kbd-bg)); /* mixed into the cap, not the page, so the edge stands out in both themes */
@@ -30,4 +31,5 @@ kbd:has(kbd) {
 
 kbd {
   white-space: nowrap;
+}
 }

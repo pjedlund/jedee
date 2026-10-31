@@ -3,6 +3,7 @@ TOOLTIP
 Label that appears under an icon-only control on hover or keyboard focus. Content comes from data-tooltip; the accessible name still has to be a real .visually-hidden label, because generated content is not a reliable accessible name.
 Adapted from arielsalminen.com's header tooltip, retokenized and given a focus-visible trigger.
 */
+@layer blocks {
 [data-tooltip] {
   --tooltip-bg: var(--color-text);
   --tooltip-color: var(--color-bg);
@@ -96,4 +97,5 @@ Adapted from arielsalminen.com's header tooltip, retokenized and given a focus-v
 
   inset-block-start: auto;
   inset-block-end: 100%;
+}
 }

@@ -65,6 +65,15 @@
     {%- if content and content.includes('class="footnote') -%}
       {%- css "local" -%}{%- include 'css/footnotes.css' -%}{%- endcss -%}
     {%- endif -%}
+    {%- if content and content.includes('<kbd') -%}
+      {%- css "local" -%}{%- include 'css/kbd.css' -%}{%- endcss -%}
+    {%- endif -%}
+    {%- if content and content.includes('section__inner') -%}
+      {%- css "local" -%}{%- include 'css/section.css' -%}{%- endcss -%}
+    {%- endif -%}
+    {%- if content and content.includes('gradient-text') -%}
+      {%- css "local" -%}{%- include 'css/textgradient.css' -%}{%- endcss -%}
+    {%- endif -%}
 
     {% include "partials/footer.njk" %}
     {% if eleventy.env.runMode === "serve" %}
@@ -77,6 +86,7 @@
     {% include "partials/shortcuts.njk" %}
     {%- if meta.switches.tooltips -%}
       {% js "defer" %}{% include "scripts/tooltip.js" %}{% endjs %}
+      {%- css "local" -%}{%- include 'css/tooltip.css' -%}{%- endcss -%}
     {%- endif -%}
     {%- if meta.easteregg -%}
       <script type="module" src="/assets/scripts/components/custom-easteregg.js"></script>

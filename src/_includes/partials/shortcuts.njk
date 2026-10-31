@@ -27,5 +27,7 @@
   </form>
 </dialog>
 {% js "defer" %}{% include "scripts/shortcuts.js" %}{% endjs %}
+{# ⚠ kbd.css keeps a block of its own: a page's CSS only drops a repeat when the whole block matches, and base.njk loads it the same way. #}
+{%- css "local" -%}{%- include 'css/kbd.css' -%}{%- endcss -%}
 {%- css "local" -%}{%- include 'css/shortcuts.css' -%}{%- endcss -%}
 {%- endif -%}

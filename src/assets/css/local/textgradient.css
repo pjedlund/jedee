@@ -1,3 +1,4 @@
+@layer blocks {
 .gradient-text {
   color: transparent;
   background-image: var(--gradient-conic);
@@ -27,4 +28,5 @@
 :root[data-theme='dark'] .gradient-text-linear {
   color: var(--color-headline);
   background-image: none;
+}
 }

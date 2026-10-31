@@ -1,3 +1,4 @@
+@layer blocks {
 .section > .divider:first-child {
   transform: rotate(180deg) translateY(-1px);
 }
@@ -16,4 +17,5 @@
 
 .section :is(h1, h2, h3, blockquote) {
   opacity: 95%;
+}
 }
