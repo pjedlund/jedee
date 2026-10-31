@@ -103,7 +103,8 @@
       {%- css "local" -%}{%- include 'css/dev-grid.css' -%}{%- endcss -%}
     {%- endif -%}
     {% include "partials/shortcuts.njk" %}
-    {%- if meta.switches.tooltips -%}
+    {# ⚠ Tooltips are only worth loading where something carries a label: the header, footer or dialog, or the page's own content. #}
+    {%- if meta.switches.tooltips and (meta.switches.header or meta.switches.footer or meta.switches.shortcuts or (content and content.includes('data-tooltip'))) -%}
       {% js "defer" %}{% include "scripts/tooltip.js" %}{% endjs %}
       {%- css "local" -%}{%- include 'css/tooltip.css' -%}{%- endcss -%}
     {%- endif -%}

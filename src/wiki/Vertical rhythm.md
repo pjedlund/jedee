@@ -1,7 +1,7 @@
 ---
 description: "Spacing a page in fractions of its body text's line-height, how far CSS can hold headings, lists, figures, tables and small text to that beat, its musical side, Ariel Salminen's Scale.css, and a quarter-line system for jedee tried on the style guide."
 date: 2026-09-30
-updated: 2026-10-27
+updated: 2026-10-31
 ---
 
 **Vertical rhythm** is spacing a page in measured intervals of one unit, the line-height of its body text, so that the text resumes on the same beat after every interruption: a heading, a list, a figure, a table. Bringhurst puts it as a musical analogy: "Space in typography is like time in music. It is infinitely divisible, but a few proportional intervals can be much more useful than a limitless choice of arbitrary quantities." His rule for it is to [add and delete vertical space in measured intervals](http://webtypography.net/2.2.2).
@@ -61,7 +61,7 @@ Holding every element to a baseline grid costs something at each kind of interru
 - **Small text** needs a leading chosen for the grid rather than for the text.
 - **Borders** add their width to the height: a 1px frame pushes everything after it off by 2px.
 
-`text-box-trim` does not help with any of this. It trims the space above the capitals and below the baseline off a text box ([MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/text-box-trim); in every engine since Firefox 154, 2026-08-18), which is how a button's label is centered (jedee's `global/blocks/button.css` uses it). A rhythm counts whole line boxes, and trimming cuts the first and last of them short.
+`text-box-trim` does not help with any of this. It trims the space above the capitals and below the baseline off a text box ([MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/text-box-trim); in every engine since Firefox 154, 2026-08-18), which is how a button's label is centered (jedee's `src/assets/css/local/button.css` uses it). A rhythm counts whole line boxes, and trimming cuts the first and last of them short.
 
 In a single column of prose nobody compares baselines: there is no second column to compare them with. What the eye sees is proportion, whether a gap after a heading is always the same fraction of a line and whether a caption's leading sits right against the text's. Alignment only becomes visible where columns stand side by side.
 
@@ -232,7 +232,7 @@ arielsalminen.com could not be opened from the session. The 2012 article is quot
 
 ### Before
 
-Until 2026-10-01 everything vertical came from one rule, `.flow > * + *` in `global/compositions/flow.css`, fed by Eleventy Excellent's Utopia tokens and the element rules in `global/blocks/prose.css`. Nothing was measured in lines.
+Until 2026-10-01 everything vertical came from one rule, `.flow > * + *` in `global/compositions/flow.css`, fed by Eleventy Excellent's Utopia tokens and the element rules in `global/blocks/prose.css` (now `src/assets/css/local/prose.css`). Nothing was measured in lines.
 
 <figure class="popout" data-wiki-mockup>
   <img eleventy:formats="webp,png" src="/assets/images/wiki/vertical-rhythm-drift-top.png" alt="Two copies of the same prose sample, 375 pixels wide, side by side over blue rules at every body line and fainter ones at every quarter line. A label beside each block gives its distance in pixels from the nearest quarter line. Left, the site's current CSS: the heading 0, meta line +1.3, the two paragraphs −2.5 and −1.6, the h3 −2.1, the list +1.8, the paragraph after it 0, the figure +1.0, the paragraph after the figure −1.5; two of nine blocks on the lattice. Right, the prototype: every label reads 0, nine of nine." width="2152" height="2302">
@@ -250,7 +250,7 @@ Both figures are `src/wiki/_sources/vertical-rhythm.html`, frozen since the old 
 
 ### The system
 
-Prose is the system: `src/assets/css/global/blocks/prose-rhythm.css` holds every rule above, scoped to `.prose`, beside `prose.css`, whose old spacing rules it replaced. Every page that sets `.prose` runs on it, which is every post type, wiki page, plain page, listing page and the webmentions box. It was built as a scoped prototype (`[data-rhythm]`, a page-level stylesheet, a dev-only `?rhythm=off` switch with scroll-synced tabs for comparing) and folded in on 2026-10-01 once it covered everything. The unit and its steps:
+Prose is the system: `src/assets/css/local/prose-rhythm.css` holds every rule above, scoped to `.prose`, beside `prose.css`, whose old spacing rules it replaced. The `--line` unit itself and its steps are the exception: they sit in `src/assets/css/global/base/global-styles.css`, because the page chrome is spaced by them too. Every page that sets `.prose` runs on it, which is every post type, wiki page, plain page, listing page and the webmentions box. It was built as a scoped prototype (`[data-rhythm]`, a page-level stylesheet, a dev-only `?rhythm=off` switch with scroll-synced tabs for comparing) and folded in on 2026-10-01 once it covered everything. The unit and its steps:
 
 ```css
 body {

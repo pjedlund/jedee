@@ -1,12 +1,12 @@
 ---
 description: "What a service worker intercepts, the five conventional caching strategies, and the roughly 80 hand-written lines that make jedee offline-capable using three of them."
 date: 2026-07-31
-updated: 2026-10-27
+updated: 2026-10-31
 ---
 
 A [service worker](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API) is a script the browser runs in the background, separate from any page, able to intercept the site's own network requests. That interception is what makes offline browsing possible: the worker answers from a cache it controls when the network is gone or slow.
 
-Three lifecycle events matter. `install` fires once per version, and is where a worker usually pre-caches the few files it needs to be useful offline at all. `activate` fires when the new version takes over, and is where old caches get deleted. `fetch` fires for every request a page makes, and is where the strategy actually lives.
+Three lifecycle events matter. `install` fires once per version, and is where a worker usually pre-caches the few files it needs to be useful offline at all. `activate` fires when the new version takes over, and is where old caches get deleted — jedee spares the ones named in `settings.pwa.keepCaches`, for a site whose own data lives in a cache. `fetch` fires for every request a page makes, and is where the strategy actually lives.
 
 Those strategies are conventionally listed as five: **cache-first** (fast, risks staleness), **network-first** (fresh, falls back to cache), **cache-only**, **network-only**, and **stale-while-revalidate** (serve the cached copy, refresh it in the background). Choosing between them is a question asked per resource rather than per site — content a reader expects to be current wants network-first, while fingerprinted assets that never change under a given URL want cache-first.
 
@@ -14,7 +14,7 @@ It is small enough to hand-write. Libraries like [Workbox](https://developer.chr
 
 ## In jedee
 
-jedee is an installable PWA, and a visited page is served back fully styled when the network is gone. That's about 80 lines of hand-written JavaScript, comments aside, in `src/pages/serviceworker.njk`, registered by a six-line inline script at the foot of `base.njk`. No Workbox, no npm package, no build step. Of the five strategies, it uses three.
+jedee is an installable PWA, and a visited page is served back fully styled when the network is gone. That's about 80 lines of hand-written JavaScript, comments aside, in `src/pages/serviceworker.njk`, registered by a six-line inline script at the foot of `base.njk`, at the address in `settings.pwa.workerPath` (default `/serviceworker.js`). No Workbox, no npm package, no build step. Of the five strategies, it uses three.
 
 Table: The service worker's strategies and what each is used for
 | Strategy | Behavior | Used for |
@@ -60,7 +60,7 @@ The name is stamped at build time, and `activate` deletes every cache whose name
 
 There's a known ceiling, marked in the source: the runtime cache is unbounded within a build, with no count or age cap. For a personal site browsed a few hundred pages between deploys that's a non-issue, and each deploy clears it. Per-entry expiry is the upgrade path, not a present need.
 
-Two entries fill the cache. **Precache on install** is a small stable set — `/`, the favicon and app icons, and `/offline/`, so the shell and fallback exist before the first offline visit. **Runtime** is everything else, as it's first requested, because the CSS arrives at hashed or query-busted paths that can't be listed by hand.
+Two entries fill the cache. **Precache on install** is a small stable set — `/`, the favicon and app icons, and `/offline/`, added one by one so a missing icon does not stop the worker installing (only `/offline/` is required), so the shell and fallback exist before the first offline visit. **Runtime** is everything else, as it's first requested, because the CSS arrives at hashed or query-busted paths that can't be listed by hand.
 
 ### Why not Workbox
 

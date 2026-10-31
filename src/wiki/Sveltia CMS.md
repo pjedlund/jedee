@@ -1,7 +1,7 @@
 ---
 description: "A git-based CMS that runs as one page inside a static site and edits its markdown through the GitHub API, and the traps met setting it up for sixteen post types, a settings file and a few single pages."
 date: 2026-09-11
-updated: 2026-10-18
+updated: 2026-10-31
 ---
 
 A git-based CMS gives a static site an editing screen without giving it a database. It runs in the browser, reads the repo's markdown files through the GitHub API, shows their front matter as a form, and saves an edit as a commit, which then triggers the normal deploy. Netlify CMS started this kind of tool. It was renamed [Decap CMS](https://decapcms.org/) in 2023, and [Sveltia CMS](https://sveltiacms.app/) is a rewrite that its author offers as the successor: the same `config.yml` format, a much better phone interface, and direct uploads to Cloudflare R2. Sveltia is still in beta before 1.0 and mostly one developer's work, so its behavior can change between versions. Pin the version in the script address.
@@ -104,6 +104,6 @@ There are two ways in, both through GitHub:
 
 ### How changes are checked
 
-Adding a field is checked before anything is saved for real. `_local/tests/sveltia-roundtrip.mjs` reproduces Sveltia's first save for every post, using the same YAML library and settings and reading the field lists from `admin/config.yml`. It then checks what Eleventy reads back. It matched real saves from the admin byte for byte: a note, a photo, an RSVP, a jam and a year-folder article. Its `--write-all` mode rewrites every post for a full before/after build, and on the first run no page changed. Rerun it after adding any field. It handles `number` fields and number-valued dropdowns, and still only warns on lists of objects.
+Adding a field is checked before anything is saved for real. `tests/sveltia-roundtrip.mjs` reproduces Sveltia's first save for every post, using the same YAML library and settings and reading the field lists from `admin/config.yml`. It then checks what Eleventy reads back. It matched real saves from the admin byte for byte: a note, a photo, an RSVP, a jam and a year-folder article. Its `--write-all` mode rewrites every post for a full before/after build, and on the first run no page changed. Rerun it after adding any field. It handles `number` fields and number-valued dropdowns, and still only warns on lists of objects.
 
 Raw source: `src/_raw/Getting Started  Sveltia CMS.md`, and the setup record `_local/design/Reference - Sveltia CMS as the edit layer.md` (§2, §4, §6), read on 2026-09-11.

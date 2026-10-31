@@ -1,7 +1,7 @@
 ---
 description: "Using Tailwind as a compiler that turns design tokens into CSS custom properties rather than as a utility framework — the CUBE boilerplate inversion, and what actually survives into the stylesheet."
 date: 2026-09-05
-updated: 2026-10-27
+updated: 2026-10-31
 ---
 
 [Tailwind CSS](https://tailwindcss.com/) is normally used by writing its utility classes in markup — `class="mt-4 flex items-center"` — and letting it emit only the classes it finds. Its config file is a secondary thing: a place to declare the values those utilities are built from.
@@ -64,7 +64,7 @@ jedee's own divergence is the adapter between the tokens and the config. EE 4.0 
 
 Ten of the fifteen token files feed the config (counted 2026-10-27); the other five (`colorsBase`, `semanticColors`, `buttonColors`, `megamenuColors`, `typography`) feed the palette script (`create-colors.js`) and the Penpot, Figma and `DESIGN.md` exports instead. The output is what [[Undefined custom properties]] is about: every `var(--color-…)` in the hand-written CSS resolves against this block, and a name that is not in it fails silently.
 
-Tailwind runs inside an Eleventy event rather than a separate build step — `src/_config/events/build-css.js` pipes each stylesheet through PostCSS with `postcss-import`, `tailwindcss`, `autoprefixer` and `cssnano`. Since EE 4.9.1, `postcss-import` expands the `*` in `@import 'blocks/*.css'` itself, through a `resolve` function that sorts Node's `fs.globSync` results; before that a separate `postcss-import-ext-glob` plugin and an `@import-glob` rule did it. The build writes `global.css` and every `local/*.css` into `src/_includes/css/`. There is no `postcss.config.js`; the plugin list lives in that file. (The generated output landing inside `_includes/` is the precondition for [[Watch loops]].)
+Tailwind runs inside an Eleventy event rather than a separate build step — `src/_config/events/build-css.js` pipes each stylesheet through PostCSS with `postcss-import`, `tailwindcss`, `autoprefixer` and `cssnano`. Since EE 4.9.1, `postcss-import` expands the `*` in `@import 'compositions/*.css'` itself, through a `resolve` function that sorts Node's `fs.globSync` results; before that a separate `postcss-import-ext-glob` plugin and an `@import-glob` rule did it. The build writes `global.css` and every `local/*.css` into `src/_includes/css/`. There is no `postcss.config.js`; the plugin list lives in that file. (The generated output landing inside `_includes/` is the precondition for [[Watch loops]].)
 
 ### What actually survives — measured
 

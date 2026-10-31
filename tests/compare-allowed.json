@@ -1,1 +1,158 @@
-{"added": [], "changed": [{"path": "/design-system/", "reason": "The link to the token files points at their new folder in the theme"}]}
+{
+  "added": [
+    {
+      "path": "/wiki/what-a-site-owns/",
+      "reason": "New wiki page describing what a site owns and what is shared"
+    }
+  ],
+  "changed": [
+    {
+      "path": "/design-system/",
+      "reason": "The link to the token files points at their new folder in the theme, and the printed name of the prose-rhythm stylesheet now gives its real folder"
+    },
+    {
+      "path": "/wiki/accessibility/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/anatomy-of-a-post-type/",
+      "reason": "Text updated to describe what a site owns, switches and the post-type list, and a link to the new page; the revised date moved"
+    },
+    {
+      "path": "/wiki/design-token-sync/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/external-link-icons/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/favicons/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/font-subsetting/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/",
+      "reason": "One line added for the new page 'What a site owns'"
+    },
+    {
+      "path": "/wiki/keyboard-shortcuts/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/layout-shift/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/line-length/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/link-checking/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/log/",
+      "reason": "The wiki log has a new entry at the top"
+    },
+    {
+      "path": "/wiki/microformats/",
+      "reason": "Only the list of pages that link here changed, because the wiki gained a page and some pages now link to it; the text of the page is the same"
+    },
+    {
+      "path": "/wiki/micropub/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/opentype-features/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/progressive-web-apps/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/self-hosting-remote-images-at-build-time/",
+      "reason": "Only the list of pages that link here changed, because the wiki gained a page and some pages now link to it; the text of the page is the same"
+    },
+    {
+      "path": "/wiki/shadows/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/sveltia-cms/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/tailwind/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/text-wrapping/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/the-accessibility-test/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/the-activities-archive/",
+      "reason": "Only the list of pages that link here changed, because the wiki gained a page and some pages now link to it; the text of the page is the same"
+    },
+    {
+      "path": "/wiki/the-interlinkers-second-render-pass/",
+      "reason": "Only the list of pages that link here changed, because the wiki gained a page and some pages now link to it; the text of the page is the same"
+    },
+    {
+      "path": "/wiki/the-place-map/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/the-service-workers-three-strategies/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/the-theme-toggle/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/the-title-less-post-types/",
+      "reason": "Only the list of pages that link here changed, because the wiki gained a page and some pages now link to it; the text of the page is the same"
+    },
+    {
+      "path": "/wiki/themes-and-starters/",
+      "reason": "Text updated to describe what a site owns, switches and the post-type list, and a link to the new page; the revised date moved"
+    },
+    {
+      "path": "/wiki/tooltips/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/vertical-rhythm/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/watch-loops/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/what-jedee-kept-from-eleventy-excellent/",
+      "reason": "Text updated: the layer order and the moved block files, the token folder, and a link to the new page; the revised date moved"
+    },
+    {
+      "path": "/wiki/wikilinks/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/search.json",
+      "reason": "The search index holds wiki text, so it carries the edited and the new wiki pages"
+    },
+    {
+      "path": "/sitemap.xml",
+      "reason": "The new wiki page 'What a site owns' is listed"
+    }
+  ]
+}

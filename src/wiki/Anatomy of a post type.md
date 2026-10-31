@@ -1,12 +1,12 @@
 ---
 description: "The nine places a new post type must be wired in before it works, and where the sixteen types legitimately diverge."
 date: 2026-07-31
-updated: 2026-10-27
+updated: 2026-10-31
 ---
 
 jedee has **sixteen** post types. Adding one is not a design problem but a wiring problem: there are nine places a type has to appear before it works, and fifteen of the sixteen fill them the same way. This page is the checklist and the places types legitimately diverge.
 
-The sixteen: article, note, reading, watching, jam, photo, recipe, event, bookmark, reply, repost, like, rsvp, audio, video, activity. Fifteen have a written spec in `_local/project_docs/`; **activities has none** — it arrived through a different route (see [[The activities archive]]) and is the type most likely to be the exception below.
+The sixteen: article, note, reading, watching, jam, photo, recipe, event, bookmark, reply, repost, like, rsvp, audio, video, activity. A site may build only some of them: `settings.postTypes` lists the ones to build, a missing list builds all sixteen, and `[]` builds none. A type left out has its posts, archive page and feeds ignored, so it has no menu link either (see [[What a site owns]]). Fifteen have a written spec in `_local/project_docs/`; **activities has none** — it arrived through a different route (see [[The activities archive]]) and is the type most likely to be the exception below.
 
 ## The four-key folder data file
 
@@ -48,7 +48,7 @@ export const byCategory = cat => collection =>
 export const POST_TYPES = ['article', 'note', 'reading', /* … */ 'activity'];
 ```
 
-`eleventy.config.js` loops it: `POST_TYPES.forEach(type => eleventyConfig.addCollection(type, byCategory(type)))`.
+`eleventy.config.js` loops it: `POST_TYPES.forEach(type => eleventyConfig.addCollection(type, byCategory(type)))`. All sixteen collections are registered whatever the setting; `enabledPostTypes(settings)` and `POST_TYPE_DIRS` in the same file decide which types' posts, archive pages and feeds Eleventy ignores, and a name in `postTypes` that is not a post type stops the build.
 
 **The layout aliases are not looped, and must not be.** `article` is in `POST_TYPES` but there is no `article.njk` — articles use `post.njk`, EE's stock layout name. A generic `addLayoutAlias(t, t + '.njk')` loop would emit a bogus alias for it. All nineteen aliases are written out one per line instead (in `eleventy.config.js` — the sixteen types minus `article`, plus `base`, `page`, `post` and `tags`). The comment in `collections.js` says so; it is the single most repeated warning across the fifteen specs.
 

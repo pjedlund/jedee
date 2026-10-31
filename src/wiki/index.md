@@ -95,6 +95,7 @@ Each entry below says what a page covers and why you would open it. The traps an
 ## The jedee site itself
 
 - [[What jedee kept from Eleventy Excellent]] — the stock-versus-fork inventory: what is untouched, what was extended, what was deleted, and what was left behind with nothing referencing it.
+- [[What a site owns]] — which files are one site's own and which are shared, and how a theme, the switches and the post-type list let a second site reuse the shared part.
 - [[Anatomy of a post type]] — the nine places a new post type has to be wired. Start here for the post-type system.
 - [[Permalinks and Obsidian-friendly filenames]] — Title Case filenames for wikilinks, kebab-case addresses for the web.
 - [[The title-less post types]] — the note and the five response types: no title by construction, and one shared card between them.

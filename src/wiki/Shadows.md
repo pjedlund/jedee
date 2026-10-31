@@ -1,7 +1,7 @@
 ---
 description: "Layered box-shadows that look like real shadows, one light source for the whole site, tinting and dark mode, and keeping an object's painted light from fighting the shadow it casts."
 date: 2026-10-24
-updated: 2026-10-27
+updated: 2026-10-31
 ---
 
 A single `box-shadow` is a blurred copy of the element's outline, moved and colored. It has one offset, one blur and one color, so it falls off in a straight ramp: either a tight dark edge or a wide gray haze, never the dense-near, soft-far shape of a shadow in a room. The fix that has become standard is to stack several shadows on the same element, each larger and fainter than the last.
@@ -52,7 +52,7 @@ An object built in CSS, a book or a sheet of paper, often carries two kinds of s
 
 ## In jedee
 
-The shadows are tokens in `src/_data/designTokens/shadows.json`, stored as Penpot-shaped layers (offset, blur, spread, 8-digit hex color) and composed into `--box-shadow-*` custom properties by `dtcgShadowToTailwind()` (see [[Tailwind]]); the same file feeds the Penpot export (see [[Design token sync]]). Each token has a `-dark` twin. Since 2026-10-26 two theme-level aliases in `global/base/variables.css` carry the common cases: `--shadow-on-page` (`thumb`) for images and maps lying on the page, and `--shadow-raised` (`panel`) for panels floating above it. The theme rules swap each to its `-dark` twin, so a component that reads an alias needs no dark-theme rule of its own; the others still swap their twin in their own dark-theme rule. The rule in `DESIGN.md` is that nothing invents a shadow: a component takes one of these.
+The shadows are tokens in `src/_includes/themes/jedee/tokens/shadows.json`, stored as Penpot-shaped layers (offset, blur, spread, 8-digit hex color) and composed into `--box-shadow-*` custom properties by `dtcgShadowToTailwind()` (see [[Tailwind]]); the same file feeds the Penpot export (see [[Design token sync]]). Each token has a `-dark` twin. Since 2026-10-26 two theme-level aliases in `global/base/variables.css` carry the common cases: `--shadow-on-page` (`thumb`) for images and maps lying on the page, and `--shadow-raised` (`panel`) for panels floating above it. The theme rules swap each to its `-dark` twin, so a component that reads an alias needs no dark-theme rule of its own; the others still swap their twin in their own dark-theme rule. The rule in `DESIGN.md` is that nothing invents a shadow: a component takes one of these.
 
 | Token | Shape | Used by |
 |---|---|---|

@@ -1,6 +1,7 @@
 ---
 description: "Title-addressed double-bracket links, why resolving them is a build-time job, and how jedee computes backlinks as page data rather than a collection."
 date: 2026-07-31
+updated: 2026-10-31
 ---
 
 A wikilink is a link written as `[[Page Title]]` — naming its target by title rather than by path or URL. The form comes from [WikiWikiWeb](https://wiki.c2.com/), the original wiki, and survives in note-taking tools like Obsidian, Logseq and Roam, where it is the main way notes connect to each other.
@@ -54,7 +55,7 @@ eleventyConfig.addPlugin(plugins.interlinker, {
 });
 ```
 
-`stubUrl: false` is load-bearing — without it `src/_config/plugins/interlinker-resolver.js` is never reached with `href === false` and the plain-text branch is dead code. The resolver escapes the text and returns it bare; it also checks the href *before* appending an anchor, so `[[Dead Page#section]]` can't produce `href="false#section"`. Covered by `_local/tests/wikilink-dead-link.test.js`.
+`stubUrl: false` is load-bearing — without it `src/_config/plugins/interlinker-resolver.js` is never reached with `href === false` and the plain-text branch is dead code. The resolver escapes the text and returns it bare; it also checks the href *before* appending an anchor, so `[[Dead Page#section]]` can't produce `href="false#section"`. Covered by `tests/wikilink-dead-link.test.js`.
 
 The plugin's console dead-link report stays on and is the build-time warning that someone added a link they shouldn't have.
 

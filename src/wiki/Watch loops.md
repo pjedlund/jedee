@@ -1,7 +1,7 @@
 ---
 description: "A build that watches a directory it also writes into will retrigger itself; how .gitignore-as-watch-list hides the problem, and why the fix belongs in a watch-only ignore."
 date: 2026-08-02
-updated: 2026-10-27
+updated: 2026-10-31
 ---
 
 A watch loop is a build that triggers itself. The shape is always the same: a watcher observes a directory tree, the build writes generated output *into* that tree, the watcher sees its own build's output change, and starts another build. Each pass is legitimate work as far as the tool is concerned, so nothing errors — it simply never settles, and the process eventually dies of memory exhaustion or pins a core until it's killed.
@@ -29,7 +29,7 @@ Those two `ignores` lines put back the *content* paths `.gitignore` had been hid
 The log names the culprit directly — one human edit followed by 23 that no one made:
 
 ```
-[11ty] File changed: ./src/assets/css/global/blocks/main-nav.css
+[11ty] File changed: ./src/assets/css/local/main-nav.css
 [11ty] File changed: ./src/_includes/css/cover.css      ← generated
 [11ty] File changed: ./src/_includes/css/global.css     ← generated
 ```

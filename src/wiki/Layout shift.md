@@ -1,7 +1,7 @@
 ---
 description: "Cumulative Layout Shift: what it measures, why the element that moves is rarely the element at fault, and how a font-size-adjust fighting a size-adjust cost this site 0.18."
 date: 2026-09-06
-updated: 2026-10-27
+updated: 2026-10-31
 ---
 
 A page that moves under the reader is a specific kind of broken. You go to click a link and an image finishes loading above it, so you click an ad instead. You start reading a paragraph and a font swaps in, reflowing the line you were on. Nothing failed and nothing is slow — the page simply arrived in pieces, and the later pieces pushed the earlier ones around.
@@ -196,7 +196,7 @@ Measured 2026-09-07: on the landing page at around 412 px the footer's link clus
 
 The page is short, so the footer is bottom-anchored: its top is `viewportHeight − footerHeight`, which makes the link cluster's height *its position*.
 
-**A reserve was tried, and removed.** From 2026-09-07 to 2026-10-05 the footer carried the only width media query in `global/blocks/`, holding the three-row height below 27rem:
+**A reserve was tried, and removed.** From 2026-09-07 to 2026-10-05 the footer carried the only width media query in the block styles (then `src/assets/css/global/blocks/`, now `src/assets/css/local/`), holding the three-row height below 27rem:
 
 ```css
 @media (width < 27rem) {

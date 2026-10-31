@@ -1,7 +1,7 @@
 ---
 description: "A systematic inventory of what jedee keeps unchanged from Eleventy Excellent and where it has deliberately diverged."
 date: 2026-07-31
-updated: 2026-10-27
+updated: 2026-10-31
 ---
 
 jedee is a fork of [Eleventy Excellent](https://eleventy-excellent.netlify.app/) by Lene Saile. Every other page in this wiki states EE-stock-versus-jedee where it happens to matter locally; this page states it systematically, so a claim on another page can be checked against one inventory.
@@ -15,22 +15,22 @@ The source is Lene's own documentation collection, `src/docs/` in the upstream c
 These are EE's, unchanged, and this wiki should not describe them as jedee inventions:
 
 - **The config module layout.** `src/_config/` splits into `collections.js`, `events.js`, `filters.js`, `plugins.js`, `shortcodes.js`, each a barrel over a folder of the same name, plus `setup/` and `utils/`. jedee's tree matches EE's file for file, plus one module of its own, `search-index.js`. `eleventy.config.js` only registers; the logic lives in the modules.
-- **The cascade layer order**, the same in both `global/global.css` except for one name: jedee calls the utilities layer `cubeUtilities` (see [[Tailwind]]):
+- **The cascade layer order**, the same in both `global/global.css` apart from three things: jedee calls the utilities layer `cubeUtilities` (see [[Tailwind]]), its fonts arrive from the active theme, and a last `theme` layer holds the theme's own CSS. The `blocks` layer has no `@import` of its own in jedee: each block arrives through a page's local CSS and wraps itself in `@layer blocks`. See [[What a site owns]].
 
   ```css
   @import 'tailwindcss/base' layer(tailwindBase);
   @import 'base/reset.css' layer(reset);
-  @import 'base/fonts.css' layer(fonts);
+  @import 'theme-fonts' layer(fonts);
   @import 'tailwindcss/components' layer(tailwindComponents);
   @import 'base/variables.css' layer(variables);
   @import 'base/global-styles.css' layer(global);
   @import 'compositions/*.css' layer(compositions);
-  @import 'blocks/*.css' layer(blocks);
   @import 'utilities/*.css' layer(cubeUtilities);
   @import 'tailwindcss/utilities' layer(tailwindUtilities);
+  @import 'theme' layer(theme);
   ```
 
-  Including the consequence Lene spells out in `css.md`: the "local" bundle uses no layers, so a per-page stylesheet outranks the whole global bundle regardless of selector specificity.
+  Including the consequence Lene spells out in `css.md`: the "local" bundle uses no layers, so a per-page stylesheet outranks the whole global bundle regardless of selector specificity. jedee's moved block files are the exception: they wrap themselves in `@layer blocks` so they keep their old place.
 - **Two CSS streams, not three.** `css.md` documents a third destination, `src/assets/css/components/`, for stylesheets a WebC component references from the output folder — and `_config/events/build-css.js` does glob it, identically in both repos. But the folder exists in **neither** checkout: not in jedee, and not in vanilla 4.6.1 either. It is a wired-up route with nothing routed through it, on both sides.
 - **[[Tailwind]] as a token pipeline, not a utility framework.** No utility classes in the markup on either side.
 - **The two JS bundles** (`js-inline.njk`, `js-defer.njk`) and the two source folders behind them — `scripts/components/` ships to the output folder for custom elements to load directly, `scripts/bundle/` ships to `_includes/scripts/` for the `{% js %}` shortcode.
@@ -44,7 +44,7 @@ Table: What jedee extended from the stock starter
 | Area | EE stock | jedee |
 |---|---|---|
 | Post types | two (`articles`, `notes`), typed through `tags` | sixteen, typed through `category` with `tags` reserved for the public vocabulary — see [[Anatomy of a post type]] |
-| Design tokens | nine files in `designTokens/`, two-step `colorsBase.json` → `colors.json` via `npm run colors` | the same two-step color pipeline, plus `semanticColors.json` and `typography.json` — fifteen files, with Utopia fluid scales, a Penpot export (`npm run penpot:tokens`) and a generated `DESIGN.md` |
+| Design tokens | nine files in `src/_data/designTokens/`, two-step `colorsBase.json` → `colors.json` via `npm run colors` | the same two-step color pipeline, plus `semanticColors.json` and `typography.json` — fifteen files in the theme's `tokens/` folder, with Utopia fluid scales, a Penpot export (`npm run penpot:tokens`) and a generated `DESIGN.md` |
 | Fonts | two families (Red Hat Display, Atkinson Hyperlegible) | six (adds Figtree, Source Sans, Source Serif, Source Code Pro) |
 | WebC components | five | eight — adds `photo-lightbox.webc` ([[The PhotoSwipe lightbox]]), `place-map.webc` and `sortable-table.webc` |
 | Header chrome | `navigation.drawerNav` and `navigation.subMenu` booleans in `meta.js` | neither key exists; replaced by `breadcrumb` and `hideNav`, and one `nav-menu.js` in place of EE's `nav-drawer.js` + `nav-sub.js` |
@@ -69,7 +69,7 @@ Table: Lene Saile's list of removable files, against jedee
 | `src/assets/images/screenshots` | deleted |
 | all files in `src/posts` | replaced wholesale |
 | all pages in `src/pages` | replaced wholesale |
-| `blocks/code.css` ([[Syntax highlighting]]) | kept |
+| `blocks/code.css` ([[Syntax highlighting]]) | kept, now `local/code.css` |
 | `src/assets/images/blog`, `gallery`, `template` | kept |
 
 So jedee removed almost exactly the set Lene marks as optional, and nothing beyond it. The starter's own structure survived the fork intact.

@@ -1,7 +1,7 @@
 ---
 description: "The W3C publishing API that lets any client post to any site, and how a static site uses it to gain an editor without giving up the static build."
 date: 2026-09-06
-updated: 2026-10-27
+updated: 2026-10-31
 ---
 
 [Micropub](https://www.w3.org/TR/micropub/) (W3C Recommendation, 2017) is a publishing API: a client sends a post to a server, and the server decides where it lives and what it looks like. Its point is the split. The app you write in and the site you publish to stop being the same product, so one editor can post to any site that implements the spec, and one site can accept posts from any client — [Quill](https://quill.p3k.io/), [Sparkles](https://sparkles.sploot.com/), iA Writer, a shortcut on a phone.
@@ -58,6 +58,6 @@ export const TYPE_DIR = {
 
 v1 is **create-only, text post-types**. The media endpoint, updates and deletes are all supported by the engine and simply not connected. Auth is hosted IndieAuth (`indieauth.com/auth` and `tokens.indieauth.com/token`) rather than a self-hosted authorization server, which means real client auth presupposes the public `me` domain being live with bidirectional `rel="me"` — the endpoint and the domain go live together or not at all.
 
-Unit tests live in `_local/tests/micropub.test.js`, run by `npm run test:unit`. The helpers are exported from the Function purely so they can be tested.
+Unit tests live in `tests/micropub.test.js`, run by `npm run test:unit`. The helpers are exported from the Function purely so they can be tested.
 
 Raw source: `netlify/functions/micropub.js` and `_local/project_docs/micropub-pattern.html`, read on 2026-09-06.

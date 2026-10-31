@@ -39,6 +39,11 @@ npm run test:a11y          # Accessibility tests with pa11y-ci
 npm run test:unit          # Unit tests (node --test, files in tests/)
 npm run rebuild            # Rebuild dist/ with drafts and hidden things included (BUILD_DRAFTS=1 SHOW_HIDDEN=1), keeping the image folders
 npm run compare            # Compare dist/ with the saved build in _local/baseline/ (add -- --shots to compare pictures too)
+npm run bare               # Build a bare page (every switch off, no post types, the sample theme) and print what it weighs and what it asks for
+npm run test:skip-link     # Press Tab on the built pages and check the skip link takes focus (run after a build)
+npm run design:system      # Rebuild the local design-system bundle in _local/claude-design-system (needs the jedee theme's design-system folder)
+npm run mockups            # Re-shoot the wiki's mockup pictures (npm run mockups:check lists the ones that have drifted)
+npm run flags              # List the @until comments that expire at a milestone
 ```
 
 ## Directory Structure
@@ -67,7 +72,7 @@ src/
   wiki/            # The LLM wiki (see below)
 admin/             # Sveltia CMS (index.html, config.yml)
 netlify/           # Netlify Functions (micropub, health-export)
-tests/             # Unit tests (*.test.js) and the build comparison (compare-builds.mjs)
+tests/             # Unit tests (*.test.js), the build comparison (compare-builds.mjs and compare-allowed.json), the bare-page report (bare-page.mjs) and site-owned.json, the list of files that belong to this site alone
 dist/              # Build output (local only)
 _local/            # ALL local-only project material (see below)
 ```
@@ -103,6 +108,14 @@ A site's look is a theme: a folder in `src/_includes/themes/`, chosen at build t
 - `DESIGN.md`: a written summary of the design system
 
 Global data `designTokens` holds the active theme's tokens, one key per file. Templates reach a theme's own files with `{% include "themes/" + meta.theme + "/home.njk" %}`. Tailwind only scans the active theme's templates, and never a `DESIGN.md`, so another theme's classes can't reach the CSS. Eleventy never treats anything in `_includes` as a page.
+
+## Switches and post types
+
+Every part that used to be always on has a yes/no setting under `switches` in `src/_data/settings.yaml`, on unless set to `false`: `easteregg`, `shortcuts`, `tooltips`, `devGrid`, `themeToggle`, `serviceWorker`, `webmentions`, `micropub`, `relMe`, `feeds`, `header`, `mainNav`, `breadcrumb` and `footer`. The list is `SWITCHES` in `src/_config/utils/switches.js`, which gives `meta.switches`; a value that isn't true or false stops the build. A new switch goes in that list, in `settings.yaml` and in `admin/config.yml` together, because a Sveltia save writes a missing yes/no field as `false`. Switching a part off removes its markup and its CSS and script; the page's own inline theme script stays, because it also applies the device's light or dark setting. The older flags `hideNav`, `hideFeatured` and `noindexSite` are laptop-only and not in the form; `SHOW_HIDDEN=1` turns the first two off for a test build, which `npm run rebuild` does.
+
+`settings.postTypes` lists the post types the site builds (the category names, such as `note` and `recipe`). A missing value builds all sixteen, `[]` builds none, and a name that isn't a post type stops the build. ⚠ `[]` is a hand edit: the admin form never saves an empty selection, so clearing the form in the CMS puts the site back to all sixteen, not to none. A type left out has no posts, archive page, feeds or menu link, and a Featured or /now pick of it is skipped.
+
+A page's CSS is loaded by what the page uses: the header, footer, menu, prose, buttons, code and the other pieces are each a file in `src/assets/css/local/` that the template using it includes. In dev, saving prose, button or code CSS now costs an Eleventy rebuild, where a file in `src/assets/css/global/` only recompiles the global stylesheet. `npm run bare` is the measure of what is left when everything is off; keep it from growing.
 
 ## Design Tokens
 

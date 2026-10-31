@@ -1,6 +1,7 @@
 ---
 description: "Why an Eleventy project is called a site rather than a theme: Hugo and WordPress separate presentation into an overridable layer, Eleventy has no such layer, and its unit of reuse is a starter you fork and own."
 date: 2026-09-05
+updated: 2026-10-31
 ---
 
 "Theme" is the everyday word for what a designer builds on WordPress, and it does not transfer to Eleventy. The word exists because WordPress splits a site in two — content in a database, presentation in a swappable layer on top — so the presentation half is a nameable thing that can be replaced without touching the content. [Hugo](https://gohugo.io/) keeps the same split without the database. Eleventy keeps neither half separate: output-producing templates, layouts, partials, CSS, data files and build config are one tree, and swapping "the theme" means swapping the site.
@@ -48,10 +49,10 @@ The trade against Hugo is not one-sided. A forked starter is uglier to upgrade, 
 jedee is a fork of Eleventy Excellent, not an installation of it. The consequences follow directly from the above:
 
 - **Upgrades are a git merge**, handled by hand, and the seam between stock and fork exists only as a written record — [[What jedee kept from Eleventy Excellent]] is that record.
-- **The folder structure carries no layer boundary**, which is what makes it read as untidy next to Hugo's. Nothing in `src/` marks which files came from the starter and which are this site's own.
+- **The folder structure carries no layer boundary between the starter and the fork**, which is what makes it read as untidy next to Hugo's. Nothing in `src/` marks which files came from the starter and which are this site's own; the line between shared and site-owned files is drawn in `tests/site-owned.json` instead.
 - **One genuine piece of mess is EE's own choice, not Eleventy's**: compiled CSS and JS are written into `src/_includes/css/` and `src/_includes/scripts/` so a template can inline them, which puts build output inside a source directory. That arrangement is the precondition for the rebuild loop described in [[Watch loops]].
 - **The underscore convention is inconsistent** — `_data` and `_includes` are marked, `assets` and `posts` are not, and nothing in the tree explains the difference.
 
-Reorganizing toward an explicit stock/fork separation was considered on 2026-09-05 and deferred: without a lookup order in the tool, any separation would be convention only, enforced by nothing.
+Reorganizing toward an explicit stock/fork separation was considered on 2026-09-05 and deferred: without a lookup order in the tool, any separation would be convention only, enforced by nothing. It has since been done on the one axis that matters for reuse, between what a site owns and what is shared, and it is enforced by tests rather than by the tool: see [[What a site owns]]. The stock/fork seam with Eleventy Excellent is still only the written record.
 
 Raw source: `src/_raw/dev-notes/How an Eleventy project has no theme layer.md`

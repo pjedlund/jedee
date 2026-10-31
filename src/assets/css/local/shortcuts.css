@@ -51,3 +51,29 @@ The keyboard-shortcuts dialog (partials/shortcuts.njk): keys on the left, what t
   padding: 0.1em 0.45em;
   text-align: center;
 }
+
+@layer blocks {
+.site-footer .footer-shortcuts:not(.creator a) {
+  padding: var(--space-xs);
+}
+
+/* A button that opens the shortcuts dialog, dressed as its neighbouring links. */
+.site-footer .footer-shortcuts {
+  cursor: pointer;
+  border-radius: var(--border-radius-medium);
+  text-decoration: underline var(--underline-thickness) var(--color-accent-orange);
+  text-underline-offset: 0.3ch;
+  transition: color 0.2s ease-out;
+}
+
+.site-footer .footer-shortcuts:hover {
+  color: var(--color-accent-orange);
+}
+
+/* Touch-only devices have no keyboard to use the shortcuts with. */
+@media (hover: none) and (pointer: coarse) {
+  .site-footer .footer-shortcuts {
+    display: none;
+  }
+}
+}

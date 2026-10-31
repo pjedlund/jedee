@@ -1,7 +1,7 @@
 ---
 description: "Shipping only the characters and styles a site needs from a web font, and how a missing character falls back to another font while a missing style is faked."
 date: 2026-09-10
-updated: 2026-10-27
+updated: 2026-10-31
 ---
 
 **Subsetting** a font means keeping only the characters a site needs and dropping the rest, so the file is a fraction of the full family's size. A complete Source Sans 3 carries Latin, Greek, Cyrillic, arrows and much more; a site written in English and Swedish needs about two hundred characters of it. The standard tool is fontTools' [`pyftsubset`](https://fonttools.readthedocs.io/en/latest/subset/), which glyphhanger and most build-time subsetting wrap. The other half of the technique is CSS [`unicode-range`](https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/unicode-range), which tells the browser which characters a face covers, so it can skip downloading a file the page has no characters for.
@@ -77,7 +77,7 @@ A gap found this way is filled the subsetting way: cut the missing face from the
 
 ## In jedee
 
-Eleventy Excellent ships **static, pre-subset `woff2` files** and has no subsetting step in the build. Its `@font-face` blocks have no `unicode-range`, so adding a character to a file is the whole fix: no CSS change. The full source fonts are bundled beside the subsets. The one exception is Cyrillic (below), which is its own file behind a `unicode-range`.
+Eleventy Excellent ships **static, pre-subset `woff2` files** and has no subsetting step in the build. Its `@font-face` blocks have no `unicode-range`, so adding a character to a file is the whole fix: no CSS change. The full source fonts are bundled beside the subsets. The one exception is Cyrillic (below), which is its own file behind a `unicode-range`. jedee's copies sit in its theme's `fonts/` folder (`src/_includes/themes/jedee/fonts/`) and are published at `/assets/fonts/`; a theme with no fonts has no such folder.
 
 Table: The shipped font files, their character counts and their sources
 | file | kind | characters | source in the repo |
@@ -110,8 +110,8 @@ Source Serif was deliberately kept small: the Latin-1 block was added and taken 
 **Styles.** `body` set `font-synthesis: none` for one day, 2026-09-13 to 09-14. It came out again once the dev-server checker could *show* fakes instead. Refusing a fake turns a missing italic upright, so the emphasis is lost, and the Georgia and Arial fallbacks, loaded as Regular only, lost their bold while the web fonts loaded. `.small-caps` still refuses fake small caps on its own. Checking the shipped files against the CSS turned up two faux italics and no faux bold:
 
 - **Italic in a serif heading.** Source Serif ships Bold only, so an `<em>` in an `h1`–`h3` was a slanted Bold: the RSVP card's "RSVP *yes*" (`partials/card-response.njk`; all three RSVPs are drafts for now) and one heading on [[The interlinker's second render pass]]. Both now use a real Bold Italic, `source-serif-bold-italic.woff2`, cut from the bundled `SourceSerif4-BoldIt` to the Bold's 109 characters: 17 KB, against 33 KB for the Bold. It is not preloaded, so only a page with italic in a heading downloads it.
-- **Italic in code.** The syntax theme sets `.token.keyword { font-style: italic }` (`global/blocks/code.css`), and there is no Source Code Pro italic, so the keywords on 31 pages were slanted. Since 2026-09-14 code is never italic: `code, pre` in `global/blocks/code.css` set `font-style: normal`, so code inside an `<em>` stays upright, and the keywords are upright and still violet. Bold code stays, because it is real (Source Code Pro is variable, 200–900); a day of never-bold code turned out to flatten wiki terms like **`animation-delay`**. A real italic needs Source Code Pro's italic downloaded first, like the code-block symbols above.
-- **Source Sans** is variable 200–900 in upright and italic, so every weight and style in body text is real. The breadcrumb's connector words use Source Sans rather than the serif for this reason (`.breadcrumb-connector` in `global/blocks/breadcrumb-leaf.css`).
+- **Italic in code.** The syntax theme sets `.token.keyword { font-style: italic }` (`src/assets/css/local/code.css`), and there is no Source Code Pro italic, so the keywords on 31 pages were slanted. Since 2026-09-14 code is never italic: `code, pre` in `src/assets/css/local/code.css` set `font-style: normal`, so code inside an `<em>` stays upright, and the keywords are upright and still violet. Bold code stays, because it is real (Source Code Pro is variable, 200–900); a day of never-bold code turned out to flatten wiki terms like **`animation-delay`**. A real italic needs Source Code Pro's italic downloaded first, like the code-block symbols above.
+- **Source Sans** is variable 200–900 in upright and italic, so every weight and style in body text is real. The breadcrumb's connector words use Source Sans rather than the serif for this reason (`.breadcrumb-connector` in `src/assets/css/local/breadcrumb-leaf.css`).
 
 The recipe itself needs a Python with fontTools and brotli; on this machine that is the python.org framework install, not the default `python3`.
 

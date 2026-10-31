@@ -1,7 +1,7 @@
 ---
 description: "A label that appears on hover or focus; why its text must never be the control's only accessible name, and why CSS alone is enough for the decorative case."
 date: 2026-09-02
-updated: 2026-10-27
+updated: 2026-10-31
 ---
 
 A tooltip is a small label that appears when a pointer rests on a control or the control takes keyboard focus. On the web it comes in three forms, and they are not interchangeable.
@@ -68,7 +68,7 @@ Fading a tooltip with `opacity` alone leaves it in the hit-testing and layout pi
 
 ## In jedee
 
-One CUBE block, `src/assets/css/global/blocks/tooltip.css`, about 55 lines. The block itself is CSS only; a control may opt into one extra behavior with a line of its own script (see "Dismissing after use" below). Not Eleventy Excellent stock — EE ships no tooltip. Adapted from the header tooltip on [arielsalminen.com](https://arielsalminen.com/), retokenized and given the triggers below.
+One CUBE block, `src/assets/css/local/tooltip.css`, about 55 lines. It and its script load only where something carries a label: the header, the footer, the shortcuts dialog, or a `data-tooltip` in the page's own content, and not at all with the `tooltips` switch off. The block itself is CSS only; a control may opt into one extra behavior with a line of its own script (see "Dismissing after use" below). Not Eleventy Excellent stock — EE ships no tooltip. Adapted from the header tooltip on [arielsalminen.com](https://arielsalminen.com/), retokenized and given the triggers below.
 
 Eleven controls use it. In the header, the breadcrumb logomark (`Home`), the search magnifier and the light/dark toggle (see [[The theme toggle]]), all icon-only, the first and last at opposite edges. In the footer, the whole icon row — the Atom feed link and seven platform links, all of them icon-only with a `visually-hidden` label. Both header controls previously carried a `title`, which was removed: with `data-tooltip` in place the browser draws its own native tooltip alongside the styled one. The star rating on book and film posts and cards (`partials/rating.njk`) uses the block too, on a `<span>` that also carries a visually hidden "Rated … out of 5".
 

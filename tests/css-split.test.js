@@ -58,6 +58,21 @@ test('the shortcuts dialog brings the key caps with it', async t => {
   assert.ok(styleOf(site, PAGE).includes(SMALL_PIECES.kbd))
 })
 
+test('tooltips on, but nothing on the page carries a label: no tooltip CSS', async t => {
+  const site = await makeTempSite({ settings: { switches: { header: false, footer: false, shortcuts: false, easteregg: false, themeToggle: false } } })
+  t.after(() => site.cleanup())
+  await site.build()
+  assert.ok(!styleOf(site, PAGE).includes('[data-tooltip'), 'tooltip CSS is on a page with nothing to label')
+})
+
+test('the header and footer without breadcrumb, menu or shortcuts carry none of their rules', async t => {
+  const site = await makeTempSite({ settings: { switches: { breadcrumb: false, mainNav: false, shortcuts: false } } })
+  t.after(() => site.cleanup())
+  await site.build()
+  const style = styleOf(site, PAGE)
+  for (const piece of ['.site-header .breadcrumb', '.site-header .menu-toggle', '.footer-shortcuts']) assert.ok(!style.includes(piece), `${piece} is in the page's CSS`)
+})
+
 // ⚠ A default page has a footer and a dialog that both bring buttons, so a bare page turns off everything around the content.
 const BARE = { header: false, footer: false, shortcuts: false, tooltips: false, easteregg: false, themeToggle: false }
 const BARE_PAGE = '---\ntitle: Bare\nlayout: base\npermalink: /bare/\n---\n\n<p>Just words.</p>\n'

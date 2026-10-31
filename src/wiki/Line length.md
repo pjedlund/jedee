@@ -1,7 +1,7 @@
 ---
 description: "How many characters a line of body text should hold, and why a max-width in ch does not set that number directly."
 date: 2026-09-10
-updated: 2026-10-01
+updated: 2026-10-31
 ---
 
 **Line length** (typography's *measure*) is the number of characters on one line of running text, spaces included. Too long, and the eye loses its place on the way back to the start of the next line; too short, and it has to jump back so often that the reading rhythm breaks. [Baymard Institute's usability research](https://baymard.com/blog/line-length-readability) (Edward Scott, 2022) puts the comfortable range at **50–75 characters per line**, and reports test users either leaving a page of over-long lines or skimming it without taking it in.
@@ -39,7 +39,7 @@ On a phone in portrait the column is narrower than any sensible maximum, so the 
 
 ## In jedee
 
-The measure is set in `global/blocks/prose.css`:
+The measure is set in `src/assets/css/local/prose.css`:
 
 ```css
 .prose :is(p, li, dl, blockquote, ul:not([class]), ol:not([class])) {

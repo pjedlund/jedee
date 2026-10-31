@@ -125,3 +125,11 @@ Top-left wayfinding that replaces the old site logo: the home crumb is the logom
   translate: -0.08em -0.05em;
 }
 }
+
+@layer blocks {
+@supports (width: round(1px, 1px)) {
+  .site-header .breadcrumb {
+    padding-block: 0;
+  }
+}
+}

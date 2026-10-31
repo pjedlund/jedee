@@ -1,7 +1,7 @@
 ---
 description: "The small set of icon files a site hands to browsers and operating systems, and the rule that decides how each one is drawn: whether the surface frames the icon for you."
 date: 2026-09-03
-updated: 2026-09-04
+updated: 2026-10-31
 ---
 
 A favicon is no longer one file. A site that wants to look right in a tab, on an iOS home screen, in an Android launcher and on a PWA splash screen ships a small set, and the members differ in more than size. Evil Martians' [How to Favicon](https://evilmartians.com/chronicles/how-to-favicon-in-2021-six-files-that-fit-most-needs) (2021, kept current since) is the reference most projects work from, Eleventy Excellent included, and it argues for the smallest set that covers real usage rather than the several dozen files older generators emitted.
@@ -46,7 +46,7 @@ One related trap: a manifest's `background_color` paints the splash screen. An i
 
 ## In jedee
 
-The whole set is generated from one file, `src/assets/svg/misc/logo.svg`, by `src/_config/setup/generate-favicons.js`, run by hand with `npm run favicons`. The outputs are committed to the repo, not built on deploy. [[Open Graph images]] are committed for the same kind of reason — their generator names a font a build server does not have. A passthrough in `eleventy.config.js` copies the folder to the site root; the `<link>` tags are in `src/_includes/head/meta-info.njk` and the manifest is `src/common/site-manifest.njk`.
+The whole set is generated from one file, `logo.svg` in the active theme's folder (`src/_includes/themes/jedee/logo.svg`), by `src/_config/setup/generate-favicons.js`, run by hand with `npm run favicons`. The outputs are committed to the repo, not built on deploy. [[Open Graph images]] are committed for the same kind of reason — their generator names a font a build server does not have. A passthrough in `eleventy.config.js` copies the folder to the site root; the `<link>` tags are in `src/_includes/head/meta-info.njk` and the manifest is `src/common/site-manifest.njk`.
 
 The script, the file names, the npm script and the Evil Martians reference are Eleventy Excellent stock. The treatment is not.
 
