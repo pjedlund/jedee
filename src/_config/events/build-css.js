@@ -30,7 +30,8 @@ const buildCss = async (inputPath, outputPaths) => {
     autoprefixer,
     cssnano
   ]).process(inputContent, {from: inputPath});
-  const css = result.css.replaceAll('__SITE_DOMAIN__', siteDomain); // the site's own links get no ↗
+  // ⚠ cssnano drops the quotes round the placeholder, and a dotted host is only valid inside quotes: the browser would throw the whole rule away. The site's own links get no ↗.
+  const css = result.css.replace(/\[href\*=["']?__SITE_DOMAIN__["']?\]/g, `[href*="${siteDomain}"]`).replaceAll('__SITE_DOMAIN__', siteDomain);
 
   for (const outputPath of outputPaths) {
     await fs.mkdir(path.dirname(outputPath), {recursive: true});
