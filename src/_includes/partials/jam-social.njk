@@ -5,16 +5,15 @@
 
 {% if social and (social.likes | length or social.comments | length) %}
   <aside class="webmentions | wrapper flow region prose">
-    <h2 id="thisismyjam">From This Is My Jam</h2>
+    <h2 id="thisismyjam">{{ words.jamSocialHeading }}</h2>
     <p class="text-step-min-1">
-      The likes and comments this jam received on This Is My Jam (2012–2015),
-      recovered from the
-      <a href="https://web.archive.org/" rel="noreferrer">Internet Archive</a>.
+      {{ words.jamSocialIntro }}
+      <a href="https://web.archive.org/" rel="noreferrer">{{ words.internetArchive }}</a>.
     </p>
 
     {% if social.likes | length %}
       <div class="flow">
-        <h3>{{ social.likes | length }} Like{% if social.likes | length != 1 %}s{% endif %}</h3>
+        <h3>{{ social.likes | length }} {{ words.like if social.likes | length == 1 else words.likes }}</h3>
         <ul class="avatars | cluster gutter-3xs" role="list">
           {% for like in social.likes %}
             <li>
@@ -38,7 +37,7 @@
 
     {% if social.comments | length %}
       <div class="flow">
-        <h3>{{ social.comments | length }} Comment{% if social.comments | length != 1 %}s{% endif %}</h3>
+        <h3>{{ social.comments | length }} {{ words.comment if social.comments | length == 1 else words.comments }}</h3>
         <ul class="webmention-list | flow" role="list">
           {% for comment in social.comments %}
             <li>
@@ -62,7 +61,7 @@
                   </a>
 
                   {% if comment.date %}
-                    <time datetime="{{ comment.date }}" title="Approximate date">
+                    <time datetime="{{ comment.date }}" title="{{ words.approximateDate }}">
                       {{ comment.date | formatDate('MMM YYYY') }}
                     </time>
                   {% endif %}

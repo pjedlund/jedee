@@ -22,7 +22,7 @@
       "id": "{{ absolutePostUrl }}",
       "url": "{{ absolutePostUrl }}",
       {% if post.data.lang %}"language": "{{ post.data.lang }}",{% endif %}
-      "title": "{{ post.data.title or 'Photo' }}",
+      "title": "{{ post.data.title or words.photo }}",
       "content_html": {{ (photoImg ~ post.content) | renderTransforms(post.data.page, meta.url) | dump | safe }},
       "date_published": "{{ post.date | dateToRfc3339 }}"
     }

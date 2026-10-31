@@ -36,24 +36,24 @@ schema: BlogPosting
     {# Transcript: native <details> (EE favours it over a JS accordion); v1 links the WebVTT for download, inline rendering is a later add (spec §10). #}
     {% if transcript %}
       <details class="transcript">
-        <summary>Transcript</summary>
-        <p><a href="{{ transcript | replace('./src', '') }}">Download transcript (WebVTT)</a></p>
+        <summary>{{ words.transcript }}</summary>
+        <p><a href="{{ transcript | replace('./src', '') }}">{{ words.downloadTranscript }}</a></p>
       </details>
     {% endif %}
 
     {# Recording metadata + downloads + licence. Inline rather than a partial: it has exactly one caller, and audio.njk already inlines the transcript block the same way. Shares media-meta.css with photo-meta.njk. Microformats: p-location (+ nested h-adr) on the place, h-geo on the coordinates — same markup as the photo type. #}
     {% if recorder or mic or audio.duration or place or audio.downloads %}
-      <section class="media-meta | flow" aria-label="Recording details">
+      <section class="media-meta | flow" aria-label="{{ words.recordingDetails }}">
 
         {% if recorder or mic or audio.duration or place %}
         <dl>
-          {% if recorder %}<dt>Recorder</dt><dd>{{ recorder }}</dd>{% endif %}
-          {% if mic %}<dt>Microphone</dt><dd>{{ mic }}</dd>{% endif %}
+          {% if recorder %}<dt>{{ words.recorder }}</dt><dd>{{ recorder }}</dd>{% endif %}
+          {% if mic %}<dt>{{ words.microphone }}</dt><dd>{{ mic }}</dd>{% endif %}
           {# A list: wind protection stacks (a basket inside a furry, say), so the field takes several. Joined into ONE <dd> rather than emitting one each — the <dl> above is a two-column grid that dt/dd flow straight into, so a second <dd> would land in the label column. #}
-          {% if windProtection %}<dt>Wind protection</dt><dd>{{ windProtection | join(", ") }}</dd>{% endif %}
+          {% if windProtection %}<dt>{{ words.windProtection }}</dt><dd>{{ windProtection | join(", ") }}</dd>{% endif %}
           {# Length only when the player is the whole recording. Once `downloads` exists the files carry their own lengths in their labels, and a lone "Length" row reads as the length of the download rather than of the clip above it. #}
-          {% if audio.duration and not audio.downloads %}<dt>Length</dt><dd>{{ audio.duration | itunesDuration }}</dd>{% endif %}
-          {% if place %}<dt>Place</dt>
+          {% if audio.duration and not audio.downloads %}<dt>{{ words.length }}</dt><dd>{{ audio.duration | itunesDuration }}</dd>{% endif %}
+          {% if place %}<dt>{{ words.place }}</dt>
             <dd class="p-location h-adr">
               {%- if lat and lon %}<a href="https://www.openstreetmap.org/?mlat={{ lat }}&mlon={{ lon }}#map={{ mapZoom or 13 }}/{{ lat }}/{{ lon }}" target="_blank" rel="noopener">{% endif -%}
               <span class="p-locality">{{ place }}</span>
@@ -61,7 +61,7 @@ schema: BlogPosting
               {%- if lat and lon %}</a>{% endif -%}
             </dd>
           {% endif %}
-          {% if lat and lon %}<dt>Coordinates</dt>
+          {% if lat and lon %}<dt>{{ words.coordinates }}</dt>
             <dd class="h-geo"><data class="p-latitude" value="{{ lat }}">{{ lat | round(5) }}</data>, <data class="p-longitude" value="{{ lon }}">{{ lon | round(5) }}</data></dd>
           {% endif %}
         </dl>
@@ -82,7 +82,7 @@ schema: BlogPosting
         {# Tied to `downloads`, not to the block as a whole: the CC0 offer only makes sense where the file is actually being handed over for reuse. A podcast episode has a player and no downloads, and must not claim a licence it wasn't given. #}
         {% if audio.downloads %}
         <p class="text-step-min-1 media-license">
-          <a rel="license" href="https://creativecommons.org/publicdomain/zero/1.0/">Public domain (CC0)</a> &mdash; download and reuse freely.
+          <a rel="license" href="https://creativecommons.org/publicdomain/zero/1.0/">{{ words.publicDomain }}</a> {{ words.downloadFree | safe }}
         </p>
         {% endif %}
 

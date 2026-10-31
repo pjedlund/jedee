@@ -13,17 +13,17 @@ schema: Event
       {% if description %}<p class="p-summary">{{ description }}</p>{% endif %}
 
       <dl class="event-meta">
-        <dt>When</dt>
+        <dt>{{ words.when }}</dt>
         <dd>
           <time class="dt-start" datetime="{{ event.start | toIsoString }}">{{ event.start | formatDate('D MMM YYYY, HH:mm') }}</time>
           {%- if event.end %} &ndash; <time class="dt-end" datetime="{{ event.end | toIsoString }}">{{ event.end | formatDate('D MMM YYYY, HH:mm') }}</time>{% endif %}
         </dd>
-        {% if event.location %}<dt>Where</dt><dd class="p-location">{{ event.location }}</dd>{% endif %}
-        {% if event.url %}<dt>Link</dt><dd><a class="u-url" href="{{ event.url }}">{{ event.url }}</a></dd>{% endif %}
+        {% if event.location %}<dt>{{ words.where }}</dt><dd class="p-location">{{ event.location }}</dd>{% endif %}
+        {% if event.url %}<dt>{{ words.link }}</dt><dd><a class="u-url" href="{{ event.url }}">{{ event.url }}</a></dd>{% endif %}
       </dl>
 
       {% if event.status and event.status != "scheduled" %}
-        <p class="event-status" data-status="{{ event.status }}">{{ event.status | replace("-", " ") | capitalize }}</p>
+        <p class="event-status" data-status="{{ event.status }}">{{ words['eventStatus-' + event.status] or (event.status | replace("-", " ") | capitalize) }}</p>
       {% endif %}
     </div>
 

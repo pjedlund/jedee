@@ -1,4 +1,4 @@
 {# Empty map box for a post's location, rendered so its aspect-ratio holds the space from first paint; place-map.js adopts it and starts the preloader. Expects mapPlace (optional). No-JS visitors get the place name's OpenStreetMap link in the meta line instead. #}
 <div class="place-map-live" data-place-map-box>
-  <p class="place-map-pending">Map of {{ mapPlace or "this place" }}</p>
+  <p class="place-map-pending">{{ words.mapOfPlace | replace('{place}', mapPlace or words.thisPlace) }}</p>
 </div>

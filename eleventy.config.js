@@ -27,6 +27,7 @@ import {resolveOrPlainText} from './src/_config/plugins/interlinker-resolver.js'
 import ignoreWikilinksInCode from './src/_config/plugins/interlinker-ignore-code.js';
 import shortcodes from './src/_config/shortcodes.js';
 import {themeDir} from './src/_config/utils/theme.js';
+import {loadWords} from './src/_config/utils/site.js';
 
 // Caps how many images fetch + encode at once, to keep a cold build's memory down. Lower it if a cold build still runs out of memory.
 import Image from '@11ty/eleventy-img';
@@ -124,7 +125,9 @@ export default async function(eleventyConfig) {
 
   eleventyConfig.addPlugin(plugins.webc, {
     components: ['./src/_includes/webc/**/*.webc'],
-    useTransform: true
+    useTransform: true,
+    // ⚠ A transform sees no global data of its own: without this a component's $data.words is undefined.
+    transformData: {words: loadWords()}
   });
 
   eleventyConfig.addPlugin(plugins.eleventyImageTransformPlugin, {

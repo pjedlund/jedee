@@ -8,18 +8,18 @@
 #}
 {%- set linkedHost = (sourceUrl or likeOf or bookmarkOf or inReplyTo or repostOf) | hostname -%}
 {%- if category == "jam" and artist -%}
-  {{ title }} <span class="breadcrumb-connector">by</span> {{ artist | unwikilink }}
+  {{ title }} <span class="breadcrumb-connector">{{ words.by }}</span> {{ artist | unwikilink }}
 {%- elif (category == "watching" and director) or (category == "reading" and author) -%}
   {%- set byline = director if category == "watching" else author -%}
-  {{ title }} <span class="breadcrumb-connector">by</span> {% if byline is string %}{{ byline | unwikilink }}{% else %}{{ byline | unwikilink | join(", ") }}{% endif %}
+  {{ title }} <span class="breadcrumb-connector">{{ words.by }}</span> {% if byline is string %}{{ byline | unwikilink }}{% else %}{{ byline | unwikilink | join(", ") }}{% endif %}
 {%- elif category == "activity" and activityType -%}
   {# activityType is an English controlled term ("orienteering") — only the title may be Swedish, so lang="sv" (set by titleLang, see eleventyComputed.js) wraps the title alone. #}
   {{ activityType | capitalize }}: {% if titleLang %}<span lang="{{ titleLang }}">{{ title }}</span>{% else %}{{ title }}{% endif %}
 {%- elif category == "audio" and place -%}
   {# Field recordings title the SUBJECT ("Small waves"), so the crumb composes it with where it was recorded: "Small waves at Nybrostrand". "at" carries almost every named location; a post that wants "in"/"on" (a forest, a train) sets placePreposition. `region` is deliberately left out — the leaf truncates to one line in the header, so it would be the first thing lost, and it already appears in the recording details. #}
-  {{ title }} <span class="breadcrumb-connector">{{ placePreposition or "at" }}</span> {{ place }}
+  {{ title }} <span class="breadcrumb-connector">{{ placePreposition or words.at }}</span> {{ place }}
 {%- elif category in ["like", "bookmark", "reply", "repost"] and (linkedHost) -%}
-  {% if title %}{{ title }} <span class="breadcrumb-connector">on</span> {% endif %}{{ linkedHost }}
+  {% if title %}{{ title }} <span class="breadcrumb-connector">{{ words.on }}</span> {% endif %}{{ linkedHost }}
 {%- elif page.url == "/404.html" -%}
   404: {{ title }}
 {%- elif tag -%}

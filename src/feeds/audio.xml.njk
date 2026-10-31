@@ -16,7 +16,7 @@ excludeFromSitemap: true
    Plain body: this syndicates the post's writing, not the file. To hear the
    recording you follow the link, or subscribe to the podcast feed. #}
 {%- set feedCollection = collections.audio -%}
-{%- set feedTitle = "Audio" -%}
-{%- set feedDescription = "Audio I've published — recordings and episodes." -%}
+{%- set feedTitle = words.feedAudio -%}
+{%- set feedDescription = words.feedAudioDescription -%}
 {%- set feedSelfUrl = "/audio/feed.xml" -%}
 {%- include "feeds/atom-body.njk" -%}

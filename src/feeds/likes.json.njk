@@ -8,7 +8,7 @@ eleventyExcludeFromCollections: true
 excludeFromSitemap: true
 ---
 {%- set feedCollection = collections.like -%}
-{%- set feedTitle = "Likes" -%}
-{%- set feedDescription = "Things I've liked elsewhere on the web." -%}
+{%- set feedTitle = words.feedLikes -%}
+{%- set feedDescription = words.feedLikesDescription -%}
 {%- set feedSelfUrl = "/likes/feed.json" -%}
 {%- include "feeds/link-json-body.njk" -%}

@@ -19,7 +19,7 @@
       "url": "{{ meta.url }}"
     },
     "author": {
-      "@type": "Person",
+      "@type": "{{ meta.siteType }}",
       "name": "{{ meta.author.name }}"
     },
     "datePublished": "{{ date | toIsoString }}"

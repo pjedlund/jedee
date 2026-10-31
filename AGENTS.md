@@ -146,6 +146,12 @@ All tokens live in the active theme's `tokens/*.json` and are consumed by the Ta
 
 Identity and social profiles live in `src/_data/settings.yaml`; `src/_data/meta.js` builds the site-wide config (OG defaults, and the theme colors from the active theme's `theme.json`) from it, and `src/_data/personal.js` maps the same values onto Eleventy Excellent's `personal.*` names. This site's own values (name, email, fediverse handle, profile links, blog description, theme colors) are in `SITE.md`.
 
+## Language and Words
+
+`site:` in `settings.yaml` holds the site's `lang` (for `<html lang>` and the feeds), `locale` (for `og:locale` and the structured data, like `en_US`) and `type` (`Person` or `Organization`, which is what the structured data calls the owner). A settings file with no `site:` block builds as English for a person.
+
+The interface words (labels, headings, accessible names, feed titles) live in `src/_config/words/<lang>.yaml`, one flat `key: text` file per language, read by `src/_data/words.js` into the global data `words`. The chosen language is laid over `en.yaml`, so a word nobody has translated shows in English. Templates write `{{ words.backlinks }}`; a sentence with a name or number in it is a text with `{title}`-style holes, filled with `| replace('{title}', title)`. `meta.js` hands the same words on under Eleventy Excellent's names (`meta.search.placeholder` and so on). A language with no file stops the build, and `tests/words.test.js` checks that every `words.x` a template uses exists in `en.yaml`. Page text in `src/pages/*.md`, `src/posts`, `src/wiki` and `themes/` is content, not interface words, and stays where it is.
+
 ## Key Conventions
 
 - **ESM only** — all JS files use `import`/`export`, no CommonJS

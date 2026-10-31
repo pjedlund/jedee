@@ -8,7 +8,7 @@ eleventyExcludeFromCollections: true
 excludeFromSitemap: true
 ---
 {%- set feedCollection = collections.jam -%}
-{%- set feedTitle = "Jams" -%}
-{%- set feedDescription = "Music I'm listening to." -%}
+{%- set feedTitle = words.feedJams -%}
+{%- set feedDescription = words.feedJamsDescription -%}
 {%- set feedSelfUrl = "/jams/feed.xml" -%}
 {%- include "feeds/atom-body.njk" -%}

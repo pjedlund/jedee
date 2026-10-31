@@ -8,7 +8,7 @@ eleventyExcludeFromCollections: true
 excludeFromSitemap: true
 ---
 {%- set feedCollection = collections.reply -%}
-{%- set feedTitle = "Replies" -%}
-{%- set feedDescription = "Replies to other people on the web." -%}
+{%- set feedTitle = words.feedReplies -%}
+{%- set feedDescription = words.feedRepliesDescription -%}
 {%- set feedSelfUrl = "/replies/feed.xml" -%}
 {%- include "feeds/link-atom-body.njk" -%}

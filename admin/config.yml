@@ -269,6 +269,13 @@ singletons:
         fields:
           - { name: site, label: Site repo, widget: string }
           - { name: licence, label: Licence repo, widget: string }
+      - name: site
+        label: Site
+        widget: object
+        fields:
+          - { name: lang, label: Language, widget: select, options: [en, sv], hint: 'The language of the interface words and of <html lang>. A language needs a file in src/_config/words, and a line here, in admin/config.yml. A language with no file stops the build' }
+          - { name: locale, label: Locale, widget: string, hint: 'For og:locale and the structured data, written en_US or sv_SE' }
+          - { name: type, label: Who the site is for, widget: select, options: [{ label: A person, value: Person }, { label: A club or organisation, value: Organization }], hint: 'What the structured data calls the owner of the site: a Person or an Organization' }
       - { name: theme, label: Theme, widget: select, options: [jedee, sample], hint: "The site's look: a folder in src/_includes/themes. A new theme needs a line here, in admin/config.yml. A name with no folder stops the build" }
       - name: switches
         label: Switches

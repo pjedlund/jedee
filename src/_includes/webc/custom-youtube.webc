@@ -97,7 +97,7 @@
       :videoid="slug"
       :js-api="jsapi !== 'undefined' ? '' : false"
       :params="start ? `start=${start}` : false"
-      :playlabel="`Play${label ? `: ${label}` : ''}`"
+      :playlabel="`${$data.words.play}${label ? `: ${label}` : ''}`"
       :style="`--yt-poster-img-url-lazy: url('${poster || getPosterImage(slug)}'); background-image: var(--yt-poster-img-url, linear-gradient(transparent, transparent));`"
     ></lite-youtube>
 

@@ -78,9 +78,9 @@
 />
 {% set ogImageAlt %}
   {%- if ogCard -%}
-    {{- title -}}, on a card beside its cover artwork
+    {{- words.cardAlt | replace('{title}', title) -}}
   {%- elif ogImage -%}
-    {{- photo.alt | default(ogAlt | default(coverAlt | default('Cover for ' + title))) -}}
+    {{- photo.alt | default(ogAlt | default(coverAlt | default(words.coverFor | replace('{title}', title)))) -}}
   {%- elif layout == 'post' or layout == 'note' -%}
     {{- title -}}
   {%- else -%}

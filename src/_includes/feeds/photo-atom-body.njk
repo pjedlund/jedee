@@ -18,7 +18,7 @@
   {# Inject the frontmatter photo as a plain <img> (sync — async shortcodes render empty inside {% set %} capture). renderTransforms then runs the eleventy-img transform to optimize it and rewrites every URL to absolute, the same path body images take into the other feeds. #}
   {%- set photoImg %}<img src="{{ post.data.photo.src | replace('./src', '') }}" alt="{{ post.data.photo.alt }}">{% endset -%}
     <entry{% if post.data.lang %} xml:lang="{{ post.data.lang }}"{% endif %}>
-      <title>{{ post.data.title or "Photo" }}</title>
+      <title>{{ post.data.title or words.photo }}</title>
       <link href="{{ absolutePostUrl }}" />
       <updated>{{ post.date | dateToRfc3339 }}</updated>
       <id>{{ absolutePostUrl }}</id>

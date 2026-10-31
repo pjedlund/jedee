@@ -26,17 +26,17 @@
 {% if reactions | length or replies | length %}
   {%- css "local" -%}{%- include 'css/webmentions.css' -%}{%- endcss -%}
   <aside class="webmentions | wrapper flow region prose">
-    <h2 id="webmentions">Webmentions</h2>
+    <h2 id="webmentions">{{ words.webmentions }}</h2>
     <p class="text-step-min-1">
-      Responses to this page from around the web, collected via
+      {{ words.webmentionsIntro }}
       <a href="https://webmention.io" rel="noreferrer">webmention.io</a>.
     </p>
 
     {% if reactions | length %}
       <div class="flow">
         <h3>
-          {{ reactions | length }} Reaction{% if reactions | length != 1 %}s{% endif %}
-          <span class="kinds">(likes, reposts and bookmarks)</span>
+          {{ reactions | length }} {{ words.reaction if reactions | length == 1 else words.reactions }}
+          <span class="kinds">{{ words.reactionKinds }}</span>
         </h3>
         <ul class="avatars | cluster gutter-3xs" role="list">
           {% for webmention in reactions %}
@@ -51,7 +51,7 @@
                   height="40"
                   loading="lazy"
                 />
-                <span class="visually-hidden p-name">{{ webmention.author.name or 'A reaction' }}</span>
+                <span class="visually-hidden p-name">{{ webmention.author.name or words.aReaction }}</span>
               </a>
             </li>
           {% endfor %}
@@ -62,7 +62,7 @@
     {% if replies | length %}
       <div class="flow">
         <h3>
-          {{ replies | length }} {% if replies | length == 1 %}Reply{% else %}Replies{% endif %}
+          {{ replies | length }} {% if replies | length == 1 %}{{ words.reply }}{% else %}{{ words.replies }}{% endif %}
         </h3>
         <ul class="webmention-list | flow" role="list">
           {% for webmention in (replies | webmentionSort) %}

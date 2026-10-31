@@ -9,20 +9,17 @@ import {looksSwedish} from '../_config/utils/looks-swedish.js';
 const PAGINATION = /^page-\d+$/;
 
 // Section labels titleCase gets wrong, or that aren't in the main nav.
-const EXTRA_LABELS = {
-  rsvps: 'RSVPs',
-  tags: 'Tags',
-};
+const extraLabels = words => ({rsvps: words.rsvps, tags: words.tagPlural});
 
 const titleCase = segment =>
   segment.replace(/-/g, ' ').replace(/\b\w/g, character => character.toUpperCase());
 
-const sectionLabel = segment => EXTRA_LABELS[segment] || titleCase(segment);
+const sectionLabel = (segment, words) => extraLabels(words)[segment] || titleCase(segment);
 
 export default {
-  // A front-matter titleLang wins; otherwise activity titles (a Swedish/English mix from Strava) get flagged when Swedish, so the shared entry-header h1 can carry lang="sv". See utils/looks-swedish.js for the detection rationale.
+  // A front-matter titleLang wins; otherwise activity titles (a Swedish/English mix from Strava) get flagged when Swedish, so the shared entry-header h1 can carry lang="sv". See utils/looks-swedish.js for the detection rationale. ⚠ Not on a Swedish site: there every title is already Swedish.
   titleLang: data =>
-    data.titleLang ?? (data.category === 'activity' && looksSwedish(data.title) ? 'sv' : undefined),
+    data.titleLang ?? (data.category === 'activity' && data.meta?.lang !== 'sv' && looksSwedish(data.title) ? 'sv' : undefined),
 
   breadcrumbs: data => {
     const url = data && data.page && data.page.url;
@@ -30,7 +27,7 @@ export default {
 
     const segments = url.split('/').filter(segment => segment && !PAGINATION.test(segment));
 
-    const siteName = (data.meta && data.meta.siteName) || 'Home';
+    const siteName = (data.meta && data.meta.siteName) || data.words.home;
     const crumbs = [{ isHome: true, url: '/', label: siteName, current: url === '/' }];
 
     let path = '';
@@ -40,7 +37,7 @@ export default {
       crumbs.push({
         isHome: false,
         url: `${path}/`,
-        label: isLast ? data.title || titleCase(segment) : sectionLabel(segment),
+        label: isLast ? data.title || titleCase(segment) : sectionLabel(segment, data.words),
         current: isLast,
       });
     });

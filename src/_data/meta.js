@@ -2,11 +2,14 @@ import 'dotenv/config'; // ⚠ config-time importers (the webmentions filter) lo
 import fs from 'node:fs';
 import {load as yamlLoad} from 'js-yaml';
 import {loadLogo, loadThemeConfig, themeDir, themeName} from '../_config/utils/theme.js';
+import {siteSettings} from '../_config/utils/site.js';
+import words from './words.js';
 
 // The values live in settings.yaml; this file gives them Lene's names so her templates still fit. ⚠ Named exports only — a default export here is silently ignored.
 // ⚠ settings.yaml has no comments on purpose: Sveltia (/admin/ → Site settings) drops them on save. Its notes are the hints in admin/config.yml.
 export const settings = yamlLoad(fs.readFileSync(new URL('./settings.yaml', import.meta.url), 'utf8'));
 const {identity, profiles, switches} = settings;
+const site = siteSettings();
 const relMe = Object.values(profiles).filter(profile => profile.relMe).map(profile => profile.url);
 
 export const url = process.env.URL || 'http://localhost:8080';
@@ -17,10 +20,10 @@ export const domain = new URL(url).hostname;
 // The canonical host name from settings — unlike `domain`, never `localhost`.
 export const siteDomain = new URL(identity.website).hostname;
 export const noindexSite = switches.noindexSite;
-export const siteType = 'Person'; // schema
-export const locale = 'en_US';
-export const lang = 'en';
-export const skipContent = 'Skip to content';
+export const siteType = site.type; // schema: Person or Organization
+export const locale = site.locale;
+export const lang = site.lang;
+export const skipContent = words.skipContent;
 // for the site content author, used in <head> meta and post h-card microformat
 export const author = {
   name: identity.name, // page / blog author's name. Must be set.
@@ -58,44 +61,44 @@ export const blog = {
   // feed links are looped over in the head. You may add more to the array.
   feedLinks: [
     {
-      title: 'Atom Feed',
+      title: words.feedAtom,
       url: '/feed.xml',
       type: 'application/atom+xml'
     },
     {
-      title: 'JSON Feed',
+      title: words.feedJson,
       url: '/feed.json',
       type: 'application/json'
     }
   ],
   // Tags
-  tagSingle: 'Tag',
-  tagPlural: 'Tags',
-  tagMore: 'More tags:',
+  tagSingle: words.tagSingle,
+  tagPlural: words.tagPlural,
+  tagMore: words.tagMore,
   // Genres — the jam-only index at /jams/genres/, deliberately separate from tags
-  genreSingle: 'Genre',
-  genrePlural: 'Genres',
-  genreMore: 'More genres:',
+  genreSingle: words.genreSingle,
+  genrePlural: words.genrePlural,
+  genreMore: words.genreMore,
   // pagination
-  paginationLabel: 'Articles',
-  paginationPage: 'Page',
-  paginationPrevious: 'Previous',
-  paginationNext: 'Next',
+  paginationLabel: words.paginationLabel,
+  paginationPage: words.paginationPage,
+  paginationPrevious: words.previous,
+  paginationNext: words.next,
   paginationNumbers: true
 };
 export const dialog = {
-  close: 'Close',
-  next: 'Next',
-  previous: 'Previous'
+  close: words.close,
+  next: words.next,
+  previous: words.previous
 };
 // ⚠ SHOW_HIDDEN=1 turns hideNav and hideFeatured off so a test build can see the menu and Featured; leave it unset in production.
 const showHidden = Boolean(process.env.SHOW_HIDDEN);
 export const navigation = {
-  navLabel: 'Menu',
-  homeTooltip: 'Home',
-  ariaTop: 'Main',
-  ariaBottom: 'Complementary',
-  ariaPlatforms: 'Platforms',
+  navLabel: words.menu,
+  homeTooltip: words.home,
+  ariaTop: words.navMain,
+  ariaBottom: words.navComplementary,
+  ariaPlatforms: words.navPlatforms,
   // Header chrome — three independent switches (header.njk), set in settings.yaml.
   breadcrumb: switches.breadcrumb,
   nameReveal: switches.nameReveal,
@@ -103,23 +106,23 @@ export const navigation = {
 };
 export const hideFeatured = switches.hideFeatured && !showHidden;
 // Static ACCESSIBLE NAME for the header light/dark toggle; aria-pressed carries the state. ⚠ Don't make this change with the theme — a toggle button's name must stay put, or screen readers announce the state twice and disagree with themselves.
-export const themeToggleLabel = 'Toggle dark mode';
+export const themeToggleLabel = words.themeToggle;
 // Visible tooltip only, so it may say what a click WILL do. Swapped by theme-toggle.js on every theme change.
 export const themeToggleTooltip = {
-  toDark: 'Show dark mode',
-  toLight: 'Show light mode'
+  toDark: words.showDark,
+  toLight: words.showLight
 };
 // Site search copy. The magnifier is icon-only, so `toggleLabel` is its accessible name.
 export const search = {
-  toggleLabel: 'Search this site',
+  toggleLabel: words.searchThisSite,
   // Visible tooltip only. Shorter than the accessible name, which stays specific.
-  toggleTooltip: 'Search',
-  inputLabel: 'Search',
-  placeholder: 'Search…',
-  clearLabel: 'Clear search',
-  resultsLabel: 'Search results',
-  more: 'more matches',
-  empty: 'Nothing found.'
+  toggleTooltip: words.search,
+  inputLabel: words.search,
+  placeholder: words.searchPlaceholder,
+  clearLabel: words.searchClear,
+  resultsLabel: words.searchResults,
+  more: words.searchMore,
+  empty: words.searchEmpty
 };
 // IndieWeb endpoints, discovered via <link rel> in the <head>. Auth is delegated to hosted IndieAuth — this site runs no auth server, it only verifies the bearer token.
 export const indieweb = {
@@ -155,8 +158,8 @@ export const tests = {
 export const viewRepo = {
   // this is for the view/edit on github link. The value in the package.json will be pulled in.
   allow: switches.viewRepo,
-  infoText: 'View this page on GitHub',
-  issuesPage: 'Report accessibility issues'
+  infoText: words.viewOnGithub,
+  issuesPage: words.reportAccessibility
 };
 export const easteregg = switches.easteregg;
 export const eastereggKeyword = switches.eastereggKeyword; // empty = the starter's "eleventy" and "excellent"

@@ -43,7 +43,7 @@
     {%- set mediaSrc = media.src -%}
     {%- set absolutePostUrl = post.url | absoluteUrl(meta.url) -%}
     {%- set itemTitle = post.data.title -%}
-    {%- if not itemTitle and media.episode -%}{%- set itemTitle = "Episode " + (media.episode | string) -%}{%- endif -%}
+    {%- if not itemTitle and media.episode -%}{%- set itemTitle = words.episode + " " + (media.episode | string) -%}{%- endif -%}
     {%- if not itemTitle -%}{%- set itemTitle = post.fileSlug -%}{%- endif -%}
     <item>
       <title>{{ itemTitle }}</title>

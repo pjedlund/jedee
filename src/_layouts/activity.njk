@@ -14,7 +14,7 @@ schema: BlogPosting
       <place-map @breakout="feature" @place="this route" @activity="{{ activityType | slugify }}">
         {#- ⚠ Empty box rendered server-side so its aspect-ratio holds the space from first paint; place-map.js adopts it. #}
         <div class="place-map-live" data-place-map-box style="--place-map-ratio: 2 / 1">
-          <p class="place-map-pending">Map of this route</p>
+          <p class="place-map-pending">{{ words.mapOfRoute }}</p>
         </div>
         <script type="application/json" data-route>{{ routeJson | safe }}</script>
       </place-map>
@@ -27,7 +27,7 @@ schema: BlogPosting
       {%
         imageKeys {
           "src": cover,
-          "alt": coverAlt | default('Cover for ' + title),
+          "alt": coverAlt | default(words.coverFor | replace('{title}', title)),
           "containerClass": "cover-zoom",
           "imageClass": "cover",
           "widths": [224, 448, 900, null],
@@ -40,29 +40,29 @@ schema: BlogPosting
     {# Recorded data for /activities/. No standard mf2 property exists for an activity's stats, so this is plain semantic markup (a description list) — the entry stays a valid h-entry on title (p-name) + date (dt-published) + commentary (e-content). Pace/speed is DERIVED here from the stored raw numbers; duration is seconds -> clock via the shared itunesDuration filter. #}
     <dl class="activity-stats | cluster">
       {% if distanceKm %}
-        <div><dt>Distance</dt><dd>{{ distanceKm | withMiles }}</dd></div>
+        <div><dt>{{ words.distance }}</dt><dd>{{ distanceKm | withMiles }}</dd></div>
       {% endif %}
-      <div><dt>Duration</dt><dd>{{ duration | itunesDuration }}</dd></div>
+      <div><dt>{{ words.duration }}</dt><dd>{{ duration | itunesDuration }}</dd></div>
       {% set pace = activityType | paceOrSpeed(distanceKm, duration) %}
       {% if pace %}
-        <div><dt>Pace</dt><dd>{{ pace }}</dd></div>
+        <div><dt>{{ words.pace }}</dt><dd>{{ pace }}</dd></div>
       {% endif %}
       {% if hrAvg %}
-        <div><dt>Heart rate</dt><dd>{{ hrAvg }}{% if hrMax %} ({{ hrMax }} max){% endif %}</dd></div>
+        <div><dt>{{ words.heartRate }}</dt><dd>{{ hrAvg }}{% if hrMax %} ({{ hrMax }} {{ words.max }}){% endif %}</dd></div>
       {% endif %}
       {% if elevationGain %}
-        <div><dt>Elevation</dt><dd>+{{ elevationGain }}&nbsp;m{% if elevationLoss %} / -{{ elevationLoss }}&nbsp;m{% endif %}</dd></div>
+        <div><dt>{{ words.elevation }}</dt><dd>+{{ elevationGain }}&nbsp;m{% if elevationLoss %} / -{{ elevationLoss }}&nbsp;m{% endif %}</dd></div>
       {% endif %}
       {% if energyKcal %}
-        <div><dt>Energy</dt><dd>{{ energyKcal }}&nbsp;kcal</dd></div>
+        <div><dt>{{ words.energy }}</dt><dd>{{ energyKcal }}&nbsp;kcal</dd></div>
       {% endif %}
     </dl>
 
     {% if stravaUrl or liveloxUrl or eventorUrl %}
       <p class="cluster gutter-xs-s">
-        {% if stravaUrl %}<a class="button" data-small-button href="{{ stravaUrl }}">View on Strava</a>{% endif %}
-        {% if liveloxUrl %}<a class="button" data-small-button href="{{ liveloxUrl }}">View on Livelox</a>{% endif %}
-        {% if eventorUrl %}<a class="button" data-small-button href="{{ eventorUrl }}">View on Eventor</a>{% endif %}
+        {% if stravaUrl %}<a class="button" data-small-button href="{{ stravaUrl }}">{{ words.viewOn }} Strava</a>{% endif %}
+        {% if liveloxUrl %}<a class="button" data-small-button href="{{ liveloxUrl }}">{{ words.viewOn }} Livelox</a>{% endif %}
+        {% if eventorUrl %}<a class="button" data-small-button href="{{ eventorUrl }}">{{ words.viewOn }} Eventor</a>{% endif %}
       </p>
     {% endif %}
 
