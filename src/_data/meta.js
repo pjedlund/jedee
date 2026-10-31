@@ -1,11 +1,22 @@
 import 'dotenv/config'; // ⚠ config-time importers (the webmentions filter) load this before eleventy.config.js reads .env
 import fs from 'node:fs';
 import {load as yamlLoad} from 'js-yaml';
+import {loadLogo, loadThemeConfig, logoOutline, themeDir, themeName} from '../_config/utils/theme.js';
+import {loadWords, siteSettings} from '../_config/utils/site.js';
+import {resolvePwa} from '../_config/utils/pwa.js';
+import {resolveSwitches} from '../_config/utils/switches.js';
 
 // The values live in settings.yaml; this file gives them Lene's names so her templates still fit. ⚠ Named exports only — a default export here is silently ignored.
 // ⚠ settings.yaml has no comments on purpose: Sveltia (/admin/ → Site settings) drops them on save. Its notes are the hints in admin/config.yml.
 export const settings = yamlLoad(fs.readFileSync(new URL('./settings.yaml', import.meta.url), 'utf8'));
-const {identity, profiles, switches} = settings;
+const {identity, profiles} = settings;
+const flags = settings.switches ?? {};
+// The parts of the site that are on unless settings say false (utils/switches.js); `flags` holds the rest of settings.switches under their own names below.
+export const switches = resolveSwitches(settings);
+// The service worker's address, protected caches and push code (utils/pwa.js).
+export const pwa = resolvePwa(settings);
+const site = siteSettings();
+const words = loadWords();
 const relMe = Object.values(profiles).filter(profile => profile.relMe).map(profile => profile.url);
 
 export const url = process.env.URL || 'http://localhost:8080';
@@ -15,11 +26,11 @@ export const siteDescription = identity.description;
 export const domain = new URL(url).hostname;
 // The canonical host name from settings — unlike `domain`, never `localhost`.
 export const siteDomain = new URL(identity.website).hostname;
-export const noindexSite = switches.noindexSite;
-export const siteType = 'Person'; // schema
-export const locale = 'en_US';
-export const lang = 'en';
-export const skipContent = 'Skip to content';
+export const noindexSite = flags.noindexSite;
+export const siteType = site.type; // schema: Person or Organization
+export const locale = site.locale;
+export const lang = site.lang;
+export const skipContent = words.skipContent;
 // for the site content author, used in <head> meta and post h-card microformat
 export const author = {
   name: identity.name, // page / blog author's name. Must be set.
@@ -38,13 +49,18 @@ export const creator = {
   mastodon: profiles.mastodon?.url,
   x: profiles.x?.url
 };
-export const pathToSvgLogo = 'src/assets/svg/misc/logo.svg'; // used for favicon generation
-//Color Hunt Palette f4f4f2e8e8e8bbbfca495464.png
-export const themeColor = '#495464'; // base-darkest — the brand tone; manifest theme_color, so it paints the splash and the app-switcher card
-export const themeLight = '#F4F4F2'; // base-lightest — <meta theme-color> in light mode, the manifest's background_color, and the knockout mark on the app icons
-export const themeDark = themeColor; // <meta theme-color> in dark mode; the same brand tone, since a pale band over a near-black page read as a leftover
+export const pathToSvgLogo = `${themeDir()}/logo.svg`; // used for favicon generation and the share cards
+export const logoMark = logoOutline(loadLogo(), `${themeDir()}/logo.svg`); // the logo's outline, for the generated share cards
+// The active theme's folder name; templates reach its files by "themes/" + meta.theme + "/home.njk".
+export const theme = themeName();
+const themeConfig = loadThemeConfig();
+export const themeColor = themeConfig.themeColor; // the brand tone; manifest theme_color, so it paints the splash and the app-switcher card
+export const themeLight = themeConfig.themeLight; // <meta theme-color> in light mode, the manifest's background_color, and the knockout mark on the app icons
+export const themeDark = themeConfig.themeDark; // <meta theme-color> in dark mode
+export const themePreloads = themeConfig.preloads; // font files head/preloads.njk asks for early
+export const themeOg = themeConfig.og; // share cards: colours, font names and files
 export const opengraph_default = '/assets/images/template/opengraph-default.jpg'; // fallback/default meta image
-export const opengraph_default_alt = 'Johan Edlund — personal website'; // alt text for default meta image
+export const opengraph_default_alt = identity.ogAlt || identity.description; // alt text for default meta image
 export const blog = {
   // RSS feed
   name: identity.name,
@@ -52,65 +68,68 @@ export const blog = {
   // feed links are looped over in the head. You may add more to the array.
   feedLinks: [
     {
-      title: 'Atom Feed',
+      title: words.feedAtom,
       url: '/feed.xml',
       type: 'application/atom+xml'
     },
     {
-      title: 'JSON Feed',
+      title: words.feedJson,
       url: '/feed.json',
       type: 'application/json'
     }
   ],
   // Tags
-  tagSingle: 'Tag',
-  tagPlural: 'Tags',
-  tagMore: 'More tags:',
+  tagSingle: words.tagSingle,
+  tagPlural: words.tagPlural,
+  tagMore: words.tagMore,
   // Genres — the jam-only index at /jams/genres/, deliberately separate from tags
-  genreSingle: 'Genre',
-  genrePlural: 'Genres',
-  genreMore: 'More genres:',
+  genreSingle: words.genreSingle,
+  genrePlural: words.genrePlural,
+  genreMore: words.genreMore,
   // pagination
-  paginationLabel: 'Articles',
-  paginationPage: 'Page',
-  paginationPrevious: 'Previous',
-  paginationNext: 'Next',
+  paginationLabel: words.paginationLabel,
+  paginationPage: words.paginationPage,
+  paginationPrevious: words.previous,
+  paginationNext: words.next,
   paginationNumbers: true
 };
 export const dialog = {
-  close: 'Close',
-  next: 'Next',
-  previous: 'Previous'
+  close: words.close,
+  next: words.next,
+  previous: words.previous
 };
+// ⚠ SHOW_HIDDEN=1 turns hideNav and hideFeatured off so a test build can see the menu and Featured; leave it unset in production.
+const showHidden = Boolean(process.env.SHOW_HIDDEN);
 export const navigation = {
-  navLabel: 'Menu',
-  homeTooltip: 'Home',
-  ariaTop: 'Main',
-  ariaBottom: 'Complementary',
-  ariaPlatforms: 'Platforms',
+  navLabel: words.menu,
+  homeTooltip: words.home,
+  ariaTop: words.navMain,
+  ariaBottom: words.navComplementary,
+  ariaPlatforms: words.navPlatforms,
   // Header chrome — three independent switches (header.njk), set in settings.yaml.
   breadcrumb: switches.breadcrumb,
-  nameReveal: switches.nameReveal,
-  hideNav: switches.hideNav
+  nameReveal: flags.nameReveal,
+  hideNav: flags.hideNav && !showHidden
 };
+export const hideFeatured = flags.hideFeatured && !showHidden;
 // Static ACCESSIBLE NAME for the header light/dark toggle; aria-pressed carries the state. ⚠ Don't make this change with the theme — a toggle button's name must stay put, or screen readers announce the state twice and disagree with themselves.
-export const themeToggleLabel = 'Toggle dark mode';
+export const themeToggleLabel = words.themeToggle;
 // Visible tooltip only, so it may say what a click WILL do. Swapped by theme-toggle.js on every theme change.
 export const themeToggleTooltip = {
-  toDark: 'Show dark mode',
-  toLight: 'Show light mode'
+  toDark: words.showDark,
+  toLight: words.showLight
 };
 // Site search copy. The magnifier is icon-only, so `toggleLabel` is its accessible name.
 export const search = {
-  toggleLabel: 'Search this site',
+  toggleLabel: words.searchThisSite,
   // Visible tooltip only. Shorter than the accessible name, which stays specific.
-  toggleTooltip: 'Search',
-  inputLabel: 'Search',
-  placeholder: 'Search…',
-  clearLabel: 'Clear search',
-  resultsLabel: 'Search results',
-  more: 'more matches',
-  empty: 'Nothing found.'
+  toggleTooltip: words.search,
+  inputLabel: words.search,
+  placeholder: words.searchPlaceholder,
+  clearLabel: words.searchClear,
+  resultsLabel: words.searchResults,
+  more: words.searchMore,
+  empty: words.searchEmpty
 };
 // IndieWeb endpoints, discovered via <link rel> in the <head>. Auth is delegated to hosted IndieAuth — this site runs no auth server, it only verifies the bearer token.
 export const indieweb = {
@@ -145,10 +164,10 @@ export const tests = {
 };
 export const viewRepo = {
   // this is for the view/edit on github link. The value in the package.json will be pulled in.
-  allow: switches.viewRepo,
-  infoText: 'View this page on GitHub',
-  issuesPage: 'Report accessibility issues'
+  allow: flags.viewRepo,
+  infoText: words.viewOnGithub,
+  issuesPage: words.reportAccessibility
 };
 export const easteregg = switches.easteregg;
-export const eastereggKeyword = switches.eastereggKeyword; // empty = the starter's "eleventy" and "excellent"
-export const eastereggShape = switches.eastereggShape; // empty = the starter's ⭐️
+export const eastereggKeyword = flags.eastereggKeyword; // empty = the starter's "eleventy" and "excellent"
+export const eastereggShape = flags.eastereggShape; // empty = the starter's ⭐️

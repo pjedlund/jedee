@@ -15,17 +15,19 @@
 
 {% if syndication %}
   <p class="text-step-min-1 cluster gutter-xs-s">
-    Also on:
+    {{ words.alsoOn }}
     {% for url in syndication %}
       <a class="u-syndication" rel="syndication" href="{{ url }}">{{ url }}</a>
     {% endfor %}
   </p>
 {% endif %}
 
-<p class="text-step-min-1">
-  Have you written a response to this on your own site?
-  <a href="https://indieweb.org/Webmention">Let me know the URL.</a>
-</p>
+{% if meta.switches.webmentions %}
+  <p class="text-step-min-1">
+    {{ words.webmentionPrompt }}
+    <a href="https://indieweb.org/Webmention">{{ words.webmentionLink }}</a>
+  </p>
+{% endif %}
 
 {# Received webmentions are rendered PER-LAYOUT (article/note/photo only), not here — see partials/webmentions.njk + each layout's bare include. The text CTA above stays on all post types. #}
 {% include 'partials/edit-on.njk' %}

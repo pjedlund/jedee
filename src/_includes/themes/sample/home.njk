@@ -1,0 +1,9 @@
+
+<div class="region wrapper flow prose" data-reveal style="--region-space-top: var(--space-xl-2xl)">
+  <h1>{{ meta.siteName }}</h1>
+  {{ content | safe }}
+</div>
+
+{% include "partials/featured.njk" %}
+
+{%- css "local" -%}{%- include 'css/hero-reveal.css' -%}{%- endcss -%}

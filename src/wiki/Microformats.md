@@ -30,7 +30,7 @@ Spacing between siblings comes from one rule — the Every Layout Stack, in `com
 
 It works only because the reset first zeroes every default margin. So a paragraph has two possible states: inside a flow context it gets `--flow-space`, outside one it gets zero.
 
-The `<article>` already carried `flow`. When the `e-content` div was added inside it *without* its own `flow` class, every paragraph moved one level deeper. The child combinator reaches direct children only — the rule now selected the `e-content` div itself but not the paragraphs within. They were grandchildren, no rule reached them, and the reset's `margin: 0` was all that applied. **Every post body on the site collapsed to zero spacing at once**, with valid CSS, a green build, and no error.
+The `<article>` already carried `flow`. When the `e-content` div was added inside it *without* a `flow` class, every paragraph moved one level deeper. The child combinator reaches direct children only — the rule now selected the `e-content` div itself but not the paragraphs within. They were grandchildren, no rule reached them, and the reset's `margin: 0` was all that applied. **Every post body on the site collapsed to zero spacing at once**, with valid CSS, a green build, and no error.
 
 The fix isn't removing the wrapper — parsers need it — but making one element carry both jobs: `class="e-content | flow"`. Same div, machine-readable marker *and* a new flow context, so its direct children get their margins back.
 
@@ -38,7 +38,7 @@ The fix isn't removing the wrapper — parsers need it — but making one elemen
 
 - **Never rename or delete an mf2 class because it looks unused in the CSS.** `h-entry`, `p-name`, `e-content`, `dt-published`, `u-url` and the rest are read by external parsers.
 - **The prefix tells you what a class is for** and is the reliable way to spot data classes in a class list: `e-` embedded HTML, `p-` plain text, `u-` URL, `dt-` datetime, `h-` a root.
-- **`.flow > * + *` never crosses an element boundary.** Any wrapper introduced inside a flow context — for microformats, for a component, for anything — needs its own `flow` class if its content should keep its rhythm. That's by design: the Stack composes by nesting, it does not inherit downward.
+- **`.flow > * + *` never crosses an element boundary.** Any wrapper introduced inside a flow context — for microformats, for a component, for anything — needs a separate `flow` class if its content should keep its rhythm. That's by design: the Stack composes by nesting, it does not inherit downward.
 
 ### `wrapper-pass` — the same root cause, a different consequence
 

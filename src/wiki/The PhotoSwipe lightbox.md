@@ -12,13 +12,13 @@ What one has to get right:
 - **Focus must move into the overlay, stay trapped there, and return to the trigger on close**, with Escape closing it. This is the argument for building on [`<dialog>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog) and `showModal()`: the browser handles focus trapping and makes the rest of the page inert without any of it being hand-written.
 - **The zoomed image should be responsive too.** Serving one enormous original into the overlay quietly undoes the optimization work done on the page image.
 
-[PhotoSwipe](https://photoswipe.com/) is the common library for the gesture and zoom behavior. The progressive-enhancement question above is independent of it — whichever library animates the overlay, the no-JS fallback is the site's own responsibility.
+[PhotoSwipe](https://photoswipe.com/) is the common library for the gesture and zoom behavior. The progressive-enhancement question above is independent of it — whichever library animates the overlay, the no-JS fallback is the site's responsibility.
 
 ## In jedee
 
 A `{% lightbox %}` shortcode puts a zoomable PhotoSwipe image in any note, article, or page. It reuses the Eleventy Image pipeline, so one line of markdown produces a responsive `<picture>` on the page *and* a responsive zoomable image in the lightbox.
 
-**jedee's own** — Eleventy Excellent ships no lightbox component. Built on `photo-lightbox.webc` + `photo-lightbox.js`.
+**jedee's** — Eleventy Excellent ships no lightbox component. Built on `photo-lightbox.webc` + `photo-lightbox.js`.
 
 **`{% bento %}` is not on `main`.** The grouped-gallery shortcode that reuses this lightbox lives on `feat/bento-gallery`, **parked 2026-07-31** — and parked blocked: the branch's draft articles carry an incomplete `{% bento %}` call that fatally aborts the build. It is described below as the worked example of grouping, because that is what it does, but nothing on the live site calls it and the branch can't be merged as it stands.
 
@@ -59,7 +59,7 @@ A lightbox trigger that is narrower than its column needs the **width cap on the
 
 <figure class="popout" data-wiki-mockup>
   <img eleventy:formats="webp,png" src="/assets/images/wiki/photoswipe-hit-area.png" alt="The same photographed race map twice, both capped to the same width. Around the left one, a tinted dashed rectangle extends well past the picture to the full width of the column; around the right one, the same rectangle hugs the picture." width="1360" height="708">
-  <figcaption>The tint is the <code>&lt;a&gt;</code>'s own box, not a drawn annotation — the picture paints over it, so what shows is exactly the clickable emptiness beside it. Left, the cap is on the image alone; right, <code>.cover-zoom</code> puts it on the wrapper too.</figcaption>
+  <figcaption>The tint is the <code>&lt;a&gt;</code>'s box, not a drawn annotation — the picture paints over it, so what shows is exactly the clickable emptiness beside it. Left, the cap is on the image alone; right, <code>.cover-zoom</code> puts it on the wrapper too.</figcaption>
 </figure>
 
 ### Without JavaScript it is a link
@@ -94,7 +94,7 @@ this.lightbox = new PhotoSwipeLightbox({
 });
 ```
 
-- **Each `<photo-lightbox>` is its own gallery** (`gallery: this, children: 'a'`), so multiple images in a post open independently with no prev/next. Grouping them is a `children`/shared-gallery change — which is exactly what the parked `{% bento %}` shortcode does, by putting several `<a>`s inside one element rather than rewriting the lightbox.
+- **Each `<photo-lightbox>` is a separate gallery** (`gallery: this, children: 'a'`), so multiple images in a post open independently with no prev/next. Grouping them is a `children`/shared-gallery change — which is exactly what the parked `{% bento %}` shortcode does, by putting several `<a>`s inside one element rather than rewriting the lightbox.
 - **`pswpModule: () => import(…)`** is PhotoSwipe's code-splitting hook: the ~14 KB shell initializes up front, the ~52 KB core loads only when an image opens. esbuild bundles both into one file, so the split that actually matters here is the is-land one — nothing loads until idle.
 - **Zoom levels are tuned for large scans**: open fitted, second click goes to 1:1 native pixels, wheel zooms between.
 - PhotoSwipe handles the loading choreography itself — it grabs the thumbnail's `currentSrc` as a placeholder, plays the open animation, decodes the large image off-screen, then crossfades. No blank frames.

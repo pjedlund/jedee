@@ -1,0 +1,201 @@
+skipContent: Skip to content
+menu: Menu
+home: Home
+homeLabel: '{name}, home'
+navMain: Main
+navComplementary: Complementary
+navPlatforms: Platforms
+breadcrumb: Breadcrumb
+themeToggle: Toggle dark mode
+showDark: Show dark mode
+showLight: Show light mode
+search: Search
+searchThisSite: Search this site
+searchPlaceholder: Search…
+searchClear: Clear search
+searchResults: Search results
+searchMore: more matches
+searchEmpty: Nothing found.
+feedAtom: Atom Feed
+feedJson: JSON Feed
+tagSingle: Tag
+tagPlural: Tags
+tagMore: 'More tags:'
+genreSingle: Genre
+genrePlural: Genres
+genreMore: 'More genres:'
+paginationLabel: Articles
+paginationPage: Page
+previous: Previous
+next: Next
+close: Close
+rsvps: RSVPs
+viewOnGithub: View this page on GitHub
+reportAccessibility: Report accessibility issues
+backlinks: Backlinks
+featured: Featured
+webmentions: Webmentions
+webmentionsIntro: Responses to this page from around the web, collected via
+reaction: Reaction
+reactions: Reactions
+reactionKinds: (likes, reposts and bookmarks)
+aReaction: A reaction
+reply: Reply
+replies: Replies
+anonymous: Anonymous
+source: Source
+like: Like
+likes: Likes
+comment: Comment
+comments: Comments
+jamSocialHeading: From This Is My Jam
+jamSocialIntro: The likes and comments this jam received on This Is My Jam (2012–2015), recovered from the
+internetArchive: Internet Archive
+approximateDate: Approximate date
+keyboardShortcuts: Keyboard shortcuts
+shortcutSearch: Open the search
+shortcutMove: Move through the search results
+shortcutOpen: Open the selected result
+shortcutClose: Close the search or this list
+shortcutGrid: Show or hide the layout grid
+shortcutRhythm: Show or hide the rhythm lines
+shortcutList: Open this list
+alsoOn: 'Also on:'
+webmentionPrompt: Have you written a response to this on your own site?
+webmentionLink: Send the URL.
+draft: draft
+readInSwedish: Läs på svenska
+readInEnglish: Read in English
+dateLong: 'Do [of] MMMM, YYYY'
+revised: Revised
+activityOrienteering: Orienteering
+activityGym: Gym
+activityRun: Run
+activityHike: Hike
+by: by
+on: on
+at: at
+episode: Episode
+coverFor: 'Cover for {title}'
+posterFor: 'Poster for {title}'
+cardAlt: '{title}, on a card beside its cover artwork'
+photo: Photo
+bookmarked: Bookmarked
+inReplyTo: In reply to
+rsvpTo: RSVP to
+rsvp: RSVP
+liked: Liked
+reposted: Reposted
+to: to
+mapOfRoute: Map of this route
+mapOfActivities: Map of the activities
+mapOfPlace: 'Map of {place}'
+thisPlace: this place
+type: Type
+date: Date
+activity: Activity
+allActivities: Every activity
+distance: Distance
+duration: Duration
+time: Time
+pace: Pace
+heartRate: Heart rate
+max: max
+elevation: Elevation
+energy: Energy
+viewOn: View on
+camera: Camera
+format: Format
+exposure: Exposure
+film: Film
+development: Development
+taken: Taken
+place: Place
+coordinates: Coordinates
+resolution: Resolution
+scanAperture: Scan aperture
+scanShutter: Scan shutter
+scanFocalLength: Scan focal length
+scanner: Scanner
+scanLens: Scan lens
+software: Software
+digitized: Digitized
+scanTechnicalData: Scan & technical data
+photographDetails: Photograph details
+recordingDetails: Recording details
+recorder: Recorder
+microphone: Microphone
+windProtection: Wind protection
+length: Length
+transcript: Transcript
+downloadTranscript: Download transcript (WebVTT)
+publicDomain: Public domain (CC0)
+downloadFree: '&mdash; download and reuse freely.'
+when: When
+where: Where
+link: Link
+eventStatus-cancelled: Cancelled
+eventStatus-postponed: Postponed
+eventStatus-moved-online: Moved online
+eventUpcoming: Upcoming
+eventPast: Past
+eventsHeading: Events
+eventsIntro: Upcoming events first, then past. Cancelled events stay listed in their date's section.
+eventsNoneUpcoming: Nothing on the calendar right now.
+eventsNonePast: No past events yet.
+yields: Yields
+totalTime: Total time
+recipeFrom: Recipe from
+lastUpdated: Last updated
+nowListening: Listening to
+nowWatching: Watching
+nowReading: Reading
+wikiPartOf: Part of the
+wikiName: wiki
+wiki: Wiki
+ratedStars: '{rating} out of 5 stars'
+rated: 'Rated {rating} out of 5'
+play: Play
+onWikipedia: on Wikipedia
+bpm: bpm
+humansLanguages: ''
+llmsArticles: Articles
+llmsNotes: Notes
+llmsReading: Reading
+llmsWatching: Watching
+llmsMusic: Music
+llmsPhotos: Photos
+llmsRecipes: Recipes
+llmsBookmarks: Bookmarks
+llmsReplies: Replies
+llmsEvents: Events
+llmsAudio: Audio
+llmsVideo: Video
+feedActivities: Activities
+feedActivitiesDescription: Runs, races and workouts.
+feedArticles: Articles
+feedArticlesDescription: Long-form posts.
+feedAudio: Audio
+feedAudioDescription: Recordings and episodes.
+feedBookmarks: Bookmarks
+feedBookmarksDescription: Links worth keeping.
+feedJams: Jams
+feedJamsDescription: Music on repeat.
+feedLikes: Likes
+feedLikesDescription: Things liked elsewhere on the web.
+feedNotes: Notes
+feedNotesDescription: Short thoughts and observations.
+feedPhotos: Photos
+feedPhotosDescription: Photographs.
+feedReading: Reading
+feedReadingDescription: Books and notes on them.
+feedRecipes: Recipes
+feedRecipesDescription: Recipes.
+feedReplies: Replies
+feedRepliesDescription: Replies to other people on the web.
+feedRsvps: RSVPs
+feedRsvpsDescription: Responses to events.
+feedVideos: Videos
+feedVideosDescription: Self-hosted clips and embeds.
+feedWatching: Watching
+feedWatchingDescription: Films and shows watched.

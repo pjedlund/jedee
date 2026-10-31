@@ -7,7 +7,7 @@ schema: BlogPosting
   <article class="wrapper flow prose h-entry">
     {% include 'partials/entry-header.njk' %}
 
-    <p>Bookmarked <a class="u-bookmark-of" href="{{ bookmarkOf }}">{{ bookmarkOf }}</a></p>
+    <p>{{ words.bookmarked }} <a class="u-bookmark-of" href="{{ bookmarkOf }}">{{ bookmarkOf }}</a></p>
 
     <div class="e-content | wrapper-pass flow">
       {{ content | safe }}

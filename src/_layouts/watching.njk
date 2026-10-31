@@ -15,12 +15,12 @@ schema: BlogPosting
           <photo-lightbox @href="{{ coverZoom.url }}" @width="{{ coverZoom.width }}" @height="{{ coverZoom.height }}">
             {# ⚠ The slot="image" must sit on a wrapper, not on the <img> itself: WebC drops a slotted node carrying eleventy:-namespaced attributes, and the cover silently renders as an empty link. #}
             <div slot="image">
-              <img class="cover" eleventy:optional="placeholder" src="{{ cover | safe }}" alt="{{ coverAlt | default('Poster for ' + title) }}" loading="lazy" eleventy:widths="160,224,448" sizes="auto">
+              <img class="cover" eleventy:optional="placeholder" src="{{ cover | safe }}" alt="{{ coverAlt | default(words.posterFor | replace('{title}', title)) }}" loading="lazy" eleventy:widths="160,224,448" sizes="auto">
             </div>
           </photo-lightbox>
         </div>
       {% else %}
-        <img class="cover" eleventy:optional="placeholder" src="{{ cover | safe }}" alt="{{ coverAlt | default('Poster for ' + title) }}" loading="lazy" eleventy:widths="160,224,448" sizes="auto">
+        <img class="cover" eleventy:optional="placeholder" src="{{ cover | safe }}" alt="{{ coverAlt | default(words.posterFor | replace('{title}', title)) }}" loading="lazy" eleventy:widths="160,224,448" sizes="auto">
       {% endif %}
     {% endif %}
 

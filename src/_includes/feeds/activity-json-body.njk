@@ -18,13 +18,13 @@
     {%- set absolutePostUrl = post.url | absoluteUrl(meta.url) -%}
     {# Plain <img> (sync) — see activity-atom-body.njk for why not the shortcode. #}
     {%- set activityHtml %}
-      {%- if post.data.cover %}<img eleventy:widths="1200" src="{{ post.data.cover }}" alt="{{ post.data.coverAlt | default('Cover for ' + post.data.title) }}">{% endif -%}
+      {%- if post.data.cover %}<img eleventy:widths="1200" src="{{ post.data.cover }}" alt="{{ post.data.coverAlt | default(words.coverFor | replace('{title}', post.data.title)) }}">{% endif -%}
       <p>
         {%- if post.data.distanceKm %}{{ post.data.distanceKm | withMiles }} · {% endif -%}
         {{ post.data.duration | itunesDuration }}
         {%- set pace = post.data.activityType | paceOrSpeed(post.data.distanceKm, post.data.duration) -%}
         {%- if pace %} · {{ pace }}{% endif -%}
-        {%- if post.data.hrAvg %} · {{ post.data.hrAvg }} bpm{% if post.data.hrMax %} ({{ post.data.hrMax }} max){% endif %}{% endif -%}
+        {%- if post.data.hrAvg %} · {{ post.data.hrAvg }} {{ words.bpm }}{% if post.data.hrMax %} ({{ post.data.hrMax }} {{ words.max }}){% endif %}{% endif -%}
         {%- if post.data.activityType %} · {{ post.data.activityType }}{% endif -%}
       </p>
     {% endset -%}

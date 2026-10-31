@@ -4,14 +4,14 @@ window.SITE_HEADER = "<header class=\"site-header wrapper\">\n  <a href=\"#main\
 
 // ⚠ Every space and type token is vw-based, so a fixed-width DIV inside the 1400px shooter viewport renders 1400px-scale type. Only an iframe gets its own viewport, which is what makes a "375px" frame honest.
 window.mountFrame = function ({ mount, width, css = '', locals = [], onLoad }) {
-  const sheets = ['global', ...locals].map(n => `<link rel="stylesheet" href="../../_includes/css/${n}.css">`).join('');
+  const sheets = ['global', 'skip-link', 'site-header', 'breadcrumb-leaf', 'breadcrumb', 'main-nav', 'sun-and-moon', 'theme-toggle', 'tooltip', ...locals].map(n => `<link rel="stylesheet" href="../../_includes/css/${n}.css">`).join('');
   const iframe = document.createElement('iframe');
   iframe.width = width;
   iframe.setAttribute('scrolling', 'no');
   iframe.srcdoc = `<!doctype html><html lang="en" data-theme="${document.documentElement.dataset.theme || 'light'}"><head><meta charset="utf-8">${sheets}<style>
     /* The bundles' own @font-face rules point at absolute /assets paths, dead under file:// — redeclare the two faces by relative path. */
-    @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../assets/fonts/source-sans/source-sans.woff2') format('woff2'); }
-    @font-face { font-family: 'Source Code Pro'; src: url('../../assets/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }
+    @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../_includes/themes/jedee/fonts/source-sans/source-sans.woff2') format('woff2'); }
+    @font-face { font-family: 'Source Code Pro'; src: url('../../_includes/themes/jedee/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }
     /* ⚠ The 1rem band at the top of every frame is the site's own body border-top, not a mockup artifact — leave it. No backticks in here: this whole block is a JS template literal. */
     body { margin: 0; background: var(--color-bg); }
     /* Neutral bars standing in for the page under the header, so a frame reads as a page in a browser rather than a floating strip. Same vocabulary as pwa-display-modes.html. */

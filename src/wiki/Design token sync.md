@@ -1,14 +1,14 @@
 ---
 description: "Generating a design tool's tokens from the code that is their source of truth, and the three ways the two sides drift apart anyway."
 date: 2026-08-22
-updated: 2026-10-28
+updated: 2026-10-31
 ---
 
 A **design token** is a named design value — a color, a spacing step, a radius — held somewhere both a stylesheet and a design tool can read. **Design token sync** is keeping those two copies in agreement. The interchange format is [DTCG](https://tr.designtokens.org/format/), a W3C community-group JSON schema that [Tokens Studio](https://tokens.studio/) popularized and that Figma, Penpot and others now import.
 
 The direction matters more than the format. Two arrangements are common:
 
-- **Design tool as source.** Designers edit tokens in the tool; a job exports them into the codebase. Natural if the design system is owned by designers.
+- **Design tool as source.** Designers edit tokens in the tool; a job exports them into the codebase. Natural if the design system is run by designers.
 - **Code as source.** The repo holds the tokens; a build step generates the tool's file. Natural for a site where the CSS is the thing that actually ships.
 
 The second is one-way by construction, which sounds safer and mostly is — but it fails in a specific way that catches people out.
@@ -42,7 +42,7 @@ That shape is then what the generator has to emit, and it is worth checking agai
 
 ## A computed color is not a token value
 
-A design tool's color token holds a color. It does not hold a *calculation* over other tokens — Penpot rejects `color-mix(in srgb, {color.bg}, {color.green.vivid} 8%)` outright, with token references and with plain hex alike (`invalid-token-value`), and offers no modifier of its own. So a palette built on `color-mix()`, as jedee's map colors are, has nowhere to land: flattening each mix to one hex loses the recipe, which is the part worth tweaking.
+A design tool's color token holds a color. It does not hold a *calculation* over other tokens — Penpot rejects `color-mix(in srgb, {color.bg}, {color.green.vivid} 8%)` outright, with token references and with plain hex alike (`invalid-token-value`), and offers no modifier. So a palette built on `color-mix()`, as jedee's map colors are, has nowhere to land: flattening each mix to one hex loses the recipe, which is the part worth tweaking.
 
 **Stacking rebuilds it.** Alpha compositing in sRGB and `color-mix()` in sRGB are the same arithmetic, so a shape bound to token A with a copy above it bound to token B at 8% opacity renders exactly `color-mix(in srgb, A, B 8%)` — and the percentage is now a number in the tool, editable without breaking either binding. Nested mixes stack as more layers, in the order the CSS nests them.
 
@@ -50,7 +50,7 @@ A design tool's color token holds a color. It does not hold a *calculation* over
 
 ## A thing no token can recolor
 
-Some things on a page change between themes without being a color at all. A map picture in the design file is two different images; a native `<audio>` player is drawn by the browser, which picks its own light or dark chrome from `color-scheme`. The site switches them with `<picture>` and `prefers-color-scheme`, or leaves them to the browser. A design tool's theme only swaps token values, so neither has anything to bind to.
+Some things on a page change between themes without being a color at all. A map picture in the design file is two different images; a native `<audio>` player is drawn by the browser, which picks its light or dark chrome from `color-scheme`. The site switches them with `<picture>` and `prefers-color-scheme`, or leaves them to the browser. A design tool's theme only swaps token values, so neither has anything to bind to.
 
 **Opacity tokens switch them.** Stack a light and a dark version, and bind each one's layer opacity to an opacity token that is `1` in one theme set and `0` in the other: `visibility.light-only` (1 in light, 0 in dark) and `visibility.dark-only` (the reverse). Switching the tool's theme then shows exactly one of the pair, with nothing to toggle by hand. Browser chrome that is a flat color can instead get ordinary color tokens sampled from the browser in each theme. These are design-tool-only tokens: no stylesheet reads them, so they need a source in the repo for the same reason as any other hand-made token — the next import deletes them otherwise.
 
@@ -60,7 +60,7 @@ The opacity has to be the layer's, for the reason given above: a token on a fill
 
 Stacking rebuilds a computed color, but it also means the design file holds the recipe once for every place it draws it. A mockup that shows a rendering *and* a legend of the values behind it carries each color twice — once in the artwork, once in the swatch — with nothing linking them. Changing a color is then two edits, and skipping one leaves the file internally inconsistent while both halves still look deliberate.
 
-The artwork is the authority when the two disagree: it is what the mockup is for, and it is the half a reader trusts. A legend is a caption. When checking a design value against code, read the artwork's own fills *and strokes* rather than the legend — a swatch strip flattens any distinction the drawing makes, because one named color may be drawn several ways.
+The artwork is the authority when the two disagree: it is what the mockup is for, and it is the half a reader trusts. A legend is a caption. When checking a design value against code, read the artwork's fills *and strokes* rather than the legend — a swatch strip flattens any distinction the drawing makes, because one named color may be drawn several ways.
 
 jedee's Place map page in Penpot is shaped this way: a light board and a dark board, each a drawn map above a strip of ten swatches naming the `--map-*` custom properties. The two agreed on every value when they were checked against each other, but the drawing carried something the strip could not — light draws `--map-road` and `--map-road-minor` as the same white at all five stroke widths, while dark splits them into two grays. Only the strokes show that; the strip shows two swatches that happen to match in one theme.
 
@@ -72,15 +72,15 @@ Three things DTCG can express that a design tool may simply not model. Each one 
 
 **Themes.** If a color token holds one value, a light/dark pair cannot be one token. It becomes two, and the theme stops being a property of the token and turns into a prefix on its name. That is survivable for palette colors and awkward for everything downstream, because any token whose value references a theme-dependent name has to be resolved once *per theme* rather than once. A component color defined as `{color.text}` is not a value; it is two.
 
-**Variants.** If components have no state or variant mechanism, every state and every theme is its own component. This multiplies rather than adds: seven buttons, each with a hover state, in two themes, is twenty-eight components — and each is a copy, so a change to one does not reach the other twenty-seven. Anything that can be pushed down into a shared child should be, because a child stays single. A container tint is the useful move here: it colors everything inside uniformly, so an icon can stay one theme-neutral component and take its color from whatever holds it.
+**Variants.** If components have no state or variant mechanism, every state and every theme is a separate component. This multiplies rather than adds: seven buttons, each with a hover state, in two themes, is twenty-eight components — and each is a copy, so a change to one does not reach the other twenty-seven. Anything that can be pushed down into a shared child should be, because a child stays single. A container tint is the useful move here: it colors everything inside uniformly, so an icon can stay one theme-neutral component and take its color from whatever holds it.
 
 ## In jedee
 
-The code is the source. `src/_data/designTokens/*.json` feeds both the website (through `tailwind.config.js`, which turns tokens into CSS custom properties) and the design file, via `npm run penpot:tokens` → `src/_config/setup/build-penpot-tokens.js` → `_local/penpot/penpot-tokens.dtcg.json` → a manual import in [Penpot](https://penpot.app)'s Tokens panel. The last step is a click because the plugin API cannot be trusted to write every token type (below). Seven sets are emitted: `core/colors`, `core/typography`, `core/spacing`, `core/layout`, `core/button`, `theme/light`, `theme/dark`.
+The code is the source. `src/_includes/themes/jedee/tokens/*.json` (each theme has a `tokens/` folder; `jedee` is the active one) feeds both the website (through `tailwind.config.js`, which turns tokens into CSS custom properties) and the design file, via `npm run penpot:tokens` → `src/_config/setup/build-penpot-tokens.js` → `_local/penpot/penpot-tokens.dtcg.json` → a manual import in [Penpot](https://penpot.app)'s Tokens panel. The last step is a click because the plugin API cannot be trusted to write every token type (below). Seven sets are emitted: `core/colors`, `core/typography`, `core/spacing`, `core/layout`, `core/button`, `theme/light`, `theme/dark`.
 
-**The near-miss.** Twelve button colors — `button.tertiary.bg` plus five `button.*.bg-hover`, in each theme — existed only inside Penpot, inside `theme/light` and `theme/dark`, both of which the build regenerates. The generated sets held 9 tokens against Penpot's 15. Importing would have replaced 15 with 9 and deleted the other six, twice; ten Button variants bind their fill to them, so the component would have broken with no error anywhere. `src/_data/designTokens/buttonColors.json` now holds them and the build emits them, so the import replaces 15 with an identical 15.
+**The near-miss.** Twelve button colors — `button.tertiary.bg` plus five `button.*.bg-hover`, in each theme — existed only inside Penpot, inside `theme/light` and `theme/dark`, both of which the build regenerates. The generated sets held 9 tokens against Penpot's 15. Importing would have replaced 15 with 9 and deleted the other six, twice; ten Button variants bind their fill to them, so the component would have broken with no error anywhere. `src/_includes/themes/jedee/tokens/buttonColors.json` now holds them and the build emits them, so the import replaces 15 with an identical 15.
 
-Two details in that fix are load-bearing. The names are emitted **verbatim**, without the `color.*` prefix the `semanticColors` entries get, because the existing Penpot bindings reference `button.tertiary.bg` — a prefix would read as a delete plus an unused new token. And the values are flattened `color-mix()` results, so they can still drift; the CSS recomputes `color-mix(in oklab, var(--button-bg) 90%, var(--color-bg))` on every theme change while the JSON does not. `_local/tests/penpot-button-tokens.test.js` guards the first; the second is open.
+Two details in that fix are load-bearing. The names are emitted **verbatim**, without the `color.*` prefix the `semanticColors` entries get, because the existing Penpot bindings reference `button.tertiary.bg` — a prefix would read as a delete plus an unused new token. And the values are flattened `color-mix()` results, so they can still drift; the CSS recomputes `color-mix(in oklab, var(--button-bg) 90%, var(--color-bg))` on every theme change while the JSON does not. `tests/penpot-button-tokens.test.js` guards the first; the second is open.
 
 `core/button` was the accidental case for a while — ten Penpot-only tokens that survived every import because the build emitted no set by that name. It is now emitted too, from the same `buttonColors.json`, declared through a `$penpotCoreSet` field so the emit loop stays generic. Safe by accident became safe by construction.
 
@@ -107,7 +107,7 @@ Reading a hand-made one back gave the shape:
 
 The docs list an `inset` key that is not there (the importer adds `inset: false` afterwards), omit the derived `colorResult`, and do not say that the color carries its alpha as **8-digit hex**.
 
-**That alpha is the one unit that survives the trip.** `hsl(0 0% 0% / 0.06)` is `#0000000F`, CSS reads `#RRGGBBAA` natively, and Penpot stores exactly that — so the direction inverts for this one token type. `src/_data/designTokens/shadows.json` holds *Penpot's* layer shape as the source of truth and `dtcgShadowToTailwind()` composes the CSS `box-shadow` string from it, rather than the usual arrangement of storing the CSS and generating a number for the tool. Hex quantizes alpha to 1/255, so Penpot shows `0.0588` where the CSS said `0.06`; invisible here, and a property of the format rather than of either side.
+**That alpha is the one unit that survives the trip.** `hsl(0 0% 0% / 0.06)` is `#0000000F`, CSS reads `#RRGGBBAA` natively, and Penpot stores exactly that — so the direction inverts for this one token type. `src/_includes/themes/jedee/tokens/shadows.json` holds *Penpot's* layer shape as the source of truth and `dtcgShadowToTailwind()` composes the CSS `box-shadow` string from it, rather than the usual arrangement of storing the CSS and generating a number for the tool. Hex quantizes alpha to 1/255, so Penpot shows `0.0588` where the CSS said `0.06`; invisible here, and a property of the format rather than of either side.
 
 **An import also rewrites which sets are active.** The import that delivered the shadows left `theme/light` and all five core sets active and switched `theme/dark` off, flipping the canvas from dark to light; before it, `theme/dark` was the active theme and `core/button` was not active at all. The active-set selection is something an import *writes*, not state it preserves — worth checking after every one, because an inactive set means its tokens resolve nowhere.
 
@@ -115,7 +115,7 @@ The docs list an `inset` key that is not there (the importer adds `inset: false`
 
 **Theme switches for the Audio post type board.** Its static place map is a light and a dark image stacked, bound to `visibility.light-only` and `visibility.dark-only`; Chrome's player is drawn with `ui.audio.bg` and `ui.audio.fg` (`#F1F3F4` and black in light, `#3A3A3A` and white in dark, sampled from Chrome). The sources are `themeVisibility.json` and `audioPlayerColors.json`, read by `build-penpot-tokens.js` through the same verbatim-name loop as `buttonColors.json`.
 
-**Read the active theme before calling a color stale.** The library's Dark theme was on, so a mega-menu drawn in dark values looked out of date when it was right. Re-applying every bound color token to "refresh" it then unbound them, because `applyToken` with the token a shape already has switches the binding off — 85 bindings went, with the colors left looking unchanged. They came back from a map of each resolved hex to its Dark token. Penpot's plugin API has no undo; `penpot.history.undoBlockBegin()` / `undoBlockFinish()` only groups a script's own edits into one ⌘Z.
+**Read the active theme before calling a color stale.** The library's Dark theme was on, so a mega-menu drawn in dark values looked out of date when it was right. Re-applying every bound color token to "refresh" it then unbound them, because `applyToken` with the token a shape already has switches the binding off — 85 bindings went, with the colors left looking unchanged. They came back from a map of each resolved hex to its Dark token. Penpot's plugin API has no undo; `penpot.history.undoBlockBegin()` / `undoBlockFinish()` only groups a script's edits into one ⌘Z.
 
 **A check against the design-system page.** On 2026-10-28 the library held 162 of the 176 tokens the build emits with the same name and value. The rest were the dark top band (pointed at a Penpot-only `color.gray.1000`), the letter-spacing above, and the theme-switch and thumbnail-shadow tokens the library had not yet imported; five tokens existed only in Penpot. `/design-system/` is generated from the same JSON, so comparing against the export is comparing against the page.
 
@@ -123,6 +123,6 @@ Mapping rules and the full trap list live in `_local/penpot/penpot-tokens.md` (g
 
 ## In Sketch (retired)
 
-Sketch was a second mirror from 2026-08-31 to 2026-10-06, built from its own script and retired in favour of Penpot alone. The lesson that outlives it: a tool that models none of references, themes or fluid sizes makes the file a snapshot, so every token change needs a re-run and re-push by hand.
+Sketch was a second mirror from 2026-08-31 to 2026-10-06, built from its script and retired in favour of Penpot alone. The lesson that outlives it: a tool that models none of references, themes or fluid sizes makes the file a snapshot, so every token change needs a re-run and re-push by hand.
 
 Raw source: `src/_raw/dev-notes/How the Penpot library was checked against the design system.md`

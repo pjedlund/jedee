@@ -4,14 +4,16 @@
 <meta charset="utf-8">
 <title>Choreographing CSS animations — wiki mockup</title>
 
-<!-- ⚠ The site's compiled bundle plus the reveal's own local source, so the type, the logomark and every step time here ARE the shipped ones. global.css is a build artifact: run `npm start` or `npm run build` once if it is missing. -->
+<!-- ⚠ The site's compiled CSS plus the reveal's own local source, so the type, the logomark and every step time here ARE the shipped ones. global.css is a build artifact: run `npm start` or `npm run build` once if it is missing. -->
 <link rel="stylesheet" href="../../_includes/css/global.css">
+<link rel="stylesheet" href="../../_includes/css/breadcrumb-leaf.css">
+<link rel="stylesheet" href="../../_includes/css/breadcrumb.css">
 <link rel="stylesheet" href="../../assets/css/local/breadcrumb-reveal.css">
 
 <style>
   /* The bundle's own @font-face rules point at absolute /assets paths, which resolve to nothing under file://. */
-  @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../assets/fonts/source-sans/source-sans.woff2') format('woff2'); }
-  @font-face { font-family: 'Source Code Pro'; src: url('../../assets/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }
+  @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../_includes/themes/jedee/fonts/source-sans/source-sans.woff2') format('woff2'); }
+  @font-face { font-family: 'Source Code Pro'; src: url('../../_includes/themes/jedee/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }
 
   body { margin: 0; padding: 40px; background: #ddd; }
 

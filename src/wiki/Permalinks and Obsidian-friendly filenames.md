@@ -44,7 +44,7 @@ The sixteenth type is the only one whose URL is not the slug alone. Its filename
 
 ## Page bundles slug from the file, not the folder
 
-A post that carries its own images can live in a folder of its own, EE's page-bundle layout. **The slug still comes from the `.md` filename** — Eleventy's `page.fileSlug` is the file's, not the folder's.
+A post that carries its images can live in a separate folder, EE's page-bundle layout. **The slug still comes from the `.md` filename** — Eleventy's `page.fileSlug` is the file's, not the folder's.
 
 `src/posts/reading/` had exactly one, and it showed the difference clearly:
 

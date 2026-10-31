@@ -1,8 +1,11 @@
+/* ⚠ Fixes the layers' order, so a block arriving in a page's local CSS sits in its place: every block now comes that way, so `blocks` has no import below. Keep it in step with the imports. */
+@layer tailwindBase, reset, fonts, tailwindComponents, variables, global, compositions, blocks, cubeUtilities, tailwindUtilities, theme;
+
 @import 'tailwindcss/base' layer(tailwindBase);
 
 @import 'base/reset.css' layer(reset);
 /* web fonts: */
-@import 'base/fonts.css' layer(fonts);
+@import 'theme-fonts' layer(fonts);
 
 @import 'tailwindcss/components' layer(tailwindComponents);
 
@@ -10,7 +13,6 @@
 @import 'base/global-styles.css' layer(global);
 
 @import 'compositions/*.css' layer(compositions);
-@import 'blocks/*.css' layer(blocks);
 /* ⚠ cubeUtilities, not utilities: Tailwind 3 claims @layer utilities as its own directive and hoists these rules into tailwindUtilities. See the wiki, "Tailwind". */
 @import 'utilities/*.css' layer(cubeUtilities);
 
@@ -18,3 +20,6 @@
 /* @import 'tests/*.css' layer(test); */
 
 @import 'tailwindcss/utilities' layer(tailwindUtilities);
+
+/* The active theme's own CSS; last, so it can override anything above. Named by build-css.js. */
+@import 'theme' layer(theme);

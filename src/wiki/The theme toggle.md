@@ -1,7 +1,7 @@
 ---
 description: "The three states a theme control has to represent, the blocking script that prevents a flash of the wrong one, and jedee's single SVG masked from sun to moon."
 date: 2026-07-31
-updated: 2026-10-28
+updated: 2026-10-31
 ---
 
 Dark mode reaches a page two ways. [`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) reports the operating system's setting and handles most visitors with no interface at all. A toggle exists for everyone else — someone whose system is dark but who wants this one site light — and the moment a site has one it has three states to represent rather than two: light, dark, and *follow the system*, which is not the same as either of the others.
@@ -14,9 +14,9 @@ Two problems arrive with the toggle, and both are more awkward than the button i
 
 ## In jedee
 
-One button, one SVG: a sun that morphs into a moon when the theme goes dark. Adapted from [Adam Argyle's sun-and-moon theme switch](https://web.dev/building-a-theme-switch-component) (MIT). Four files carry it — `partials/theme-toggle.njk`, `blocks/theme-toggle.css` (the button), `blocks/sun-and-moon.css` (the icon and its animation), and `scripts/bundle/theme-toggle.js`.
+One button, one SVG: a sun that morphs into a moon when the theme goes dark. Adapted from [Adam Argyle's sun-and-moon theme switch](https://web.dev/building-a-theme-switch-component) (MIT). Four files carry it — `partials/theme-toggle.njk`, `local/theme-toggle.css` (the button), `local/sun-and-moon.css` (the icon and its animation), and `scripts/bundle/theme-toggle.js`.
 
-**Diverges from Eleventy Excellent**, which ships its own toggle. This replaced an earlier two-icon version that stacked both glyphs and showed whichever was *inactive*.
+**Diverges from Eleventy Excellent**, which ships its toggle. This replaced an earlier two-icon version that stacked both glyphs and showed whichever was *inactive*.
 
 ### There is no moon shape
 
@@ -136,6 +136,6 @@ The accessible name is a `visually-hidden` span, not the SVG, which is `aria-hid
 
 The name is a fixed "Toggle dark mode". It has to be: on a toggle button the state lives in `aria-pressed`, and a name that flips with it announces the state twice in two vocabularies. The tooltip is decoration, exposed to nobody, so it is free to say what a click *will* do — "Show dark mode" in light, "Show light mode" in dark, set by `reflectToggleState()` in the same breath as `aria-pressed`, so a theme change from any source (the button, the system preference listener, first load) updates both.
 
-The markup carries no `data-tooltip`; the script adds it. That keeps a wrong string from ever existing, and costs nothing, because the button is already hidden until its island upgrades. The `title` attribute that used to serve this purpose was removed, or the browser would draw its own native tooltip beside the styled one.
+The markup carries no `data-tooltip`; the script adds it. That keeps a wrong string from ever existing, and costs nothing, because the button is already hidden until its island upgrades. The `title` attribute that used to serve this purpose was removed, or the browser would draw its native tooltip beside the styled one.
 
 Raw source: `src/_raw/dev-notes/How the theme toggle works.md`

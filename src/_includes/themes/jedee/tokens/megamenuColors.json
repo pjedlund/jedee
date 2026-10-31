@@ -1,0 +1,24 @@
+{
+  "$type": "color",
+  "$description": "Per-theme mega-menu colors, pushed into Penpot's theme/light and theme/dark sets by build-penpot-tokens.js. Same reason as buttonColors.json: a token living only inside the Penpot file is deleted by the next import, and the Mega-menu board binds to these. Names are emitted verbatim, NOT under the color.* prefix. src/assets/css/local/main-nav.css computes these live with color-mix(); the hexes below are the flattened result and drift if the palette moves. Two colors the panel uses are deliberately absent because they are already real tokens: color.text and color.orange.500.",
+  "themes": {
+    "light": {
+      "megamenu.surface": "#F9F9F8",
+      "megamenu.row-bg-hover": "#F0F1EF",
+      "megamenu.icon": "#9EB1BF",
+      "megamenu.count": "#68727F",
+      "megamenu.dots": "#9298A1",
+      "megamenu.toggle-border": "#D3D5D7",
+      "megamenu.toggle-border-hover": "#ACB1B7"
+    },
+    "dark": {
+      "megamenu.surface": "#212326",
+      "megamenu.row-bg-hover": "#17191C",
+      "megamenu.icon": "#266996",
+      "megamenu.count": "#909295",
+      "megamenu.dots": "#707275",
+      "megamenu.toggle-border": "#2F3235",
+      "megamenu.toggle-border-hover": "#55575A"
+    }
+  }
+}

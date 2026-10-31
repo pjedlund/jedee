@@ -3,11 +3,11 @@ description: "CSS scroll-behavior for in-page links: why the common html:focus-w
 date: 2026-10-29
 ---
 
-[`scroll-behavior: smooth`](https://developer.mozilla.org/en-US/docs/Web/CSS/scroll-behavior) on the scrolling element makes the browser animate a jump instead of cutting to it: a click on a `#fragment` link, and programmatic scrolls such as `scrollIntoView()` that don't set a behavior of their own. For a reader it keeps a sense of where on the page they landed. People who ask for reduced motion should get the instant jump, so the rule belongs behind `prefers-reduced-motion`.
+[`scroll-behavior: smooth`](https://developer.mozilla.org/en-US/docs/Web/CSS/scroll-behavior) on the scrolling element makes the browser animate a jump instead of cutting to it: a click on a `#fragment` link, and programmatic scrolls such as `scrollIntoView()` that don't set a behavior. For a reader it keeps a sense of where on the page they landed. People who ask for reduced motion should get the instant jump, so the rule belongs behind `prefers-reduced-motion`.
 
 ## The find-on-page problem
 
-Set on `html` without conditions, it also animates the browser's own find-on-page (Ctrl/⌘F): each hit glides into view, which feels sluggish when stepping through results. Chris Coyier took the rule off CSS-Tricks for that reason and published Christian Schaefer's fix in [Fixing Smooth Scrolling with Find-on-Page](https://css-tricks.com/?p=332473) (2021):
+Set on `html` without conditions, it also animates the browser's find-on-page (Ctrl/⌘F): each hit glides into view, which feels sluggish when stepping through results. Chris Coyier took the rule off CSS-Tricks for that reason and published Christian Schaefer's fix in [Fixing Smooth Scrolling with Find-on-Page](https://css-tricks.com/?p=332473) (2021):
 
 ```css
 html:focus-within {

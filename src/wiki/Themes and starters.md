@@ -1,6 +1,7 @@
 ---
-description: "Why an Eleventy project is called a site rather than a theme: Hugo and WordPress separate presentation into an overridable layer, Eleventy has no such layer, and its unit of reuse is a starter you fork and own."
+description: "Why an Eleventy project is called a site rather than a theme: Hugo and WordPress separate presentation into an overridable layer, Eleventy has no such layer, and its unit of reuse is a starter you copy and then keep as your site."
 date: 2026-09-05
+updated: 2026-10-31
 ---
 
 "Theme" is the everyday word for what a designer builds on WordPress, and it does not transfer to Eleventy. The word exists because WordPress splits a site in two — content in a database, presentation in a swappable layer on top — so the presentation half is a nameable thing that can be replaced without touching the content. [Hugo](https://gohugo.io/) keeps the same split without the database. Eleventy keeps neither half separate: output-producing templates, layouts, partials, CSS, data files and build config are one tree, and swapping "the theme" means swapping the site.
@@ -9,7 +10,7 @@ So there is no sub-unit to name, and the term for an Eleventy project is **site*
 
 ## A theme layer is a lookup order, not a folder
 
-The mechanism that makes a theme replaceable is per-file resolution order. Hugo's [template lookup order](https://gohugo.io/templates/lookup-order/) consults the project's own `layouts/` before the theme's, path by path, so any single file can be overridden without editing the theme; [Hugo Modules](https://gohugo.io/hugo-modules/) (0.56, 2019) generalize this into mountable, composable Go modules. WordPress does the equivalent with its [template hierarchy](https://developer.wordpress.org/themes/basics/template-hierarchy/) plus child themes.
+The mechanism that makes a theme replaceable is per-file resolution order. Hugo's [template lookup order](https://gohugo.io/templates/lookup-order/) consults the project's `layouts/` before the theme's, path by path, so any single file can be overridden without editing the theme; [Hugo Modules](https://gohugo.io/hugo-modules/) (0.56, 2019) generalize this into mountable, composable Go modules. WordPress does the equivalent with its [template hierarchy](https://developer.wordpress.org/themes/basics/template-hierarchy/) plus child themes.
 
 Both pay the same price: an override is a *copy*. Upstream changes its version of the file, the local copy keeps winning, and nothing reports it. The staleness is silent by construction — the same failure shape as a quoted code snippet that no longer matches the code it quotes.
 
@@ -17,7 +18,7 @@ Both pay the same price: an override is a *copy*. Upstream changes its version o
 
 Two things would have to exist, and neither does. Measured against `@11ty/eleventy` 3.1.6 on 2026-09-05.
 
-**There is no fallback chain.** `dir.includes` and `dir.layouts` are each exactly one directory — `ProjectDirectories.js` normalizes each through a single `setIncludes()` / `setLayouts()` call, with no array form. There is nowhere for a theme's files to sit underneath the project's own.
+**There is no fallback chain.** `dir.includes` and `dir.layouts` are each exactly one directory — `ProjectDirectories.js` normalizes each through a single `setIncludes()` / `setLayouts()` call, with no array form. There is nowhere for a theme's files to sit underneath the project's.
 
 **Virtual templates are additive, not underlaid.** `eleventyConfig.addTemplate()` ([3.0+](https://www.11ty.dev/docs/virtual-templates/)) lets a plugin register a template from code with no file on disk, which is the closest Eleventy comes to shipping templates in a package. It is not a lookup order. A collision throws:
 
@@ -35,23 +36,25 @@ if (paths.length !== new Set(paths).size) {
 
 And layouts and includes never reach that check: the paths are first filtered by `this.dirs.isTemplateFile(path)`, which returns `false` for anything under `layouts` or `includes`. A plugin can therefore add pages, but cannot ship a layout or a partial, and cannot replace anything.
 
-This is deliberate rather than missing. Eleventy's stated position is that it does not dictate project structure, and a tool that does not know what the layers are cannot offer to override one.
+This is deliberate. Eleventy's stated position is that it does not dictate project structure, and a tool that does not know what the layers are cannot offer to override one. It is also the weakest part of the design for anyone who wants to reuse a site.
+
+The word "template" shows the problem. Eleventy's [glossary](https://www.11ty.dev/docs/glossary/) defines a template as "a content file written in a format such as Markdown", and a layout as a kind of template that wraps another. So a blog post is a template, the page frame around it is a template, and the file that generates a feed is a template. Everywhere else the word means the reusable frame that content is poured into; here it also means the content. A tool with one word for the writing and for the frame around it has no way to say which of the two a new site should replace, and neither does its folder structure. Everything that follows on this page comes from that.
 
 ## The unit of reuse is a starter
 
-What Eleventy has instead is the starter: a complete repo you copy and then own outright. [Eleventy Excellent](https://github.com/madrilene/eleventy-excellent) is one. Lene Saile calls it a starter rather than a theme, which is the accurate word — the moment it is copied it stops being a layer and becomes the site.
+What Eleventy has instead is the starter: a complete repo you copy and then keep as your site. [Eleventy Excellent](https://github.com/madrilene/eleventy-excellent) is one. Lene Saile calls it a starter rather than a theme, which is the accurate word — the moment it is copied it stops being a layer and becomes the site.
 
-The trade against Hugo is not one-sided. A forked starter is uglier to upgrade, because the upgrade is a merge rather than a version bump. But a merge conflict is a *message*: it names the file and shows both versions. A stale Hugo override says nothing at all. That holds for files both sides changed; a file upstream *adds* merges in without a word, which is how the 4.8.0 upgrade nearly let a starter file take over the address of jedee's own llms.txt — see [[What jedee kept from Eleventy Excellent]]. In practice a heavily customized Hugo site also accumulates a `layouts/` full of copied theme files — the same fork, without git tracking which upstream version each copy came from.
+The trade against Hugo is not one-sided. A forked starter is uglier to upgrade, because the upgrade is a merge rather than a version bump. But a merge conflict is a *message*: it names the file and shows both versions. A stale Hugo override says nothing at all. That holds for files both sides changed; a file upstream *adds* merges in without a word, which is how the 4.8.0 upgrade nearly let a starter file take over the address of jedee's llms.txt — see [[What jedee kept from Eleventy Excellent]]. In practice a heavily customized Hugo site also accumulates a `layouts/` full of copied theme files — the same fork, without git tracking which upstream version each copy came from.
 
 ## In jedee
 
 jedee is a fork of Eleventy Excellent, not an installation of it. The consequences follow directly from the above:
 
 - **Upgrades are a git merge**, handled by hand, and the seam between stock and fork exists only as a written record — [[What jedee kept from Eleventy Excellent]] is that record.
-- **The folder structure carries no layer boundary**, which is what makes it read as untidy next to Hugo's. Nothing in `src/` marks which files came from the starter and which are this site's own.
-- **One genuine piece of mess is EE's own choice, not Eleventy's**: compiled CSS and JS are written into `src/_includes/css/` and `src/_includes/scripts/` so a template can inline them, which puts build output inside a source directory. That arrangement is the precondition for the rebuild loop described in [[Watch loops]].
+- **The folder structure carries no layer boundary between the starter and the fork**, which is what makes it read as untidy next to Hugo's. Nothing in `src/` marks which files came from the starter and which belong to this site; the line between shared files and site files is drawn in `tests/site-files.json` instead.
+- **One genuine piece of mess is EE's choice, not Eleventy's**: compiled CSS and JS are written into `src/_includes/css/` and `src/_includes/scripts/` so a template can inline them, which puts build output inside a source directory. That arrangement is the precondition for the rebuild loop described in [[Watch loops]].
 - **The underscore convention is inconsistent** — `_data` and `_includes` are marked, `assets` and `posts` are not, and nothing in the tree explains the difference.
 
-Reorganizing toward an explicit stock/fork separation was considered on 2026-09-05 and deferred: without a lookup order in the tool, any separation would be convention only, enforced by nothing.
+Reorganizing toward an explicit stock/fork separation was considered on 2026-09-05 and deferred: without a lookup order in the tool, any separation would be convention only, enforced by nothing. It has since been done on the one axis that matters for reuse, between what belongs to one site and what is shared, and it is enforced by tests rather than by the tool: see [[Shared files and site files]]. The stock/fork seam with Eleventy Excellent is still only the written record.
 
 Raw source: `src/_raw/dev-notes/How an Eleventy project has no theme layer.md`

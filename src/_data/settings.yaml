@@ -7,6 +7,7 @@ identity:
   bio: Johan Edlund is a web designer living in Malmö, Sweden. He believes that Jesus Christ is the truth and the way.
   description: Personal site of Johan Edlund
   feedDescription: Jesus Christ is the truth and the way.
+  ogAlt: Johan Edlund — personal website
   address: |-
     Johan Edlund
     Västra Ryttmästaregatan 30D
@@ -39,6 +40,11 @@ profiles:
 repos:
   site: https://github.com/pjedlund/jedee
   licence: https://github.com/pjedlund/soli-deo-gloria-dedication
+site:
+  lang: en
+  locale: en_US
+  type: Person
+theme: jedee
 switches:
   breadcrumb: true
   nameReveal: true
@@ -46,11 +52,28 @@ switches:
   eastereggKeyword: jesus
   eastereggShape: ❤️
   viewRepo: true
+  header: true
+  mainNav: true
+  themeToggle: true
+  footer: true
+  shortcuts: true
+  tooltips: true
+  devGrid: true
+  serviceWorker: true
+  feeds: true
+  webmentions: true
+  micropub: true
+  relMe: true
   hideFeatured: true
   hideNav: true
   noindexSite: true
+pwa:
+  workerPath: /serviceworker.js
+analytics:
+  umamiId: 75b79efd-f4b0-4425-aace-9fa8230aa1c3
 wiki:
   visibility: public
+  attribution: pages written by an AI (Claude Code), supervised by Johan.
 search:
   enabled: true
   types:

@@ -1,10 +1,10 @@
 ---
 description: "A build that watches a directory it also writes into will retrigger itself; how .gitignore-as-watch-list hides the problem, and why the fix belongs in a watch-only ignore."
 date: 2026-08-02
-updated: 2026-10-27
+updated: 2026-10-31
 ---
 
-A watch loop is a build that triggers itself. The shape is always the same: a watcher observes a directory tree, the build writes generated output *into* that tree, the watcher sees its own build's output change, and starts another build. Each pass is legitimate work as far as the tool is concerned, so nothing errors — it simply never settles, and the process eventually dies of memory exhaustion or pins a core until it's killed.
+A watch loop is a build that triggers itself. The shape is always the same: a watcher observes a directory tree, the build writes generated output *into* that tree, the watcher sees its build's output change, and starts another build. Each pass is legitimate work as far as the tool is concerned, so nothing errors — it simply never settles, and the process eventually dies of memory exhaustion or pins a core until it's killed.
 
 It is easy to introduce and hard to see, because most tools ship with a default that hides it. Watchers commonly seed their ignore list from `.gitignore`, on the reasoning that generated files are exactly the things you don't commit *and* don't want to rebuild on. That heuristic is right often enough that the underlying fragility — build output living inside the watched input tree — goes unnoticed for as long as the heuristic holds. The loop appears at the moment something turns the heuristic off, which is usually a change made for an unrelated reason.
 
@@ -14,9 +14,9 @@ It is easy to introduce and hard to see, because most tools ship with a default 
 
 ## In jedee
 
-Eleventy honors `.gitignore` by default, and jedee's build writes generated files into its own input directory on every pass — 29 on 2026-09-22, 22 compiled stylesheets into `src/_includes/css/` and 7 bundled scripts into `src/_includes/scripts/`, from an `eleventy.before` event. Both directories are gitignored, so for a long time the watcher never saw them.
+Eleventy honors `.gitignore` by default, and jedee's build writes generated files into its input directory on every pass — 29 on 2026-09-22, 22 compiled stylesheets into `src/_includes/css/` and 7 bundled scripts into `src/_includes/scripts/`, from an `eleventy.before` event. Both directories are gitignored, so for a long time the watcher never saw them.
 
-Making the private wiki browsable locally broke that. `src/wiki/` is gitignored because it holds its own inner git repo, so the only way to make Eleventy build it was to stop honoring `.gitignore` entirely:
+Making the private wiki browsable locally broke that. `src/wiki/` is gitignored because it holds its inner git repo, so the only way to make Eleventy build it was to stop honoring `.gitignore` entirely:
 
 ```js
 eleventyConfig.setUseGitIgnore(false);
@@ -29,7 +29,7 @@ Those two `ignores` lines put back the *content* paths `.gitignore` had been hid
 The log names the culprit directly — one human edit followed by 23 that no one made:
 
 ```
-[11ty] File changed: ./src/assets/css/global/blocks/main-nav.css
+[11ty] File changed: ./src/assets/css/local/main-nav.css
 [11ty] File changed: ./src/_includes/css/cover.css      ← generated
 [11ty] File changed: ./src/_includes/css/global.css     ← generated
 ```
@@ -45,13 +45,13 @@ eleventyConfig.watchIgnores.add('src/_includes/scripts/**');
 
 **The standing rule this left behind:** anything that calls `setUseGitIgnore(false)` takes on the job of re-ignoring, by hand, every build-generated path inside `src/`. The call itself went away on 2026-09-05 when the wiki became ordinary tracked files, but the two `watchIgnores` lines stay, because the second loop below showed that `.gitignore` never covered as much as it seemed to. The next candidate if it ever starts writing on a warm cache is `src/assets/og-images/`, produced by the `svgToJpeg` after-event and covered by an explicit `addWatchTarget` glob.
 
-One entry that was added and then removed is worth recording, because the reasoning sounds right: `**/.git/**`, on the theory that Eleventy's default ignore covers only the *root* `.git/` while `src/wiki/` has its own repo, so committing wiki notes with the dev server running would start a rebuild storm. Tested afterwards, touching files in `src/wiki/.git/` triggers no rebuild with or without it. It was dead config and came out again.
+One entry that was added and then removed is worth recording, because the reasoning sounds right: `**/.git/**`, on the theory that Eleventy's default ignore covers only the *root* `.git/` while `src/wiki/` has its repo, so committing wiki notes with the dev server running would start a rebuild storm. Tested afterwards, touching files in `src/wiki/.git/` triggers no rebuild with or without it. It was dead config and came out again.
 
 ### The second loop: a writer that is not the build
 
-A month later the dev server was dying again, this time with no edit at all — it rebuilt while a page was merely being scrolled, which pointed at images. It was not images. The trigger was Obsidian, and the mechanism is a different one from the loop above, worth keeping apart: here the build was not writing into its own watched tree; a *second program* was.
+A month later the dev server was dying again, this time with no edit at all — it rebuilt while a page was merely being scrolled, which pointed at images. It was not images. The trigger was Obsidian, and the mechanism is a different one from the loop above, worth keeping apart: here the build was not writing into its watched tree; a *second program* was.
 
-Two facts combine. The Obsidian vault for the site is `src/` itself, so Obsidian's own bookkeeping lives at `src/.obsidian/`, and it rewrites `workspace.json` there on nearly every click — a pane resize, a tab switch, scrolling a note. And Eleventy's reading of `.gitignore` is not git's. `EleventyFiles.normalizeIgnoreContent()` takes each line, joins it to the directory the ignore file sits in, and stats the result:
+Two facts combine. The Obsidian vault for the site is `src/` itself, so Obsidian's bookkeeping lives at `src/.obsidian/`, and it rewrites `workspace.json` there on nearly every click — a pane resize, a tab switch, scrolling a note. And Eleventy's reading of `.gitignore` is not git's. `EleventyFiles.normalizeIgnoreContent()` takes each line, joins it to the directory the ignore file sits in, and stats the result:
 
 ```js
 let path = TemplateGlob.normalizePath(dir, "/", line);
@@ -76,7 +76,7 @@ The fix is one more watch-only line, for the same reason as the first two — th
 eleventyConfig.watchIgnores.add('src/.obsidian/**');
 ```
 
-Verified silent afterwards for forty seconds idle, for writes to `workspace.json` and `app.json`, and for the same 61 image requests, with the process flat at 1.65 GB. The general rule that falls out: **a `.gitignore` line without a leading slash hides nothing inside the input directory from Eleventy's watcher.** Any program that writes inside `src/` — an editor's state folder, a sync client, a plugin cache — needs its own `watchIgnores` entry with the full path, and the way to find out which one is to read the `File changed:` lines before theorising about what else was happening at the time.
+Verified silent afterwards for forty seconds idle, for writes to `workspace.json` and `app.json`, and for the same 61 image requests, with the process flat at 1.65 GB. The general rule that falls out: **a `.gitignore` line without a leading slash hides nothing inside the input directory from Eleventy's watcher.** Any program that writes inside `src/` — an editor's state folder, a sync client, a plugin cache — needs its `watchIgnores` entry with the full path, and the way to find out which one is to read the `File changed:` lines before theorising about what else was happening at the time.
 
 The loop was not the whole story here — see [[The dev server's memory]] for the retention underneath it, which is what turned nine rebuilds into an immediate crash rather than a slow one.
 

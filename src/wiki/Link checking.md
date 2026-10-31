@@ -1,7 +1,7 @@
 ---
 description: "Why a link checker that scans source instead of rendered output reports things that were never links, and how an all-false-positive report hid a real defect on jedee."
 date: 2026-08-03
-updated: 2026-10-27
+updated: 2026-10-31
 ---
 
 A link checker finds the links in a site and verifies that their targets exist. There are two places to do it, and the choice decides which mistakes the checker is capable of making.
@@ -34,7 +34,7 @@ wikiLinkRegExp    = /(?<!!)(!?)\[\[([^|\n]+?)(\|([^\n]+?))?]]/g   // wikilink-pa
 internalLinkRegex = /href="\/(.*?)"/g                             // html-link-parser.js
 ```
 
-Until 2026-08-03 the console report carried **13 warnings, all 13 false positives** — TOML tables and a JS array quoted in fenced blocks, the prose examples on [[Wikilinks]], a former page title kept deliberately in the wiki's own log, an href inside a fenced HTML example, and the un-rendered `href="/tags/{{ tag | slugify }}/"` from `tags.njk`.
+Until 2026-08-03 the console report carried **13 warnings, all 13 false positives** — TOML tables and a JS array quoted in fenced blocks, the prose examples on [[Wikilinks]], a former page title kept deliberately in the wiki's log, an href inside a fenced HTML example, and the un-rendered `href="/tags/{{ tag | slugify }}/"` from `tags.njk`.
 
 **Rendering was never wrong.** markdown-it resolves backticks before the plugin's inline rule, so a wikilink inside a code span never reaches the renderer and comes out as literal `[[text]]`, which is what an example should be. Only detection was wrong — which is why nothing looked broken.
 
@@ -66,7 +66,7 @@ Three details carry weight. Fences are stripped first, so the inline pass cannot
 2. **A deep import throws.** `import … from '@photogabble/eleventy-plugin-interlinker/src/wikilink-parser.js'` fails with `ERR_PACKAGE_PATH_NOT_EXPORTED`: the package's `exports` map publishes only `./index.js`, which does not re-export the parser classes. Loading them by *file path* works, because `exports` constrains package specifiers and not file URLs — and it resolves to the same absolute path the plugin imports internally, so it is the same module instance and the prototype patch is visible to the plugin.
 3. **There are two parsers.** Patching only the wikilink one took 13 warnings to 3; the rest were `href=` matches from `HTMLLinkParser`, blind in exactly the same way.
 
-The patch throws a named error if `find` is ever missing, so an interlinker upgrade fails loudly rather than quietly reverting to noise. **Re-check it on any version bump.** Covered by `_local/tests/wikilink-ignore-code.test.js`.
+The patch throws a named error if `find` is ever missing, so an interlinker upgrade fails loudly rather than quietly reverting to noise. **Re-check it on any version bump.** Covered by `tests/wikilink-ignore-code.test.js`.
 
 ### Verification, and one standing caveat
 

@@ -1,8 +1,9 @@
 import fs from 'node:fs';
 import Color from 'colorjs.io';
 import slugify from 'slugify';
+import {TOKENS_DIR, loadTokens} from '../utils/theme.js';
 
-const colorsBase = JSON.parse(fs.readFileSync('./src/_data/designTokens/colorsBase.json', 'utf-8'));
+const colorsBase = loadTokens('colorsBase.json');
 
 const nameSlug = text => slugify(text, {lower: true});
 
@@ -96,4 +97,4 @@ if (colorsBase.standalone) {
   });
 }
 
-fs.writeFileSync('./src/_data/designTokens/colors.json', JSON.stringify(colorTokens, null, 2));
+fs.writeFileSync(`./${TOKENS_DIR}/colors.json`, JSON.stringify(colorTokens, null, 2));

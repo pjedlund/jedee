@@ -6,7 +6,7 @@
 <place-map @place="my activities">
   {%- if collections.activity | located | length %}
     <div class="place-map-live" data-place-map-box>
-      <p class="place-map-pending">Map of my activities</p>
+      <p class="place-map-pending">{{ words.mapOfActivities }}</p>
       <div class="place-map-preloader" aria-hidden="true"><div class="place-map-preloader-logo"></div><span>0</span></div>
     </div>
   {%- endif %}
@@ -14,16 +14,16 @@
     {#- ⚠ No tabindex on this wrapper: the head buttons and row links already let a keyboard scroll it, and Safari moves focus to the nearest focusable ancestor on a click, scrolling the page and losing the click. #}
     <div class="table-wrapper" role="region" aria-labelledby="activities-caption" data-table-rows="link">
       <table data-place-list>
-        <caption id="activities-caption" class="visually-hidden">Every activity</caption>
+        <caption id="activities-caption" class="visually-hidden">{{ words.allActivities }}</caption>
         <thead>
           <tr>
-            <th scope="col" data-icon data-sort-first="ascending">Type</th>
-            <th scope="col" aria-sort="descending">Date</th>
-            <th scope="col">Activity</th>
-            <th scope="col" data-numeric data-table-priority="3">Distance</th>
-            <th scope="col" data-numeric data-table-priority="2">Time</th>
-            <th scope="col" data-numeric data-table-priority="5" data-sort-first="ascending">Pace</th>
-            <th scope="col" data-numeric data-table-priority="4">Heart rate</th>
+            <th scope="col" data-icon data-sort-first="ascending">{{ words.type }}</th>
+            <th scope="col" aria-sort="descending">{{ words.date }}</th>
+            <th scope="col">{{ words.activity }}</th>
+            <th scope="col" data-numeric data-table-priority="3">{{ words.distance }}</th>
+            <th scope="col" data-numeric data-table-priority="2">{{ words.time }}</th>
+            <th scope="col" data-numeric data-table-priority="5" data-sort-first="ascending">{{ words.pace }}</th>
+            <th scope="col" data-numeric data-table-priority="4">{{ words.heartRate }}</th>
           </tr>
         </thead>
         <tbody>

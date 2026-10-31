@@ -19,13 +19,16 @@ import fs from 'node:fs';
 const settings = yamlLoad(fs.readFileSync('./src/_data/settings.yaml', 'utf8'));
 
 //  config import
-import { POST_TYPES, byCategory, showInSitemap, tagList, genreList, featured, resolvePicks } from './src/_config/collections.js';
+import { POST_TYPES, POST_TYPE_DIRS, enabledPostTypes, byCategory, showInSitemap, tagList, genreList, featured, resolvePicks } from './src/_config/collections.js';
 import events from './src/_config/events.js';
 import filters from './src/_config/filters.js';
 import plugins from './src/_config/plugins.js';
 import {resolveOrPlainText} from './src/_config/plugins/interlinker-resolver.js';
 import ignoreWikilinksInCode from './src/_config/plugins/interlinker-ignore-code.js';
 import shortcodes from './src/_config/shortcodes.js';
+import {themeDir} from './src/_config/utils/theme.js';
+import {loadWords} from './src/_config/utils/site.js';
+import {resolveSwitches} from './src/_config/utils/switches.js';
 
 // Caps how many images fetch + encode at once, to keep a cold build's memory down. Lower it if a cold build still runs out of memory.
 import Image from '@11ty/eleventy-img';
@@ -48,6 +51,8 @@ export default async function(eleventyConfig) {
   // --------------------- custom watch targets
   eleventyConfig.addWatchTarget('./src/assets/**/*.{css,js,svg,png,jpeg}');
   eleventyConfig.addWatchTarget('./src/_includes/**/*.{webc}');
+  eleventyConfig.addWatchTarget('./src/_config/words/*.yaml');
+  eleventyConfig.addWatchTarget('./src/_includes/themes/*/words.yaml');
 
   // `npm run dev:mem` prints retained heap after each build. See the wiki "The dev server's memory".
   if (process.env.MEMLOG) {
@@ -63,6 +68,9 @@ export default async function(eleventyConfig) {
   eleventyConfig.watchIgnores.add('src/_includes/scripts/**');
   // ⚠ Global CSS stays out of the watcher: watchGlobalCss recompiles it and the dev server swaps it in place, where a rebuild would cost every page. See the wiki "The dev server's memory".
   eleventyConfig.watchIgnores.add('src/assets/css/global/**');
+  // ⚠ Same for a theme's CSS. Its fonts and DESIGN.md feed no page, so saving them shouldn't rebuild every page either.
+  eleventyConfig.watchIgnores.add('src/_includes/themes/*/*.{css,md}');
+  eleventyConfig.watchIgnores.add('src/_includes/themes/*/fonts/**');
   eleventyConfig.setServerOptions({watch: ['dist/assets/css/global.css']});
   // ⚠ The Obsidian vault is src/, and Eleventy reads the .gitignore line `.obsidian` as ./.obsidian at the repo root, so without this every Obsidian click (workspace.json) triggers a full rebuild. See the wiki "Watch loops".
   eleventyConfig.watchIgnores.add('src/.obsidian/**');
@@ -120,7 +128,9 @@ export default async function(eleventyConfig) {
 
   eleventyConfig.addPlugin(plugins.webc, {
     components: ['./src/_includes/webc/**/*.webc'],
-    useTransform: true
+    useTransform: true,
+    // ⚠ A transform sees no global data of its own: without this a component's $data.words is undefined.
+    transformData: {words: loadWords()}
   });
 
   eleventyConfig.addPlugin(plugins.eleventyImageTransformPlugin, {
@@ -219,11 +229,14 @@ export default async function(eleventyConfig) {
 
   // --------------------- Passthrough File Copy
   // -- same path: self-hosted .mp3/.mp4/.vtt and the This Is My Jam avatars (`jams-social`, rendered with `eleventy:ignore`), which Eleventy Image never moves.
-  ['src/assets/fonts/', 'src/assets/images/template', 'src/assets/images/recipes', 'src/assets/images/jams-social', 'src/assets/og-images', 'src/assets/audio', 'src/assets/video', 'src/assets/map'].forEach(path =>
+  ['src/assets/images/template', 'src/assets/images/recipes', 'src/assets/images/jams-social', 'src/assets/og-images', 'src/assets/audio', 'src/assets/video', 'src/assets/map'].forEach(path =>
     eleventyConfig.addPassthroughCopy(path)
   );
 
   eleventyConfig.addPassthroughCopy({
+    // -- the active theme's fonts, at the same address whichever theme it is
+    [`${themeDir()}/fonts`]: 'assets/fonts',
+
     // -- to root
     'src/assets/images/favicon/*': '/',
     'src/assets/images/avatar/*': '/',
@@ -239,6 +252,23 @@ export default async function(eleventyConfig) {
     'node_modules/maplibre-gl/dist/maplibre-gl.css': `assets/components/maplibre-gl.css`,
     'node_modules/@11ty/is-land/dist/is-land.min.js': `assets/components/is-land.min.js`
   });
+
+  // ---------------------- switched-off parts that are pages: ignores must be set here, before the data cascade runs
+  const switches = resolveSwitches(settings);
+  if (!switches.feeds) {
+    eleventyConfig.ignores.add('src/common/feed-*.njk');
+    eleventyConfig.ignores.add('src/feeds/**');
+  }
+  if (!switches.serviceWorker) eleventyConfig.ignores.add('src/pages/serviceworker.njk');
+
+  // A switched-off post type builds nothing: no posts, no archive page, no feeds. ⚠ A type name in settings.postTypes that doesn't exist stops the build.
+  const postTypesOn = enabledPostTypes(settings);
+  for (const [type, dir] of Object.entries(POST_TYPE_DIRS)) {
+    if (postTypesOn.includes(type)) continue;
+    eleventyConfig.ignores.add(`src/posts/${dir}/**`);
+    eleventyConfig.ignores.add(`src/pages/${dir}.njk`);
+    eleventyConfig.ignores.add(`src/feeds/${dir}*`);
+  }
 
   // ----------------------  ignore test files
   if (process.env.ELEVENTY_ENV != 'test') {

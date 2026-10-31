@@ -249,6 +249,7 @@ singletons:
           - { name: bio, label: Bio, widget: text, hint: 'llms.txt' }
           - { name: description, label: Site description, widget: string }
           - { name: feedDescription, label: Feed description, widget: string }
+          - { name: ogAlt, label: Share image description, widget: string, hint: 'Alt text for the fallback preview image; it should describe what npm run og:default draws' }
           - { name: address, label: Postal address, widget: text, hint: 'Shown on the legal and privacy pages' }
       - name: profiles
         label: Profiles
@@ -268,6 +269,15 @@ singletons:
         fields:
           - { name: site, label: Site repo, widget: string }
           - { name: licence, label: Licence repo, widget: string }
+      - name: site
+        label: Site
+        widget: object
+        fields:
+          - { name: lang, label: Language, widget: select, options: [en, sv], hint: 'The language of the interface words and of <html lang>. A language needs a file in src/_config/words, and a line here, in admin/config.yml. A language with no file stops the build' }
+          - { name: locale, label: Locale, widget: string, hint: 'For og:locale and the structured data, written en_US or sv_SE' }
+          - { name: type, label: Who the site is for, widget: select, options: [{ label: A person, value: Person }, { label: A club or organisation, value: Organization }], hint: 'What the structured data calls the owner of the site: a Person or an Organization' }
+      - { name: theme, label: Theme, widget: select, options: [jedee, sample], hint: "The site's look: a folder in src/_includes/themes. A new theme needs a line here, in admin/config.yml. A name with no folder stops the build" }
+      - { name: postTypes, label: Post types, widget: select, multiple: true, required: false, dropdown_threshold: 20, hint: 'The types the site builds. Empty = all 16. A type left out has no posts, archive page, feed or menu link, and a Featured or /now pick of it is skipped', options: [{ label: Articles, value: article }, { label: Notes, value: note }, { label: Books, value: reading }, { label: Films, value: watching }, { label: Jams, value: jam }, { label: Photos, value: photo }, { label: Recipes, value: recipe }, { label: Events, value: event }, { label: Bookmarks, value: bookmark }, { label: Replies, value: reply }, { label: Reposts, value: repost }, { label: Likes, value: like }, { label: RSVPs, value: rsvp }, { label: Recordings, value: audio }, { label: Videos, value: video }, { label: Activities, value: activity }] }
       - name: switches
         label: Switches
         widget: object
@@ -279,11 +289,36 @@ singletons:
           # Any single emoji works as a shape; add one here to offer it.
           - { name: eastereggShape, label: Easter egg shape, widget: select, required: false, hint: 'Empty = star', options: [{ label: '⭐️ Star', value: '⭐️' }, { label: '🎉 Party popper', value: '🎉' }, { label: '❤️ Heart', value: '❤️' }, { label: '✝️ Cross', value: '✝️' }, { label: '🎵 Note', value: '🎵' }, { label: '🌍 Globe', value: '🌍' }, { label: '☀️ Sun', value: '☀️' }] }
           - { name: viewRepo, label: View on GitHub link, widget: boolean }
+          - { name: header, label: Header, widget: boolean, hint: 'Off: no header at all, and no skip link, so the site supplies its own' }
+          - { name: mainNav, label: Main menu, widget: boolean, hint: 'Off: no menu in the header' }
+          - { name: themeToggle, label: Light and dark button, widget: boolean, hint: 'Off: no button in the header; the page follows the light or dark setting of the device' }
+          - { name: footer, label: Footer, widget: boolean }
+          - { name: shortcuts, label: Keyboard shortcuts dialog, widget: boolean, hint: 'Off: no dialog, no script and no footer button' }
+          - { name: tooltips, label: Tooltips, widget: boolean, hint: 'Off: no tooltip script, no tooltip styles and no hover labels' }
+          - { name: devGrid, label: Layout grid for development, widget: boolean, hint: 'Off: no grid script or styles (Alt+G and Alt+R do nothing)' }
+          - { name: serviceWorker, label: Offline support, widget: boolean, hint: 'Off: no service worker file and nothing registers it' }
+          - { name: feeds, label: Feeds, widget: boolean, hint: 'Off: no feed files at all, no feed links in the head, and no feed button in the footer' }
+          - { name: webmentions, label: Webmentions, widget: boolean, hint: 'Off: no webmention link in the head, nothing fetched at build time, and none shown on posts' }
+          - { name: micropub, label: Micropub and IndieAuth links, widget: boolean, hint: 'Off: the three links in the head go. ⚠ The Netlify function that takes the posts is still deployed' }
+          - { name: relMe, label: rel=me and fediverse:creator, widget: boolean, hint: 'Off: no rel="me" on profile links, in the head or the footer, and no fediverse:creator tag' }
+      - name: pwa
+        label: Service worker
+        widget: object
+        fields:
+          - { name: workerPath, label: Service worker address, widget: string, required: false, hint: 'Starts with / and ends in .js. Empty = /serviceworker.js. ⚠ A worker only covers the folder it is in, so a nested address like /app/sw.js leaves the rest of the site out' }
+          - { name: keepCaches, label: Caches to keep, widget: list, required: false, hint: 'Names of caches the worker must not delete when it updates, such as one that holds a log the visitor made. Empty = none' }
+          - { name: push, label: Push notification code, widget: string, required: false, hint: 'A path under src/_includes, such as pwa/push.js. Empty = no push code. A path with no file stops the build' }
+      - name: analytics
+        label: Analytics
+        widget: object
+        fields:
+          - { name: umamiId, label: Umami website ID, widget: string, required: false, hint: 'Empty = no analytics script at all. Otherwise the Umami script loads on deployed builds only, never on the dev server' }
       - name: wiki
         label: Wiki
         widget: object
         fields:
           - { name: visibility, label: Visibility, widget: select, options: [private, local, public], hint: 'private: never built. local: dev server only. public: built everywhere, production included' }
+          - { name: attribution, label: Byline on wiki pages, widget: string, required: false, hint: 'The end of the line above every wiki page: "Part of the jedee wiki — " followed by this text' }
       - name: search
         label: Search
         widget: object

@@ -46,9 +46,9 @@ Or register the property so it does not inherit at all:
 
 The consequence is that converting one writer accomplishes nothing. Every file that declares the property has to move to the knob in the same change, or none of them should.
 
-## What a knob should not own
+## What a knob should not control
 
-Not everything a component sets on a composition belongs in the composition's API. `flex` and `min-inline-size` on an element that *is* a cluster size it as an item of its own parent — they describe its relationship to its siblings, not the cluster's internal arrangement. Those stay plain declarations. The test is whether the composition would ever want to read the value itself.
+Not everything a component sets on a composition belongs in the composition's API. `flex` and `min-inline-size` on an element that *is* a cluster size it as an item of its parent — they describe its relationship to its siblings, not the cluster's internal arrangement. Those stay plain declarations. The test is whether the composition would ever want to read the value itself.
 
 ## The residue
 

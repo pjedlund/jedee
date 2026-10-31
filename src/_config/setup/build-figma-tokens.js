@@ -1,5 +1,5 @@
 // Builds the Figma copy of the DTCG tokens for the Tokens Studio plugin — same sets as Penpot's, with one fix.
-// Workflow: edit src/_data/designTokens/ (run `npm run colors` after colorsBase.json) → `npm run figma:tokens` → import `_local/figma/figma-tokens.dtcg.json` via Tokens Studio.
+// Workflow: edit the active theme's tokens/ (run `npm run colors` after colorsBase.json) → `npm run figma:tokens` → import `_local/figma/figma-tokens.dtcg.json` via Tokens Studio.
 // ⚠ Only difference from Penpot: line-height. Our tokens are unitless (1.2 = 1.2×font-size, CSS-style); Figma reads line-height as PX unless it ends in %, so a bare 1.2 collapses the text box. Here they become "120%".
 
 import {mkdir, writeFile} from 'node:fs/promises';

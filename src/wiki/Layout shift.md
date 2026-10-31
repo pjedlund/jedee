@@ -1,7 +1,7 @@
 ---
 description: "Cumulative Layout Shift: what it measures, why the element that moves is rarely the element at fault, and how a font-size-adjust fighting a size-adjust cost this site 0.18."
 date: 2026-09-06
-updated: 2026-10-27
+updated: 2026-10-31
 ---
 
 A page that moves under the reader is a specific kind of broken. You go to click a link and an image finishes loading above it, so you click an ad instead. You start reading a paragraph and a font swaps in, reflowing the line you were on. Nothing failed and nothing is slow — the page simply arrived in pieces, and the later pieces pushed the earlier ones around.
@@ -10,7 +10,7 @@ A page that moves under the reader is a specific kind of broken. You go to click
 
 Two properties of that formula matter more than the definition:
 
-- **Only *unexpected* shift counts.** A shift within 500 ms of a user input — you clicked a disclosure and it opened — is excluded, via the `hadRecentInput` flag. CLS is about the page moving on its own.
+- **Only *unexpected* shift counts.** A shift within 500 ms of a user input — you clicked a disclosure and it opened — is excluded, via the `hadRecentInput` flag. CLS is about the page moving by itself.
 - **Big movers are punished disproportionately.** The impact fraction is the *area* of what moved. A tall container nudged a few pixels scores far worse than a small element thrown across the screen, because the score is about how much of the reader's view was disturbed.
 
 The mitigations are all versions of one instruction — reserve the space before you know what goes in it. Put `width` and `height` on every image so the browser can compute the box from the aspect ratio before a byte of image arrives. Give embeds and ads a fixed reserved box. Never insert content above content that is already on screen. And for fonts, either accept the fallback or make the fallback the same size as the real thing.
@@ -162,7 +162,7 @@ The generators — [screenspan.net/fallback](https://screenspan.net/fallback), [
 
 **Three reasons, measured on this site.**
 
-**1. One number, several requirements.** `size-adjust` matches an *average*, but any given line of text has its own letter mix. Deriving the value the heading actually needs from four different samples gives four different answers:
+**1. One number, several requirements.** `size-adjust` matches an *average*, but any given line of text has its letter mix. Deriving the value the heading actually needs from four different samples gives four different answers:
 
 Table: The `size-adjust` each text sample needs
 | sample | required `size-adjust` |
@@ -192,11 +192,11 @@ So `prose.css`'s `max-inline-size: 54ch` (about 63 characters in the web font, s
 
 ### The shift no descriptor can reach
 
-Measured 2026-09-07: on the landing page at around 412 px the footer's link cluster wrapped to **three rows in the fallback and two in the web font**, moving the footer 34 px and scoring **CLS 0.173**. That width was not arbitrary and the band is narrow — measured below. No `size-adjust` fixes it: tested down to 91.5%, 2.4% narrower than Capsize's own value, the row count never flips. A row of short uppercase link labels has a glyph mix nothing like the average the descriptor was fitted to, and the wrap sits right on a boundary at that width.
+Measured 2026-09-07: on the landing page at around 412 px the footer's link cluster wrapped to **three rows in the fallback and two in the web font**, moving the footer 34 px and scoring **CLS 0.173**. That width was not arbitrary and the band is narrow — measured below. No `size-adjust` fixes it: tested down to 91.5%, 2.4% narrower than Capsize's value, the row count never flips. A row of short uppercase link labels has a glyph mix nothing like the average the descriptor was fitted to, and the wrap sits right on a boundary at that width.
 
 The page is short, so the footer is bottom-anchored: its top is `viewportHeight − footerHeight`, which makes the link cluster's height *its position*.
 
-**A reserve was tried, and removed.** From 2026-09-07 to 2026-10-05 the footer carried the only width media query in `global/blocks/`, holding the three-row height below 27rem:
+**A reserve was tried, and removed.** From 2026-09-07 to 2026-10-05 the footer carried the only width media query in the block styles (then `src/assets/css/global/blocks/`, now `src/assets/css/local/`), holding the three-row height below 27rem:
 
 ```css
 @media (width < 27rem) {
@@ -233,7 +233,7 @@ Table: Footer link rows in the web font and the fallback, by viewport width (202
 
 <figure class="popout" data-wiki-mockup>
   <img eleventy:formats="webp,png" src="/assets/images/wiki/layout-shift-font-band.png" alt="The site footer rendered six times in a three-by-two grid: at 412, 430 and 444 pixels wide, each in the web font and in the metric-matched fallback. At 412 both states take three rows of links; at 444 both take two. Only at 430 do they disagree: two rows and 64 pixels in the web font, three rows and 99 in the fallback." width="2660" height="1202">
-  <figcaption>The band, re-measured rather than redrawn: each panel is the real footer in its own iframe at that viewport width, and the row counts and heights are read back off the rendered geometry. Only the middle column disagrees, and with no reserve its height follows the row count: that 35 px is how far the bottom-anchored footer moves.</figcaption>
+  <figcaption>The band, re-measured rather than redrawn: each panel is the real footer in its iframe at that viewport width, and the row counts and heights are read back off the rendered geometry. Only the middle column disagrees, and with no reserve its height follows the row count: that 35 px is how far the bottom-anchored footer moves.</figcaption>
 </figure>
 
 **The disagreement is a band from 419 to 439 px, and Lighthouse's mobile preset emulates 412 px**, now just below it. On 2026-09-07 the band was 409–430 and 412 sat inside it, which was the whole reason the mobile audit reported a residual CLS while every other width measured clean. The footer's version number is not what moved it (set to 0.9.0 or 1.0.0, the band stays put); the cause was not traced. It is not a mobile problem but a 20-pixel one whose position drifts with small changes to the footer's type, so a clean audit at 412 says nothing about the widths beside it.
@@ -278,9 +278,9 @@ Table: Landing page in Netlify's Lighthouse run, before and after the fade
 | LCP | 1.8 s | 2.3 s |
 | FCP | 1.2 s | 1.0 s |
 
-Before, the swap reflowed the visible intro paragraph (0.113 on its own) and the `h1`; after, they were still at or near `opacity: 0` when it happened, and the only shift left is the footer, which does not fade (0.017). The price is LCP: the intro is the largest element and is not counted as painted until it starts to appear, half a second later. So the 3G finding and this one agree — the fade hides the swap only when the font is quicker than the fade.
+Before, the swap reflowed the visible intro paragraph (0.113 by itself) and the `h1`; after, they were still at or near `opacity: 0` when it happened, and the only shift left is the footer, which does not fade (0.017). The price is LCP: the intro is the largest element and is not counted as painted until it starts to appear, half a second later. So the 3G finding and this one agree — the fade hides the swap only when the font is quicker than the fade.
 
-**Gating the reveal does zero the score** — an element at `opacity: 0` generates no `layout-shift` entry at all, which is worth knowing on its own. But it pays for that in first paint, and there is no usable middle:
+**Gating the reveal does zero the score** — an element at `opacity: 0` generates no `layout-shift` entry at all, which is worth knowing by itself. But it pays for that in first paint, and there is no usable middle:
 
 Table: Gating the reveal on font load: CLS against first paint
 | gate ceiling | CLS | FCP |
@@ -315,11 +315,11 @@ Table: Font loading strategies, from Zach Leatherman's guide
 
 ### A lab runner's CLS is only as real as its installed fonts
 
-The next morning, Netlify's own Lighthouse run on the deploy that carried all of the above reported **CLS 0.305** — "poor", against 0.079 measured locally on the same build — and its first filmstrip frame showed the landing heading on **three lines**. No font state explains that from this machine: Source Serif, the matched fallback and even raw Georgia all set "Hej hej! I'm Johan." on two lines at 360 px, the width the plugin's pinned Lighthouse 9.6.8 emulates.
+The next morning, Netlify's Lighthouse run on the deploy that carried all of the above reported **CLS 0.305** — "poor", against 0.079 measured locally on the same build — and its first filmstrip frame showed the landing heading on **three lines**. No font state explains that from this machine: Source Serif, the matched fallback and even raw Georgia all set "Hej hej! I'm Johan." on two lines at 360 px, the width the plugin's pinned Lighthouse 9.6.8 emulates.
 
 The fallback faces are `local()`-only — `local('Georgia')`, `local('Arial')`, `local('Courier New')` — and those are Microsoft fonts. Where one is absent the `@font-face` resolves to nothing, the family falls through to the platform generic, and every descriptor on it applies to nothing. Two platforms lack all three: **Android**, which is most real mobile traffic, and **Linux**, which is every Lighthouse runner. Netlify's build image ships only the DejaVu family ([netlify/build-image#327](https://github.com/netlify/build-image/issues/327) quotes its `fc-list`), and the audit runs in that image after the build.
 
-So the reproduction fetched the candidate fonts *into the browser* rather than installing anything — Roboto and Noto Serif from Google Fonts, DejaVu from jsDelivr — declared each as its own family, and re-rendered the heading and the intro paragraph under every one at five widths:
+So the reproduction fetched the candidate fonts *into the browser* rather than installing anything — Roboto and Noto Serif from Google Fonts, DejaVu from jsDelivr — declared each as a separate family, and re-rendered the heading and the intro paragraph under every one at five widths:
 
 Table: Line counts at 360 px with each candidate fallback font
 | fallback for the heading / intro at 360 px | `h1` lines | intro lines |
@@ -336,25 +336,25 @@ The matching layer *is* inert on Android, exactly as feared — and it does not 
 Two things worth knowing if the layer is ever extended:
 
 - **`local('Georgia')` resolves Georgia Regular only.** The 700-weight heading fallback is Chrome's synthesised bold, and the 100.8% was tuned against that: Georgia Regular faux-bold sets the sample at 193 px, real Georgia Bold at 222. Adding `local('Georgia Bold')` for authenticity would make the fallback 14% too wide unless the descriptor is re-derived.
-- **Per-platform matching has an established shape.** Capsize's [`createFontStack`](https://github.com/seek-oss/capsize) takes several fallbacks and emits one `@font-face` per fallback, each with its own `size-adjust`, chained as `'Source Serif', 'Source Serif Fallback: Georgia', 'Source Serif Fallback: Noto Serif', serif`; the browser skips any family whose `local()` finds nothing, so each platform gets its own tuned face. Liberation Sans and Liberation Mono are metric-identical to Arial and Courier New and could share the existing descriptors as extra `local()` candidates. Nothing metric-compatible with Georgia ships anywhere by default.
+- **Per-platform matching has an established shape.** Capsize's [`createFontStack`](https://github.com/seek-oss/capsize) takes several fallbacks and emits one `@font-face` per fallback, each with its `size-adjust`, chained as `'Source Serif', 'Source Serif Fallback: Georgia', 'Source Serif Fallback: Noto Serif', serif`; the browser skips any family whose `local()` finds nothing, so each platform gets its tuned face. Liberation Sans and Liberation Mono are metric-identical to Arial and Courier New and could share the existing descriptors as extra `local()` candidates. Nothing metric-compatible with Georgia ships anywhere by default.
 
 The decision was to change nothing: the CSS is right for the platforms that have the fonts, harmless on the one that does not, and the only "bad" number comes from a machine with neither. What changed is how the audit is read.
 
 ### The figure
 
-`src/wiki/_sources/layout-shift.html` draws the band above. Six `srcdoc` iframes, one per width and font state, each loading the compiled `global.css` and the real footer lifted verbatim into `site-footer.js`; the row counts and heights in the labels are read out of each frame's own geometry after its fonts settle, so the picture states what it measured rather than repeating the table.
+`src/wiki/_sources/layout-shift.html` draws the band above. Six `srcdoc` iframes, one per width and font state, each loading the compiled `global.css` and the real footer lifted verbatim into `site-footer.js`; the row counts and heights in the labels are read out of each frame's geometry after its fonts settle, so the picture states what it measured rather than repeating the table.
 
 **An iframe, not a copy.** The wrapper gutter and every space and type token here are `vw`-based, so they read the *viewport*; a fixed-width `div` inside the 1400 px shooter page would wrap at the wrong width. `srcdoc` rather than `src`: a `srcdoc` frame inherits the parent's origin so its geometry can be read back, where a separate `file://` document is an opaque origin and `contentDocument` comes back `null`.
 
 **The first attempt built the link row by hand, and all six columns agreed.** The real cluster sits inside `.wrapper`, whose gutter is `6vw` a side, and shares a flex container with the platform-icon nav — about 26 px of width that is the whole difference between wrapping at two rows and three. A simplified copy measures a different element and quietly reports no problem. Lift the markup.
 
-**The bundle's own `@font-face` is unusable here**: it points at an absolute `/assets` path, dead under `file://`, and its `src` list starts with `local('Source Sans')`. Without redeclaring the face by relative path, the "web font" column renders in whatever the machine happens to have installed — which is the same class of mistake as the Netlify finding two sections up, in miniature.
+**The bundle's `@font-face` is unusable here**: it points at an absolute `/assets` path, dead under `file://`, and its `src` list starts with `local('Source Sans')`. Without redeclaring the face by relative path, the "web font" column renders in whatever the machine happens to have installed — which is the same class of mistake as the Netlify finding two sections up, in miniature.
 
 ### Measuring it honestly
 
 Two ways to get a wrong number, both met on the day this page was written.
 
-**Your own browser scores your site.** A Lighthouse run from a normal profile reported Best Practices 96 on the live site, on the strength of one console error: `cloud.umami.is/script.js — net::ERR_BLOCKED_BY_CLIENT`. That is a content blocker in the *auditing* browser refusing the analytics script. The same page from a clean headless profile scores **100** with zero console errors. The site did not change; the browser did. Run the audit in a clean profile before believing a Best Practices deduction — though note the real-world corollary, that a visitor with a blocker does see that error, and the analytics simply do not record them.
+**Your browser scores your site.** A Lighthouse run from a normal profile reported Best Practices 96 on the live site, on the strength of one console error: `cloud.umami.is/script.js — net::ERR_BLOCKED_BY_CLIENT`. That is a content blocker in the *auditing* browser refusing the analytics script. The same page from a clean headless profile scores **100** with zero console errors. The site did not change; the browser did. Run the audit in a clean profile before believing a Best Practices deduction — though note the real-world corollary, that a visitor with a blocker does see that error, and the analytics simply do not record them.
 
 **An automated browser pane can report a zero-height viewport,** in which an `IntersectionObserver` never fires — so every [[is-land]] `on:visible` island looks permanently un-hydrated while the `on:idle` ones look fine. That produced two confident and completely false findings before the viewport was checked. See the same warning on [[is-land]].
 

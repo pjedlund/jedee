@@ -8,7 +8,7 @@ schema: BlogPosting
     {% include 'partials/entry-header.njk' %}
 
     {# &nbsp; after </data>: the HTML minifier strips a normal space directly following a <data> tag, which would join "yes" and "to". #}
-    <p><data class="p-rsvp" value="{{ rsvp }}">RSVP: {{ rsvp }}</data>&nbsp;to <a class="u-in-reply-to" href="{{ inReplyTo }}">{{ inReplyTo }}</a></p>
+    <p><data class="p-rsvp" value="{{ rsvp }}">{{ words.rsvp }}: {{ rsvp }}</data>&nbsp;{{ words.to }} <a class="u-in-reply-to" href="{{ inReplyTo }}">{{ inReplyTo }}</a></p>
 
     <div class="e-content | wrapper-pass flow">
       {{ content | safe }}

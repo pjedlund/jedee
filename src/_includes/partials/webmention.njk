@@ -21,7 +21,7 @@
         <strong class="p-name">{{ webmention.author.name }}</strong>
       </a>
     {% else %}
-      <strong class="author">Anonymous</strong>
+      <strong class="author">{{ words.anonymous }}</strong>
     {% endif %}
 
     {% if webmention['wm-received'] %}
@@ -36,6 +36,6 @@
   </div>
 
   {% if webmention.url %}
-    <a class="u-url" href="{{ webmention.url }}" rel="noopener noreferrer">Source</a>
+    <a class="u-url" href="{{ webmention.url }}" rel="noopener noreferrer">{{ words.source }}</a>
   {% endif %}
 </article>

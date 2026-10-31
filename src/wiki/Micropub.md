@@ -1,12 +1,12 @@
 ---
 description: "The W3C publishing API that lets any client post to any site, and how a static site uses it to gain an editor without giving up the static build."
 date: 2026-09-06
-updated: 2026-10-27
+updated: 2026-10-31
 ---
 
 [Micropub](https://www.w3.org/TR/micropub/) (W3C Recommendation, 2017) is a publishing API: a client sends a post to a server, and the server decides where it lives and what it looks like. Its point is the split. The app you write in and the site you publish to stop being the same product, so one editor can post to any site that implements the spec, and one site can accept posts from any client — [Quill](https://quill.p3k.io/), [Sparkles](https://sparkles.sploot.com/), iA Writer, a shortcut on a phone.
 
-A request is either form-encoded or JSON, and carries `h=entry` plus the [microformats2](https://microformats.org/wiki/microformats2) properties of the post — `content`, `name`, `category`, `in-reply-to`, `like-of` and so on. Authorization is a bearer token from [IndieAuth](https://indieauth.spec.indieweb.org/): the client sends the user to their own domain to sign in, and gets back a token scoped to `create`. The server advertises itself with `<link rel="micropub">` in the head, next to the `authorization_endpoint` and `token_endpoint` links a client needs to complete that handshake.
+A request is either form-encoded or JSON, and carries `h=entry` plus the [microformats2](https://microformats.org/wiki/microformats2) properties of the post — `content`, `name`, `category`, `in-reply-to`, `like-of` and so on. Authorization is a bearer token from [IndieAuth](https://indieauth.spec.indieweb.org/): the client sends the user to their domain to sign in, and gets back a token scoped to `create`. The server advertises itself with `<link rel="micropub">` in the head, next to the `authorization_endpoint` and `token_endpoint` links a client needs to complete that handshake.
 
 The spec deliberately says nothing about storage. A Micropub server can write to a database, a file, or a git commit — the response is a `201` and a `Location` header naming the new post's URL, and how it got there is the implementation's business. See [[The IndieWeb]] for where this sits among the other building blocks.
 
@@ -50,7 +50,7 @@ export const TYPE_DIR = {
 ### The rest of the wrapper
 
 - **Every post gets a title**, derived if the client sent none, so nothing lands blank in `<title>`, the OG tags, the feeds or a card. A title-less post's slug comes from the first ~10 words of its body, or — for a reply, repost or RSVP — the last meaningful path segment of its target URL, so the filename, the URL and the `<h1>` all agree instead of reading as a bare timestamp.
-- **`visibility` is translated into jedee's own vocabulary**, interpreted centrally at build time in `drafts.js`. `unlisted` keeps the native key and the build drops the post from every collection, feed and the sitemap while its permalink still resolves. `private` reuses the `draft` mechanism, because **there is no true private on a public static build** — a documented limitation, not encryption. Anything else is dropped so no stray `visibility:` line leaks into frontmatter.
+- **`visibility` is translated into jedee's vocabulary**, interpreted centrally at build time in `drafts.js`. `unlisted` keeps the native key and the build drops the post from every collection, feed and the sitemap while its permalink still resolves. `private` reuses the `draft` mechanism, because **there is no true private on a public static build** — a documented limitation, not encryption. Anything else is dropped so no stray `visibility:` line leaks into frontmatter.
 - **Cover URLs are upgraded to full resolution.** Sparkles' Movie/Book/Listen editors hand over thumbnails — Apple Music's `100x100bb`, OpenLibrary's `-M` — and the `.cover` block caps width without upscaling, so a thumbnail renders tiny. Known providers are rewritten (`/1000x1000bb.`, `-L`); unknown hosts pass through.
 - **Workouts arrive through the same door.** An Apple Watch → iOS Shortcut posts a flat `h-entry` with `activity`, `distance`, `heart-rate` and friends. There is no engine post-type for a workout, so the engine routes it as a `note` and the store wrapper detects `activity` and reroutes it to `src/posts/activities/` ([[The activities archive]]). Pace is derived at render, never stored — only recorded raw numbers land in frontmatter.
 
@@ -58,6 +58,6 @@ export const TYPE_DIR = {
 
 v1 is **create-only, text post-types**. The media endpoint, updates and deletes are all supported by the engine and simply not connected. Auth is hosted IndieAuth (`indieauth.com/auth` and `tokens.indieauth.com/token`) rather than a self-hosted authorization server, which means real client auth presupposes the public `me` domain being live with bidirectional `rel="me"` — the endpoint and the domain go live together or not at all.
 
-Unit tests live in `_local/tests/micropub.test.js`, run by `npm run test:unit`. The helpers are exported from the Function purely so they can be tested.
+Unit tests live in `tests/micropub.test.js`, run by `npm run test:unit`. The helpers are exported from the Function purely so they can be tested.
 
 Raw source: `netlify/functions/micropub.js` and `_local/project_docs/micropub-pattern.html`, read on 2026-09-06.

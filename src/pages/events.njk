@@ -3,6 +3,10 @@ layout: base
 title: Events
 description: Events I'm hosting — upcoming and past.
 permalink: '/events/index.html'
+# pagination only gates the file: nothing in event, no page
+pagination:
+  data: collections.event
+  size: 100000
 ---
 
 {# Two-section archive (spec §7). Unlike other types this does NOT reuse archive-listing.njk: the collection is partitioned at build time into Upcoming (soonest first) and Past (most-recent first) via the events.js date filters. "Now" is frozen at build (static site). Cancelled events are NOT filtered out — status drives the badge, date drives the section. No pagination for v1 (if Past grows long, paginate it, not Upcoming). No feed (spec §8). Section headings are <h2>, so cards render <h3>. #}
@@ -14,19 +18,19 @@ permalink: '/events/index.html'
 <div class="wrapper">
   <header class="full | section" style="--spot-color: var(--color-accent-blue)">
     <div class="section__inner flow region" style="--region-space-top: var(--space-xl-2xl)">
-      <h1 class="text-center" style="color: var(--color-light);">Events</h1>
+      <h1 class="text-center" style="color: var(--color-light);">{{ words.eventsHeading }}</h1>
     </div>
 
     {% svg "divider/edgy", null, "divider" %}
   </header>
 
   <div class="region flow prose" style="--region-space-top: var(--space-xl-2xl)">
-    <p>Events I'm hosting — upcoming first, then past. Cancelled events stay listed in their date's section.</p>
+    <p>{{ words.eventsIntro | safe }}</p>
   </div>
 
   <div class="region flow" style="--region-space-top: var(--space-l); --flow-space: var(--space-xl-2xl)">
     <section class="flow" aria-labelledby="events-upcoming">
-      <h2 id="events-upcoming">Upcoming</h2>
+      <h2 id="events-upcoming">{{ words.eventUpcoming }}</h2>
       {%- if upcoming.length -%}
         <custom-masonry layout="50-50">
           {%- for item in upcoming -%}
@@ -34,12 +38,12 @@ permalink: '/events/index.html'
           {%- endfor -%}
         </custom-masonry>
       {%- else -%}
-        <p>Nothing on the calendar right now.</p>
+        <p>{{ words.eventsNoneUpcoming }}</p>
       {%- endif -%}
     </section>
 
     <section class="flow" aria-labelledby="events-past">
-      <h2 id="events-past">Past</h2>
+      <h2 id="events-past">{{ words.eventPast }}</h2>
       {%- if past.length -%}
         <custom-masonry layout="50-50">
           {%- for item in past -%}
@@ -47,8 +51,9 @@ permalink: '/events/index.html'
           {%- endfor -%}
         </custom-masonry>
       {%- else -%}
-        <p>No past events yet.</p>
+        <p>{{ words.eventsNonePast }}</p>
       {%- endif -%}
     </section>
   </div>
 </div>
+{%- css "local" -%}{%- include 'css/seperator.css' -%}{%- endcss -%}

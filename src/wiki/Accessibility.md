@@ -1,6 +1,7 @@
 ---
 description: "Making a site usable by people with disabilities: WCAG's four principles and three levels, what can be checked automatically, and where each part of the work lives in this wiki."
 date: 2026-09-14
+updated: 2026-10-31
 ---
 
 Web accessibility means building pages that people with disabilities can perceive, operate and understand: people who use a screen reader, a keyboard or a switch instead of a mouse, who magnify the page, who are color-blind or have low vision, who get motion sickness from animation, or who have cognitive disabilities. Much of it is simply building a page well for everyone: text at a readable length, controls that say what they do, a page that does not move under the reader.
@@ -28,7 +29,7 @@ The site's public [accessibility statement](/accessibility/) targets **WCAG 2.1 
 `npm run test:a11y` runs pa11y-ci with HTML_CodeSniffer's `WCAG2AA` rules over the paths listed in `meta.js`. Three limits, each written up on [[The accessibility test]]:
 
 - It is a spot check of **ten pages**, chosen to cover the layout shapes, not the whole site.
-- It sees **light mode only**. Dark mode is checked by a separate script, `_local/tests/a11y-nojs.js`, which also covers the no-JavaScript rendering pa11y cannot load.
+- It sees **light mode only**. Dark mode is checked by a separate script, `tests/a11y-nojs.js`, which also covers the no-JavaScript rendering pa11y cannot load.
 - ⚠ A passing contrast rule over a `color-mix()` color can mean the engine could not read the color, not that it passed. The style guide's primary button measured 3.45:1 on 2026-08-04 while pa11y reported nothing.
 
 ### What came from Eleventy Excellent
@@ -53,7 +54,7 @@ Counted in both repositories' `src/assets/css/` on 2026-09-14.
 
 ### Decisions
 
-- **Low contrast on decoration is not a defect.** An `aria-hidden` icon beside a text label carries no information of its own, so neither 1.4.3 Contrast (Minimum) nor 1.4.11 Non-text Contrast applies to it. On the mega-menu pass (2026-08-01) one such icon was raised to 4.97:1 and then reverted; its contrast is a design choice, not a fix.
+- **Low contrast on decoration is not a defect.** An `aria-hidden` icon beside a text label carries no information, so neither 1.4.3 Contrast (Minimum) nor 1.4.11 Non-text Contrast applies to it. On the mega-menu pass (2026-08-01) one such icon was raised to 4.97:1 and then reverted; its contrast is a design choice, not a fix.
 - **AA, plus AAA where it comes cheap.** The 54ch measure sets about 63 characters per line, inside the width part of 1.4.8. Wiki pages expand their abbreviations through a shared glossary (3.1.4), and motion honors `prefers-reduced-motion` (2.3.3). None of this is a claim of AAA conformance.
 
 Raw source: `src/pages/accessibility.md`, `src/_data/meta.js`, `src/assets/css/` in jedee and in Eleventy Excellent, and the pages linked above, read on 2026-09-14; WCAG 2.2 at w3.org.

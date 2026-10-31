@@ -6,7 +6,7 @@ updated: 2026-10-27
 
 Git stores every version of every file forever. That is exactly the behavior you want for text and exactly the one you don't want for large binaries: a 150 MB scan committed once is 150 MB in the repository permanently, and replacing it adds another 150 MB rather than a diff. Everyone who clones pays for all of it, and the repository stops being cheap to copy — which is most of what makes git pleasant to use.
 
-[Git LFS](https://git-lfs.com/) is the conventional answer, keeping a small pointer file in the repo and the bytes on a separate server. It isn't free either: it needs host support, carries its own bandwidth quotas, and makes a clone fail in new ways when the LFS server is unreachable.
+[Git LFS](https://git-lfs.com/) is the conventional answer, keeping a small pointer file in the repo and the bytes on a separate server. It isn't free either: it needs host support, carries its bandwidth quotas, and makes a clone fail in new ways when the LFS server is unreachable.
 
 For files that are *published* rather than *versioned*, the simpler option is to skip the repository altogether — put them in object storage and link to them by URL. Archival originals suit this well, because they have exactly the properties that make version control pointless: written once, never edited, and with no history anyone needs.
 
@@ -39,7 +39,7 @@ photo:
 
 - **The order is a contract.** `downloads[0]` is always the full-size raster; it carries `width`/`height` and drives both the lightbox and the Resolution row in the metadata block. `downloads[1]` is the archival scan.
 - ⚠ **`bytes` must match the served `content-length`.** It records the exact size of the file in the bucket; re-upload a file and the frontmatter has to follow.
-- **The URL shape is the addressing scheme**: the bucket's public r2.dev hostname plus `/photos/<name>.<ext>`, where the name is the scan's own roll/frame/scan/exposure identifier — not the post slug.
+- **The URL shape is the addressing scheme**: the bucket's public r2.dev hostname plus `/photos/<name>.<ext>`, where the name is the scan's roll/frame/scan/exposure identifier — not the post slug.
 
 ### The wiring
 
@@ -64,7 +64,7 @@ photo:
 
 A Cloudflare R2 bucket named `johanedlund-photos`, served through the bucket's public r2.dev URL. **No custom domain, so no DNS involved.** The free tier covers this comfortably and egress is free; r2.dev is rate-limited, which is fine at this traffic.
 
-This replaced an earlier Bunny.net setup — storage zone, CDN, own subdomain, certificate — after a surprise charge. The current machinery is one bucket and one public URL.
+This replaced an earlier Bunny.net setup — storage zone, CDN, separate subdomain, certificate — after a surprise charge. The current machinery is one bucket and one public URL.
 
 **The build never touches these files:** no fetch, no processing, no size checks. The repo stores two URLs and a byte count, and the page trusts them. That trust is the price of keeping 157 MB per photograph out of git, and the `bytes` discipline above is what keeps it honest.
 

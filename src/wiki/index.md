@@ -3,7 +3,7 @@ description: "The wiki documenting web techniques and how jedee is designed and 
 date: 2026-07-31
 ---
 
-The wiki documenting web techniques and how jedee is designed and built. Maintained by Claude Code, following conventions kept in the project's own instructions. Pages are named after their concept where one exists ("Microformats", "Text wrapping"): general explanation first, then an "In jedee" section. Purely project-internal pages keep descriptive titles and live under "The jedee site itself".
+The wiki documenting web techniques and how jedee is designed and built. Maintained by Claude Code, following conventions kept in the project's instructions. Pages are named after their concept where one exists ("Microformats", "Text wrapping"): general explanation first, then an "In jedee" section. Purely project-internal pages keep descriptive titles and live under "The jedee site itself".
 
 Each entry below says what a page covers and why you would open it. The traps and the measurements live on the pages themselves.
 
@@ -12,7 +12,7 @@ Each entry below says what a page covers and why you would open it. The traps an
 - [[Accessibility]] — WCAG's principles and levels, what automated testing can and cannot catch, and a map of the accessibility work spread across this wiki. Start here.
 - [[Microformats]] — the class vocabulary that makes HTML machine-readable, and why those classes must never be treated as styling hooks.
 - [[One JSON-LD envelope for sixteen types]] — one include that emits structured data for every post type, driven by front matter.
-- [[Per-type feeds]] — giving each kind of post its own Atom and JSON feed, and deciding which kinds do not need one.
+- [[Per-type feeds]] — giving each kind of post its Atom and JSON feed, and deciding which kinds do not need one.
 - [[Abbreviations]] — the `abbr` element, what a `title` attribute can and cannot be relied on for, and one glossary that serves every wiki page.
 - [[Keyboard shortcuts]] — which key combinations WCAG allows and which belong to the browser, reading an Option shortcut, and a shortcuts list in a native dialog.
 - [[The lang attribute]] — marking a page's language and its foreign-language passages, including titles detected at build time.
@@ -41,19 +41,19 @@ Each entry below says what a page covers and why you would open it. The traps an
 - [[Shadows]] — layered box-shadows that look like real shadows, one light source, tinting and dark mode, and balancing painted light against a cast shadow.
 - [[Tables]] — markup that reads correctly unstyled, the browser defaults worth overriding, alignment, sticky headers, and what a table wider than the page needs. Ends with this site's activities table.
 - [[Tooltips]] — the three kinds of tooltip, and when each one is honest.
-- [[Design token sync]] — generating a design tool's tokens from the code that owns them, what does not survive the trip, and switching non-color things with the theme.
+- [[Design token sync]] — generating a design tool's tokens from the code that holds them, what does not survive the trip, and switching non-color things with the theme.
 - [[Icons]] — outline versus filled icon sets, picking a set by how many of your icons it really has, inline SVG colored by `currentColor`, and the filled Phosphor set this site uses.
 - [[External-link icons]] — the arrow after an outbound link: when to announce it, drawing it as a mask so it can change color, and moving it without letting it wrap alone.
 
 ## Images & media
 
-- [[Figures]] — `figure` and `figcaption`, images that follow a site's own light or dark theme, where a caption sits relative to the text, and the caption icon drawn in CSS.
+- [[Figures]] — `figure` and `figcaption`, images that follow a site's light or dark theme, where a caption sits relative to the text, and the caption icon drawn in CSS.
 - [[Alt text]] — informative versus decorative, and why `alt=""` is an answer rather than an omission.
 - [[Self-hosting remote images at build time]] — pulling a remote cover into the build so no visitor request leaves the site.
 - [[Hosting large originals off-repo]] — the deliberate inverse: 157 MB of scans kept in a bucket the build never touches.
 - [[The PhotoSwipe lightbox]] — a lightbox loaded only once it is needed, degrading to a plain link without JavaScript.
 - [[The YouTube embed]] — a stand-in with a self-hosted thumbnail, so loading a page sends nothing to Google.
-- [[The place map]] — a map component on this site's own tiles, with three modes chosen by the markup: single pin, place groups, and a recorded route.
+- [[The place map]] — a map component on this site's tiles, with three modes chosen by the markup: single pin, place groups, and a recorded route.
 
 ## Publishing & the IndieWeb
 
@@ -95,6 +95,7 @@ Each entry below says what a page covers and why you would open it. The traps an
 ## The jedee site itself
 
 - [[What jedee kept from Eleventy Excellent]] — the stock-versus-fork inventory: what is untouched, what was extended, what was deleted, and what was left behind with nothing referencing it.
+- [[Shared files and site files]] — which files belong to one site and which are shared, and how a theme, the switches and the post-type list let a second site reuse the shared part.
 - [[Anatomy of a post type]] — the nine places a new post type has to be wired. Start here for the post-type system.
 - [[Permalinks and Obsidian-friendly filenames]] — Title Case filenames for wikilinks, kebab-case addresses for the web.
 - [[The title-less post types]] — the note and the five response types: no title by construction, and one shared card between them.

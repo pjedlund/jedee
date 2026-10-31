@@ -9,9 +9,9 @@ A [cross-document view transition](https://developer.mozilla.org/en-US/docs/Web/
 @view-transition { navigation: auto; }
 ```
 
-The browser then snapshots the outgoing page, loads the incoming one, snapshots that, and animates between the two images inside a pseudo-element tree — `::view-transition` and its `::view-transition-old()` / `::view-transition-new()` children — which lives in its own top layer above the rest of the document. Giving an element a `view-transition-name` lifts it out of the page-wide snapshot so it animates independently, which is the mechanism behind an element appearing to persist across a navigation.
+The browser then snapshots the outgoing page, loads the incoming one, snapshots that, and animates between the two images inside a pseudo-element tree — `::view-transition` and its `::view-transition-old()` / `::view-transition-new()` children — which lives in its top layer above the rest of the document. Giving an element a `view-transition-name` lifts it out of the page-wide snapshot so it animates independently, which is the mechanism behind an element appearing to persist across a navigation.
 
-Scroll position sits awkwardly in that model. The transition spans a navigation: the outgoing document had a scroll offset, the incoming one has its own, and the pseudo-element tree is not in the normal flow of either. Whether CSS can observe the arriving page's scroll position *while the transition runs* is not something the specifications say much about — which is why the answer below had to be established by testing rather than by reading.
+Scroll position sits awkwardly in that model. The transition spans a navigation: the outgoing document had a scroll offset, the incoming one has another, and the pseudo-element tree is not in the normal flow of either. Whether CSS can observe the arriving page's scroll position *while the transition runs* is not something the specifications say much about — which is why the answer below had to be established by testing rather than by reading.
 
 **Finding: during a cross-document view transition, CSS can react to the arriving page's scroll position — two different ways, with no JavaScript.** No prior art was found for either, so this is recorded as tested behavior rather than documented API.
 
@@ -19,7 +19,7 @@ Scroll position sits awkwardly in that model. The transition spans a navigation:
 
 A cross-document view transition snapshots elements on the old page and animates them on the new one, and **the snapshots keep the old page's viewport coordinates**. So if an element near the top gets an exit animation and the new page arrives *scrolled down* — a back navigation with scroll restoration, or a link to a `#fragment` — the exit animation plays at the top of the viewport, floating over the middle of whatever content is now there.
 
-The fix needs a condition CSS famously lacks: "only run this if the page is at the top." The transition pseudo-elements also live in their own layer hanging off the root, so it wasn't obvious any scroll-aware mechanism could reach them.
+The fix needs a condition CSS famously lacks: "only run this if the page is at the top." The transition pseudo-elements also live in their layer hanging off the root, so it wasn't obvious any scroll-aware mechanism could reach them.
 
 ## Mechanism 1 — a `scroll-state()` container query
 
@@ -33,7 +33,7 @@ html { container: root-scroll / scroll-state; }
 }
 ```
 
-Why it can work at all: **a pseudo-element may use its own originating element as its query container**, and the `::view-transition-*` pseudos originate from the root — the very element carrying `container`.
+Why it can work at all: **a pseudo-element may use its originating element as its query container**, and the `::view-transition-*` pseudos originate from the root — the very element carrying `container`.
 
 **Tested: works.** Arriving scrolled, the exit animation is dropped; arriving at the top, it plays. The scroll state reported during the transition is the *new* page's, which is the useful one.
 

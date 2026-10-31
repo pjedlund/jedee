@@ -294,7 +294,7 @@ colorGroups:
   </section>
   <section class="rhythm | flow region">
     <h3 class="heading-line">Vertical rhythm</h3>
-    <p>Prose, where every gap, and every line of text that is not body text, is a whole number of quarter lines of body text (<code>global/blocks/prose-rhythm.css</code>). The wiki page <a href="/wiki/vertical-rhythm/">Vertical rhythm</a> explains and measures it. <kbd><kbd data-pc="Alt">⌥</kbd><kbd>R</kbd></kbd> draws the same lines over any page, counted from the top of the page.</p>
+    <p>Prose, where every gap, and every line of text that is not body text, is a whole number of quarter lines of body text (<code>src/assets/css/local/prose-rhythm.css</code>). The wiki page <a href="/wiki/vertical-rhythm/">Vertical rhythm</a> explains and measures it. <kbd><kbd data-pc="Alt">⌥</kbd><kbd>R</kbd></kbd> draws the same lines over any page, counted from the top of the page.</p>
 
     <div class="rhythm-demo | flow">
       <label class="rhythm-toggle"><input type="checkbox"> Show the rhythm lines: whole lines strong, quarter lines faint</label>
@@ -591,7 +591,7 @@ colorGroups:
     <h2 id="tokens" tabindex="-1">Tokens</h2>
   </header>
   <section class="flow region">
-    <p>Every value on this page starts in a <a href="{{ settings.repos.site }}/tree/main/src/_data/designTokens">design token file</a>, in the <a href="https://www.designtokens.org/">W3C design tokens format</a>. The build turns them into the CSS custom properties the site uses, token files for Penpot and Figma, and <code>DESIGN.md</code>, a written summary for people and tools.</p>
+    <p>Every value on this page starts in a <a href="{{ settings.repos.site }}/tree/main/src/_includes/themes/{{ meta.theme }}/tokens">design token file</a>, in the <a href="https://www.designtokens.org/">W3C design tokens format</a>. The build turns them into the CSS custom properties the site uses, token files for Penpot and Figma, and <code>DESIGN.md</code>, a written summary for people and tools.</p>
   </section>
 </article>
 

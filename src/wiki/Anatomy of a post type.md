@@ -1,12 +1,12 @@
 ---
 description: "The nine places a new post type must be wired in before it works, and where the sixteen types legitimately diverge."
 date: 2026-07-31
-updated: 2026-10-27
+updated: 2026-10-31
 ---
 
 jedee has **sixteen** post types. Adding one is not a design problem but a wiring problem: there are nine places a type has to appear before it works, and fifteen of the sixteen fill them the same way. This page is the checklist and the places types legitimately diverge.
 
-The sixteen: article, note, reading, watching, jam, photo, recipe, event, bookmark, reply, repost, like, rsvp, audio, video, activity. Fifteen have a written spec in `_local/project_docs/`; **activities has none** — it arrived through a different route (see [[The activities archive]]) and is the type most likely to be the exception below.
+The sixteen: article, note, reading, watching, jam, photo, recipe, event, bookmark, reply, repost, like, rsvp, audio, video, activity. A site may build only some of them: `settings.postTypes` lists the ones to build, a missing list builds all sixteen, and `[]` builds none. A type left out has its posts, archive page and feeds ignored, so it has no menu link either (see [[Shared files and site files]]). Fifteen have a written spec in `_local/project_docs/`; **activities has none** — it arrived through a different route (see [[The activities archive]]) and is the type most likely to be the exception below.
 
 ## The four-key folder data file
 
@@ -33,7 +33,7 @@ eleventyComputed: {
 }
 ```
 
-It was ported from `photos.json` so EXIF could be read from the file at build time — and `photoExif` is a **top-level** key rather than nested under `photo`, because a computed key that reads its own parent is a self-reference in the data cascade. Worth knowing before writing a script that globs `src/posts/*/*.json` expecting sixteen hits: it finds ten. Jams, reading and watching followed photo into JavaScript on 2026-08-29 and 2026-09-09, for lightbox covers and Open Graph cards, and recipes and videos on 2026-10-11, so their Open Graph cards could use their own artwork.
+It was ported from `photos.json` so EXIF could be read from the file at build time — and `photoExif` is a **top-level** key rather than nested under `photo`, because a computed key that reads its parent is a self-reference in the data cascade. Worth knowing before writing a script that globs `src/posts/*/*.json` expecting sixteen hits: it finds ten. Jams, reading and watching followed photo into JavaScript on 2026-08-29 and 2026-09-09, for lightbox covers and Open Graph cards, and recipes and videos on 2026-10-11, so their Open Graph cards could use their artwork.
 
 ## Registration: one array, explicit aliases
 
@@ -48,7 +48,7 @@ export const byCategory = cat => collection =>
 export const POST_TYPES = ['article', 'note', 'reading', /* … */ 'activity'];
 ```
 
-`eleventy.config.js` loops it: `POST_TYPES.forEach(type => eleventyConfig.addCollection(type, byCategory(type)))`.
+`eleventy.config.js` loops it: `POST_TYPES.forEach(type => eleventyConfig.addCollection(type, byCategory(type)))`. All sixteen collections are registered whatever the setting; `enabledPostTypes(settings)` and `POST_TYPE_DIRS`, defined in `src/_config/collections.js` and used by `eleventy.config.js`, decide which types' posts, archive pages and feeds Eleventy ignores, and a name in `postTypes` that is not a post type stops the build.
 
 **The layout aliases are not looped, and must not be.** `article` is in `POST_TYPES` but there is no `article.njk` — articles use `post.njk`, EE's stock layout name. A generic `addLayoutAlias(t, t + '.njk')` loop would emit a bogus alias for it. All nineteen aliases are written out one per line instead (in `eleventy.config.js` — the sixteen types minus `article`, plus `base`, `page`, `post` and `tags`). The comment in `collections.js` says so; it is the single most repeated warning across the fifteen specs.
 
@@ -72,7 +72,7 @@ export const POST_TYPES = ['article', 'note', 'reading', /* … */ 'activity'];
 ## The other five slots
 
 - **Layout** — `src/_layouts/<type>.njk`. All sixteen exist. All sixteen open with `<article class="wrapper flow prose h-entry">`; see [[Microformats]].
-- **Card** — `src/_includes/partials/card-<type>.njk`. Ten types have their own; the five response types share one, and activities have none — see [[The title-less post types]].
+- **Card** — `src/_includes/partials/card-<type>.njk`. Ten types have one each; the five response types share one, and activities have none — see [[The title-less post types]].
 - **Feed** — fourteen types have one; two deliberately don't (reposts, events). See [[Per-type feeds]].
 - **Navigation** — one entry in `src/_data/navigation.js` with a Phosphor icon ([[Icons]]) and the collection key for the count. All sixteen are listed. Jam is asymmetric: URL `/jams/`, collection key `jam`.
 - **Schema** — a `schema:` line in the layout's front matter. See [[One JSON-LD envelope for sixteen types]].

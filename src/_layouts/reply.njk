@@ -7,7 +7,7 @@ schema: BlogPosting
   <article class="wrapper flow prose h-entry">
     {% include 'partials/entry-header.njk' %}
 
-    <p>In reply to <a class="u-in-reply-to" href="{{ inReplyTo }}">{{ inReplyTo }}</a></p>
+    <p>{{ words.inReplyTo }} <a class="u-in-reply-to" href="{{ inReplyTo }}">{{ inReplyTo }}</a></p>
 
     <div class="e-content | wrapper-pass flow">
       {{ content | safe }}

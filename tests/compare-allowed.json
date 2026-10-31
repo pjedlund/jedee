@@ -1,0 +1,322 @@
+{
+  "added": [
+    {
+      "path": "/wiki/shared-files-and-site-files/",
+      "reason": "New wiki page describing shared files and site files"
+    }
+  ],
+  "changed": [
+    {
+      "path": "/wiki/the-indieweb/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/design-system/",
+      "reason": "The link to the token files points at their new folder in the theme, and the printed name of the prose-rhythm stylesheet now gives its real folder"
+    },
+    {
+      "path": "/wiki/accessibility/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/anatomy-of-a-post-type/",
+      "reason": "Text updated to describe what a site owns, switches and the post-type list, and a link to the new page; the revised date moved"
+    },
+    {
+      "path": "/wiki/design-token-sync/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/external-link-icons/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/favicons/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/font-subsetting/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/",
+      "reason": "One line added for the new page 'Shared files and site files'"
+    },
+    {
+      "path": "/wiki/keyboard-shortcuts/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/layout-shift/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/line-length/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/link-checking/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/log/",
+      "reason": "The wiki log has a new entry at the top"
+    },
+    {
+      "path": "/wiki/microformats/",
+      "reason": "Only the list of pages that link here changed, because the wiki gained a page and some pages now link to it; the text of the page is the same"
+    },
+    {
+      "path": "/wiki/micropub/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/opentype-features/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/progressive-web-apps/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/self-hosting-remote-images-at-build-time/",
+      "reason": "Only the list of pages that link here changed, because the wiki gained a page and some pages now link to it; the text of the page is the same"
+    },
+    {
+      "path": "/wiki/shadows/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/sveltia-cms/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/tailwind/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/text-wrapping/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/the-accessibility-test/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/the-activities-archive/",
+      "reason": "Only the list of pages that link here changed, because the wiki gained a page and some pages now link to it; the text of the page is the same"
+    },
+    {
+      "path": "/wiki/the-interlinkers-second-render-pass/",
+      "reason": "Only the list of pages that link here changed, because the wiki gained a page and some pages now link to it; the text of the page is the same"
+    },
+    {
+      "path": "/wiki/the-place-map/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/the-service-workers-three-strategies/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/the-theme-toggle/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/the-title-less-post-types/",
+      "reason": "Only the list of pages that link here changed, because the wiki gained a page and some pages now link to it; the text of the page is the same"
+    },
+    {
+      "path": "/wiki/themes-and-starters/",
+      "reason": "Text updated to describe what a site owns, switches and the post-type list, and a link to the new page; the revised date moved"
+    },
+    {
+      "path": "/wiki/tooltips/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/vertical-rhythm/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/watch-loops/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/what-jedee-kept-from-eleventy-excellent/",
+      "reason": "Text updated: the layer order and the moved block files, the token folder, and a link to the new page; the revised date moved"
+    },
+    {
+      "path": "/wiki/wikilinks/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/search.json",
+      "reason": "The search index holds wiki text, so it carries the edited and the new wiki pages"
+    },
+    {
+      "path": "/sitemap.xml",
+      "reason": "The new wiki page 'Shared files and site files' is listed"
+    },
+    {
+      "path": "/wiki/abbreviations/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/alt-text/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/breadcrumb/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/css-3d-transforms/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/choreographing-css-animations/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/configuring-a-layout-composition/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/figures/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/floats/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/focus-rings-and-paint-containment/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/format-on-save/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/hosting-large-originals-off-repo/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/icons/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/layout-breakouts/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/netlify/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/one-json-ld-envelope-for-sixteen-types/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/open-graph-images/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/per-type-feeds/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/permalinks-and-obsidian-friendly-filenames/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/personal-websites/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/prefetching/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/rebuilding-an-archive-from-the-wayback-machine/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/scroll-aware-css-during-view-transitions/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/site-search/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/smooth-scrolling/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/syntax-highlighting/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/tables/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/the-photoswipe-lightbox/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/the-youtube-embed/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/the-dev-servers-memory/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/the-lang-attribute/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/the-main-menu/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/three-things-called-cache/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/timestamps-without-a-time-zone/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/typographic-conventions/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/undefined-custom-properties/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/web-clipper-templates/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/web-components/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/webc/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/webmentions/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/is-land/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    }
+  ]
+}

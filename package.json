@@ -34,7 +34,11 @@
     "pa11y:serve": "cross-env ELEVENTY_ENV=test BUILD_DRAFTS=1 eleventy --serve --ignore-initial",
     "test:a11y": "npm run pa11y:build && (npm run pa11y:serve &) && sleep 5 && npm run pa11y:test",
     "flags": "grep -rn \"@until\" src netlify admin eleventy.config.js || echo 'No expiring comments.'",
-    "test:unit": "node --test _local/tests/*.test.js",
+    "test:unit": "node --test tests/*.test.js",
+    "test:skip-link": "node tests/skip-link-focus.mjs dist",
+    "rebuild": "mkdir -p dist/assets && find dist -mindepth 1 -maxdepth 1 ! -name assets ! -name img -exec rm -rf {} + && find dist/assets -mindepth 1 -maxdepth 1 ! -name images -exec rm -rf {} + && cross-env BUILD_DRAFTS=1 SHOW_HIDDEN=1 npm run build:11ty",
+    "compare": "node tests/compare-builds.mjs _local/baseline dist",
+    "bare": "node tests/bare-page.mjs",
     "mockups": "node src/wiki/_sources/shoot-mockups.js",
     "mockups:check": "node src/wiki/_sources/check-mockups.js"
   },
@@ -105,6 +109,7 @@
     "sharp": "^0.35.5",
     "sharp-ico": "^0.1.5",
     "slugify": "^1.6.9",
-    "svgo": "^4.1.0"
+    "svgo": "^4.1.0",
+    "yaml": "^2.9.1"
   }
 }

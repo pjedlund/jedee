@@ -3,7 +3,7 @@
 {% set headingLevel = headingLevel | default("h2") %}
 {% set cat = item.data.category %}
 
-{% set verbs = { "bookmark": "Bookmarked", "reply": "In reply to", "rsvp": "RSVP to", "like": "Liked", "repost": "Reposted" } %}
+{% set verbs = { "bookmark": words.bookmarked, "reply": words.inReplyTo, "rsvp": words.rsvpTo, "like": words.liked, "repost": words.reposted } %}
 {% set mf2 = { "bookmark": "u-bookmark-of", "reply": "u-in-reply-to", "rsvp": "u-in-reply-to", "like": "u-like-of", "repost": "u-repost-of" } %}
 {% set fields = { "bookmark": "bookmarkOf", "reply": "inReplyTo", "rsvp": "inReplyTo", "like": "likeOf", "repost": "repostOf" } %}
 {% set target = item.data[fields[cat]] %}
@@ -11,14 +11,14 @@
 <custom-card>
   <{{ headingLevel }} slot="headline" class="text-step-1">
     {%- if cat == "rsvp" and item.data.rsvp -%}
-      RSVP <em>{{ item.data.rsvp }}</em> to
+      {{ words.rsvp }} <em>{{ item.data.rsvp }}</em> {{ words.to }}
     {%- else -%}
       {{ verbs[cat] }}
     {%- endif %}
     {% if target %}<a class="{{ mf2[cat] }}" href="{{ target }}">{{ target }}</a>{% endif %}
   </{{ headingLevel }}>
   <span slot="date">
-    {%- if item.data.draft -%}<span class="button" data-small-button data-button-variant='tertiary'>draft</span> {% endif -%}
+    {%- if item.data.draft -%}<span class="button" data-small-button data-button-variant='tertiary'>{{ words.draft }}</span> {% endif -%}
     <a href="{{ item.url | url }}">{% set definedDate = item.date %}{% include "partials/date.njk" %}</a>
   </span>
   {% if item.data.description %}

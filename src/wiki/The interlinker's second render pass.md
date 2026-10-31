@@ -6,7 +6,7 @@ updated: 2026-10-27
 
 A [[Wikilinks|wikilink]] names its target by title — `[[Page Title]]` — rather than by path, so something has to work out where that title actually lives before a page can be built. On an [Eleventy](https://www.11ty.dev/) site that job belongs to a plugin, and the way this one does the lookup — by rendering every page a second time, mid-build — is the root of the worst failure this site has had. It is worth understanding before putting any conditional around an include.
 
-`@photogabble/eleventy-plugin-interlinker` resolves wikilinks by **re-rendering every page in a pass of its own, mid-build**. That coupling of link resolution to render timing is what the rest of this page unpacks.
+`@photogabble/eleventy-plugin-interlinker` resolves wikilinks by **re-rendering every page in a separate pass, mid-build**. That coupling of link resolution to render timing is what the rest of this page unpacks.
 
 ## The failure
 

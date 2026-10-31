@@ -6,9 +6,10 @@ import path from 'node:path';
 import sharp from 'sharp';
 import puppeteer from 'puppeteer';
 import matter from 'gray-matter';
-import { author, pathToSvgLogo } from '../../_data/meta.js';
+import { author, pathToSvgLogo, themeOg } from '../../_data/meta.js';
 import { unwikilink } from '../filters/unwikilink.js';
 import { slugifyString } from '../filters/slugify.js';
+import { cardFontFaces, missingCardFonts } from '../utils/og-fonts.js';
 
 const SITE_DOMAIN = new URL(author.website).hostname;
 
@@ -19,12 +20,11 @@ const TYPES = {
   reading: {dir: 'src/posts/reading', eyebrow: 'Reading', credit: data => data.author}
 };
 
-const PAPER = '#F4F4F2';
-const INK = '#495464';
-const MUTED = '#bbbfca';
+const PAPER = themeOg.background;
+const INK = themeOg.text;
+const MUTED = themeOg.muted;
 
 const chromePath = process.env.PA11Y_CHROME || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-const fontUri = p => `data:font/woff2;base64,${fs.readFileSync(p).toString('base64')}`;
 
 const logo = fs.readFileSync(pathToSvgLogo, 'utf8');
 const markPath = logo.match(/\sd="([^"]+)"/)[1];
@@ -38,7 +38,7 @@ const escape = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<':
 
 // ⚠ The site's own slugify filter, not a mirror of it: the filename is the key on both sides, and a hand-rolled copy drifts the moment a title contains a colon or an ampersand.
 
-// ⚠ Inlined as a data: URI, never a file:// or remote src. A setContent document has no origin, so a file:// image fails silently and the card ships with a blank square — the same trap as the fonts.
+// ⚠ Inlined as a data: URI, never a file:// or remote src. A setContent document has no origin, so a file:// image fails silently and the card ships with a blank square — the same trap as the fonts (utils/og-fonts.js).
 const coverUri = async cover => {
   if (cover.startsWith('/')) {
     const local = path.join('src', cover.replace(/^\//, ''));
@@ -52,21 +52,20 @@ const coverUri = async cover => {
 };
 
 const cardHtml = (post, cover, type) => `<!doctype html><html lang="en"><head><meta charset="utf-8"><style>
-  @font-face { font-family: 'Source Serif'; font-weight: 700; src: url('${fontUri('src/assets/fonts/source-serif/source-serif.woff2')}') format('woff2'); }
-  @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('${fontUri('src/assets/fonts/source-sans/source-sans.woff2')}') format('woff2'); }
+  ${cardFontFaces}
   * { margin: 0; box-sizing: border-box; }
   body { width: 1200px; height: 630px; background: ${PAPER}; display: flex; align-items: center; gap: 72px; padding: 96px; overflow: hidden; position: relative; }
   /* Sized by height, not width: a square album cover comes out 438x438 and a 2:3 poster or book cover 292x438, so every type sits in the same band without letterboxing. */
-  .art { height: 438px; width: auto; max-width: 438px; flex: none; border-radius: 6px; object-fit: cover; box-shadow: 0 18px 40px rgb(73 84 100 / 0.22); }
+  .art { height: 438px; width: auto; max-width: 438px; flex: none; border-radius: 6px; object-fit: cover; box-shadow: 0 18px 40px color-mix(in srgb, ${INK} 22%, transparent); }
   .text { min-width: 0; }
-  .eyebrow { font-family: 'Source Sans', Arial, sans-serif; font-weight: 600; font-size: 20px; letter-spacing: 2px; text-transform: uppercase; color: ${markColor}; margin-block-end: 18px; }
+  .eyebrow { font-family: '${themeOg.body.family}', Arial, sans-serif; font-weight: 600; font-size: 20px; letter-spacing: 2px; text-transform: uppercase; color: ${markColor}; margin-block-end: 18px; }
   /* 700 / -1 tracking is the per-post card's title treatment; 56px rather than its 80 because a title shares this card with an artist and a cover. */
-  h1 { font-family: 'Source Serif', Georgia, serif; font-weight: 700; font-size: 56px; line-height: 1.12; letter-spacing: -1px; color: ${INK};
+  h1 { font-family: '${themeOg.display.family}', Georgia, serif; font-weight: 700; font-size: 56px; line-height: 1.12; letter-spacing: -1px; color: ${INK};
        display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
-  .artist { font-family: 'Source Sans', Arial, sans-serif; font-weight: 400; font-size: 32px; line-height: 1.3; color: ${INK}; opacity: 0.75; margin-block-start: 20px;
+  .artist { font-family: '${themeOg.body.family}', Arial, sans-serif; font-weight: 400; font-size: 32px; line-height: 1.3; color: ${INK}; opacity: 0.75; margin-block-start: 20px;
             display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
   .sig { position: absolute; inset-block-end: 38px; inset-inline-end: 96px; display: flex; align-items: center; gap: 12px;
-         font-family: 'Source Sans', Arial, sans-serif; font-weight: 600; font-size: 22px; letter-spacing: -0.5px; color: ${MUTED}; }
+         font-family: '${themeOg.body.family}', Arial, sans-serif; font-weight: 600; font-size: 22px; letter-spacing: -0.5px; color: ${MUTED}; }
   .sig svg { display: block; }
 </style></head><body>
   <img class="art" src="${cover}" alt="">
@@ -122,12 +121,12 @@ for (const post of posts) {
   await page.setContent(cardHtml(post, cover, post.type), { waitUntil: 'load' });
   await page.evaluate(() => document.fonts.ready);
   // ⚠ A card silently set in a system fallback, or with a blank square where the art should be, is a valid JPEG that is simply wrong. Assert both before shooting.
-  const bad = await page.evaluate(() => {
-    const missing = ['Source Serif', 'Source Sans'].filter(f => ![...document.fonts].some(ff => ff.family === f && ff.status === 'loaded'));
+  const bad = await missingCardFonts(page);
+  const artLoaded = await page.evaluate(() => {
     const art = document.querySelector('.art');
-    if (!art.complete || !art.naturalWidth) missing.push('the cover image');
-    return missing;
+    return art.complete && art.naturalWidth > 0;
   });
+  if (!artLoaded) bad.push('the cover image');
   if (bad.length) throw new Error(`${post.slug}: never loaded — ${bad.join(', ')}. The card would ship wrong.`);
 
   const shot = await page.screenshot({ type: 'png' });

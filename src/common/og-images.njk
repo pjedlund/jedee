@@ -1,11 +1,4 @@
 ---
-fontDisplay: "Source Serif 4" # needed created in local development, font must be installed on your system.
-fontBody: "Source Sans 3" # needed created in local development, font must be installed on your system.
-background: '#F4F4F2'
-textColor: '#495464'
-colorMediumDark: '#bbbfca'
-colorLightGrey: '#e8e8e8'
-accentColor: '#d0621e' # --color-accent-orange, the mark's own fill in src/assets/svg/misc/logo.svg
 pagination:
   data: collections.titleCards
   size: 1
@@ -22,7 +15,7 @@ eleventyExcludeFromCollections: true
   xmlns="http://www.w3.org/2000/svg"
   xmlns:xlink="http://www.w3.org/1999/xlink"
 >
-  {% set titleInLines = post.data.title | splitlines(22) %}
+  {% set og = meta.themeOg %}{% set titleInLines = post.data.title | splitlines(22) %}
   {% set numberOfLines = titleInLines.length %}
   {% if numberOfLines == 1 %}
     {% set verticalStartingPoint = 340 %}
@@ -36,18 +29,18 @@ eleventyExcludeFromCollections: true
     {% set verticalStartingPoint = 170 %}
   {% endif %}
 
-  <rect id="bg" width="100%" height="100%" opacity="1" fill="{{ background }}" />
+  <rect id="bg" width="100%" height="100%" opacity="1" fill="{{ og.background }}" />
   <!-- ground: the site's own mark where Eleventy Excellent's template put its star. Same size, position and 10% as the fallback card in generate-og-default.js, so the two read as one set. -->
   <g transform="translate(666,96) scale(4.38,4.38)">
-    <path fill="{{ accentColor }}" opacity="0.1" d="m50 0 .588.003V0h9.706v30.882h-9.706v.009a19 19 0 0 0-.588-.009c-10.558 0-19.118 8.559-19.118 19.118S39.441 69.118 50 69.118 69.118 60.559 69.118 50V30.882C69.118 13.826 82.945 0 100 0v50c0 27.614-22.386 50-50 50S0 77.614 0 50 22.386 0 50 0" />
+    <path fill="{{ og.accent }}" opacity="0.1" d="{{ meta.logoMark }}" />
   </g>
 
   <!-- date -->
   <text
-    font-family="{{ fontBody }},sans-serif"
+    font-family="{{ og.body.family }},sans-serif"
     font-size="18"
     font-weight="500"
-    fill="{{textColor}}"
+    fill="{{ og.text }}"
   >
     <tspan x="160" y="{{ verticalStartingPoint - 120 }}">
       {{ post.date | formatDate('YYYY/MM/DD') }}
@@ -57,11 +50,11 @@ eleventyExcludeFromCollections: true
   <!-- title -->
   <text
     id="text"
-    font-family="'Source Serif 4',serif"
+    font-family="'{{ og.display.family }}',serif"
     font-size="80"
     font-weight="700"
     letter-spacing="-1"
-    fill="{{ textColor }}"
+    fill="{{ og.text }}"
   >
     {% for line in titleInLines %}
       <tspan x="160" y="{{ verticalStartingPoint - 20 + loop.index0 * 85 }}"> {{ line }} </tspan>
@@ -74,23 +67,23 @@ eleventyExcludeFromCollections: true
     font-style="italic"
     font-weight="300"
     letter-spacing="-1"
-    fill="{{ textColor }}" >
+    fill="{{ og.text }}" >
     <tspan x="160" y="580">{{ meta.siteDomain }}</tspan> </text> #}
 
 
   <!-- sitename -->
   <text
-    font-family="{{ fontBody }}, sans-serif"
+    font-family="{{ og.body.family }}, sans-serif"
     font-size="18"
     font-weight="600"
-    fill="#bbbfca"
+    fill="{{ og.muted }}"
     letter-spacing="-1"
   >
     <tspan x="950" y="580">{{ meta.siteDomain }}</tspan>
   </text>
 
-  <!-- signature mark, in the accent orange. ⚠ It was the base-dark grey #bbbfca here, the value that measured 1.67 on the light page and was fixed everywhere else on the site. -->
+  <!-- signature mark, in the accent orange. ⚠ It was the base-dark grey {{ og.muted }} here, the value that measured 1.67 on the light page and was fixed everywhere else on the site. -->
   <g transform="translate(916,560) scale(0.2,0.2)">
-    <path fill="{{ accentColor }}" d="m50 0 .588.003V0h9.706v30.882h-9.706v.009a19 19 0 0 0-.588-.009c-10.558 0-19.118 8.559-19.118 19.118S39.441 69.118 50 69.118 69.118 60.559 69.118 50V30.882C69.118 13.826 82.945 0 100 0v50c0 27.614-22.386 50-50 50S0 77.614 0 50 22.386 0 50 0" />
+    <path fill="{{ og.accent }}" d="{{ meta.logoMark }}" />
   </g>
 </svg>

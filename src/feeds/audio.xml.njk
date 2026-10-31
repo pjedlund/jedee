@@ -8,7 +8,7 @@ eleventyExcludeFromCollections: true
 excludeFromSitemap: true
 ---
 {# The regular Atom feed, not the podcast one. Both want /audio/feed.xml and the
-   regular feed wins (Johan, 2026-08-10): a feed reader is how most people follow
+   regular feed wins (the site owner's call, 2026-08-10): a feed reader is how most people follow
    a section, and audio here is mostly field recordings rather than episodes. The
    RSS 2.0 podcast feed still exists, with the enclosures and the iTunes tags,
    at /audio/podcast.xml.
@@ -16,7 +16,7 @@ excludeFromSitemap: true
    Plain body: this syndicates the post's writing, not the file. To hear the
    recording you follow the link, or subscribe to the podcast feed. #}
 {%- set feedCollection = collections.audio -%}
-{%- set feedTitle = "Audio" -%}
-{%- set feedDescription = "Audio I've published — recordings and episodes." -%}
+{%- set feedTitle = words.feedAudio -%}
+{%- set feedDescription = words.feedAudioDescription -%}
 {%- set feedSelfUrl = "/audio/feed.xml" -%}
 {%- include "feeds/atom-body.njk" -%}

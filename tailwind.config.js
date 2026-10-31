@@ -1,38 +1,17 @@
 /* © Andy Bell - https://github.com/Set-Creative-Studio/cube-boilerplate */
 
-import plugin from 'tailwindcss/plugin';
+import plugin from 'tailwindcss/plugin.js';
 import postcss from 'postcss';
 import postcssJs from 'postcss-js';
 
 import {dtcgToTailwind, dtcgFluidToTailwind, dtcgShadowToTailwind} from './src/_config/utils/dtcg-to-tailwind.js';
+import {loadTokens, themeName} from './src/_config/utils/theme.js';
 
-// Raw design tokens
-import colorTokens from './src/_data/designTokens/colors.json';
-import borderRadiusTokens from './src/_data/designTokens/borderRadius.json';
-import borderWidthTokens from './src/_data/designTokens/borderWidth.json';
-import shadowTokens from './src/_data/designTokens/shadows.json';
-import fontTokens from './src/_data/designTokens/fonts.json';
-import spacingTokens from './src/_data/designTokens/spacing.json';
-import textSizeTokens from './src/_data/designTokens/textSizes.json';
-import textLeadingTokens from './src/_data/designTokens/textLeading.json';
-import textWeightTokens from './src/_data/designTokens/textWeights.json';
-import viewportTokens from './src/_data/designTokens/viewports.json';
+// Reads the active theme's tokens each time it's called; build-css.js calls it for every build.
+export const themeFromTokens = () => {
+  const viewportTokens = loadTokens('viewports.json');
 
-// Process design tokens
-const colors = dtcgToTailwind(colorTokens);
-const borderRadius = dtcgToTailwind(borderRadiusTokens);
-const borderWidth = dtcgToTailwind(borderWidthTokens);
-const boxShadow = dtcgShadowToTailwind(shadowTokens);
-const fontFamily = dtcgToTailwind(fontTokens);
-const fontSize = dtcgFluidToTailwind(textSizeTokens);
-const fontWeight = dtcgToTailwind(textWeightTokens);
-const lineHeight = dtcgToTailwind(textLeadingTokens);
-const spacing = dtcgFluidToTailwind(spacingTokens);
-
-export default {
-  content: ['./src/**/*.{html,js,md,njk,liquid,webc}'],
-  presets: [],
-  theme: {
+  return {
     screens: {
       ltsm: {max: `${viewportTokens.sm}px`},
       sm: `${viewportTokens.sm}px`,
@@ -40,15 +19,15 @@ export default {
       ltnavigation: {max: `${viewportTokens.navigation}px`},
       navigation: `${viewportTokens.navigation}px`
     },
-    colors,
-    borderRadius,
-    borderWidth,
-    boxShadow,
-    spacing,
-    fontFamily,
-    fontSize,
-    fontWeight,
-    lineHeight,
+    colors: dtcgToTailwind(loadTokens('colors.json')),
+    borderRadius: dtcgToTailwind(loadTokens('borderRadius.json')),
+    borderWidth: dtcgToTailwind(loadTokens('borderWidth.json')),
+    boxShadow: dtcgShadowToTailwind(loadTokens('shadows.json')),
+    spacing: dtcgFluidToTailwind(loadTokens('spacing.json')),
+    fontFamily: dtcgToTailwind(loadTokens('fonts.json')),
+    fontSize: dtcgFluidToTailwind(loadTokens('textSizes.json')),
+    fontWeight: dtcgToTailwind(loadTokens('textWeights.json')),
+    lineHeight: dtcgToTailwind(loadTokens('textLeading.json')),
     backgroundColor: ({theme}) => theme('colors'),
     textColor: ({theme}) => theme('colors'),
     margin: ({theme}) => ({
@@ -56,7 +35,14 @@ export default {
       ...theme('spacing')
     }),
     padding: ({theme}) => theme('spacing')
-  },
+  };
+};
+
+export default {
+  // ⚠ Tailwind makes a class for any word in these files that looks like one, so only the active theme's templates count, and no DESIGN.md.
+  content: ['./src/**/*.{html,js,md,njk,liquid,webc}', `!./src/_includes/themes/!(${themeName()})/**`, '!./src/_includes/themes/*/*.md'],
+  presets: [],
+  theme: themeFromTokens(),
   variantOrder: [
     'first',
     'last',

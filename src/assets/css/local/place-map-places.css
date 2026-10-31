@@ -26,7 +26,7 @@ Places mode (the activity index and its route pages): the pending caption, per-t
   }
 }
 
-/* Each row's dot and each route's line, in the type's color (variables.css); read by place-map.js. */
+/* Each row's dot and each route's line, in the type's color (activity-colors.css); read by place-map.js. */
 [data-activity] {
   --place-color: var(--activity-color);
   --color-route-line: var(--activity-color);
@@ -107,7 +107,7 @@ Places mode (the activity index and its route pages): the pending caption, per-t
 /* ACTIVITY TYPE ICON — the table's first column. One icon per activityType (src/assets/svg/activity/), the name beside it for screen readers. */
 .activity-type {
   --activity-icon-size: 1em; /* the design draws the icon at the body text size */
-  --activity-icon-color: var(--activity-color, var(--color-text-accent)); /* the type's color from variables.css, else gray */
+  --activity-icon-color: var(--activity-color, var(--color-text-accent)); /* the type's color from activity-colors.css, else gray */
 
   color: var(--activity-icon-color);
 }

@@ -1,7 +1,7 @@
 ---
 description: "Shipping only the characters and styles a site needs from a web font, and how a missing character falls back to another font while a missing style is faked."
 date: 2026-09-10
-updated: 2026-10-27
+updated: 2026-10-31
 ---
 
 **Subsetting** a font means keeping only the characters a site needs and dropping the rest, so the file is a fraction of the full family's size. A complete Source Sans 3 carries Latin, Greek, Cyrillic, arrows and much more; a site written in English and Swedish needs about two hundred characters of it. The standard tool is fontTools' [`pyftsubset`](https://fonttools.readthedocs.io/en/latest/subset/), which glyphhanger and most build-time subsetting wrap. The other half of the technique is CSS [`unicode-range`](https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/unicode-range), which tells the browser which characters a face covers, so it can skip downloading a file the page has no characters for.
@@ -20,7 +20,7 @@ The characters most likely to go missing are the ones an author never types:
 - **Fetched text.** Anything pulled in at build time (a video title, a book title) brings characters the author never saw.
 - **Decomposed accents.** Unicode can write "ö" as one code point (NFC) or as `o` plus U+0308 COMBINING DIAERESIS (NFD); both render the same ([Unicode normalization, UAX #15](https://unicode.org/reports/tr15/)). A subset holds the precomposed letters but almost never the combining marks, so NFD text draws its accents in the fallback. [`String.prototype.normalize('NFC')`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/normalize) on the incoming string rejoins them.
 
-Design tools add a trap of their own: they swap quotes as you type (macOS "smart quotes"), so a mockup can show `’` where the page has `'`, and the two look like a font difference when they are different characters.
+Design tools add a trap too: they swap quotes as you type (macOS "smart quotes"), so a mockup can show `’` where the page has `'`, and the two look like a font difference when they are different characters.
 
 ## Finding fallbacks
 
@@ -36,7 +36,7 @@ for (let n; (n = tw.nextNode()); ) {
 }
 ```
 
-Two additions matter: an italic that is its own file needs its own cmap (check `cs.fontStyle`), and `::before`, `::after` and `::marker` string content is text too.
+Two additions matter: an italic that is a separate file needs a separate cmap (check `cs.fontStyle`), and `::before`, `::after` and `::marker` string content is text too.
 
 **While you work, one page at a time**, a script can do the same test with no cmaps at all. It measures each character in a canvas with the page's web font followed by a **blank font**: one zero-width glyph mapped to every code point (a cmap format 13 subtable, the trick behind [Adobe Blank](https://github.com/adobe-fonts/adobe-blank)). A character the web font has comes out with a width; one it lacks falls through to the blank font and measures zero. Comparing two ordinary fallbacks (`monospace` against `serif`) looks simpler and misses exactly the rare symbols: when neither fallback has `⁂`, both hand it to the same system font and the widths agree. Chrome refuses a font whose glyph table is empty ("OTS parsing error: glyf: zero-length table" in the console), so the blank font's `.notdef` needs a real outline. A canvas does not trigger font downloads, so a `unicode-range` face the page itself never needed measures as missing.
 
@@ -77,7 +77,7 @@ A gap found this way is filled the subsetting way: cut the missing face from the
 
 ## In jedee
 
-Eleventy Excellent ships **static, pre-subset `woff2` files** and has no subsetting step in the build. Its `@font-face` blocks have no `unicode-range`, so adding a character to a file is the whole fix: no CSS change. The full source fonts are bundled beside the subsets. The one exception is Cyrillic (below), which is its own file behind a `unicode-range`.
+Eleventy Excellent ships **static, pre-subset `woff2` files** and has no subsetting step in the build. Its `@font-face` blocks have no `unicode-range`, so adding a character to a file is the whole fix: no CSS change. The full source fonts are bundled beside the subsets. The one exception is Cyrillic (below), which is a separate file behind a `unicode-range`. jedee's copies sit in its theme's `fonts/` folder (`src/_includes/themes/jedee/fonts/`) and are published at `/assets/fonts/`; a theme with no fonts has no such folder.
 
 Table: The shipped font files, their character counts and their sources
 | file | kind | characters | source in the repo |
@@ -96,22 +96,22 @@ The fallback faces behind each are the metric-matched Georgia, Arial and Courier
 
 **Checking while you work.** On the dev server only (`eleventy.env.runMode === "serve"` in `base.njk`), `src/assets/scripts/bundle/font-check.js` runs the blank-font test above on every page. It grays out and dot-underlines each character drawn by a fallback, outlines any element set in a style its family has no file for, gives both a hover title, and logs a count to the console. Emoji and pictographs such as `⚠` are skipped on purpose. On this page it flags nine characters, all in code where Source Code Pro lacks them (the symbols listed below, plus `Δ`), and the code keywords' missing italic.
 
-**The 2026-09-10 scan.** All 641 built pages, 34 characters falling back. The biggest was Source Serif having **no curly quotes at all**: with `typographer: true` in `src/_config/plugins/markdown.js`, every heading with an apostrophe drew its `’` in Georgia. Filled since: ‘ ’ “ ” – — … and `ü` in Source Serif; `~ ← ↑ → ↓ ↔ Δ` in Source Sans upright and italic. On 2026-10-07 ⌘ and ⌥ went into Source Sans upright only, for the key caps in the keyboard-shortcuts dialog: 432 bytes. Source Sans draws both a full em wide, so a second `@font-face` in `fonts.css` maps just those two code points to the same file with `size-adjust: 75%`. ⚠ The ⌘ outline in the shipped file is also raised 180 units so it sits from the baseline to cap height; a fresh subset from the original font loses that, and the ⌘ drops below the baseline again. The YouTube captions on two jam pages had NFD accents from YouTube's own titles; `youtubeTitle` in `src/_config/filters/youtube-title.js` now normalizes to NFC (see [[The YouTube embed]]).
+**The 2026-09-10 scan.** All 641 built pages, 34 characters falling back. The biggest was Source Serif having **no curly quotes at all**: with `typographer: true` in `src/_config/plugins/markdown.js`, every heading with an apostrophe drew its `’` in Georgia. Filled since: ‘ ’ “ ” – — … and `ü` in Source Serif; `~ ← ↑ → ↓ ↔ Δ` in Source Sans upright and italic. On 2026-10-07 ⌘ and ⌥ went into Source Sans upright only, for the key caps in the keyboard-shortcuts dialog: 432 bytes. Source Sans draws both a full em wide, so a second `@font-face` in `fonts.css` maps just those two code points to the same file with `size-adjust: 75%`. ⚠ The ⌘ outline in the shipped file is also raised 180 units so it sits from the baseline to cap height; a fresh subset from the original font loses that, and the ⌘ drops below the baseline again. The YouTube captions on two jam pages had NFD accents from YouTube's titles; `youtubeTitle` in `src/_config/filters/youtube-title.js` now normalizes to NFC (see [[The YouTube embed]]).
 
 Left falling back on purpose:
 
 - **Emoji.** No text font has them, and the system emoji font is the right one.
-- **`⚠`**, on most wiki pages. It is in no Source font, so the wiki's own warning marker always comes from a system font. Decorative; left.
+- **`⚠`**, on most wiki pages. It is in no Source font, so the wiki's warning marker always comes from a system font. Decorative; left.
 - **`⁂`, `❖`, `↩︎`** (the last is the footnote back-link). Also in no Source font.
 - **Code-block symbols** (`→ ← │ ⌄ ⚠`). The code font is a trimmed variable subset with no full variable source bundled; fixing it means downloading Source Code Pro's variable release first.
 
 Source Serif was deliberately kept small: the Latin-1 block was added and taken back out the same day. Add accented letters to it one at a time, when a heading actually needs one. Add each one to the Bold Italic too: the two files share one character list, and a character in only one of them falls back in the other.
 
-**Styles.** `body` set `font-synthesis: none` for one day, 2026-09-13 to 09-14. It came out again once the dev-server checker could *show* fakes instead. Refusing a fake turns a missing italic upright, so the emphasis is lost, and the Georgia and Arial fallbacks, loaded as Regular only, lost their bold while the web fonts loaded. `.small-caps` still refuses fake small caps on its own. Checking the shipped files against the CSS turned up two faux italics and no faux bold:
+**Styles.** `body` set `font-synthesis: none` for one day, 2026-09-13 to 09-14. It came out again once the dev-server checker could *show* fakes instead. Refusing a fake turns a missing italic upright, so the emphasis is lost, and the Georgia and Arial fallbacks, loaded as Regular only, lost their bold while the web fonts loaded. `.small-caps` still refuses fake small caps by itself. Checking the shipped files against the CSS turned up two faux italics and no faux bold:
 
 - **Italic in a serif heading.** Source Serif ships Bold only, so an `<em>` in an `h1`–`h3` was a slanted Bold: the RSVP card's "RSVP *yes*" (`partials/card-response.njk`; all three RSVPs are drafts for now) and one heading on [[The interlinker's second render pass]]. Both now use a real Bold Italic, `source-serif-bold-italic.woff2`, cut from the bundled `SourceSerif4-BoldIt` to the Bold's 109 characters: 17 KB, against 33 KB for the Bold. It is not preloaded, so only a page with italic in a heading downloads it.
-- **Italic in code.** The syntax theme sets `.token.keyword { font-style: italic }` (`global/blocks/code.css`), and there is no Source Code Pro italic, so the keywords on 31 pages were slanted. Since 2026-09-14 code is never italic: `code, pre` in `global/blocks/code.css` set `font-style: normal`, so code inside an `<em>` stays upright, and the keywords are upright and still violet. Bold code stays, because it is real (Source Code Pro is variable, 200–900); a day of never-bold code turned out to flatten wiki terms like **`animation-delay`**. A real italic needs Source Code Pro's italic downloaded first, like the code-block symbols above.
-- **Source Sans** is variable 200–900 in upright and italic, so every weight and style in body text is real. The breadcrumb's connector words use Source Sans rather than the serif for this reason (`.breadcrumb-connector` in `global/blocks/breadcrumb-leaf.css`).
+- **Italic in code.** The syntax theme sets `.token.keyword { font-style: italic }` (`src/assets/css/local/code.css`), and there is no Source Code Pro italic, so the keywords on 31 pages were slanted. Since 2026-09-14 code is never italic: `code, pre` in `src/assets/css/local/code.css` set `font-style: normal`, so code inside an `<em>` stays upright, and the keywords are upright and still violet. Bold code stays, because it is real (Source Code Pro is variable, 200–900); a day of never-bold code turned out to flatten wiki terms like **`animation-delay`**. A real italic needs Source Code Pro's italic downloaded first, like the code-block symbols above.
+- **Source Sans** is variable 200–900 in upright and italic, so every weight and style in body text is real. The breadcrumb's connector words use Source Sans rather than the serif for this reason (`.breadcrumb-connector` in `src/assets/css/local/breadcrumb-leaf.css`).
 
 The recipe itself needs a Python with fontTools and brotli; on this machine that is the python.org framework install, not the default `python3`.
 

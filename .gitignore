@@ -57,10 +57,9 @@ src/_obsidian/*
 .omc
 .github
 
-# Project notes (kept locally, not in repo)
-AGENTS.md
+# Project notes (kept locally, not in repo); AGENTS.md is tracked on purpose, so keep anything personal out of it
 CLAUDE.md
-DESIGN.md
+SITE.md
 IDEAS.md
 LOG.md
 TODO.md

@@ -1,6 +1,10 @@
 ---
 layout: tags
 permalink: /jams/genres/index.html
+# pagination only gates the file: nothing in genreList, no page
+pagination:
+  data: collections.genreList
+  size: 100000
 eleventyComputed:
   title: '{{ meta.blog.genrePlural }}'
 ---

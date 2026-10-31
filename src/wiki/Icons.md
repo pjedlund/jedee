@@ -26,7 +26,7 @@ That partial coverage is what usually decides between sets. A set is only as goo
 
 Icons used to ship as an icon font, one glyph per icon. Inline SVG replaced it: it renders crisply at any size, cannot be swapped for a fallback font, and is styled with ordinary CSS. Chris Coyier's [Inline SVG vs Icon Fonts](https://css-tricks.com/icon-fonts-vs-svg/) (2014) sets out the comparison; it still holds.
 
-The convention that makes inline SVG easy is `currentColor`. An icon drawn with `fill="currentColor"` (or `stroke="currentColor"` for an outline) takes the text color of whatever contains it, so a link's hover color, a dark theme or an active state reaches the icon with no rule of its own. Sizing it in `em` (`width="1em" height="1em"`) does the same for size.
+The convention that makes inline SVG easy is `currentColor`. An icon drawn with `fill="currentColor"` (or `stroke="currentColor"` for an outline) takes the text color of whatever contains it, so a link's hover color, a dark theme or an active state reaches the icon with no rule. Sizing it in `em` (`width="1em" height="1em"`) does the same for size.
 
 ## Labels
 

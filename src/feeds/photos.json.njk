@@ -8,7 +8,7 @@ eleventyExcludeFromCollections: true
 excludeFromSitemap: true
 ---
 {%- set feedCollection = collections.photo -%}
-{%- set feedTitle = "Photos" -%}
-{%- set feedDescription = "Photographs I've published." -%}
+{%- set feedTitle = words.feedPhotos -%}
+{%- set feedDescription = words.feedPhotosDescription -%}
 {%- set feedSelfUrl = "/photos/feed.json" -%}
 {%- include "feeds/photo-json-body.njk" -%}

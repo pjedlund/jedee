@@ -16,8 +16,8 @@ schema: BlogPosting
 
     {% if yield or totalTime %}
       <dl class="recipe-meta">
-        {% if yield %}<dt>Yields</dt><dd>{{ yield }}</dd>{% endif %}
-        {% if totalTime %}<dt>Total time</dt><dd><time datetime="{{ totalTime | toISODuration }}">{{ totalTime | formatDuration }}</time></dd>{% endif %}
+        {% if yield %}<dt>{{ words.yields }}</dt><dd>{{ yield }}</dd>{% endif %}
+        {% if totalTime %}<dt>{{ words.totalTime }}</dt><dd><time datetime="{{ totalTime | toISODuration }}">{{ totalTime | formatDuration }}</time></dd>{% endif %}
       </dl>
     {% endif %}
 
@@ -26,7 +26,7 @@ schema: BlogPosting
       {{ content | safe }}
     </div>
 
-    {% if source %}<p class="recipe-source">Recipe from <a href="{{ source }}">{{ source }}</a></p>{% endif %}
+    {% if source %}<p class="recipe-source">{{ words.recipeFrom }} <a href="{{ source }}">{{ source }}</a></p>{% endif %}
 
     {% include 'partials/backlinks.njk' %}
     {% include 'partials/entry-footer.njk' %}

@@ -1,5 +1,6 @@
 {# Light/dark toggle showing the current theme; inside <is-land> so it appears only once JS can run it. The no-flash theme is set by the inline theme-toggle.js, not this button. #}
 {# ⚠ No `title`: the script sets a tooltip whose wording follows the theme, while the accessible name must not change. #}
+{%- if meta.switches.themeToggle -%}
 <is-land on:idle>
   <button type="button" id="theme-toggle" class="theme-toggle" data-theme-toggle aria-pressed="false" data-tooltip-align="end">
     <svg class="sun-and-moon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
@@ -22,3 +23,5 @@
     <span class="visually-hidden">{{ meta.themeToggleLabel }}</span>
   </button>
 </is-land>
+{%- css "local" -%}{%- include 'css/sun-and-moon.css' -%}{%- include 'css/theme-toggle.css' -%}{%- endcss -%}
+{%- endif -%}

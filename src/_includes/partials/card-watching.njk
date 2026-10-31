@@ -7,13 +7,13 @@
 <custom-card clickable data-poster>
   {% if item.data.cover %}
     <div slot="image" webc:nokeep>
-      <img eleventy:optional="placeholder" src="{{ item.data.cover | safe }}" alt="{{ item.data.coverAlt | default('Poster for ' + item.data.title) }}" loading="lazy" eleventy:widths="224,320,448,640" sizes="auto">
+      <img eleventy:optional="placeholder" src="{{ item.data.cover | safe }}" alt="{{ item.data.coverAlt | default(words.posterFor | replace('{title}', item.data.title)) }}" loading="lazy" eleventy:widths="224,320,448,640" sizes="auto">
     </div>
   {% endif %}
   <{{ headingLevel }} slot="headline" class="text-step-1">
     <a href="{{ item.url | url }}">{{ item.data.title }}</a>
   </{{ headingLevel }}>
-  <span slot="date">{%- if item.data.draft -%}<span class="button" data-small-button data-button-variant='tertiary'>draft</span>{%- endif %} {% include "partials/date.njk" %}{% if item.data.scoreMy %} {% set rating = item.data.scoreMy %}{% include "partials/rating.njk" %}{% endif %}</span>
+  <span slot="date">{%- if item.data.draft -%}<span class="button" data-small-button data-button-variant='tertiary'>{{ words.draft }}</span>{%- endif %} {% include "partials/date.njk" %}{% if item.data.scoreMy %} {% set rating = item.data.scoreMy %}{% include "partials/rating.njk" %}{% endif %}</span>
   {% if showTags and item.data.tags.length > 1 %}
     <div slot="tag" webc:nokeep>
       {% for tag in item.data.tags %}

@@ -1,7 +1,7 @@
 ---
 description: "How many characters a line of body text should hold, and why a max-width in ch does not set that number directly."
 date: 2026-09-10
-updated: 2026-10-01
+updated: 2026-10-31
 ---
 
 **Line length** (typography's *measure*) is the number of characters on one line of running text, spaces included. Too long, and the eye loses its place on the way back to the start of the next line; too short, and it has to jump back so often that the reading rhythm breaks. [Baymard Institute's usability research](https://baymard.com/blog/line-length-readability) (Edward Scott, 2022) puts the comfortable range at **50–75 characters per line**, and reports test users either leaving a page of over-long lines or skimming it without taking it in.
@@ -39,7 +39,7 @@ On a phone in portrait the column is narrower than any sensible maximum, so the 
 
 ## In jedee
 
-The measure is set in `global/blocks/prose.css`:
+The measure is set in `src/assets/css/local/prose.css`:
 
 ```css
 .prose :is(p, li, dl, blockquote, ul:not([class]), ol:not([class])) {
@@ -50,7 +50,7 @@ The measure is set in `global/blocks/prose.css`:
 
 Eleventy Excellent ships `60ch`. On 2026-10-01 Johan tried several widths and settled on `54ch`, which lands near the middle of the 50–75 range instead of at its top (the numbers are below). Plain lists take the measure on the list itself rather than on each item, so the bullet indent comes out of the line length instead of pushing list text past the paragraphs' right edge. That follows the book typographer's text block, where indented matter sits inside the measure and never sticks out of it. A list with a class (a card grid, a row of tags) keeps the per-item rule, so the cap doesn't squeeze the whole grid.
 
-jedee's own additions reuse the number: `.intro` (the lede under a post title) in `local/post.css` is also `54ch`, and so is the wiki's caption measure in `local/wiki.css` (see [[Figures]]). The design system page's running text takes it too (`local/design-system.css`), since 2026-10-05, when the 97rem wrapper let its paragraphs run about 170 characters a line. The webmention list in `local/webmentions.css` is `40ch`. The prose column around them is `--wrapper-width: 64rem`, so the `ch` cap, not the column, is what limits a paragraph on a tablet or desktop screen. [[Text wrapping]] covers the `text-wrap` half of the same rule.
+jedee's additions reuse the number: `.intro` (the lede under a post title) in `local/post.css` is also `54ch`, and so is the wiki's caption measure in `local/wiki.css` (see [[Figures]]). The design system page's running text takes it too (`local/design-system.css`), since 2026-10-05, when the 97rem wrapper let its paragraphs run about 170 characters a line. The webmention list in `local/webmentions.css` is `40ch`. The prose column around them is `--wrapper-width: 64rem`, so the `ch` cap, not the column, is what limits a paragraph on a tablet or desktop screen. [[Text wrapping]] covers the `text-wrap` half of the same rule.
 
 Because that cap is narrower than the column and nothing centers it, every text block hangs from the column's start edge. Measured on [[Layout breakouts]] at a 1280 px viewport: the content band runs 128–1152 px, and an `h2` fills it; a code block breaks out to 96–1184 px; a paragraph and a figcaption both stop at 860.2 px. A paragraph's optical center therefore sits about 146 px left of the band's center. **This is deliberate and the page is designed around it**: the full-width elements that fall between the text — a code block, a table, a figure — re-establish the band, so the page reads as balanced without the short blocks being centered. Adding `margin-inline: auto` to the rule above would center every one of them and flatten the effect site-wide, in one line.
 

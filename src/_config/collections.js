@@ -33,6 +33,19 @@ export const byCategory = cat => collection =>
 /** Every per-type collection name; add a type here to register its collection. Layout aliases stay explicit in eleventy.config.js — `article` uses layout: post (no article.njk), so an alias loop would break. */
 export const POST_TYPES = ['article', 'note', 'reading', 'jam', 'watching', 'bookmark', 'reply', 'rsvp', 'like', 'repost', 'photo', 'recipe', 'event', 'audio', 'video', 'activity'];
 
+/** Each category's folder in src/posts, which is also its archive page and feed name (src/pages/<folder>.njk, src/feeds/<folder>*). Used to ignore a switched-off type. */
+export const POST_TYPE_DIRS = {article: 'articles', note: 'notes', reading: 'reading', jam: 'jams', watching: 'watching', bookmark: 'bookmarks', reply: 'replies', rsvp: 'rsvps', like: 'likes', repost: 'reposts', photo: 'photos', recipe: 'recipes', event: 'events', audio: 'audio', video: 'videos', activity: 'activities'};
+
+/** The post types a site builds: settings.postTypes, or all of them when the key is missing. ⚠ [] means none, and a name that isn't a post type stops the build so a typo can't hide a type. */
+export const enabledPostTypes = settings => {
+  const given = settings?.postTypes;
+  if (given === undefined || given === null) return POST_TYPES;
+  if (!Array.isArray(given)) throw new Error(`settings.postTypes is ${JSON.stringify(given)}, but it must be a list of post types (${POST_TYPES.join(', ')})`);
+  const unknown = given.find(type => !POST_TYPES.includes(type));
+  if (unknown !== undefined) throw new Error(`settings.postTypes lists ${JSON.stringify(unknown)}, which is not a post type. The post types are: ${POST_TYPES.join(', ')}`);
+  return POST_TYPES.filter(type => given.includes(type));
+};
+
 /** All user-facing tags, excluding system tags. Per-type category names live in `category`, never in `tags`. Keep SYSTEM_TAGS minimal — firehose + EE built-ins only. */
 const SYSTEM_TAGS = ['posts', 'docs', 'all', 'searchable'];
 

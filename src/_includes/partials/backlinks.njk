@@ -1,6 +1,6 @@
 {% if backlinks.length > 0 %}
     <nav class="backlinks" aria-labelledby="backlinks-heading">
-        <h2 id="backlinks-heading">Backlinks</h2>
+        <h2 id="backlinks-heading">{{ words.backlinks }}</h2>
         <ul>
             {% for link in backlinks %}
                 <li><a href="{{ link.url }}">{{ link.title }}</a></li>

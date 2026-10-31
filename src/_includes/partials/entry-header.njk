@@ -16,7 +16,7 @@
 {%- set twin = collections.all | twinOf(page.url, translation) %}
 {%- if twin %}
   {%- set twinLang = twin.data.lang or meta.lang %}
-  <p><a class="button" data-small-button href="{{ twin.url }}" hreflang="{{ twinLang }}" lang="{{ twinLang }}" rel="alternate">{{ 'Läs på svenska' if twinLang == 'sv' else 'Read in English' }}</a></p>
+  <p><a class="button" data-small-button href="{{ twin.url }}" hreflang="{{ twinLang }}" lang="{{ twinLang }}" rel="alternate">{{ words.readInSwedish if twinLang == 'sv' else words.readInEnglish }}</a></p>
 {%- endif %}
 
 {# The featured image is always a lightbox. credit renders as the figcaption, outside the clickable area ("credit" was never a shortcode option — the old pass-through silently dropped it). sizes matches the .feature breakout width, same as the photo layout's hero. #}
@@ -36,19 +36,19 @@
 
 <p class="meta | cluster gutter-s-m">
   {%- if draft -%}
-    <span class="button" data-small-button data-button-variant="tertiary">draft</span>
+    <span class="button" data-small-button data-button-variant="tertiary">{{ words.draft }}</span>
   {%- endif %}
   {# The post type, linked to its archive — icon and name come from navigation.postTypes, matched on the folder's category. #}
   {%- for pt in navigation.postTypes %}{% if pt.collection == category %}
     <a class="meta-item" href="{{ pt.url }}">{% svg 'posts/' + pt.icon, '', 'meta-icon' %}{{ pt.text }}</a>
   {%- endif %}{% endfor %}
-  {# Activity pages only: the activity type with its own glyph, to the left of the date. activityType is set only on activity posts, so this block never renders on other types. Small local icon+label map — Johan's four types ("Gym" is the weight-training label). #}
+  {# Activity pages only: the activity type with its own glyph, to the left of the date. activityType is set only on activity posts, so this block never renders on other types. Small local icon+label map — the site's four types ("Gym" is the weight-training label). #}
   {%- if activityType %}
     {%- set activityMeta = {
-      "orienteering": {"icon": "compass", "label": "Orienteering"},
-      "weight training": {"icon": "dumbbell", "label": "Gym"},
-      "run": {"icon": "footprints", "label": "Run"},
-      "hike": {"icon": "mountain", "label": "Hike"}
+      "orienteering": {"icon": "compass", "label": words.activityOrienteering},
+      "weight training": {"icon": "dumbbell", "label": words.activityGym},
+      "run": {"icon": "footprints", "label": words.activityRun},
+      "hike": {"icon": "mountain", "label": words.activityHike}
     } -%}
     {%- set at = activityMeta[activityType] -%}
     {%- if at %}
@@ -57,7 +57,7 @@
   {%- endif %}
   {# The date, with a calendar glyph, on every post type. Kept here (not in date.njk) so it rides only the post meta line — date.njk is shared by every archive card too. #}
   {% if date %}
-    <span class="meta-item">{% svg 'posts/calendar', '', 'meta-icon' %}{% set definedDate = date %}{% set dateFormat = 'Do [of] MMMM, YYYY' %}{% include "partials/date.njk" %}</span>
+    <span class="meta-item">{% svg 'posts/calendar', '', 'meta-icon' %}{% set definedDate = date %}{% set dateFormat = words.dateLong %}{% include "partials/date.njk" %}</span>
   {% endif %}
   {% if scoreMy %}
     {% set rating = scoreMy %}{% include "partials/rating.njk" %}
@@ -66,7 +66,7 @@
   {%- set unrevisedTypes = ['activity', 'bookmark', 'like', 'repost', 'reply', 'rsvp'] %}
   {%- set revision = page.inputPath | gitRevision if not (category in unrevisedTypes) %}
   {%- if revision and meta.viewRepo.allow and (revision.date | formatDate('YYYY-MM-DD')) != (date | formatDate('YYYY-MM-DD')) %}
-    <span class="meta-item"><a data-meta-tight href="{{ settings.repos.site }}/commit/{{ revision.hash }}">{% svg 'platform/github', '', 'meta-icon' %}Revised <time class="dt-updated" datetime="{{ revision.date | toIsoString }}">{{ revision.date | formatDate('Do [of] MMMM, YYYY') }}</time></a></span>
+    <span class="meta-item"><a data-meta-tight href="{{ settings.repos.site }}/commit/{{ revision.hash }}">{% svg 'platform/github', '', 'meta-icon' %}{{ words.revised }} <time class="dt-updated" datetime="{{ revision.date | toIsoString }}">{{ revision.date | formatDate(words.dateLong) }}</time></a></span>
   {%- endif %}
 </p>
 

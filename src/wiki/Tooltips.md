@@ -1,14 +1,14 @@
 ---
 description: "A label that appears on hover or focus; why its text must never be the control's only accessible name, and why CSS alone is enough for the decorative case."
 date: 2026-09-02
-updated: 2026-10-27
+updated: 2026-10-31
 ---
 
 A tooltip is a small label that appears when a pointer rests on a control or the control takes keyboard focus. On the web it comes in three forms, and they are not interchangeable.
 
 **The `title` attribute** is the native one. It costs nothing, works with no CSS and no JavaScript, and is contributed to the accessible name — but it is [widely discouraged](https://www.tpgi.com/using-the-html-title-attribute-updated/) for anything that matters: it never appears on touch, most browsers never show it to keyboard users, its delay and styling are the operating system's, and it is truncated without warning. Treat it as a fallback of last resort rather than a feature. [[Abbreviations]] is the one place on this site where it is used deliberately anyway — an `<abbr>` has nowhere else to put its expansion, and there the `title` is a bonus for pointer users rather than the mechanism anything depends on.
 
-**A CSS-generated tooltip** — a `::after` on the control, with `content: attr(data-tooltip)` — is the lightweight custom version. It needs no script, positions itself in the control's own coordinate space, and can be styled to match the design. Its limit is that generated content is not dependable as an accessible name.
+**A CSS-generated tooltip** — a `::after` on the control, with `content: attr(data-tooltip)` — is the lightweight custom version. It needs no script, positions itself in the control's coordinate space, and can be styled to match the design. Its limit is that generated content is not dependable as an accessible name.
 
 **A scripted tooltip** — a real element, `aria-describedby`, positioning against the viewport, dismissable per [WCAG 1.4.13 Content on Hover or Focus](https://www.w3.org/WAI/WCAG22/Understanding/content-on-hover-or-focus.html) — is what you need when the tooltip carries information that exists nowhere else on the page. If a visitor cannot complete a task without reading it, it is not decoration and CSS alone is not enough.
 
@@ -54,7 +54,7 @@ A tooltip centered under its control is `inset-inline-start: 50%` plus a `-50%` 
 The vertical version of the same thing is easier to miss: a tooltip *below* a control near the foot of the page extends past the document, adding dead scroll under the footer that nothing visible accounts for. Both are worth measuring rather than eyeballing — compare `documentElement.scrollWidth` / `scrollHeight` against `clientWidth` / `clientHeight` with the tooltip hidden.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/tooltip-edge-anchors.png" alt="Two frames standing in for a page, one above the other. In the upper frame, labeled &quot;centred and below on every control&quot;, three dark tooltips are cut off by the frame edges: a Home label clipped at the left, a &quot;Show dark mode&quot; label clipped mid-word at the right, and an Atom feed label clipped at the bottom. In the lower frame, labeled &quot;align=start, align=end, position=top&quot;, the same three labels sit fully inside the frame — the first two anchored to the controls' own edges, the third opening upwards above its control." width="1188" height="1012">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/tooltip-edge-anchors.png" alt="Two frames standing in for a page, one above the other. In the upper frame, labeled &quot;centred and below on every control&quot;, three dark tooltips are cut off by the frame edges: a Home label clipped at the left, a &quot;Show dark mode&quot; label clipped mid-word at the right, and an Atom feed label clipped at the bottom. In the lower frame, labeled &quot;align=start, align=end, position=top&quot;, the same three labels sit fully inside the frame — the first two anchored to the controls' edges, the third opening upwards above its control." width="1188" height="1012">
   <figcaption>The three exceptions, and what they exist for. ⚠ The frame clips here so the failure is visible in a still; on a real page nothing is clipped — the label lands outside the viewport and the document grows a scrollbar instead, on every page rather than only while the tooltip shows.</figcaption>
 </figure>
 
@@ -68,13 +68,13 @@ Fading a tooltip with `opacity` alone leaves it in the hit-testing and layout pi
 
 ## In jedee
 
-One CUBE block, `src/assets/css/global/blocks/tooltip.css`, about 55 lines. The block itself is CSS only; a control may opt into one extra behavior with a line of its own script (see "Dismissing after use" below). Not Eleventy Excellent stock — EE ships no tooltip. Adapted from the header tooltip on [arielsalminen.com](https://arielsalminen.com/), retokenized and given the triggers below.
+One CUBE block, `src/assets/css/local/tooltip.css`, about 55 lines. It and its script load only where something carries a label: the header, the footer, the shortcuts dialog, or a `data-tooltip` in the page's content, and not at all with the `tooltips` switch off. The block itself is CSS only; a control may opt into one extra behavior with one extra line of script (see "Dismissing after use" below). Not Eleventy Excellent stock — EE ships no tooltip. Adapted from the header tooltip on [arielsalminen.com](https://arielsalminen.com/), retokenized and given the triggers below.
 
-Eleven controls use it. In the header, the breadcrumb logomark (`Home`), the search magnifier and the light/dark toggle (see [[The theme toggle]]), all icon-only, the first and last at opposite edges. In the footer, the whole icon row — the Atom feed link and seven platform links, all of them icon-only with a `visually-hidden` label. Both header controls previously carried a `title`, which was removed: with `data-tooltip` in place the browser draws its own native tooltip alongside the styled one. The star rating on book and film posts and cards (`partials/rating.njk`) uses the block too, on a `<span>` that also carries a visually hidden "Rated … out of 5".
+Eleven controls use it. In the header, the breadcrumb logomark (`Home`), the search magnifier and the light/dark toggle (see [[The theme toggle]]), all icon-only, the first and last at opposite edges. In the footer, the whole icon row — the Atom feed link and seven platform links, all of them icon-only with a `visually-hidden` label. Both header controls previously carried a `title`, which was removed: with `data-tooltip` in place the browser draws its native tooltip alongside the styled one. The star rating on book and film posts and cards (`partials/rating.njk`) uses the block too, on a `<span>` that also carries a visually hidden "Rated … out of 5".
 
 The theme toggle is the divergence case described above. Its accessible name is a fixed "Toggle dark mode" with `aria-pressed` carrying the state, while its tooltip is set by `theme-toggle.js` on every theme change — "Show dark mode" in light, "Show light mode" in dark. The markup carries no `data-tooltip` at all; the script adds it, which is honest, since the button is already hidden until its island upgrades.
 
-The colors need no dark-mode rules. Background is `--color-text` and text is `--color-bg`, so the label inverts against the page in both themes on its own; only the shadow swaps (`--box-shadow-popup` → `--box-shadow-popup-dark`), the same way the place map's popup does it ([[Shadows]]).
+The colors need no dark-mode rules. Background is `--color-text` and text is `--color-bg`, so the label inverts against the page in both themes by itself; only the shadow swaps (`--box-shadow-popup` → `--box-shadow-popup-dark`), the same way the place map's popup does it ([[Shadows]]).
 
 Three behaviors the source design did not have:
 
@@ -100,11 +100,11 @@ The weight tokens here are `--font-regular`, `--font-bold`, `--font-extra-bold`.
 
 `:hover:not(:focus)` is the usual trick and was rejected. It relies on a click focusing the button, which Chrome and Firefox do and Safari on macOS does not, so the behavior would be absent on one engine and the tooltip would additionally stay suppressed for as long as the button kept focus — including after the pointer left and came back.
 
-Instead the control's own script sets a `data-tooltip-dismissed` attribute on click and removes it on `pointerleave` or `blur`; the block hides on that attribute alongside `:active`. Four lines inside the existing theme-toggle click handler, correct in every engine, and keyboard-safe — nothing is blurred, so an Enter press leaves focus where it was. The attribute is part of the block's contract, so any control can opt in the same way.
+Instead the control's script sets a `data-tooltip-dismissed` attribute on click and removes it on `pointerleave` or `blur`; the block hides on that attribute alongside `:active`. Four lines inside the existing theme-toggle click handler, correct in every engine, and keyboard-safe — nothing is blurred, so an Enter press leaves focus where it was. The attribute is part of the block's contract, so any control can opt in the same way.
 
 ### Esc
 
-WCAG 1.4.13 does not exempt a tooltip for repeating a hidden label: anything that appears on hover or focus and covers other content has to be dismissible without moving the pointer or focus. The footer tooltips open upwards over the footer links, so they cover content. Since 2026-10-08 `bundle/tooltip.js`, included on every page from `base.njk`, listens for Esc on the document and sets the same `data-tooltip-dismissed` on whichever `[data-tooltip]` matches `:hover` or `:focus-visible`, clearing it on that control's next `pointerleave` or `blur`. Focus stays where it was. It runs alongside the other Esc handlers (the menu, the search, the shortcuts dialog), which close their own things.
+WCAG 1.4.13 does not exempt a tooltip for repeating a hidden label: anything that appears on hover or focus and covers other content has to be dismissible without moving the pointer or focus. The footer tooltips open upwards over the footer links, so they cover content. Since 2026-10-08 `bundle/tooltip.js`, included on every page from `base.njk`, listens for Esc on the document and sets the same `data-tooltip-dismissed` on whichever `[data-tooltip]` matches `:hover` or `:focus-visible`, clearing it on that control's next `pointerleave` or `blur`. Focus stays where it was. It runs alongside the other Esc handlers (the menu, the search, the shortcuts dialog), which close their things.
 
 ### What is not built
 

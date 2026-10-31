@@ -18,7 +18,7 @@ const credit = value => list(unwikilink(value)).join(', ');
 const genres = data => list(unwikilink(data.genre)).join(', ');
 const join = parts => parts.filter(Boolean).join(' · ');
 
-// The line a post falls back to when it carries no `description:` of its own — the site-wide "Personal site of Johan Edlund" says nothing about a record, a film or a book.
+// The line a post falls back to when it carries no `description:` of its own — the site-wide description says nothing about a record, a film or a book.
 // Each builds what its card cannot already show, from fields the posts already carry. Returns null rather than a bare fragment when there is nothing to say.
 export const autoDescription = {
   // 6 of 120 jams carry a description; artist is 120/120, genre 113, year 99. The album is dropped when it merely repeats the title, which is the usual case.

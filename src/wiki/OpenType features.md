@@ -1,7 +1,7 @@
 ---
 description: "The optional typographic behaviors built into a font file (ligatures, small caps, figure styles, alternates) and how CSS switches them on."
 date: 2026-09-10
-updated: 2026-10-27
+updated: 2026-10-31
 ---
 
 A modern font file carries more than one shape per character. **OpenType features** are named switches inside the file, each a four-letter tag, that substitute or reposition glyphs: `liga` joins "f" and "i" into one ligature, `smcp` swaps lowercase for small capitals, `onum` swaps lining figures for old-style ones. The tags are defined in the [OpenType feature registry](https://learn.microsoft.com/en-us/typography/opentype/spec/featuretags); which of them a given font implements is up to its designer.
@@ -28,7 +28,7 @@ CSS has two levels. The **`font-variant-*` properties** name the effect, and are
 .alt { font-feature-settings: 'ss01', 'ss10'; }
 ```
 
-⚠ **`font-feature-settings` is one property holding a list, so a later declaration replaces the whole list rather than adding to it.** A rule setting `'ss01'` on a child silently turns off a `'ss10'` its parent set. The `font-variant-*` properties don't have this problem, since each controls its own features.
+⚠ **`font-feature-settings` is one property holding a list, so a later declaration replaces the whole list rather than adding to it.** A rule setting `'ss01'` on a child silently turns off a `'ss10'` its parent set. The `font-variant-*` properties don't have this problem, since each controls its features.
 
 **Asking for a feature the font lacks does not fail visibly.** For small caps the browser *synthesizes* them, shrinking the capitals, which gives thin, pale letters next to real ones; `font-synthesis-small-caps: none` turns that off. For most other features nothing happens at all. The only way to know what a font can do is to look inside it (fontTools lists a file's GSUB features) or render every feature on and off.
 
@@ -36,11 +36,11 @@ CSS has two levels. The **`font-variant-*` properties** name the effect, and are
 
 ## In jedee
 
-Since 2026-09-10 the site sets a few features of its own: old-style proportional figures in `.prose`, small caps through one `.small-caps` class, and real superscripts for footnote markers (`font-variant-position: super`). The rules, and the conventions behind them, are on [[Typographic conventions]].
+Since 2026-09-10 the site sets a few features itself: old-style proportional figures in `.prose`, small caps through one `.small-caps` class, and real superscripts for footnote markers (`font-variant-position: super`). The rules, and the conventions behind them, are on [[Typographic conventions]].
 
-The menu's post counts set `font-variant-numeric: tabular-nums` directly (`global/blocks/main-nav.css`). The activity figures (`local/activity.css`), tables in prose and the map preloader's count fill the `--nums-spacing` slot instead, described on [[Typographic conventions]]. Source Serif and Source Sans already have tabular figures by default: every digit is the same width (542 units in Serif, 472 in Sans upright, 456 in italic). So the menu's rule changes nothing. Inside an activity post the slot keeps the prose's `--nums-figure: oldstyle-nums`, so the stats are old-style tabular figures.
+The menu's post counts set `font-variant-numeric: tabular-nums` directly (`src/assets/css/local/main-nav.css`). The activity figures (`local/activity.css`), tables in prose and the map preloader's count fill the `--nums-spacing` slot instead, described on [[Typographic conventions]]. Source Serif and Source Sans already have tabular figures by default: every digit is the same width (542 units in Serif, 472 in Sans upright, 456 in italic). So the menu's rule changes nothing. Inside an activity post the slot keeps the prose's `--nums-figure: oldstyle-nums`, so the stats are old-style tabular figures.
 
-What the shipped subsets can do, checked by rendering each feature on and off from the site's own files (every pair verified by `npm run mockups:check` to render differently) and by comparing glyph outlines:
+What the shipped subsets can do, checked by rendering each feature on and off from the site's files (every pair verified by `npm run mockups:check` to render differently) and by comparing glyph outlines:
 
 <figure class="popout" data-wiki-mockup>
   <img eleventy:formats="webp,png" src="/assets/images/wiki/opentype-serif.png" alt="A table of Source Serif Bold features, each shown off and on. Common ligatures join the f-i and f-f-i in office and affine. Small caps turns Small Caps into small capitals. Old-style figures change 1984 and 2026 only slightly. Proportional figures tighten 1111. Diagonal fractions turn 1/2, 3/4 and 7/8 into single fraction glyphs. Ordinals raise the a and o after 1 and 2. Slashed zero puts a slash through each zero." width="1932" height="948">
@@ -63,7 +63,7 @@ What the shipped subsets can do, checked by rendering each feature on and off fr
 - **On by default:** `liga` covers only ff, ft and fft. There is no fi or fl ligature because Source Sans' f is drawn so it doesn't collide. `ccmp` joins l·l (the Catalan *ela geminada*).
 - **Opt-in, working:** small caps across Latin-1 (`smcp`, `c2sc`), `onum`, `pnum`, titling figures (`titl`), `frac`, `sups`/`subs`/`sinf`, `ordn`, `zero`, `case`.
 - **Stylistic sets, working:** `ss01` serifed I, `ss02` simple a g l, `ss03` simple a, `ss04` simple g, `ss05` simple l, `ss06` serifed a, `ss09` capital figures, `ss10` dotted zero. `cv01`–`cv05` and `cv17`–`cv19` offer the same alternates one character at a time, and `salt` offers them together. The full font's `ss07`, `ss08` and `cv06`–`cv16` act only on characters outside the subset and are gone.
-- **Discretionary ligatures (`dlig`):** þ + at/æt/et becomes the medieval abbreviation ꝥ ("that"), and Þ the same as Ꝥ. `hlig` offers the same thorn ligatures on their own. And **"she" and "he" become one glyph the font names `t_h_e_y`, "her", "his" and "hers" another named `t_h_e_i_r`**: an invented, single character, not the spelled-out word. It is a gender-neutral third-person pronoun, the same idea as Swedish [*hen*](https://en.wikipedia.org/wiki/Hen_(pronoun)), but one that exists only in writing. Designer Sarah Gephart drew it in 2018 as an independent project on Source Sans Pro, set to replace he, she, his, her and hers automatically; Paul Hunt, the Adobe designer of Source Sans, then added it to the family as a discretionary ligature ([AIGA Eye on Design](https://eyeondesign.aiga.org/do-gender-neutral-pronouns-need-their-own-glyphs/)). Four punctuation sequences (`.-(`, `.-)`, `!-)`, `?-(`) are also ligated under `dlig`; what they are meant for isn't identified here. Nothing on the site enables `dlig`, and turning it on over running text would rewrite every "he" and "she".
+- **Discretionary ligatures (`dlig`):** þ + at/æt/et becomes the medieval abbreviation ꝥ ("that"), and Þ the same as Ꝥ. `hlig` offers the same thorn ligatures by themselves. And **"she" and "he" become one glyph the font names `t_h_e_y`, "her", "his" and "hers" another named `t_h_e_i_r`**: an invented, single character, not the spelled-out word. It is a gender-neutral third-person pronoun, the same idea as Swedish [*hen*](https://en.wikipedia.org/wiki/Hen_(pronoun)), but one that exists only in writing. Designer Sarah Gephart drew it in 2018 as an independent project on Source Sans Pro, set to replace he, she, his, her and hers automatically; Paul Hunt, the Adobe designer of Source Sans, then added it to the family as a discretionary ligature ([AIGA Eye on Design](https://eyeondesign.aiga.org/do-gender-neutral-pronouns-need-their-own-glyphs/)). Four punctuation sequences (`.-(`, `.-)`, `!-)`, `?-(`) are also ligated under `dlig`; what they are meant for isn't identified here. Nothing on the site enables `dlig`, and turning it on over running text would rewrite every "he" and "she".
 - **Source Sans italic has no small caps at all**, in the subset or in the full italic font. `font-variant-caps: small-caps` on italic text gives synthesized small caps, unless `font-synthesis-small-caps: none` is set.
 
 One consequence of the fallback faces ([[Layout shift]]): Georgia, behind Source Serif, has **old-style figures by default**, so a heading's digits change style, not just font, for the moment before the web font arrives.

@@ -7,7 +7,7 @@ schema: BlogPosting
   <article class="wrapper flow prose h-entry">
     {% include 'partials/entry-header.njk' %}
 
-    <p>Liked <a class="u-like-of" href="{{ likeOf }}">{{ likeOf }}</a></p>
+    <p>{{ words.liked }} <a class="u-like-of" href="{{ likeOf }}">{{ likeOf }}</a></p>
 
     <div class="e-content | wrapper-pass flow">
       {{ content | safe }}

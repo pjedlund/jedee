@@ -7,5 +7,4 @@ src/_obsidian/
 src/wiki/_sources/
 
 # Design system sources — previews and guideline docs assembled into _local/claude-design-system/ by build-design-system.js, never pages.
-src/_config/setup/design-previews/
-src/_config/setup/design-system-docs/
+src/_includes/themes/*/design-system/

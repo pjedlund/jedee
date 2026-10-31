@@ -52,10 +52,29 @@
         aria-current=page
       {% endif %}
     {% endset %}
+    {# ⚠ Keep the `content and` guard: unguarded, .includes() throws in a render where content is undefined and every wikilink on the site silently turns into plain text. #}
+    {# ⚠ Before the header, so these keep their old place ahead of the header's and footer's pieces in the blocks layer. `content` here already holds the layouts and their partials. #}
+    {%- if content and r/class=["'](?:[^"']*\s)?button[\s"']/.test(content) -%}
+      {# ⚠ button.css is its own block everywhere it's loaded, or a page with the footer and the dialog carries it twice. #}
+      {%- css "local" -%}{%- include 'css/button.css' -%}{%- endcss -%}
+    {%- endif -%}
+    {%- if content and (content.includes('<code') or content.includes('<pre') or content.includes('codepen')) -%}
+      {%- css "local" -%}{%- include 'css/code.css' -%}{%- endcss -%}
+    {%- endif -%}
+    {%- set hasProse = content and r/class=["'](?:[^"']*\s)?prose[\s"']/.test(content) -%}
+    {%- if hasProse or (content and content.includes('class="design-system')) -%}
+      {%- css "local" -%}{%- include 'css/external-link.css' -%}{%- endcss -%}
+    {%- endif -%}
+    {%- if hasProse -%}
+      {%- css "local" -%}{%- include 'css/prose-rhythm.css' -%}{%- endcss -%}
+      {%- css "local" -%}{%- include 'css/prose.css' -%}{%- endcss -%}
+    {%- endif -%}
+    {%- if content and content.includes('data-activity=') -%}
+      {%- css "local" -%}{%- include 'css/activity-colors.css' -%}{%- endcss -%}
+    {%- endif -%}
     {% include "partials/header.njk" %}
 
     <main id="main" class="flow">{{ content | safe }}</main>
-    {# ⚠ Keep the `content and` guard: unguarded, .includes() throws in a render where content is undefined and every wikilink on the site silently turns into plain text. #}
     {%- if content and content.includes('<table') -%}
       {%- css "local" -%}{%- include 'css/table.css' -%}{%- include 'css/table-columns.css' -%}{%- endcss -%}
     {%- endif -%}
@@ -65,23 +84,40 @@
     {%- if content and content.includes('class="footnote') -%}
       {%- css "local" -%}{%- include 'css/footnotes.css' -%}{%- endcss -%}
     {%- endif -%}
+    {%- if content and content.includes('<kbd') -%}
+      {%- css "local" -%}{%- include 'css/kbd.css' -%}{%- endcss -%}
+    {%- endif -%}
+    {%- if content and content.includes('section__inner') -%}
+      {%- css "local" -%}{%- include 'css/section.css' -%}{%- endcss -%}
+    {%- endif -%}
+    {%- if content and content.includes('gradient-text') -%}
+      {%- css "local" -%}{%- include 'css/textgradient.css' -%}{%- endcss -%}
+    {%- endif -%}
 
     {% include "partials/footer.njk" %}
     {% if eleventy.env.runMode === "serve" %}
       {% js "defer" %}{% include "scripts/font-check.js" %}{% endjs %}
     {% endif %}
-    {% js "defer" %}{% include "scripts/dev-grid.js" %}{% endjs %}
-    {%- css "local" -%}{%- include 'css/dev-grid.css' -%}{%- endcss -%}
+    {%- if meta.switches.devGrid -%}
+      {% js "defer" %}{% include "scripts/dev-grid.js" %}{% endjs %}
+      {%- css "local" -%}{%- include 'css/dev-grid.css' -%}{%- endcss -%}
+    {%- endif -%}
     {% include "partials/shortcuts.njk" %}
-    {% js "defer" %}{% include "scripts/tooltip.js" %}{% endjs %}
+    {# ⚠ Tooltips are only worth loading where something carries a label: the header, footer or dialog, or the page's own content. #}
+    {%- if meta.switches.tooltips and (meta.switches.header or meta.switches.footer or meta.switches.shortcuts or (content and content.includes('data-tooltip'))) -%}
+      {% js "defer" %}{% include "scripts/tooltip.js" %}{% endjs %}
+      {%- css "local" -%}{%- include 'css/tooltip.css' -%}{%- endcss -%}
+    {%- endif -%}
     {%- if meta.easteregg -%}
       <script type="module" src="/assets/scripts/components/custom-easteregg.js"></script>
       <custom-easteregg{% if meta.eastereggKeyword %} keyword="{{ meta.eastereggKeyword }}"{% endif %}{% if meta.eastereggShape %} shape="{{ meta.eastereggShape }}"{% endif %}></custom-easteregg>
     {%- endif -%}
-    <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/serviceworker.js')
-      }
-    </script>
+    {%- if meta.switches.serviceWorker -%}
+      <script>
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('{{ meta.pwa.workerPath }}')
+        }
+      </script>
+    {%- endif -%}
   </body>
 </html>

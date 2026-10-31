@@ -1,5 +1,5 @@
 ---
-description: "Partial hydration as a custom element: markup that works on its own, with the JavaScript that upgrades it held back until a condition is met."
+description: "Partial hydration as a custom element: markup that works by itself, with the JavaScript that upgrades it held back until a condition is met."
 date: 2026-09-06
 updated: 2026-10-18
 ---
@@ -36,7 +36,7 @@ The honest limit is that the technique costs a decision per component and gives 
 
 ## In jedee
 
-The dependency (`@11ty/is-land` 5.0.1) and the way it loads are Eleventy Excellent stock since EE 4.9.1 (merged 2026-10-18). The package's own minified file is copied to `/assets/components/is-land.min.js` (a passthrough copy in `eleventy.config.js`), and `head/js-defer.njk` loads it with `<script type="module">`: 5,151 bytes, 2,103 gzipped. Until then esbuild bundled it and `head/js-inline.njk` inlined it into the head of every page (4,054 bytes, see below). It is now a request, but one the browser caches across pages. A module script waits for the page to finish parsing, which changes nothing here: every island waits for `on:idle` or `on:visible` anyway.
+The dependency (`@11ty/is-land` 5.0.1) and the way it loads are Eleventy Excellent stock since EE 4.9.1 (merged 2026-10-18). The package's minified file is copied to `/assets/components/is-land.min.js` (a passthrough copy in `eleventy.config.js`), and `head/js-defer.njk` loads it with `<script type="module">`: 5,151 bytes, 2,103 gzipped. Until then esbuild bundled it and `head/js-inline.njk` inlined it into the head of every page (4,054 bytes, see below). It is now a request, but one the browser caches across pages. A module script waits for the page to finish parsing, which changes nothing here: every island waits for `on:idle` or `on:visible` anyway.
 
 Seven elements use it, all with one of two conditions — `on:idle` for anything in the page chrome, `on:visible` for anything embedded in a post's body.
 
@@ -51,7 +51,7 @@ Table: The islands in jedee: condition and origin
 | `webc/custom-youtube.webc` | `on:visible` | EE stock — see [[The YouTube embed]] |
 | `webc/custom-peertube.webc` | `on:visible` | EE stock |
 
-None of the seven uses `on:interaction`, `on:media` or `on:save-data`, and only the place map combines two. EE's `partials/gallery.njk` was an eighth until it was deleted as dead source on 2026-10-17. The sortable table is the one nested island; is-land's documentation says an island inside another inherits its parent's conditions as well as its own.
+None of the seven uses `on:interaction`, `on:media` or `on:save-data`, and only the place map combines two. EE's `partials/gallery.njk` was an eighth until it was deleted as dead source on 2026-10-17. The sortable table is the one nested island; is-land's documentation says an island inside another inherits its parent's conditions as well as the ones it sets.
 
 `webc/custom-masonry.webc` was an eighth, EE stock and `on:visible`, until its masonry script was removed on 2026-09-06 because it shifted the layout ([[Layout shift]]). The `<custom-masonry>` tag stays, never defined, as a CSS hook ([[Web components]]).
 

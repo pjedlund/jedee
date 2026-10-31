@@ -7,7 +7,7 @@ Most code editors can run a formatter such as [Prettier](https://prettier.io/) e
 
 That last step is the risk. A formatter can fail: it has to parse the file first, and a file it can't parse produces an error, not formatted code. A well-behaved integration notices the error and leaves the file as it was. A careless one takes whatever came back — which on an error can be nothing at all — and saves it. The file on disk is then empty, the editor may still show the old text until it reloads, and nothing warns you.
 
-Templates are where this bites. Prettier parses HTML, CSS and JavaScript itself, but a template language mixes its own tags into HTML, so it needs a plugin, and the plugin's parser is stricter and less complete than the language it reads. For Nunjucks and Jinja the usual one is [prettier-plugin-jinja-template](https://github.com/davidodenwald/prettier-plugin-jinja-template). A template that Eleventy renders without complaint can still be one the plugin rejects.
+Templates are where this bites. Prettier parses HTML, CSS and JavaScript itself, but a template language mixes its tags into HTML, so it needs a plugin, and the plugin's parser is stricter and less complete than the language it reads. For Nunjucks and Jinja the usual one is [prettier-plugin-jinja-template](https://github.com/davidodenwald/prettier-plugin-jinja-template). A template that Eleventy renders without complaint can still be one the plugin rejects.
 
 Three guards, from the file outward:
 
@@ -56,6 +56,6 @@ fi
 
 `git cat-file -s ":path"` is the size of the staged copy and `"HEAD:path"` the size of the committed one, so the check is about what the commit would record, not what the editor shows. It only looks at modified files (`--diff-filter=M`), so deleting a file still works normally. Tested in a throwaway repository: emptying a file was blocked, an ordinary edit went through.
 
-[[Sveltia CMS]] is the other tool here that rewrites a whole file when it saves one, with its own, milder surprise.
+[[Sveltia CMS]] is the other tool here that rewrites a whole file when it saves one, with a milder surprise of the same kind.
 
 Raw source: `src/_raw/dev-notes/How a format-on-save extension blanked a template.md`

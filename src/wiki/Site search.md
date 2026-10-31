@@ -41,7 +41,7 @@ search:
       activityType: orienteering
 ```
 
-`enabled: false` does three things at once and only one of them is written anywhere: the index template's `permalink` returns `false` so no `/search.json` is emitted; one `{% if %}` in `partials/header.njk` skips the partial; and because the partial is what pulls in its own CSS and JS through `{% css "local" %}` and `{% js "defer" %}`, skipping it is what actually stops both from shipping. That last point is why the panel is a plain Nunjucks partial rather than a WebC component — the same reason [[The main menu]] is one.
+`enabled: false` does three things at once and only one of them is written anywhere: the index template's `permalink` returns `false` so no `/search.json` is emitted; one `{% if %}` in `partials/header.njk` skips the partial; and because the partial is what pulls in its CSS and JS through `{% css "local" %}` and `{% js "defer" %}`, skipping it is what actually stops both from shipping. That last point is why the panel is a plain Nunjucks partial rather than a WebC component — the same reason [[The main menu]] is one.
 
 `types` is a curated list, not every collection. The response types (likes, replies, reposts, RSVPs, bookmarks) stay out because they would drown prose results. The keys are **collection keys, and they are singular** — `article`, not `articles`; the plurals are archive URLs and produce an empty index with a green build. See [[Anatomy of a post type]].
 
@@ -90,20 +90,20 @@ The include in `header.njk` is wrapped in an `{% if %}`, and the partial calls `
 
 ### Opening it, and clearing it
 
-Focusing the field on open reads like one line and depends on a second one two files away. `input.focus()` did nothing at all — no error, no rejected promise, `document.activeElement` simply unchanged — because of the panel's own transition:
+Focusing the field on open reads like one line and depends on a second one two files away. `input.focus()` did nothing at all — no error, no rejected promise, `document.activeElement` simply unchanged — because of the panel's transition:
 
 ```css
 transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s linear;
 ```
 
-⚠ A transitioned `visibility` is still `hidden` on the frame the transition starts, and `focus()` on a hidden element is a silent no-op. `visibility` is in that list for two good reasons — a closed panel's links must not be Tab-focusable, and the panel has to stay visible through its own fade out — and both survive flipping it instantly one way and delaying it the other:
+⚠ A transitioned `visibility` is still `hidden` on the frame the transition starts, and `focus()` on a hidden element is a silent no-op. `visibility` is in that list for two good reasons — a closed panel's links must not be Tab-focusable, and the panel has to stay visible through its fade out — and both survive flipping it instantly one way and delaying it the other:
 
 ```css
 .search-panel { transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear; }
 .search-toggle[aria-expanded='false'] + .search-panel { transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s; }
 ```
 
-The bug hid behind its own fade: reopening the panel *within* the closing 200ms worked, because `visibility` had not reached `hidden` yet, so only the very first open of a page session failed — the case you stop testing once you are iterating. The reduced-motion branch never had it, having no transition to be mid-way through.
+The bug hid behind its fade: reopening the panel *within* the closing 200ms worked, because `visibility` had not reached `hidden` yet, so only the very first open of a page session failed — the case you stop testing once you are iterating. The reduced-motion branch never had it, having no transition to be mid-way through.
 
 The clear button was the same shape of mistake one property along. It ships with a `hidden` attribute that the script toggles, and it rendered regardless:
 
@@ -112,9 +112,9 @@ The clear button was the same shape of mistake one property along. It ships with
 .search-clear[hidden] { display: none; }  /* the line that was missing */
 ```
 
-`[hidden]` is a *UA* rule of `display: none`, and an author rule beats a UA rule at equal specificity — the class does not have to outrank it, only to exist. Any component that sets `display` on its own class has to restate `[hidden]`, or its `hidden` attribute is decoration. Here it meant a dead X sat in the field from the moment the panel opened, clearing an already-empty input.
+`[hidden]` is a *UA* rule of `display: none`, and an author rule beats a UA rule at equal specificity — the class does not have to outrank it, only to exist. Any component that sets `display` in its class has to restate `[hidden]`, or its `hidden` attribute is decoration. Here it meant a dead X sat in the field from the moment the panel opened, clearing an already-empty input.
 
-`input[type=search]` draws WebKit's own cancel button as well, once there is a value. It works, but it is painted at a fixed pixel size and stops matching the row the moment the page is zoomed, while the styled button — sized in `em` — scales with everything else. Hiding it needs its own rule, not a shared selector list: Firefox does not know `::-webkit-search-cancel-button`, and an unknown pseudo-element invalidates every selector it is grouped with.
+`input[type=search]` draws WebKit's cancel button as well, once there is a value. It works, but it is painted at a fixed pixel size and stops matching the row the moment the page is zoomed, while the styled button — sized in `em` — scales with everything else. Hiding it needs a separate rule, not a shared selector list: Firefox does not know `::-webkit-search-cancel-button`, and an unknown pseudo-element invalidates every selector it is grouped with.
 
 ```css
 .search-input::-webkit-search-cancel-button { display: none; }
@@ -126,11 +126,11 @@ The search panel and the mega-menu both anchor to the header row (`.repel.ontop`
 
 `search.css` redeclares the panel surface rather than reading the nav's `--megamenu-surface`, because that property is declared on `.mainnav` — which does not exist at all in a production build while the soft-launch dial hides the nav. An inherited custom property that is only sometimes in scope is the failure in [[Undefined custom properties]].
 
-The panel also had no `font-size` of its own at first, so it inherited the header's ~26px and every `em`-sized icon scaled off that: the magnifier rendered at 34px beside the theme toggle's 21px. The result rows now sit on `--size-step-min-1` with `0.95em` icons (`search-results.css`). That matched the mega-menu's rows until 2026-10-26, when the open mega-menu's icons went to `1.2em` of the text (`main-nav.css`).
+The panel also had no `font-size` at first, so it inherited the header's ~26px and every `em`-sized icon scaled off that: the magnifier rendered at 34px beside the theme toggle's 21px. The result rows now sit on `--size-step-min-1` with `0.95em` icons (`search-results.css`). That matched the mega-menu's rows until 2026-10-26, when the open mega-menu's icons went to `1.2em` of the text (`main-nav.css`).
 
 ### Contrast on a lifted panel
 
-The excerpt color cleared 4.5:1 against the panel at `color-mix(… 80%, …)` and then failed at **4.31** on the *highlighted* row, whose own 4% tint darkens the ground beneath it. A `color-mix()` is only valid on the surface it was tuned on, and a row that changes background on hover is two surfaces. Shipped 84% in light, 72% in dark — light and dark run out of headroom at different percentages, so one number does not fix both.
+The excerpt color cleared 4.5:1 against the panel at `color-mix(… 80%, …)` and then failed at **4.31** on the *highlighted* row, whose 4% tint darkens the ground beneath it. A `color-mix()` is only valid on the surface it was tuned on, and a row that changes background on hover is two surfaces. Shipped 84% in light, 72% in dark — light and dark run out of headroom at different percentages, so one number does not fix both.
 
 Measure these with an oklab→sRGB conversion, not a regex over `getComputedStyle().color`. Chromium serializes an oklab mix as `oklab(L a b)`, and a parser expecting `rgb()` reads those three floats as channels and reports a confident pass — it scored the failing values above as 1.00 and 2.73 before the conversion went in.
 

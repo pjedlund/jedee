@@ -1,4 +1,4 @@
-// Builds the /search.json index. Pure functions over collection items, so the whole thing is unit-testable without Eleventy — see _local/tests/search-index.test.js.
+// Builds the /search.json index. Pure functions over collection items, so the whole thing is unit-testable without Eleventy — see tests/search-index.test.js.
 
 // ⚠ Order matters: fenced code and images go before links, or their inner brackets are eaten as link syntax first.
 export const stripMarkdown = text => {

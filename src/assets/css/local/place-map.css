@@ -4,6 +4,17 @@ A reusable MapLibre map drawn from our own Protomaps tiles, authored like an ima
 MapLibre's stylesheet loads after this bundle, so its overrides are scoped under the [data-place-map-canvas] hook (set in JS) to win on specificity instead of !important.
 */
 
+/* In the variables layer, where they were in the shared CSS, so a theme can still override them. */
+@layer variables {
+  :root {
+    /* Route start marker on the activity map. The accent green is a muted olive that reads gray on the map, so the "start" dot uses a saturated green of its own — one value works on both light and dark tile sets. */
+    --color-route-start: var(--color-green-vivid);
+
+    /* A route line (track + start/finish symbols) on the activity map; place-map-places.css swaps in the activity type's color. This fallback is the accent orange, which reads on every tile set (topo green, satellite, light and dark), where a purple vanished on some. */
+    --color-route-line: var(--color-accent-orange);
+  }
+}
+
 place-map {
   display: block;
 }

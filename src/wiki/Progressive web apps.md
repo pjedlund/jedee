@@ -1,6 +1,7 @@
 ---
 description: "What actually makes a site installable — HTTPS, a manifest and a service worker — and what changes when someone installs it, which is less than the name suggests."
 date: 2026-09-04
+updated: 2026-10-31
 ---
 
 A **progressive web app** is an ordinary website that a browser will offer to install: it gets an icon on the home screen or in the launcher, opens without browser chrome, and — if it has cached anything — works with the network gone. There is no separate artifact, no store, no second codebase. The same URLs serve the same HTML to a browser tab and to the installed app.
@@ -25,7 +26,7 @@ It carries the name shown under the icon, the icons themselves at the sizes each
 
 ```js
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/serviceworker.js')
+  navigator.serviceWorker.register('/serviceworker.js') // the default address; settings.pwa.workerPath changes it
 }
 ```
 
@@ -40,7 +41,7 @@ Less than the name suggests, and that is the point rather than a disappointment.
   <figcaption>The same page, in a browser tab and installed. The two bands the left frame spends on browser furniture are the whole of what <code>display: standalone</code> gives back.</figcaption>
 </figure>
 
-The mockup is `src/wiki/_sources/pwa-display-modes.html`; `npm run mockups` re-shoots it. **Both status bars are deliberately the same color.** The browser tints its own status bar from the same `<meta name="theme-color">` the installed app uses, so painting the left one a browser gray would have drawn a difference that does not exist. The chrome is the only variable in the picture.
+The mockup is `src/wiki/_sources/pwa-display-modes.html`; `npm run mockups` re-shoots it. **Both status bars are deliberately the same color.** The browser tints its status bar from the same `<meta name="theme-color">` the installed app uses, so painting the left one a browser gray would have drawn a difference that does not exist. The chrome is the only variable in the picture.
 
 What it does *not* change is more interesting. The URLs are the same, so a link into the app still works and a page can still be shared. There is no install step for updates — a deploy is live immediately, subject only to whatever the service worker caches. And nothing about the layout changes: an installed site is as responsive or as broken as the site was.
 
@@ -58,7 +59,7 @@ The site is installable, and a page you have visited comes back fully styled wit
 
 jedee's only manifest divergence is `name`. EE writes `"{{ meta.siteName }} - {{ meta.siteDescription }}"`; here `name` and `short_name` are both just `meta.siteName`. "Johan Edlund" is twelve characters, inside the budget a launcher gives `short_name` anyway, so there is nothing to abbreviate and nothing to gain from a longer `name` that only ever appears in the install dialog.
 
-**The service worker is jedee's own**, and it is [Max Böck's](https://github.com/maxboeck/eleventastic/blob/master/src/serviceworker.njk) — credited in a comment at the top of `src/pages/serviceworker.njk` — extended with runtime caching on 23 June 2026. Registration is six lines at the foot of `base.njk`, with no `scope` argument (the default, the origin root, is what is wanted) and no `.then()`/`.catch()` logging, since a failed registration is not something a visitor can act on.
+**The service worker was written for this site**, and it comes from [Max Böck's](https://github.com/maxboeck/eleventastic/blob/master/src/serviceworker.njk) — credited in a comment at the top of `src/pages/serviceworker.njk` — extended with runtime caching on 23 June 2026. Registration is six lines at the foot of `base.njk`, at the address in `pwa.workerPath` (`/serviceworker.js` unless a site sets another; a worker placed in a folder can only control that folder), with no `scope` argument (the default, the origin root, is what is wanted) and no `.then()`/`.catch()` logging, since a failed registration is not something a visitor can act on.
 
 ⚠ **`start_url` is `meta.url`, resolved at build time.** Change the domain or the deploy environment and the manifest is wrong until the site is rebuilt — the same build-time coupling that bites elsewhere in this repo.
 
@@ -66,7 +67,7 @@ jedee's only manifest divergence is `name`. EE writes `"{{ meta.siteName }} - {{
 
 `/offline/` is a plain page precached on install, returned only for a URL that has never been visited; everything visited comes back from the runtime cache instead. [[The service worker's three strategies]] covers why.
 
-**What is deliberately absent:** no install-prompt UI — `beforeinstallprompt` is not intercepted anywhere, so the browser's own prompt is the only affordance. No push notifications, no background sync, no share target, no `shortcuts`, and no `screenshots` array, which is what a richer install dialog would draw on. For a personal site that people mostly read in a tab, the installable path is a bonus rather than the intended one.
+**What is deliberately absent:** no install-prompt UI — `beforeinstallprompt` is not intercepted anywhere, so the browser's prompt is the only affordance. Push notifications are off unless a site sets `pwa.push` to a file that the worker includes; no background sync, no share target, no `shortcuts`, and no `screenshots` array, which is what a richer install dialog would draw on. For a personal site that people mostly read in a tab, the installable path is a bonus rather than the intended one.
 
 Related: [[The service worker's three strategies]] — what the worker does with the requests it intercepts. [[Favicons]] — the icon set the manifest points at, and where each size is actually used. [[Three things called cache]] — the service-worker cache is only one of three.
 

@@ -1,7 +1,7 @@
 ---
 description: "What a rule engine can and cannot check, why coverage matters more than the tool, and how jedee runs pa11y-ci against a locally served build."
 date: 2026-07-31
-updated: 2026-10-28
+updated: 2026-10-31
 ---
 
 Automated accessibility testing runs a rule engine over rendered pages and reports violations of machine-checkable [WCAG](https://www.w3.org/WAI/standards-guidelines/wcag/) criteria: missing alt text, insufficient contrast, unlabeled form controls, a missing `lang` on the `<html>` element ([[The lang attribute]]), broken heading order. Two engines do most of the work in practice — [axe-core](https://github.com/dequelabs/axe-core) and HTML CodeSniffer. [pa11y](https://pa11y.org/) is a command-line wrapper that drives a headless browser and runs one of them; `pa11y-ci` is the batch version, taking a list of URLs and exiting non-zero when any of them fails.
@@ -47,7 +47,7 @@ if (process.env.ELEVENTY_ENV != 'test') {
 }
 ```
 
-So `pa11y.json` exists only in an `ELEVENTY_ENV=test` build. That is also why `test:a11y` runs its own `pa11y:build` first and then serves it — it cannot reuse a production `dist/`.
+So `pa11y.json` exists only in an `ELEVENTY_ENV=test` build. That is also why `test:a11y` runs its `pa11y:build` first and then serves it — it cannot reuse a production `dist/`.
 
 The four steps behind the one command: clean and build in test mode → start `eleventy --serve` on `localhost:8080` with `--ignore-initial` so it serves the build that already exists → sleep → run `pa11y-ci` against the generated config.
 
@@ -62,7 +62,7 @@ export const tests = {
     // ⚠ Keep this list in step by hand when a post is renamed or deleted — a path that no longer exists scores zero errors and passes silently.
     customPaths: ['/', '/accessibility/', '/articles/', '/design-system/', '/audio/nybrostrand-beach/', '/activities/', '/jams/50ft-queenie/', '/reading/a-confession/', '/watching/the-killing/', '/now/'],
     globalIgnore: [],
-    // Point pa11y at an already-installed Chrome. Do not empty this: puppeteer then hunts for its own pinned build and fails with "Could not find Chrome (ver. …)" — see the wiki, "The accessibility test". Override with PA11Y_CHROME= where Chrome lives elsewhere.
+    // Point pa11y at an already-installed Chrome. Do not empty this: puppeteer then hunts for its pinned build and fails with "Could not find Chrome (ver. …)" — see the wiki, "The accessibility test". Override with PA11Y_CHROME= where Chrome lives elsewhere.
     chromePath: process.env.PA11Y_CHROME || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
   }
 };
@@ -70,7 +70,7 @@ export const tests = {
 
 `pa11y.njk` branches on that array: **non-empty means only those paths are tested**; empty means it sweeps every page in `collections.showInSitemap`. jedee's is non-empty, so a green run covers ten URLs.
 
-The first four are EE's own default list with `/blog/` swapped for `/articles/` — chrome and prose. The fifth was added 2026-08-05 to cover a media *post* layout, which none of the others render: the `<audio>` player, the capture-metadata `<dl>`, the download buttons and the `<place-map>`. The sixth was added 2026-08-15 for a third shape again — a very long index (180 links) inside a custom element, with [[The place map]] in places mode above it. Three more followed — a jam, a reading post and a watching post — each a different [[The title-less post types|title-less or link-post]] shape; the jam's cover opens in [[The PhotoSwipe lightbox]], so the lightbox is covered too. The tenth, `/now/`, arrived with the Now page on 2026-09-11 and brings its own `now` layout.
+The first four are EE's default list with `/blog/` swapped for `/articles/` — chrome and prose. The fifth was added 2026-08-05 to cover a media *post* layout, which none of the others render: the `<audio>` player, the capture-metadata `<dl>`, the download buttons and the `<place-map>`. The sixth was added 2026-08-15 for a third shape again — a very long index (180 links) inside a custom element, with [[The place map]] in places mode above it. Three more followed — a jam, a reading post and a watching post — each a different [[The title-less post types|title-less or link-post]] shape; the jam's cover opens in [[The PhotoSwipe lightbox]], so the lightbox is covered too. The tenth, `/now/`, arrived with the Now page on 2026-09-11 and brings its `now` layout.
 
 jedee has sixteen post types (see [[Anatomy of a post type]]), so ten URLs are still a sample rather than coverage: no note, photo, event, recipe or response-type page is tested, nor a tag page. Emptying the array is a one-line change if a full sweep is wanted; the reason not to is runtime, since the sitemap is in the hundreds of pages.
 
@@ -111,7 +111,7 @@ The fix is to point pa11y at a Chrome that is already on the machine, which the 
 chromePath: process.env.PA11Y_CHROME || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
 ```
 
-`src/common/pa11y.njk` feeds that into `executablePath` inside the `chromeLaunchConfig` it already emitted — the same executable the two-theme script further down this page had been using all along, which is the small irony here: the answer was on this page, in another section, for weeks. Empty falls back to puppeteer's own resolution, which on this machine means the "Could not find Chrome" failure above, so the value should not be emptied; `PA11Y_CHROME=` covers a machine where Chrome lives elsewhere. The accepted trade-off is that a system Chrome auto-updates rather than being pinned; for a rule engine that runs inside the page, that is a low risk.
+`src/common/pa11y.njk` feeds that into `executablePath` inside the `chromeLaunchConfig` it already emitted — the same executable the two-theme script further down this page had been using all along, which is the small irony here: the answer was on this page, in another section, for weeks. Empty falls back to puppeteer's resolution, which on this machine means the "Could not find Chrome" failure above, so the value should not be emptied; `PA11Y_CHROME=` covers a machine where Chrome lives elsewhere. The accepted trade-off is that a system Chrome auto-updates rather than being pinned; for a rule engine that runs inside the page, that is a low risk.
 
 Worth distinguishing from the failure above: this one is loud — a non-zero exit and no results table. The dead-path failure is the quiet one.
 
@@ -140,7 +140,7 @@ const page = await browser.newPage();
 await page.emulateMediaFeatures([{name: 'prefers-color-scheme', value: 'dark'}]);
 ```
 
-The same run covers the dark-mode gap above, since `prefers-color-scheme` emulation is a per-page setting and with no script running there is no `data-theme` stamp to fight — the page takes the `@media` path, which is exactly what a no-JS visitor gets. jedee's version lives at `_local/tests/a11y-nojs.js` and needs `npm start` running first, because the main nav is only revealed in serve mode. First run, 2026-08-04: clean on `/`, `/about/` and `/articles/` in both themes.
+The same run covers the dark-mode gap above, since `prefers-color-scheme` emulation is a per-page setting and with no script running there is no `data-theme` stamp to fight — the page takes the `@media` path, which is exactly what a no-JS visitor gets. jedee's version lives at `tests/a11y-nojs.js` and needs `npm start` running first, because the main nav is only revealed in serve mode. First run, 2026-08-04: clean on `/`, `/about/` and `/articles/` in both themes.
 
 It also turned up something the JS-on suite misses on a page it *does* test: the primary button on the style guide, which became `/design-system/` on 2026-10-11, measures 3.45:1 in both themes (`#f6f1f1` on `#d0621e`, re-measured 2026-10-28). Its regular-weight text is fluid, 19px at 320px wide and 24px from about 1024px, so it counts as large text (3:1) only on wide screens and fails 4.5:1 below that. Its text color is a `color-mix()`, and the rule engine appears not to read the resulting `oklab()` any better than a hand-written parser does — worth remembering that **a passing contrast rule over mixed colors may mean "could not read", not "fine"**.
 

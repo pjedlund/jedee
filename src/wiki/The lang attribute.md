@@ -4,7 +4,7 @@ date: 2026-08-01
 updated: 2026-10-18
 ---
 
-`lang` declares the human language of content so browsers, screen readers and search engines handle it correctly — hyphenation, quotation marks, and above all pronunciation. Two levels: the whole page carries a `lang` on `<html>` ([WCAG 3.1.1 Language of Page](https://www.w3.org/WAI/WCAG22/Understanding/language-of-page.html)), and any passage in a *different* language gets its own `lang` on a wrapping element ([3.1.2 Language of Parts](https://www.w3.org/WAI/WCAG22/Understanding/language-of-parts.html), AA). Without the second, a screen reader reads the foreign words with the page's voice — Swedish "hej" mangled by an English synthesiser.
+`lang` declares the human language of content so browsers, screen readers and search engines handle it correctly — hyphenation, quotation marks, and above all pronunciation. Two levels: the whole page carries a `lang` on `<html>` ([WCAG 3.1.1 Language of Page](https://www.w3.org/WAI/WCAG22/Understanding/language-of-page.html)), and any passage in a *different* language gets its `lang` on a wrapping element ([3.1.2 Language of Parts](https://www.w3.org/WAI/WCAG22/Understanding/language-of-parts.html), AA). Without the second, a screen reader reads the foreign words with the page's voice — Swedish "hej" mangled by an English synthesiser.
 
 Values are [BCP 47](https://www.rfc-editor.org/info/bcp47) tags. Use the **shortest adequate** one: `sv`, not `sv-SE` — a region subtag only earns its place when it changes meaning or pronunciation, and screen readers key off the primary subtag anyway. Two things you should *not* mark: 3.1.2 exempts **proper names** and **words that have become part of the surrounding vernacular**, so not every foreign word needs a span.
 
@@ -16,7 +16,7 @@ The site is `lang="en"` (`meta.lang`). Swedish appears in a few places, each mar
 
 **Language twins** — two versions of one page, one per language. Either page names the other with `translation: /url/of/the/other/`; the other side finds it, through the `twinOf` filter (`_config/filters/twin.js`). The pair then gets three things:
 
-- a small button under the heading, labelled in the twin's own language and marked with it: `<a … hreflang="sv" lang="sv" rel="alternate">Läs på svenska</a>`, or "Read in English" the other way
+- a small button under the heading, labelled in the twin's language and marked with it: `<a … hreflang="sv" lang="sv" rel="alternate">Läs på svenska</a>`, or "Read in English" the other way
 - two `<link rel="alternate" hreflang>` lines in the head, one for each version, so search engines treat them as one page in two languages
 - one shared set of [[Webmentions]]: a like on either version shows on both
 

@@ -5,14 +5,14 @@ layout: base
 {# /now (src/pages/now.md, Sveltia: Now): the page's own text, then the picked jams, films and books, each with its archive's card. #}
 <div class="region wrapper flow prose" style="--region-space-top: var(--space-xl-2xl)">
   <h1>{{ title }}</h1>
-  <p class="text-step-min-1">Last updated <time datetime="{{ page.date | toIsoString }}">{{ page.date | formatDate('D MMM YYYY') }}</time>{% if location %} · {{ location }}{% endif %}</p>
+  <p class="text-step-min-1">{{ words.lastUpdated }} <time datetime="{{ page.date | toIsoString }}">{{ page.date | formatDate('D MMM YYYY') }}</time>{% if location %} · {{ location }}{% endif %}</p>
   {{ content | safe }}
 </div>
 
 {% set nowLists = [
-  { heading: "Listening to", posts: collections.all | pickPosts("jams", listening), card: "card-jam.njk" },
-  { heading: "Watching", posts: collections.all | pickPosts("watching", watching), card: "card-watching.njk" },
-  { heading: "Reading", posts: collections.all | pickPosts("reading", reading), card: "card-reading.njk" }
+  { heading: words.nowListening, posts: collections.all | pickPosts("jams", listening), card: "card-jam.njk" },
+  { heading: words.nowWatching, posts: collections.all | pickPosts("watching", watching), card: "card-watching.njk" },
+  { heading: words.nowReading, posts: collections.all | pickPosts("reading", reading), card: "card-reading.njk" }
 ] %}
 {% for list in nowLists %}
   {% if list.posts.length %}

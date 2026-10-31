@@ -1,0 +1,315 @@
+@layer blocks {
+:root {
+  --code-orange: hsl(30, 95%, 50%); /* dark theme: L=50 → 7:1 on --color-code-bg (was 30% = 2.9:1, fails AA) */
+  --code-blue: hsl(205, 100%, 70%);
+  /* ⚠ No red or green: blue and orange carry the differences, after GitHub's color-blind themes. Run _local/design/cvd-check.mjs after any change (wiki: Syntax highlighting). */
+  --code-purple: hsl(270, 75%, 70%);
+  --code-gold: hsl(45, 90%, 65%);
+  --code-gray: hsla(0, 0%, 70%, 0.75); /* updated to maintain a 5:1*/
+  --color-code-text: color-mix(in oklab, var(--color-text-accent) 90%, var(--color-base-black));
+  --code-border-size: var(--border-thickness);
+  --code-border-style: solid;
+}
+
+/* ⚠ Guarded so a dark toggle on a light-mode device keeps the dark palette above. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) {
+    --code-orange: hsl(30, 95%, 26%);
+    --code-blue: hsl(215, 70%, 28%);
+    --code-purple: hsl(270, 60%, 44%);
+    --code-gold: hsl(35, 80%, 16%);
+    --code-gray: hsl(0, 0%, 33%);
+    --color-code-text: color-mix(in oklab, var(--color-text-accent) 90%, var(--color-base-black));
+    --code-border-size: var(--border-thickness);
+    --code-border-style: solid;
+  }
+}
+
+:root[data-theme='light'] {
+  --code-orange: hsl(30, 95%, 26%);
+  --code-blue: hsl(215, 70%, 28%);
+  --code-purple: hsl(270, 60%, 44%);
+  --code-gold: hsl(35, 80%, 16%);
+  --code-gray: hsl(0, 0%, 33%);
+  --color-code-text: color-mix(in oklab, var(--color-text-accent) 90%, var(--color-base-black));
+  --code-border-size: var(--border-thickness);
+  --code-border-style: solid;
+}
+
+/* Each syntax color takes a smidgeon of a theme color, so code sits in the site's palette. ⚠ Either knob moves every color pair: re-measure the rendered colors, as on the wiki page Syntax highlighting. */
+:root {
+  --code-tint: var(--color-accent-orange);
+  --code-tint-amount: 20%;
+
+  --color-code-orange: color-mix(in oklab, var(--code-orange), var(--code-tint) var(--code-tint-amount));
+  --color-code-blue: color-mix(in oklab, var(--code-blue), var(--code-tint) var(--code-tint-amount));
+  --color-code-purple: color-mix(in oklab, var(--code-purple), var(--code-tint) var(--code-tint-amount));
+  --color-code-gold: color-mix(in oklab, var(--code-gold), var(--code-tint) var(--code-tint-amount));
+  --color-code-gray: color-mix(in oklab, var(--code-gray), var(--code-tint) var(--code-tint-amount));
+}
+
+code,
+pre {
+  font-family: var(--font-mono);
+  font-size: var(--size-step-min-1);
+  /* ⚠ Source Code Pro has no italic, so code is never italic, even inside an <em>. Bold is real (weights 200–900). */
+  font-style: normal;
+  background-color: var(--color-code-bg);
+}
+
+code[class*='language-'],
+pre[class*='language-'] {
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  hyphens: none;
+}
+
+/* Specific Styles for <pre> Elements */
+pre {
+  --code-shadow: color-mix(in oklab, var(--color-text) 40%, transparent); /* twice the table one: at 20% the glow vanished on the dark code background */
+
+  grid-column: popout !important;
+  overflow-x: auto;
+  padding: var(--space-l) var(--space-l);
+
+  border-radius: var(--border-radius-medium);
+  /* Was `border-size: var(--button-border-size)` — no such property or variable, so --code-border-size above was never consumed. */
+  border-width: var(--code-border-size);
+  border-style: var(--code-border-style);
+  border-color: var(--code-border-color);
+
+  /* Scroll cues, as on tables (see the wiki page Tables): covers scroll with the code and hide each edge shadow once that edge is reached. */
+  background:
+    linear-gradient(to right, var(--color-code-bg) 30%, transparent),
+    linear-gradient(to left, var(--color-code-bg) 30%, transparent) 100% 0,
+    radial-gradient(farthest-side at 0 50%, var(--code-shadow), transparent),
+    radial-gradient(farthest-side at 100% 50%, var(--code-shadow), transparent) 100% 0;
+  background-color: var(--color-code-bg);
+  background-repeat: no-repeat;
+  background-size: 4em 100%, 4em 100%, 1.4em 100%, 1.4em 100%;
+  background-attachment: local, local, scroll, scroll;
+}
+
+/* ⚠ The inner code must stay see-through, or its own background hides the cues behind every line. */
+pre code {
+  background: none;
+}
+
+/* Style Adjustments for <code> within different contexts */
+/* Inline code sits in a raised chip, adapted from arielsalminen.com. ⚠ Keep it display: inline — inline-block adds the padding to the line height and stops long code wrapping. */
+:where(:not(pre)) > code {
+  --inline-code-bg: color-mix(in oklab, var(--color-bg-accent) 65%, var(--color-bg));
+  --inline-code-shadow: var(--box-shadow-chip);
+
+  padding: var(--space-3xs) var(--space-xs);
+  border-radius: var(--border-radius-medium);
+  background-color: var(--inline-code-bg);
+  box-shadow: var(--inline-code-shadow);
+}
+
+/* In a heading the chip scales with the heading: the same 0.8 ratio code has to body text (step-min-1 / step-0). */
+:is(h1, h2, h3, h4, h5, h6) code {
+  font-size: 0.8em;
+  padding: 0.1em 0.3em;
+}
+
+:root[data-theme='dark'] :where(:not(pre)) > code {
+  --inline-code-shadow: var(--box-shadow-chip-dark);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) :where(:not(pre)) > code {
+    --inline-code-shadow: var(--box-shadow-chip-dark);
+  }
+}
+
+pre[class*='language-'] {
+  overflow: auto;
+  position: relative;
+}
+
+[class*='language-'] .namespace {
+  opacity: 0.7;
+}
+
+.token.atrule {
+  color: var(--color-code-blue);
+}
+
+.token.attr-name {
+  color: var(--color-code-blue);
+}
+
+.token.attr-value {
+  color: var(--color-code-text);
+}
+
+.token.attribute {
+  color: var(--color-code-blue);
+}
+
+.token.boolean {
+  color: var(--color-code-gold);
+}
+
+.token.builtin {
+  color: var(--color-code-orange);
+}
+
+.token.cdata {
+  color: var(--color-code-orange);
+}
+
+.token.char {
+  color: var(--color-code-orange);
+}
+
+.token.class {
+  color: var(--color-code-orange);
+}
+
+.token.class-name {
+  color: var(--color-code-orange);
+}
+
+.token.color {
+  color: var(--color-code-orange);
+}
+
+.token.comment {
+  color: var(--color-code-gray);
+}
+
+.token.constant {
+  color: var(--color-code-gold);
+}
+
+.token.deleted {
+  color: var(--color-code-gold);
+}
+
+.token.doctype {
+  color: var(--color-code-orange);
+}
+
+.token.entity {
+  color: var(--color-code-gold);
+}
+
+.token.function {
+  color: var(--color-code-gold);
+}
+
+.token.hexcode {
+  color: var(--color-code-orange);
+}
+
+.token.id {
+  color: var(--color-code-gold);
+  font-weight: var(--font-bold);
+}
+
+.token.important {
+  color: var(--color-code-gold);
+  font-weight: var(--font-bold);
+}
+
+.token.inserted {
+  color: var(--color-code-orange);
+}
+
+.token.keyword {
+  color: var(--color-code-purple);
+}
+
+.token.number {
+  color: var(--color-code-text);
+}
+
+.token.operator {
+  color: var(--color-code-gray);
+}
+
+.token.prolog {
+  color: var(--color-code-orange);
+}
+
+.token.property {
+  color: var(--color-code-orange);
+}
+
+.token.pseudo-class {
+  color: var(--color-code-blue);
+}
+
+.token.pseudo-element {
+  color: var(--color-code-blue);
+}
+
+.token.punctuation {
+  color: var(--color-code-gray);
+}
+
+.token.regex {
+  color: var(--color-code-orange);
+}
+
+.token.selector {
+  color: var(--color-code-gold);
+}
+
+.token.string {
+  color: var(--color-code-text);
+}
+
+.token.symbol {
+  color: var(--color-code-gold);
+}
+
+.token.tag {
+  color: var(--color-code-gold);
+}
+
+.token.unit {
+  color: var(--color-code-gold);
+}
+
+.token.url {
+  color: var(--color-code-purple);
+}
+
+.token.variable {
+  color: var(--color-code-gold);
+}
+
+/* CodePen iframe */
+.codepen a {
+  --icon-size: 1.2em;
+
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.prose .cp_embed_wrapper,
+.prose .cp_embed_wrapper + script + *:not(h2) {
+  --flow-space: var(--space-l);
+}
+
+.cp_embed_wrapper {
+  grid-column: popout;
+  position: relative;
+  overflow: auto;
+  display: grid;
+  place-items: center;
+  grid-template-areas: 'container';
+  resize: horizontal;
+}
+
+.cp_embed_wrapper iframe {
+  grid-area: container;
+  width: 100%;
+}
+}

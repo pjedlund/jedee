@@ -3,6 +3,10 @@ layout: base
 title: Activities
 description: 'A log of my activities.'
 permalink: 'activities/index.html'
+# pagination only gates the file: nothing in activity, no page
+pagination:
+  data: collections.activity
+  size: 100000
 ---
 
 {# No hero, no intro: the map is the first thing on the page. See partials/place-map-activities.njk. #}
