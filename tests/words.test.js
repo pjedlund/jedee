@@ -92,3 +92,57 @@ test('on a Swedish site activity titles are not marked Swedish again', async () 
   assert.equal(computed.titleLang(activity('sv')), undefined)
   assert.equal(computed.titleLang({...activity('sv'), titleLang: 'en'}), 'en')
 })
+
+test('a theme\'s words win over the language\'s, which win over English', async t => {
+  const site = await makeTempSite({
+    settings: { theme: 'sample', site: { lang: 'sv', locale: 'sv_SE' } },
+    files: {
+      'src/_config/words/sv.yaml': 'skipContent: Hoppa från språket\nmenu: Meny\n',
+      'src/_includes/themes/sample/words.yaml': 'skipContent: Hoppa från temat\n',
+    },
+  })
+  t.after(() => site.cleanup())
+  await site.build()
+  const home = site.read('index.html')
+  assert.ok(home.includes('Hoppa från temat'), "the theme's word didn't win")
+  assert.ok(!home.includes('Hoppa från språket'), "the language's word beat the theme's")
+})
+
+test('a theme with no words.yaml builds, and the neutral feed texts show', async t => {
+  const book = '---\ntitle: A book\ndate: 2026-01-01\n---\n\nText.\n'
+  const site = await makeTempSite({ settings: { theme: 'sample' }, files: { 'src/posts/reading/a-book.md': book } })
+  t.after(() => site.cleanup())
+  await site.build()
+  const feed = site.read('reading/feed.xml')
+  assert.ok(feed.includes('Books and notes on them.'), 'the neutral reading feed text is missing')
+  assert.ok(!/\bI(?:'|&#39;)?(?:m|ve)\b|\bmy\b/.test(feed), 'the feed has first-person wording')
+  assert.ok(!feed.includes('reading.'), 'JEDEE\'s own feed text leaked into a sample build')
+})
+
+test('every word a theme sets exists in English too', () => {
+  const english = load(readFileSync(path.join(root, 'src/_config/words/en.yaml'), 'utf8'))
+  const themes = path.join(root, 'src/_includes/themes')
+  for (const theme of readdirSync(themes)) {
+    let words
+    try {
+      words = load(readFileSync(path.join(themes, theme, 'words.yaml'), 'utf8'))
+    } catch {
+      continue
+    }
+    const unknown = Object.keys(words).filter(key => !(key in english))
+    assert.deepEqual(unknown, [], `themes/${theme}/words.yaml sets words that en.yaml does not have`)
+  }
+})
+
+test('a Swedish site prints Swedish month names', async t => {
+  const note = '---\ntitle: En anteckning\ndate: 2026-09-15\n---\n\nText.\n'
+  const site = await makeTempSite({
+    settings: { site: { lang: 'sv', locale: 'sv_SE' } },
+    files: { 'src/_config/words/sv.yaml': "dateLong: 'D MMMM YYYY'\n", 'src/posts/notes/en-anteckning.md': note },
+  })
+  t.after(() => site.cleanup())
+  await site.build()
+  const page = site.read('notes/en-anteckning/index.html')
+  assert.ok(page.includes('15 september 2026'), `the note's date is not in Swedish: ${page.match(/dt-published[^<]*<\/time>|<time[^>]*>[^<]*<\/time>/)?.[0]}`)
+  assert.ok(!page.includes('September'), 'an English month name is still on the page')
+})

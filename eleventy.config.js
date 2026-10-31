@@ -50,6 +50,8 @@ export default async function(eleventyConfig) {
   // --------------------- custom watch targets
   eleventyConfig.addWatchTarget('./src/assets/**/*.{css,js,svg,png,jpeg}');
   eleventyConfig.addWatchTarget('./src/_includes/**/*.{webc}');
+  eleventyConfig.addWatchTarget('./src/_config/words/*.yaml');
+  eleventyConfig.addWatchTarget('./src/_includes/themes/*/words.yaml');
 
   // `npm run dev:mem` prints retained heap after each build. See the wiki "The dev server's memory".
   if (process.env.MEMLOG) {

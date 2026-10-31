@@ -2,7 +2,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { execFileSync } from 'node:child_process'
-import { readFileSync } from 'node:fs'
+import { readFileSync, readdirSync } from 'node:fs'
 import path from 'node:path'
 
 const root = path.resolve(import.meta.dirname, '..')
@@ -30,4 +30,15 @@ test('no personal details in shared files', () => {
     for (const word of PERSONAL) if (text.includes(word)) found.push(`${file}: ${word}`)
   }
   assert.deepEqual(found, [], `Personal details in shared files. Reword them, read them from settings, or (if the file belongs to the site) list it in tests/site-owned.json:\n${found.join('\n')}`)
+})
+
+test('the language word files hold no first-person wording', () => {
+  const dir = path.join(root, 'src/_config/words')
+  const found = []
+  for (const file of readdirSync(dir)) {
+    for (const line of readFileSync(path.join(dir, file), 'utf8').split('\n')) {
+      if (/\b(I|I'm|I've|my|me|mine)\b/.test(line.replace(/^[\w-]+:/, '').replaceAll("''", "'"))) found.push(`${file}: ${line}`)
+    }
+  }
+  assert.deepEqual(found, [], "First-person wording belongs in the site's theme words.yaml, not in a language file:\n" + found.join('\n'))
 })

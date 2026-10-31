@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {load as yamlLoad} from 'js-yaml';
+import {themeDir} from './theme.js';
 
 const ROOT = fileURLToPath(new URL('../../..', import.meta.url));
 const WORDS = 'src/_config/words';
@@ -19,9 +20,12 @@ export function siteSettings() {
   return {lang, locale, type};
 }
 
-// The chosen language laid over English, so a word nobody has translated yet shows in English instead of nothing.
+// English, then the chosen language over it (so a word nobody has translated yet shows in English instead of nothing), then the theme's own words.yaml over both (a site's own wording and facts).
 export function loadWords() {
   const {lang} = siteSettings();
-  const english = readYaml(`${WORDS}/en.yaml`);
-  return lang === 'en' ? english : {...english, ...readYaml(`${WORDS}/${lang}.yaml`)};
+  const words = readYaml(`${WORDS}/en.yaml`);
+  if (lang !== 'en') Object.assign(words, readYaml(`${WORDS}/${lang}.yaml`));
+  const themeWords = `${themeDir()}/words.yaml`;
+  if (fs.existsSync(path.join(ROOT, themeWords))) Object.assign(words, readYaml(themeWords));
+  return words;
 }

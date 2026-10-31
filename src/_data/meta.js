@@ -2,14 +2,14 @@ import 'dotenv/config'; // ⚠ config-time importers (the webmentions filter) lo
 import fs from 'node:fs';
 import {load as yamlLoad} from 'js-yaml';
 import {loadLogo, loadThemeConfig, themeDir, themeName} from '../_config/utils/theme.js';
-import {siteSettings} from '../_config/utils/site.js';
-import words from './words.js';
+import {loadWords, siteSettings} from '../_config/utils/site.js';
 
 // The values live in settings.yaml; this file gives them Lene's names so her templates still fit. ⚠ Named exports only — a default export here is silently ignored.
 // ⚠ settings.yaml has no comments on purpose: Sveltia (/admin/ → Site settings) drops them on save. Its notes are the hints in admin/config.yml.
 export const settings = yamlLoad(fs.readFileSync(new URL('./settings.yaml', import.meta.url), 'utf8'));
 const {identity, profiles, switches} = settings;
 const site = siteSettings();
+const words = loadWords();
 const relMe = Object.values(profiles).filter(profile => profile.relMe).map(profile => profile.url);
 
 export const url = process.env.URL || 'http://localhost:8080';

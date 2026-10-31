@@ -62,7 +62,7 @@ shortcutRhythm: Show or hide the rhythm lines
 shortcutList: Open this list
 alsoOn: 'Also on:'
 webmentionPrompt: Have you written a response to this on your own site?
-webmentionLink: Let me know the URL.
+webmentionLink: Send the URL.
 draft: draft
 readInSwedish: Läs på svenska
 readInEnglish: Read in English
@@ -88,7 +88,7 @@ liked: Liked
 reposted: Reposted
 to: to
 mapOfRoute: Map of this route
-mapOfActivities: Map of my activities
+mapOfActivities: Map of the activities
 mapOfPlace: 'Map of {place}'
 thisPlace: this place
 type: Type
@@ -140,7 +140,7 @@ eventStatus-moved-online: Moved online
 eventUpcoming: Upcoming
 eventPast: Past
 eventsHeading: Events
-eventsIntro: Events I'm hosting — upcoming first, then past. Cancelled events stay listed in their date's section.
+eventsIntro: Upcoming events first, then past. Cancelled events stay listed in their date's section.
 eventsNoneUpcoming: Nothing on the calendar right now.
 eventsNonePast: No past events yet.
 yields: Yields
@@ -151,14 +151,14 @@ nowListening: Listening to
 nowWatching: Watching
 nowReading: Reading
 wikiPartOf: Part of the
-wikiName: jedee wiki
+wikiName: wiki
 wiki: Wiki
 ratedStars: '{rating} out of 5 stars'
 rated: 'Rated {rating} out of 5'
 play: Play
 onWikipedia: on Wikipedia
 bpm: bpm
-humansLanguages: English (US), Swedish
+humansLanguages: ''
 llmsArticles: Articles
 llmsNotes: Notes
 llmsReading: Reading
@@ -176,26 +176,26 @@ feedActivitiesDescription: Runs, races and workouts.
 feedArticles: Articles
 feedArticlesDescription: Long-form posts.
 feedAudio: Audio
-feedAudioDescription: 'Audio I''ve published — recordings and episodes.'
+feedAudioDescription: Recordings and episodes.
 feedBookmarks: Bookmarks
 feedBookmarksDescription: Links worth keeping.
 feedJams: Jams
-feedJamsDescription: 'Music I''m listening to.'
+feedJamsDescription: Music on repeat.
 feedLikes: Likes
-feedLikesDescription: 'Things I''ve liked elsewhere on the web.'
+feedLikesDescription: Things liked elsewhere on the web.
 feedNotes: Notes
 feedNotesDescription: Short thoughts and observations.
 feedPhotos: Photos
-feedPhotosDescription: 'Photographs I''ve published.'
+feedPhotosDescription: Photographs.
 feedReading: Reading
-feedReadingDescription: 'Books I''m reading.'
+feedReadingDescription: Books and notes on them.
 feedRecipes: Recipes
-feedRecipesDescription: 'Recipes I''ve written.'
+feedRecipesDescription: Recipes.
 feedReplies: Replies
 feedRepliesDescription: Replies to other people on the web.
 feedRsvps: RSVPs
-feedRsvpsDescription: Events I have responded to.
+feedRsvpsDescription: Responses to events.
 feedVideos: Videos
-feedVideosDescription: 'Videos I''ve published — self-hosted clips and embeds.'
+feedVideosDescription: Self-hosted clips and embeds.
 feedWatching: Watching
-feedWatchingDescription: 'Films and shows I''ve watched.'
+feedWatchingDescription: Films and shows watched.
