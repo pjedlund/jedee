@@ -2,7 +2,7 @@
 MAIN NAV — post-type mega-menu
 A "Menu ⌄" button drops a two-column, table-of-contents-style panel of every post type (icon · name · leader dots · count). Progressive enhancement per the nav-accessible skill: plain <a> list → <ul role="list"> → <nav> landmark → JS-injected toggle button. Without JS the panel is a static row of pills.
 
-⚠ The seven color-mix() colors below are mirrored as flat hexes in designTokens/megamenuColors.json, since Penpot has no color-mix(). Change a percentage here and the mirror drifts — reflatten and re-run `npm run penpot:tokens`.
+⚠ The seven color-mix() colors below are mirrored as flat hexes in the theme's tokens/megamenuColors.json, since Penpot has no color-mix(). Change a percentage here and the mirror drifts — reflatten and re-run `npm run penpot:tokens`.
 */
 
 .mainnav {
