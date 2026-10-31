@@ -26,7 +26,7 @@ Places mode (the activity index and its route pages): the pending caption, per-t
   }
 }
 
-/* Each row's dot and each route's line, in the type's color (variables.css); read by place-map.js. */
+/* Each row's dot and each route's line, in the type's color (activity-colors.css); read by place-map.js. */
 [data-activity] {
   --place-color: var(--activity-color);
   --color-route-line: var(--activity-color);

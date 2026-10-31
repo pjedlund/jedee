@@ -1,3 +1,4 @@
+@layer blocks {
 .skip-link {
   clip: rect(1px, 1px, 1px, 1px);
   display: block;
@@ -32,4 +33,5 @@
   position: absolute;
   inline-size: 1px;
   white-space: nowrap;
+}
 }

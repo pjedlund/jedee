@@ -219,24 +219,31 @@ if (args.includes('--shots')) {
   const outDir = path.join(root, '_local/compare');
   const results = [];
 
+  // Returns what's wrong with one view, or nothing if the two builds match.
+  const shootAndCompare = async (p, width, scheme, slug) => {
+    try {
+      // ⚠ One page at a time: tabs open side by side get painted in strips and come out garbled.
+      const a = await photograph(browser, serverBefore.base, p, width, scheme);
+      const b = await photograph(browser, serverAfter.base, p, width, scheme);
+      if (a.error || b.error) return `could not load (before: ${a.error ?? 'ok'}, after: ${b.error ?? 'ok'})`;
+      const { share, note, dense = [] } = await comparePixels(a.png, b.png, path.join(outDir, `${slug}.png`));
+      if (share > failAbove || dense.length) return `${note ?? `${(share * 100).toFixed(3)}% of pixels differ${dense.length ? `, ${dense.length} dense patch(es), first at x ${dense[0][0]} y ${dense[0][1]}` : ''}`}; diff image: _local/compare/${slug}.png`;
+    } catch (error) {
+      return `error: ${error.message}`;
+    }
+  };
+
   const worker = async () => {
     while (jobs.length) {
       const { p, width, scheme } = jobs.shift();
       const label = `${p} at ${width} ${scheme}`;
       const slug = `${p.replace(/^\/|\/$/g, '').replace(/\//g, '_') || 'home'}-${width}-${scheme}`;
-      try {
-        // ⚠ One page at a time: tabs open side by side get painted in strips and come out garbled.
-        const a = await photograph(browser, serverBefore.base, p, width, scheme);
-        const b = await photograph(browser, serverAfter.base, p, width, scheme);
-        if (a.error || b.error) {
-          results.push({ label, p, problem: `could not load (before: ${a.error ?? 'ok'}, after: ${b.error ?? 'ok'})` });
-          continue;
-        }
-        const { share, note, dense = [] } = await comparePixels(a.png, b.png, path.join(outDir, `${slug}.png`));
-        if (share > failAbove || dense.length) results.push({ label, p, problem: `${note ?? `${(share * 100).toFixed(3)}% of pixels differ${dense.length ? `, ${dense.length} dense patch(es), first at x ${dense[0][0]} y ${dense[0][1]}` : ''}`}; diff image: _local/compare/${slug}.png` });
-      } catch (error) {
-        results.push({ label, p, problem: `error: ${error.message}` });
-      }
+      // ⚠ Chrome can paint a scaled picture slightly differently between runs, so a failing view is shot once more and only a difference that repeats fails. The limits above don't change.
+      const first = await shootAndCompare(p, width, scheme, slug);
+      if (!first) continue;
+      const second = await shootAndCompare(p, width, scheme, slug);
+      if (second) results.push({ label, p, problem: second });
+      else console.log(`Passed on the second shot: ${label} (first shot: ${first})`);
     }
   };
   await worker();

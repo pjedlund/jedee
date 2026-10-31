@@ -8,7 +8,7 @@ const NOTE = '---\ntitle: A small note\ndate: 2026-01-01\n---\n\nHello.\n'
 const STANDALONE = body => `---\ntitle: A plain page\nlayout: page\npermalink: /plain/\n---\n\n${body}\n`
 
 // ⚠ .mainnav alone proves nothing: nav-menu-cls.css supplies it too, so .megamenu-label stands for main-nav.css.
-const CHROME = ['.site-header', '.mainnav', '.megamenu-label', '.breadcrumb', '.theme-toggle', '.site-footer', '[data-tooltip']
+const CHROME = ['.site-header', '.skip-link', '.mainnav', '.megamenu-label', '.breadcrumb', '.theme-toggle', '.site-footer', '[data-tooltip']
 const SMALL_PIECES = { kbd: 'kbd:not(:has(kbd))', section: '.section__inner', textgradient: '.gradient-text' }
 
 const styleOf = (site, file) => [...site.read(file).matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi)].map(match => match[1]).join('\n')
@@ -71,7 +71,7 @@ test('bare page has no article or code CSS', async t => {
   await site.build()
   const style = styleOf(site, 'bare/index.html')
   assert.doesNotMatch(style, PROSE)
-  for (const piece of ['pre[class', '.button', 'activity', 'place-map', '.token']) assert.ok(!style.includes(piece), `${piece} is in the CSS of a bare page`)
+  for (const piece of ['pre[class', '.button', 'activity', 'place-map', '.token', '.skip-link', '.divider']) assert.ok(!style.includes(piece), `${piece} is in the CSS of a bare page`)
   assert.ok(style.includes('--line:'), 'the line unit is part of the basics: the page chrome is spaced by it')
   assert.ok(style.includes('@property --line'), 'the line unit has lost its registration')
 })
@@ -104,4 +104,13 @@ test('a map brings its default line color', async t => {
   await site.build()
   assert.ok(!styleOf(site, 'bare/index.html').includes('--color-route-line'), 'the map\'s colors are on a page with no map')
   assert.ok(styleOf(site, 'design-system/index.html').includes('--color-route-line:'), 'a page with a map lost the map\'s colors')
+})
+
+test('an archive brings the divider, and other pages do not', async t => {
+  const site = await makeTempSite({ files: { 'src/posts/notes/a-small-note.md': NOTE } })
+  t.after(() => site.cleanup())
+  await site.build()
+  assert.match(site.read('notes/index.html'), /<svg[^>]*class="?divider/)
+  assert.equal(copies(styleOf(site, 'notes/index.html'), '.divider>.divider'), 1)
+  assert.ok(!styleOf(site, PAGE).includes('.divider'), 'the divider is on a page with no archive header')
 })

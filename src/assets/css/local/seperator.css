@@ -1,3 +1,4 @@
+@layer blocks {
 .divider {
   display: block;
   block-size: 3.5em;
@@ -7,4 +8,5 @@
 
 .divider > .divider {
   transform: translateY(-1px);
+}
 }
