@@ -4,6 +4,7 @@ A small ↗ after outbound text links in prose and on the design-system page; it
 `__SITE_DOMAIN__` is swapped for the host name of settings.identity.website when the CSS is built.
 `.no-indicator` opts a link out — use it for any link whose content isn't words (an image-only link would draw a stray arrow under the picture).
 */
+@layer blocks {
 :is(.prose, .design-system) a[href^='http']:where(:not([href*='__SITE_DOMAIN__'], [href*='localhost'], .no-indicator))::after { /* ⚠ :where() keeps the exclusions out of specificity, or this rule beats the hover and motion rules below */
   --external-lift: 0.1em; /* how far the arrow takes off on hover */
   --external-top: 0.22em;
@@ -30,4 +31,5 @@ A small ↗ after outbound text links in prose and on the design-system page; it
     mask-position: right 0 top calc(var(--external-top) - var(--external-lift));
     transition-timing-function: ease-out, cubic-bezier(0.5, 0, 0.75, 0); /* eases in like a plane leaving the runway, lands softly on the way back */
   }
+}
 }

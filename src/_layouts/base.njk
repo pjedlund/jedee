@@ -61,6 +61,14 @@
     {%- if content and (content.includes('<code') or content.includes('<pre') or content.includes('codepen')) -%}
       {%- css "local" -%}{%- include 'css/code.css' -%}{%- endcss -%}
     {%- endif -%}
+    {%- set hasProse = content and r/class=["'](?:[^"']*\s)?prose[\s"']/.test(content) -%}
+    {%- if hasProse or (content and content.includes('class="design-system')) -%}
+      {%- css "local" -%}{%- include 'css/external-link.css' -%}{%- endcss -%}
+    {%- endif -%}
+    {%- if hasProse -%}
+      {%- css "local" -%}{%- include 'css/prose-rhythm.css' -%}{%- endcss -%}
+      {%- css "local" -%}{%- include 'css/prose.css' -%}{%- endcss -%}
+    {%- endif -%}
     {% include "partials/header.njk" %}
 
     <main id="main" class="flow">{{ content | safe }}</main>
