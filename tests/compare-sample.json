@@ -1,0 +1,22 @@
+[
+  {"path": "/", "note": "home"},
+  {"path": "/tags/", "note": "tag index"},
+  {"path": "/now/", "note": "now page"},
+  {"path": "/design-system/", "note": "design system, has tables"},
+  {"path": "/accessibility/", "note": "plain page, a pa11y path"},
+  {"path": "/notes/", "note": "an archive"},
+  {"path": "/activities/", "note": "the longest archive, a pa11y path"},
+  {"path": "/notes/affinity-studio/", "note": "post type: note"},
+  {"path": "/reading/a-confession/", "note": "post type: reading, a pa11y path"},
+  {"path": "/watching/the-killing/", "note": "post type: watching, a pa11y path"},
+  {"path": "/jams/50ft-queenie/", "note": "post type: jam, a pa11y path"},
+  {"path": "/bookmarks/indiewebifying-my-website-part-1-microformats-and-webmentions/", "note": "post type: bookmark"},
+  {"path": "/replies/despite-being-free-i-havent-used-affinity-studio-that-much/", "note": "post type: reply"},
+  {"path": "/likes/ariel-salminen-website/", "note": "post type: like"},
+  {"path": "/photos/asturian-valley/", "note": "post type: photo"},
+  {"path": "/audio/nybrostrand-beach/", "note": "post type: audio, a pa11y path"},
+  {"path": "/activities/2024-06-06-sprintol-traning/", "note": "post type: activity, has a map"},
+  {"path": "/wiki/alt-text/", "note": "a wiki page"},
+  {"path": "/wiki/tables/", "note": "a page with a table"},
+  {"path": "/wiki/the-place-map/", "note": "a page about the map"}
+]
