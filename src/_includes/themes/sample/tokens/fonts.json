@@ -1,0 +1,36 @@
+{
+  "$type": "fontFamily",
+  "display": {
+    "$value": [
+      "system-ui",
+      "-apple-system",
+      "Segoe UI",
+      "Roboto",
+      "sans-serif"
+    ],
+    "$description": "The system's own sans-serif; no font files to load",
+    "penpot": "Roboto"
+  },
+  "base": {
+    "$value": [
+      "system-ui",
+      "-apple-system",
+      "Segoe UI",
+      "Roboto",
+      "sans-serif"
+    ],
+    "$description": "The system's own sans-serif; no font files to load",
+    "penpot": "Roboto"
+  },
+  "mono": {
+    "$value": [
+      "ui-monospace",
+      "SFMono-Regular",
+      "Menlo",
+      "Consolas",
+      "monospace"
+    ],
+    "$description": "The system's own monospace; no font files to load",
+    "penpot": "Roboto Mono"
+  }
+}

@@ -1,26 +1,6 @@
-<link
-  rel="preload"
-  href="/assets/fonts/source-serif/source-serif.woff2"
-  as="font"
-  type="font/woff2"
-  crossorigin
-/>
-
-<link
-  rel="preload"
-  href="/assets/fonts/source-sans/source-sans.woff2"
-  as="font"
-  type="font/woff2"
-  crossorigin
-/>
-
-<link
-  rel="preload"
-  href="/assets/fonts/source-sans/source-sans-italic.woff2"
-  as="font"
-  type="font/woff2"
-  crossorigin
-/>
+{% for font in meta.themePreloads %}
+  <link rel="preload" href="{{ font.href }}" as="font" type="{{ font.type }}" crossorigin />
+{% endfor %}
 
 <!-- preloads in page data -->
 {%- if preloads -%}

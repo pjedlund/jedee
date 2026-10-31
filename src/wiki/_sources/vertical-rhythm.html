@@ -5,8 +5,8 @@
 <title>Vertical rhythm — wiki mockup</title>
 <link rel="stylesheet" href="../../_includes/css/global.css">
 <style>
-  @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../assets/fonts/source-sans/source-sans.woff2') format('woff2'); }
-  @font-face { font-family: 'Source Code Pro'; font-weight: 200 900; src: url('../../assets/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }
+  @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../_includes/themes/jedee/fonts/source-sans/source-sans.woff2') format('woff2'); }
+  @font-face { font-family: 'Source Code Pro'; font-weight: 200 900; src: url('../../_includes/themes/jedee/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }
 
   body { margin: 0; padding: 40px; background: #ddd; border: none; }
   .specimen { inline-size: fit-content; background: var(--color-bg); color: var(--color-text); border: 1px solid var(--color-bg-accent-2); border-radius: 6px; padding: 22px 28px 26px; font-family: 'Source Sans', sans-serif; }
@@ -61,10 +61,10 @@
 
   // ⚠ The bundle's @font-face rules point at absolute /assets paths, which this server maps to an unbuilt dist/, so the faces are redeclared relative. Without this the sample would quietly measure the metric-matched fallbacks.
   const fonts = `
-    @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../assets/fonts/source-sans/source-sans.woff2') format('woff2'); }
-    @font-face { font-family: 'Source Sans'; font-style: italic; font-weight: 100 1000; src: url('../../assets/fonts/source-sans/source-sans-italic.woff2') format('woff2'); }
-    @font-face { font-family: 'Source Serif'; font-weight: 700; src: url('../../assets/fonts/source-serif/source-serif.woff2') format('woff2'); }
-    @font-face { font-family: 'Source Code Pro'; font-weight: 200 900; src: url('../../assets/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }`;
+    @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../_includes/themes/jedee/fonts/source-sans/source-sans.woff2') format('woff2'); }
+    @font-face { font-family: 'Source Sans'; font-style: italic; font-weight: 100 1000; src: url('../../_includes/themes/jedee/fonts/source-sans/source-sans-italic.woff2') format('woff2'); }
+    @font-face { font-family: 'Source Serif'; font-weight: 700; src: url('../../_includes/themes/jedee/fonts/source-serif/source-serif.woff2') format('woff2'); }
+    @font-face { font-family: 'Source Code Pro'; font-weight: 200 900; src: url('../../_includes/themes/jedee/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }`;
 
   // Both sides load the same stylesheets, the prototype included; only data-rhythm differs, so any difference is the prototype's.
   const sheets = ['../../_includes/css/global.css', ...['table', 'meta', 'media-meta', 'footnotes'].map(name => `../../assets/css/local/${name}.css`)]

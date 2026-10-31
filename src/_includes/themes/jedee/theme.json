@@ -1,0 +1,10 @@
+{
+  "themeColor": "#495464",
+  "themeLight": "#F4F4F2",
+  "themeDark": "#495464",
+  "preloads": [
+    {"href": "/assets/fonts/source-serif/source-serif.woff2", "type": "font/woff2"},
+    {"href": "/assets/fonts/source-sans/source-sans.woff2", "type": "font/woff2"},
+    {"href": "/assets/fonts/source-sans/source-sans-italic.woff2", "type": "font/woff2"}
+  ]
+}

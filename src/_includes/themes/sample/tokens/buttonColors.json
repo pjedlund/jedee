@@ -1,0 +1,38 @@
+{
+  "$type": "color",
+  "$penpotCoreSet": "core/button",
+  "$description": "Button colors, pushed into Penpot by build-penpot-tokens.js. They existed only inside the Penpot file until 2026-08-22, where a token import would silently delete them (import replaces same-named sets), and the ten Button variants bind their fills here. Two tiers: `core` holds the seven plain references, emitted verbatim into a core/button set — NOT under the color.* prefix, because the existing Penpot bindings reference them as button.*. `themes` holds the nine genuine color-mix() results from blocks/button.css, flattened per theme, so those hexes drift if the palette moves. Three of the nine (default.text, primary.text, secondary.text) were previously approximated in Penpot as {color.bg} / {color.gray.100}; the real mixes here shift those labels slightly, all still clear AA.",
+  "core": {
+    "button.default.bg": "{color.text}",
+    "button.primary.bg": "{color.orange.500}",
+    "button.secondary.bg": "{color.semantic.blue}",
+    "button.tertiary.text": "{color.text}",
+    "button.ghost.bg": "{color.bg}",
+    "button.ghost.text": "{color.text}",
+    "button.ghost.border": "{color.text}"
+  },
+  "themes": {
+    "light": {
+      "button.default.text": "#E1E3E3",
+      "button.default.bg-hover": "#516769",
+      "button.primary.text": "#eef3f4",
+      "button.primary.bg-hover": "#5693dd",
+      "button.secondary.text": "#e9f0f1",
+      "button.secondary.bg-hover": "#23696f",
+      "button.tertiary.bg": "#cdd7d8",
+      "button.tertiary.bg-hover": "#d1dadb",
+      "button.ghost.bg-hover": "#E7E7E6"
+    },
+    "dark": {
+      "button.default.text": "#212626",
+      "button.default.bg-hover": "#b3b6b7",
+      "button.primary.text": "#eef3f4",
+      "button.primary.bg-hover": "#3f7bc3",
+      "button.secondary.text": "#e9f0f1",
+      "button.secondary.bg-hover": "#1b5157",
+      "button.tertiary.bg": "#222424",
+      "button.tertiary.bg-hover": "#212323",
+      "button.ghost.bg-hover": "#121717"
+    }
+  }
+}

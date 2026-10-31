@@ -4,7 +4,7 @@
 
 ## How this design system stays true
 
-Every value here is generated from the site's own repository — the DTCG tokens in `src/_data/designTokens/*.json` and the compiled `src/_includes/css/global.css` — by one command, `npm run design:system`. Nothing in it is kept by hand.
+Every value here is generated from the site's own repository — the DTCG tokens in the active theme's folder, `src/_includes/themes/<theme>/tokens/*.json`, and the compiled `src/_includes/css/global.css` — by one command, `npm run design:system`. Nothing in it is kept by hand.
 
 `components/bundle.css` **is the site's own compiled stylesheet**, copied unmodified but for the font URLs, with the two per-page bundles the previews need concatenated on. The type preloads it into every preview, so a preview is styled by the CSS the site actually ships rather than by a reconstruction of it.
 

@@ -1,5 +1,5 @@
 // Regression test for the per-theme button colors in the Penpot token export
-// (src/_data/designTokens/buttonColors.json → build-penpot-tokens.js).
+// (the theme's tokens/buttonColors.json → build-penpot-tokens.js).
 //
 // Why this exists: importing a DTCG file into Penpot REPLACES any token set
 // whose name matches, and the build generates theme/light + theme/dark. Twelve
@@ -24,12 +24,13 @@ import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { TOKENS_DIR } from '../src/_config/utils/theme.js'
 
 const run = promisify(execFile)
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const BUILD = resolve(REPO_ROOT, 'src/_config/setup/build-penpot-tokens.js')
 const OUTPUT = resolve(REPO_ROOT, '_local/penpot/penpot-tokens.dtcg.json')
-const SOURCE = resolve(REPO_ROOT, 'src/_data/designTokens/buttonColors.json')
+const SOURCE = resolve(REPO_ROOT, TOKENS_DIR, 'buttonColors.json')
 
 // Flatten a DTCG set into { 'dotted.token.name': value }.
 function flatten(set) {

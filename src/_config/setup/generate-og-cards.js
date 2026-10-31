@@ -9,6 +9,7 @@ import matter from 'gray-matter';
 import { author, pathToSvgLogo } from '../../_data/meta.js';
 import { unwikilink } from '../filters/unwikilink.js';
 import { slugifyString } from '../filters/slugify.js';
+import { themeDir } from '../utils/theme.js';
 
 const SITE_DOMAIN = new URL(author.website).hostname;
 
@@ -52,8 +53,8 @@ const coverUri = async cover => {
 };
 
 const cardHtml = (post, cover, type) => `<!doctype html><html lang="en"><head><meta charset="utf-8"><style>
-  @font-face { font-family: 'Source Serif'; font-weight: 700; src: url('${fontUri('src/assets/fonts/source-serif/source-serif.woff2')}') format('woff2'); }
-  @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('${fontUri('src/assets/fonts/source-sans/source-sans.woff2')}') format('woff2'); }
+  @font-face { font-family: 'Source Serif'; font-weight: 700; src: url('${fontUri(`${themeDir()}/fonts/source-serif/source-serif.woff2`)}') format('woff2'); }
+  @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('${fontUri(`${themeDir()}/fonts/source-sans/source-sans.woff2`)}') format('woff2'); }
   * { margin: 0; box-sizing: border-box; }
   body { width: 1200px; height: 630px; background: ${PAPER}; display: flex; align-items: center; gap: 72px; padding: 96px; overflow: hidden; position: relative; }
   /* Sized by height, not width: a square album cover comes out 438x438 and a 2:3 poster or book cover 292x438, so every type sits in the same band without letterboxing. */

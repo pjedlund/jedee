@@ -26,6 +26,7 @@ import plugins from './src/_config/plugins.js';
 import {resolveOrPlainText} from './src/_config/plugins/interlinker-resolver.js';
 import ignoreWikilinksInCode from './src/_config/plugins/interlinker-ignore-code.js';
 import shortcodes from './src/_config/shortcodes.js';
+import {themeDir} from './src/_config/utils/theme.js';
 
 // Caps how many images fetch + encode at once, to keep a cold build's memory down. Lower it if a cold build still runs out of memory.
 import Image from '@11ty/eleventy-img';
@@ -63,6 +64,9 @@ export default async function(eleventyConfig) {
   eleventyConfig.watchIgnores.add('src/_includes/scripts/**');
   // ⚠ Global CSS stays out of the watcher: watchGlobalCss recompiles it and the dev server swaps it in place, where a rebuild would cost every page. See the wiki "The dev server's memory".
   eleventyConfig.watchIgnores.add('src/assets/css/global/**');
+  // ⚠ Same for a theme's CSS. Its fonts and DESIGN.md feed no page, so saving them shouldn't rebuild every page either.
+  eleventyConfig.watchIgnores.add('src/_includes/themes/*/*.{css,md}');
+  eleventyConfig.watchIgnores.add('src/_includes/themes/*/fonts/**');
   eleventyConfig.setServerOptions({watch: ['dist/assets/css/global.css']});
   // ⚠ The Obsidian vault is src/, and Eleventy reads the .gitignore line `.obsidian` as ./.obsidian at the repo root, so without this every Obsidian click (workspace.json) triggers a full rebuild. See the wiki "Watch loops".
   eleventyConfig.watchIgnores.add('src/.obsidian/**');
@@ -219,11 +223,14 @@ export default async function(eleventyConfig) {
 
   // --------------------- Passthrough File Copy
   // -- same path: self-hosted .mp3/.mp4/.vtt and the This Is My Jam avatars (`jams-social`, rendered with `eleventy:ignore`), which Eleventy Image never moves.
-  ['src/assets/fonts/', 'src/assets/images/template', 'src/assets/images/recipes', 'src/assets/images/jams-social', 'src/assets/og-images', 'src/assets/audio', 'src/assets/video', 'src/assets/map'].forEach(path =>
+  ['src/assets/images/template', 'src/assets/images/recipes', 'src/assets/images/jams-social', 'src/assets/og-images', 'src/assets/audio', 'src/assets/video', 'src/assets/map'].forEach(path =>
     eleventyConfig.addPassthroughCopy(path)
   );
 
   eleventyConfig.addPassthroughCopy({
+    // -- the active theme's fonts, at the same address whichever theme it is
+    [`${themeDir()}/fonts`]: 'assets/fonts',
+
     // -- to root
     'src/assets/images/favicon/*': '/',
     'src/assets/images/avatar/*': '/',

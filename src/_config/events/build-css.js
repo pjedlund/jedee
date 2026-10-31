@@ -7,6 +7,8 @@ import path from 'node:path';
 import postcss from 'postcss';
 import postcssImport from 'postcss-import';
 import tailwindcss from 'tailwindcss';
+import tailwindConfig, {themeFromTokens} from '../../../tailwind.config.js';
+import {themeDir} from '../utils/theme.js';
 
 const buildCss = async (inputPath, outputPaths) => {
   const inputContent = await fs.readFile(inputPath, 'utf-8');
@@ -14,13 +16,16 @@ const buildCss = async (inputPath, outputPaths) => {
   const result = await postcss([
     postcssImport({
       resolve(id, basedir) {
+        if (id === 'theme-fonts') return path.resolve(themeDir(), 'fonts.css');
+        if (id === 'theme') return path.resolve(themeDir(), 'theme.css');
         if (!id.includes('*')) return id;
         return globSync(id, {cwd: basedir})
           .sort()
           .map(file => path.join(basedir, file));
       }
     }),
-    tailwindcss,
+    // ⚠ Given the config as a file, Tailwind only rereads it when something it imports changes, and tokens are read, not imported: an edited token would need a dev server restart.
+    tailwindcss({...tailwindConfig, theme: themeFromTokens()}),
     autoprefixer,
     cssnano
   ]).process(inputContent, {from: inputPath});
@@ -42,11 +47,10 @@ const globalOutputs = () =>
 
 export const buildGlobalCss = () => buildCss(GLOBAL_SRC, globalOutputs());
 
-/** Recompiles global CSS on save, in the Eleventy process, so `src/assets/css/global/**` can stay out of Eleventy's watcher. */
+/** Recompiles global CSS on save, in the Eleventy process, so `src/assets/css/global/**` can stay out of Eleventy's watcher. The active theme's folder counts too: fonts.css, theme.css and the tokens all end up in it. */
 export const watchGlobalCss = () => {
   let pending;
-  // ⚠ unref() is what lets Ctrl+C stop the dev server: Eleventy's SIGINT handler only closes its own watchers, and an open fs.watch keeps Node alive.
-  return watch('src/assets/css/global', {recursive: true}, () => {
+  const rebuild = () => {
     clearTimeout(pending);
     pending = setTimeout(
       () =>
@@ -55,7 +59,9 @@ export const watchGlobalCss = () => {
           .catch(error => console.error(`[css] ${error.message}`)),
       50
     );
-  }).unref();
+  };
+  // ⚠ unref() is what lets Ctrl+C stop the dev server: Eleventy's SIGINT handler only closes its own watchers, and an open fs.watch keeps Node alive.
+  return ['src/assets/css/global', themeDir()].map(folder => watch(folder, {recursive: true}, rebuild).unref());
 };
 
 export const buildAllCss = async () => {

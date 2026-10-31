@@ -60,7 +60,6 @@ src/_obsidian/*
 # Project notes (kept locally, not in repo); AGENTS.md is tracked on purpose, so keep anything personal out of it
 CLAUDE.md
 SITE.md
-DESIGN.md
 IDEAS.md
 LOG.md
 TODO.md

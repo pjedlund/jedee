@@ -1,5 +1,5 @@
 // Builds a DTCG JSON of the design tokens for Penpot's Tokens panel; full mapping notes in _local/penpot/penpot-tokens.md.
-// Workflow: edit src/_data/designTokens/ (run `npm run colors` after colorsBase.json) → `npm run penpot:tokens` → import `_local/penpot/penpot-tokens.dtcg.json` in Penpot.
+// Workflow: edit the active theme's tokens/ (run `npm run colors` after colorsBase.json) → `npm run penpot:tokens` → import `_local/penpot/penpot-tokens.dtcg.json` in Penpot.
 // Mapping:
 //   nesting            -> dot names (gray.100 -> color.gray.100)
 //   fluid { min, max } -> the max, in px
@@ -8,12 +8,12 @@
 //   light_dark colors  -> the value to theme/light, .subdued to theme/dark
 // ⚠ Type names are plural (fontFamilies…) because Penpot's importer expects them; if themes import empty, set their members by hand in Penpot's Themes tab.
 
-import {readFile, writeFile} from 'node:fs/promises';
+import {writeFile} from 'node:fs/promises';
 import {dirname, resolve} from 'node:path';
 import {fileURLToPath, pathToFileURL} from 'node:url';
+import {loadTokens} from '../utils/theme.js';
 
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../../..');
-const TOKENS_DIR = resolve(REPO_ROOT, 'src/_data/designTokens');
 const OUTPUT_PATH = resolve(REPO_ROOT, '_local/penpot/penpot-tokens.dtcg.json');
 
 // Top-level keys in colors.json that have a .subdued sibling and represent the light/dark semantic colors.
@@ -23,9 +23,7 @@ const LIGHT_DARK_COLOR_NAMES = ['red', 'blue', 'green'];
 const CORE_SETS = ['core/colors', 'core/typography', 'core/spacing', 'core/layout', 'core/button'];
 const SET_ORDER = [...CORE_SETS, 'theme/light', 'theme/dark'];
 
-async function readJSON(file) {
-	return JSON.parse(await readFile(resolve(TOKENS_DIR, file), 'utf8'));
-}
+const readJSON = async file => loadTokens(file);
 
 function setLeaf(obj, dottedPath, value) {
 	const parts = dottedPath.split('.');

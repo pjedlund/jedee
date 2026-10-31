@@ -2,7 +2,7 @@
 
 @import 'base/reset.css' layer(reset);
 /* web fonts: */
-@import 'base/fonts.css' layer(fonts);
+@import 'theme-fonts' layer(fonts);
 
 @import 'tailwindcss/components' layer(tailwindComponents);
 
@@ -18,3 +18,6 @@
 /* @import 'tests/*.css' layer(test); */
 
 @import 'tailwindcss/utilities' layer(tailwindUtilities);
+
+/* The active theme's own CSS; last, so it can override anything above. Named by build-css.js. */
+@import 'theme' layer(theme);

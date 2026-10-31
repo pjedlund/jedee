@@ -39,6 +39,7 @@ profiles:
 repos:
   site: https://github.com/pjedlund/jedee
   licence: https://github.com/pjedlund/soli-deo-gloria-dedication
+theme: jedee
 switches:
   breadcrumb: true
   nameReveal: true

@@ -3,10 +3,11 @@
  * - © Andy Bell - https://buildexcellentwebsit.es/
  */
 
-import viewports from '../../_data/designTokens/viewports.json';
+import {loadTokens} from './theme.js';
 
 export const clampValue = (min, max) => {
   const rootSize = 16;
+  const viewports = loadTokens('viewports.json');
 
   if (min === max) {
     return `${min / rootSize}rem`;

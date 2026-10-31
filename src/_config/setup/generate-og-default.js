@@ -5,6 +5,7 @@ import path from 'node:path';
 import sharp from 'sharp';
 import puppeteer from 'puppeteer';
 import { settings, siteName, siteDomain, themeColor, themeLight, pathToSvgLogo, opengraph_default } from '../../_data/meta.js';
+import { themeDir } from '../utils/theme.js';
 
 // The landing page's own second sentence, kept in step by hand — the intro is prose in the page.
 const TAGLINE = settings.identity.tagline;
@@ -32,8 +33,8 @@ const mark = (size, color, opacity = 1) =>
   `<svg viewBox="0 0 100 100" width="${size}" height="${size}" fill="${color}" opacity="${opacity}" aria-hidden="true"><path d="${markPath}"/></svg>`;
 
 const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><style>
-  @font-face { font-family: 'Source Serif'; font-weight: 700; src: url('${fontUri('src/assets/fonts/source-serif/source-serif.woff2')}') format('woff2'); }
-  @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('${fontUri('src/assets/fonts/source-sans/source-sans.woff2')}') format('woff2'); }
+  @font-face { font-family: 'Source Serif'; font-weight: 700; src: url('${fontUri(`${themeDir()}/fonts/source-serif/source-serif.woff2`)}') format('woff2'); }
+  @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('${fontUri(`${themeDir()}/fonts/source-sans/source-sans.woff2`)}') format('woff2'); }
   * { margin: 0; box-sizing: border-box; }
   body { width: 1200px; height: 630px; background: ${PAPER}; position: relative; overflow: hidden; }
   /* The site's own mark as the ground, where Eleventy Excellent's template puts its star. Bled off two edges so it reads as texture rather than a second logo. */
