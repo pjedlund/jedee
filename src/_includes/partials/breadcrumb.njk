@@ -30,6 +30,11 @@
   </ol>
 </nav>
 
+{% css "local" %}
+  {% include "css/breadcrumb-leaf.css" %}
+  {% include "css/breadcrumb.css" %}
+{% endcss %}
+
 {% if page.url == "/" and meta.navigation.nameReveal %}
   {% css "local" %}
     {% include "css/breadcrumb-reveal.css" %}

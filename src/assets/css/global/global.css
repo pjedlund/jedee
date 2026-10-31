@@ -1,3 +1,6 @@
+/* ⚠ Fixes the layers' order, so a block arriving later in a page's local CSS still sits in its old place. Keep it in step with the imports below. */
+@layer tailwindBase, reset, fonts, tailwindComponents, variables, global, compositions, blocks, cubeUtilities, tailwindUtilities, theme;
+
 @import 'tailwindcss/base' layer(tailwindBase);
 
 @import 'base/reset.css' layer(reset);

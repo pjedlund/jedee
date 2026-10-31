@@ -4,7 +4,7 @@ window.SITE_HEADER = "<header class=\"site-header wrapper\">\n  <a href=\"#main\
 
 // ⚠ Every space and type token is vw-based, so a fixed-width DIV inside the 1400px shooter viewport renders 1400px-scale type. Only an iframe gets its own viewport, which is what makes a "375px" frame honest.
 window.mountFrame = function ({ mount, width, css = '', locals = [], onLoad }) {
-  const sheets = ['global', ...locals].map(n => `<link rel="stylesheet" href="../../_includes/css/${n}.css">`).join('');
+  const sheets = ['global', 'site-header', 'breadcrumb-leaf', 'breadcrumb', 'main-nav', 'sun-and-moon', 'theme-toggle', ...locals].map(n => `<link rel="stylesheet" href="../../_includes/css/${n}.css">`).join('');
   const iframe = document.createElement('iframe');
   iframe.width = width;
   iframe.setAttribute('scrolling', 'no');

@@ -12,6 +12,7 @@
 
         <span class="font-base">{{ meta.siteName }}</span>
       </a>
+      {% css "local" %}{% include "css/site-logo.css" %}{% endcss %}
     {% endif %}
     <div class="cluster">
       {# Soft-launch: nav hidden in production (meta.navigation.hideNav) but always revealed in local dev (`eleventy --serve`) so it stays testable. Parenthesised because Nunjucks parses `not A or B` as `not (A or B)`. #}
@@ -28,4 +29,5 @@
     </div>
   </div>
 </header>
+{%- css "local" -%}{%- include 'css/site-header.css' -%}{%- endcss -%}
 {%- endif -%}

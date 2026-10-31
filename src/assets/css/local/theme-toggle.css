@@ -3,6 +3,7 @@ THEME TOGGLE — animated sun ↔ moon
 Single icon button in the header, showing the CURRENT theme: sun in light, moon in dark. The icon's animation is sun-and-moon.css. Adapted from Adam Argyle's "Building a theme switch component" (web.dev, MIT), rewritten flat with the easings inlined and motion gated on prefers-reduced-motion.
 Progressive enhancement: hidden until <is-land> upgrades — a toggle that can't run shouldn't show. The no-flash theme itself is set by the inline theme-toggle.js.
 */
+@layer blocks {
 .theme-toggle {
   /* Outer box sized to sit alongside the wordmark logo in the header; the glyph is the header icon size, and the padding takes up the difference. */
   --theme-toggle-box: calc(var(--size-step-min-1) + var(--space-2xs) * 2);
@@ -59,4 +60,5 @@ is-land:not(:defined) .theme-toggle {
 is-land:has(> .theme-toggle) {
   display: flex;
   align-items: center;
+}
 }

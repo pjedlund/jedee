@@ -1,8 +1,8 @@
 /*
 BREADCRUMB
-Top-left wayfinding that replaces the old site logo: the home crumb is the logomark, the final crumb carries the page title (partials/breadcrumb.njk + breadcrumb-leaf.njk). Site-wide header chrome, so it belongs in global/blocks. Separators are CSS-drawn chevrons (the "›" glyph isn't in the font subset) and are inert to assistive tech.
+Top-left wayfinding that replaces the old site logo: the home crumb is the logomark, the final crumb carries the page title (partials/breadcrumb.njk + breadcrumb-leaf.njk). Separators are CSS-drawn chevrons (the "›" glyph isn't in the font subset) and are inert to assistive tech.
 */
-
+@layer blocks {
 .breadcrumb {
   --breadcrumb-size: var(--size-step-min-2);
   --breadcrumb-gap: var(--space-xs);
@@ -123,4 +123,5 @@ Top-left wayfinding that replaces the old site logo: the home crumb is the logom
   rotate: 45deg;
   /* Nudge onto the cap height's optical centre, and left onto the box's: rotating a square 45deg leaves the two drawn borders entirely in the box's RIGHT half, which reads as the chevron sitting closer to the crumb after it. */
   translate: -0.08em -0.05em;
+}
 }

@@ -2,7 +2,7 @@
 BREADCRUMB LEAF
 The current-page crumb (partials/breadcrumb-leaf.njk): one clamped line, and the quiet italic connector words inside it. The trail itself is breadcrumb.css.
 */
-
+@layer blocks {
 .breadcrumb-current {
   /* Single-line clamp + ellipsis. -webkit-line-clamp rather than `white-space: nowrap`, because the global `* { text-wrap: pretty }` reset re-enables wrapping even against an explicit nowrap. `min-inline-size: 0` lets this nested flex item shrink below its content so the clamp bites. */
   display: -webkit-box;
@@ -24,4 +24,5 @@ The current-page crumb (partials/breadcrumb-leaf.njk): one clamped line, and the
   text-transform: none;
   letter-spacing: normal;
   color: var(--breadcrumb-color-ancestor);
+}
 }

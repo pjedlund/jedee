@@ -1,8 +1,8 @@
 /*
 SITE HEADER
-The full-width header band. The <header> spans the viewport while its contents stay aligned to the centered content column via the .wrapper grid it carries (header.njk) — edge-to-edge without abandoning the editorial column. Site-wide chrome → global/blocks.
+The full-width header band. The <header> spans the viewport while its contents stay aligned to the centered content column via the .wrapper grid it carries (header.njk) — edge-to-edge without abandoning the editorial column.
 */
-
+@layer blocks {
 .site-header {
   /* One size for every glyph in the header row — logomark, magnifier, sun/moon; the MENU caret keeps its own smaller size. */
   --site-header-icon-size: calc(var(--size-step-min-2) * 1.2);
@@ -26,4 +26,5 @@ The full-width header band. The <header> spans the viewport while its contents s
     block-size: calc(var(--line) - round(var(--line) - (1em + 2 * var(--space-xs) + 2 * var(--border-thickness)), 2px));
     padding-block: 0;
   }
+}
 }

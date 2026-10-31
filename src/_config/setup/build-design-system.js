@@ -254,8 +254,8 @@ await mkdir(resolve(OUT, 'fonts'), {recursive: true});
 await writeFile(resolve(OUT, 'tokens.json'), JSON.stringify(tokens, null, 2));
 
 // The site's own stylesheet rides in as bundle.css, which the type preloads into every preview — so a preview is styled by the real CSS, not a reconstruction. ⚠ Fonts sit a level up from components/.
-// ⚠ custom-card and the mega-menu ship as per-page bundles, not in global.css — a preview linking its own stylesheet would be inert here, so they are concatenated in.
-const localBundles = ['custom-card.css', 'nav-menu-cls.css'];
+// ⚠ custom-card, the chrome and the small pieces ship as per-page bundles, not in global.css — a preview linking its own stylesheet would be inert here, so they are concatenated in.
+const localBundles = ['custom-card', 'nav-menu-cls', 'breadcrumb-leaf', 'breadcrumb', 'main-nav', 'site-header', 'site-logo', 'sun-and-moon', 'theme-toggle'].map(name => `${name}.css`);
 let localCss = '';
 for (const f of localBundles) localCss += `\n${await readFile(resolve(REPO_ROOT, 'src/_includes/css', f), 'utf8')}`;
 const bundleCss = (globalCss + localCss).replace(/url\(\/assets\/fonts\/[^/)]*\/([^/)]+\.woff2)\)/g, 'url(../fonts/$1)');

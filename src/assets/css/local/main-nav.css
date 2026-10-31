@@ -4,7 +4,7 @@ A "Menu ⌄" button drops a two-column, table-of-contents-style panel of every p
 
 ⚠ The seven color-mix() colors below are mirrored as flat hexes in the theme's tokens/megamenuColors.json, since Penpot has no color-mix(). Change a percentage here and the mirror drifts — reflatten and re-run `npm run penpot:tokens`.
 */
-
+@layer blocks {
 .mainnav {
   /* The panel is anchored to the full-width header row (.repel.ontop in header.njk), not to .mainnav — that puts it under the theme toggle with equal gutters. Keep .mainnav static so the anchor wins. */
 
@@ -286,4 +286,5 @@ A "Menu ⌄" button drops a two-column, table-of-contents-style panel of every p
 
 .mainnav > .megamenu:first-child .megamenu-dots {
   display: none;
+}
 }

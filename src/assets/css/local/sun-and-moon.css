@@ -2,7 +2,7 @@
 SUN AND MOON
 The theme toggle's icon: switching to dark grows the sun's disc, fades and rotates its beams, and slides a masked circle in to carve the crescent. Motion gated on prefers-reduced-motion. The button itself is theme-toggle.css.
 */
-
+@layer blocks {
 /* sun, moon-mask and beams share a center pivot */
 .sun-and-moon > :is(.moon, .sun, .sun-beams) {
   transform-origin: center center;
@@ -69,4 +69,5 @@ The theme toggle's icon: switching to dark grows the sun's disc, fades and rotat
     transition-delay: 0.25s;
     transition-duration: 0.5s;
   }
+}
 }
