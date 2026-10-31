@@ -48,7 +48,7 @@ export const byCategory = cat => collection =>
 export const POST_TYPES = ['article', 'note', 'reading', /* … */ 'activity'];
 ```
 
-`eleventy.config.js` loops it: `POST_TYPES.forEach(type => eleventyConfig.addCollection(type, byCategory(type)))`. All sixteen collections are registered whatever the setting; `enabledPostTypes(settings)` and `POST_TYPE_DIRS` in the same file decide which types' posts, archive pages and feeds Eleventy ignores, and a name in `postTypes` that is not a post type stops the build.
+`eleventy.config.js` loops it: `POST_TYPES.forEach(type => eleventyConfig.addCollection(type, byCategory(type)))`. All sixteen collections are registered whatever the setting; `enabledPostTypes(settings)` and `POST_TYPE_DIRS`, defined in `src/_config/collections.js` and used by `eleventy.config.js`, decide which types' posts, archive pages and feeds Eleventy ignores, and a name in `postTypes` that is not a post type stops the build.
 
 **The layout aliases are not looped, and must not be.** `article` is in `POST_TYPES` but there is no `article.njk` — articles use `post.njk`, EE's stock layout name. A generic `addLayoutAlias(t, t + '.njk')` loop would emit a bogus alias for it. All nineteen aliases are written out one per line instead (in `eleventy.config.js` — the sixteen types minus `article`, plus `base`, `page`, `post` and `tags`). The comment in `collections.js` says so; it is the single most repeated warning across the fifteen specs.
 

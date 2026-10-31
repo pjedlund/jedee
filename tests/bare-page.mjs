@@ -11,7 +11,7 @@ const BARE_PAGE = '---\ntitle: Bare\nlayout: base\npermalink: /bare/\n---\n\n<p>
 // ⚠ These are the numbers on the old, full-featured page, measured before the trimming started. A bare page is meant to land far under them.
 const BEFORE = { total: 88, gzip: 21, sharedCss: 54, pageCss: 8, html: 23 };
 
-const switches = Object.fromEntries([...SWITCHES, 'nameReveal', 'viewRepo', 'breadcrumb', 'relMe'].map(name => [name, false]));
+const switches = Object.fromEntries([...SWITCHES, 'nameReveal', 'viewRepo'].map(name => [name, false]));
 const site = await makeTempSite({ settings: { theme: 'sample', postTypes: [], switches }, files: { 'src/pages/bare.njk': BARE_PAGE } });
 try {
   await site.build();

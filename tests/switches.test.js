@@ -129,6 +129,7 @@ test('breadcrumb off: the logo and name take its place', async t => {
   t.after(() => site.cleanup())
   await site.build()
   assert.match(site.read(PAGE).match(/<header class="site-header[\s\S]*?<\/header>/)[0], /class="logo \| cluster"/)
+  assert.ok(!site.read(PAGE).includes('BreadcrumbList'), 'the trail is still in the structured data')
 })
 
 test('feeds off: no feed files and no links to them', async t => {
