@@ -14,7 +14,7 @@ The two pull in opposite directions on granularity. The mf2 vocabulary is fine-g
 
 The mf2 layer is fine-grained and per-type — `u-listen-of`, `h-event`, `p-rsvp`. The JSON-LD layer is almost entirely one shape. That asymmetry is deliberate, and it's held in place by one line of template code.
 
-### The include that builds its own path
+### The include that builds its path
 
 `src/_includes/head/schema.njk`:
 

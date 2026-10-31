@@ -49,7 +49,7 @@ Covered on [[Text wrapping]]. `text-wrap: balance` evens out the lines of a shor
 
 ## Superscripts
 
-A footnote marker is conventionally a bare superscript figure. The browser's `<sup>` fakes one with `vertical-align: super` and a smaller size, which pushes the line apart. `font-variant-position: super` uses the font's own superscript glyphs, which sit inside the line. It works in Chrome since version 117 (2023), in Firefox and in Safari.
+A footnote marker is conventionally a bare superscript figure. The browser's `<sup>` fakes one with `vertical-align: super` and a smaller size, which pushes the line apart. `font-variant-position: super` uses the font's superscript glyphs, which sit inside the line. It works in Chrome since version 117 (2023), in Firefox and in Safari.
 
 Chrome and Safari draw nothing fake when the font has no superscript form for a character: it shows at full size on the baseline. So every character in the marker has to be covered. A font with superscript digits but no superscript brackets cannot set `[1]`.
 
@@ -98,7 +98,7 @@ WCAG says little here directly. [1.4.8](https://www.w3.org/WAI/WCAG22/Understand
 
 ## In jedee
 
-Set on 2026-09-10 after a research pass and an audit of the site; the decisions are in `_local/design/Plan - Typographic utility classes.md`. The `text-wrap` reset is Eleventy Excellent stock, the rest is jedee's own. The design system page (`/design-system/`) shows each feature off and on under Typography → Type features.
+Set on 2026-09-10 after a research pass and an audit of the site; the decisions are in `_local/design/Plan - Typographic utility classes.md`. The `text-wrap` reset is Eleventy Excellent stock, the rest is jedee's. The design system page (`/design-system/`) shows each feature off and on under Typography → Type features.
 
 ### Figures
 
@@ -114,7 +114,7 @@ Four opt-in classes live in `global/utilities/numerals.css`: `.fraction`, `.slas
 
 `.small-caps` (`global/utilities/small-caps.css`) is for the opening words of an article or a name: small caps plus `--tracking-wide` letterspacing. Write it as `<span class="small-caps">…</span>`, or as `{.small-caps}` at the end of a markdown paragraph. Not `*text*{.small-caps}`: Source Sans italic has no small caps. The class refuses fake small caps itself with `font-synthesis-small-caps: none`; `body` allows synthesis again since 2026-09-14, and the dev server's font check flags a faked style instead. See [[Font subsetting]].
 
-`abbr` gets no small caps. The glossary ([[Abbreviations]]) marks only its own terms, so styled acronyms would sit beside unstyled ones, and `all-small-caps` would flatten RDFa.
+`abbr` gets no small caps. The glossary ([[Abbreviations]]) marks only its terms, so styled acronyms would sit beside unstyled ones, and `all-small-caps` would flatten RDFa.
 
 ### Capitals
 
@@ -163,7 +163,7 @@ Books have a Subtitle field in [[Sveltia CMS]]. Films don't, since Letterboxd ha
 Every webtypography.net rule was checked against the site on 2026-09-21. Four things changed:
 
 - **Kerning in WebKit** (2.1.8). Eleventy Excellent's reset set `text-rendering: optimizeSpeed` on `body`, which turns kerning off in WebKit: Safari and practically every iPhone browser. The line is gone, and a ⚠ comment in `reset.css` keeps an upgrade from bringing it back.
-- **Running text at the font's own spacing** (2.1.7). Eleventy Excellent also tracked `body` at `--tracking` (−0.04ch), pulling every lowercase letter tighter. Only headings keep it: tightening display sizes is the exception Bringhurst allows (2.1.1).
+- **Running text at the font's spacing** (2.1.7). Eleventy Excellent also tracked `body` at `--tracking` (−0.04ch), pulling every lowercase letter tighter. Only headings keep it: tightening display sizes is the exception Bringhurst allows (2.1.1).
 - **Hyphenation limits** (2.4.1). `body` sets `hyphenate-limit-chars: auto 2 3`, inherited wherever `hyphens: auto` is on. Chrome honors it only some of the time ("forev-er" became "for-ever", "activi-ty" stays).
 - **Hard spaces between numbers and units** (2.4.6). A markdown-it rule in `markdown.js` joins a number and its unit (km, min, s, MB, °C and a few more) with a non-breaking space; code is left alone. The activity stats and the `withMiles` and `paceOrSpeed` filters do the same. The cost: on a phone, a table cell that used to split "0.34 / s" now scrolls sideways instead.
 

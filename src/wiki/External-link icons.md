@@ -6,7 +6,7 @@ updated: 2026-10-31
 
 An external-link icon is a small mark, usually ↗, after a link that leads to another site. It tells a reader before they click that they are about to leave. It is decoration when the link opens in the same tab. When a link opens a new tab or window, that has to be said in text, because the change of context is something a screen-reader user cannot see.
 
-The usual way to add the icon is a `::after` on links whose `href` starts with `http`, with exclusions for the site's own domain, so internal links (written relative, `/about/`) never match.
+The usual way to add the icon is a `::after` on links whose `href` starts with `http`, with exclusions for the site's domain, so internal links (written relative, `/about/`) never match.
 
 ## Drawing it so it can change color
 
@@ -37,7 +37,7 @@ Every `:not()` in the selector counts as much as its argument, so three exclusio
 a[href^='http']:where(:not([href*='example.com'], [href*='localhost'], .no-indicator))::after { … }
 ```
 
-If the dim color is mixed from `currentColor`, a link whose own color changes on hover will tint the icon anyway, which can make a broken hover rule look half-working.
+If the dim color is mixed from `currentColor`, a link whose color changes on hover will tint the icon anyway, which can make a broken hover rule look half-working.
 
 ## In jedee
 

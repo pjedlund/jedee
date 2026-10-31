@@ -33,7 +33,7 @@ eleventyComputed: {
 }
 ```
 
-It was ported from `photos.json` so EXIF could be read from the file at build time — and `photoExif` is a **top-level** key rather than nested under `photo`, because a computed key that reads its own parent is a self-reference in the data cascade. Worth knowing before writing a script that globs `src/posts/*/*.json` expecting sixteen hits: it finds ten. Jams, reading and watching followed photo into JavaScript on 2026-08-29 and 2026-09-09, for lightbox covers and Open Graph cards, and recipes and videos on 2026-10-11, so their Open Graph cards could use their own artwork.
+It was ported from `photos.json` so EXIF could be read from the file at build time — and `photoExif` is a **top-level** key rather than nested under `photo`, because a computed key that reads its parent is a self-reference in the data cascade. Worth knowing before writing a script that globs `src/posts/*/*.json` expecting sixteen hits: it finds ten. Jams, reading and watching followed photo into JavaScript on 2026-08-29 and 2026-09-09, for lightbox covers and Open Graph cards, and recipes and videos on 2026-10-11, so their Open Graph cards could use their artwork.
 
 ## Registration: one array, explicit aliases
 
@@ -72,7 +72,7 @@ export const POST_TYPES = ['article', 'note', 'reading', /* … */ 'activity'];
 ## The other five slots
 
 - **Layout** — `src/_layouts/<type>.njk`. All sixteen exist. All sixteen open with `<article class="wrapper flow prose h-entry">`; see [[Microformats]].
-- **Card** — `src/_includes/partials/card-<type>.njk`. Ten types have their own; the five response types share one, and activities have none — see [[The title-less post types]].
+- **Card** — `src/_includes/partials/card-<type>.njk`. Ten types have one each; the five response types share one, and activities have none — see [[The title-less post types]].
 - **Feed** — fourteen types have one; two deliberately don't (reposts, events). See [[Per-type feeds]].
 - **Navigation** — one entry in `src/_data/navigation.js` with a Phosphor icon ([[Icons]]) and the collection key for the count. All sixteen are listed. Jam is asymmetric: URL `/jams/`, collection key `jam`.
 - **Schema** — a `schema:` line in the layout's front matter. See [[One JSON-LD envelope for sixteen types]].

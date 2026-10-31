@@ -8,7 +8,7 @@ A `<figure>` holds content that the text refers to but that could move elsewhere
 
 ## Images that follow the theme
 
-A screenshot taken in a light theme sits on a dark page as a bright rectangle. HTML's own answer is `<picture>` with a media query on the source:
+A screenshot taken in a light theme sits on a dark page as a bright rectangle. HTML's answer is `<picture>` with a media query on the source:
 
 ```html
 <picture>
@@ -17,7 +17,7 @@ A screenshot taken in a light theme sits on a dark page as a bright rectangle. H
 </picture>
 ```
 
-That follows the operating system's setting, and only that. A site with its own theme switch (see [[The theme toggle]]) can be in dark mode on a light system, and the `<picture>` still picks the light image: a media query inside `srcset` selection cannot see an attribute on the page.
+That follows the operating system's setting, and only that. A site with its theme switch (see [[The theme toggle]]) can be in dark mode on a light system, and the `<picture>` still picks the light image: a media query inside `srcset` selection cannot see an attribute on the page.
 
 The alternative is two ordinary `<img>` elements and CSS that hides one, keyed on the same selectors the theme itself uses. A lazy-loaded image that is not rendered is not fetched, so the hidden one should cost nothing; that has not been measured on this site.
 
@@ -27,11 +27,11 @@ A caption is secondary text, and the usual typographic advice is to keep it in t
 
 ## In jedee
 
-Eleventy Excellent ships one `figcaption` rule in `global/base/global-styles.css`: centered, italic, one step smaller, `text-wrap: balance`. Since 2026-10-02 jedee's version of that rule is left-aligned, starts with an info icon, and wraps with `pretty`, and since 2026-10-05 it is upright rather than italic; the [[Text wrapping]] reasoning for `balance` went with the centering. The rest of this section is jedee's own, and it covers every caption on the site: the markdown image title, the `{% image %}` shortcode, the lightbox component, a post's `credit:` under its featured image, and a `<figcaption>` written by hand.
+Eleventy Excellent ships one `figcaption` rule in `global/base/global-styles.css`: centered, italic, one step smaller, `text-wrap: balance`. Since 2026-10-02 jedee's version of that rule is left-aligned, starts with an info icon, and wraps with `pretty`, and since 2026-10-05 it is upright rather than italic; the [[Text wrapping]] reasoning for `balance` went with the centering. The rest of this section is jedee's, and it covers every caption on the site: the markdown image title, the `{% image %}` shortcode, the lightbox component, a post's `credit:` under its featured image, and a `<figcaption>` written by hand.
 
 ### The icon at the start of the line
 
-The icon floats at the start of the caption's first line, and the text runs beside it. A second line clears the float and starts under the icon, at the caption's own edge, so the caption reads as one left-aligned block on the prose edge. The icon is cap-height and dimmed, so it sits at the size of the capitals beside it rather than the full em box.
+The icon floats at the start of the caption's first line, and the text runs beside it. A second line clears the float and starts under the icon, at the caption's edge, so the caption reads as one left-aligned block on the prose edge. The icon is cap-height and dimmed, so it sits at the size of the capitals beside it rather than the full em box.
 
 ```css
 figcaption {
@@ -53,11 +53,11 @@ figcaption::before {
 
 Until 2026-10-04 the icon hung outside the text instead: the caption reserved room with `padding-inline-start` and the icon floated into it with an equal negative margin, so every line started after the icon. It was changed so a wrapped caption starts on the same edge as the paragraphs.
 
-A float never adds height to a line box, and an inline icon can, by pushing the line past its `line-height`. The caption therefore stays exactly one small-text line plus its quarter-line padding: 27px on a phone (20.25 + 6.75) and 42px wide (31.5 + 10.5), the same as before the icon, so [[Vertical rhythm]] is untouched. `1lh` is the caption's own line height, so the margin centers the icon on the first line at any size. A leading space before the text collapses at the start of a line, and a float doesn't count as content, so whitespace in the markup can't widen the gap either.
+A float never adds height to a line box, and an inline icon can, by pushing the line past its `line-height`. The caption therefore stays exactly one small-text line plus its quarter-line padding: 27px on a phone (20.25 + 6.75) and 42px wide (31.5 + 10.5), the same as before the icon, so [[Vertical rhythm]] is untouched. `1lh` is the caption's line height, so the margin centers the icon on the first line at any size. A leading space before the text collapses at the start of a line, and a float doesn't count as content, so whitespace in the markup can't widen the gap either.
 
 ### An icon drawn in CSS
 
-The link underline on the site is `--underline-thickness`, 0.2ex, so it thickens with the text. It sits `0.3ch` below the text (the global `a` rule), so the gap scales with the text too; every underlined link uses both, the meta line's included since 2026-10-05, when its own `0.25em` offset went. An icon from an SVG file scales its stroke with the icon's box instead. The info icon is drawn in CSS so its lines can be measured in `ex` too: a round border is the ring, and two background layers paint the dot and the stem.
+The link underline on the site is `--underline-thickness`, 0.2ex, so it thickens with the text. It sits `0.3ch` below the text (the global `a` rule), so the gap scales with the text too; every underlined link uses both, the meta line's included since 2026-10-05, when its `0.25em` offset went. An icon from an SVG file scales its stroke with the icon's box instead. The info icon is drawn in CSS so its lines can be measured in `ex` too: a round border is the ring, and two background layers paint the dot and the stem.
 
 ```css
 figcaption::before {
@@ -70,7 +70,7 @@ figcaption::before {
 }
 ```
 
-`--caption-icon-stroke` is `0.2ex` and `--caption-icon-color` is `--color-text-subdued`. The YouTube and PeerTube icons under a video are SVG files ([[The YouTube embed]]). Until 2026-10-14 they were outlines matched to this weight with `stroke-width: 0.2ex` and `vector-effect: non-scaling-stroke`; they are now filled brand marks ([[Icons]]), and those two rules are left over and draw nothing. The YouTube icon is `--color-red-vivid`. The video link keeps the older hanging layout, an icon floated into reserved padding, so its title lines all start after the icon. As a flex row (icon, gap, link) Chrome sized the link narrower than its own text: a 44-character title wrapped onto two lines inside a 1024px row with no `max-width` anywhere. A block with a floated icon has no such sizing step.
+`--caption-icon-stroke` is `0.2ex` and `--caption-icon-color` is `--color-text-subdued`. The YouTube and PeerTube icons under a video are SVG files ([[The YouTube embed]]). Until 2026-10-14 they were outlines matched to this weight with `stroke-width: 0.2ex` and `vector-effect: non-scaling-stroke`; they are now filled brand marks ([[Icons]]), and those two rules are left over and draw nothing. The YouTube icon is `--color-red-vivid`. The video link keeps the older hanging layout, an icon floated into reserved padding, so its title lines all start after the icon. As a flex row (icon, gap, link) Chrome sized the link narrower than its text: a 44-character title wrapped onto two lines inside a 1024px row with no `max-width` anywhere. A block with a floated icon has no such sizing step.
 
 ### As wide as the image
 
@@ -86,7 +86,7 @@ figure:has(> picture, > img, > a > picture) > figcaption {
 }
 ```
 
-`contain: inline-size` gives the caption no width of its own when the browser works out how wide `fit-content` is, so the image alone decides. A 400px image in a 1024px column gets a 400px figure and a 400px caption. A large image is unaffected: `fit-content` never exceeds the space available, and the reset's `max-inline-size: 100%` already holds the image there. The `:has()` keeps the rule off figures that hold a video or a table, which have no width of their own and would shrink to nothing. Breakouts are excluded because they are a column width by definition. A small image used to be centered with a `text-center` class on the figure; it now sits on the left edge with its caption.
+`contain: inline-size` gives the caption no width when the browser works out how wide `fit-content` is, so the image alone decides. A 400px image in a 1024px column gets a 400px figure and a 400px caption. A large image is unaffected: `fit-content` never exceeds the space available, and the reset's `max-inline-size: 100%` already holds the image there. The `:has()` keeps the rule off figures that hold a video or a table, which have no width and would shrink to nothing. Breakouts are excluded because they are a column width by definition. A small image used to be centered with a `text-center` class on the figure; it now sits on the left edge with its caption.
 
 ### Breakout captions on the prose edge
 
@@ -110,7 +110,7 @@ A figure at `.popout`, `.feature` or `.full` width starts left of the text, and 
 
 ### Wiki captions
 
-Wiki captions also stop at the paragraphs' `54ch` measure, so a caption's right edge lines up with the paragraphs above it rather than with the figure. `54ch` in the caption's own rule would be 54 of the caption's smaller characters, so the measure is registered as a length, resolves once on `.prose` at the body size, and inherits as pixels:
+Wiki captions also stop at the paragraphs' `54ch` measure, so a caption's right edge lines up with the paragraphs above it rather than with the figure. `54ch` in the caption's rule would be 54 of the caption's smaller characters, so the measure is registered as a length, resolves once on `.prose` at the body size, and inherits as pixels:
 
 ```css
 @property --wiki-prose-measure {
@@ -151,11 +151,11 @@ On the site, a markdown preprocessor in `eleventy.config.js` (`wiki-dark-figures
 
 This only works for a mockup whose colors come from the site's stylesheet. A color written into the mockup by hand stays a light-theme color in the dark shot. The accent tokens are a subtler case: in dark mode `--color-accent-blue` and `--color-accent-green` become muted surface colors that disappear as text, so the breakouts, tooltips and layout-shift mockups carry a dark-only rule that swaps their labels to `--color-blue-vivid` and `--color-green-vivid`, about 5:1 on the dark page. A caption dimmed with `opacity` also dims any colored word inside it, so those captions dim by mixing their color with the background instead. Look at every dark PNG before opting a mockup in.
 
-A mockup with its own hand-picked palette, like the specimen cards on [[OpenType features]], can still have a twin: its palette variables get a second set of values under `[data-theme="dark"]`, taken from the site's dark tokens, and the rewrite flips them like anything else. A shot whose subject is the light theme itself opts back out with `data-light-only` on its `[data-shot]` — the sun colors on [[The theme toggle]], measured against the light page, are the one that does. Twenty-four shots have twins; the two drawn phones on [[Progressive web apps]] do not, because a phone showing the site in one theme is the picture, not a color choice.
+A mockup with its hand-picked palette, like the specimen cards on [[OpenType features]], can still have a twin: its palette variables get a second set of values under `[data-theme="dark"]`, taken from the site's dark tokens, and the rewrite flips them like anything else. A shot whose subject is the light theme itself opts back out with `data-light-only` on its `[data-shot]` — the sun colors on [[The theme toggle]], measured against the light page, are the one that does. Twenty-four shots have twins; the two drawn phones on [[Progressive web apps]] do not, because a phone showing the site in one theme is the picture, not a color choice.
 
 ### The panel behind a shot
 
-A wiki figure marked `data-wiki-mockup` sits on a panel the color of a code block (`--color-code-bg`), with no border or outline. The panel is drawn by `wiki.css`, not baked into the PNG: `shoot-mockups.js` strips each `.specimen`'s own paper, border, padding and radius before shooting, so the shot is transparent around its content and the panel follows the theme like a code block does.
+A wiki figure marked `data-wiki-mockup` sits on a panel the color of a code block (`--color-code-bg`), with no border or outline. The panel is drawn by `wiki.css`, not baked into the PNG: `shoot-mockups.js` strips each `.specimen`'s paper, border, padding and radius before shooting, so the shot is transparent around its content and the panel follows the theme like a code block does.
 
 In a popout figure the shot sits in the `content` track of the breakout subgrid, so its left edge meets the prose at every width, and a `::before` in the same grid row reaches past it by a fixed inset:
 

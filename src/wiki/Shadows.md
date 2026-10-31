@@ -21,13 +21,13 @@ Tobias Ahlin's [Smoother & sharper shadows with layered box-shadows](https://tob
 }
 ```
 
-More layers means a lower alpha per layer for the same overall depth. Ahlin's own example uses 0.12; anything between about 0.05 and 0.15 reads as a shadow rather than a smudge.
+More layers means a lower alpha per layer for the same overall depth. Ahlin's example uses 0.12; anything between about 0.05 and 0.15 reads as a shadow rather than a smudge.
 
 Josh Comeau's [Designing beautiful shadows in CSS](https://www.joshwcomeau.com/css/designing-shadows) builds on it with three further ideas:
 
 - **One light source for the whole page.** Every shadow on the site should fall the same way, so the horizontal offset is a fixed share of the vertical one. With the light up and to the left, `x = y / 2` puts every shadow down and a little to the right.
 - **Elevation as a scale.** A low, a medium and a high shadow, each a set of layers, rather than a new value per component. His [shadow palette generator](https://www.joshwcomeau.com/css/introducing-shadow-palette-generator/) produces the three as custom properties, using negative spread on the larger layers to keep them tucked under the object.
-- **Tinted shadows.** A shadow in pure black over a colored page looks gray and dirty, because a real shadow is the surface color with less light on it. Using a darker, desaturated version of the page's own hue instead of black keeps it clean.
+- **Tinted shadows.** A shadow in pure black over a colored page looks gray and dirty, because a real shadow is the surface color with less light on it. Using a darker, desaturated version of the page's hue instead of black keeps it clean.
 
 Philipp Brumm's Smooth Shadow tool, which Comeau credits as his inspiration and which is now offline, spaced the layers on an easing curve instead of doubling them, which gives a very long, soft fall-off suited to large floating panels.
 
@@ -48,7 +48,7 @@ A shadow is darkness subtracted from a lit surface. On a near-black page there i
 
 ## Painted light and cast shadow
 
-An object built in CSS, a book or a sheet of paper, often carries two kinds of shade: light painted onto its own surface with gradients (a highlight toward the light, darkening away from it), and the shadow it casts on the page. The two have to agree, and they do not weigh the same in both themes. On a light page, strong darkening on the object reads as the object being dirty or in shade, while its cast shadow is faint; the eye wants the reverse, a surface that stays bright and a shadow that lands beside it. So in light mode the painted darkening stays faint and the cast shadow does the work, offset away from the light. On a dark page the painted light is what gives the object form, and the cast shadow can barely show, so the balance flips back.
+An object built in CSS, a book or a sheet of paper, often carries two kinds of shade: light painted onto its surface with gradients (a highlight toward the light, darkening away from it), and the shadow it casts on the page. The two have to agree, and they do not weigh the same in both themes. On a light page, strong darkening on the object reads as the object being dirty or in shade, while its cast shadow is faint; the eye wants the reverse, a surface that stays bright and a shadow that lands beside it. So in light mode the painted darkening stays faint and the cast shadow does the work, offset away from the light. On a dark page the painted light is what gives the object form, and the cast shadow can barely show, so the balance flips back.
 
 ## In jedee
 

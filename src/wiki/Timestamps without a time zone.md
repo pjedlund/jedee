@@ -12,7 +12,7 @@ Data exports are where this bites hardest, because an export is read once by a s
 **Do not settle it by reading the documentation, and do not settle it by which reading looks more plausible.** "08:59 for a morning race" and "10:59 for a morning race" are both plausible. Settle it against a source that is absolute by construction:
 
 - **A file format that specifies UTC.** [FIT](https://developer.garmin.com/fit/protocol/), EXIF's `DateTimeOriginal` companion `OffsetTimeOriginal`, HTTP `Date` headers, and most binary telemetry formats define their epoch or offset in the specification. If a CSV column and a spec-defined UTC field hold the *same* number, the column is UTC; if they differ by the local offset, it is local.
-- **A physical artefact.** A printed receipt, a photograph's own clock, a published start list — anything generated outside the system being imported.
+- **A physical artefact.** A printed receipt, a photograph's clock, a published start list — anything generated outside the system being imported.
 - **An already-correct record of the same event** in another part of the same system, if one exists.
 
 Two agreeing sources are worth more than any amount of reasoning about what the exporter "probably" does, and the check costs one script run.
@@ -43,6 +43,6 @@ next(fit.get_messages('record')).get_value('timestamp')  # 2026-07-20 08:59:56
 
 The backfilled posts therefore carry `+02:00` on a value that was already UTC, putting their time of day two hours early. Only the time is affected: every one of those activities happened in daylight, so no date rolls over and no permalink is wrong (see [[Permalinks and Obsidian-friendly filenames]] — the activity permalink formats the date, not the time). It has not been swept; posts imported from 2026-08-09 onward are written correctly.
 
-What made it survivable is a rule the archive follows for its own reasons: **frontmatter stores recorded numbers only, never derived ones.** A stored "10:59" would have to be found and recomputed; a stored instant is one arithmetic shift away from correct whenever the sweep happens.
+What made it survivable is a rule the archive follows for its reasons: **frontmatter stores recorded numbers only, never derived ones.** A stored "10:59" would have to be found and recomputed; a stored instant is one arithmetic shift away from correct whenever the sweep happens.
 
 Raw source: `src/_raw/dev-notes/How activity posts are imported from a Strava export.md`

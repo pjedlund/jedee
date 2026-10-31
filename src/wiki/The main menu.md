@@ -26,7 +26,7 @@ One disclosure: a `MENU ⌄` button drops a two-column, table-of-contents-style 
 
 <figure class="popout" data-wiki-mockup>
   <img eleventy:formats="webp,png" src="/assets/images/wiki/main-menu-open.png" alt="A browser window at 1280 pixels. In the header, a breadcrumb trail on the left and a MENU button on the right; below the button, an open panel listing sixteen post types in two columns, each row an icon, a name, a row of leader dots and a count." width="1284" height="642">
-  <figcaption>The disclosure open. Each row is icon, name, leader dots, count; the trigger fills with the panel's own surface so the two read as one sheet.</figcaption>
+  <figcaption>The disclosure open. Each row is icon, name, leader dots, count; the trigger fills with the panel's surface so the two read as one sheet.</figcaption>
 </figure>
 
 **Diverges from Eleventy Excellent**, whose nav is a horizontal link list with an optional drawer.
@@ -86,14 +86,14 @@ The header row is a `.repel` holding the [[Breadcrumb|breadcrumb]] and a cluster
 }
 ```
 
-A fixed basis makes the row grow into what the trail leaves on a wide screen and wrap onto its own full-width line on a narrow one. The trail's own truncation is the `-webkit-line-clamp` described in [[Text wrapping]].
+A fixed basis makes the row grow into what the trail leaves on a wide screen and wrap onto a separate full-width line on a narrow one. The trail's truncation is the `-webkit-line-clamp` described in [[Text wrapping]].
 
 <figure class="popout" data-wiki-mockup>
   <img eleventy:formats="webp,png" src="/assets/images/wiki/main-menu-breadcrumb-crush.png" alt="Two browser windows stacked, identical except for the header row's flex declarations. In the upper one the breadcrumb reads Photos then a single truncated letter; in the lower one it reads Photos then Pier 4, Ribersborg in full." width="1284" height="972">
   <figcaption>The same markup, the same width. Above, the cluster's pin relaxed to <code>flex: 1 1 auto</code> with the row still pinned to one line; below, the shipped pair. The trail is what pays for it.</figcaption>
 </figure>
 
-The two wrap values go through the compositions' own custom properties rather than declaring `flex-wrap` from outside; `flex` and `min-inline-size` stay plain declarations because they size the element as an item of the row, not the cluster's internals. That distinction, and the two traps in converting a declaration to a knob, are in [[Configuring a layout composition]] — which is also where the no-JS pill row's `.cluster` class comes from, since this page's fallback row used to rebuild that composition by hand.
+The two wrap values go through the compositions' custom properties rather than declaring `flex-wrap` from outside; `flex` and `min-inline-size` stay plain declarations because they size the element as an item of the row, not the cluster's internals. That distinction, and the two traps in converting a declaration to a knob, are in [[Configuring a layout composition]] — which is also where the no-JS pill row's `.cluster` class comes from, since this page's fallback row used to rebuild that composition by hand.
 
 The `:has(.mainnav)` guard is load-bearing: during the soft launch the header omits the nav entirely in production, which also means no button, and without it the cluster grew to 22rem around nothing but the theme toggle.
 

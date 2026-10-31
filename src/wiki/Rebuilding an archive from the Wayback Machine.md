@@ -3,7 +3,7 @@ description: "Using a shutdown data dump and the Wayback Machine to reconstruct 
 date: 2026-07-31
 ---
 
-When a service shuts down, what it leaves behind usually comes in two incompatible halves. A closing service that behaves well publishes a **data dump** — your own records, structured, but stripped of everything that made the site a place: other people's replies, the surrounding page, often the images. The [Wayback Machine](https://web.archive.org) has the opposite problem and the opposite virtue: it kept the rendered pages, other people included, but only where a crawler happened to pass, and with no structure at all.
+When a service shuts down, what it leaves behind usually comes in two incompatible halves. A closing service that behaves well publishes a **data dump** — your records, structured, but stripped of everything that made the site a place: other people's replies, the surrounding page, often the images. The [Wayback Machine](https://web.archive.org) has the opposite problem and the opposite virtue: it kept the rendered pages, other people included, but only where a crawler happened to pass, and with no structure at all.
 
 **The technique is to use each for what the other lacks: the official dump gives you the skeleton, the Archive gives you everything the dump left out.**
 
@@ -11,7 +11,7 @@ Three things are worth knowing before starting one of these:
 
 - **Find the captures programmatically.** The [CDX Server API](https://github.com/internetarchive/wayback/blob/master/wayback-cdx-server/README.md) lists every capture of a URL or prefix as plain text, which beats guessing timestamps. Appending `id_` to the timestamp in a Wayback URL (`/web/20150101000000id_/http://…`) returns the original resource without the Archive's injected toolbar — worth having when parsing.
 - **Crawl politely.** The Wayback Machine throttles hard and will start refusing a scraper that hammers it. Backoff is not optional.
-- **An archived social page contains other people's content**, usually in structurally similar wrappers right beside your own. This is the failure that matters, because it is silent: a selector that looks right can attribute a stranger's words to you and produce a perfectly plausible-looking result. Verify a sample by hand before trusting any selector.
+- **An archived social page contains other people's content**, usually in structurally similar wrappers right beside yours. This is the failure that matters, because it is silent: a selector that looks right can attribute a stranger's words to you and produce a perfectly plausible-looking result. Verify a sample by hand before trusting any selector.
 
 There is also a presentation question that outlives the scraping. Recovered material is not the same as live material — dates are approximate, people's profiles are gone, and reactions came from a context that no longer exists. Showing it as though it arrived normally overstates what you actually know.
 

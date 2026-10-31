@@ -34,7 +34,7 @@ Two attributes make that safe in a template:
 - **`| safe` on the URL in Nunjucks.** Without it, `&` becomes `&amp;` and a multi-parameter URL 404s — which is a *fatal* build error, not a missing image.
 - **`eleventy:optional`** so a dead remote URL degrades to a placeholder instead of failing the build.
 
-### The transform's own attributes, and why `widths` is one worth knowing
+### The transform's attributes, and why `widths` is one worth knowing
 
 The `eleventy:` prefix is the transform's per-image escape hatch generally, not just an error-handling one. `eleventy:widths`, `eleventy:formats` and `eleventy:ignore` each override the plugin's global options for a single `<img>` — which matters because the global options are set once in `eleventy.config.js` and are easy to forget:
 
@@ -46,7 +46,7 @@ eleventyConfig.addPlugin(plugins.eleventyImageTransformPlugin, {
 });
 ```
 
-**`widths: ['auto']` means the original width, whatever that happens to be.** Every plain `<img>` the transform touches therefore emits the source file at full size, so an image the page shows small still ships at the size it was scanned or shot at. The shortcodes don't have this problem — a `{% imageKeys %}` call states its own `widths` — so it only surfaces on the transform route.
+**`widths: ['auto']` means the original width, whatever that happens to be.** Every plain `<img>` the transform touches therefore emits the source file at full size, so an image the page shows small still ships at the size it was scanned or shot at. The shortcodes don't have this problem — a `{% imageKeys %}` call states its `widths` — so it only surfaces on the transform route.
 
 The activities feed is the worked example. An activity's race map is a photographed scan up to 4032 px and ~2 MB, and the feed only needs enough to show the shape of a course:
 
@@ -54,7 +54,7 @@ The activities feed is the worked example. An activity's race map is a photograp
 <img eleventy:widths="1200" src="{{ post.data.cover }}" alt="…">
 ```
 
-Capping there changed the feed's 22 covers from ~2 MB each to a 9.3 MB total, and changed the page not at all — the page renders the same file through `{% imageKeys %}` in `activity.njk`, which asks for `[224, 448, 900, null]` so [[The PhotoSwipe lightbox]] still gets the full scan. **Two routes over one source file can want different sizes**, and each states its own. eleventy-img never upscales, so a cap is a ceiling and not a resize — smaller maps stay at their own width.
+Capping there changed the feed's 22 covers from ~2 MB each to a 9.3 MB total, and changed the page not at all — the page renders the same file through `{% imageKeys %}` in `activity.njk`, which asks for `[224, 448, 900, null]` so [[The PhotoSwipe lightbox]] still gets the full scan. **Two routes over one source file can want different sizes**, and each states what it wants. eleventy-img never upscales, so a cap is a ceiling and not a resize — smaller maps stay at their width.
 
 ### Bundling was considered and declined — twice
 

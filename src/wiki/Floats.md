@@ -20,9 +20,9 @@ Before flexbox and grid, [`float`](https://developer.mozilla.org/en-US/docs/Web/
 
 A float wraps the line boxes of the text that follows it in the same block formatting context, so the box and the text it wraps must be in the same ordinary block.
 
-⚠ A float on a grid item or a flex item does nothing: the item stays where the grid or the flex row puts it, and no text wraps around it. In a post body laid out as a grid, every paragraph is its own grid item, so a floated image between paragraphs simply sits in its row. The fix is a plain wrapper block holding the floated box and the text that should wrap around it.
+⚠ A float on a grid item or a flex item does nothing: the item stays where the grid or the flex row puts it, and no text wraps around it. In a post body laid out as a grid, every paragraph is a separate grid item, so a floated image between paragraphs simply sits in its row. The fix is a plain wrapper block holding the floated box and the text that should wrap around it.
 
-The container also has to hold the float in. A float taller than its text otherwise hangs out of the bottom of its block and over whatever comes next. [`display: flow-root`](https://developer.mozilla.org/en-US/docs/Web/CSS/display#flow-root) on the wrapper makes it contain its floats, the modern replacement for a clearfix. A grid item already contains its floats, since it starts its own formatting context, but `flow-root` keeps that true wherever the wrapper ends up.
+The container also has to hold the float in. A float taller than its text otherwise hangs out of the bottom of its block and over whatever comes next. [`display: flow-root`](https://developer.mozilla.org/en-US/docs/Web/CSS/display#flow-root) on the wrapper makes it contain its floats, the modern replacement for a clearfix. A grid item already contains its floats, since it starts its formatting context, but `flow-root` keeps that true wherever the wrapper ends up.
 
 ## When to stop floating
 
@@ -39,7 +39,7 @@ A float has no intrinsic way to give up: in a narrow column it keeps its width a
 }
 ```
 
-The `:has()` rule lets the floated component set up its own wrapper, so the page using it only has to put it first inside the block of text. The threshold follows from the widths: if the text beside the float should keep at least 28rem and the float takes 35 % plus a gutter, the block needs about 28 ÷ 0.61 = 46rem. Below that the box sits above the text, which is also where it belongs on a phone.
+The `:has()` rule lets the floated component set up its wrapper, so the page using it only has to put it first inside the block of text. The threshold follows from the widths: if the text beside the float should keep at least 28rem and the float takes 35 % plus a gutter, the block needs about 28 ÷ 0.61 = 46rem. Below that the box sits above the text, which is also where it belongs on a phone.
 
 ## Why not a two-column layout
 

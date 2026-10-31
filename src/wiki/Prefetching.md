@@ -26,7 +26,7 @@ Table: Eagerness levels and Chrome's limits
 | Eagerness | Fetches | Held at once |
 |---|---|---|
 | `immediate` | As soon as the rule is seen | 50 |
-| `eager` | Earlier than `moderate`, by Chrome's own heuristic | 2, oldest dropped |
+| `eager` | Earlier than `moderate`, by Chrome's heuristic | 2, oldest dropped |
 | `moderate` | When the pointer rests on the link for about 200 ms, or on pointerdown | 2, oldest dropped |
 | `conservative` | On pointerdown or touchstart | 2, oldest dropped |
 
@@ -54,7 +54,7 @@ Before the API, libraries did this in JavaScript. [instant.page](https://instant
 
 ## In jedee
 
-The rule is Eleventy Excellent's, added in 4.8 (upstream commit `1107a1b`): `src/_includes/head/speculation-rules.njk`, included in `base.njk` right after `head/meta-info.njk`, at `moderate`. The 4.8.0 merge left it out with the other files upstream added (see [[What jedee kept from Eleventy Excellent]]), and it was taken on its own afterward, with one change of jedee's: URLs that are not pages are excluded.
+The rule is Eleventy Excellent's, added in 4.8 (upstream commit `1107a1b`): `src/_includes/head/speculation-rules.njk`, included in `base.njk` right after `head/meta-info.njk`, at `moderate`. The 4.8.0 merge left it out with the other files upstream added (see [[What jedee kept from Eleventy Excellent]]), and it was taken by itself afterward, with one change of jedee's: URLs that are not pages are excluded.
 
 ```json
 "where": {
@@ -65,7 +65,7 @@ The rule is Eleventy Excellent's, added in 4.8 (upstream commit `1107a1b`): `src
 }
 ```
 
-The built pages carried 510 links to feeds (`.xml`) and 136 to full-size `.jpeg` images under `/assets/`; hovering those would download files nobody asked to open. `/admin/` is [[Sveltia CMS]] and `/api/` the [[Micropub]] endpoint. No page links to either today, and excluding them costs nothing. `/*` already keeps other sites' links out, since the pattern resolves against the page's own origin. The exclusions can be checked in any browser console, prefetching or not: `new URLPattern('/*.xml', location.origin).test(location.origin + '/reading/feed.xml')` is `true`.
+The built pages carried 510 links to feeds (`.xml`) and 136 to full-size `.jpeg` images under `/assets/`; hovering those would download files nobody asked to open. `/admin/` is [[Sveltia CMS]] and `/api/` the [[Micropub]] endpoint. No page links to either today, and excluding them costs nothing. `/*` already keeps other sites' links out, since the pattern resolves against the page's origin. The exclusions can be checked in any browser console, prefetching or not: `new URLPattern('/*.xml', location.origin).test(location.origin + '/reading/feed.xml')` is `true`.
 
 It pays off here because of how the rest is cached. Pages are network-first in the service worker, and [[Netlify]] serves HTML `max-age=0, must-revalidate` ([[Three things called cache]]), so every online click waits for at least a round-trip. The CSS is inlined into the HTML and the worker already holds the fonts, so the HTML is what a click waits for, and it is the one thing a prefetch fetches.
 

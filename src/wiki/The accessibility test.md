@@ -47,7 +47,7 @@ if (process.env.ELEVENTY_ENV != 'test') {
 }
 ```
 
-So `pa11y.json` exists only in an `ELEVENTY_ENV=test` build. That is also why `test:a11y` runs its own `pa11y:build` first and then serves it — it cannot reuse a production `dist/`.
+So `pa11y.json` exists only in an `ELEVENTY_ENV=test` build. That is also why `test:a11y` runs its `pa11y:build` first and then serves it — it cannot reuse a production `dist/`.
 
 The four steps behind the one command: clean and build in test mode → start `eleventy --serve` on `localhost:8080` with `--ignore-initial` so it serves the build that already exists → sleep → run `pa11y-ci` against the generated config.
 
@@ -62,7 +62,7 @@ export const tests = {
     // ⚠ Keep this list in step by hand when a post is renamed or deleted — a path that no longer exists scores zero errors and passes silently.
     customPaths: ['/', '/accessibility/', '/articles/', '/design-system/', '/audio/nybrostrand-beach/', '/activities/', '/jams/50ft-queenie/', '/reading/a-confession/', '/watching/the-killing/', '/now/'],
     globalIgnore: [],
-    // Point pa11y at an already-installed Chrome. Do not empty this: puppeteer then hunts for its own pinned build and fails with "Could not find Chrome (ver. …)" — see the wiki, "The accessibility test". Override with PA11Y_CHROME= where Chrome lives elsewhere.
+    // Point pa11y at an already-installed Chrome. Do not empty this: puppeteer then hunts for its pinned build and fails with "Could not find Chrome (ver. …)" — see the wiki, "The accessibility test". Override with PA11Y_CHROME= where Chrome lives elsewhere.
     chromePath: process.env.PA11Y_CHROME || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
   }
 };
@@ -70,7 +70,7 @@ export const tests = {
 
 `pa11y.njk` branches on that array: **non-empty means only those paths are tested**; empty means it sweeps every page in `collections.showInSitemap`. jedee's is non-empty, so a green run covers ten URLs.
 
-The first four are EE's own default list with `/blog/` swapped for `/articles/` — chrome and prose. The fifth was added 2026-08-05 to cover a media *post* layout, which none of the others render: the `<audio>` player, the capture-metadata `<dl>`, the download buttons and the `<place-map>`. The sixth was added 2026-08-15 for a third shape again — a very long index (180 links) inside a custom element, with [[The place map]] in places mode above it. Three more followed — a jam, a reading post and a watching post — each a different [[The title-less post types|title-less or link-post]] shape; the jam's cover opens in [[The PhotoSwipe lightbox]], so the lightbox is covered too. The tenth, `/now/`, arrived with the Now page on 2026-09-11 and brings its own `now` layout.
+The first four are EE's default list with `/blog/` swapped for `/articles/` — chrome and prose. The fifth was added 2026-08-05 to cover a media *post* layout, which none of the others render: the `<audio>` player, the capture-metadata `<dl>`, the download buttons and the `<place-map>`. The sixth was added 2026-08-15 for a third shape again — a very long index (180 links) inside a custom element, with [[The place map]] in places mode above it. Three more followed — a jam, a reading post and a watching post — each a different [[The title-less post types|title-less or link-post]] shape; the jam's cover opens in [[The PhotoSwipe lightbox]], so the lightbox is covered too. The tenth, `/now/`, arrived with the Now page on 2026-09-11 and brings its `now` layout.
 
 jedee has sixteen post types (see [[Anatomy of a post type]]), so ten URLs are still a sample rather than coverage: no note, photo, event, recipe or response-type page is tested, nor a tag page. Emptying the array is a one-line change if a full sweep is wanted; the reason not to is runtime, since the sitemap is in the hundreds of pages.
 
@@ -111,7 +111,7 @@ The fix is to point pa11y at a Chrome that is already on the machine, which the 
 chromePath: process.env.PA11Y_CHROME || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
 ```
 
-`src/common/pa11y.njk` feeds that into `executablePath` inside the `chromeLaunchConfig` it already emitted — the same executable the two-theme script further down this page had been using all along, which is the small irony here: the answer was on this page, in another section, for weeks. Empty falls back to puppeteer's own resolution, which on this machine means the "Could not find Chrome" failure above, so the value should not be emptied; `PA11Y_CHROME=` covers a machine where Chrome lives elsewhere. The accepted trade-off is that a system Chrome auto-updates rather than being pinned; for a rule engine that runs inside the page, that is a low risk.
+`src/common/pa11y.njk` feeds that into `executablePath` inside the `chromeLaunchConfig` it already emitted — the same executable the two-theme script further down this page had been using all along, which is the small irony here: the answer was on this page, in another section, for weeks. Empty falls back to puppeteer's resolution, which on this machine means the "Could not find Chrome" failure above, so the value should not be emptied; `PA11Y_CHROME=` covers a machine where Chrome lives elsewhere. The accepted trade-off is that a system Chrome auto-updates rather than being pinned; for a rule engine that runs inside the page, that is a low risk.
 
 Worth distinguishing from the failure above: this one is loud — a non-zero exit and no results table. The dead-path failure is the quiet one.
 

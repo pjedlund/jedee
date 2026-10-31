@@ -4,13 +4,13 @@ date: 2026-07-31
 updated: 2026-10-29
 ---
 
-*Cache* is among the most overloaded words in web development. On a single site it can name several unrelated stores, living in different places, owned by different parties and cleared in completely different ways. Conflating them makes debugging miserable, because "clear the cache" then has several possible meanings and usually only one of them is the one that would help.
+*Cache* is among the most overloaded words in web development. On a single site it can name several unrelated stores, living in different places, run by different parties and cleared in completely different ways. Conflating them makes debugging miserable, because "clear the cache" then has several possible meanings and usually only one of them is the one that would help.
 
 The stores that commonly coexist on a static site:
 
 - **A build cache**, on whatever machine builds the site, holding expensive intermediate work — fetched remote data, optimized images — so the next build can skip redoing it. It never reaches a visitor, and a stale entry here shows up as a build that produces the wrong output rather than as a user-visible bug.
 - **The browser's HTTP cache**, governed by the `Cache-Control` and `ETag` headers the server sends. This is what makes repeat visits fast, and what can hand somebody a stale page after a deploy.
-- **A service-worker cache**, written by the site's own JavaScript running in the visitor's browser. Unlike the HTTP cache it is under the site's direct control, and it is what makes a site work with no network at all.
+- **A service-worker cache**, written by the site's JavaScript running in the visitor's browser. Unlike the HTTP cache it is under the site's direct control, and it is what makes a site work with no network at all.
 
 **Cache-busting** is the counter-move to the second one: making a URL change whenever its contents change, so the browser has no cached copy to reuse. The usual technique is a content hash in the filename (`global.a1b2c3.css`), which lets the file be cached effectively forever, because a new version is by definition a new URL. For small enough assets there is another option — give it no separate URL at all and inline it into the HTML document, which is itself revalidated on every visit.
 
@@ -89,7 +89,7 @@ Note that for a visitor with the service worker active, these headers never come
 
 ### What each path actually costs
 
-Measured on the live site on 2026-08-30 with `place-map.js` (156 KB), navigating between two pages that both use the component. The browser's own resource timings report `deliveryType` and `transferSize`, so "bytes over the network" is observed rather than inferred.
+Measured on the live site on 2026-08-30 with `place-map.js` (156 KB), navigating between two pages that both use the component. The browser's resource timings report `deliveryType` and `transferSize`, so "bytes over the network" is observed rather than inferred.
 
 Table: A repeat request for `place-map.js`, by visitor
 | Visitor | Answered by | Bytes over the network | Time |
@@ -100,6 +100,6 @@ Table: A repeat request for `place-map.js`, by visitor
 
 The middle row is what `max-age=0, must-revalidate` costs: one small round-trip per page load, not a re-download. The top row is the common case, and it is why the header choice matters less than it looks — most repeat views never reach the network at all. Both non-zero timings sit off the critical path anyway, because the scripts load on idle inside an `<is-land>`.
 
-⚠ **A committed header is not a live header.** This fix was committed on 2026-08-11 but production went on serving the old year-long value until 2026-08-30, because a stale `netlify.toml` was riding along in Netlify's build cache. Two ordinary deploys did not dislodge it; only *Clear cache and deploy site* did. When a header does not match the file, check what the deploy is actually serving (`curl -sI`) before assuming the config is wrong — and note that a cache-cleared deploy also reinstalls every dependency from scratch, which is its own risk if any of them have gone stale.
+⚠ **A committed header is not a live header.** This fix was committed on 2026-08-11 but production went on serving the old year-long value until 2026-08-30, because a stale `netlify.toml` was riding along in Netlify's build cache. Two ordinary deploys did not dislodge it; only *Clear cache and deploy site* did. When a header does not match the file, check what the deploy is actually serving (`curl -sI`) before assuming the config is wrong — and note that a cache-cleared deploy also reinstalls every dependency from scratch, which is a risk in itself if any of them have gone stale.
 
 Source: `_local/project_docs/build-and-browser-caching.html` (written 23 Jun 2026), re-verified against `netlify.toml` on 2026-07-31; corrected 2026-08-11 when the component-script header was fixed from a year to `max-age=0, must-revalidate`; measured against production and confirmed live on 2026-08-30.

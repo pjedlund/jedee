@@ -4,7 +4,7 @@ date: 2026-08-28
 updated: 2026-10-27
 ---
 
-A multi-step animation — wipe something away, reveal something else, blink, wipe again — does not need JavaScript to sequence it. CSS gives every element one animation clock, and several animations can run on it at once, comma-separated, each with its own duration, easing and delay. Chaining the delays is the whole technique.
+A multi-step animation — wipe something away, reveal something else, blink, wipe again — does not need JavaScript to sequence it. CSS gives every element one animation clock, and several animations can run on it at once, comma-separated, each with its duration, easing and delay. Chaining the delays is the whole technique.
 
 Three properties carry it:
 
@@ -29,7 +29,7 @@ Three properties carry it:
 
 Each step then declares "start when the one before ends", and a new knob (an initial hold, a longer blink) re-times the rest for free.
 
-When several animations touch the *same* property, the last one in the list wins while it is active or filling — so ordering matters, and a later step with `fill: both` will clobber an earlier one during its own delay. Giving each step a different property avoids the question entirely.
+When several animations touch the *same* property, the last one in the list wins while it is active or filling — so ordering matters, and a later step with `fill: both` will clobber an earlier one during its delay. Giving each step a different property avoids the question entirely.
 
 ## Wipes and carets
 
@@ -42,11 +42,11 @@ Reveal or erase content along a travelling edge with an animated `clip-path: ins
 
 The familiar `steps()` typewriter — animating `width` in `ch` units — **assumes a monospace font**. With a proportional face the edge stutters through positions that don't correspond to character boundaries. A smooth `clip-path` wipe is the proportional-font equivalent.
 
-To make the edge visible as a text cursor, put a bar inside the wiped element, absolutely positioned, and animate its `inset-inline-start` from `0` to `100%` with the same duration and easing as the clip. **A percentage offset is the one length that tracks text of unknown width** — the element's own rendered width, which CSS cannot otherwise name, and which changes with the font, the viewport and the content. Nothing has to be measured or synced.
+To make the edge visible as a text cursor, put a bar inside the wiped element, absolutely positioned, and animate its `inset-inline-start` from `0` to `100%` with the same duration and easing as the clip. **A percentage offset is the one length that tracks text of unknown width** — the element's rendered width, which CSS cannot otherwise name, and which changes with the font, the viewport and the content. Nothing has to be measured or synced.
 
 `translate: -100% 0` then pulls the bar back inside the clip edge instead of straddling it, so it is never half-clipped mid-wipe.
 
-⚠ **A percentage offset on an absolutely positioned child resolves against the parent's padding box.** So a bar pinned at `inset-inline-start: 100%` sits with its *right* edge on the padding-box edge, and its own width eats any gap you tried to open with padding. The padding has to carry both:
+⚠ **A percentage offset on an absolutely positioned child resolves against the parent's padding box.** So a bar pinned at `inset-inline-start: 100%` sits with its *right* edge on the padding-box edge, and its width eats any gap you tried to open with padding. The padding has to carry both:
 
 ```css
 padding-inline-end: calc(var(--caret-gap) + var(--caret-width));
@@ -98,14 +98,14 @@ document.getAnimations()
 
 ## In jedee
 
-The start page — and only the start page — types its own name. The header's logomark is followed by JOHAN EDLUND wiping in behind a caret, which blinks twice and then backspaces the name away, leaving the bare logomark that every other page shows. Everything above is from building it, 2026-08-28.
+The start page — and only the start page — types its name. The header's logomark is followed by JOHAN EDLUND wiping in behind a caret, which blinks twice and then backspaces the name away, leaving the bare logomark that every other page shows. Everything above is from building it, 2026-08-28.
 
 <figure class="popout" data-wiki-mockup>
   <img eleventy:formats="webp,png" src="/assets/images/wiki/reveal-filmstrip.png" alt="Six stacked frames of the site header, each labeled with a time. At 1.080s only the letters JO are visible with a caret bar beside them. At 1.325s the name has reached JOHAN EDL. At 1.650s the full name JOHAN EDLUND stands with the caret parked a small gap past the D. At 2.100s the name is complete and the caret has vanished. At 3.525s the name has shrunk back to JOHAN with the caret on its edge. At 3.700s only the orange logomark is left." width="1260" height="884">
-  <figcaption>The chain at six instants on its own clock. The caret is one bar riding the wipe edge — the same duration and easing as the clip, and a percentage offset doing the tracking.</figcaption>
+  <figcaption>The chain at six instants on its clock. The caret is one bar riding the wipe edge — the same duration and easing as the clip, and a percentage offset doing the tracking.</figcaption>
 </figure>
 
-The mockup is `src/wiki/_sources/breadcrumb-reveal.html`, and it is made with the technique in the section above: six copies of the real header, every animation in each paused and seeked to a different `currentTime`, so nothing is running when the shot is taken and the stale-frame trap cannot arise. It links the site's compiled `global.css` and this block's own `breadcrumb-reveal.css`, so the type, the logomark and every step time in the picture are the shipped ones rather than a copy. `npm run mockups` re-shoots it.
+The mockup is `src/wiki/_sources/breadcrumb-reveal.html`, and it is made with the technique in the section above: six copies of the real header, every animation in each paused and seeked to a different `currentTime`, so nothing is running when the shot is taken and the stale-frame trap cannot arise. It links the site's compiled `global.css` and this block's `breadcrumb-reveal.css`, so the type, the logomark and every step time in the picture are the shipped ones rather than a copy. `npm run mockups` re-shoots it.
 
 **The first frame is 1.080s, not 1.000s, and the gate is why.** At the instant the wipe starts the frame is blank, and so is the frame past the end — `npm run mockups:check` rejected the two as pixel-identical, which is the right answer: they are the same picture even though they mean different things. The one second of dead time before the first glyph is prose, not a frame.
 
@@ -115,7 +115,7 @@ The mockup is `src/wiki/_sources/breadcrumb-reveal.html`, and it is made with th
 
 The knobs, all on `.breadcrumb-reveal`: `--reveal-delay`, `--reveal-in`, `--reveal-blink` (one on/off cycle, run twice), `--reveal-out`, `--reveal-caret-width`, `--reveal-caret-gap`. The three step times are derived from them as above.
 
-**EE stock vs jedee:** the reduced-motion opt-in idiom is Eleventy Excellent's convention for decorative motion (its reset separately clamps durations in the `reduce` branch); the block, the caret technique and the toggle are jedee's own.
+**EE stock vs jedee:** the reduced-motion opt-in idiom is Eleventy Excellent's convention for decorative motion (its reset separately clamps durations in the `reduce` branch); the block, the caret technique and the toggle are jedee's.
 
 The sibling half of this work — a directional wipe *between* pages, using per-crumb view transition names — is built but parked on `feat/breadcrumb-directional-wipe`, not merged.
 

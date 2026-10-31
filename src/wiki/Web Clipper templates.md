@@ -4,7 +4,7 @@ date: 2026-07-31
 updated: 2026-10-27
 ---
 
-A large share of the posts on a personal site are about *someone else's* thing: an album, a film, a book, a page worth keeping. Typing that metadata by hand is usually the reason those posts never get written, so the practical question is how to turn a source page into a post in the site's own format with as few steps as possible.
+A large share of the posts on a personal site are about *someone else's* thing: an album, a film, a book, a page worth keeping. Typing that metadata by hand is usually the reason those posts never get written, so the practical question is how to turn a source page into a post in the site's format with as few steps as possible.
 
 Browser clippers do this by reading the page you are on and writing a file. The [Obsidian Web Clipper](https://obsidian.md/clipper) is the one organized around templates: a per-source configuration says which fields to extract, where each one comes from, and what file to write. Extraction draws on four sources, in descending order of reliability:
 
@@ -44,7 +44,7 @@ Right-click a source page and the clipper writes a frontmatter-complete markdown
 
 ### The three traps
 
-**1. `type` decides the YAML, and it lives in three places.** `multitext` writes a YAML list *and splits the value on commas*, so a description on `multitext` shatters into a list at every comma. Worse, the JSON's `type` is only a **seed** — it applies the first time a registry meets a property *name*, and never overrides one already registered. The type actually lives in the Web Clipper's own Properties tab and in the vault's `src/.obsidian/types.json`. A field stuck as a list must be changed in those two places; re-importing cannot fix it. Because names are shared across all templates, a new template inherits whatever an older one registered — the raw clipper's `author` had to be `multitext` for exactly this reason.
+**1. `type` decides the YAML, and it lives in three places.** `multitext` writes a YAML list *and splits the value on commas*, so a description on `multitext` shatters into a list at every comma. Worse, the JSON's `type` is only a **seed** — it applies the first time a registry meets a property *name*, and never overrides one already registered. The type actually lives in the Web Clipper's Properties tab and in the vault's `src/.obsidian/types.json`. A field stuck as a list must be changed in those two places; re-importing cannot fix it. Because names are shared across all templates, a new template inherits whatever an older one registered — the raw clipper's `author` had to be `multitext` for exactly this reason.
 
 **2. `{{schema:}}` reads JSON-LD and nothing else.** A source publishing RDFa or microdata leaves every field empty, with no error. Standard Ebooks is that case, so its template is built on `{{selector:…}}` and `{{meta:…}}` instead. **Check the rendered DOM of a real source page before writing a single `{{schema:}}`.**
 

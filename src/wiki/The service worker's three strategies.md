@@ -4,7 +4,7 @@ date: 2026-07-31
 updated: 2026-10-31
 ---
 
-A [service worker](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API) is a script the browser runs in the background, separate from any page, able to intercept the site's own network requests. That interception is what makes offline browsing possible: the worker answers from a cache it controls when the network is gone or slow.
+A [service worker](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API) is a script the browser runs in the background, separate from any page, able to intercept the site's network requests. That interception is what makes offline browsing possible: the worker answers from a cache it controls when the network is gone or slow.
 
 Three lifecycle events matter. `install` fires once per version, and is where a worker usually pre-caches the few files it needs to be useful offline at all. `activate` fires when the new version takes over, and is where old caches get deleted — jedee spares the ones named in `settings.pwa.keepCaches`, for a site that keeps its data in a cache. `fetch` fires for every request a page makes, and is where the strategy actually lives.
 

@@ -157,6 +157,166 @@
     {
       "path": "/sitemap.xml",
       "reason": "The new wiki page 'Shared files and site files' is listed"
+    },
+    {
+      "path": "/wiki/abbreviations/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/alt-text/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/breadcrumb/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/css-3d-transforms/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/choreographing-css-animations/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/configuring-a-layout-composition/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/figures/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/floats/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/focus-rings-and-paint-containment/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/format-on-save/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/hosting-large-originals-off-repo/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/icons/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/layout-breakouts/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/netlify/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/one-json-ld-envelope-for-sixteen-types/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/open-graph-images/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/per-type-feeds/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/permalinks-and-obsidian-friendly-filenames/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/personal-websites/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/prefetching/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/rebuilding-an-archive-from-the-wayback-machine/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/scroll-aware-css-during-view-transitions/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/site-search/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/smooth-scrolling/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/syntax-highlighting/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/tables/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/the-photoswipe-lightbox/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/the-youtube-embed/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/the-dev-servers-memory/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/the-lang-attribute/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/the-main-menu/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/three-things-called-cache/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/timestamps-without-a-time-zone/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/typographic-conventions/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/undefined-custom-properties/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/web-clipper-templates/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/web-components/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/webc/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/webmentions/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/is-land/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
     }
   ]
 }

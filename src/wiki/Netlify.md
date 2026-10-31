@@ -5,7 +5,7 @@ date: 2026-09-28
 
 [Netlify](https://www.netlify.com/) is a host for static sites that also runs the build. It watches a git repository; on every push to the production branch it checks out a fresh copy, runs the build command, and publishes the output folder to its CDN. Anything that must change between deploys — HTTP headers, redirects, build settings — is declared in files in the repository rather than in a server config, mainly [`netlify.toml`](https://docs.netlify.com/configure-builds/file-based-configuration/) and a `_redirects` file in the published folder. [Netlify Functions](https://docs.netlify.com/functions/overview/) add the one thing a static site cannot do: run code per request, for an endpoint that receives posts.
 
-Two properties of this model shape everything else. The build machine starts clean each time, so anything worth keeping between builds has to be carried explicitly. And the site is a snapshot of the moment it was built: data fetched at build time (webmentions, remote covers, the site's own URL) is only as current as the last deploy.
+Two properties of this model shape everything else. The build machine starts clean each time, so anything worth keeping between builds has to be carried explicitly. And the site is a snapshot of the moment it was built: data fetched at build time (webmentions, remote covers, the site's URL) is only as current as the last deploy.
 
 ## In jedee
 
@@ -34,6 +34,6 @@ Two properties of this model shape everything else. The build machine starts cle
 
 The Eleventy build never sees `netlify/`; its input folder is `src/`.
 
-**Build-time values.** `meta.url` is read from Netlify's `URL` environment variable during the build, so the site's own address in feeds, canonical links and structured data is fixed at build time. Secrets (the GitHub token for the functions, the map API key, the webmention.io token) live in Netlify's environment settings, never in `netlify.toml`, which is committed. Webmentions are fetched at build, so a new reply appears after the next deploy; see [[Webmentions]].
+**Build-time values.** `meta.url` is read from Netlify's `URL` environment variable during the build, so the site's address in feeds, canonical links and structured data is fixed at build time. Secrets (the GitHub token for the functions, the map API key, the webmention.io token) live in Netlify's environment settings, never in `netlify.toml`, which is committed. Webmentions are fetched at build, so a new reply appears after the next deploy; see [[Webmentions]].
 
 Raw source: `src/_raw/dev-notes/How jedee deploys to Netlify.md`

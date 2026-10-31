@@ -4,7 +4,7 @@ date: 2026-08-22
 updated: 2026-10-27
 ---
 
-CSS lets a stylesheet name its own values — `--brand-color: crimson` — and read them back anywhere with `var(--brand-color)`. These are **custom properties**, and they are the machinery behind design tokens, theming and dark mode. This page is about what happens when the name is wrong: a typo, a token that got renamed, a property that was never defined at all.
+CSS lets a stylesheet name its values — `--brand-color: crimson` — and read them back anywhere with `var(--brand-color)`. These are **custom properties**, and they are the machinery behind design tokens, theming and dark mode. This page is about what happens when the name is wrong: a typo, a token that got renamed, a property that was never defined at all.
 
 When a declaration uses `var()` to reference a custom property that was never defined, and gives no fallback, the result is not what most people expect. The declaration is not a syntax error, and it is not skipped. It is **invalid at computed-value time** ([CSS Variables spec §invalid-variables](https://www.w3.org/TR/css-variables-1/#invalid-variables)), and the spec says the property then takes [`unset`](https://developer.mozilla.org/en-US/docs/Web/CSS/unset).
 
@@ -45,14 +45,14 @@ Both names are Eleventy Excellent / Every Layout stock — Every Layout's Box pr
 
 The consequences split exactly along the inherit/initial line. `font-family` inherited Source Sans from its parent and looked perfectly correct. `border-width` fell to `medium`, so **every non-small button on the live site carried a 3px border nobody chose** — confirmed with `getComputedStyle`, not inferred. `[data-small-button]` escaped it by setting `2px` explicitly.
 
-It hid for so long because on four of the five variants the border color is `color-mix(in oklab, var(--button-bg) 80%, var(--color-text))` — a slightly darker shade of the button's own background. A 3px border in nearly the background color reads as a slightly heavier button. On the ghost button, whose border is `--color-text`, it was plainly visible once anyone looked.
+It hid for so long because on four of the five variants the border color is `color-mix(in oklab, var(--button-bg) 80%, var(--color-text))` — a slightly darker shade of the button's background. A 3px border in nearly the background color reads as a slightly heavier button. On the ghost button, whose border is `--color-text`, it was plainly visible once anyone looked.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/undefined-border-width.png" alt="Two rows of the same five buttons at equal size. In the top row the border is 3px; on the dark, orange, blue and green buttons it reads as a slightly heavier edge in almost the button's own color, while the white ghost button has an obviously thick dark outline. In the bottom row every border is 1px and the ghost button's outline is a hairline." width="1296" height="304">
-  <figcaption>The accident on top, the fix below. Four variants absorb the extra 2px into a border that is nearly their own background; the ghost button, whose border is <code>--color-text</code>, is where it shows.</figcaption>
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/undefined-border-width.png" alt="Two rows of the same five buttons at equal size. In the top row the border is 3px; on the dark, orange, blue and green buttons it reads as a slightly heavier edge in almost the button's color, while the white ghost button has an obviously thick dark outline. In the bottom row every border is 1px and the ghost button's outline is a hairline." width="1296" height="304">
+  <figcaption>The accident on top, the fix below. Four variants absorb the extra 2px into a border that is nearly their background; the ghost button, whose border is <code>--color-text</code>, is where it shows.</figcaption>
 </figure>
 
-The mockup is `src/wiki/_sources/undefined-custom-properties.html`, rendering the real `button.css` at the real palette; `npm run mockups` re-shoots it. Both rows are drawn in equal-width columns, so the border width is the only thing that differs between them — sizing each button to its own content would have let the 3px row grow and passed that off as part of the finding.
+The mockup is `src/wiki/_sources/undefined-custom-properties.html`, rendering the real `button.css` at the real palette; `npm run mockups` re-shoots it. Both rows are drawn in equal-width columns, so the border width is the only thing that differs between them — sizing each button to its content would have let the 3px row grow and passed that off as part of the finding.
 
 The fix defined it once, beside the existing border convention. It was a plain `1px` at first; it now reads the `--border-width-thin` token, also 1px:
 
@@ -77,7 +77,7 @@ That refines the rule above rather than contradicting it. The inherit branch "lo
 
 **It came back, and the cause was upstream of the CSS.** The first full-project lint on 2026-09-22 found three more: `--color-primary` on the photo page's "Scan & technical data" toggle, `--font-body` still in `button.css` (the fix above defined `--border-thickness` and left it) and in `details.css`, and `--font-normal` — the tooltip's name — on checkbox labels and in the breadcrumb, where `var(--font-normal, 400)` only worked through its fallback. All three are Eleventy Excellent names. The `color` one showed: undefined, the open toggle inherited the surrounding text color, so the hover did nothing. They are now `--color-accent-orange-text`, `--font-base` and `--font-regular`.
 
-The reason they kept reappearing was not the stylesheet. The `cube-css` and `eleventy-excellent` skills Claude reads before writing CSS listed `--font-body` and `--color-primary` among "the project's tokens" — true of plain EE, false here — so code written with them in context reached for names jedee doesn't define. Both skills now say to read the project's own token files first and warn that plain EE names may not exist on a fork. A fix to the CSS alone would have lasted until the next time something was written from the skills.
+The reason they kept reappearing was not the stylesheet. The `cube-css` and `eleventy-excellent` skills Claude reads before writing CSS listed `--font-body` and `--color-primary` among "the project's tokens" — true of plain EE, false here — so code written with them in context reached for names jedee doesn't define. Both skills now say to read the project's token files first and warn that plain EE names may not exist on a fork. A fix to the CSS alone would have lasted until the next time something was written from the skills.
 
 **How to sweep for it:** grep the source for `var(--…)` references and diff the names against the defined ones. A referenced-but-undefined property is always a mistake; only whether it is a *visible* mistake depends on the property. The moment to do this is after any token-system rewrite, which is precisely when such references get orphaned. The `lint` skill's design lane does exactly this diff on every full run: it builds the list of defined properties from the compiled CSS, then checks every `var()` against it.
 
@@ -95,7 +95,7 @@ const resolves = (value, cs) => {
 
 Run it once per theme (the dark blocks define different properties) and only after every island has hydrated, since a component's CSS often arrives with its script. `on:visible` islands only hydrate once an `IntersectionObserver` reports them on screen, and a hidden or background tab never reports that — in a hidden browser pane they stay unhydrated however far the page is scrolled. A headless Chrome (puppeteer, already installed for the a11y tests) scrolls each island into view and runs the check reliably. The 2026-10-09 sweep covered all nine island components — place map, sortable table, photo lightbox, YouTube, PeerTube, search, theme toggle, the route map and the (unused) gallery — on real pages in both themes, and found no undefined property. The scripts are kept locally in `_local/generated/island-audit-2026-10-09/`.
 
-**EE stock vs jedee:** the two property names are upstream; the missing definitions, and therefore the bug, are jedee's own.
+**EE stock vs jedee:** the two property names are upstream; the missing definitions, and therefore the bug, are jedee's.
 
 Related: [[Design token sync]] — the other silent token failure, at the boundary with the design tool rather than inside the stylesheet. [[Text wrapping]] — another case where a global CSS rule produces a surprise in one specific block.
 

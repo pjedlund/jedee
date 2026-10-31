@@ -29,7 +29,7 @@ Five post types render a cover image — activity, jam, reading, recipe, watchin
 <img class="cover" src="{{ cover | safe }}" alt="Cover for {{ title }}" …>
 ```
 
-That is jedee's own code, not EE stock — these post types are jedee additions. The effect was that a cover image could not be described at all: the value was a generated sentence naming the post, identical on every post of that type.
+That is jedee's code, not EE stock — these post types are jedee additions. The effect was that a cover image could not be described at all: the value was a generated sentence naming the post, identical on every post of that type.
 
 All nine now read an optional `coverAlt` and fall back to the string they used to emit:
 

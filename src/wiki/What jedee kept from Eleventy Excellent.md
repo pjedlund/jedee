@@ -6,15 +6,15 @@ updated: 2026-10-31
 
 jedee is a fork of [Eleventy Excellent](https://eleventy-excellent.netlify.app/) by Lene Saile. Every other page in this wiki states EE-stock-versus-jedee where it happens to matter locally; this page states it systematically, so a claim on another page can be checked against one inventory.
 
-The source is Lene's own documentation collection, `src/docs/` in the upstream checkout at `/Users/johanedlund/Projects/eleventy-excellent` — 22 files, about 3,800 words, read in place and never edited. The checkout sits on tag `4.6.1`; jedee merged **4.6.0** in May 2026, one patch behind. Since then jedee has also merged 4.7.0 (August 2026) and 4.8.0 (15 September 2026); [Taking a new release](#taking-a-new-release) covers what the 4.8.0 merge showed about upgrading a fork.
+The source is Lene's documentation collection, `src/docs/` in the upstream checkout at `/Users/johanedlund/Projects/eleventy-excellent` — 22 files, about 3,800 words, read in place and never edited. The checkout sits on tag `4.6.1`; jedee merged **4.6.0** in May 2026, one patch behind. Since then jedee has also merged 4.7.0 (August 2026) and 4.8.0 (15 September 2026); [Taking a new release](#taking-a-new-release) covers what the 4.8.0 merge showed about upgrading a fork.
 
-**The docs are dated 30 March 2026 and are already stale in Lene's own repo.** `details.md` describes a `<custom-details>` WebC component at length — and the string `custom-details` appears nowhere in the 4.6.1 source tree except inside that doc file. The component was folded back into a plain `<details>`/`<summary>` partial and the doc was never updated. Treat every claim here as verified against code on **2026-07-31**, not as a transcription of Lene's prose.
+**The docs are dated 30 March 2026 and are already stale in Lene's repo.** `details.md` describes a `<custom-details>` WebC component at length — and the string `custom-details` appears nowhere in the 4.6.1 source tree except inside that doc file. The component was folded back into a plain `<details>`/`<summary>` partial and the doc was never updated. Treat every claim here as verified against code on **2026-07-31**, not as a transcription of Lene's prose.
 
 ## Stock and untouched
 
 These are EE's, unchanged, and this wiki should not describe them as jedee inventions:
 
-- **The config module layout.** `src/_config/` splits into `collections.js`, `events.js`, `filters.js`, `plugins.js`, `shortcodes.js`, each a barrel over a folder of the same name, plus `setup/` and `utils/`. jedee's tree matches EE's file for file, plus one module of its own, `search-index.js`. `eleventy.config.js` only registers; the logic lives in the modules.
+- **The config module layout.** `src/_config/` splits into `collections.js`, `events.js`, `filters.js`, `plugins.js`, `shortcodes.js`, each a barrel over a folder of the same name, plus `setup/` and `utils/`. jedee's tree matches EE's file for file, plus one extra module, `search-index.js`. `eleventy.config.js` only registers; the logic lives in the modules.
 - **The cascade layer order**, the same in both `global/global.css` apart from three things: jedee calls the utilities layer `cubeUtilities` (see [[Tailwind]]), its fonts arrive from the active theme, and a last `theme` layer holds the theme's CSS. The `blocks` layer has no `@import` in jedee: each block arrives through a page's local CSS and wraps itself in `@layer blocks`. See [[Shared files and site files]].
 
   ```css
@@ -36,7 +36,7 @@ These are EE's, unchanged, and this wiki should not describe them as jedee inven
 - **The two JS bundles** (`js-inline.njk`, `js-defer.njk`) and the two source folders behind them — `scripts/components/` ships to the output folder for custom elements to load directly, `scripts/bundle/` ships to `_includes/scripts/` for the `{% js %}` shortcode.
 - **The three image routes** (HTML Transform, markdown syntax, `{% image %}` / `{% imageKeys %}`) — see [[Self-hosting remote images at build time]] for the one place jedee leans on a route Lene documents but does not use much.
 - **OG image generation, favicon generation, the pa11y config generator, the `_redirects` template** — all four still the stock pipelines. See [[The accessibility test]] for what jedee changed in how pa11y is *run*.
-- **`<custom-card>`, `<custom-masonry>`, `<custom-youtube>`, `<custom-peertube>`, `<custom-svg>`** — the five WebC components EE 4.6.1 actually ships, all still present. (The folder holds seven `.webc` files; `custom-youtube-link.webc` and `custom-peertube-link.webc` are the no-JS fallback partners of the two embeds, not components in their own right. Counts on this page exclude them on both sides.)
+- **`<custom-card>`, `<custom-masonry>`, `<custom-youtube>`, `<custom-peertube>`, `<custom-svg>`** — the five WebC components EE 4.6.1 actually ships, all still present. (The folder holds seven `.webc` files; `custom-youtube-link.webc` and `custom-peertube-link.webc` are the no-JS fallback partners of the two embeds, not components by themselves. Counts on this page exclude them on both sides.)
 
 ## Extended
 
@@ -58,7 +58,7 @@ The design-token divergence is narrower than it looks from the file count: jedee
 
 ## Deleted
 
-`what-delete.md` is Lene's own list of what a fork can safely remove, which makes it a fair measure of how much of the starter jedee actually kept. Against that list:
+`what-delete.md` is Lene's list of what a fork can safely remove, which makes it a fair measure of how much of the starter jedee actually kept. Against that list:
 
 Table: Lene Saile's list of removable files, against jedee
 | Lene's item | jedee |
@@ -72,7 +72,7 @@ Table: Lene Saile's list of removable files, against jedee
 | `blocks/code.css` ([[Syntax highlighting]]) | kept, now `local/code.css` |
 | `src/assets/images/blog`, `gallery`, `template` | kept |
 
-So jedee removed almost exactly the set Lene marks as optional, and nothing beyond it. The starter's own structure survived the fork intact.
+So jedee removed almost exactly the set Lene marks as optional, and nothing beyond it. The starter's structure survived the fork intact.
 
 ## ⚠ Left behind by those deletions
 
@@ -86,7 +86,7 @@ It is a few kilobytes of source that compiles but ships to no page — the JS eq
 
 ## Taking a new release
 
-jedee takes an EE release as a git merge of upstream's `main` into a branch, following Lene's own procedure. [[Themes and starters]] makes the case for this over a theme system: a merge conflict names the file and shows both versions, where a stale override says nothing. The 4.8.0 merge on 2026-09-15 showed where that stops being true.
+jedee takes an EE release as a git merge of upstream's `main` into a branch, following Lene's procedure. [[Themes and starters]] makes the case for this over a theme system: a merge conflict names the file and shows both versions, where a stale override says nothing. The 4.8.0 merge on 2026-09-15 showed where that stops being true.
 
 **Files upstream adds merge in without a conflict.** A file that is new upstream and absent from the fork is simply added; git has nothing to compare it with. 4.8.0 added six. One of them, `src/common/llms.11tydata.js`, is a directory data file that sets the permalink of `src/common/llms.njk` through `eleventyComputed`:
 
@@ -100,13 +100,13 @@ export default {
 };
 ```
 
-jedee already had its own `llms.njk`, sectioned by post type and fed from `settings.yaml`. Computed data outranks front matter, so this file would have taken over the address of jedee's page, and it reads `meta.robots`, a key jedee's `meta.js` doesn't have. Nothing in the merge output flagged it. The check that does is reading the `A ` lines in `git status` before committing. That time they also held a speculation-rules include, a view-transitions stylesheet (jedee has its own, gated on reduced motion), an `escapeHtml` filter that only upstream's new `svg.js` calls, a demo GIF and a doc page. All six were removed. The speculation-rules include came back the same day on its own branch, with jedee's own exclusions added ([[Prefetching]]): removing an added file in the merge doesn't rule it out, it moves the decision to a separate commit.
+jedee already had its `llms.njk`, sectioned by post type and fed from `settings.yaml`. Computed data outranks front matter, so this file would have taken over the address of jedee's page, and it reads `meta.robots`, a key jedee's `meta.js` doesn't have. Nothing in the merge output flagged it. The check that does is reading the `A ` lines in `git status` before committing. That time they also held a speculation-rules include, a view-transitions stylesheet (jedee has one, gated on reduced motion), an `escapeHtml` filter that only upstream's new `svg.js` calls, a demo GIF and a doc page. All six were removed. The speculation-rules include came back the same day on a separate branch, with jedee's exclusions added ([[Prefetching]]): removing an added file in the merge doesn't rule it out, it moves the decision to a separate commit.
 
 **A file upstream changes back looks like any other conflict.** Keeping jedee's side is usually right, but the conflict looks the same whether upstream fixed a bug or undid something jedee changed on purpose. In 4.8.0, EE's `svg.js` became `async` again; jedee keeps it synchronous, because an async shortcode inside a conditional include renders empty under the interlinker ([[The interlinker's second render pass]]). The same merge showed the opposite case in `theme-toggle.js`: upstream fixed swapped dark and light `theme-color` values that jedee's reworked single-button toggle still carried, so that fix was merged in by hand rather than dropped with the rest of upstream's file.
 
 **Orphans keep taking upstream's changes.** The details partial and script (the disclosure UI for EE's `/get-started/` docs) were both rewritten by the 4.8.0 merge with nothing on the site to show for it, which is why they were deleted on 2026-09-28 along with `local/details.css` and `meta.details`. Expect the next upstream merge to offer them back; decline.
 
-**Check for a newer point release before resolving anything.** The 4.9.0 merge on 2026-10-18 stopped at 26 conflicts, most from 4.9.0 splitting `scripts/bundle/` into `inline/` and `defer/`. 4.9.1, released two days later, put the scripts back in `bundle/` and kept only the part that mattered (is-land as its own module file), so merging 4.9.1 instead left 12 conflicts and no folder moves. `git fetch upstream --tags` and a look at the newest tag cost nothing.
+**Check for a newer point release before resolving anything.** The 4.9.0 merge on 2026-10-18 stopped at 26 conflicts, most from 4.9.0 splitting `scripts/bundle/` into `inline/` and `defer/`. 4.9.1, released two days later, put the scripts back in `bundle/` and kept only the part that mattered (is-land as a separate module file), so merging 4.9.1 instead left 12 conflicts and no folder moves. `git fetch upstream --tags` and a look at the newest tag cost nothing.
 
 **A file that merges cleanly can still depend on something you didn't take.** 4.9.1 rewrote `custom-svg.webc` from `require()` to `import`, and it merged in silently. That syntax only works with the WebC 0.12 beta, which jedee left at 0.11.2, so the file went back to jedee's version, along with the YouTube and PeerTube components, whose `export` in `webc:setup` has the same need. When a dependency stays behind, search the merged files for whatever new syntax that dependency introduced.
 

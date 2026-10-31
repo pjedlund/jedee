@@ -15,14 +15,14 @@ Table: What each `process.memoryUsage()` field holds
 | --- | --- |
 | `heapUsed` | live JS objects — where a genuine leak in JS code shows |
 | `heapTotal` | heap V8 has reserved; grows when `heapUsed` won't fit |
-| `external` / `arrayBuffers` | memory owned by C++/native bindings and typed-array backing stores |
+| `external` / `arrayBuffers` | memory held by C++/native bindings and typed-array backing stores |
 | `rss` | the whole resident process, native allocations included |
 
 **Two rules make the numbers trustworthy.** First, force garbage collection before every reading (run with `--expose-gc` and call `global.gc()`), otherwise you are measuring collection timing, not retention — an uncollected-garbage sawtooth and a real leak look identical in an unforced sample. Second, take readings at the same point in a repeating cycle, so successive numbers are comparable.
 
 Read together, they classify the problem quickly. `heapUsed` climbing on a straight line across cycles while `external` stays flat is a JS leak. `rss` and `external` spiking while `heapUsed` stays modest is native memory — the crash message will still say "heap", misleadingly. A single spike that recovers is a workload peak, not a leak, and is fixed by throttling concurrency rather than by hunting retainers.
 
-**Isolating the owner** is elimination, not intuition. Disable one component per run and compare slopes; anything that leaves the slope unchanged is exonerated. A heap snapshot (`v8.writeHeapSnapshot()`) tells you *what* is retained, though on a large heap the answer is often an ocean of anonymous `Object` and string nodes with no single named owner, which points at a framework holding a whole build rather than at any one call site. Snapshots above ~512 MB also exceed Node's maximum string length, so they have to be parsed as a stream rather than with `JSON.parse`.
+**Finding the holder** is elimination, not intuition. Disable one component per run and compare slopes; anything that leaves the slope unchanged is exonerated. A heap snapshot (`v8.writeHeapSnapshot()`) tells you *what* is retained, though on a large heap the answer is often an ocean of anonymous `Object` and string nodes with no single named holder, which points at a framework holding a whole build rather than at any one call site. Snapshots above ~512 MB also exceed Node's maximum string length, so they have to be parsed as a stream rather than with `JSON.parse`.
 
 ## In jedee
 
@@ -37,7 +37,7 @@ Image.concurrency = 4;   // default is CPU count
 
 It is a module global, so the single line covers every eleventy-img path: the transform plugin, the `{% image %}` and `{% lightbox %}` shortcodes, OG-image generation and YouTube posters.
 
-**The per-page leak** happens in `eleventy --serve`, on an edit, with the server already idle and warm — and it is Eleventy's own. It is paid per page *rendered*, not per rebuild, which is what decides how long a session lasts. With GC forced twice before each reading, one content edit — 159 of 681 pages rebuilt — gives a dead-straight line:
+**The per-page leak** happens in `eleventy --serve`, on an edit, with the server already idle and warm — and it is Eleventy's. It is paid per page *rendered*, not per rebuild, which is what decides how long a session lasts. With GC forced twice before each reading, one content edit — 159 of 681 pages rebuilt — gives a dead-straight line:
 
 ```
 build 1  heapUsed 1042 MB   external 38   rss 2101
@@ -65,7 +65,7 @@ The bisect exonerated everything jedee controls. Measured before `--incremental`
 
 **Saves cannot be batched while `--incremental` is on.** ⚠ `setWatchThrottleWaitTime(ms)` looks like the lever and is accepted without complaint, but it cannot make one rebuild cover several saves: it is a debounce on when the first build *starts*, and under `--incremental` Eleventy then drains its watch queue one file per build. Five files saved inside a 500 ms window still produced five rebuilds. Eleventy says so in a comment at the top of `EleventyWatch.js` — "Incremental builds don't batch changes, they queue. Nonincremental builds batch." — and `getActiveQueue()` returns `[this.activeQueue[0]]` when incremental. The countdown in "You saved while Eleventy was running, let's run again. (4 changes)" is that queue draining, not Eleventy absorbing a burst. Dropping `--incremental` does batch, at the price of every rebuild being all 681 pages.
 
-**Why one content save rebuilds 159 pages.** 134 of them are the paginated tag and genre indexes. Both collections are built with `collection.getAll()`, so any template changing anywhere dirties them, and every page they paginate into is rebuilt. Narrowing the source looks like the fix and is not: `tagList` pointed at `getFilteredByGlob('./src/posts/**/*.md')` and `genreList` at the jams folder — both correct on their own terms, since tags and genres only ever come from posts — and a content edit still wrote exactly 159 files. Eleventy does not track which templates a custom collection actually read, so a custom collection is dirty whenever anything is. Reverted.
+**Why one content save rebuilds 159 pages.** 134 of them are the paginated tag and genre indexes. Both collections are built with `collection.getAll()`, so any template changing anywhere dirties them, and every page they paginate into is rebuilt. Narrowing the source looks like the fix and is not: `tagList` pointed at `getFilteredByGlob('./src/posts/**/*.md')` and `genreList` at the jams folder — both correct on their terms, since tags and genres only ever come from posts — and a content edit still wrote exactly 159 files. Eleventy does not track which templates a custom collection actually read, so a custom collection is dirty whenever anything is. Reverted.
 
 The ceiling is raised in `package.json`, and `npm start` now relaunches the server rather than leaving a dead port when the ceiling is reached anyway:
 
@@ -86,7 +86,7 @@ eleventyConfig.watchIgnores.add('src/assets/css/global/**');
 eleventyConfig.setServerOptions({watch: ['dist/assets/css/global.css']});
 ```
 
-`watchIgnores`, not `ignores` — the same distinction as the fix above, watch-only, so template discovery and include resolution are untouched. Serving also writes the compiled global CSS to `dist/` as a plain file alongside the include copy production inlines, keyed on `ELEVENTY_RUN_MODE === 'serve'` so the condition stays in step with the `runMode` branch in `head/css-inline.njk` that links it. A recompile-on-save watcher runs *inside* the Eleventy process — `node:fs`'s recursive `watch`, started once from the existing `eleventy.before` hook — so there is no second process, no extra terminal and no new dependency, which is what the August note had assumed a standalone watcher would cost. It catches its own errors, because a half-typed rule mid-edit would otherwise take the server down with it. The watcher is `unref()`ed so Ctrl+C still stops the server. Eleventy's own Ctrl+C handler closes only its own watchers and then waits for Node to run out of work; an open `fs.watch` kept it running indefinitely, so Ctrl+C did nothing (found and fixed 2026-09-21). With it unref'd, Eleventy exits 0, and the `until` loop in `npm start`, which only relaunches on a failure, ends too.
+`watchIgnores`, not `ignores` — the same distinction as the fix above, watch-only, so template discovery and include resolution are untouched. Serving also writes the compiled global CSS to `dist/` as a plain file alongside the include copy production inlines, keyed on `ELEVENTY_RUN_MODE === 'serve'` so the condition stays in step with the `runMode` branch in `head/css-inline.njk` that links it. A recompile-on-save watcher runs *inside* the Eleventy process — `node:fs`'s recursive `watch`, started once from the existing `eleventy.before` hook — so there is no second process, no extra terminal and no new dependency, which is what the August note had assumed a standalone watcher would cost. It catches its errors, because a half-typed rule mid-edit would otherwise take the server down with it. The watcher is `unref()`ed so Ctrl+C still stops the server. Eleventy's Ctrl+C handler closes only its watchers and then waits for Node to run out of work; an open `fs.watch` kept it running indefinitely, so Ctrl+C did nothing (found and fixed 2026-09-21). With it unref'd, Eleventy exits 0, and the `until` loop in `npm start`, which only relaunches on a failure, ends too.
 
 The result is a CSS save that Eleventy declines to build for at all:
 

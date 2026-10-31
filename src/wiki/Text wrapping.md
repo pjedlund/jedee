@@ -14,7 +14,7 @@ p  { text-wrap: pretty; }  /* better paragraph endings — running text */
 - **`balance`** distributes words so every line of the block is roughly the same length. Browsers cap it at a handful of lines (~6–10), so it is for headings, pull quotes, and captions — not paragraphs. Especially good for centered headings.
 - **`pretty`** optimizes where lines break with particular attention to the *end* of the block, preventing the lone last word. WebKit's implementation goes further and evaluates the whole paragraph ([their 2025 write-up](https://webkit.org/blog/16547/better-typography-with-text-wrap-pretty/)); Chromium's focuses on the last few lines. Use it on body copy.
 
-Both, rendered in the site's own faces at the same measure. Each pair is one string set twice; the only thing that differs between the columns is the property.
+Both, rendered in the site's faces at the same measure. Each pair is one string set twice; the only thing that differs between the columns is the property.
 
 <figure class="popout" data-wiki-mockup>
   <img eleventy:formats="webp,png" src="/assets/images/wiki/textwrap-balance.png" alt="The same heading twice at equal width. On the left, greedy wrapping leaves the word Machine alone on a third line. On the right, balance redistributes the words so all three lines are close to the same length." width="1298" height="298">
@@ -40,7 +40,7 @@ Both values are shipped, at these places in the cascade:
 - `global/base/global-styles.css`: `blockquote` (with its `p`) takes `balance`, since a quotation is a short block like a heading. `figcaption` took `balance` too while captions were centered, from 2026-09-10; since they went left-aligned on 2026-10-02 it is back on `pretty` ([[Figures]]). ⚠ Inside `.prose` the quote needs the rule again in `prose.css`. There, `.prose :is(p, …)` sets `pretty` in a later layer and matches the quote's paragraphs directly.
 - `src/assets/css/local/breadcrumb-leaf.css` — **the gotcha.** The current-page crumb must stay on one line, but the global `* { text-wrap: pretty }` reset re-enables wrapping *even against an explicit `white-space: nowrap`*. The block clamps with `-webkit-line-clamp: 1` instead, which wins where `nowrap` loses. Any future single-line truncation on this site has the same fight ahead of it — the reset's universal selector reaches everything.
 
-**EE stock vs jedee:** the two reset rules and the `prose.css` `pretty` are Eleventy Excellent's stock typography. jedee's own additions are the `.intro` balance, the quotation `balance` in `global-styles.css` and again in `prose.css`, the `figcaption` rule, the subtitle's `balance` (`hgroup > p` in `local/post.css`), and the breadcrumb line-clamp workaround.
+**EE stock vs jedee:** the two reset rules and the `prose.css` `pretty` are Eleventy Excellent's stock typography. jedee's additions are the `.intro` balance, the quotation `balance` in `global-styles.css` and again in `prose.css`, the `figcaption` rule, the subtitle's `balance` (`hgroup > p` in `local/post.css`), and the breadcrumb line-clamp workaround.
 
 Related: [[Microformats]] — the other page where a universal-selector reset interacts with a specific block in a non-obvious way (there `margin: 0`, here `text-wrap`).
 

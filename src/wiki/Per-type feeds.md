@@ -1,5 +1,5 @@
 ---
-description: "What a feed is, why splitting one per category helps subscribers, and how jedee gives fourteen of sixteen post types their own — plus what a feed silently drops."
+description: "What a feed is, why splitting one per category helps subscribers, and how jedee gives fourteen of sixteen post types a feed each — plus what a feed silently drops."
 date: 2026-07-31
 updated: 2026-10-17
 ---
@@ -12,7 +12,7 @@ A feed is a machine-readable list of a site's recent items that a reader applica
 
 ## In jedee
 
-Fourteen of the sixteen post types publish their own feed, so a reader can subscribe to the films without the books. Two publish none, each for its own reason.
+Fourteen of the sixteen post types publish a separate feed, so a reader can subscribe to the films without the books. Two publish none, each for its reason.
 
 ### A feed template is five lines
 

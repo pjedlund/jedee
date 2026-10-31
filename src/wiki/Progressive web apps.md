@@ -41,7 +41,7 @@ Less than the name suggests, and that is the point rather than a disappointment.
   <figcaption>The same page, in a browser tab and installed. The two bands the left frame spends on browser furniture are the whole of what <code>display: standalone</code> gives back.</figcaption>
 </figure>
 
-The mockup is `src/wiki/_sources/pwa-display-modes.html`; `npm run mockups` re-shoots it. **Both status bars are deliberately the same color.** The browser tints its own status bar from the same `<meta name="theme-color">` the installed app uses, so painting the left one a browser gray would have drawn a difference that does not exist. The chrome is the only variable in the picture.
+The mockup is `src/wiki/_sources/pwa-display-modes.html`; `npm run mockups` re-shoots it. **Both status bars are deliberately the same color.** The browser tints its status bar from the same `<meta name="theme-color">` the installed app uses, so painting the left one a browser gray would have drawn a difference that does not exist. The chrome is the only variable in the picture.
 
 What it does *not* change is more interesting. The URLs are the same, so a link into the app still works and a page can still be shared. There is no install step for updates — a deploy is live immediately, subject only to whatever the service worker caches. And nothing about the layout changes: an installed site is as responsive or as broken as the site was.
 

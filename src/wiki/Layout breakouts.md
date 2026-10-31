@@ -4,7 +4,7 @@ date: 2026-08-23
 updated: 2026-10-27
 ---
 
-A reading page wants one narrow column for prose and the occasional element wider than it — a diagram, a code block, a full-bleed image. The old way was negative margins, which fight the page's own padding and break at small widths.
+A reading page wants one narrow column for prose and the occasional element wider than it — a diagram, a code block, a full-bleed image. The old way was negative margins, which fight the page's padding and break at small widths.
 
 The current technique is [Ryan Mulligan's layout breakouts](https://ryanmulligan.dev/blog/layout-breakouts/): make the container a grid with several symmetric named columns, put everything in the middle one by default, and let an element opt into a wider pair of grid lines. Nothing is positioned; the element simply spans different named lines.
 
@@ -40,14 +40,14 @@ The current technique is [Ryan Mulligan's layout breakouts](https://ryanmulligan
 
 Two details do most of the work. The `[name-start]` / `[name-end]` line names mean `grid-column: popout` is a complete instruction — CSS resolves a bare name to its `-start`/`-end` pair. And `--content` is a `min()` of a maximum width and `100% - gap * 2`, so the content column is capped on a wide screen and still leaves a margin on a narrow one, with no media query anywhere.
 
-**The catch is that these classes only work on a direct child of the grid.** `grid-column` is a property of a grid *item*, and a grid item is a direct child. Wrap the content in anything — a container element, a component's own root, a plugin's output — and every breakout class inside it silently does nothing. There is no error; the element just renders at content width, which is exactly what it would do if the class were misspelled. This is the single thing that makes breakouts fiddly in real templates, and it has more than one answer depending on what did the wrapping.
+**The catch is that these classes only work on a direct child of the grid.** `grid-column` is a property of a grid *item*, and a grid item is a direct child. Wrap the content in anything — a container element, a component's root, a plugin's output — and every breakout class inside it silently does nothing. There is no error; the element just renders at content width, which is exactly what it would do if the class were misspelled. This is the single thing that makes breakouts fiddly in real templates, and it has more than one answer depending on what did the wrapping.
 
 <figure class="popout" data-wiki-mockup>
   <img eleventy:formats="webp,png" src="/assets/images/wiki/layout-breakouts-direct-child.png" alt="Three stacked panels, each showing a dark content-width bar above an orange bar marked .popout. In the first, labeled &quot;.wrapper &gt; .popout — steps out&quot;, the orange bar is wider than the dark one. In the second, labeled &quot;.wrapper &gt; div &gt; .popout — silently content width&quot;, the orange bar is exactly as wide as the dark one. In the third, labeled &quot;.wrapper &gt; .wrapper-pass &gt; .popout — steps out again&quot;, it is wider once more." width="1520" height="890">
   <figcaption>The same class, three depths. The middle panel is the failure: <code>.popout</code> is present and did nothing, which is indistinguishable from a typo.</figcaption>
 </figure>
 
-`subgrid` is the general answer where the wrapper is yours: a direct child that spans the full track and re-declares `grid-template-columns: subgrid` republishes the parent's named lines to its own children, so the breakout classes work one level deeper.
+`subgrid` is the general answer where the wrapper is yours: a direct child that spans the full track and re-declares `grid-template-columns: subgrid` republishes the parent's named lines to its children, so the breakout classes work one level deeper.
 
 ### The second silent failure: a breakout doesn't exist until the content column stops growing
 
@@ -67,7 +67,7 @@ Past the threshold the free space is handed to the four growable inner tracks in
 | 64rem | 1160 | 1024 | 20 |
 | 64rem | 1249 | 1024 | 64 |
 
-The practical consequence: **the wider you set `--wrapper-width`, the further off-screen you push your own breakouts.** At `64rem` the popout is live from 1120px, an ordinary laptop. At `97rem` it stays dead until 1648px and only reaches full width at 1776px — so on a 1440px laptop it is invisible, and on an external display it suddenly makes the element 4rem wider than the widest text on the page. A breakout in a wide container is therefore not a subtler version of a breakout in a narrow one; it is a class that does nothing most of the time and something unintended the rest.
+The practical consequence: **the wider you set `--wrapper-width`, the further off-screen you push your breakouts.** At `64rem` the popout is live from 1120px, an ordinary laptop. At `97rem` it stays dead until 1648px and only reaches full width at 1776px — so on a 1440px laptop it is invisible, and on an external display it suddenly makes the element 4rem wider than the widest text on the page. A breakout in a wide container is therefore not a subtler version of a breakout in a narrow one; it is a class that does nothing most of the time and something unintended the rest.
 
 Which says what the classes are actually for: stepping out of a **reading measure**. A container already sized for a wide layout has nothing to break out of, and the right answer there is the content column itself.
 
@@ -85,11 +85,11 @@ The breakout offsets are shared by both wrapper widths, so only the prose breako
 
 The card listings follow the same grid through `.grid`'s `data-layout` variants (`compositions/grid.css`). At 1552px, `33-33-33` gives four cards of three grid columns each, from an `18rem` minimum that is just too wide for a fifth. `50-50` gives three cards of four columns each, and a two-item `50-50` or `thirds` listing stretches to two cards of six columns each. Inside the 1024px prose column, `halves` gives two cards of four columns each; it is `auto-fill`, so a lone card keeps that width instead of stretching (`/now/`). The grid gap is `--space-s-m`, 31px at its maximum against Penpot's 32, so each card is about a pixel off the guide.
 
-⚠ None of those variants applied between 2026-09-06 and 2026-10-05. Removing the masonry script left `custom-masonry.webc` with `webc:root webc:keep` on a tag of its own name, which WebC renders as the tag nested inside itself. The outer copy had no `data-layout`, so every listing was squeezed into its first 16rem column. `webc:root="override"` renders it once.
+⚠ None of those variants applied between 2026-09-06 and 2026-10-05. Removing the masonry script left `custom-masonry.webc` with `webc:root webc:keep` on a tag of its name, which WebC renders as the tag nested inside itself. The outer copy had no `data-layout`, so every listing was squeezed into its first 16rem column. `webc:root="override"` renders it once.
 
 ### Four ways around the direct-child rule
 
-Every post body hits the constraint, because the mf2 `e-content` wrapper (see [[Microformats]]) is an element between `.wrapper` and the markdown. jedee's own addition to the composition is the subgrid pass-through:
+Every post body hits the constraint, because the mf2 `e-content` wrapper (see [[Microformats]]) is an element between `.wrapper` and the markdown. jedee's addition to the composition is the subgrid pass-through:
 
 ```css
 @supports (grid-template-columns: subgrid) {
@@ -107,9 +107,9 @@ Used as `<div class="e-content | wrapper-pass flow">` in every post-type layout 
 
 The other three cases are wrappers jedee doesn't control the shape of:
 
-- **A markup wrapper of your own** — `audio.njk` and `photo.njk` put the location map in a plain `<div class="feature">` (`.popout` until 2026-10-26), the direct child, and let the component sit inside it.
+- **A separate markup wrapper** — `audio.njk` and `photo.njk` put the location map in a plain `<div class="feature">` (`.popout` until 2026-10-26), the direct child, and let the component sit inside it.
 - **A shortcode's generated markup** — the image/lightbox shortcode takes a `containerClass` parameter that lands on the outer `<div>` it emits rather than on the inner `<picture>`, for exactly this reason. The `<div>` is load-bearing anyway: markdown-it rejects a bare `<photo-lightbox @…>` line because the `@`-prefixed WebC props aren't valid HTML attributes.
-- **A WebC component root** — `<place-map>` puts `webc:root` on the inner element, so a `class="popout"` on the invocation merges onto *that*, a grid grandchild under the component's own `<is-land>`. The component takes a `@breakout` prop instead and applies the class to the `<is-land>` root, which is the real grid child. See [[The place map]].
+- **A WebC component root** — `<place-map>` puts `webc:root` on the inner element, so a `class="popout"` on the invocation merges onto *that*, a grid grandchild under the component's `<is-land>`. The component takes a `@breakout` prop instead and applies the class to the `<is-land>` root, which is the real grid child. See [[The place map]].
 
 The pattern across all four: find the element that is genuinely the direct child of `.wrapper`, and get the class onto it. When that element is generated by something else, the component has to expose a way in.
 
@@ -117,7 +117,7 @@ The pattern across all four: find the element that is genuinely the direct child
 
 On 2026-09-19 the second failure mode above turned up in three places. `.prose` narrows `--wrapper-width` to `64rem`, but only when it is on the `.wrapper` element itself — the post layouts all do that, so their content column is 1024 and `.popout` is 1088. `partials/archive-listing.njk` puts `.prose` on a *child* instead (it is the intro paragraph's class, not the page's), so custom-property inheritance never reaches the grid and the archive wrapper stays at the stock `85rem`. Its content column is 1360, and the `.popout` on `/activities/`'s map-and-table block measured 1424 — wider than every line of prose on the page, and 161px short of the `.full` header it looked like it was competing with. Two styleguide tables had the same class in the same wide wrapper.
 
-All three had the class removed rather than the wrapper narrowed; 1360 was the width that page was designed at (1552 since 2026-10-05). The interesting part is the reporting: the misuse had been shipping for a while and was only visible above 1456px, so it took a wide display to see it at all. Every remaining `.popout` in the site is in a layout with `.prose` on the wrapper — the post types, the wiki, and the wiki's own figures — which is the rule the class is worth holding to.
+All three had the class removed rather than the wrapper narrowed; 1360 was the width that page was designed at (1552 since 2026-10-05). The interesting part is the reporting: the misuse had been shipping for a while and was only visible above 1456px, so it took a wide display to see it at all. Every remaining `.popout` in the site is in a layout with `.prose` on the wrapper — the post types, the wiki, and the wiki's figures — which is the rule the class is worth holding to.
 
 One thing the removal disturbed, and a correction worth recording with it. `--table-edge-padding` (see [[Tables]]) is `var(--space-m-l)`, 31px at its maximum, applied as `padding-inline-start` to a table's caption and first column, and it is tuned against the `2rem` popout track: at popout width the table's box starts 32px outside the content column and that 31px puts the first column's text back on the content line. Two comments in `table.css` said so, and removing the breakout from the activities table looked at first like it had made them stale.
 
@@ -127,4 +127,4 @@ The general lesson is about the comments rather than the CSS: a comment that exp
 
 Both figures are `src/wiki/_sources/layout-breakouts.html`, drawn with real `.wrapper` elements against the site's compiled `global.css` — the tracks, the gap clamp and the subgrid pass-through are the stylesheet's rather than a redrawing. `--gap` is `clamp(1rem, 6vw, 3rem)`, so the gutter in a shot is the *shooter's viewport's*, not the specimen's; at 1400px it sits at the `3rem` maximum, which is the gutter a desktop reader gets.
 
-Source: `src/assets/css/global/compositions/wrapper.css`, checked against live code 2026-08-23. Technique and the file's own credit: [Ryan Mulligan, "Layout Breakouts with CSS Grid"](https://ryanmulligan.dev/blog/layout-breakouts/). The track-sizing thresholds and the three misplaced breakouts: the session of 2026-09-19, measured in the browser against the compiled stylesheet. Raw source: `src/_raw/dev-notes/How the popout breakout was pulled back to prose width.md`.
+Source: `src/assets/css/global/compositions/wrapper.css`, checked against live code 2026-08-23. Technique and the file's credit: [Ryan Mulligan, "Layout Breakouts with CSS Grid"](https://ryanmulligan.dev/blog/layout-breakouts/). The track-sizing thresholds and the three misplaced breakouts: the session of 2026-09-19, measured in the browser against the compiled stylesheet. Raw source: `src/_raw/dev-notes/How the popout breakout was pulled back to prose width.md`.

@@ -1,10 +1,10 @@
 ---
-description: "Custom elements, and the case for building them in two layers: HTML and CSS that render on their own, then JavaScript that upgrades them."
+description: "Custom elements, and the case for building them in two layers: HTML and CSS that render by themselves, then JavaScript that upgrades them."
 date: 2026-09-14
 updated: 2026-10-27
 ---
 
-A **web component** is an HTML element the page author defines. The browser supplies three separate pieces: the Custom Elements API (`customElements.define('my-thing', MyThing)` registers a class for a tag name, which must contain a hyphen), Shadow DOM (a private subtree with its own scoped styles), and `<template>` / `<slot>` for markup to stamp out. None of the three needs the others. A tag with a hyphen in it is valid HTML whether or not anything ever defines it; until it is defined it is an unknown element that CSS can still style.
+A **web component** is an HTML element the page author defines. The browser supplies three separate pieces: the Custom Elements API (`customElements.define('my-thing', MyThing)` registers a class for a tag name, which must contain a hyphen), Shadow DOM (a private subtree with its scoped styles), and `<template>` / `<slot>` for markup to stamp out. None of the three needs the others. A tag with a hyphen in it is valid HTML whether or not anything ever defines it; until it is defined it is an unknown element that CSS can still style.
 
 The promise is portability: one component works in React, Vue, a static site or no framework at all, because it is built on the platform rather than on a library. The recurring complaints come from how most component libraries build them, rendering everything from JavaScript into a shadow root:
 
@@ -20,7 +20,7 @@ Table: Ariel Salminen's three kinds of progressive web component
 | Kind | Where its HTML comes from | Where its CSS lives |
 | --- | --- | --- |
 | Composite | wraps and enhances HTML written inside it | light DOM |
-| Primitive | renders its own HTML, but the base markup for the first state ships with the page | light DOM |
+| Primitive | renders its HTML, but the base markup for the first state ships with the page | light DOM |
 | Declarative | a hybrid, using Declarative Shadow DOM (`<template shadowrootmode>`) so a shadow root can be in the server's HTML | shadow DOM |
 
 The composite kind is what Jeremy Keith called [HTML web components](https://adactio.com/journal/20618) in 2023: the custom element adds behavior to markup that already works. She presents the three as a design stance rather than a library feature.
@@ -37,7 +37,7 @@ Table: The custom tags in jedee and what their JavaScript does
 | Tag | Defined by | What its JavaScript does |
 | --- | --- | --- |
 | `<is-land>` | `@11ty/is-land`, EE stock | holds back other scripts until a condition is met — see [[is-land]] |
-| `<place-map>` | jedee | reads the place list and route JSON rendered inside it and draws a MapLibre map from jedee's own tiles — see [[The place map]] |
+| `<place-map>` | jedee | reads the place list and route JSON rendered inside it and draws a MapLibre map from jedee's tiles — see [[The place map]] |
 | `<sortable-table>` | jedee (added 2026-09-15) | turns the column heads of the table inside it into sort buttons — see [[Tables]] |
 | `<photo-lightbox>` | jedee | wires PhotoSwipe to the single `<a>` inside it — see [[The PhotoSwipe lightbox]] |
 | `<lite-youtube>` | `lite-youtube-embed`, EE stock | swaps the poster for the player on click — see [[The YouTube embed]] |

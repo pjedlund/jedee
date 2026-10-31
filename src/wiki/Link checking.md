@@ -34,7 +34,7 @@ wikiLinkRegExp    = /(?<!!)(!?)\[\[([^|\n]+?)(\|([^\n]+?))?]]/g   // wikilink-pa
 internalLinkRegex = /href="\/(.*?)"/g                             // html-link-parser.js
 ```
 
-Until 2026-08-03 the console report carried **13 warnings, all 13 false positives** — TOML tables and a JS array quoted in fenced blocks, the prose examples on [[Wikilinks]], a former page title kept deliberately in the wiki's own log, an href inside a fenced HTML example, and the un-rendered `href="/tags/{{ tag | slugify }}/"` from `tags.njk`.
+Until 2026-08-03 the console report carried **13 warnings, all 13 false positives** — TOML tables and a JS array quoted in fenced blocks, the prose examples on [[Wikilinks]], a former page title kept deliberately in the wiki's log, an href inside a fenced HTML example, and the un-rendered `href="/tags/{{ tag | slugify }}/"` from `tags.njk`.
 
 **Rendering was never wrong.** markdown-it resolves backticks before the plugin's inline rule, so a wikilink inside a code span never reaches the renderer and comes out as literal `[[text]]`, which is what an example should be. Only detection was wrong — which is why nothing looked broken.
 

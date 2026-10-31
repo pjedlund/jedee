@@ -24,15 +24,15 @@ Size is the obvious variable and the least interesting one. The one that decides
 
 A browser tab does not. The icon sits on chrome the site does not control, at 16 CSS pixels, next to a title. It needs transparency, and it needs nearly the whole box — padding at that size is space taken from an already tiny mark.
 
-Every other destination frames it. iOS rounds the home-screen icon to its own squircle. Android masks the launcher icon to whatever shape the launcher uses. The install sheet and the splash screen draw it on their own ground. These can afford a generous inset, because the OS is going to add its own margin around whatever it is given.
+Every other destination frames it. iOS rounds the home-screen icon to its squircle. Android masks the launcher icon to whatever shape the launcher uses. The install sheet and the splash screen draw it on their ground. These can afford a generous inset, because the OS is going to add its margin around whatever it is given.
 
 That split produces three rules that are easy to get backwards:
 
 - **`apple-touch-icon` must be opaque.** iOS composites transparency to black, so a transparent one arrives as a mark floating on a black tile.
-- **`apple-touch-icon` must not have baked rounded corners.** iOS applies its own mask on top; corners already cut out of the image become transparent notches inside the OS's rounded shape.
+- **`apple-touch-icon` must not have baked rounded corners.** iOS applies its mask on top; corners already cut out of the image become transparent notches inside the OS's rounded shape.
 - **A maskable icon must be opaque and full-bleed.** Its whole premise is that the launcher crops it to an unknown shape. The [maskable spec](https://www.w3.org/TR/appmanifest/#dfn-maskable) defines a safe zone — a circle of 40% radius, centered — and everything outside it may be cropped away. Transparency there means the wallpaper shows through the crop. [maskable.app](https://maskable.app/) previews this against real launcher shapes.
 
-Only the icons that nothing masks — the manifest's plain `"any"` icons — can carry their own corners.
+Only the icons that nothing masks — the manifest's plain `"any"` icons — can carry their corners.
 
 ## theme-color beats the manifest
 
@@ -58,7 +58,7 @@ const TILE_PAD = 0.222;   // app icons; the OS frames them anyway
 const TILE_RADIUS = 0.22;
 ```
 
-The brand color is not written into the script. It is read out of the logo's own root `fill`, so the SVG stays the single source of truth, with a guard — because a missing fill would render the mark orange-on-orange and leave the build green while shipping a blank tile:
+The brand color is not written into the script. It is read out of the logo's root `fill`, so the SVG stays the single source of truth, with a guard — because a missing fill would render the mark orange-on-orange and leave the build green while shipping a blank tile:
 
 ```js
 const markColor = svgSource.match(/<svg[^>]*\sfill="([^"]+)"/)?.[1];
@@ -68,7 +68,7 @@ const knockout = Buffer.from(svgSource.replaceAll(markColor, themeLight));
 
 The two manifest icons get corners composited with `dest-in`; `apple-touch-icon` and `maskable-icon` stay square for the reasons above. The radius is a proportion rather than one of the project's radius tokens ([[Design token sync]]), which are sized for UI — a fixed px radius would vanish at 512 and swamp the 192.
 
-**⚠ `sharpsToIco` appends its own `resize()` to whatever sharp pipeline it is handed.** Sharp applies resize before extend regardless of call order, and a second `resize()` replaces the first, so a pipeline of `resize(28).extend(2)` becomes `resize(32).extend(2)` and writes a **36px** file. At an earlier padding value it wrote 44px. Nothing errors — it is a valid `.ico` at the wrong size. Materializing to a buffer first pins it:
+**⚠ `sharpsToIco` appends its `resize()` to whatever sharp pipeline it is handed.** Sharp applies resize before extend regardless of call order, and a second `resize()` replaces the first, so a pipeline of `resize(28).extend(2)` becomes `resize(32).extend(2)` and writes a **36px** file. At an earlier padding value it wrote 44px. Nothing errors — it is a valid `.ico` at the wrong size. Materializing to a buffer first pins it:
 
 ```js
 const icoBuffer = await padded(svgBuffer, 32, TAB_PAD).png().toBuffer();
@@ -86,7 +86,7 @@ Table: The four icon shapes, side by side
 | --- | --- | --- |
 | <img src="/favicon.svg" alt="The jedee mark in brand orange on transparency, filling almost the whole square." width="72" height="72" eleventy:ignore> | `favicon.svg` | Bare mark, transparent, 14 of 16 pixels |
 | <img src="/icon-512x512.png" alt="The mark knocked out of a solid orange tile with rounded corners." width="72" height="72" eleventy:ignore> | `icon-192x192.png`, `icon-512x512.png` | Opaque tile, corners baked in — nothing masks these |
-| <img src="/apple-touch-icon.png" alt="The same orange tile with square corners." width="72" height="72" eleventy:ignore> | `apple-touch-icon.png` | Opaque tile, square — iOS adds its own squircle |
+| <img src="/apple-touch-icon.png" alt="The same orange tile with square corners." width="72" height="72" eleventy:ignore> | `apple-touch-icon.png` | Opaque tile, square — iOS adds its squircle |
 | <img src="/maskable-icon.png" alt="The same orange tile with square corners, full-bleed to the edge." width="72" height="72" eleventy:ignore> | `maskable-icon.png` | Opaque tile, square, full-bleed — the launcher crops it |
 
 The last two look identical here and that is the point: baked corners would become transparent notches inside the shape the OS cuts.
@@ -133,7 +133,7 @@ The frames are drawn by `src/wiki/_sources/pwa-preview.html`, which points at th
   <li>
     <figure>
       <img eleventy:formats="webp,png" src="/assets/images/wiki/pwa-recent-apps.png" alt="An app-switcher card, its header tinted slate with the mark and the site name, the page below it off-white." width="504" height="944">
-      <figcaption><strong>Recent apps</strong> — Android tints the card header with <code>theme_color</code> — the one place the manifest's own color still shows.</figcaption>
+      <figcaption><strong>Recent apps</strong> — Android tints the card header with <code>theme_color</code> — the one place the manifest's color still shows.</figcaption>
     </figure>
   </li>
 </ul>

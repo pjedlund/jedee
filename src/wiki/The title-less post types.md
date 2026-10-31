@@ -27,7 +27,7 @@ The `hgroup` branch only adds a subtitle beside the heading, and `titleLang` onl
 
 ## One card for five types
 
-Ten types have their own card partial, and activities have none (their archive is a map and a table). The five response types share `card-response.njk`, which resolves the differences with three lookup tables:
+Ten types have a separate card partial, and activities have none (their archive is a map and a table). The five response types share `card-response.njk`, which resolves the differences with three lookup tables:
 
 ```njk
 {% set verbs  = { "bookmark": "Bookmarked", "reply": "In reply to", "rsvp": "RSVP to", "like": "Liked", "repost": "Reposted" } %}
@@ -36,7 +36,7 @@ Ten types have their own card partial, and activities have none (their archive i
 {% set target = item.data[fields[cat]] %}
 ```
 
-With no title to put in the headline slot, the card's headline becomes **a verb plus the target link** — "Bookmarked https://…". The date, not the headline, is what links to the post's own page.
+With no title to put in the headline slot, the card's headline becomes **a verb plus the target link** — "Bookmarked https://…". The date, not the headline, is what links to the post's page.
 
 ⚠ The card is deliberately **not** `clickable`. `<custom-card>`'s clickable variant stretches a `::after` over the whole card to make one link fill it — but a response card has two genuine destinations, the off-site target and the on-site permalink, and they'd fight over it.
 
