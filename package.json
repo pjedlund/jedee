@@ -28,7 +28,7 @@
     "build:11ty": "cross-env ELEVENTY_ENV=production eleventy",
     "start": "until npm run dev:11ty; do echo '↻ dev server ran out of memory — restarting'; sleep 2; done",
     "dev:mem": "cross-env ELEVENTY_ENV=development MEMLOG=1 NODE_OPTIONS='--max-old-space-size=8192 --expose-gc' eleventy --serve --incremental",
-    "build": "npm run clean && cross-env BUILD_DRAFTS=1 SHOW_HIDDEN=1 npm run build:11ty",
+    "build": "npm run clean && npm run build:11ty",
     "pa11y:build": "npm run clean && cross-env ELEVENTY_ENV=test BUILD_DRAFTS=1 eleventy",
     "pa11y:test": "sleep 3 && pa11y-ci --config ./dist/pa11y.json",
     "pa11y:serve": "cross-env ELEVENTY_ENV=test BUILD_DRAFTS=1 eleventy --serve --ignore-initial",
