@@ -5,8 +5,6 @@ date: 2026-10-31
 
 A site built on a starter is two things tangled together: the machinery that turns files into pages, and the files that are one particular site. A fork never separates them, so the next person to use the machinery finds someone else's name in the footer, someone else's fonts in the stylesheet and someone else's post types in the menu. The question to ask of every file is "would a new site replace this, or keep it?" Drawing that line is what makes a starter reusable, and the line only holds if something checks it.
 
-The reason to draw it is a website anyone can start, with every IndieWeb feature already turned on. Max Böck's [*The IndieWeb for Everyone*](https://mxb.dev/blog/the-indieweb-for-everyone/) asks for independence on the web to be about as easy as signing up for a phone plan, and the tools are not there yet (see [[The IndieWeb]]). A starter that has to be untangled before it can be used cannot be that.
-
 Hugo and WordPress draw the line with a lookup order, so a site's files sit on top of a theme's. Eleventy has no such thing, and even its vocabulary blurs the line: a post and the layout around it are both "templates" ([[Themes and starters]] goes through this). So the line has to be kept by convention and enforced by tests.
 
 ## In jedee
