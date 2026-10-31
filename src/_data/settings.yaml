@@ -52,6 +52,18 @@ switches:
   eastereggKeyword: jesus
   eastereggShape: ❤️
   viewRepo: true
+  header: true
+  mainNav: true
+  themeToggle: true
+  footer: true
+  shortcuts: true
+  tooltips: true
+  devGrid: true
+  serviceWorker: true
+  feeds: true
+  webmentions: true
+  micropub: true
+  relMe: true
   hideFeatured: true
   hideNav: true
   noindexSite: true

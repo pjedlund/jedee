@@ -3,11 +3,15 @@ import fs from 'node:fs';
 import {load as yamlLoad} from 'js-yaml';
 import {loadLogo, loadThemeConfig, themeDir, themeName} from '../_config/utils/theme.js';
 import {loadWords, siteSettings} from '../_config/utils/site.js';
+import {resolveSwitches} from '../_config/utils/switches.js';
 
 // The values live in settings.yaml; this file gives them Lene's names so her templates still fit. ⚠ Named exports only — a default export here is silently ignored.
 // ⚠ settings.yaml has no comments on purpose: Sveltia (/admin/ → Site settings) drops them on save. Its notes are the hints in admin/config.yml.
 export const settings = yamlLoad(fs.readFileSync(new URL('./settings.yaml', import.meta.url), 'utf8'));
-const {identity, profiles, switches} = settings;
+const {identity, profiles} = settings;
+const flags = settings.switches ?? {};
+// The parts of the site that are on unless settings say false (utils/switches.js); `flags` holds the rest of settings.switches under their own names below.
+export const switches = resolveSwitches(settings);
 const site = siteSettings();
 const words = loadWords();
 const relMe = Object.values(profiles).filter(profile => profile.relMe).map(profile => profile.url);
@@ -19,7 +23,7 @@ export const siteDescription = identity.description;
 export const domain = new URL(url).hostname;
 // The canonical host name from settings — unlike `domain`, never `localhost`.
 export const siteDomain = new URL(identity.website).hostname;
-export const noindexSite = switches.noindexSite;
+export const noindexSite = flags.noindexSite;
 export const siteType = site.type; // schema: Person or Organization
 export const locale = site.locale;
 export const lang = site.lang;
@@ -101,10 +105,10 @@ export const navigation = {
   ariaPlatforms: words.navPlatforms,
   // Header chrome — three independent switches (header.njk), set in settings.yaml.
   breadcrumb: switches.breadcrumb,
-  nameReveal: switches.nameReveal,
-  hideNav: switches.hideNav && !showHidden
+  nameReveal: flags.nameReveal,
+  hideNav: flags.hideNav && !showHidden
 };
-export const hideFeatured = switches.hideFeatured && !showHidden;
+export const hideFeatured = flags.hideFeatured && !showHidden;
 // Static ACCESSIBLE NAME for the header light/dark toggle; aria-pressed carries the state. ⚠ Don't make this change with the theme — a toggle button's name must stay put, or screen readers announce the state twice and disagree with themselves.
 export const themeToggleLabel = words.themeToggle;
 // Visible tooltip only, so it may say what a click WILL do. Swapped by theme-toggle.js on every theme change.
@@ -157,10 +161,10 @@ export const tests = {
 };
 export const viewRepo = {
   // this is for the view/edit on github link. The value in the package.json will be pulled in.
-  allow: switches.viewRepo,
+  allow: flags.viewRepo,
   infoText: words.viewOnGithub,
   issuesPage: words.reportAccessibility
 };
 export const easteregg = switches.easteregg;
-export const eastereggKeyword = switches.eastereggKeyword; // empty = the starter's "eleventy" and "excellent"
-export const eastereggShape = switches.eastereggShape; // empty = the starter's ⭐️
+export const eastereggKeyword = flags.eastereggKeyword; // empty = the starter's "eleventy" and "excellent"
+export const eastereggShape = flags.eastereggShape; // empty = the starter's ⭐️

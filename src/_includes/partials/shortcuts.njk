@@ -1,4 +1,5 @@
 {# KEYBOARD SHORTCUTS — a native dialog that ⌥L opens (shortcuts.js). Mac symbols are the default; a `data-pc` label replaces each one on other systems. The heading takes the opening focus, so a screen reader starts with the title rather than "Close, button". #}
+{%- if meta.switches.shortcuts -%}
 <dialog id="shortcuts" class="shortcuts | flow" aria-labelledby="shortcuts-title" closedby="any">
   <h2 id="shortcuts-title" tabindex="-1" autofocus>{{ words.keyboardShortcuts }}</h2>
   <dl class="shortcuts-list">
@@ -10,10 +11,12 @@
     <dd>{{ words.shortcutOpen }}</dd>
     <dt><kbd>Esc</kbd></dt>
     <dd>{{ words.shortcutClose }}</dd>
-    <dt><kbd><kbd data-pc="Alt">⌥</kbd><kbd>G</kbd></kbd></dt>
-    <dd>{{ words.shortcutGrid }}</dd>
-    <dt><kbd><kbd data-pc="Alt">⌥</kbd><kbd>R</kbd></kbd></dt>
-    <dd>{{ words.shortcutRhythm }}</dd>
+    {% if meta.switches.devGrid %}
+      <dt><kbd><kbd data-pc="Alt">⌥</kbd><kbd>G</kbd></kbd></dt>
+      <dd>{{ words.shortcutGrid }}</dd>
+      <dt><kbd><kbd data-pc="Alt">⌥</kbd><kbd>R</kbd></kbd></dt>
+      <dd>{{ words.shortcutRhythm }}</dd>
+    {% endif %}
     <dt><kbd><kbd data-pc="Alt">⌥</kbd><kbd>L</kbd></kbd></dt>
     <dd>{{ words.shortcutList }}</dd>
   </dl>
@@ -23,3 +26,4 @@
 </dialog>
 {% js "defer" %}{% include "scripts/shortcuts.js" %}{% endjs %}
 {%- css "local" -%}{%- include 'css/shortcuts.css' -%}{%- endcss -%}
+{%- endif -%}

@@ -6,7 +6,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import dotenv from 'dotenv';
-import {domain} from './meta.js';
+import {domain, switches} from './meta.js';
 import {fetchWebmentions} from '../_config/utils/webmention-fetch.js';
 
 dotenv.config();
@@ -35,6 +35,8 @@ function readFromCache() {
 }
 
 export default async function () {
+  // Off: nothing is fetched and nothing is read, so the build holds no mentions at all.
+  if (!switches.webmentions) return {lastFetched: null, children: []};
   const cache = readFromCache();
 
   if (cache.children.length) {

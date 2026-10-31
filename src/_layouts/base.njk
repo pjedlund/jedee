@@ -70,18 +70,24 @@
     {% if eleventy.env.runMode === "serve" %}
       {% js "defer" %}{% include "scripts/font-check.js" %}{% endjs %}
     {% endif %}
-    {% js "defer" %}{% include "scripts/dev-grid.js" %}{% endjs %}
-    {%- css "local" -%}{%- include 'css/dev-grid.css' -%}{%- endcss -%}
+    {%- if meta.switches.devGrid -%}
+      {% js "defer" %}{% include "scripts/dev-grid.js" %}{% endjs %}
+      {%- css "local" -%}{%- include 'css/dev-grid.css' -%}{%- endcss -%}
+    {%- endif -%}
     {% include "partials/shortcuts.njk" %}
-    {% js "defer" %}{% include "scripts/tooltip.js" %}{% endjs %}
+    {%- if meta.switches.tooltips -%}
+      {% js "defer" %}{% include "scripts/tooltip.js" %}{% endjs %}
+    {%- endif -%}
     {%- if meta.easteregg -%}
       <script type="module" src="/assets/scripts/components/custom-easteregg.js"></script>
       <custom-easteregg{% if meta.eastereggKeyword %} keyword="{{ meta.eastereggKeyword }}"{% endif %}{% if meta.eastereggShape %} shape="{{ meta.eastereggShape }}"{% endif %}></custom-easteregg>
     {%- endif -%}
-    <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/serviceworker.js')
-      }
-    </script>
+    {%- if meta.switches.serviceWorker -%}
+      <script>
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('/serviceworker.js')
+        }
+      </script>
+    {%- endif -%}
   </body>
 </html>

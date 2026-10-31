@@ -1,3 +1,4 @@
+{%- if meta.switches.footer -%}
 <footer class="site-footer | mt-l-xl p-s-m">
   <div class="wrapper">
     <div class="cluster gutter-xs">
@@ -21,23 +22,27 @@
         {% endfor %}
       </nav>
 
-      {# Unhidden by shortcuts.js, so it never shows without the script that makes it work. #}
-      <button type="button" class="footer-shortcuts" data-shortcuts-open aria-haspopup="dialog" hidden>{{ words.keyboardShortcuts }}</button>
+      {% if meta.switches.shortcuts %}
+        {# Unhidden by shortcuts.js, so it never shows without the script that makes it work. #}
+        <button type="button" class="footer-shortcuts" data-shortcuts-open aria-haspopup="dialog" hidden>{{ words.keyboardShortcuts }}</button>
+      {% endif %}
 
       <nav class="cluster" aria-label="{{ meta.navigation.ariaPlatforms }}">
-        <!-- gets the first item from the feed loop set in meta -->
-        <a
-          href="{{ meta.blog.feedLinks[0].url }}"
-          rel="alternate"
-          type="{{ meta.blog.feedLinks[0].type }}"
-          class="button"
-          data-icon
-          data-tooltip="{{ meta.blog.feedLinks[0].title }}"
-          data-tooltip-position="top"
-        >
-          <span class="visually-hidden">{{ meta.blog.feedLinks[0].title }}</span>
-          {% svg "misc/rss" %}
-        </a>
+        {% if meta.switches.feeds %}
+          <!-- gets the first item from the feed loop set in meta -->
+          <a
+            href="{{ meta.blog.feedLinks[0].url }}"
+            rel="alternate"
+            type="{{ meta.blog.feedLinks[0].type }}"
+            class="button"
+            data-icon
+            data-tooltip="{{ meta.blog.feedLinks[0].title }}"
+            data-tooltip-position="top"
+          >
+            <span class="visually-hidden">{{ meta.blog.feedLinks[0].title }}</span>
+            {% svg "misc/rss" %}
+          </a>
+        {% endif %}
 
         {% for key, value in personal.platforms %}
           {% if value != "" %}
@@ -48,7 +53,7 @@
               class="no-indicator button"
               data-icon
               href="{{ value }}"
-              rel="me"
+              {% if meta.switches.relMe %}rel="me"{% endif %}
               data-tooltip="{{ platformName }}"
               data-tooltip-position="top"
             >
@@ -69,3 +74,4 @@
       by {{ meta.creator.name }} </aside> #}
   </div>
 </footer>
+{%- endif -%}

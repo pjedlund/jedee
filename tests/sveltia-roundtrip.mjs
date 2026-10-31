@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { isDeepStrictEqual } from 'node:util';
 import { createRequire } from 'node:module';
+import { SWITCHES } from '../src/_config/utils/switches.js';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const require = createRequire(`${ROOT}/package.json`);
@@ -118,4 +119,16 @@ for (const { file, data, fields } of singletons) {
   const same = isDeepStrictEqual(read(text), read(saved.text));
   console.log(`${file}: ${saved.text === text ? 'untouched by a save' : 'a save rewrites it'}; values ${same ? 'identical' : 'CHANGE'}`);
   saved.warnings.forEach((w) => console.log(`   ! ${w}`));
+}
+// settings.yaml must come out of a save with every value it went in with, and every switch must be a field in the form: a yes/no field that is missing from the file is saved as false, which would turn that part of the site off.
+const settingsSingleton = singletons.find(({ file }) => file === 'src/_data/settings.yaml');
+if (settingsSingleton) {
+  const text = fs.readFileSync(`${ROOT}/${settingsSingleton.file}`, 'utf8');
+  const before = flatten(jsyaml.load(text));
+  const after = flatten(jsyaml.load(sveltiaSaveData(text, settingsSingleton.fields).text));
+  for (const key of Object.keys(before)) if (!(key in after)) console.log(`   ! ${settingsSingleton.file}: a save drops ${key}`);
+  for (const name of SWITCHES) {
+    if (!settingsSingleton.fields.some(([field]) => field === `switches.${name}`)) console.log(`   ! ${settingsSingleton.file}: switches.${name} has no field in admin/config.yml`);
+    if (!(`switches.${name}` in before)) console.log(`   ! ${settingsSingleton.file}: switches.${name} is not in the file, so a save would write false`);
+  }
 }

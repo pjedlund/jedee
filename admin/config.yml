@@ -288,6 +288,18 @@ singletons:
           # Any single emoji works as a shape; add one here to offer it.
           - { name: eastereggShape, label: Easter egg shape, widget: select, required: false, hint: 'Empty = star', options: [{ label: '⭐️ Star', value: '⭐️' }, { label: '🎉 Party popper', value: '🎉' }, { label: '❤️ Heart', value: '❤️' }, { label: '✝️ Cross', value: '✝️' }, { label: '🎵 Note', value: '🎵' }, { label: '🌍 Globe', value: '🌍' }, { label: '☀️ Sun', value: '☀️' }] }
           - { name: viewRepo, label: View on GitHub link, widget: boolean }
+          - { name: header, label: Header, widget: boolean, hint: 'Off: no header at all, and no skip link, so the site supplies its own' }
+          - { name: mainNav, label: Main menu, widget: boolean, hint: 'Off: no menu in the header' }
+          - { name: themeToggle, label: Light and dark button, widget: boolean, hint: 'Off: no button in the header; the page follows the light or dark setting of the device' }
+          - { name: footer, label: Footer, widget: boolean }
+          - { name: shortcuts, label: Keyboard shortcuts dialog, widget: boolean, hint: 'Off: no dialog, no script and no footer button' }
+          - { name: tooltips, label: Tooltips, widget: boolean, hint: 'Off: no tooltip script. The tooltip styles stay in the page' }
+          - { name: devGrid, label: Layout grid for development, widget: boolean, hint: 'Off: no grid script or styles (Alt+G and Alt+R do nothing)' }
+          - { name: serviceWorker, label: Offline support, widget: boolean, hint: 'Off: no service worker file and nothing registers it' }
+          - { name: feeds, label: Feeds, widget: boolean, hint: 'Off: no feed files at all, no feed links in the head, and no feed button in the footer' }
+          - { name: webmentions, label: Webmentions, widget: boolean, hint: 'Off: no webmention link in the head, nothing fetched at build time, and none shown on posts' }
+          - { name: micropub, label: Micropub and IndieAuth links, widget: boolean, hint: 'Off: the three links in the head go. ⚠ The Netlify function that takes the posts is still deployed' }
+          - { name: relMe, label: rel=me and fediverse:creator, widget: boolean, hint: 'Off: no rel="me" on profile links, in the head or the footer, and no fediverse:creator tag' }
       - name: analytics
         label: Analytics
         widget: object

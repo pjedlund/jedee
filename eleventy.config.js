@@ -28,6 +28,7 @@ import ignoreWikilinksInCode from './src/_config/plugins/interlinker-ignore-code
 import shortcodes from './src/_config/shortcodes.js';
 import {themeDir} from './src/_config/utils/theme.js';
 import {loadWords} from './src/_config/utils/site.js';
+import {resolveSwitches} from './src/_config/utils/switches.js';
 
 // Caps how many images fetch + encode at once, to keep a cold build's memory down. Lower it if a cold build still runs out of memory.
 import Image from '@11ty/eleventy-img';
@@ -251,6 +252,14 @@ export default async function(eleventyConfig) {
     'node_modules/maplibre-gl/dist/maplibre-gl.css': `assets/components/maplibre-gl.css`,
     'node_modules/@11ty/is-land/dist/is-land.min.js': `assets/components/is-land.min.js`
   });
+
+  // ---------------------- switched-off parts that are pages: ignores must be set here, before the data cascade runs
+  const switches = resolveSwitches(settings);
+  if (!switches.feeds) {
+    eleventyConfig.ignores.add('src/common/feed-*.njk');
+    eleventyConfig.ignores.add('src/feeds/**');
+  }
+  if (!switches.serviceWorker) eleventyConfig.ignores.add('src/pages/serviceworker.njk');
 
   // ----------------------  ignore test files
   if (process.env.ELEVENTY_ENV != 'test') {
