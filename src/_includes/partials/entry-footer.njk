@@ -22,10 +22,12 @@
   </p>
 {% endif %}
 
-<p class="text-step-min-1">
-  {{ words.webmentionPrompt }}
-  <a href="https://indieweb.org/Webmention">{{ words.webmentionLink }}</a>
-</p>
+{% if meta.switches.webmentions %}
+  <p class="text-step-min-1">
+    {{ words.webmentionPrompt }}
+    <a href="https://indieweb.org/Webmention">{{ words.webmentionLink }}</a>
+  </p>
+{% endif %}
 
 {# Received webmentions are rendered PER-LAYOUT (article/note/photo only), not here — see partials/webmentions.njk + each layout's bare include. The text CTA above stays on all post types. #}
 {% include 'partials/edit-on.njk' %}

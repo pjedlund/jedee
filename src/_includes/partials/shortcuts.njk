@@ -3,12 +3,14 @@
 <dialog id="shortcuts" class="shortcuts | flow" aria-labelledby="shortcuts-title" closedby="any">
   <h2 id="shortcuts-title" tabindex="-1" autofocus>{{ words.keyboardShortcuts }}</h2>
   <dl class="shortcuts-list">
-    <dt><kbd><kbd data-pc="Ctrl">⌘</kbd><kbd>K</kbd></kbd></dt>
-    <dd>{{ words.shortcutSearch }}</dd>
-    <dt><kbd>↓</kbd> <kbd>↑</kbd></dt>
-    <dd>{{ words.shortcutMove }}</dd>
-    <dt><kbd>Enter</kbd></dt>
-    <dd>{{ words.shortcutOpen }}</dd>
+    {% if meta.switches.header and settings.search.enabled %}
+      <dt><kbd><kbd data-pc="Ctrl">⌘</kbd><kbd>K</kbd></kbd></dt>
+      <dd>{{ words.shortcutSearch }}</dd>
+      <dt><kbd>↓</kbd> <kbd>↑</kbd></dt>
+      <dd>{{ words.shortcutMove }}</dd>
+      <dt><kbd>Enter</kbd></dt>
+      <dd>{{ words.shortcutOpen }}</dd>
+    {% endif %}
     <dt><kbd>Esc</kbd></dt>
     <dd>{{ words.shortcutClose }}</dd>
     {% if meta.switches.devGrid %}

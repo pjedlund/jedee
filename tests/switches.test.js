@@ -3,7 +3,6 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { execFileSync } from 'node:child_process'
 import { readdirSync, readFileSync } from 'node:fs'
-import { createRequire } from 'node:module'
 import path from 'node:path'
 import { load } from 'js-yaml'
 import { makeTempSite } from './lib/temp-site.mjs'
@@ -50,6 +49,25 @@ test('resolveSwitches: every switch is on unless settings say false', () => {
   assert.deepEqual(resolveSwitches({ switches: { feeds: false, hideNav: true } }).feeds, false)
   assert.deepEqual(resolveSwitches({ switches: { hideNav: true } }), all, 'a setting that is not a switch is left out')
   assert.throws(() => resolveSwitches({ switches: { feeds: 'no' } }), /switches\.feeds/)
+})
+
+test('a settings file with no switches block builds with every marker in place', async t => {
+  const site = await makeTempSite({ settings: { switches: null } })
+  t.after(() => site.cleanup())
+  await site.build()
+  const page = pageAndScripts(site, PAGE)
+  for (const [name, marker] of Object.entries(MARKERS)) assert.ok(page.includes(marker), `${name}: ${marker} is missing when settings have no switches`)
+})
+
+test('the shortcuts dialog lists the search keys only when there is a search to use them in', async t => {
+  const on = await makeTempSite()
+  t.after(() => on.cleanup())
+  await on.build()
+  assert.ok(on.read(PAGE).includes('<kbd>K</kbd>'), 'the search key is missing')
+  const off = await makeTempSite({ settings: { switches: { header: false } } })
+  t.after(() => off.cleanup())
+  await off.build()
+  assert.ok(off.read(PAGE).includes('id="shortcuts"') && !off.read(PAGE).includes('<kbd>K</kbd>'), 'the dialog still lists the search keys')
 })
 
 test('on by default: the header, menu button area and footer are not empty', async t => {
@@ -151,11 +169,13 @@ test('webmentions: saved ones show on a note, and not when the switch is off', a
   t.after(() => on.cleanup())
   await on.build()
   assert.match(on.read('notes/a-small-note/index.html'), /A saved reply text/)
+  assert.match(on.read('notes/a-small-note/index.html'), /indieweb\.org\/Webmention/, 'the invitation to send one is missing')
 
   const off = await makeTempSite({ settings: { switches: { webmentions: false } }, files })
   t.after(() => off.cleanup())
   await off.build()
   assert.doesNotMatch(off.read('notes/a-small-note/index.html'), /A saved reply text|class="webmentions/)
+  assert.doesNotMatch(off.read('notes/a-small-note/index.html'), /indieweb\.org\/Webmention/, 'the invitation to send one is still there')
 })
 
 // The form: a yes/no field missing from settings.yaml is saved as false, which would turn that part of the site off.
@@ -171,11 +191,7 @@ test('the Sveltia form has a yes/no field for every switch, and settings.yaml ho
   }
 })
 
-// ⚠ The report needs the `yaml` package (Sveltia's own YAML library), which this project does not list as a dependency yet; without it the case is skipped, not passed.
-let hasYaml = true
-try { createRequire(path.join(ROOT, 'package.json')).resolve('yaml') } catch { hasYaml = false }
-
-test('a Sveltia save of settings.yaml keeps theme, site, analytics, postTypes and every switch', { skip: !hasYaml && 'the yaml package is not installed' }, () => {
+test('a Sveltia save of settings.yaml keeps theme, site, analytics, postTypes and every switch', () => {
   const run = (...args) => execFileSync(process.execPath, [path.join(ROOT, 'tests/sveltia-roundtrip.mjs'), ...args], { cwd: ROOT, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 })
   const report = run().split('\n')
   assert.match(report.find(row => row.startsWith('src/_data/settings.yaml:')) ?? '', /values identical/)
