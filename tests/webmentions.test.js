@@ -13,9 +13,10 @@ import {
   webmentionisOwn,
   webmentionSort
 } from '../src/_config/filters/webmentions.js'
+import { author } from '../src/_data/meta.js'
 
-const A = 'https://johanedlund.se/notes/a/'
-const B = 'https://johanedlund.se/notes/b/'
+const A = 'https://site.example/notes/a/'
+const B = 'https://site.example/notes/b/'
 
 // Minimal JF2 feed: two mentions on A (a like + a reply) and one own like on B.
 const feed = {
@@ -44,7 +45,7 @@ const feed = {
       'wm-property': 'like-of',
       'like-of': B,
       published: '2026-01-03T10:00:00Z',
-      author: { name: 'Johan', url: 'https://johanedlund.se' }
+      author: { name: author.name, url: author.website }
     }
   ]
 }
@@ -55,7 +56,7 @@ test('webmentionGetForUrl: filters by wm-target', () => {
   assert.deepEqual(onA.map(m => m['wm-id']).sort(), [1, 2])
 
   assert.equal(webmentionGetForUrl(feed, B).length, 1)
-  assert.equal(webmentionGetForUrl(feed, 'https://johanedlund.se/notes/zzz/').length, 0)
+  assert.equal(webmentionGetForUrl(feed, 'https://site.example/notes/zzz/').length, 0)
 })
 
 test('webmentionGetForUrl: a list of targets merges twins, one source reacting to both counts once', () => {
@@ -68,12 +69,12 @@ test('webmentionGetForUrl: a list of targets merges twins, one source reacting t
   assert.deepEqual(webmentionGetForUrl(twinFeed, [A, B]).map(m => m['wm-id']), [7, 9])
 })
 
-test('webmentionisOwn: true only for Johan\'s identities', () => {
+test('webmentionisOwn: true only for the site owner\'s identities', () => {
   // own apex URL
-  assert.equal(webmentionisOwn({ author: { url: 'https://johanedlund.se' } }), true)
-  // own bsky + mastodon
-  assert.equal(webmentionisOwn({ author: { url: 'https://bsky.app/profile/johanedlund.se' } }), true)
-  assert.equal(webmentionisOwn({ author: { url: 'https://mastodon.social/@pjedlund' } }), true)
+  assert.equal(webmentionisOwn({ author: { url: author.website } }), true)
+  // every rel=me profile in settings
+  assert.ok(author.me.length > 0, 'settings has no rel=me profiles to test')
+  for (const url of author.me) assert.equal(webmentionisOwn({ author: { url } }), true, url)
   // a stranger
   assert.equal(webmentionisOwn({ author: { url: 'https://bob.example' } }), false)
   // no author / no url → falsy
@@ -84,12 +85,12 @@ test('webmentionisOwn: true only for Johan\'s identities', () => {
 test('webmentionisOwn: true for the silo-post self-echo (brid.gy /post/ source)', () => {
   // Bridgy backfeeds a Flickr photo's own description as a mention-of with a
   // /post/ source — drop it, even though its author is a silo profile (Flickr),
-  // not one of Johan's own identity URLs.
+  // not one of the site owner's own identity URLs.
   assert.equal(
     webmentionisOwn({
       'wm-source': 'https://brid.gy/post/flickr/36098627@N00/53236844443',
-      author: { name: 'Johan Edlund', url: 'https://www.flickr.com/people/pjedlund/' },
-      content: { text: 'Brygga 4, Ribersborg…' }
+      author: { name: author.name, url: 'https://www.flickr.com/people/someone-else/' },
+      content: { text: 'A photo caption' }
     }),
     true
   )
@@ -97,7 +98,7 @@ test('webmentionisOwn: true for the silo-post self-echo (brid.gy /post/ source)'
   assert.equal(
     webmentionisOwn({
       'wm-source': 'https://brid.gy/comment/flickr/36098627@N00/53236844443/123',
-      author: { name: 'Johan Edlund', url: 'https://www.flickr.com/people/pjedlund/' },
+      author: { name: author.name, url: 'https://www.flickr.com/people/someone-else/' },
       content: { text: 'Thanks a lot!' }
     }),
     false

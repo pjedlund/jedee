@@ -1,9 +1,10 @@
 /*
 EXTERNAL LINK
 A small ↗ after outbound text links in prose and on the design-system page; it is dim at rest and takes off up and to the right, in the link's hover orange, on hover. Internal links are relative (/about/), so they never match href^='http'. Decorative — links open in the same tab, so no extra announcement.
+`__SITE_DOMAIN__` is swapped for the host name of settings.identity.website when the CSS is built.
 `.no-indicator` opts a link out — use it for any link whose content isn't words (an image-only link would draw a stray arrow under the picture).
 */
-:is(.prose, .design-system) a[href^='http']:where(:not([href*='johanedlund.se'], [href*='localhost'], .no-indicator))::after { /* ⚠ :where() keeps the exclusions out of specificity, or this rule beats the hover and motion rules below */
+:is(.prose, .design-system) a[href^='http']:where(:not([href*='__SITE_DOMAIN__'], [href*='localhost'], .no-indicator))::after { /* ⚠ :where() keeps the exclusions out of specificity, or this rule beats the hover and motion rules below */
   --external-lift: 0.1em; /* how far the arrow takes off on hover */
   --external-top: 0.22em;
 

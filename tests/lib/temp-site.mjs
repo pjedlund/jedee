@@ -57,9 +57,9 @@ export async function makeTempSite({ settings = {}, files = {} } = {}) {
 
   return {
     dir,
-    build() {
+    build(env = {}) {
       return new Promise((resolve, reject) => {
-        const child = spawn(process.execPath, [path.join(root, 'node_modules/@11ty/eleventy/cmd.cjs')], { cwd: dir, env: { ...process.env, ELEVENTY_ENV: 'production' } });
+        const child = spawn(process.execPath, [path.join(root, 'node_modules/@11ty/eleventy/cmd.cjs')], { cwd: dir, env: { ...process.env, ELEVENTY_ENV: 'production', ...env } });
         let output = '';
         child.stdout.on('data', chunk => (output += chunk));
         child.stderr.on('data', chunk => (output += chunk));

@@ -8,6 +8,7 @@ import postcss from 'postcss';
 import postcssImport from 'postcss-import';
 import tailwindcss from 'tailwindcss';
 import tailwindConfig, {themeFromTokens} from '../../../tailwind.config.js';
+import {siteDomain} from '../../_data/meta.js';
 import {themeDir} from '../utils/theme.js';
 
 const buildCss = async (inputPath, outputPaths) => {
@@ -29,13 +30,14 @@ const buildCss = async (inputPath, outputPaths) => {
     autoprefixer,
     cssnano
   ]).process(inputContent, {from: inputPath});
+  const css = result.css.replaceAll('__SITE_DOMAIN__', siteDomain); // the site's own links get no ↗
 
   for (const outputPath of outputPaths) {
     await fs.mkdir(path.dirname(outputPath), {recursive: true});
-    await fs.writeFile(outputPath, result.css);
+    await fs.writeFile(outputPath, css);
   }
 
-  return result.css;
+  return css;
 };
 
 // Serving ALSO writes the global CSS as a plain file, so a CSS save costs no Eleventy rebuild. ⚠ Condition must stay in step with the runMode branch in head/css-inline.njk, which is what links this file.

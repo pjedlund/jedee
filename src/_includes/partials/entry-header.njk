@@ -42,7 +42,7 @@
   {%- for pt in navigation.postTypes %}{% if pt.collection == category %}
     <a class="meta-item" href="{{ pt.url }}">{% svg 'posts/' + pt.icon, '', 'meta-icon' %}{{ pt.text }}</a>
   {%- endif %}{% endfor %}
-  {# Activity pages only: the activity type with its own glyph, to the left of the date. activityType is set only on activity posts, so this block never renders on other types. Small local icon+label map — Johan's four types ("Gym" is the weight-training label). #}
+  {# Activity pages only: the activity type with its own glyph, to the left of the date. activityType is set only on activity posts, so this block never renders on other types. Small local icon+label map — the site's four types ("Gym" is the weight-training label). #}
   {%- if activityType %}
     {%- set activityMeta = {
       "orienteering": {"icon": "compass", "label": "Orienteering"},

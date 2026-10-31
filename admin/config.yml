@@ -249,6 +249,7 @@ singletons:
           - { name: bio, label: Bio, widget: text, hint: 'llms.txt' }
           - { name: description, label: Site description, widget: string }
           - { name: feedDescription, label: Feed description, widget: string }
+          - { name: ogAlt, label: Share image description, widget: string, hint: 'Alt text for the fallback preview image; it should describe what npm run og:default draws' }
           - { name: address, label: Postal address, widget: text, hint: 'Shown on the legal and privacy pages' }
       - name: profiles
         label: Profiles
@@ -280,11 +281,17 @@ singletons:
           # Any single emoji works as a shape; add one here to offer it.
           - { name: eastereggShape, label: Easter egg shape, widget: select, required: false, hint: 'Empty = star', options: [{ label: '⭐️ Star', value: '⭐️' }, { label: '🎉 Party popper', value: '🎉' }, { label: '❤️ Heart', value: '❤️' }, { label: '✝️ Cross', value: '✝️' }, { label: '🎵 Note', value: '🎵' }, { label: '🌍 Globe', value: '🌍' }, { label: '☀️ Sun', value: '☀️' }] }
           - { name: viewRepo, label: View on GitHub link, widget: boolean }
+      - name: analytics
+        label: Analytics
+        widget: object
+        fields:
+          - { name: umamiId, label: Umami website ID, widget: string, required: false, hint: 'Empty = no analytics script at all. Otherwise the Umami script loads on deployed builds only, never on the dev server' }
       - name: wiki
         label: Wiki
         widget: object
         fields:
           - { name: visibility, label: Visibility, widget: select, options: [private, local, public], hint: 'private: never built. local: dev server only. public: built everywhere, production included' }
+          - { name: attribution, label: Byline on wiki pages, widget: string, required: false, hint: 'The end of the line above every wiki page: "Part of the jedee wiki — " followed by this text' }
       - name: search
         label: Search
         widget: object

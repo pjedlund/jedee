@@ -109,18 +109,18 @@ test('rewriteFrontmatter: read-of h-cite -> link + author (book)', () => {
   const out = rewriteFrontmatter({
     'read-of': {
       type: 'cite',
-      name: 'Anna Karenina',
-      author: 'Leo Tolstoy',
+      name: 'Pride and Prejudice',
+      author: 'Jane Austen',
       photo: 'https://img/cover.jpg',
       url: 'https://openlibrary.org/works/OL1394508W',
-      published: '1878'
+      published: '1813'
     }
   })
-  assert.equal(out.title, 'Anna Karenina')
+  assert.equal(out.title, 'Pride and Prejudice')
   assert.equal(out.link, 'https://openlibrary.org/works/OL1394508W')
   assert.equal(out.cover, 'https://img/cover.jpg')
-  assert.equal(out.author, 'Leo Tolstoy')
-  assert.equal(out.year, '1878')
+  assert.equal(out.author, 'Jane Austen')
+  assert.equal(out.year, '1813')
   // read/watch are unaffected by the listen split: creator stays `author`, and the
   // jam-only `artist`/`album` keys are never introduced.
   assert.ok(!('artist' in out))
@@ -480,7 +480,7 @@ test('titleFromContent: caps at ~6 words on a word boundary, no ellipsis', () =>
 test('titleFromContent: a dangling stopword left by the cut is trimmed', () => {
   // "...should update the" cuts at 6 words ending on a stopword -> trim it
   assert.equal(
-    titleFromContent('I feel we should update the Tolstoy project parent repo'),
+    titleFromContent('I feel we should update the Example project parent repo'),
     'I feel we should update'
   )
   // HTML is stripped before the cap; "...from Sparkles via" -> "via" trimmed

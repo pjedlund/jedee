@@ -11,14 +11,14 @@ import assert from 'node:assert/strict'
 
 import { fetchWebmentions } from '../src/_config/utils/webmention-fetch.js'
 
-const ok = { domain: 'johanedlund.se', token: 'tok' }
+const ok = { domain: 'example.com', token: 'tok' }
 const feed = { children: [{ 'wm-id': 1 }, { 'wm-id': 2 }] }
 
 test('missing config returns false rather than attempting a fetch', async () => {
   const never = () => { throw new Error('should not have been called') }
 
   assert.equal(await fetchWebmentions({ token: 'tok', fetcher: never }), false)
-  assert.equal(await fetchWebmentions({ domain: 'johanedlund.se', fetcher: never }), false)
+  assert.equal(await fetchWebmentions({ domain: 'example.com', fetcher: never }), false)
 })
 
 test('a throwing fetch returns false instead of propagating', async () => {
@@ -50,7 +50,7 @@ test('since is only appended when given, and the token is passed through', async
   const capture = async url => { seen = url; return feed }
 
   await fetchWebmentions({ ...ok, fetcher: capture })
-  assert.ok(seen.includes('domain=johanedlund.se'), seen)
+  assert.ok(seen.includes('domain=example.com'), seen)
   assert.ok(seen.includes('token=tok'), seen)
   assert.ok(!seen.includes('since='), seen)
 

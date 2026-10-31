@@ -59,7 +59,7 @@ test('sample theme replaces the look', async t => {
 // The favicons are generated once per site (npm run favicons), so they belong to the site rather than the theme.
 const SITE_OWNED = new Set(['favicon.svg']);
 const JEDEE_FONTS = ['source serif', 'source sans', 'source code pro'];
-// ⚠ This page's prose names a font, as content rather than styling; changing it would change johanedlund.se.
+// ⚠ This page's prose names a font, as content rather than styling; changing it would change the site's content.
 const NAMES_A_FONT_IN_PROSE = new Set(['design-system/index.html']);
 
 test('no JEDEE colour or font is left in a sample build', async t => {

@@ -15,15 +15,15 @@ export const webmentionGetForUrl = (webmentions, urls) => {
   });
 };
 
-/** True if the mention is one of Johan's own / a self-echo, so the template can exclude it. Two cases:
+/** True if the mention is one of the site owner's own / a self-echo, so the template can exclude it. Two cases:
  * (1) Bridgy backfeeds the silo POST itself: `wm-source` is a brid.gy `/post/` URL (vs `/comment/`, `/like/`, `/repost/`) — never a genuine response, always drop.
- * (2) the author is one of Johan's own identities (POSSE copies bouncing back). NB: silo profiles (e.g. Flickr) are excluded, so his own genuine `/comment/` mentions still render. */
+ * (2) the author is one of the site owner's own identities (POSSE copies bouncing back). NB: silo profiles (e.g. Flickr) are excluded, so his own genuine `/comment/` mentions still render. */
 export const webmentionisOwn = webmention => {
   // (1) Self-syndication echo: the silo post mentioning itself.
   const source = webmention['wm-source'] || '';
   if (/^https?:\/\/brid\.gy\/post\//.test(source)) return true;
 
-  // (2) Author is one of Johan's own identities.
+  // (2) Author is one of the site owner's own identities.
   const urls = [author.website, ...author.me];
   const authorUrl = webmention.author ? webmention.author.url : false;
   return authorUrl && urls.includes(authorUrl);

@@ -50,7 +50,7 @@ export const themeDark = themeConfig.themeDark; // <meta theme-color> in dark mo
 export const themePreloads = themeConfig.preloads; // font files head/preloads.njk asks for early
 export const themeOg = themeConfig.og; // share cards: colours, font names and files
 export const opengraph_default = '/assets/images/template/opengraph-default.jpg'; // fallback/default meta image
-export const opengraph_default_alt = 'Johan Edlund — personal website'; // alt text for default meta image
+export const opengraph_default_alt = identity.ogAlt || identity.description; // alt text for default meta image
 export const blog = {
   // RSS feed
   name: identity.name,

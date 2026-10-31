@@ -27,7 +27,7 @@ const slug = value => value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^
 
 /* ---------- the two pieces worth testing ---------- */
 
-/** Merge existing + MusicBrainz genres into the final list for one post. Existing values always survive — this enriches, it never overrules what a clip or Johan put there. Release-group genres outrank artist genres at equal vote count, because "the genre of this record" beats "the genre of everything this act ever did". */
+/** Merge existing + MusicBrainz genres into the final list for one post. Existing values always survive — this enriches, it never overrules what a clip or the site owner put there. Release-group genres outrank artist genres at equal vote count, because "the genre of this record" beats "the genre of everything this act ever did". */
 export function pickGenres(existing, entry, max = MAX_GENRES) {
   const kept = existing.map(unwikilink).filter(Boolean);
   const seen = new Map(kept.map(name => [slug(name), name]));

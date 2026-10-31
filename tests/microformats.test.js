@@ -12,6 +12,7 @@ import { readFileSync, existsSync, readdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 import { mf2 } from 'microformats-parser'
+import { author } from '../src/_data/meta.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const DIST = join(__dirname, '..', 'dist')
@@ -19,7 +20,7 @@ const DIST = join(__dirname, '..', 'dist')
 // process.env.URL (set by Netlify; pinned to localhost in .env for local dev),
 // so the entry permalink/author URLs we assert against share that base.
 const BASE = process.env.URL || 'http://localhost:8080'
-const AUTHOR = 'Johan Edlund' // meta.author.name
+const AUTHOR = author.name
 
 // type -> built section directory (per-post pages live one level below)
 const TYPE_DIR = {

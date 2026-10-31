@@ -66,7 +66,7 @@ schema: BlogPosting
       </p>
     {% endif %}
 
-    {# Captions are free prose Johan writes — almost always Swedish for orienteering events, so activities.json defaults captionLang to "sv"; a rare English caption sets `captionLang: en` in its own front matter. #}
+    {# Captions are free prose the site owner writes — almost always Swedish for orienteering events, so activities.json defaults captionLang to "sv"; a rare English caption sets `captionLang: en` in its own front matter. #}
     {% if content %}
       <div class="e-content | wrapper-pass flow"{% if captionLang %} lang="{{ captionLang }}"{% endif %}>
         {{ content | safe }}
