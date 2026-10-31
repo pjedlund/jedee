@@ -28,5 +28,5 @@
   "readme.md",
   "LICENSE",
   "tests/no-personal-details.test.js",
-  "tests/site-owned.json"
+  "tests/site-files.json"
 ]

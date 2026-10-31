@@ -1,11 +1,15 @@
 {
   "added": [
     {
-      "path": "/wiki/what-a-site-owns/",
-      "reason": "New wiki page describing what a site owns and what is shared"
+      "path": "/wiki/shared-files-and-site-files/",
+      "reason": "New wiki page describing shared files and site files"
     }
   ],
   "changed": [
+    {
+      "path": "/wiki/the-indieweb/",
+      "reason": "A new backlink from the wiki page 'Shared files and site files'"
+    },
     {
       "path": "/design-system/",
       "reason": "The link to the token files points at their new folder in the theme, and the printed name of the prose-rhythm stylesheet now gives its real folder"
@@ -36,7 +40,7 @@
     },
     {
       "path": "/wiki/",
-      "reason": "One line added for the new page 'What a site owns'"
+      "reason": "One line added for the new page 'Shared files and site files'"
     },
     {
       "path": "/wiki/keyboard-shortcuts/",
@@ -152,7 +156,7 @@
     },
     {
       "path": "/sitemap.xml",
-      "reason": "The new wiki page 'What a site owns' is listed"
+      "reason": "The new wiki page 'Shared files and site files' is listed"
     }
   ]
 }

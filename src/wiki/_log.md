@@ -5,9 +5,9 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
-## [2026-10-31] ingest | What a site owns
+## [2026-10-31] ingest | Shared files and site files
 
-New page, from the work that made the site reusable by a second site: a theme folder, switches for what was always on, a post-type list and a test that fails when a shared file names its owner. Records the bare-page measurement method. Also corrected stale folder paths on the pages for Accessibility, Link checking, Micropub, Wikilinks, The accessibility test, Sveltia CMS, The place map, Design token sync, Shadows, Layout shift, Favicons, Keyboard shortcuts, The theme toggle, Text wrapping, Tooltips, Watch loops, Font subsetting, OpenType features, Line length, External-link icons, Vertical rhythm, Progressive web apps and The service worker's three strategies, and updated Themes and starters, Anatomy of a post type and What jedee kept from Eleventy Excellent.
+New page, from the work that made the site reusable by a second site: a theme folder, switches for what was always on, a post-type list and a test that fails when a shared file names this site's details. Records the bare-page measurement method. Also corrected stale folder paths on the pages for Accessibility, Link checking, Micropub, Wikilinks, The accessibility test, Sveltia CMS, The place map, Design token sync, Shadows, Layout shift, Favicons, Keyboard shortcuts, The theme toggle, Text wrapping, Tooltips, Watch loops, Font subsetting, OpenType features, Line length, External-link icons, Vertical rhythm, Progressive web apps and The service worker's three strategies, and updated Themes and starters, Anatomy of a post type and What jedee kept from Eleventy Excellent.
 
 ## [2026-10-29] ingest | Smooth scrolling
 

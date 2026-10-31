@@ -77,7 +77,7 @@ A gap found this way is filled the subsetting way: cut the missing face from the
 
 ## In jedee
 
-Eleventy Excellent ships **static, pre-subset `woff2` files** and has no subsetting step in the build. Its `@font-face` blocks have no `unicode-range`, so adding a character to a file is the whole fix: no CSS change. The full source fonts are bundled beside the subsets. The one exception is Cyrillic (below), which is its own file behind a `unicode-range`. jedee's copies sit in its theme's `fonts/` folder (`src/_includes/themes/jedee/fonts/`) and are published at `/assets/fonts/`; a theme with no fonts has no such folder.
+Eleventy Excellent ships **static, pre-subset `woff2` files** and has no subsetting step in the build. Its `@font-face` blocks have no `unicode-range`, so adding a character to a file is the whole fix: no CSS change. The full source fonts are bundled beside the subsets. The one exception is Cyrillic (below), which is a separate file behind a `unicode-range`. jedee's copies sit in its theme's `fonts/` folder (`src/_includes/themes/jedee/fonts/`) and are published at `/assets/fonts/`; a theme with no fonts has no such folder.
 
 Table: The shipped font files, their character counts and their sources
 | file | kind | characters | source in the repo |

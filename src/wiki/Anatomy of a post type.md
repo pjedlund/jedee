@@ -6,7 +6,7 @@ updated: 2026-10-31
 
 jedee has **sixteen** post types. Adding one is not a design problem but a wiring problem: there are nine places a type has to appear before it works, and fifteen of the sixteen fill them the same way. This page is the checklist and the places types legitimately diverge.
 
-The sixteen: article, note, reading, watching, jam, photo, recipe, event, bookmark, reply, repost, like, rsvp, audio, video, activity. A site may build only some of them: `settings.postTypes` lists the ones to build, a missing list builds all sixteen, and `[]` builds none. A type left out has its posts, archive page and feeds ignored, so it has no menu link either (see [[What a site owns]]). Fifteen have a written spec in `_local/project_docs/`; **activities has none** — it arrived through a different route (see [[The activities archive]]) and is the type most likely to be the exception below.
+The sixteen: article, note, reading, watching, jam, photo, recipe, event, bookmark, reply, repost, like, rsvp, audio, video, activity. A site may build only some of them: `settings.postTypes` lists the ones to build, a missing list builds all sixteen, and `[]` builds none. A type left out has its posts, archive page and feeds ignored, so it has no menu link either (see [[Shared files and site files]]). Fifteen have a written spec in `_local/project_docs/`; **activities has none** — it arrived through a different route (see [[The activities archive]]) and is the type most likely to be the exception below.
 
 ## The four-key folder data file
 

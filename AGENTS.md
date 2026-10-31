@@ -72,7 +72,7 @@ src/
   wiki/            # The LLM wiki (see below)
 admin/             # Sveltia CMS (index.html, config.yml)
 netlify/           # Netlify Functions (micropub, health-export)
-tests/             # Unit tests (*.test.js), the build comparison (compare-builds.mjs and compare-allowed.json), the bare-page report (bare-page.mjs) and site-owned.json, the list of files that belong to this site alone
+tests/             # Unit tests (*.test.js), the build comparison (compare-builds.mjs and compare-allowed.json), the bare-page report (bare-page.mjs) and site-files.json, the list of files that belong to this site alone
 dist/              # Build output (local only)
 _local/            # ALL local-only project material (see below)
 ```
