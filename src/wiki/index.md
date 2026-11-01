@@ -3,7 +3,7 @@ description: "The wiki documenting web techniques and how stomme is designed and
 date: 2026-07-31
 ---
 
-The wiki documenting web techniques and how stomme is designed and built. Maintained by Claude Code, following conventions kept in the project's instructions. Pages are named after their concept where one exists ("Microformats", "Text wrapping"): general explanation first, then an "In stomme" section. Purely project-internal pages keep descriptive titles and live under "Stomme itself".
+The wiki documenting web techniques and how stomme is designed and built. Maintained by Claude Code, following conventions kept in the project's instructions. Pages are named after their concept where one exists ("Microformats", "Text wrapping"): general explanation first, then an "In stomme" section. Purely project-internal pages keep descriptive titles and are listed in the sections about the project, towards the end.
 
 stomme is the shared foundation these pages describe: the code and conventions that every site built on it has in common, apart from a site's posts, settings, theme and extra files. An "In stomme" section describes that foundation.
 
@@ -65,9 +65,6 @@ Each entry below says what a page covers and why you would open it. The traps an
 - [[The IndieWeb]] — the movement, its principles, its seven building blocks, and the criticism from inside it about how hard it is to join.
 - [[Micropub]] — the publishing API that gives a static site an editor without giving up the static build.
 - [[Sveltia CMS]] — a git-based editor at `/admin/` for changing posts from a phone, and what it does to a file when it saves one.
-
-## The open web
-
 
 ## Build & delivery
 
