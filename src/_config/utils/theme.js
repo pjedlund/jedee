@@ -32,3 +32,15 @@ export const logoOutline = (svg, file = 'logo.svg') => {
 	if (!paths.length) throw new Error(`${file} has no path with a double-quoted d="…", so the share cards have no logo mark.`);
 	return paths.join(' ');
 };
+
+// The font files a theme's fonts.css loads, each once; a rule with no file (a local() fallback) is left out.
+export const themeFontFiles = css => {
+	const files = new Map();
+	for (const [, rule] of css.matchAll(/@font-face\s*\{([^}]*)\}/g)) {
+		const source = rule.match(/url\(['"]?\/assets\/fonts\/([^'")]+\.woff2)/)?.[1];
+		if (!source || files.has(source)) continue;
+		const value = name => rule.match(new RegExp(`${name}:\\s*([^;]+)`))?.[1].trim();
+		files.set(source, {family: value('font-family').replace(/['"]/g, ''), file: `fonts/${path.basename(source)}`, source, weight: value('font-weight') ?? '400', style: value('font-style') ?? 'normal'});
+	}
+	return [...files.values()];
+};
