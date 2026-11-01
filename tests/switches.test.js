@@ -266,3 +266,32 @@ test('speculation rules: only on a page with a link on the site to fetch ahead',
   assert.ok(!site.read('outward/index.html').includes(rules), 'a page with no link on the site carries the rules')
   assert.ok(site.read('linked/index.html').includes(rules), 'a page with a link on the site lost the rules')
 })
+
+const SHARE_PICTURE = 'src/assets/images/template/opengraph-default.jpg'
+const SHARE_TAGS = ['og:image"', 'og:image:alt', 'og:image:width', 'og:image:height', 'twitter:card', 'twitter:image:alt']
+
+test('share-image tags: a site with no default picture prints none on a page with no picture', async t => {
+  const site = await bareSite({ [SHARE_PICTURE]: null, ...pageFile('words', '<p>Just words.</p>') })
+  t.after(() => site.cleanup())
+  await site.build()
+  const html = site.read('words/index.html')
+  for (const tag of SHARE_TAGS) assert.ok(!html.includes(tag), `${tag} is on a page with no picture to name`)
+  assert.ok(html.includes('og:title'), 'the other share tags went too')
+})
+
+test('share-image tags: a page with its picture has them, and a default picture covers the rest', async t => {
+  const withPicture = { 'src/pages/pictured.njk': '---\ntitle: Pictured\nlayout: base\npermalink: /pictured/\nogImage:\n  url: /assets/images/a.jpg\n  width: 800\n  height: 600\n---\n<p>Words.</p>\n' }
+  const noDefault = await bareSite({ [SHARE_PICTURE]: null, ...withPicture })
+  t.after(() => noDefault.cleanup())
+  await noDefault.build()
+  const pictured = noDefault.read('pictured/index.html')
+  for (const tag of SHARE_TAGS) assert.ok(pictured.includes(tag), `${tag} is missing from a page with a picture`)
+  assert.match(pictured, /og:image"\s+content="[^"]*\/assets\/images\/a\.jpg"/)
+
+  const withDefault = await bareSite(pageFile('words', '<p>Just words.</p>'))
+  t.after(() => withDefault.cleanup())
+  await withDefault.build()
+  const words = withDefault.read('words/index.html')
+  for (const tag of SHARE_TAGS) assert.ok(words.includes(tag), `${tag} is missing where the default picture applies`)
+  assert.match(words, /og:image"\s+content="[^"]*opengraph-default\.jpg"/)
+})

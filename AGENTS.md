@@ -48,7 +48,7 @@ npm run test:unit          # Unit tests (node --test, files in tests/)
 npm run rebuild            # Rebuild dist/ with drafts and hidden things included (BUILD_DRAFTS=1 SHOW_HIDDEN=1), keeping the image folders
 npm run compare            # Compare dist/ with the saved build in _local/baseline/ (add -- --shots to compare pictures too)
 npm run compare:upstream   # In a site: list the shared files that differ from stomme
-npm run bare               # Build a bare page (every switch off, no post types, the sample theme) and print what it weighs and what it asks for
+npm run bare               # Build a bare page (every switch off, no post types, the sample theme, no default share picture) and print what it weighs and what it asks for
 npm run test:skip-link     # Press Tab on the built pages and check the skip link takes focus (run after a build)
 npm run design:system      # Rebuild the local design-system bundle in _local/claude-design-system (needs a theme with a design-system folder)
 npm run mockups            # Re-shoot the wiki's mockup pictures (npm run mockups:check lists the ones that have drifted)
@@ -128,7 +128,7 @@ Every part that used to be always on has a yes/no setting under `switches` in `s
 
 `settings.postTypes` lists the post types the site builds (the category names, such as `note` and `recipe`). A missing value builds all sixteen, `[]` builds none, and a name that isn't a post type stops the build. ⚠ `[]` is a hand edit: the admin form never saves an empty selection, so clearing the form in the CMS puts the site back to all sixteen, not to none. A type left out has no posts, archive page, feeds or menu link, and a Featured or /now pick of it is skipped.
 
-A page's CSS is loaded by what the page uses: the header, footer, menu, prose, buttons, code and the other pieces are each a file in `src/assets/css/local/` that the template using it includes. In dev, saving prose, button or code CSS now costs an Eleventy rebuild, where a file in `src/assets/css/global/` only recompiles the global stylesheet. `npm run bare` is the measure of what is left when everything is off; keep it from growing.
+A page's CSS is loaded by what the page uses: the header, footer, menu, prose, buttons, code and the other pieces are each a file in `src/assets/css/local/` that the template using it includes. In dev, saving prose, button or code CSS now costs an Eleventy rebuild, where a file in `src/assets/css/global/` only recompiles the global stylesheet. `npm run bare` is the measure of what is left when everything is off; keep it from growing. Three things leave a page by what it holds rather than by a switch: `is-land.min.js` and the speculation rules go when the finished page has no island or no link on the site (`src/_config/plugins/finished-page.js`, which must stay after the WebC plugin), and the share-image tags go when neither the page nor the site has a picture to name.
 
 ## Design Tokens
 
