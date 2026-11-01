@@ -7,6 +7,7 @@ import path from 'node:path'
 import { load } from 'js-yaml'
 import { makeTempSite } from './lib/temp-site.mjs'
 import { SWITCHES, resolveSwitches } from '../src/_config/utils/switches.js'
+import { resolveMaps } from '../src/_config/utils/maps.js'
 
 const ROOT = path.resolve(import.meta.dirname, '..')
 const NOTE = '---\ntitle: A small note\ndate: 2026-01-01\n---\n\nHello.\n'
@@ -305,4 +306,40 @@ test('search.json: not built with the header off, built with it on', async t => 
   t.after(() => on.cleanup())
   await on.build()
   assert.ok(on.exists('search.json'), 'search.json is missing with the header on')
+})
+
+const TILES = 'https://tiles.example/maps/somewhere.pmtiles'
+const MAP_SCRIPT = '/assets/scripts/components/place-map.js'
+
+test('resolveMaps: tiles and a whole coverage box, or nothing', () => {
+  assert.deepEqual(resolveMaps({}), { tiles: null, coverage: null })
+  assert.deepEqual(resolveMaps({ maps: { tiles: '' } }), { tiles: null, coverage: null })
+  assert.deepEqual(resolveMaps({ maps: { tiles: TILES } }), { tiles: TILES, coverage: null })
+  assert.deepEqual(resolveMaps({ maps: { tiles: TILES, coverage: { west: 1, south: 2, east: 3, north: 4 } } }), { tiles: TILES, coverage: [1, 2, 3, 4] })
+  assert.throws(() => resolveMaps({ maps: { tiles: TILES, coverage: { west: 1, south: 2 } } }), /settings\.maps\.coverage/)
+})
+
+test('maps with no tiles: no script, no box, and the build says so', async t => {
+  const site = await makeTempSite({ settings: { maps: null } })
+  t.after(() => site.cleanup())
+  const output = await site.build()
+  const html = site.read('design-system/index.html')
+  assert.match(html, /<place-map\b[^>]*\sdata-no-tiles/, 'the map is not marked as having no tiles')
+  assert.ok(!html.includes(MAP_SCRIPT), 'a map with no tiles still loads its 289 KB script')
+  assert.match(html, /[;}]\[data-no-tiles\]\s*\[data-place-map-box\]\{display:none\}/, 'the empty box still shows, or the rule names a tag that is-land renames')
+  assert.match(output, /settings\.maps\.tiles/, 'the build does not say why there is no map')
+  assert.ok(!site.read(MAP_SCRIPT.slice(1)).includes('r2.dev'), 'one site\'s tile address is still in the script')
+})
+
+test('maps with tiles: the script loads, and holds the address and box from settings', async t => {
+  const site = await makeTempSite({ settings: { maps: { tiles: TILES, coverage: { west: 1.5, south: 2.5, east: 3.5, north: 4.5 } } } })
+  t.after(() => site.cleanup())
+  const output = await site.build()
+  const html = site.read('design-system/index.html')
+  assert.ok(html.includes(MAP_SCRIPT), 'the map script is missing')
+  assert.ok(!/<place-map\b[^>]*\sdata-no-tiles/.test(html), 'a map with tiles is marked as having none')
+  assert.ok(!output.includes('settings.maps.tiles'), 'the build warns though tiles are set')
+  const script = site.read(MAP_SCRIPT.slice(1))
+  assert.ok(script.includes(TILES), 'the tile address is not in the script')
+  assert.match(script, /\[1\.5,\s*2\.5,\s*3\.5,\s*4\.5\]/, 'the coverage box is not in the script')
 })

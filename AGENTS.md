@@ -145,7 +145,7 @@ All tokens live in the active theme's `tokens/*.json` and are consumed by the Ta
 
 ## Site Metadata
 
-Identity and social profiles live in `src/_data/settings.yaml`; `src/_data/meta.js` builds the site-wide config (OG defaults, and the theme colors from the active theme's `theme.json`) from it, and `src/_data/personal.js` maps the same values onto Eleventy Excellent's `personal.*` names. `a11yPaths` in `settings.yaml` lists the pages `npm run test:a11y` checks, and `[]` checks every page; with no such key it checks a short list of pages every site has.
+Identity and social profiles live in `src/_data/settings.yaml`; `src/_data/meta.js` builds the site-wide config (OG defaults, and the theme colors from the active theme's `theme.json`) from it, and `src/_data/personal.js` maps the same values onto Eleventy Excellent's `personal.*` names. `maps` in `settings.yaml` holds the address of the map tiles and the area they cover; with no tiles, `<place-map>` shows no map, and the build says so. `a11yPaths` in `settings.yaml` lists the pages `npm run test:a11y` checks, and `[]` checks every page; with no such key it checks a short list of pages every site has.
 
 ## Language and Words
 

@@ -25,6 +25,11 @@ place-map > .place-map-live + :not(script, link) {
   margin-block-start: var(--space-l);
 }
 
+/* A site with no tiles (settings.maps): no map, and no empty box where one would be. What else is in <place-map>, such as the activities table, stays. ⚠ No tag name here: until it wakes, is-land renames the element to is-land--place-map. */
+[data-no-tiles] [data-place-map-box] {
+  display: none;
+}
+
 /* Live inline map. Rendered server-side so its ratio holds the space from first paint, and the box keeps its height when the canvas moves out to the overlay. position:relative anchors the maximize button. */
 .place-map-live {
   position: relative;

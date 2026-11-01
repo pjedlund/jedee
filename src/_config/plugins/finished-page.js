@@ -18,6 +18,15 @@ export const finishPage = html => {
   return page;
 };
 
-export const finishedPage = eleventyConfig => {
-  eleventyConfig.addTransform('finished-page', (content, path) => (path && path.endsWith('.html') ? finishPage(content) : content));
+export const finishedPage = (eleventyConfig, { maps } = {}) => {
+  let mapsWithoutTiles = 0;
+  eleventyConfig.addTransform('finished-page', (content, path) => {
+    if (!path || !path.endsWith('.html')) return content;
+    if (!maps?.tiles && content.includes('<place-map')) mapsWithoutTiles++;
+    return finishPage(content);
+  });
+  eleventyConfig.on('eleventy.after', () => {
+    if (mapsWithoutTiles) console.log(`[maps] ${mapsWithoutTiles} page(s) use <place-map>, but settings.maps.tiles is empty, so they show no map. See the wiki "The place map".`);
+    mapsWithoutTiles = 0;
+  });
 };

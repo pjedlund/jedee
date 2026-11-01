@@ -2,6 +2,12 @@ import esbuild from 'esbuild';
 import fg from 'fast-glob';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import {settings} from '../../_data/meta.js';
+import {resolveMaps} from '../utils/maps.js';
+
+// Values from settings that a script is built with.
+const maps = resolveMaps(settings);
+const define = {__MAP_TILES__: JSON.stringify(maps.tiles), __MAP_COVERAGE__: JSON.stringify(maps.coverage)};
 
 export const buildJs = async (inputPath, outputPath, {format} = {}) => {
   const result = await esbuild.build({
@@ -10,6 +16,7 @@ export const buildJs = async (inputPath, outputPath, {format} = {}) => {
     bundle: true,
     minify: true,
     write: false,
+    define,
     ...(format && {format})
   });
 
