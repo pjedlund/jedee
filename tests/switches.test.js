@@ -220,3 +220,35 @@ test('humans.txt names no tool that belongs to one site, and a theme can add its
   await themed.build()
   assert.match(themed.read('humans.txt'), /Components: 11ty and a shed\n\s*Software: A pencil/)
 })
+
+// A bare page: every switch off, no post types, as `npm run bare` builds it. Tests of what it carries add their pages through `files`.
+const BARE_SWITCHES = Object.fromEntries([...SWITCHES, 'nameReveal', 'viewRepo'].map(name => [name, false]))
+const bareSite = (files = {}) => makeTempSite({ settings: { postTypes: [], switches: BARE_SWITCHES }, files })
+const pageFile = (slug, body) => ({ [`src/pages/${slug}.njk`]: `---\ntitle: ${slug}\nlayout: base\npermalink: /${slug}/\n---\n\n${body}\n` })
+const IS_LAND = '/assets/components/is-land.min.js'
+
+test('is-land: a page with no island asks for no script', async t => {
+  const site = await bareSite(pageFile('words', '<p>Just words.</p>'))
+  t.after(() => site.cleanup())
+  await site.build()
+  assert.ok(!site.read('words/index.html').includes(IS_LAND), 'the bare page still loads is-land')
+})
+
+// ⚠ The half that matters: a wrong gate makes islands silently never start, and an embed only becomes an <is-land> after WebC has run.
+test('is-land: a page whose only island comes from a YouTube embed still loads the script', async t => {
+  const site = await bareSite(pageFile('tube', '<custom-youtube @slug="abc123" @label="A film"></custom-youtube>'))
+  t.after(() => site.cleanup())
+  await site.build()
+  const html = site.read('tube/index.html')
+  assert.match(html, /<is-land\b/, 'the embed did not render an island')
+  assert.ok(html.includes(IS_LAND), 'an island with no is-land script never starts')
+})
+
+test('is-land: the theme toggle, an island in the header, still gets the script', async t => {
+  const site = await makeTempSite()
+  t.after(() => site.cleanup())
+  await site.build()
+  const html = site.read(PAGE)
+  assert.match(html, /<is-land\b/)
+  assert.ok(html.includes(IS_LAND))
+})

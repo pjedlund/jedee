@@ -133,6 +133,9 @@ export default async function(eleventyConfig) {
     transformData: {words: loadWords()}
   });
 
+  // ⚠ After WebC: this one reads the page once the components have become their markup.
+  eleventyConfig.addPlugin(plugins.finishedPage);
+
   eleventyConfig.addPlugin(plugins.eleventyImageTransformPlugin, {
     transform: (sharp) => {
       sharp.keepMetadata();
