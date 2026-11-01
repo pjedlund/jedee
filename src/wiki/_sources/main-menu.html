@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en" data-theme="light" data-dark-shot>
+<head>
+<meta charset="utf-8">
+<title>The main menu — wiki mockup</title>
+
+<style>
+
+  :root { --ink: #23292F; --paper: #F4F4F2; --rule: #cbcdd2; --chrome: #e8e8e6; --chrome-rule: #d3d3d0; --muted: #68727F; --dot: #c8c8c4; --pill: #fff; }
+  /* The site's dark theme for the paper, and a dark browser chrome to match. */
+  [data-theme="dark"] { --ink: #c8cacc; --paper: #141619; --rule: #383b3f; --chrome: #26292d; --chrome-rule: #383b3f; --muted: #9aa0a6; --dot: #4a4e54; --pill: #1b1d20; }
+
+  body { margin: 0; padding: 40px; background: #ddd; font: 14px/1.5 system-ui, sans-serif; color: var(--ink); }
+
+  /* A specimen carries a paper the way a device frame carries a bezel — so one shot reads deliberately on either theme of the wiki page. */
+  .specimen { inline-size: fit-content; background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 22px 26px 26px; margin-block-end: 44px; }
+
+  .label { font-family: ui-monospace, monospace; font-size: 12px; color: var(--ink); opacity: 0.55; margin: 0 0 12px; }
+
+  /* Browser chrome drawn OUTSIDE the scaled iframe, so it stays crisp while the page inside is scaled. */
+  .browser { border: 1px solid var(--chrome-rule); border-radius: 7px; overflow: hidden; background: var(--chrome); inline-size: fit-content; }
+  .bar { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-block-end: 1px solid var(--chrome-rule); }
+  .bar .dot { inline-size: 8px; block-size: 8px; border-radius: 50%; background: var(--dot); flex: none; }
+  .bar .pill { flex: 1; background: var(--pill); border-radius: 999px; padding: 3px 10px; font-size: 10px; color: var(--muted); margin-inline-start: 4px; }
+
+  /* The frame renders at its true width and is scaled down here — scaling, not resizing, is what keeps a 1280px page a 1280px page. */
+  .viewport { overflow: hidden; }
+  .viewport iframe { border: 0; display: block; transform: scale(0.5); transform-origin: top left; }
+
+  .pair { display: flex; align-items: flex-start; gap: 30px; }
+  /* Two 1280px frames side by side come to 1368 CSS px — twice the figure column. Stacked, the two breadcrumbs also line up vertically, which is what the eye needs here. */
+  .stack { display: grid; gap: 22px; }
+  .pair .cap { font-family: ui-monospace, monospace; font-size: 11px; opacity: 0.55; margin: 0 0 8px; }
+</style>
+</head>
+<body>
+
+<!-- ⚠ Every frame below is built by CLONING one header string, so the markup is identical by construction and only the named variable can differ. -->
+<div class="specimen" data-shot="main-menu-open">
+  <p class="label">with JavaScript · 1280px</p>
+  <div class="browser">
+    <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="pill">example.com/notes/</span></div>
+    <div class="viewport" data-frame="open"></div>
+  </div>
+</div>
+
+<div class="specimen" data-shot="main-menu-no-js">
+  <p class="label">without JavaScript · the same panel, in normal flow</p>
+  <div class="pair">
+    <div>
+      <p class="cap">1280px — two rows</p>
+      <div class="browser">
+        <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="pill">example.com</span></div>
+        <div class="viewport" data-frame="nojs-wide"></div>
+      </div>
+    </div>
+    <div>
+      <p class="cap">375px — six rows</p>
+      <div class="browser">
+        <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="pill">example.com</span></div>
+        <div class="viewport" data-frame="nojs-narrow"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="site-header.js"></script>
+<script>
+  // The frames load asynchronously, so the shooters must wait rather than race networkidle0.
+  window.__mockupReady = false;
+
+  // A file:// mockup always has scripting ENABLED, so nav-menu-cls.css's guard hides the panel in the fallback frames too. Re-assert the display .cluster would give it with scripting off — the one thing this mockup cannot reproduce for real.
+  const AS_IF_NO_JS = '.mainnav > ul { display: flex; }';
+
+
+  // The theme toggle and the search control hide behind `is-land:not(:defined)` — a control that cannot run should not show. Defining the element is what the real page's is-land script does, and it is the difference between the enhanced frame and the fallback ones.
+  const defineIsland = (doc, win) => win.customElements.define('is-land', class extends win.HTMLElement {});
+
+  // The three lines nav-menu.js runs, so the enhanced frame is enhanced the way the site is.
+  const enhance = (doc, win) => {
+    defineIsland(doc, win);
+    const nav = doc.querySelector('#mainnav');
+    const list = nav.querySelector('ul');
+    const clone = doc.querySelector('#menu-template').content.cloneNode(true);
+    const button = clone.querySelector('button[data-menu-toggle]');
+    list.style.setProperty('display', 'grid');
+    list.removeAttribute('data-no-flash');
+    nav.insertBefore(clone, list);
+    button.setAttribute('aria-expanded', 'true');
+  };
+
+  const frame = (name, width, opts) =>
+    window.mountFrame({ mount: document.querySelector(`[data-frame="${name}"]`), width, ...opts })
+      .then(() => {
+        const holder = document.querySelector(`[data-frame="${name}"]`);
+        const iframe = holder.querySelector('iframe');
+        const doc = iframe.contentDocument;
+        // The open panel is absolutely positioned, so the frame is sized to whatever the document actually reaches.
+        iframe.height = Math.ceil(doc.documentElement.scrollHeight);
+        holder.style.inlineSize = `${width * 0.5}px`;
+        holder.style.blockSize = `${iframe.height * 0.5}px`;
+      });
+
+  Promise.all([
+    frame('open', 1280, { locals: ['nav-menu-cls', 'search', 'search-field', 'search-results'], onLoad: enhance }),
+    frame('nojs-wide', 1280, { locals: ['nav-menu-cls', 'search', 'search-field', 'search-results'], css: AS_IF_NO_JS }),
+    frame('nojs-narrow', 375, { locals: ['nav-menu-cls', 'search', 'search-field', 'search-results'], css: AS_IF_NO_JS })
+  ]).then(() => {
+    requestAnimationFrame(() => requestAnimationFrame(() => (window.__mockupReady = true)));
+  });
+</script>
+
+</body>
+</html>

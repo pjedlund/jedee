@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en" data-theme="light" data-dark-shot>
+<head>
+<meta charset="utf-8">
+<title>Vertical rhythm — wiki mockup</title>
+<link rel="stylesheet" href="../../_includes/css/global.css">
+<style>
+
+  body { margin: 0; padding: 40px; background: #ddd; border: none; }
+  .specimen { inline-size: fit-content; background: var(--color-bg); color: var(--color-text); border: 1px solid var(--color-bg-accent-2); border-radius: 6px; padding: 22px 28px 26px; font-family: sans-serif; }
+  .specimen + .specimen { margin-block-start: 40px; }
+  .mono { font-family: ui-monospace, monospace; font-size: 13px; line-height: 1.4; }
+  /* ⚠ Iframes, not copies: every type and space token is vw-based, so the sample needs a real viewport of the width it claims. */
+  iframe { display: block; border: 1px solid var(--color-bg-accent-2); border-radius: 4px; background: var(--color-bg); }
+  .key { display: flex; gap: 18px; margin: 12px 0 0; }
+  .key i { display: inline-block; inline-size: 18px; block-size: 0; vertical-align: middle; margin-inline-end: 6px; border-block-start: 2px solid color-mix(in oklab, var(--color-accent-blue) 45%, transparent); }
+  .key i.q { border-block-start: 2px solid color-mix(in oklab, var(--color-accent-blue) 14%, transparent); }
+</style>
+</head>
+<body>
+
+<div class="specimen" data-shot="vertical-rhythm-lattice">
+  <div id="lattice"></div>
+  <p class="key mono"><span><i></i>one body line</span><span><i class="q"></i>a quarter line</span></p>
+</div>
+
+<script>
+  window.__mockupReady = false;
+
+
+
+
+  // Both sides load the same stylesheets, the prototype included; only data-rhythm differs, so any difference is the prototype's.
+  const sheets = ['../../_includes/css/global.css', ...['button', 'code', 'external-link', 'prose-rhythm', 'prose'].map(name => `../../_includes/css/${name}.css`), ...['table', 'meta', 'media-meta', 'footnotes'].map(name => `../../assets/css/local/${name}.css`)]
+    .map(href => `<link rel="stylesheet" href="${href}">`)
+    .join('');
+
+  // The grid is painted on .wrapper-pass, whose top is the first block's top: whole lines strong, quarter lines faint.
+  const grid = `
+    :root { --grid-line: color-mix(in oklab, var(--color-accent-blue) 45%, transparent); --grid-quarter: color-mix(in oklab, var(--color-accent-blue) 14%, transparent); }
+    body { border: none; background: var(--color-bg); }
+    .rhythm-sample { padding-block: 20px 28px; }
+    .grid-paint {
+      background-image:
+        repeating-linear-gradient(to bottom, var(--grid-line) 0 1px, transparent 1px var(--line)),
+        repeating-linear-gradient(to bottom, var(--grid-quarter) 0 1px, transparent 1px calc(var(--line) / 4));
+    }`;
+
+  const frameDoc = (body, proposed, extra = '') => `<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8">${sheets}
+    <style>${grid}${extra}</style></head>
+    <body><div class="rhythm-sample | wrapper flow prose"${proposed ? ' data-rhythm="proposed"' : ''}>${body}</div></body></html>`;
+
+  const loadFrame = (f, html) =>
+    new Promise(resolve => {
+      f.addEventListener('load', async () => {
+        await f.contentDocument.fonts.ready;
+        f.style.blockSize = `${f.contentDocument.documentElement.scrollHeight}px`;
+        resolve(f.contentDocument);
+      }, { once: true });
+      f.srcdoc = html;
+    });
+
+  (async () => {
+    // The lattice close-up: body text, small text and table rows side by side, each column ticked at the top of every one of its lines. The strong rule falls every three body lines, where all three kinds start together.
+    const cols = `
+      <div class="wrapper-pass">
+        <div class="lattice-head"><p>Body text: 1 line</p><p>Caption: ¾ line</p><p>Table row: 1½ lines</p></div>
+        <div class="lattice-cols">
+          <p style="--tick: var(--line)">Running text sets the beat. Every line of it is one line-height tall, and whatever interrupts it hands the beat back unchanged.</p>
+          <figure style="--tick: calc(var(--line) * 0.75)"><figcaption>Four lines of a caption take exactly three lines of the text beside it, so every third body line and every fourth caption line start together, and so do the lines after them.</figcaption></figure>
+          <div class="table-wrapper" style="--tick: calc(var(--line) * 1.5)"><table><tbody><tr><td>Row one</td></tr><tr><td>Row two</td></tr><tr><td>Row three</td></tr><tr><td>Row four</td></tr></tbody></table></div>
+        </div>
+      </div>`;
+    const colsCss = `
+      .lattice-head, .lattice-cols { display: grid; grid-template-columns: repeat(3, 1fr); column-gap: 40px; align-items: start; }
+      .lattice-head p { font-family: monospace; font-size: 13px; line-height: 1.4; margin: 0 0 12px; padding-inline-start: 18px; opacity: 0.7; }
+      .lattice-cols {
+        background-image:
+          repeating-linear-gradient(to bottom, var(--grid-line) 0 2px, transparent 2px calc(var(--line) * 3)),
+          repeating-linear-gradient(to bottom, var(--grid-quarter) 0 1px, transparent 1px var(--line));
+      }
+      .lattice-cols > * {
+        margin: 0;
+        padding-inline-start: 18px;
+        background: repeating-linear-gradient(to bottom, var(--color-accent-orange) 0 3px, transparent 3px var(--tick)) 0 0 / 8px 100% no-repeat;
+      }
+      .lattice-cols figcaption { margin: 0; padding: 0; text-align: start; }
+      .lattice-cols .table-wrapper { --table-edge-padding: 0.5em; }`;
+    const lf = document.createElement('iframe');
+    lf.width = 1000;
+    lf.setAttribute('scrolling', 'no');
+    document.getElementById('lattice').append(lf);
+    await loadFrame(lf, frameDoc(cols, true, colsCss));
+
+    requestAnimationFrame(() => requestAnimationFrame(() => { window.__mockupReady = true; }));
+  })();
+</script>
+
+</body>
+</html>

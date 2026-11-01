@@ -1,0 +1,105 @@
+---
+description: "The wiki documenting web techniques and how stomme is designed and built."
+date: 2026-07-31
+---
+
+The wiki documenting web techniques and how stomme is designed and built. Maintained by Claude Code, following conventions kept in the project's instructions. Pages are named after their concept where one exists ("Microformats", "Text wrapping"): general explanation first, then an "In stomme" section. Purely project-internal pages keep descriptive titles and live under "Stomme itself".
+
+Each entry below says what a page covers and why you would open it. The traps and the measurements live on the pages themselves.
+
+## Web standards & markup
+
+- [[Accessibility]] — WCAG's principles and levels, what automated testing can and cannot catch, and a map of the accessibility work spread across this wiki. Start here.
+- [[Microformats]] — the class vocabulary that makes HTML machine-readable, and why those classes must never be treated as styling hooks.
+- [[One JSON-LD envelope for sixteen types]] — one include that emits structured data for every post type, driven by front matter.
+- [[Per-type feeds]] — giving each kind of post its Atom and JSON feed, and deciding which kinds do not need one.
+- [[Abbreviations]] — the `abbr` element, what a `title` attribute can and cannot be relied on for, and one glossary that serves every wiki page.
+- [[Keyboard shortcuts]] — which key combinations WCAG allows and which belong to the browser, reading an Option shortcut, and a shortcuts list in a native dialog.
+- [[The lang attribute]] — marking a page's language and its foreign-language passages, including titles detected at build time.
+- [[Web components]] — custom elements built in layers: working HTML and CSS first, JavaScript on top.
+
+## CSS & design
+
+- [[Text wrapping]] — `text-wrap: balance` and `pretty`, and the end of JavaScript widow-fixers.
+- [[OpenType features]] — ligatures, small caps, figure styles and stylistic sets, and which of them this site's fonts actually carry.
+- [[Typographic conventions]] — Bringhurst's and Butterick's rules for figures, capitals, captions, superscripts, ordinals and subtitles, and what each costs in accessibility.
+- [[Line length]] — how many characters a line of text should hold, why `54ch` is not 54 characters, and why the capped blocks hang from the left edge rather than being centered.
+- [[Vertical rhythm]] — spacing a page in fractions of its body line, what it costs for images, tables and small text, its musical side, how Ariel Salminen's Scale.css, CUBE CSS, Every Layout and Eleventy Excellent handle it, and a quarter-line prototype on the style guide.
+- [[The theme toggle]] — one SVG sun masked into a moon, and the inline script that prevents a flash of the wrong theme.
+- [[Focus rings and paint containment]] — why an outline drawn outside its element disappears inside anything that clips.
+- [[Smooth scrolling]] — `scroll-behavior` for jump links, the `html:focus-within` version that keeps find-on-page instant, and why it needs focusable targets.
+- [[Breadcrumb]] — a trail of links in a labeled `nav`, the structured data that mirrors it, and keeping a header row on one line.
+- [[The main menu]] — a disclosure menu whose button is added by script, so the CSS has to detect its absence from the markup alone.
+- [[Viewport units]] — what `100vw` measures, why it is wider than the page when a scrollbar takes room, and why a headless test never shows it.
+- [[Choreographing CSS animations]] — sequencing a multi-step animation without JavaScript: named step times, `clip-path` wipes, and a caret that tracks the wipe.
+- [[Scroll-aware CSS during view transitions]] — a tested finding about what reaches the view-transition pseudo-elements. Not shipped.
+- [[Undefined custom properties]] — what a `var()` pointing at nothing actually does, which is not nothing, and how to check for it element by element.
+- [[Configuring a layout composition]] — setting a layout's published properties instead of redeclaring them, and how far that choice spreads.
+- [[Layout breakouts]] — a named-column grid that lets an element step wider than the text column, and the two conditions it needs to work.
+- [[Floats]] — the one job floats are still for, wrapping text around a box, what the container has to provide, and a container query that decides when to stop floating.
+- [[CSS 3D transforms]] — building a solid-looking object from flat layers, keeping its shape at every size, and painting on its light and shadow. The pamphlet and book mock-ups.
+- [[Shadows]] — layered box-shadows that look like real shadows, one light source, tinting and dark mode, and balancing painted light against a cast shadow.
+- [[Tables]] — markup that reads correctly unstyled, the browser defaults worth overriding, alignment, sticky headers, and what a table wider than the page needs. Ends with this site's activities table.
+- [[Tooltips]] — the three kinds of tooltip, and when each one is honest.
+- [[Design token sync]] — generating a design tool's tokens from the code that holds them, what does not survive the trip, and switching non-color things with the theme.
+- [[Icons]] — outline versus filled icon sets, picking a set by how many of your icons it really has, inline SVG colored by `currentColor`, and the filled Phosphor set this site uses.
+- [[External-link icons]] — the arrow after an outbound link: when to announce it, drawing it as a mask so it can change color, and moving it without letting it wrap alone.
+
+## Images & media
+
+- [[Figures]] — `figure` and `figcaption`, images that follow a site's light or dark theme, where a caption sits relative to the text, and the caption icon drawn in CSS.
+- [[Alt text]] — informative versus decorative, and why `alt=""` is an answer rather than an omission.
+- [[Self-hosting remote images at build time]] — pulling a remote cover into the build so no visitor request leaves the site.
+- [[Hosting large originals off-repo]] — the deliberate inverse: large scans kept in a bucket the build never touches.
+- [[The PhotoSwipe lightbox]] — a lightbox loaded only once it is needed, degrading to a plain link without JavaScript.
+- [[The YouTube embed]] — a stand-in with a self-hosted thumbnail, so loading a page sends nothing to Google.
+- [[The place map]] — a map component on this site's tiles, with three modes chosen by the markup: single pin, place groups, and a recorded route.
+
+## Publishing & the IndieWeb
+
+- [[Webmentions]] — receiving replies and likes on a static site: a hosted endpoint, a build-time fetch, and backfeed from social platforms.
+- [[Web Clipper templates]] — clipping a source page straight into a post with its front matter already filled in.
+- [[The authoring tool decides the data model]] — flat front matter where a spec wanted nesting is usually the tool's limit, not unfinished work. Find out what writes a field before designing it.
+- [[The IndieWeb]] — the movement, its principles, its seven building blocks, and the criticism from inside it about how hard it is to join.
+- [[Micropub]] — the publishing API that gives a static site an editor without giving up the static build.
+- [[Sveltia CMS]] — a git-based editor at `/admin/` for changing posts from a phone, and what it does to a file when it saves one.
+
+## The open web
+
+
+## Build & delivery
+
+- [[Netlify]] — the host that builds on every push: headers and redirects from files, a serverless function, and what a clean build machine has to carry over.
+- [[Three things called cache]] — the build cache, the browser cache and the service-worker cache, and why this site busts cache by inlining rather than by hashed filenames.
+- [[The service worker's three strategies]] — network-first pages, cache-first assets, and a cache that clears itself on every deploy, in about 25 lines.
+- [[Prefetching]] — fetching the next page before the click with speculation rules, and the script libraries that predate them.
+- [[Progressive web apps]] — what makes a site installable, and how little changes when someone installs it.
+- [[The accessibility test]] — the generated pa11y config and the test-only build, and what a green run does and does not cover.
+- [[Link checking]] — why scanning source for links finds things that were never links, and what an all-false-positive report costs.
+- [[Format on save]] — an editor that runs a formatter on every save, and why a formatter that can't parse a template can leave it empty.
+- [[Watch loops]] — a build that watches a folder it also writes into, and the other ways a rebuild retriggers itself.
+- [[The dev server's memory]] — telling a JavaScript heap leak from native memory and from a one-off spike, and what one save costs when the leak is paid per page rendered.
+- [[Syntax highlighting]] — coloring code blocks at build time, the palette behind it, and why inline code is treated differently.
+- [[Favicons]] — the six-file set, and the rule the differences follow from: whether the destination frames the icon for you.
+- [[Timestamps without a time zone]] — a datetime with no offset resolves silently and wrongly. How to settle one against a spec-defined field or a physical artefact.
+- [[Tailwind]] — Tailwind used as a compiler that turns design tokens into custom properties, not as a utility framework.
+- [[Open Graph images]] — four sources of a sharing card, most specific first, and how the composited ones are drawn and kept current.
+- [[Forced layout]] — what makes a script stop and lay out the whole page, why doing it in a loop freezes the page, and how to record a page load well enough to find the line responsible.
+- [[Font subsetting]] — shipping only the characters a site needs, and how to find the ones you have missed.
+- [[is-land]] — holding JavaScript back until a condition is met, around markup that already works without it.
+- [[WebC]] — Eleventy's single-file component format, which expands a tag into HTML at build time and then gets out of the way.
+- [[Themes and starters]] — why an Eleventy project is a site rather than a theme, and what that means when a new release of the starter lands.
+
+## Stomme itself
+
+- [[Shared files and site files]] — which files belong to one site and which are shared, and how a theme, the switches and the post-type list let a second site reuse the shared part.
+- [[Anatomy of a post type]] — the nine places a new post type has to be wired. Start here for the post-type system.
+- [[Permalinks and Obsidian-friendly filenames]] — Title Case filenames for wikilinks, kebab-case addresses for the web.
+- [[The title-less post types]] — the note and the five response types: no title by construction, and one shared card between them.
+- [[Wikilinks]] — `[[bracket]]` links, how backlinks are computed rather than collected, and what a dead link renders as.
+- [[The interlinker's second render pass]] — the plugin re-renders every page mid-build. Read this before wrapping any include in a condition.
+- [[Site search]] — a JSON index written at build time, fetched once and filtered in the browser, with no search library.
+
+## Recent additions
+
+Every ingest, enrich and lint session is recorded in [[_log|the wiki log]], newest first.

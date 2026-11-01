@@ -1,0 +1,176 @@
+---
+description: "The book-typography rules for figures, small caps, capitals, captions, line breaks, superscripts, ordinals, list markers, subtitles, kerning, hyphenation and hard spaces, where they come from, and what each costs in accessibility."
+date: 2026-09-10
+updated: 2026-10-27
+---
+
+Typography carries a set of conventions older than the web, most of them written down in two books. Robert Bringhurst's *The Elements of Typographic Style* (1992; 4th edition 2012) is adapted rule by rule for CSS at [webtypography.net](http://webtypography.net/). Matthew Butterick's *Practical Typography* is a free online book. The two agree more than they differ, and where they differ Butterick is the milder. This page covers the part CSS can switch on, given fonts that carry the features; the switches themselves are on [[OpenType features]].
+
+Most of these rules are about **evenness**. A page reads as one texture when numbers, acronyms and capitals don't jump out of it. That makes them defaults on elements, not decoration added word by word.
+
+## Figures
+
+Digits come in two shapes. **Lining** figures are all the height of capitals. **Old-style** (or text) figures rise and descend like lowercase letters. Bringhurst ([3.2.1](http://webtypography.net/3.2.1)) uses lining figures with full capitals and old-style figures "in all other circumstances". Butterick ([alternate figures](https://practicaltypography.com/alternate-figures.html)) is milder: lining figures are the general default, and old-style figures belong only in lowercase body text, never next to capitals.
+
+Figure *width* is a separate choice. **Tabular** figures all share one width, so columns of numbers line up. **Proportional** figures are spaced like letters. Butterick: proportional in body text, tabular in any column of numbers.
+
+```css
+.prose { font-variant-numeric: oldstyle-nums proportional-nums; }
+.prose table { font-variant-numeric: lining-nums tabular-nums; }
+```
+
+`font-variant-numeric` is one property holding both choices, so a child that sets only `tabular-nums` also resets the figure style to lining. That is usually what a column wants, and it is also how a single keyword quietly undoes a parent's old-style setting.
+
+## Small caps
+
+Small caps are capitals drawn at about the height of lowercase letters, with strokes thickened to match. Bringhurst ([3.2.2](http://webtypography.net/3.2.2)) sets acronyms in running text in spaced small caps. Butterick ([small caps](https://practicaltypography.com/small-caps.html)) uses them sparingly, as a third kind of emphasis beside bold and italic. Both insist on real ones. A browser asked for small caps that a font lacks shrinks the capitals instead, which leaves them thin and pale.
+
+- `font-variant-caps: small-caps` turns lowercase into small caps and leaves capitals alone, so <span class="small-caps">Robert Bringhurst</span> keeps a full-size R and B.
+- `all-small-caps` also turns the capitals into small caps: the form for acronyms. It flattens mixed-case names, so <span style="font-variant-caps: all-small-caps">RDFa</span> and <span style="font-variant-caps: all-small-caps">W3C</span> both come out as uniform small capitals.
+- `font-synthesis-small-caps: none` refuses the fake. Text in a face without small caps is shown as ordinary text instead.
+
+`font-variant-caps` changes only the drawing, not the characters, so a screen reader reads the source text.
+
+## Capitals and letterspacing
+
+Bringhurst ([2.1.6](http://webtypography.net/2.1.6)): letterspace strings of capitals and small caps by 5–10% of the type size, and don't letterspace lowercase without a reason. Butterick ([all caps](https://practicaltypography.com/all-caps.html)): capitals for short text only (headings under a line, labels, small print), never whole paragraphs, and always letterspaced. Lowercase reads faster because its ascenders and descenders give each word a recognizable shape; in capitals every word is a rectangle.
+
+`text-transform: uppercase` can reach assistive technology. [Ben Myers](https://benmyers.dev/blog/css-can-influence-screenreaders/) (2020) showed VoiceOver reading a button labeled "Add", styled uppercase, as the acronym A.D.D. Small caps made from lowercase letters don't have this problem, because the characters are unchanged.
+
+## Captions and italic
+
+Neither book makes captions italic. Italic captions are a book habit for telling a caption apart from the text around it, and a smaller size does the same job. The case against italic is readability. The [GOV.UK style guide](https://guidance.publishing.service.gov.uk/writing-to-gov-uk-standards/style-guides/a-to-z-style-guide/) does not use italics at all. Rello and Baeza-Yates' eye-tracking study *Good fonts for dyslexia* (ASSETS 2013) reported that italic slowed readers with dyslexia; the paper is paywalled and was not re-read for this page. The cost grows with length, so the useful line falls between a short label under a picture and a paragraph of explanation.
+
+Centering adds a second cost: every line starts at a different place, so the eye has to search for the next one. It suits a line or two. Check the face too. A caption in a font with no real italic gets a slant the browser synthesizes.
+
+## Line breaks
+
+Covered on [[Text wrapping]]. `text-wrap: balance` evens out the lines of a short block: a heading, a caption, a quotation. Chrome stops balancing above six lines ([Chrome for Developers](https://developer.chrome.com/docs/css-ui/css-text-wrap-balance), 2023). `pretty` keeps a paragraph from ending on one word. Neither changes the text or its order, so neither has a known accessibility cost, and both survive zoom and the WCAG 1.4.12 text-spacing overrides.
+
+## Superscripts
+
+A footnote marker is conventionally a bare superscript figure. The browser's `<sup>` fakes one with `vertical-align: super` and a smaller size, which pushes the line apart. `font-variant-position: super` uses the font's superscript glyphs, which sit inside the line. It works in Chrome since version 117 (2023), in Firefox and in Safari.
+
+Chrome and Safari draw nothing fake when the font has no superscript form for a character: it shows at full size on the baseline. So every character in the marker has to be covered. A font with superscript digits but no superscript brackets cannot set `[1]`.
+
+## Ordinals
+
+Ordinals (first, 9th, twenty-ninth) raise two questions: words or figures, and whether to raise the suffix. The raised "th" is a word-processor default, not a typesetting convention. Butterick ([superscripted ordinals](https://practicaltypography.com/ordinals.html)): they are "tiny and hard to read", so avoid them and switch off the autocorrect that makes them. A figure ordinal sits on the baseline: 9th, 101st.
+
+When to use words is a house-style choice, and ordinals follow the same rule as cardinal numbers:
+- **Chicago** (books and essays) spells out zero through one hundred, and round multiples of them ([CMOS Q&A on numbers](https://www.chicagomanualofstyle.org/qanda/data/faq/topics/Numbers.html), sections 9.2–9.4). So "ninth", "twenty-ninth" and "three hundredth", but "101st".
+- **AP** (news) spells out first through ninth and uses figures from 10th ([NIU's AP summary](https://web.news.niu.edu/2019/02/25/numbers-in-ap-style/), 2019).
+- **Swedish** usually spells out numbers up to twelve (*Myndigheternas skrivregler*, [Ds 2004:45](https://www.riksdagen.se/sv/dokument-och-lagar/dokument/departementsserien/myndigheternas-skrivregler_gsb445/html/)). A figure ordinal takes a colon and the word's last letter: 1:a, 3:e, 29:e, never raised ([Språkrådet's Frågelådan](https://frageladan.isof.se/faqs/24030)).
+
+In CSS, `font-variant-numeric: ordinal` switches on the font's `ordn` feature. In some fonts that feature is contextual and raises only letters that follow a digit. In others it is a plain substitution that raises every lowercase letter in its span. Check the font before putting it on more than the suffix.
+
+## Lists
+
+Bringhurst has no rule for lists: neither the book's numbered rules nor webtypography.net covers bullets or list numbers. His figure rule still reaches them. A list number sits in lowercase running text, so by 3.2.1 it takes old-style figures. Butterick ([bulleted and numbered lists](https://practicaltypography.com/bulleted-and-numbered-lists.html)) says the bullet or number may differ in font and size from the item's text, a bullet should be noticeable but not big, hollow bullets are subtler than solid ones, and an asterisk is too small and sits too high to serve as one.
+
+Neither book says how far to indent a list. The nearest rule is the paragraph indent, borrowed here only for its measure: stomme separates paragraphs with space instead, which both books treat as the alternative to an indent, not something to combine with it. Bringhurst (2.3.2) asks for an indent of at least an en, and [webtypography.net](http://webtypography.net/2.3.2) suggests an indent of one line-height, so the indent and the leading make a square. Butterick ([first-line indents](https://practicaltypography.com/first-line-indents.html)) gives one to four times the point size.
+
+Chrome's default stylesheet gives `::marker` `font-variant-numeric: tabular-nums` (checked 2026-09-14). By the one-property trap under Figures, that also makes list numbers lining, whatever the list item inherits. Old-style numbers need the marker set explicitly: `ol li::marker { font-variant-numeric: oldstyle-nums tabular-nums; }`. Tabular keeps "9." and "10." the same width.
+
+A list number carries meaning ("see step 3"), so it counts as text and needs 4.5:1 contrast ([WCAG 1.4.3](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html)). A bullet is decoration and has no contrast requirement.
+
+## Subtitles
+
+A subtitle belongs to the title but is not part of it. HTML marks this with `<hgroup>`: one heading plus one or more `<p>` elements, before or after it ([WHATWG, the hgroup element](https://html.spec.whatwg.org/multipage/sections.html#the-hgroup-element)). The older model allowed several headings in one `<hgroup>` and dropped all but the first from the document outline. No browser ever built that outline, and the spec was revised to the heading-plus-paragraphs form in July 2022 ([whatwg/html#7829](https://github.com/whatwg/html/pull/7829)). A second heading for the subtitle (an `<h2>` straight after the `<h1>`) is the pattern this replaces: it puts a false section into the outline.
+
+```html
+<hgroup>
+  <h1>A Sample Book Title</h1>
+  <p>A longer subtitle that explains what the book is about</p>
+</hgroup>
+```
+
+A screen reader announces the heading, then reads the subtitle as an ordinary paragraph. The heading's accessible name is the title alone, so a heading list stays short. [MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/hgroup) gives `<hgroup>` the implicit role `group`.
+
+Typographically a subtitle is the title's second voice: smaller, often italic, and short enough to balance like a heading.
+
+## Accessibility
+
+WCAG says little here directly. [1.4.8](https://www.w3.org/WAI/WCAG22/Understanding/visual-presentation.html) (level AAA) limits lines to 80 characters and rules out text justified to both margins, and says nothing about italic or capitals. The guidance comes from plain-language style guides and reading research instead:
+- **Italic:** keep it for short text.
+- **Capitals:** use them for labels, not paragraphs.
+- **Small caps and superscripts:** these keep the text's color. What makes them harder to read is their smaller size, not contrast.
+
+## In stomme
+
+Set on 2026-09-10 after a research pass and an audit of the site. The `text-wrap` reset is Eleventy Excellent stock, the rest is stomme's. The design system page (`/design-system/`) shows each feature off and on under Typography → Type features.
+
+### Figures
+
+Running text in `.prose` takes old-style proportional figures. Tables, `abbr` and code (`code, kbd, samp, pre`) set lining figures back; Source Code Pro has old-style figures too, so code needs that reset. Outside `.prose` figures stay lining: the breadcrumb, the menu's counts, the footer. An activity's stats take `tabular-nums` (`local/activity.css`), which keeps them lining, while a photo's capture metadata ("6×17", "3:30 @ 38 °C") reads as running text and takes old-style.
+
+Four opt-in classes live in `global/utilities/numerals.css`: `.fraction`, `.slashed-zero`, `.lining-nums` and `.tabular-nums`. Each fills one slot (`--nums-figure`, `--nums-spacing`, `--nums-fraction` or `--nums-zero`) and one rule joins the slots into `font-variant-numeric`, so the classes combine and a class inside `.prose` keeps its old-style figures. ⚠ An element that changes a slot must repeat the joining rule, or it inherits the value its parent already worked out and the change does nothing.
+
+- `.fraction` goes on the fraction alone: `<span class="fraction">3/4</span>`. Source Sans' `frac` changes every digit, full stop, comma and parenthesis it covers, so on a whole sentence it turned the closing full stop into a raised dot. It stays off by default, as the OpenType registry advises: none of the built site's digit–slash–digit sequences is a fraction ("12/13" widths, "206/207" characters).
+- `.slashed-zero` also sets lining figures, because the old-style zero has no slashed form.
+- Three of the names are also Tailwind classes, and Tailwind's later layer replaced the whole value. Its `fontVariantNumeric` plugin is switched off; see [[Tailwind]].
+
+### Small caps
+
+`.small-caps` (`global/utilities/small-caps.css`) is for the opening words of an article or a name: small caps plus `--tracking-wide` letterspacing. Write it as `<span class="small-caps">…</span>`, or as `{.small-caps}` at the end of a markdown paragraph. Not `*text*{.small-caps}`: Source Sans italic has no small caps. The class refuses fake small caps itself with `font-synthesis-small-caps: none`; `body` allows synthesis again since 2026-09-14, and the dev server's font check flags a faked style instead. See [[Font subsetting]].
+
+`abbr` gets no small caps. The glossary ([[Abbreviations]]) marks only its terms, so styled acronyms would sit beside unstyled ones, and `all-small-caps` would flatten RDFa.
+
+### Capitals
+
+Capital labels (logo, breadcrumb, menu button, footer, buttons) share `--tracking-wide`, 0.16ch since 2026-10-27, up from 0.12ch. The `ch` unit is the width of a zero, which in Source Sans is 0.497em in the regular weight and 0.527em in the bold, so that is about 8% of the size, a little more in bold labels, inside Bringhurst's 5–10%. A VoiceOver check of these `uppercase` labels is on the backlog.
+
+### Captions and quotations
+
+Captions are upright, left-aligned and `pretty`, one step smaller than the text; see [[Figures]]. Every figure and table caption is upright, for the readability case above. A word set in `<em>` inside a caption shows as italic again, which it could not while the caption itself was italic.
+
+Quotations balance. The rule is in `global-styles.css` and again in `prose.css`, whose `pretty` rule on `p` would otherwise win.
+
+### Footnote markers
+
+Footnote markers are bare superscript figures, drawn with `font-variant-position: super` in `footnotes.css`. `markdown.js` overrides markdown-it-footnote's `footnote_caption` rule to drop the brackets, because the Source Sans subset has superscript digits, parentheses and colons but no square brackets. The link inside the marker pads only top and bottom (`padding-block`), so the full-size figure has no gap on either side.
+
+### Ordinals
+
+Ordinals follow Chicago: words up to one hundred ("the ninth time"), figures on the baseline above that. There is deliberately no `.ordinal` class.
+
+Source Sans' `ordn` raises every lowercase letter it covers, with no check for a preceding digit, so `font-variant-numeric: ordinal` on a sentence raises the whole sentence: the same trap as `frac`. If a raised suffix is ever wanted, put `font-variant-position: super` on a span around the suffix alone. The subset has superscript a–z, and the `--nums-*` slots stay untouched.
+
+Older content was not swept for figure ordinals; there were four at the time of writing, two of them in clipped titles.
+
+### List markers
+
+In `.prose` (since 2026-09-14), ordered-list numbers take old-style tabular figures. The marker reads `--nums-figure`, so a list inside `.lining-nums` gets lining numbers. Numbers and bullets share `--color-accent-orange-text`: `orange-600` in light mode (5.8:1 on the page) and `orange-500` in dark (4.7:1). Other orange text that carries meaning can use the same variable.
+
+The bullet is a hollow ring, Butterick's subtler kind. Its marker is `'◦\2009\2008 '`: the ring, a thin space, a punctuation space and a word space. The last two copy the numbers' ". ", and the thin space makes up half the difference between a digit and the ring, so the ring centers over the numbers' last digit. ◦ and • were added to the Source Sans subset by hand; ‣ and ▪ are still missing, so either needs the same step ([[Font subsetting]]).
+
+Both kinds of list start at `1lh`, so the indent and the leading make the square webtypography.net suggests. That holds "10. ", whose marker box is 1.36em against a prose line of 1.4–1.5em; a list that reaches 100 hangs.
+
+### Paragraph spacing
+
+Paragraphs are separated by space, not indented, so Bringhurst's indent rule (2.3.2) does not apply. Every gap in prose is a whole number of quarter lines of body text, set in `prose-rhythm.css`; see [[Vertical rhythm]]. Lists and code blocks keep an extra half line below them, on purpose.
+
+### Subtitles
+
+A `subtitle:` in a post's front matter renders under the title in an `<hgroup>`, from `partials/entry-header.njk`, on every post type. The `<p>` sits outside `p-name`, so the microformats title stays the title alone; see [[Microformats]]. Subtitles are written in title case with short words lowercase, like the title.
+
+It is set in Source Sans italic at `--size-step-2`, in the headline color, balanced (`local/post.css`). Three serif versions came first; the italic sans read as a second voice rather than a smaller title. Its `--flow-space` is set on the `<p>` itself: set on the `<hgroup>`, it lost to `.prose`'s larger space after a heading.
+
+Books have a Subtitle field in [[Sveltia CMS]]. Films don't, since Letterboxd has no subtitle for the Web Clipper to fill it from, but a film can still take `subtitle:` by hand.
+
+### Fixes from the webtypography.net check
+
+Every webtypography.net rule was checked against the site on 2026-09-21. Four things changed:
+
+- **Kerning in WebKit** (2.1.8). Eleventy Excellent's reset set `text-rendering: optimizeSpeed` on `body`, which turns kerning off in WebKit: Safari and practically every iPhone browser. The line is gone, and a ⚠ comment in `reset.css` keeps an upgrade from bringing it back.
+- **Running text at the font's spacing** (2.1.7). Eleventy Excellent also tracked `body` at `--tracking` (−0.04ch), pulling every lowercase letter tighter. Only headings keep it: tightening display sizes is the exception Bringhurst allows (2.1.1).
+- **Hyphenation limits** (2.4.1). `body` sets `hyphenate-limit-chars: auto 2 3`, inherited wherever `hyphens: auto` is on. Chrome honors it only some of the time ("forev-er" became "for-ever", "activi-ty" stays).
+- **Hard spaces between numbers and units** (2.4.6). A markdown-it rule in `markdown.js` joins a number and its unit (km, min, s, MB, °C and a few more) with a non-breaking space; code is left alone. The activity stats and the `withMiles` and `paceOrSpeed` filters do the same. The cost: on a phone, a table cell that used to split "0.34 / s" now scrolls sideways instead.
+
+### Link underlines
+
+Links set `text-decoration-skip-ink: auto` (the reset) with `text-underline-offset: 0.3ch`. Safari does break the underline around descenders in the shipped Source Sans subset, even though its outlines are CFF2: tested 2026-10-07 against the TrueType build and Arial, all three skipped. A "q" that seems to run straight through its underline at body size is a near miss — at 24 px the descender reaches about 5 px below the baseline and the line starts about 3.6 px below it, so a hair's difference in placement decides it. Raising the line by lowering the offset is the lever; it was left alone.
+
+### Not done
+
+There is no `.figures` or `.balance` class, since the defaults cover them, and never `dlig`, which rewrites "he" and "she".

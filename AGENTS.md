@@ -180,6 +180,7 @@ A Claude-maintained wiki documenting how this codebase is designed and built —
 - `src/wiki/` — the wiki pages. Claude writes and maintains these, the site's editor supervises; the `TechArticle` schema states that split. Ordinary tracked files; they commit with everything else.
 - `src/wiki/index.md` — the catalog. Read this FIRST when answering a wiki question; update it on every ingest. One line per page saying what it covers and why you would open it, and nothing else: the findings, traps and measurements belong on the page, not restated here. `_log.md` is the record of what changed when, so the index never carries a copy of it.
 - `src/wiki/_log.md` — diary of ingest / query-filed / lint sessions, **newest first**: a new entry goes at the top, directly under the intro paragraph. Format `## [YYYY-MM-DD] ingest | Title`.
+- `tests/wiki-links.test.js` — fails when a wiki page that is not a site file links to a page that is not in `src/wiki/`. A dead wikilink renders as plain text with no error, so this test is the only check.
 - `src/_raw/` — immutable sources: external clips and retired dev notes (in `src/_raw/dev-notes/`). Read, never edit or delete.
 - `src/_data/settings.yaml` → `wiki.visibility` — the visibility dial: `private` never builds the wiki, `local` builds it only in the dev server (never in a production build), `public` builds it everywhere and is how the wiki goes live. `hidden` is reserved and stops the build.
 
