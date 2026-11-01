@@ -252,3 +252,17 @@ test('is-land: the theme toggle, an island in the header, still gets the script'
   assert.match(html, /<is-land\b/)
   assert.ok(html.includes(IS_LAND))
 })
+
+test('speculation rules: only on a page with a link on the site to fetch ahead', async t => {
+  const site = await bareSite({
+    ...pageFile('words', '<p>Just words.</p>'),
+    ...pageFile('outward', '<p><a href="https://example.org/">Away</a> and <a href="#here">here</a>.</p>'),
+    ...pageFile('linked', '<p><a href="/words/">Words</a>.</p>'),
+  })
+  t.after(() => site.cleanup())
+  await site.build()
+  const rules = '"speculationrules"'
+  assert.ok(!site.read('words/index.html').includes(rules), 'a page with no links carries the rules')
+  assert.ok(!site.read('outward/index.html').includes(rules), 'a page with no link on the site carries the rules')
+  assert.ok(site.read('linked/index.html').includes(rules), 'a page with a link on the site lost the rules')
+})

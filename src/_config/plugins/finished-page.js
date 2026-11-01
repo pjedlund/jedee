@@ -2,7 +2,15 @@
 
 const IS_LAND_SCRIPT = /<script\b[^>]*\bis-land\.min\.js[^>]*><\/script>\s*/;
 
-export const finishPage = html => (html.includes('<is-land') ? html : html.replace(IS_LAND_SCRIPT, ''));
+const SPECULATION_RULES = /<script\b[^>]*\bspeculationrules\b[^>]*>[\s\S]*?<\/script>\s*/;
+const LINK_ON_THE_SITE = /<a\b[^>]*\shref=(?!["']?(?:https?:|\/\/|#|mailto:|tel:))/i;
+
+export const finishPage = html => {
+  let page = html;
+  if (!page.includes('<is-land')) page = page.replace(IS_LAND_SCRIPT, '');
+  if (!LINK_ON_THE_SITE.test(page)) page = page.replace(SPECULATION_RULES, '');
+  return page;
+};
 
 export const finishedPage = eleventyConfig => {
   eleventyConfig.addTransform('finished-page', (content, path) => (path && path.endsWith('.html') ? finishPage(content) : content));
