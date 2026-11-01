@@ -37,6 +37,6 @@ Whether a scroll animated cannot be told from where it ended, only from the fram
 
 `html:focus-within { scroll-behavior: smooth }` is Eleventy Excellent's stock `src/assets/css/global/base/reset.css`, with `scroll-behavior: auto` under `prefers-reduced-motion: reduce`. stomme keeps it, so find-on-page stays instant.
 
-The section buttons at the top of `/design-system/` link to eight `<h2>`s, each with `tabindex="-1"` (`src/pages/design-system.njk`). Measured after the change: Grid animated over 90 frames, Patterns, about 21 500px down, over 81, with focus on the heading. Before, both cut straight to the target.
+The section buttons at the top of `/design-system/` link to eight `<h2>`s, each with `tabindex="-1"` (`src/pages/design-system.njk`). Both jumps now animate, with focus on the heading; before, both cut straight to the target.
 
-Headings rendered from markdown elsewhere on the site have no `tabindex`, so a jump link to one, such as a hand-made table of contents in a wiki page, still cuts instead of scrolling. Doing it site-wide would mean adding `tabindex="-1"` where the markdown headings are rendered.
+Headings rendered from markdown elsewhere have no `tabindex`, so a jump link to one, such as a hand-made table of contents in a wiki page, still cuts instead of scrolling. Doing it everywhere would mean adding `tabindex="-1"` where the markdown headings are rendered.

@@ -79,7 +79,7 @@ The colors need no dark-mode rules. Background is `--color-text` and text is `--
 Three behaviors the source design did not have:
 
 - **`:focus-visible` as well as `:hover`.** Verified with a real Tab press — Chromium does not honor `element.focus({focusVisible: true})` from script, so a scripted focus reports `:focus-visible` as false and reads as broken CSS.
-- **Two edge anchors**, `data-tooltip-align="start"` and `="end"`, because both header controls are at opposite edges, and a `data-tooltip-position="top"` for the footer's feed icon, which sits close enough to the bottom of the document that a tooltip below it added 16px of dead scroll — measured, not guessed. The defaults stay centered and below for anything placed inland.
+- **Two edge anchors**, `data-tooltip-align="start"` and `="end"`, because both header controls are at opposite edges, and a `data-tooltip-position="top"` for the footer's feed icon, which sits close enough to the bottom of the document that a tooltip below it adds dead scroll. The defaults stay centered and below for anything placed inland.
 - **Suppressed on `aria-current`.** The source spells this `:not(.active)` on its nav items; the attribute already carries the state, so `[data-tooltip][aria-current]::after` does it without a class. On the start page the logomark *is* the current page, and its tooltip would have landed on top of the wordmark typing itself in (see [[Choreographing CSS animations]]).
 
 ### A `::after` inherits from a control styled not to look like text
@@ -104,7 +104,7 @@ Instead the control's script sets a `data-tooltip-dismissed` attribute on click 
 
 ### Esc
 
-WCAG 1.4.13 does not exempt a tooltip for repeating a hidden label: anything that appears on hover or focus and covers other content has to be dismissible without moving the pointer or focus. The footer tooltips open upwards over the footer links, so they cover content. Since 2026-10-08 `bundle/tooltip.js`, included on every page from `base.njk`, listens for Esc on the document and sets the same `data-tooltip-dismissed` on whichever `[data-tooltip]` matches `:hover` or `:focus-visible`, clearing it on that control's next `pointerleave` or `blur`. Focus stays where it was. It runs alongside the other Esc handlers (the menu, the search, the shortcuts dialog), which close their things.
+WCAG 1.4.13 does not exempt a tooltip for repeating a hidden label: anything that appears on hover or focus and covers other content has to be dismissible without moving the pointer or focus. The footer tooltips open upwards over the footer links, so they cover content. `bundle/tooltip.js`, included on every page from `base.njk`, listens for Esc on the document and sets the same `data-tooltip-dismissed` on whichever `[data-tooltip]` matches `:hover` or `:focus-visible`, clearing it on that control's next `pointerleave` or `blur`. Focus stays where it was. It runs alongside the other Esc handlers (the menu, the search, the shortcuts dialog), which close their things.
 
 ### What is not built
 

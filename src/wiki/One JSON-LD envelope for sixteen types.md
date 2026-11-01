@@ -31,7 +31,7 @@ Two blocks on every page — site identity and the breadcrumb trail — then a t
 
 ⚠ **A `schema:` value with no matching template throws and fails the build.** The path is built from data, so nothing checks it until Eleventy tries to read the file. `schema: VideoPosting` is a one-word edit that looks harmless and stops the build.
 
-Five templates exist: `BlogPosting.njk`, `WebSite.njk`, `BreadcrumbList.njk`, `Event.njk`, and `TechArticle.njk`, which `wiki.11tydata.js` sets for the whole wiki folder since 2026-09-05.
+Five templates exist: `BlogPosting.njk`, `WebSite.njk`, `BreadcrumbList.njk`, `Event.njk`, and `TechArticle.njk`, which `wiki.11tydata.js` sets for the whole wiki folder.
 
 ### Fifteen types say BlogPosting
 
@@ -43,15 +43,15 @@ The BlogPosting template emits `headline`, `description`, `image`, `datePublishe
 "headline": "{{ title or meta.siteName }}",
 ```
 
-Every spec names the richer type it would eventually like — `ListenAction` embedding a `MusicAlbum` for jams, `ReadAction` embedding a `Book` for reading, `WatchAction` with a `Movie` for watching, `AudioObject`/`VideoObject` for the media types, `SocialMediaPosting` for the responses. None are built. They are a real backlog rather than a vague intention, but each one costs a template.
+Each type has a richer one it could eventually use — `ListenAction` embedding a `MusicAlbum` for jams, `ReadAction` embedding a `Book` for reading, `WatchAction` with a `Movie` for watching, `AudioObject`/`VideoObject` for the media types, `SocialMediaPosting` for the responses. None are built, and each one costs a template.
 
 ### Event is the one exception
 
 `event.njk` declares `schema: Event`, and `schemas/Event.njk` exists to match. The reasoning was rich results: Google surfaces event cards from `startDate`, `location` and `eventStatus`, so a real Event type buys something visible that a BlogPosting envelope doesn't.
 
-**Recipe was meant to be the second exception, and isn't.** Its spec argues the case at least as strongly — recipe rich cards surface image, time, yield and ingredients — and specifies a `schemas/Recipe.njk`, noting that the template and the front matter must land in the same change. The template was never written, so `recipe.njk` still declares `schema: BlogPosting`. The constraint held exactly as the spec predicted it would: because the two halves had to ship together, neither shipped.
+**Recipe was meant to be the second exception, and isn't.** The case is at least as strong — recipe rich cards surface image, time, yield and ingredients — and would need a `schemas/Recipe.njk`, landing in the same change as the front matter. There is no such template, so `recipe.njk` still declares `schema: BlogPosting`. The constraint holds exactly as described: because the two halves have to ship together, neither has.
 
-Two things follow if that's ever picked up. The recipe data is now in the post body rather than front matter (see [[Per-type feeds]]), so a `Recipe.njk` would have to read something the spec assumed would be structured fields. And the template has to be committed before or with the front-matter line — never after.
+Two things follow if that's ever picked up. The recipe data is in the post body rather than front matter (see [[Per-type feeds]]), so a `Recipe.njk` would have to read something other than structured fields. And the template has to be committed before or with the front-matter line — never after.
 
 ### Where the two layers disagree
 

@@ -34,7 +34,7 @@ An icon next to a text label that says the same thing is decoration: it gets `ar
 
 ## In stomme
 
-The site's icons are filled, to match the solid logo mark. Until 2026-10-14 they were Lucide outlines; eight filled sets were compared against the 28 icons in use, and [Phosphor](https://phosphoricons.com/)'s fill weight was the only one with a real match for all 28. Phosphor's rounded shapes are also the closest to the logo's.
+The icons are filled, to match a solid logo mark. The set is [Phosphor](https://phosphoricons.com/)'s fill weight, chosen after comparing eight filled sets against the icons in use; it was the only one with a real match for all of them, and its rounded shapes are also the closest to a rounded logo.
 
 The files live in `src/assets/svg/`, by role:
 

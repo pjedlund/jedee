@@ -30,7 +30,7 @@ No premature-use error, no separate collection, and no HTML to strip out afterwa
 
 ## In stomme
 
-One dial in `src/_data/settings.yaml` switches the whole feature:
+One dial in `src/_data/settings.yaml` switches the whole feature (the values below are an example):
 
 ```yaml
 search:
@@ -45,9 +45,9 @@ search:
 
 `types` is a curated list, not every collection. The response types (likes, replies, reposts, RSVPs, bookmarks) stay out because they would drown prose results. The keys are **collection keys, and they are singular** — `article`, not `articles`; the plurals are archive URLs and produce an empty index with a green build. See [[Anatomy of a post type]].
 
-Activities are the one type where the whole collection is the wrong unit, so `only` narrows them by a front-matter key: an archive imported from a fitness export holds a few activities with names worth looking up months later, while the rest carry the service's defaults, a long run of posts called "Morning Run". `only` is deliberately a general key/value match rather than a flag for one sport — it is the same few lines either way, and it keeps the answer to "what is searchable?" inside the dial.
+Some types are the wrong unit as a whole collection, so `only` narrows them by a front-matter key: an archive imported from a fitness export may hold a few activities with names worth looking up months later, while the rest carry the service's defaults, a long run of posts called "Morning Run". `only` is deliberately a general key/value match rather than a flag for one sport — it is the same few lines either way, and it keeps the answer to "what is searchable?" inside the dial.
 
-Standalone prose pages are not in any post collection, so they opt in with `tags: ["searchable"]`, which gives a real `collections.searchable` the index can list beside the post types. `searchable` has to join `SYSTEM_TAGS` in `src/_config/collections.js` in the same edit — every other tag on this site is a public page, and without that one word `/tags/searchable/` quietly appears in the tag index.
+Standalone prose pages are not in any post collection, so they opt in with `tags: ["searchable"]`, which gives a real `collections.searchable` the index can list beside the post types. `searchable` has to join `SYSTEM_TAGS` in `src/_config/collections.js` in the same edit — every other tag is a public page, and without that one word `/tags/searchable/` quietly appears in the tag index.
 
 ### The index
 
@@ -64,11 +64,11 @@ Each entry carries `url`, `title`, `type`, `date`, a ~140-character `text` excer
 
 ### What `rawInput` still contains
 
-Both of these shipped into the index before being caught, and both are the general trap above in concrete form:
+Both of these are the general trap above in concrete form:
 
 ```js
-.replace(/<!--[\s\S]*?-->/g, ' ')      // authoring TODOs made /about/ findable by searching "todo"
-.replace(/\{[{%][\s\S]*?[}%]\}/g, ' ') // /imprint/ indexed "{{ personal.address }}" verbatim
+.replace(/<!--[\s\S]*?-->/g, ' ')      // authoring TODOs would make a page findable by searching "todo"
+.replace(/\{[{%][\s\S]*?[}%]\}/g, ' ') // a template expression like "{{ personal.address }}" would be indexed verbatim
 ```
 
 The rest of the strip is ordinary markdown: fenced code and images before links, or their inner brackets are eaten as link syntax first; `[[wikilinks]]` reduced to their label ([[Wikilinks]]); heading markers and emphasis to spaces; whitespace collapsed. The excerpt cuts at the last word boundary rather than mid-word.
@@ -124,17 +124,17 @@ The clear button was the same shape of mistake one property along. It ships with
 
 The search panel and the mega-menu both anchor to the header row (`.repel.ontop`) with `inset-inline-end: 0`, so open together they sit on top of each other. Each trigger's click handler sets the other's `aria-expanded` to `false`.
 
-`search.css` redeclares the panel surface rather than reading the nav's `--megamenu-surface`, because that property is declared on `.mainnav` — which does not exist at all in a production build while the soft-launch dial hides the nav. An inherited custom property that is only sometimes in scope is the failure in [[Undefined custom properties]].
+`search.css` redeclares the panel surface rather than reading the nav's `--megamenu-surface`, because that property is declared on `.mainnav` — which does not exist at all when the `hideNav` setting hides the nav. An inherited custom property that is only sometimes in scope is the failure in [[Undefined custom properties]].
 
-The panel also had no `font-size` at first, so it inherited the header's ~26px and every `em`-sized icon scaled off that: the magnifier rendered at 34px beside the theme toggle's 21px. The result rows now sit on `--size-step-min-1` with `0.95em` icons (`search-results.css`). That matched the mega-menu's rows until 2026-10-26, when the open mega-menu's icons went to `1.2em` of the text (`main-nav.css`).
+The panel needs a `font-size` set on it, or it inherits the header's large size and every `em`-sized icon scales off that: the magnifier renders far larger than the theme toggle beside it. The result rows sit on `--size-step-min-1` with `0.95em` icons (`search-results.css`); the open mega-menu's icons are `1.2em` of the text (`main-nav.css`).
 
 ### Contrast on a lifted panel
 
 The excerpt color cleared 4.5:1 against the panel at `color-mix(… 80%, …)` and then failed at **4.31** on the *highlighted* row, whose 4% tint darkens the ground beneath it. A `color-mix()` is only valid on the surface it was tuned on, and a row that changes background on hover is two surfaces. Shipped 84% in light, 72% in dark — light and dark run out of headroom at different percentages, so one number does not fix both.
 
-Measure these with an oklab→sRGB conversion, not a regex over `getComputedStyle().color`. Chromium serializes an oklab mix as `oklab(L a b)`, and a parser expecting `rgb()` reads those three floats as channels and reports a confident pass — it scored the failing values above as 1.00 and 2.73 before the conversion went in.
+Measure these with an oklab→sRGB conversion, not a regex over `getComputedStyle().color`. Chromium serializes an oklab mix as `oklab(L a b)`, and a parser expecting `rgb()` reads those three floats as channels and reports a confident pass — it scores failing values as passes.
 
 pa11y only ever sees the panel closed, since it does not click ([[The accessibility test]]). The combobox, the listbox and the options exist only in the open state and have to be checked by hand.
 
-Related: [[The main menu]] — the other header disclosure, whose surface, shadow, drop distance and reduced-motion gate this one reuses. The `only` map exists for the activities type.
+Related: [[The main menu]] — the other header disclosure, whose surface, shadow, drop distance and reduced-motion gate this one reuses. The `only` map exists for types such as activities.
 

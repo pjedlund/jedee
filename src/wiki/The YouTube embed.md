@@ -21,7 +21,7 @@ Two details are commonly left half-finished:
 
 ### The poster is self-hosted at build time
 
-By default lite-youtube pulls its thumbnail from `i.ytimg.com` at page load — a request to Google on every render. An earlier wrapper routed through a screenshot service, which flashed an Eleventy-branded placeholder while generating. Now the thumbnail is fetched, optimized, and hosted on this domain at build time, so **a page makes no request to Google to render the embed**:
+By default lite-youtube pulls its thumbnail from `i.ytimg.com` at page load — a request to Google on every render. Here the thumbnail is fetched, optimized, and hosted on the site's domain at build time, so **a page makes no request to Google to render the embed**:
 
 ```js
 // src/_config/filters/youtube-poster.js
@@ -61,13 +61,13 @@ is-land[ready] lite-youtube { animation: yt-poster-fade var(--yt-poster-fade, 35
 
 ### Reserving the space before hydration
 
-The placeholder above is also what holds the player's space, so **where its CSS lives decides whether the page jumps**. Written inside the island's `<template data-island>` — the natural place, since that's where the lite-youtube stylesheet and script go — it only lands when the island hydrates. Until then the wrapper has no `aspect-ratio` and is zero pixels high, and everything below it is shoved down the moment hydration runs. The box rules therefore live in the component's `<style>`, outside the template, and only the lite-youtube stylesheet and script stay inside it. Measured after the move: CLS 0, and the un-hydrated wrapper already reports 1024×576.
+The placeholder above is also what holds the player's space, so **where its CSS lives decides whether the page jumps**. Written inside the island's `<template data-island>` — the natural place, since that's where the lite-youtube stylesheet and script go — it only lands when the island hydrates. Until then the wrapper has no `aspect-ratio` and is zero pixels high, and everything below it is shoved down the moment hydration runs. The box rules therefore live in the component's `<style>`, outside the template, and only the lite-youtube stylesheet and script stay inside it. With the rules outside the template the layout shift is zero, and the un-hydrated wrapper already reports its full size.
 
 The no-JS hide moved for the same reason. `is-land:not(:defined) { display: none }` hides the box for exactly the window the reservation is meant to cover — the element is undefined until the island runtime defines it — so the hide is now a `<noscript>` rule instead, which only applies when scripting is genuinely off. The YouTube link under the player is the no-JS path either way.
 
 ### The focus ring that was hiding
 
-Checking the fade for accessibility turned up an unrelated pre-existing bug: the play button had **no visible keyboard focus indicator**. It fills the entire embed, and lite-youtube sets `contain: content`, which paint-clips anything drawn outside the box — and this site's focus ring is *outset* (`outline-offset: 0.3ch`), so it was drawn just past the edge and clipped away. The fix inverts the offset for that one button:
+The play button would have **no visible keyboard focus indicator** by default. It fills the entire embed, and lite-youtube sets `contain: content`, which paint-clips anything drawn outside the box — and the focus ring is *outset* (`outline-offset: 0.3ch`), so it would be drawn just past the edge and clipped away. The fix inverts the offset for that one button:
 
 ```css
 is-land lite-youtube .lyt-playbtn { --focus-offset: -4px; }

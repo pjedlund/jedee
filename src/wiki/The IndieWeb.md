@@ -44,14 +44,14 @@ Taken together the criticism is not that the blocks are badly designed. It is th
 
 ## In stomme
 
-Every block above is wired here. That bears the criticism out rather than answering it: what it took is spelled out after the list.
+Every block above is wired in stomme. That bears the criticism out rather than answering it: what it took is spelled out after the list.
 
 - **microformats2** on all sixteen post-type layouts, including the response types that carry `u-like-of` and `in-reply-to`.
 - **Webmentions received** through a hosted endpoint and fetched at build time, with Bridgy backfeed — see [[Webmentions]].
 - **Micropub live** at `/api/micropub`, a Netlify Function that turns an incoming `h-entry` into a shape-correct markdown file committed to the repo — see [[Micropub]]. Posting from a phone with the laptop off, which is the one thing a static site otherwise cannot do.
 - **IndieAuth** via a hosted provider, with `authorization_endpoint` and `token_endpoint` discovery links in the head next to `rel="micropub"`.
-- **`rel="me"`** on all seven platform links in the footer.
-- **Feeds** per post type — see [[Per-type feeds]]. **POSSE** exists as the `syndication:` field and is used by one post.
+- **`rel="me"`** on the footer's platform links, behind the `relMe` switch.
+- **Feeds** per post type — see [[Per-type feeds]]. **POSSE** exists as the `syndication:` field.
 
 Getting there took a forked starter ([[Themes and starters]]), a Node build, a git workflow, a Netlify account and nine wiring points per post type ([[Anatomy of a post type]]). That is a description, not a defence: it is exactly the stack Böck says should not be the price of keeping your content under your domain.
 

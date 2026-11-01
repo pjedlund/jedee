@@ -22,7 +22,7 @@ CSS has two units for it, both [Baseline widely available](https://web-platform-
 
 Each has a trap on a site built like this one:
 
-- **`lh` resolves on every element separately.** `--flow-space: 1lh` gives a paragraph one of its lines and a blockquote, set larger, one of *its* lines. stomme tried exactly that on 2026-09-21 and a blockquote got 61px above it against 31px for a paragraph ([[Typographic conventions]]).
+- **`lh` resolves on every element separately.** `--flow-space: 1lh` gives a paragraph one of its lines and a blockquote, set larger, one of *its* lines. Trying exactly that gave a blockquote about twice the space above it that a paragraph got ([[Typographic conventions]]).
 - **`rlh` is only the body line if the body type is set on the root.** Bernat sets `html { font-size: 112.5%; line-height: 1.5 }`. stomme sets its type on `body` and leaves the root at the browser's 16px, which every `rem`-based token assumes. `1rlh` here is the `normal` line-height of the browser's default serif, 18px in Chromium: not a body line, and not even the site's font.
 
 A **registered custom property** gives the unit without either trap. A property registered as a `<length>` computes to pixels on the element that sets it, and descendants inherit the pixels, not the expression. The wiki's caption measure is built the same way ([[Figures]]).
@@ -128,7 +128,7 @@ The caption's quarter line under the image is padding, not margin. eleventy-img 
 
 It holds only while the image is as wide as the figure. An image narrower than its container, at its intrinsic width, would need `min()` against that width.
 
-Prose images used to have a 1px hairline, which the prototype drew as an outline with a negative offset so it added no height. Since 2026-10-26 images and videos have no hairline at all: the `--shadow-on-page` shadow edges an image, and a shadow takes no space.
+Prose images used to have a 1px hairline, which the prototype drew as an outline with a negative offset so it added no height. Images and videos now have no hairline at all: the `--shadow-on-page` shadow edges an image, and a shadow takes no space.
 
 ### Tables
 
@@ -153,11 +153,11 @@ A musical scale says which pitches a piece may use; its rhythm says when they fa
 
 **Pitch.** Type scales step by the same ratios that tune musical intervals:
 
-- stomme's scale (Utopia, inherited from Eleventy Excellent) steps by 1.2 on a phone and by 1.25 on a wide screen: a minor third (6:5) opening out to a major third (5:4).
+- The `sample` theme's scale (Utopia, inherited from Eleventy Excellent; a theme sets the ratios in `textSizes.json`) steps by 1.2 on a phone and by 1.25 on a wide screen: a minor third (6:5) opening out to a major third (5:4).
 - Every Layout's ratio of 1.5 is a perfect fifth (3:2).
 - Ariel Salminen's Scale.css (below) takes its sizes from the Pythagorean chromatic scale, where every interval is built from stacked fifths.
 
-**Time.** stomme has had the pitch layer from the start. What it lacks is the time layer: a beat. In the prototype the body line is the beat and the quarter line is its subdivision, and every other element is a note value or a rest counted in it.
+**Time.** A type scale is the pitch layer. What it lacks is the time layer: a beat. In stomme's rhythm the body line is the beat and the quarter line is its subdivision, and every other element is a note value or a rest counted in it.
 
 Table: The prototype's intervals read as rhythm
 | element | lines | as rhythm |
@@ -232,15 +232,15 @@ arielsalminen.com could not be opened while this was written. The 2012 article i
 
 ### Before
 
-Until 2026-10-01 everything vertical came from one rule, `.flow > * + *` in `global/compositions/flow.css`, fed by Eleventy Excellent's Utopia tokens and the element rules in `global/blocks/prose.css` (now `src/assets/css/local/prose.css`). Nothing was measured in lines.
+In Eleventy Excellent everything vertical comes from one rule, `.flow > * + *` in `global/compositions/flow.css`, fed by its Utopia tokens and the element rules in `prose.css`. Nothing is measured in lines.
 
-Four of the sample's twenty blocks start on a quarter line at 375px, and two at 1360px, where the misses reach 4.3px. A quarter line is 7–10px, so no block can be more than 3.5–5px off, and a miss this size is not visible by itself. What is visible is the spread: the gap between paragraphs, the space around a rule, the height of a table row each follow their token.
+Some of the sample's blocks start off a quarter line at 375px and at 1360px, where the misses reach a few pixels. A quarter line is only 7–10px, so no block can be more than half of that off, and a miss this size is not visible by itself. What is visible is the spread: the gap between paragraphs, the space around a rule, the height of a table row each follow their token.
 
-The comparison pictures that went with this section are not kept: the old CSS has left the site, so re-shot now both halves would be the same page. It fetches the style guide's sample (`src/_includes/partials/rhythm-sample.njk`), renders it in 375px iframes, once plain and once under the prototype, with the built `global.css` and the same local stylesheets on both, and measures every block's top from the page's first. `?w=1360` measures the widest step instead. Those runs are where the numbers on this page come from.
+The comparison pictures that went with this section are not kept: the old CSS has left stomme, so re-shot now both halves would be the same page. It fetches the style guide's sample (`src/_includes/partials/rhythm-sample.njk`), renders it in 375px iframes, once plain and once under the prototype, with the built `global.css` and the same local stylesheets on both, and measures every block's top from the page's first. `?w=1360` measures the widest step instead. Those runs are where the numbers on this page come from.
 
 ### The system
 
-Prose is the system: `src/assets/css/local/prose-rhythm.css` holds every rule above, scoped to `.prose`, beside `prose.css`, whose old spacing rules it replaced. The `--line` unit itself and its steps are the exception: they sit in `src/assets/css/global/base/global-styles.css`, because the page chrome is spaced by them too. Every page that sets `.prose` runs on it, which is every post type, wiki page, plain page, listing page and the webmentions box. It was built as a scoped prototype (`[data-rhythm]`, a page-level stylesheet, a dev-only `?rhythm=off` switch with scroll-synced tabs for comparing) and folded in on 2026-10-01 once it covered everything. The unit and its steps:
+Prose is the system: `src/assets/css/local/prose-rhythm.css` holds every rule above, scoped to `.prose`, beside `prose.css`, whose old spacing rules it replaced. The `--line` unit itself and its steps are the exception: they sit in `src/assets/css/global/base/global-styles.css`, because the page chrome is spaced by them too. Every page that sets `.prose` runs on it, which is every post type, wiki page, plain page, listing page and the webmentions box. It was built as a scoped prototype (`[data-rhythm]`, a page-level stylesheet, a dev-only `?rhythm=off` switch with scroll-synced tabs for comparing) and folded in once it covered everything. The unit and its steps:
 
 ```css
 body {
@@ -261,7 +261,7 @@ body {
 }
 ```
 
-The unit sits on `body` rather than `.prose` since 2026-10-12, so the page chrome can use it too (see "The page above the prose" below). Body and prose share a font size, so the value is the same. It changes no token, and `flow.css` is untouched: it works through `--flow-space`, the published property of the flow composition ([[Configuring a layout composition]]).
+The unit sits on `body` rather than `.prose`, so the page chrome can use it too (see "The page above the prose" below). Body and prose share a font size, so the value is the same. It changes no token, and `flow.css` is untouched: it works through `--flow-space`, the published property of the flow composition ([[Configuring a layout composition]]).
 
 ⚠ **Global CSS is in cascade layers; page-level stylesheets are not, so they win whatever their selector.** A component whose stylesheet sets the same property as the rhythm keeps its value, so each such component takes the line steps in its file, with the old value as the fallback outside prose: `table.css` (cell and caption padding, band rules painted into the cells), `media-meta.css`, `activity.css`, `event-status.css`, `post.css` (the subtitle and the 16:9 featured image), and the two video-link components. The `--line` registration still works from inside a layer.
 
@@ -271,11 +271,11 @@ The unit sits on `body` rather than `.prose` since 2026-10-12, so the page chrom
 
 **A code block inside a list item** keeps the browser's 1em above it, since a list item is not a flow container. It gets the paragraph gap instead. The wiki log's compact headings had their leading, padding and border, and are on quarter lines in `wiki.css` now.
 
-**Components bring their spacing.** The other post types surfaced the rest, each now on quarter lines: pills (the draft badge in the meta line, tags, genre chips, download buttons) snapped to the nearest quarter line, with wrapped rows a quarter line apart and a pill in a list item made a flex item, since its text line added 2px under it; the rating's 16px row of stars given a small-text line; lists of pills stripped of a utility's or the browser's margin; the footnote list's 1em bottom margin; the activity stats, the event status badge and the subtitle under a title; the external-link arrow, once a 1em inline-block that stretched small-text lines by 0.75px, now an inline box on the prose's line-height, which can't. Video embeds are 16:9, so the player pads itself down to the next quarter line with a percentage margin and the credit link sits a quarter line under it (the pad moved from the link onto the player on 2026-10-02, when the player went to popout width and stopped sharing the link's width); Chrome's 54px audio player is set to the nearest quarter line; a featured image is cropped to 16:9 whatever the file's ratio, so it is padded as 16:9.
+**Components bring their spacing.** The other post types surfaced the rest, each now on quarter lines: pills (the draft badge in the meta line, tags, genre chips, download buttons) snapped to the nearest quarter line, with wrapped rows a quarter line apart and a pill in a list item made a flex item, since its text line added 2px under it; the rating's 16px row of stars given a small-text line; lists of pills stripped of a utility's or the browser's margin; the footnote list's 1em bottom margin; the activity stats, the event status badge and the subtitle under a title; the external-link arrow, once a 1em inline-block that stretched small-text lines by 0.75px, now an inline box on the prose's line-height, which can't. Video embeds are 16:9, so the player pads itself down to the next quarter line with a percentage margin and the credit link sits a quarter line under it; Chrome's 54px audio player is set to the nearest quarter line; a featured image is cropped to 16:9 whatever the file's ratio, so it is padded as 16:9.
 
-Measured on 2026-10-01 after the fold, at 375px and 1360px with a headless sweep of every wiki page and article, two to four posts of each other type, every plain and listing page, and posts with webmentions): nearly all clean. Every block lands on the lattice or follows an image, map or embed; the favicons page's icon grid shifts the text after it, and the style guide's smallest labels are loose at the widest step, since no quarter-line leading suits that size at both ends.
+Measured after the fold, at 375px and 1360px with a headless sweep of pages of every layout, including posts with webmentions: nearly all clean. Every block lands on the lattice or follows an image, map or embed; the favicons page's icon grid shifts the text after it, and the style guide's smallest labels are loose at the widest step, since no quarter-line leading suits that size at both ends.
 
-The paragraph gap is three-quarters of a line, chosen over half a line on 2026-10-01: half a line kept the phone at today's 14px but made the space under a heading the same as the gap between paragraphs, so headings stopped sitting closer to their text.
+The paragraph gap is three-quarters of a line, chosen over half a line: half a line kept the phone at the old gap but made the space under a heading the same as the gap between paragraphs, so headings stopped sitting closer to their text.
 
 The heading rules come last in the file. A heading's space above then wins over the space set by the element before it (a figure's line and a half, say), and the half line under a heading wins over the next element's.
 
@@ -285,7 +285,7 @@ The heading rules come last in the file. A heading's space above then wins over 
 
 ### On any page
 
-<kbd><kbd>⌥</kbd><kbd>R</kbd></kbd> draws the same lattice over any page, and <kbd><kbd>⌥</kbd><kbd>G</kbd></kbd> the column grid ([[Keyboard shortcuts]]); both stay on for the tab. The lines are drawn in the body's `--line` from the top of the page, so they are the same on every page; the script only stretches the layer to the page's height. Until 2026-10-12 they were phased to the prose's first block instead, and a page with no prose used the body's fractional line height, so the lines moved from page to page.
+<kbd><kbd>⌥</kbd><kbd>R</kbd></kbd> draws the same lattice over any page, and <kbd><kbd>⌥</kbd><kbd>G</kbd></kbd> the column grid ([[Keyboard shortcuts]]); both stay on for the tab. The lines are drawn in the body's `--line` from the top of the page, so they are the same on every page; the script only stretches the layer to the page's height.
 
 The lines started out as the body's background, and every card, table row and section with a background hid them. They are now a separate layer laid over the page and blended into it. In light mode the layer uses `mix-blend-mode: darken`, which keeps the darker of the two colors at each pixel: a blue line darkens a white card, but black text is already darker than the line, so the text stays on top. In dark mode it uses `lighten` for the same reason. The result reads as lines above the backgrounds and below the text, without either knowing the other exists.
 
@@ -303,7 +303,7 @@ The lines started out as the body's background, and every card, table row and se
 }
 ```
 
-The overlay's code is `local/dev-grid.css` and `bundle/dev-grid.js`, shipped on every page since 2026-10-07 for about 2 KB.
+The overlay's code is `local/dev-grid.css` and `bundle/dev-grid.js`, shipped on every page for about 2 KB.
 
 ### Not done
 
@@ -311,8 +311,8 @@ The overlay's code is `local/dev-grid.css` and `bundle/dev-grid.js`, shipped on 
 
 ### The page above the prose
 
-Since 2026-10-12 the top of the page is counted in lines too. The color bar at the top is a border on `body`: a border takes up real space, so everything below starts after it, which is what the lattice needs (a shadow or an overlay would not push the page down). It was half a line thick at first and has been a quarter line since 2026-10-14. The site header is two lines tall under it, and since 2026-10-26 it has no bottom rule: the band ends in space. The first region on the page then rounds its top padding to the lattice (`utilities/region.css`); that rounding still subtracts half a line, the old bar's thickness, and has not been re-checked against the quarter-line bar. Where a line's pixels don't divide by four the bar is a fraction of a pixel, and the screen rounds it.
+The top of the page is counted in lines too. The color bar at the top is a border on `body`: a border takes up real space, so everything below starts after it, which is what the lattice needs (a shadow or an overlay would not push the page down). It is a quarter line thick. The site header is two lines tall under it, with no bottom rule: the band ends in space. The first region on the page then rounds its top padding to the lattice, allowing for the quarter-line bar (`utilities/region.css`). Where a line's pixels don't divide by four the bar is a fraction of a pixel, and the screen rounds it.
 
-Source: research session 2026-09-30. stomme's CSS was audited in the repository, and Eleventy Excellent's read from [its repository](https://github.com/madrilene/eleventy-excellent). Bernat's article and Roberts' post were read from their sources on GitHub, and the browser support dates are from the web-features data. The Every Layout and Piccalilli pages could not be fetched from the session; they are paraphrased, not quoted.
+Sources: stomme's CSS was audited in the repository, and Eleventy Excellent's read from [its repository](https://github.com/madrilene/eleventy-excellent). Bernat's article and Roberts' post were read from their sources on GitHub, and the browser support dates are from the web-features data. The Every Layout and Piccalilli pages could not be fetched from the session; they are paraphrased, not quoted.
 
 Source: Ariel Salminen, "On Typography" (2012).

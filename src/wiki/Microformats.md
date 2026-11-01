@@ -42,13 +42,13 @@ The fix isn't removing the wrapper — parsers need it — but making one elemen
 
 ### `wrapper-pass` — the same root cause, a different consequence
 
-Every post-type layout except `photo.njk` uses `class="e-content | wrapper-pass flow"` (only `post.njk` and `note.njk` did until 2026-10-02). `wrapper-pass` (added June 2026, in `compositions/wrapper.css`) re-exposes the wrapper's named grid columns via `grid-template-columns: subgrid`, so breakout widths (`popout`, `feature`, `full`) work inside the body. Breakouts are grid-column assignments that only apply to direct children of `.wrapper` — so the same wrapper that broke the spacing also broke the breakouts, by the same demotion, needing a different fix. In browsers without subgrid, content simply stays at content width.
+Every post-type layout except `photo.njk` uses `class="e-content | wrapper-pass flow"`. `wrapper-pass` (in `compositions/wrapper.css`) re-exposes the wrapper's named grid columns via `grid-template-columns: subgrid`, so breakout widths (`popout`, `feature`, `full`) work inside the body. Breakouts are grid-column assignments that only apply to direct children of `.wrapper` — so the same wrapper that broke the spacing also broke the breakouts, by the same demotion, needing a different fix. In browsers without subgrid, content simply stays at content width.
 
 ### The entry root sits on the `<article>` — in all sixteen layouts
 
-`e-content` only means anything *inside* an `h-entry`. For a long stretch the only `h-entry` on a post page was the hidden authorship block, which left the visible body and every `u-*` property outside the entry — so a strict parser saw an entry with no content and a set of orphaned properties. Every one of the fifteen per-type specs documents this as a deferred caveat.
+`e-content` only means anything *inside* an `h-entry`. If the only `h-entry` on a post page were the hidden authorship block, the visible body and every `u-*` property would sit outside the entry, and a strict parser would see an entry with no content and a set of orphaned properties.
 
-**It is no longer true.** All sixteen layouts now open the same way:
+stomme avoids that: all sixteen layouts open the same way:
 
 ```njk
 <article class="wrapper flow prose h-entry">
@@ -58,7 +58,6 @@ so the body, the properties, and the hidden `<data>` targets all parse as childr
 
 ⚠ Two things are deliberately rendered **outside** the root: received webmentions (`webmentions.njk`) and reactions recovered from an archived service (`jam-social.njk`). Both are `h-cite` cards about *other people's* posts, and nesting them inside the entry would make them read as children of it. The comments in those partials say so — don't tidy them into the `<article>`.
 
-If a spec still describes the nesting caveat as open, the spec is out of date on that point.
 
 **EE stock vs stomme:** `flow.css`, `wrapper.css`, and the reset are Eleventy Excellent's. The `e-content` wrapper, `wrapper-pass`, the entry root, and the mf2 vocabulary throughout the layouts are stomme's IndieWeb layer.
 

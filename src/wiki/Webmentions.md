@@ -16,7 +16,7 @@ What the receiver *displays* is not part of the protocol. Parsing the source pag
 
 ## In stomme
 
-Eleventy Excellent ships no webmention layer; this is stomme's, live since 2026-06-05. Three parts: a hosted receiving endpoint, a build-time fetch, and a render partial.
+Eleventy Excellent ships no webmention layer; this is stomme's. Three parts: a hosted receiving endpoint, a build-time fetch, and a render partial.
 
 ### Receiving without a server
 
@@ -33,7 +33,7 @@ That is the entire receiving side. Mentions accumulate there until the next buil
 `src/_data/webmentions.js` pulls the collected mentions during the build, so every deployed page stays plain static HTML. It keeps its `.cache/webmentions.json` and fetches incrementally — each build only pulls what arrived since the last one.
 
 - **Activation is the token, not code.** Without `WEBMENTION_IO_TOKEN` the fetch returns `false`, the build stays green, and the section renders empty. The whole feature switched on by setting an environment variable — no code change.
-- ⚠ **Every failure returns `false`, not just a missing token.** The fetch lives in `src/_config/utils/webmention-fetch.js` and swallows a rejected request, a non-2xx, and a 200 whose body is not a JF2 feed; the caller then keeps its cache and does **not** advance `lastFetched`, so the next build retries from the same point. This was not always true: until 2026-09-05 only the two configuration checks returned `false` and the request itself was unguarded, so an intermittent `502` from webmention.io failed the entire production build — which on Netlify means a third party's flakiness blocks a deploy. Proven by pointing the API at an unreachable host and watching a full production build finish anyway.
+- ⚠ **Every failure returns `false`, not just a missing token.** The fetch lives in `src/_config/utils/webmention-fetch.js` and swallows a rejected request, a non-2xx, and a 200 whose body is not a JF2 feed; the caller then keeps its cache and does **not** advance `lastFetched`, so the next build retries from the same point. It has to be so: an unguarded request would let an intermittent `502` from webmention.io fail the entire production build — which on Netlify means a third party's flakiness blocks a deploy. Check it by pointing the API at an unreachable host and watching a full production build finish anyway.
 - **Fetching is production-only.** Dev builds read whatever is already cached; only `ELEVENTY_ENV === 'production'` hits the API.
 - **The cache survives deploys** via `netlify-plugin-cache`, which is what makes the incremental `since` model work at all on Netlify.
 

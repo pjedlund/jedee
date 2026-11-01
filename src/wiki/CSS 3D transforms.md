@@ -41,7 +41,7 @@ There is no lighting in CSS 3D, so the light is painted on:
 
 - **Light**: a pseudo-element over the top face with a gradient from a light tint in one corner to a shade in the opposite one. Plain semi-transparent white and brown layers work; `mix-blend-mode: soft-light` is almost invisible on a pale surface.
 - **Details**: a narrow gradient band does for a fold, a hardcover's groove beside the spine, or the darkening where a page block meets its boards. Alternating colors on stacked layers read as page edges.
-- **Shadow**: a `box-shadow` on the bottom layer lies in that layer's plane, so it reads as a shadow on the surface under the object. A separate blurred element behind it reads as the object hovering. stomme's book takes the site's `thumb` shadow, five equal layers from 1 to 16px after Tobias Ahlin, with a deeper `-dark` twin, because a light shadow vanishes on a near-black page. The pamphlet takes `thumb-cast`, the same layers pushed right to match its top-left light; on a light page the painted darkening on its cover is kept faint, so the shade falls on the page instead.
+- **Shadow**: a `box-shadow` on the bottom layer lies in that layer's plane, so it reads as a shadow on the surface under the object. A separate blurred element behind it reads as the object hovering. stomme's book takes the theme's `thumb` shadow token, five equal layers from 1 to 16px after Tobias Ahlin, with a deeper `-dark` twin, because a light shadow vanishes on a near-black page. The pamphlet takes `thumb-cast`, the same layers pushed right to match its top-left light; on a light page the painted darkening on its cover is kept faint, so the shade falls on the page instead.
 
 ## Motion
 
@@ -64,7 +64,7 @@ The resting angle sits inside `(hover: hover)`: a device that cannot hover canno
 
 Two partials, each with its local CSS that loads only where they are used:
 
-- `partials/pamphlet.njk` with `local/pamphlet.css`: a pamphlet cover, traced to SVG, as a stapled pamphlet lying on a table. Twelve stacked sheets carry the thickness and the rounded corners; the view is a 10° tilt and a 2° spin, eased flat on hover. It floats into the text it belongs to (see [[Floats]]), and lies flat whenever it is not floated. In stomme it is included only by the Pamphlet sample on the design system page (`src/pages/design-system.njk`, lines 575-576).
+- `partials/pamphlet.njk` with `local/pamphlet.css`: a pamphlet cover, traced to SVG, as a stapled pamphlet lying on a table. Twelve stacked sheets carry the thickness and the rounded corners; the view is a 10° tilt and a 2° spin, eased flat on hover. It floats into the text it belongs to (see [[Floats]]), and lies flat whenever it is not floated. The design system page (`src/pages/design-system.njk`) shows it as a sample.
 - `partials/book.njk` with `local/book.css`: a hardcover after Castiel's structure (front cover, page block, back board), turned −32° to show its pages. The cover is a plain `<img>` through the Image transform, so a reading post's remote cover works as is (see [[Self-hosting remote images at build time]]).
 
 Both are shown under Patterns on the design system page, `/design-system/`.

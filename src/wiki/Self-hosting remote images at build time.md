@@ -17,7 +17,7 @@ Two consequences worth planning for. The fetch now happens on every build, which
 
 ## In stomme
 
-The site shows plenty of images that live on someone else's server — album covers from Apple Music and Bandcamp, book covers, film posters, YouTube thumbnails. **None of them are requested by the visitor's browser.** Eleventy Image fetches, optimizes, and self-hosts each one during the build.
+A site can show many images that live on someone else's server — album covers from Apple Music and Bandcamp, book covers, film posters, YouTube thumbnails. **None of them are requested by the visitor's browser.** Eleventy Image fetches, optimizes, and self-hosts each one during the build.
 
 ### Two routes, and only one accepts a remote URL
 
@@ -48,21 +48,21 @@ eleventyConfig.addPlugin(plugins.eleventyImageTransformPlugin, {
 
 **`widths: ['auto']` means the original width, whatever that happens to be.** Every plain `<img>` the transform touches therefore emits the source file at full size, so an image the page shows small still ships at the size it was scanned or shot at. The shortcodes don't have this problem — a `{% imageKeys %}` call states its `widths` — so it only surfaces on the transform route.
 
-The activities feed is the worked example. An activity's map cover is a photographed scan up to 4032 px and ~2 MB, and the feed only needs enough to show the shape of a course:
+An activities feed is the worked example. An activity's map cover can be a photographed scan of 4032 px and about 2 MB, and the feed only needs enough to show the shape of a course:
 
 ```jinja2
 <img eleventy:widths="1200" src="{{ post.data.cover }}" alt="…">
 ```
 
-Capping there changed the feed's 22 covers from ~2 MB each to a 9.3 MB total, and changed the page not at all — the page renders the same file through `{% imageKeys %}` in `activity.njk`, which asks for `[224, 448, 900, null]` so [[The PhotoSwipe lightbox]] still gets the full scan. **Two routes over one source file can want different sizes**, and each states what it wants. eleventy-img never upscales, so a cap is a ceiling and not a resize — smaller maps stay at their width.
+Capping there shrinks each cover a great deal and changes the page not at all — the page renders the same file through `{% imageKeys %}` in `activity.njk`, which asks for `[224, 448, 900, null]` so [[The PhotoSwipe lightbox]] still gets the full scan. **Two routes over one source file can want different sizes**, and each states what it wants. eleventy-img never upscales, so a cap is a ceiling and not a resize — smaller maps stay at their width.
 
 ### Bundling was considered and declined — twice
 
 The settled strategy is: **remote URL in `cover:`, plain `<img>`, build self-hosts.** Do not resurrect a `normalize-posts.js` / `colocate-cover.js` / `coverSource:` apparatus to copy covers into the repo — it was never built, and the build already does the job.
 
-The second refusal (25 May 2026) has a reason worth keeping: **the Obsidian Web Clipper cannot download a `cover:` image.** It writes front matter and body text, and the local-images plugin pulls down *body* images only, never a front-matter cover. So "always bundled" would mean reviving the dropped script or adding a manual step to every clip — to buy something the build already delivers. The authoring tool set the shape of the convention, the same way it did for [[Per-type feeds]]; see [[Web Clipper templates]] for the tool itself and [[The authoring tool decides the data model]] for the pattern.
+The second refusal has a reason worth keeping: **the Obsidian Web Clipper cannot download a `cover:` image.** It writes front matter and body text, and the local-images plugin pulls down *body* images only, never a front-matter cover. So "always bundled" would mean reviving the dropped script or adding a manual step to every clip — to buy something the build already delivers. The authoring tool set the shape of the convention, the same way it did for [[Per-type feeds]]; see [[Web Clipper templates]] for the tool itself and [[The authoring tool decides the data model]] for the pattern.
 
-**The escape hatch, when a cover must be permanent.** `dist/` is gitignored, so covers are refetched every build and the *repo* is not an archive of them — only the deployed site is. For any single post worth keeping forever, download the cover into `src/assets/images/reading/` and point `cover:` at that local path. It renders through the identical plain-`<img>` (the transform handles local paths too), gets committed, and adds no machinery.
+**The escape hatch, when a cover must be permanent.** `dist/` is gitignored, so covers are refetched every build and the *repo* is not an archive of them — only the deployed site is. For any single post worth keeping forever, download the cover into a local images folder (for example `src/assets/images/reading/`) and point `cover:` at that local path. It renders through the identical plain-`<img>` (the transform handles local paths too), gets committed, and adds no machinery.
 
 ### Two details that bite later
 

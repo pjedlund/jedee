@@ -26,9 +26,9 @@ In a running page, the [Long Animation Frames API](https://developer.chrome.com/
 
 ## In stomme
 
-The activities page showed an empty map box for over a second before [[The place map]]'s preloader appeared. A HAR showed `place-map.js` downloaded at 535 ms and the first tile request at 1,985 ms, with nothing in between — so the gap was not the network. The Performance trace showed one 1,233 ms task evaluating the module, a single 1,283 ms frame, and 1,201 ms of Rendering against 204 ms of Scripting. Grouping the trace's forced layouts by stack put **280 of the 286** on two lines of `cssColor()`, called once per activity row from `initPlaces()`.
+A page with [[The place map]] and a long list of rows (an activities archive, for example) can show an empty map box for over a second before the preloader appears. A HAR then shows the script downloaded and the first tile request a second or more later, with nothing in between — so the gap is not the network. The Performance trace shows one long task evaluating the module, mostly Rendering rather than Scripting. Grouping the trace's forced layouts by stack puts nearly all of them on two lines of `cssColor()`, called once per row from `initPlaces()`.
 
-`cssColor()` turns a CSS color MapLibre can't parse (`color-mix()`, `oklab()`) into `rgba()`: it appends a `<span>` with that color, reads the span's computed color, removes it, and paints the result into a 1×1 canvas. The append makes layout stale and the read forces it — twice per row, 140 rows, about 4 ms each on a page this size. There are only three activity colors.
+`cssColor()` turns a CSS color MapLibre can't parse (`color-mix()`, `oklab()`) into `rgba()`: it appends a `<span>` with that color, reads the span's computed color, removes it, and paints the result into a 1×1 canvas. The append makes layout stale and the read forces it — twice per row, several milliseconds each on a large page. A page has only a few distinct colors.
 
 The fix remembers each resolved value:
 
@@ -42,5 +42,5 @@ function cssColor(el, prop) {
 }
 ```
 
-The cache key is the custom property's value with its `var()`s already substituted, so a theme switch that changes a color produces a new key rather than a stale hit. That holds only while no `--place-color` or `--map-*` value contains `currentColor` or `light-dark()`, which stay unresolved in the value text. Timed on the live page against the same 140 rows: **1,600 ms before, 31 ms after**, identical colors out. On a production build the whole map setup dropped to about 103 ms of script, 39 ms of it forced layout.
+The cache key is the custom property's value with its `var()`s already substituted, so a theme switch that changes a color produces a new key rather than a stale hit. That holds only while no `--place-color` or `--map-*` value contains `currentColor` or `light-dark()`, which stay unresolved in the value text. As one example, timed on a page with 140 rows: **1,600 ms before, 31 ms after**, identical colors out.
 

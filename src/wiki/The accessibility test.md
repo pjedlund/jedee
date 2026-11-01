@@ -15,7 +15,7 @@ Two practical consequences follow, and both are about scope rather than rules:
 
 ## In stomme
 
-stomme runs pa11y-ci against a locally served build. The whole thing is Eleventy Excellent stock, inherited unchanged — what stomme changed is not the machinery but **which pages it points at**, and that turns out to matter more than the machinery does.
+stomme runs pa11y-ci against a locally served build. The whole thing is Eleventy Excellent stock, inherited unchanged — what stomme changed is not the machinery but **which pages it points at**, and that matters more than the machinery does.
 
 ```bash
 npm run test:a11y
@@ -64,6 +64,8 @@ a11yPaths:
   - /now/
 ```
 
+The list above is an example; each site sets its list in `settings.yaml`.
+
 ```js
 export const tests = {
   pa11y: {
@@ -75,9 +77,9 @@ export const tests = {
 };
 ```
 
-`pa11y.njk` branches on that array: **non-empty means only those paths are tested**; empty means it sweeps every page in `collections.showInSitemap`. With no `a11yPaths` key at all, a short list every site has is used. Here the list is non-empty, so a green run covers five URLs: chrome and prose pages, the design-system page and the Now layout.
+`pa11y.njk` branches on that array: **non-empty means only those paths are tested**; empty means it sweeps every page in `collections.showInSitemap`. With no `a11yPaths` key at all, a short list every site has is used. With a short list a green run covers only those URLs.
 
-stomme has sixteen post types (see [[Anatomy of a post type]]), so five URLs are a sample rather than coverage: no note, photo, event, recipe or response-type page is tested, nor a tag page. A site adds one page of each layout shape it uses, such as a media post, a very long index inside a custom element and a post whose image opens in the lightbox. Setting `a11yPaths: []` is a one-line change for a full sweep; the reason not to is runtime, since a sitemap can run to hundreds of pages.
+The shared code has sixteen post types (see [[Anatomy of a post type]]), so a handful of URLs is a sample rather than coverage: a note, photo, event, recipe or response-type page, or a tag page, is tested only if the list names one. A site adds one page of each layout shape it uses, such as a media post, a very long index inside a custom element and a post whose image opens in the lightbox. Setting `a11yPaths: []` is a one-line change for a full sweep; the reason not to is runtime, since a sitemap can run to hundreds of pages.
 
 ### ⚠ A path that no longer exists passes, it does not fail
 
@@ -103,20 +105,20 @@ Error: Could not find Chrome (ver. 148.0.7778.97). This can occur if either
  1. you did not perform an installation before running the script …
 ```
 
-It bit on 2026-08-05, again on 2026-08-08, and again on 2026-08-15, and the advice recorded here each time — `npx puppeteer browsers install chrome` — was treating a symptom. **Resolved 2026-08-15 by not using puppeteer's browser at all.**
+It can recur after every dependency refresh, and the usual advice — `npx puppeteer browsers install chrome` — treats a symptom. **The fix is not to use puppeteer's browser at all.**
 
-Three things were going on. First, **puppeteer is not a dependency of this project**: it arrives transitively under `pa11y-ci` → `pa11y`, and it keeps its browser in the machine-wide `~/.cache/puppeteer`, never in `node_modules`. Deleting `node_modules` does not touch it, and neither does anything in `package.json`. Second, **puppeteer pins one exact Chrome build**, so any dependency refresh that bumps puppeteer invalidates whatever was downloaded before — the error returns naming a different version, which is what made it feel like the install "kept coming undone". Third, and the reason it stayed mysterious, **puppeteer's postinstall swallows a failed download**: it creates the cache folder, fails to fill it, and lets `npm install` exit clean, so the breakage only surfaces months later when someone runs the suite.
+Three things go on. First, **puppeteer is not a dependency of this project**: it arrives transitively under `pa11y-ci` → `pa11y`, and it keeps its browser in the machine-wide `~/.cache/puppeteer`, never in `node_modules`. Deleting `node_modules` does not touch it, and neither does anything in `package.json`. Second, **puppeteer pins one exact Chrome build**, so any dependency refresh that bumps puppeteer invalidates whatever was downloaded before — the error returns naming a different version, which is what made it feel like the install "kept coming undone". Third, and the reason it stayed mysterious, **puppeteer's postinstall swallows a failed download**: it creates the cache folder, fails to fill it, and lets `npm install` exit clean, so the breakage only surfaces months later when someone runs the suite.
 
-The diagnostic tell is worth keeping: an **empty** `~/.cache/puppeteer` with no version folders *at all* means the download never succeeded, not that it went stale — puppeteer never prunes old builds, so a working install leaves them piled up. On this machine there were none, on any date, which is what ruled out the stale-version story that three sessions had assumed.
+The diagnostic tell is worth keeping: an **empty** `~/.cache/puppeteer` with no version folders *at all* means the download never succeeded, not that it went stale — puppeteer never prunes old builds, so a working install leaves them piled up.
 
-The fix is to point pa11y at a Chrome that is already on the machine, which the config template can now do:
+The fix is to point pa11y at a Chrome that is already on the machine, which the config template can do:
 
 ```js
 // src/_data/meta.js — override per machine with PA11Y_CHROME=
 chromePath: process.env.PA11Y_CHROME || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
 ```
 
-`src/common/pa11y.njk` feeds that into `executablePath` inside the `chromeLaunchConfig` it already emitted — the same executable the two-theme script further down this page had been using all along, which is the small irony here: the answer was on this page, in another section, for weeks. Empty falls back to puppeteer's resolution, which on this machine means the "Could not find Chrome" failure above, so the value should not be emptied; `PA11Y_CHROME=` covers a machine where Chrome lives elsewhere. The accepted trade-off is that a system Chrome auto-updates rather than being pinned; for a rule engine that runs inside the page, that is a low risk.
+`src/common/pa11y.njk` feeds that into `executablePath` inside the `chromeLaunchConfig` it already emitted — the same executable the two-theme script further down this page uses. Empty falls back to puppeteer's resolution, which can mean the "Could not find Chrome" failure above, so the value should not be emptied; `PA11Y_CHROME=` covers a machine where Chrome lives elsewhere. The accepted trade-off is that a system Chrome auto-updates rather than being pinned; for a rule engine that runs inside the page, that is a low risk.
 
 Worth distinguishing from the failure above: this one is loud — a non-zero exit and no results table. The dead-path failure is the quiet one.
 
@@ -133,7 +135,7 @@ The main menu renders two different layouts depending on whether scripts run: a 
 Three things have to be right, and each of them silently produces a *wrong green* if it is not:
 
 - **Turn JavaScript off with the launch flag `--blink-settings=scriptEnabled=false`.** It is the only route that makes the `(scripting: none)` media query match, and that query is what hides the panel before the script upgrades it. Chrome refuses to emulate `scripting` through `emulateMediaFeatures`, and `setJavaScriptEnabled(false)` leaves it reporting `enabled` — so with either of those the nav gets "measured" while `display: none`, and reports nothing wrong because there is nothing to see.
-- **Read colors back through a 1×1 canvas, never by parsing the string.** Any value built with `color-mix()` computes to `oklab(…)`, whose numbers are 0–1, not 0–255. Parsing that as RGB reads every mixed color as near-black: the first version of this check "found" 193 failures at 1.16:1. Setting `fillStyle` and reading the pixel back converts any CSS color syntax correctly.
+- **Read colors back through a 1×1 canvas, never by parsing the string.** Any value built with `color-mix()` computes to `oklab(…)`, whose numbers are 0–1, not 0–255. Parsing that as RGB reads every mixed color as near-black: a parser that does this "finds" failures at 1.16:1 that are not there. Setting `fillStyle` and reading the pixel back converts any CSS color syntax correctly.
 - **Skip elements smaller than a couple of pixels.** `.visually-hidden` text passes `checkVisibility()` — it is clipped, not hidden — so it reports as a contrast failure on every page.
 
 ```js
@@ -145,9 +147,9 @@ const page = await browser.newPage();
 await page.emulateMediaFeatures([{name: 'prefers-color-scheme', value: 'dark'}]);
 ```
 
-The same run covers the dark-mode gap above, since `prefers-color-scheme` emulation is a per-page setting and with no script running there is no `data-theme` stamp to fight — the page takes the `@media` path, which is exactly what a no-JS visitor gets. stomme's version lives at `tests/a11y-nojs.js` and needs `npm start` running first, because the main nav is only revealed in serve mode. First run, 2026-08-04: clean on `/`, `/about/` and `/articles/` in both themes.
+The same run covers the dark-mode gap above, since `prefers-color-scheme` emulation is a per-page setting and with no script running there is no `data-theme` stamp to fight — the page takes the `@media` path, which is exactly what a no-JS visitor gets. stomme's version lives at `tests/a11y-nojs.js` and needs `npm start` running first, because the main nav is only revealed in serve mode.
 
-It also turned up something the JS-on suite misses on a page it *does* test: the primary button on the style guide, which became `/design-system/` on 2026-10-11, measures 3.45:1 in both themes (`#f6f1f1` on `#d0621e`, re-measured 2026-10-28). Its regular-weight text is fluid, 19px at 320px wide and 24px from about 1024px, so it counts as large text (3:1) only on wide screens and fails 4.5:1 below that. Its text color is a `color-mix()`, and the rule engine appears not to read the resulting `oklab()` any better than a hand-written parser does — worth remembering that **a passing contrast rule over mixed colors may mean "could not read", not "fine"**.
+It can also turn up something the JS-on suite misses on a page it *does* test: a button whose text color is a `color-mix()` can measure 3.45:1 while the rule engine reports nothing, and with fluid regular-weight text it counts as large text (3:1) only on wide screens and fails 4.5:1 below that. The rule engine appears not to read the resulting `oklab()` any better than a hand-written parser does — worth remembering that **a passing contrast rule over mixed colors may mean "could not read", not "fine"**.
 
 ### Suppressing a finding
 
@@ -162,12 +164,10 @@ Two levels, both stock:
 
 - **Site-wide** — `meta.tests.pa11y.globalIgnore`, which becomes `defaults.ignore`.
 
-**Neither is in use anywhere in stomme.** `globalIgnore` is `[]` and no content file or layout carries a `pa11yIgnore` key — the only file in the repo containing that string is the template that reads it. The ten tested pages pass with nothing suppressed. Prefer the per-page form if that ever changes, with the exact rule code pa11y prints and a one-line note on why it is a false positive.
+**Neither is in use in stomme.** `globalIgnore` is `[]` and no content file or layout carries a `pa11yIgnore` key — the template that reads it is the only file containing that string. Prefer the per-page form if that ever changes, with the exact rule code pa11y prints and a one-line note on why it is a false positive.
 
 ### What it cannot catch
 
 An automated WCAG2AA pass is a floor. The failure documented in [[Focus rings and paint containment]] — an outset focus ring rendered invisible by a clipping ancestor — is valid HTML with correct contrast and a real focus style, so pa11y reports nothing. Anything that depends on what a control looks like *while being operated* is outside what this test observes.
 
-The no-JS section was added 2026-08-04 from a session that built the check; everything in it was measured, not inferred. The two warnings above it — the dead path that passes, and the missing browser that fails — were added 2026-08-08 after both were hit in one run, and the path list was corrected to five at the same time. It has grown since — six by 2026-08-15, nine by 2026-09-06, ten by 2026-09-11 — so the count in this page's prose is the one thing here worth re-checking against `meta.js` rather than trusting.
-
-Source: `tests.md` in Eleventy Excellent's `src/docs/` (tag `4.6.1`, dated 2026-03-30), checked against stomme's `src/common/pa11y.njk`, `src/_data/meta.js` and `eleventy.config.js` on 2026-07-31.
+Source: `tests.md` in Eleventy Excellent's `src/docs/` (tag `4.6.1`, dated 2026-03-30), checked against stomme's `src/common/pa11y.njk`, `src/_data/meta.js` and `eleventy.config.js`.

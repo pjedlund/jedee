@@ -36,7 +36,7 @@ The honest limit is that the technique costs a decision per component and gives 
 
 ## In stomme
 
-The dependency (`@11ty/is-land` 5.0.1) and the way it loads are Eleventy Excellent stock since EE 4.9.1 (merged 2026-10-18). The package's minified file is copied to `/assets/components/is-land.min.js` (a passthrough copy in `eleventy.config.js`), and `head/js-defer.njk` loads it with `<script type="module">`: 5,151 bytes, 2,103 gzipped. Until then esbuild bundled it and `head/js-inline.njk` inlined it into the head of every page (4,054 bytes, see below). It is now a request, but one the browser caches across pages. A module script waits for the page to finish parsing, which changes nothing here: every island waits for `on:idle` or `on:visible` anyway.
+The dependency (`@11ty/is-land` 5.0.1) and the way it loads are Eleventy Excellent stock since EE 4.9.1. The package's minified file is copied to `/assets/components/is-land.min.js` (a passthrough copy in `eleventy.config.js`), and `head/js-defer.njk` loads it with `<script type="module">`: 5,151 bytes, 2,103 gzipped. Until then esbuild bundled it and `head/js-inline.njk` inlined it into the head of every page (4,054 bytes, see below). It is now a request, but one the browser caches across pages. A module script waits for the page to finish parsing, which changes nothing here: every island waits for `on:idle` or `on:visible` anyway.
 
 Seven elements use it, all with one of two conditions — `on:idle` for anything in the page chrome, `on:visible` for anything embedded in a post's body.
 
@@ -51,9 +51,9 @@ Table: The islands in stomme: condition and origin
 | `webc/custom-youtube.webc` | `on:visible` | EE stock — see [[The YouTube embed]] |
 | `webc/custom-peertube.webc` | `on:visible` | EE stock |
 
-None of the seven uses `on:interaction`, `on:media` or `on:save-data`, and only the place map combines two. EE's `partials/gallery.njk` was an eighth until it was deleted as dead source on 2026-10-17. The sortable table is the one nested island; is-land's documentation says an island inside another inherits its parent's conditions as well as the ones it sets.
+None of the seven uses `on:interaction`, `on:media` or `on:save-data`, and only the place map combines two. EE's `partials/gallery.njk` was an eighth until it was deleted as dead source. The sortable table is the one nested island; is-land's documentation says an island inside another inherits its parent's conditions as well as the ones it sets.
 
-`webc/custom-masonry.webc` was an eighth, EE stock and `on:visible`, until its masonry script was removed on 2026-09-06 because it shifted the layout. The `<custom-masonry>` tag stays, never defined, as a CSS hook ([[Web components]]).
+`webc/custom-masonry.webc` was an eighth, EE stock and `on:visible`, until its masonry script was removed because it shifted the layout. The `<custom-masonry>` tag stays, never defined, as a CSS hook ([[Web components]]).
 
 ### The template boundary is a layout-shift trap
 
@@ -71,10 +71,10 @@ A WebC component whose template is `<is-land …><my-thing webc:root>` puts the 
 
 ### The autoinit import, now gone everywhere
 
-Up to EE 4.8, the bundle entry also imported `is-land-autoinit.js`, which mounts a framework component (`petite-vue`, `vue`, `svelte`, `preact`) for an island with an `import=` attribute. No island here has one and the site uses none of those frameworks, so on 2026-09-06 the import was dropped here, taking the inlined bundle from 4,592 to 4,054 bytes. is-land 5 then removed autoinit itself (frameworks now register through `Island.addInitType()`), and EE 4.9.1 stopped bundling is-land at all, so the bundle entry and this divergence are both gone. is-land 5 also made `on:idle` much cheaper and its interaction listeners passive.
+Up to EE 4.8, the bundle entry also imported `is-land-autoinit.js`, which mounts a framework component (`petite-vue`, `vue`, `svelte`, `preact`) for an island with an `import=` attribute. No island here has one and the site uses none of those frameworks, so the import was dropped here, taking the inlined bundle from 4,592 to 4,054 bytes. is-land 5 then removed autoinit itself (frameworks now register through `Island.addInitType()`), and EE 4.9.1 stopped bundling is-land at all, so the bundle entry and this divergence are both gone. is-land 5 also made `on:idle` much cheaper and its interaction listeners passive.
 
 After the 4.9.1 upgrade every island was checked in a production build: search, theme toggle and lightbox reach `ready` on load, the place map on scroll, and the theme toggle still switches.
 
-A note on checking `on:visible` at all, because it cost two false findings here: an automated browser pane can report `innerHeight` as **0**, and an IntersectionObserver in a zero-height viewport never fires, so every `on:visible` island looks permanently un-hydrated while every `on:idle` one looks fine. Set a real viewport size and re-read before believing it. The second false finding was pure timing — the island had hydrated a moment after the check ran. Both the masonry and the YouTube islands did reach `ready` on scroll in a production build, verified at 1280×900 on 2026-09-06, before the masonry island was removed.
+A note on checking `on:visible` at all, because it cost two false findings here: an automated browser pane can report `innerHeight` as **0**, and an IntersectionObserver in a zero-height viewport never fires, so every `on:visible` island looks permanently un-hydrated while every `on:idle` one looks fine. Set a real viewport size and re-read before believing it. The second false finding was pure timing — the island had hydrated a moment after the check ran. Both the masonry and the YouTube islands did reach `ready` on scroll in a production build, verified at 1280×900 in a production build.
 
-Raw source: `src/_config/events/build-js.js`, the four `webc/` and two `partials/` files above, and `node_modules/@11ty/is-land/` at 4.0.1, read on 2026-09-06; the island list rechecked on 2026-09-14; the loading and version updated from EE 4.9.1 and the is-land 5.0.0 release notes on 2026-10-18.
+Raw source: `src/_config/events/build-js.js`, the four `webc/` and two `partials/` files above, and `node_modules/@11ty/is-land/`; the loading and version are from EE 4.9.1 and the is-land 5.0.0 release notes.

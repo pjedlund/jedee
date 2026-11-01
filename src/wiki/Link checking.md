@@ -1,5 +1,5 @@
 ---
-description: "Why a link checker that scans source instead of rendered output reports things that were never links, and how an all-false-positive report hid a real defect on stomme."
+description: "Why a link checker that scans source instead of rendered output reports things that were never links, and how an all-false-positive report can hide a real defect."
 date: 2026-08-03
 updated: 2026-10-31
 ---
@@ -36,9 +36,9 @@ internalLinkRegex = /href="\/(.*?)"/g                             // html-link-p
 
 Left alone, the plugin's regexes report false positives in the console: TOML tables and JS arrays quoted in fenced blocks, prose examples such as those on [[Wikilinks]], an href inside a fenced HTML example, and the un-rendered `href="/tags/{{ tag | slugify }}/"` from `src/common/tags.njk`.
 
-**Rendering was never wrong.** markdown-it resolves backticks before the plugin's inline rule, so a wikilink inside a code span never reaches the renderer and comes out as literal `[[text]]`, which is what an example should be. Only detection was wrong — which is why nothing looked broken.
+**Rendering is never wrong.** markdown-it resolves backticks before the plugin's inline rule, so a wikilink inside a code span never reaches the renderer and comes out as literal `[[text]]`, which is what an example should be. Only detection is affected, which is why nothing looks broken.
 
-### The defect it was hiding
+### The defect it can hide
 
 Detection also drives backlinks. A wikilink written inside backticks as a code example must not count: if detection ignores the backticks, it is taken for a real link, and the page it points to renders a Backlinks nav pointing at a wiki URL. The warning count alone cannot show this, so diff the whole built site against a baseline.
 
@@ -60,13 +60,13 @@ Three details carry weight. Fences are stripped first, so the inline pass cannot
 
 1. **The resolver is the wrong place**, which is where the work started. A resolving function decides how to *render* a link that has already been found — it runs after detection and after the dead link has been recorded, so it cannot suppress anything. See [[Wikilinks]] for what the resolver legitimately does.
 2. **A deep import throws.** `import … from '@photogabble/eleventy-plugin-interlinker/src/wikilink-parser.js'` fails with `ERR_PACKAGE_PATH_NOT_EXPORTED`: the package's `exports` map publishes only `./index.js`, which does not re-export the parser classes. Loading them by *file path* works, because `exports` constrains package specifiers and not file URLs — and it resolves to the same absolute path the plugin imports internally, so it is the same module instance and the prototype patch is visible to the plugin.
-3. **There are two parsers.** Patching only the wikilink one took 13 warnings to 3; the rest were `href=` matches from `HTMLLinkParser`, blind in exactly the same way.
+3. **There are two parsers.** Patching only the wikilink one leaves the `href=` matches from `HTMLLinkParser`, which are blind in exactly the same way.
 
 The patch throws a named error if `find` is ever missing, so an interlinker upgrade fails loudly rather than quietly reverting to noise. **Re-check it on any version bump.** Covered by `tests/wikilink-ignore-code.test.js`.
 
 ### Verification, and one standing caveat
 
-The built output was the check, not the warning count: after code stripping, every page should be byte-identical to the baseline except a page that had gained backlinks from wikilinks inside code, which lose them; after templated hrefs, every page should be identical, and tag links still render and resolve. The dead-link warnings should go to 0.
+The built output was the check, not the warning count: after code stripping, every page should be byte-identical to the baseline except a page that had gained backlinks from wikilinks inside code, which lose them; after templated hrefs, every page should be identical, and tag links still render and resolve. The dead-link warnings should then list only real dead links.
 
 ⚠ **The plugin reads a page's *body* only — front matter is never scanned.** So wikilinks in front matter (a jam's artist or genre, for instance) are not detected, produce no backlink and never appear in the report. Counting "wikilinks on the site" by grepping files overstates what the plugin actually sees.
 

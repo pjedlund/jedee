@@ -14,7 +14,7 @@ It is easy to introduce and hard to see, because most tools ship with a default 
 
 ## In stomme
 
-Eleventy honors `.gitignore` by default, and stomme's build writes generated files into its input directory on every pass — 29 on 2026-09-22, 22 compiled stylesheets into `src/_includes/css/` and 7 bundled scripts into `src/_includes/scripts/`, from an `eleventy.before` event. Both directories are gitignored, so for a long time the watcher never saw them.
+Eleventy honors `.gitignore` by default, and stomme's build writes generated files into its input directory on every pass — compiled stylesheets into `src/_includes/css/` and bundled scripts into `src/_includes/scripts/`, from an `eleventy.before` event. Both directories are gitignored, so for a long time the watcher never saw them.
 
 Making the private wiki browsable locally broke that. `src/wiki/` is gitignored because it holds its inner git repo, so the only way to make Eleventy build it was to stop honoring `.gitignore` entirely:
 
@@ -24,7 +24,7 @@ eleventyConfig.ignores.add('src/_raw/**');
 eleventyConfig.ignores.add('src/posts/articles/-drafts/**');
 ```
 
-Those two `ignores` lines put back the *content* paths `.gitignore` had been hiding. The generated directories were missed, so the watcher could suddenly see them, and every build ended by rewriting the files that start the next one. Editing one CSS value produced nine full rebuilds and exhausted the heap; with the fix later removed to confirm the cause, one edit produced 18 rebuilds and 408 self-triggers in three minutes and was still climbing.
+Those two `ignores` lines put back the *content* paths `.gitignore` had been hiding. The generated directories were missed, so the watcher could suddenly see them, and every build ended by rewriting the files that start the next one. Editing one CSS value produced nine full rebuilds and exhausted the heap; with the fix removed to confirm the cause, one edit produced a rebuild after rebuild, each triggering the next, and was still climbing.
 
 The log names the culprit directly — one human edit followed by 23 that no one made:
 
@@ -43,15 +43,15 @@ eleventyConfig.watchIgnores.add('src/_includes/scripts/**');
 
 `watchIgnores`, not `ignores`, for the reason above: in Eleventy 3.x `EleventyFiles.getGlobWatcherIgnores()` unions `fileIgnores` (`.gitignore` + `.eleventyignore` + `config.ignores`) with `config.watchIgnores`, and only the latter is watch-only. The compiled stylesheets still have to resolve as includes.
 
-**The standing rule this left behind:** anything that calls `setUseGitIgnore(false)` takes on the job of re-ignoring, by hand, every build-generated path inside `src/`. The call itself went away on 2026-09-05 when the wiki became ordinary tracked files, but the two `watchIgnores` lines stay, because the second loop below showed that `.gitignore` never covered as much as it seemed to. The next candidate if it ever starts writing on a warm cache is `src/assets/og-images/`, produced by the `svgToJpeg` after-event and covered by an explicit `addWatchTarget` glob.
+**The standing rule this left behind:** anything that calls `setUseGitIgnore(false)` takes on the job of re-ignoring, by hand, every build-generated path inside `src/`. The call itself is gone now that the wiki is ordinary tracked files, but the two `watchIgnores` lines stay, because the second loop below showed that `.gitignore` never covered as much as it seemed to. The next candidate if it ever starts writing on a warm cache is `src/assets/og-images/`, produced by the `svgToJpeg` after-event and covered by an explicit `addWatchTarget` glob.
 
 One entry that was added and then removed is worth recording, because the reasoning sounds right: `**/.git/**`, on the theory that Eleventy's default ignore covers only the *root* `.git/` while `src/wiki/` has its repo, so committing wiki notes with the dev server running would start a rebuild storm. Tested afterwards, touching files in `src/wiki/.git/` triggers no rebuild with or without it. It was dead config and came out again.
 
 ### The second loop: a writer that is not the build
 
-A month later the dev server was dying again, this time with no edit at all — it rebuilt while a page was merely being scrolled, which pointed at images. It was not images. The trigger was Obsidian, and the mechanism is a different one from the loop above, worth keeping apart: here the build was not writing into its watched tree; a *second program* was.
+The dev server can die again with no edit at all — it rebuilt while a page was merely being scrolled, which pointed at images. It was not images. The trigger was Obsidian, and the mechanism is a different one from the loop above, worth keeping apart: here the build was not writing into its watched tree; a *second program* was.
 
-Two facts combine. The Obsidian vault for the site is `src/` itself, so Obsidian's bookkeeping lives at `src/.obsidian/`, and it rewrites `workspace.json` there on nearly every click — a pane resize, a tab switch, scrolling a note. And Eleventy's reading of `.gitignore` is not git's. `EleventyFiles.normalizeIgnoreContent()` takes each line, joins it to the directory the ignore file sits in, and stats the result:
+Two facts combine. When the Obsidian vault is `src/` itself, Obsidian's bookkeeping lives at `src/.obsidian/`, and it rewrites `workspace.json` there on nearly every click — a pane resize, a tab switch, scrolling a note. And Eleventy's reading of `.gitignore` is not git's. `EleventyFiles.normalizeIgnoreContent()` takes each line, joins it to the directory the ignore file sits in, and stats the result:
 
 ```js
 let path = TemplateGlob.normalizePath(dir, "/", line);
@@ -68,7 +68,7 @@ The signature is the same as before — a `File changed:` line for something no 
 [11ty] Wrote 678 files in 11.54 seconds
 ```
 
-A change outside the template set is not something `--incremental` can scope, so each write was a full rebuild, at the ~370 MB per pass described in [[The dev server's memory]]; the 8 GB ceiling lasted five or six clicks. The scroll correlation was real but backwards: eleventy-img's on-request mode was generating the lazily loaded images into `dist/` as they scrolled into view (the `(requested)` lines in the log), and `dist/` is never watched — it just happened while Obsidian was open beside the browser. Measured apart, with Obsidian closed and a logged server: 61 image requests, zero rebuilds; one `touch src/.obsidian/workspace.json`, one full rebuild.
+A change outside the template set is not something `--incremental` can scope, so each write was a full rebuild, at the per-pass cost described in [[The dev server's memory]], which exhausted the heap within a few clicks. The scroll correlation was real but backwards: eleventy-img's on-request mode was generating the lazily loaded images into `dist/` as they scrolled into view (the `(requested)` lines in the log), and `dist/` is never watched — it just happened while Obsidian was open beside the browser. Measured apart, with Obsidian closed and a logged server: many image requests, zero rebuilds; one `touch src/.obsidian/workspace.json`, one full rebuild.
 
 The fix is one more watch-only line, for the same reason as the first two — the folder is not an input either, but `watchIgnores` is the list that cannot affect anything else:
 

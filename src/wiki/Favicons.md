@@ -46,11 +46,11 @@ One related trap: a manifest's `background_color` paints the splash screen. An i
 
 ## In stomme
 
-The whole set is generated from one file, `logo.svg` in the active theme's folder (`src/_includes/themes/sample/logo.svg`), by `src/_config/setup/generate-favicons.js`, run by hand with `npm run favicons`. The outputs are committed to the repo, not built on deploy. [[Open Graph images]] are committed for the same kind of reason — their generator names a font a build server does not have. A passthrough in `eleventy.config.js` copies the folder to the site root; the `<link>` tags are in `src/_includes/head/meta-info.njk` and the manifest is `src/common/site-manifest.njk`.
+The whole set is generated from one file, `logo.svg` in the active theme's folder (`src/_includes/themes/<theme>/logo.svg`), by `src/_config/setup/generate-favicons.js`, run by hand with `npm run favicons`. The outputs are committed to the repo, not built on deploy. [[Open Graph images]] are committed for the same kind of reason — their generator names a font a build server does not have. A passthrough in `eleventy.config.js` copies the folder to the site root; the `<link>` tags are in `src/_includes/head/meta-info.njk` and the manifest is `src/common/site-manifest.njk`.
 
 The script, the file names, the npm script and the Evil Martians reference are Eleventy Excellent stock. The treatment is not.
 
-**Two treatments, from the rule above.** The tab keeps the bare mark on transparency at 14 of 16 pixels. Every app icon is one object — the mark knocked out of a solid accent blue:
+**Two treatments, from the rule above.** The tab keeps the bare mark on transparency at 14 of 16 pixels. Every app icon is one object — the mark knocked out of a solid tile in the logo's color:
 
 ```js
 const TAB_PAD = 1 / 16;   // a 14px mark in a 16px box
@@ -68,7 +68,7 @@ const knockout = Buffer.from(svgSource.replaceAll(markColor, themeLight));
 
 The two manifest icons get corners composited with `dest-in`; `apple-touch-icon` and `maskable-icon` stay square for the reasons above. The radius is a proportion rather than one of the project's radius tokens ([[Design token sync]]), which are sized for UI — a fixed px radius would vanish at 512 and swamp the 192.
 
-**⚠ `sharpsToIco` appends its `resize()` to whatever sharp pipeline it is handed.** Sharp applies resize before extend regardless of call order, and a second `resize()` replaces the first, so a pipeline of `resize(28).extend(2)` becomes `resize(32).extend(2)` and writes a **36px** file. At an earlier padding value it wrote 44px. Nothing errors — it is a valid `.ico` at the wrong size. Materializing to a buffer first pins it:
+**⚠ `sharpsToIco` appends its `resize()` to whatever sharp pipeline it is handed.** Sharp applies resize before extend regardless of call order, and a second `resize()` replaces the first, so a pipeline of `resize(28).extend(2)` becomes `resize(32).extend(2)` and writes a **36px** file. Nothing errors — it is a valid `.ico` at the wrong size. Materializing to a buffer first pins it:
 
 ```js
 const icoBuffer = await padded(svgBuffer, 32, TAB_PAD).png().toBuffer();
@@ -84,18 +84,18 @@ EE's stock script is immune, because it hands over a bare `sharp(svgBuffer)` wit
 Table: The four icon shapes, side by side
 | | File | Treatment |
 | --- | --- | --- |
-| <img src="/favicon.svg" alt="The stomme mark in the accent blue on transparency, filling almost the whole square." width="72" height="72" eleventy:ignore> | `favicon.svg` | Bare mark, transparent, 14 of 16 pixels |
-| <img src="/icon-512x512.png" alt="The mark knocked out of a solid accent-blue tile with rounded corners." width="72" height="72" eleventy:ignore> | `icon-192x192.png`, `icon-512x512.png` | Opaque tile, corners baked in — nothing masks these |
-| <img src="/apple-touch-icon.png" alt="The same accent-blue tile with square corners." width="72" height="72" eleventy:ignore> | `apple-touch-icon.png` | Opaque tile, square — iOS adds its squircle |
-| <img src="/maskable-icon.png" alt="The same accent-blue tile with square corners, full-bleed to the edge." width="72" height="72" eleventy:ignore> | `maskable-icon.png` | Opaque tile, square, full-bleed — the launcher crops it |
+| <img src="/favicon.svg" alt="The site's mark in the logo's color on transparency, filling almost the whole square." width="72" height="72" eleventy:ignore> | `favicon.svg` | Bare mark, transparent, 14 of 16 pixels |
+| <img src="/icon-512x512.png" alt="The mark knocked out of a solid tile in the logo's color, with rounded corners." width="72" height="72" eleventy:ignore> | `icon-192x192.png`, `icon-512x512.png` | Opaque tile, corners baked in — nothing masks these |
+| <img src="/apple-touch-icon.png" alt="The same tile with square corners." width="72" height="72" eleventy:ignore> | `apple-touch-icon.png` | Opaque tile, square — iOS adds its squircle |
+| <img src="/maskable-icon.png" alt="The same tile with square corners, full-bleed to the edge." width="72" height="72" eleventy:ignore> | `maskable-icon.png` | Opaque tile, square, full-bleed — the launcher crops it |
 
 The last two look identical here and that is the point: baked corners would become transparent notches inside the shape the OS cuts.
 
-**The theme colors.** Three exports in `src/_data/meta.js`, one consumer each: `themeColor` (`#1f5f5b`) reaches only the manifest's `theme_color`, so it paints the splash and the app-switcher card; `themeLight` (`#f6f8f7`) does `<meta name="theme-color">` in light mode, the manifest's `background_color`, and the knockout mark on the tiles; `themeDark` does the meta tag in dark mode and now references `themeColor`, so it is the same dark tone as the splash ([[The theme toggle]]).
+**The theme colors.** Three exports in `src/_data/meta.js`, read from the active theme's `theme.json`, one consumer each: `themeColor` reaches only the manifest's `theme_color`, so it paints the splash and the app-switcher card; `themeLight` does `<meta name="theme-color">` in light mode, the manifest's `background_color`, and the knockout mark on the tiles; `themeDark` does the meta tag in dark mode, and is best kept the same dark tone as the splash ([[The theme toggle]]).
 
-Because `background_color` is `themeLight`, a light plate on the manifest icons would have been invisible on the splash. That is why they are the accent-blue tile instead — and it makes the install prompt show the same object as the home screen it leads to. The other half of the installed-app experience is [[The service worker's three strategies]].
+Because `background_color` is `themeLight`, a light plate on the manifest icons would have been invisible on the splash. That is why they are a tile in the logo's color instead — and it makes the install prompt show the same object as the home screen it leads to. The other half of the installed-app experience is [[The service worker's three strategies]].
 
-**On a device.** The set rendered into the six places an installed app shows it. Every color claim above is visible here at once: the tile under Android's circular crop, the splash where `background_color` and the tile's ground are the same `#F4F4F2`, and the two chrome colors doing different jobs.
+**On a device.** The set rendered into the six places an installed app shows it. The frames show stomme with the `sample` theme, so the name and colors in them are that theme's. Every color claim above is visible here at once: the tile under Android's circular crop, the splash where `background_color` and the tile's ground are the same, and the two chrome colors doing different jobs.
 
 The frames are drawn by `src/wiki/_sources/pwa-preview.html`, which points at the committed icons rather than copies of them, so opening it shows whatever the set currently is. `npm run mockups` re-shoots the six PNGs from it; the `width`/`height` on each `<img>` below is their intrinsic size and has to follow if the frame size changes.
 
@@ -115,7 +115,7 @@ The frames are drawn by `src/wiki/_sources/pwa-preview.html`, which points at th
   <li>
     <figure>
       <img eleventy:formats="webp,png" src="/assets/images/wiki/pwa-splash-screen.png" alt="A launch screen: a dark teal status bar, then the rounded blue tile centered on an off-white field with the name Stomme beneath it." width="504" height="944">
-      <figcaption><strong>Splash screen</strong> — The tile reads as a distinct object on the <code>#f6f8f7</code> splash.</figcaption>
+      <figcaption><strong>Splash screen</strong> — The tile reads as a distinct object on the <code>themeLight</code> splash.</figcaption>
     </figure>
   </li>
   <li>
