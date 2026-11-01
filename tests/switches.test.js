@@ -295,3 +295,14 @@ test('share-image tags: a page with its picture has them, and a default picture 
   for (const tag of SHARE_TAGS) assert.ok(words.includes(tag), `${tag} is missing where the default picture applies`)
   assert.match(words, /og:image"\s+content="[^"]*opengraph-default\.jpg"/)
 })
+
+test('search.json: not built with the header off, built with it on', async t => {
+  const off = await makeTempSite({ settings: { switches: { header: false } } })
+  t.after(() => off.cleanup())
+  await off.build()
+  assert.ok(!off.exists('search.json'), 'search.json is built with no header to search from')
+  const on = await makeTempSite({ settings: { switches: { header: true } } })
+  t.after(() => on.cleanup())
+  await on.build()
+  assert.ok(on.exists('search.json'), 'search.json is missing with the header on')
+})
