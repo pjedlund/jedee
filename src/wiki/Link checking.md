@@ -21,7 +21,7 @@ Neither is a bug in the matcher. Both are structural consequences of reading sou
 
 A checker's value is entirely signal-to-noise, and this is easy to get backwards. A report that is 100% false positives is not a *weak* report. It is **equivalent to having no report**, and strictly worse than none, because it is usually documented somewhere as the safety net for exactly the mistake it is failing to catch. Nobody reads the fourteenth line of a list whose first thirteen lines are known to be wrong.
 
-The sharper danger is that false positives conceal false negatives. If detection is producing phantom links, those phantom links are also feeding whatever *else* detection drives — a backlink graph, a sitemap, a redirect map — and a wrong entry there is a real defect sitting quietly behind a wall of warnings everyone has learned to ignore. This is not hypothetical; see below.
+The sharper danger is that false positives conceal false negatives. If detection is producing phantom links, those phantom links are also feeding whatever *else* detection drives — a backlink graph, a sitemap, a redirect map — and a wrong entry there is a real defect sitting quietly behind a wall of warnings everyone has learned to ignore. This is not hypothetical: the section on stomme below shows how it happens.
 
 **So the fix for a noisy checker is not to lower its severity or filter its output at the reading end.** It is to stop detecting the things that were never links, so that the report returns to zero and the next line to appear in it is worth acting on.
 

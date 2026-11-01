@@ -55,7 +55,7 @@ Each entry below says what a page covers and why you would open it. The traps an
 - [[Hosting large originals off-repo]] — the deliberate inverse: large scans kept in a bucket the build never touches.
 - [[The PhotoSwipe lightbox]] — a lightbox loaded only once it is needed, degrading to a plain link without JavaScript.
 - [[The YouTube embed]] — a stand-in with a self-hosted thumbnail, so loading a page sends nothing to Google.
-- [[The place map]] — a map component on one vector basemap, with three modes chosen by the markup: single pin, place groups, and a recorded route.
+- [[The place map]] — a map component on one vector basemap, with three modes chosen by the markup: single pin, places, and a recorded route.
 
 ## Publishing & the IndieWeb
 

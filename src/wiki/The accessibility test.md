@@ -147,7 +147,7 @@ const page = await browser.newPage();
 await page.emulateMediaFeatures([{name: 'prefers-color-scheme', value: 'dark'}]);
 ```
 
-The same run covers the dark-mode gap above, since `prefers-color-scheme` emulation is a per-page setting and with no script running there is no `data-theme` stamp to fight — the page takes the `@media` path, which is exactly what a no-JS visitor gets. stomme's version lives at `tests/a11y-nojs.js` and needs `npm start` running first, because the main nav is only revealed in serve mode.
+The same run covers the dark-mode gap above, since `prefers-color-scheme` emulation is a per-page setting and with no script running there is no `data-theme` stamp to fight — the page takes the `@media` path, which is exactly what a no-JS visitor gets. stomme's version lives at `tests/a11y-nojs.js` and needs `npm start` running first, because serve mode always shows the main nav, whatever `hideNav` says.
 
 It can also turn up something the JS-on suite misses on a page it *does* test: a button whose text color is a `color-mix()` can measure 3.45:1 while the rule engine reports nothing, and with fluid regular-weight text it counts as large text (3:1) only on wide screens and fails 4.5:1 below that. The rule engine appears not to read the resulting `oklab()` any better than a hand-written parser does — worth remembering that **a passing contrast rule over mixed colors may mean "could not read", not "fine"**.
 

@@ -153,7 +153,7 @@ Paragraphs are separated by space, not indented, so Bringhurst's indent rule (2.
 
 A `subtitle:` in a post's front matter renders under the title in an `<hgroup>`, from `partials/entry-header.njk`, on every post type. The `<p>` sits outside `p-name`, so the microformats title stays the title alone; see [[Microformats]]. Subtitles are written in title case with short words lowercase, like the title.
 
-It is set in Source Sans italic at `--size-step-2`, in the headline color, balanced (`local/post.css`). The italic sans reads as a second voice rather than a smaller title. Its `--flow-space` is set on the `<p>` itself: set on the `<hgroup>`, it lost to `.prose`'s larger space after a heading.
+It is set in the theme's base font, in italic, at `--size-step-2`, in the headline color, balanced (`local/post.css`). An italic sans such as Source Sans reads as a second voice rather than a smaller title. Its `--flow-space` is set on the `<p>` itself: set on the `<hgroup>`, it lost to `.prose`'s larger space after a heading.
 
 Books have a Subtitle field in [[Sveltia CMS]]. Films don't, since Letterboxd has no subtitle for the Web Clipper to fill it from, but a film can still take `subtitle:` by hand.
 

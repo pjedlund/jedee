@@ -45,6 +45,8 @@ pyftsubset Full-Font.otf.woff2 --unicodes-file=targets.txt --flavor=woff2 --layo
 
 Then check before replacing the file: nothing the old cmap had is gone, the new characters are present, and a variable font still has its `fvar` table. Don't pass `--instance`, which would flatten the weight axis. `--layout-features='*'` keeps the font's ligatures, small caps and other switches; without it they're stripped (see [[OpenType features]] for what these subsets keep). A variable subset cannot be extended from static per-weight files: the glyphs have to come from a variable source, or the axis is lost.
 
+A character drawn too wide can be scaled separately: a second `@font-face` for just those code points, pointing at the same file with `size-adjust`, shrinks them without touching the rest. And a fresh subset loses any hand edit made to a glyph in the old file, so a hand-raised or hand-drawn glyph has to be redone after every re-subset.
+
 Every character added is paid for on every page that loads the file. Whole blocks are tempting ("add all of Latin-1") and expensive: the full Latin-1 Supplement took one heading font from 33 KB to 45 KB, for letters no heading used. Add characters as pages need them.
 
 ## Missing styles

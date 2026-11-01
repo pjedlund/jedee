@@ -38,7 +38,7 @@ It happens by accident to every ` ```njk ` fence, which on wiki pages quoting la
 
 That is the whole difficulty in one picture. Nothing about the flat block says *failure*; it says *plaintext*, which is a legitimate thing for a fence to be. The two are only distinguishable side by side, and only ever became visible because a colored `js` block happened to sit next to one.
 
-The mockup is `src/wiki/_sources/syntax-highlighting.html`. Its two panels are the literal output of `markdownLib.render()` for the same source string, pasted in, and it links the site's compiled `global.css` so the token colors are `code.css`'s rather than a copy of them. Regenerate the two panels with the one-liner at the foot of this page; `npm run mockups` re-shoots it. The size and `white-space` have to be forced onto every descendant of both `<pre>`s: `code.css` sizes `code` as well as `pre`, and left alone the highlighted half wrapped where the flat half did not — a difference in line breaks that has nothing to do with the finding.
+The mockup is `src/wiki/_sources/syntax-highlighting.html`. Its two panels are the literal output of `markdownLib.render()` for the same source string, pasted in, and it links the site's compiled `global.css` so the token colors are `code.css`'s rather than a copy of them, and the accent that tints them is the `sample` theme's. Regenerate the two panels with the one-liner at the foot of this page; `npm run mockups` re-shoots it. The size and `white-space` have to be forced onto every descendant of both `<pre>`s: `code.css` sizes `code` as well as `pre`, and left alone the highlighted half wrapped where the flat half did not — a difference in line breaks that has nothing to do with the finding.
 
 The fix leans on `jinja2` (an alias of Prism's `django`), whose delimiters are Nunjucks' delimiters. Aliasing the grammar directly — `prism.languages.njk = prism.languages.jinja2` — is the version that looks right and reads wrong, because it skips the markup-templating hook described above and leaves the HTML around the tags as undifferentiated `token operator` / `token variable`. What works is rewriting the fence's language before Prism sees it, so the name stays `jinja2`:
 
@@ -67,7 +67,7 @@ node -e "import('./src/_config/plugins/markdown.js').then(m => console.log(m.mar
 
 ### Colors
 
-The token colors started as Eleventy Excellent's palette, which names its variables by hue in `code.css`: orange 30°, indigo 260°, violet 314°, pink 350°, a gray and a blue. stomme changed saturation and lightness per theme to clear WCAG AA against the code block background The palette was then reworked after GitHub's color-blind themes, described below. The `.token.*` rules map Prism's token types onto five colors: orange, blue, purple, gold and gray. Strings, numbers and attribute values stay in the plain code text color.
+The token colors started as Eleventy Excellent's palette, which names its variables by hue in `code.css`: orange 30°, indigo 260°, violet 314°, pink 350°, a gray and a blue. stomme changed saturation and lightness per theme to clear WCAG AA against the code block background. The palette was then reworked after GitHub's color-blind themes, described below. The `.token.*` rules map Prism's token types onto five colors: orange, blue, purple, gold and gray. Strings, numbers and attribute values stay in the plain code text color.
 
 GitHub's *protanopia and deuteranopia* themes (`light_colorblind` and `dark_colorblind` in [Primer's primitives](https://github.com/primer/primitives)) start from the default syntax colors and swap out exactly the ones red–green color-blind readers confuse:
 
@@ -130,7 +130,7 @@ Table: Where the chip's middle sits against the middle of the body text's capita
 |---|---|---|---|
 | Figtree + Roboto Mono (EE, 2024) | 0.038em | 0.002em | −0.042em |
 | Atkinson Hyperlegible + `ui-monospace` (EE today) | 0.071em | 0.032em | 0.008em |
-| Source Sans + Source Code Pro (measured for stomme) | 0.053em | 0.013em | −0.027em |
+| Source Sans + Source Code Pro (one pair, as an example) | 0.053em | 0.013em | −0.027em |
 
 The February value centers EE's 2024 pair almost exactly. EE has since changed fonts and kept the value, which leaves today's pair 0.032em low; that row is SF Mono on macOS, since `ui-monospace` is a different font on other systems. With Source Sans and Source Code Pro the chip sits 0.053em low without the nudge, about 1.5px at a large body size. stomme keeps the letters on the baseline instead, a choice between two alignments rather than a fix: the nudge would move them 0.04em off the line the prose sits on. The two were compared side by side and the baseline won. The chip also stays `display: inline`. Measured, `inline-block` keeps the text on the baseline too, since an inline-block's baseline is its last line of text; what changes is that the vertical padding then counts toward the line's height (the test paragraph grew 0.84px), and a long span can no longer wrap onto the next line. The selector is EE's, and so was the plain `0.1em 0.4em` padding it replaces. The chip is stomme's.
 

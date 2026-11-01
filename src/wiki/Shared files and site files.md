@@ -9,7 +9,7 @@ Hugo and WordPress draw the line with a lookup order, so a site's files sit on t
 
 ## In stomme
 
-The shared part is everything outside the list of site files. The list is `tests/site-files.json`, one pattern per line, and it is the definition: a file belongs to this one site if a pattern matches it, and is shared if none does. It covers the posts, a handful of pages (about, accessibility, ai, colophon, legal, now, privacy and sustainability), the settings, the featured list, the genre descriptions, the navigation, the favicon set, the default share picture, the demo pictures and audio, the generated share cards, the CMS configuration, the package files, the licence and the readme, and the two test lists that belong to a site. The wiki and the theme folders are not on the list: they are shared.
+The shared part is everything outside the list of site files. The list is `tests/site-files.json`, one pattern per line, and it is the definition: a file belongs to one site if a pattern matches it, and is shared if none does. stomme's list is the starting list, and it covers the posts, a handful of pages (about, accessibility, ai, colophon, legal, now, privacy and sustainability), the settings, the featured list, the genre descriptions, the navigation, the favicon set, the default share picture, the demo pictures and audio, the generated share cards, the CMS configuration, the package files, the licence and the readme, and the two test lists that belong to a site. The shared pages, the wiki and the `sample` theme are not on the list: they are shared. A site adds its theme folder, its extra wiki pages, the wiki index and log, and any extra Netlify functions.
 
 Four things let a second site reuse the shared part without editing it:
 

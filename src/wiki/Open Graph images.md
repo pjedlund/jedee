@@ -75,9 +75,9 @@ Three things the generator does differently from the per-post template, all of t
 
 **Chrome rasterizes it, not an SVG library**, so the fonts are the theme's woff2 files and no installation is assumed. That inverts the dependency described further down rather than living with it.
 
-**The two faces are inlined as `data:` URIs.** `@font-face` pointed at `file://` paths would leave the card silently set in Georgia and Arial — a `setContent` document has no file origin, so the requests fail and `FontFace.status` comes back `'error'`. The card looks plausible enough that only a check catches it.
+**A theme can name font files in its `og` block; those are inlined as `data:` URIs and checked.** A font with no file is a system font. `@font-face` pointed at `file://` paths would leave the card silently set in Georgia and Arial — a `setContent` document has no file origin, so the requests fail and `FontFace.status` comes back `'error'`. The card looks plausible enough that only a check catches it.
 
-**So the generator asserts both faces loaded and throws if not.** This is the one place the silent-fallback failure can be made loud.
+**So the generator asserts every named face loaded and throws if not.** This is the one place the silent-fallback failure can be made loud.
 
 The per-post template is aligned to match: Eleventy Excellent's star is replaced by the site's mark at the same size, position and 10%, and the signature logomark takes the accent color — the same value as the breadcrumb logomark. The 80px title over the watermark keeps almost the contrast it has on bare paper, so the overlap on a long title costs nothing.
 

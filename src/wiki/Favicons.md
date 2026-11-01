@@ -102,7 +102,7 @@ The frames are drawn by `src/wiki/_sources/pwa-preview.html`, which points at th
 <ul class="grid | popout" role="list" data-wiki-mockup style="--grid-min-item-size: 17rem; --gutter: var(--space-m)">
   <li>
     <figure>
-      <img eleventy:formats="webp,png" src="/assets/images/wiki/pwa-home-screen.png" alt="A phone home screen with eight app tiles in two rows: seven gray placeholders labeled Mail, Maps, Photos, Notes, Music, Files and Clock, and the site's blue tile, circular-cropped with a pale circle inside, labeled Stomme, third in the top row." width="504" height="944">
+      <img eleventy:formats="webp,png" src="/assets/images/wiki/pwa-home-screen.png" alt="A phone home screen with eight app tiles in two rows: seven gray placeholders labeled Mail, Maps, Photos, Notes, Music, Files and Clock, and a blue tile, circular-cropped with a pale circle inside, labeled Stomme, third in the top row." width="504" height="944">
       <figcaption><strong>Home screen</strong> — The maskable icon under Android's circular crop.</figcaption>
     </figure>
   </li>
