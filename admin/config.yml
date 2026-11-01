@@ -296,7 +296,7 @@ singletons:
           - { name: serviceWorker, label: Offline support, widget: boolean, hint: 'Off: no service worker file and nothing registers it' }
           - { name: feeds, label: Feeds, widget: boolean, hint: 'Off: no feed files at all, no feed links in the head, and no feed button in the footer' }
           - { name: webmentions, label: Webmentions, widget: boolean, hint: 'Off: no webmention link in the head, nothing fetched at build time, and none shown on posts' }
-          - { name: micropub, label: Micropub and IndieAuth links, widget: boolean, hint: 'Off: the three links in the head go. ⚠ The Netlify function that takes the posts is still deployed' }
+          - { name: micropub, label: Micropub and IndieAuth links, widget: boolean, hint: 'Off: the three links in the head go. The Netlify function that takes the posts answers only when the ME variable is set in Netlify, and gives a 404 otherwise' }
           - { name: relMe, label: rel=me and fediverse:creator, widget: boolean, hint: 'Off: no rel="me" on profile links, in the head or the footer, and no fediverse:creator tag' }
       - name: pwa
         label: Service worker
