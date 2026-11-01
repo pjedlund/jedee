@@ -129,3 +129,22 @@ test('an archive brings the divider, and other pages do not', async t => {
   assert.equal(copies(styleOf(site, 'notes/index.html'), '.divider>.divider'), 1)
   assert.ok(!styleOf(site, PAGE).includes('.divider'), 'the divider is on a page with no archive header')
 })
+
+test('lightbox CSS: only on a page with a lightbox, and in the blocks layer', async t => {
+  const plain = { 'src/pages/plain.md': STANDALONE('Just words.') }
+  const site = await makeTempSite({
+    files: {
+      ...plain,
+      'src/pages/tagged.njk': '---\ntitle: Tagged\nlayout: base\npermalink: /tagged/\n---\n<div class="wrapper"><div class="feature"><photo-lightbox @href="/a.jpg" @width="10" @height="10"><img slot="image" src="/a.jpg" alt="" eleventy:ignore></photo-lightbox></div></div>\n',
+      'src/pages/shortcode.njk': '---\ntitle: Shortcode\nlayout: base\npermalink: /shortcode/\n---\n{% lightbox "/assets/images/template/opengraph-default.jpg", "A picture" %}\n',
+    },
+  })
+  t.after(() => site.cleanup())
+  await site.build()
+  assert.ok(!styleOf(site, 'plain/index.html').includes('photo-lightbox'), 'a page with no lightbox still carries its CSS')
+  for (const file of ['tagged/index.html', 'shortcode/index.html']) {
+    const local = [...site.read(file).matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi)].map(match => match[1])[1] ?? ''
+    assert.match(local, /@layer blocks\{[^]*photo-lightbox/, `${file}: the lightbox CSS is missing or outside the blocks layer`)
+  }
+  assert.match(styleOf(site, 'plain/index.html'), /figure:is\(\.popout,\s*\.feature,\s*\.full\)/, 'a plain breakout figure lost its caption rule')
+})

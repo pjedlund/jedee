@@ -149,27 +149,18 @@ figure:has(> picture, > img, > a > picture) > figcaption {
   contain: inline-size;
 }
 
-/* A breakout figure keeps its caption in the text column: the figure, and a lightbox's wrappers around it, pass the page grid's columns through. */
+/* A breakout figure keeps its caption in the text column: the figure passes the page grid's columns through. A lightbox's wrappers do the same in local/photo-lightbox.css. */
 @supports (grid-template-columns: subgrid) {
-  :is(.wrapper, .wrapper-pass) > figure:is(.popout, .feature, .full),
-  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full):has(> is-land > photo-lightbox > figure),
-  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full) > is-land:has(> photo-lightbox > figure),
-  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full) > is-land > photo-lightbox:has(> figure),
-  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full) > is-land > photo-lightbox > figure {
+  :is(.wrapper, .wrapper-pass) > figure:is(.popout, .feature, .full) {
     display: grid;
     grid-template-columns: subgrid;
   }
 
-  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full) > is-land,
-  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full) > is-land > photo-lightbox,
-  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full) > is-land > photo-lightbox > figure,
-  :is(.wrapper, .wrapper-pass) > figure:is(.popout, .feature, .full) > :not(figcaption),
-  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full) > is-land > photo-lightbox > figure > :not(figcaption) {
+  :is(.wrapper, .wrapper-pass) > figure:is(.popout, .feature, .full) > :not(figcaption) {
     grid-column: 1 / -1;
   }
 
-  :is(.wrapper, .wrapper-pass) > figure:is(.popout, .feature, .full) > figcaption,
-  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full) > is-land > photo-lightbox > figure > figcaption {
+  :is(.wrapper, .wrapper-pass) > figure:is(.popout, .feature, .full) > figcaption {
     grid-column: content;
   }
 }
