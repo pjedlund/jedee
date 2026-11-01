@@ -162,3 +162,13 @@ test('the map preloader mark comes from the theme logo, and the stem is a theme 
   assert.ok(!style.includes('m50 0 .588'), 'a fixed logo is still in the CSS')
   assert.match(style, /var\(--preloader-stem-width,\s*0\)/, 'the stem box is still fixed to one logo')
 })
+
+test('the YouTube placeholder mark comes from the theme logo', async t => {
+  const site = await makeTempSite({ files: { 'src/_includes/themes/sample/logo.svg': OTHER_LOGO, 'src/pages/tube.njk': '---\ntitle: Tube\nlayout: base\npermalink: /tube/\n---\n<custom-youtube @slug="abc123" @label="A film"></custom-youtube>\n' } })
+  t.after(() => site.cleanup())
+  await site.build()
+  const html = site.read('tube/index.html')
+  assert.ok(html.includes("--yt-logo-mark: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 40' fill='%23808080' fill-opacity='.1'%3E%3Cpath d='M1 1h18v38H1z'/%3E%3C/svg%3E\")"), 'the mark is not the theme logo')
+  assert.ok(!html.includes('__THEME_LOGO_MARK__'), 'the placeholder reached the page')
+  assert.ok(!html.includes('m50 0 .588'), 'a fixed logo is still in the markup')
+})
