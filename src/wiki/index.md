@@ -5,7 +5,7 @@ date: 2026-07-31
 
 The wiki documenting web techniques and how stomme is designed and built. Maintained by Claude Code, following conventions kept in the project's instructions. Pages are named after their concept where one exists ("Microformats", "Text wrapping"): general explanation first, then an "In stomme" section. Purely project-internal pages keep descriptive titles and live under "Stomme itself".
 
-stomme is the shared foundation these pages describe: the code and conventions that every site built on it has in common, apart from a site's posts, settings, theme and extra files. An "In stomme" section describes that foundation.
+johanedlund.se is built on stomme, the shared foundation these pages describe: the code and conventions every site built on it has in common. An "In stomme" section describes that foundation, so the pictures there may show stomme's neutral sample theme rather than this site. The pages under "This site" are about johanedlund.se alone.
 
 Each entry below says what a page covers and why you would open it. The traps and the measurements live on the pages themselves.
 
