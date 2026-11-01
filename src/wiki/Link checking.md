@@ -1,5 +1,5 @@
 ---
-description: "Why a link checker that scans source instead of rendered output reports things that were never links, and how an all-false-positive report hid a real defect on jedee."
+description: "Why a link checker that scans source instead of rendered output reports things that were never links, and how an all-false-positive report hid a real defect on stomme."
 date: 2026-08-03
 updated: 2026-10-31
 ---
@@ -25,7 +25,7 @@ The sharper danger is that false positives conceal false negatives. If detection
 
 **So the fix for a noisy checker is not to lower its severity or filter its output at the reading end.** It is to stop detecting the things that were never links, so that the report returns to zero and the next line to appear in it is worth acting on.
 
-## In jedee
+## In stomme
 
 `@photogabble/eleventy-plugin-interlinker` scans source, with two separate parsers and two regexes:
 
@@ -34,17 +34,13 @@ wikiLinkRegExp    = /(?<!!)(!?)\[\[([^|\n]+?)(\|([^\n]+?))?]]/g   // wikilink-pa
 internalLinkRegex = /href="\/(.*?)"/g                             // html-link-parser.js
 ```
 
-Until 2026-08-03 the console report carried **13 warnings, all 13 false positives** — TOML tables and a JS array quoted in fenced blocks, the prose examples on [[Wikilinks]], a former page title kept deliberately in the wiki's log, an href inside a fenced HTML example, and the un-rendered `href="/tags/{{ tag | slugify }}/"` from `tags.njk`.
+Left alone, the plugin's regexes report false positives in the console: TOML tables and JS arrays quoted in fenced blocks, prose examples such as those on [[Wikilinks]], an href inside a fenced HTML example, and the un-rendered `href="/tags/{{ tag | slugify }}/"` from `src/common/tags.njk`.
 
 **Rendering was never wrong.** markdown-it resolves backticks before the plugin's inline rule, so a wikilink inside a code span never reaches the renderer and comes out as literal `[[text]]`, which is what an example should be. Only detection was wrong — which is why nothing looked broken.
 
 ### The defect it was hiding
 
-Detection also drives backlinks. Two wiki pages use `[[Anna Karenina]]` as a code example, and since detection ignored the backticks, both counted as real links to the published `/reading/anna-karenina/` post. That post rendered a Backlinks nav pointing at two **wiki** URLs — a straight violation of the one-way rule as it stood then, which kept the still-private wiki out of published pages. (The wiki has been public since 2026-09-05, and a post may now link into it, though rarely.)
-
-Production was safe by luck of configuration: the wiki only builds when the wiki dial in `settings.yaml` is `local` or `public`, and production then sat at `local`, so the pages generating those backlinks were not in the production build. Any local or public build leaked it.
-
-It was not found by reading the warnings. It was found by diffing the whole built site against a pre-patch baseline. The warning count alone would have shown the fix "working" and said nothing about this.
+Detection also drives backlinks. A wikilink written inside backticks as a code example must not count: if detection ignores the backticks, it is taken for a real link, and the page it points to renders a Backlinks nav pointing at a wiki URL. The warning count alone cannot show this, so diff the whole built site against a baseline.
 
 ### The fix
 
@@ -70,10 +66,8 @@ The patch throws a named error if `find` is ever missing, so an interlinker upgr
 
 ### Verification, and one standing caveat
 
-The built output was the check, not the warning count: with code stripping, all 361 pages were byte-identical except `/reading/anna-karenina/` losing its two wiki backlinks; with templated hrefs, all 361 were identical with no exceptions, and tag links still render and resolve. Dead-link warnings went 13 → 0.
+The built output was the check, not the warning count: after code stripping, every page should be byte-identical to the baseline except a page that had gained backlinks from wikilinks inside code, which lose them; after templated hrefs, every page should be identical, and tag links still render and resolve. The dead-link warnings should go to 0.
 
-⚠ **The plugin reads a page's *body* only — front matter is never scanned.** So the wikilinks in jam front matter (artist, genre) have never been detected, never produced a backlink, and never appeared in the report. Counting "wikilinks on the site" by grepping files overstates what the plugin actually sees, and [[Wikilinks]] carried a figure that made that mistake.
+⚠ **The plugin reads a page's *body* only — front matter is never scanned.** So wikilinks in front matter (a jam's artist or genre, for instance) are not detected, produce no backlink and never appear in the report. Counting "wikilinks on the site" by grepping files overstates what the plugin actually sees.
 
 See also [[The interlinker's second render pass]] — the same plugin's other structural surprise, where link resolution is coupled to render timing.
-
-Raw source: `src/_raw/dev-notes/How the dead-link report was made usable.md`

@@ -1,5 +1,5 @@
 ---
-description: "Telling a JS-heap leak from native memory, and from a one-off spike: what heapUsed, external and RSS each mean, why GC must be forced before reading them, and jedee's two unrelated out-of-memory crashes."
+description: "Telling a JS-heap leak from native memory, and from a one-off spike: what heapUsed, external and RSS each mean, why GC must be forced before reading them, and stomme's two unrelated out-of-memory crashes."
 date: 2026-08-02
 updated: 2026-10-28
 ---
@@ -24,7 +24,7 @@ Read together, they classify the problem quickly. `heapUsed` climbing on a strai
 
 **Finding the holder** is elimination, not intuition. Disable one component per run and compare slopes; anything that leaves the slope unchanged is exonerated. A heap snapshot (`v8.writeHeapSnapshot()`) tells you *what* is retained, though on a large heap the answer is often an ocean of anonymous `Object` and string nodes with no single named holder, which points at a framework holding a whole build rather than at any one call site. Snapshots above ~512 MB also exceed Node's maximum string length, so they have to be parsed as a stream rather than with `JSON.parse`.
 
-## In jedee
+## In stomme
 
 The site has hit two out-of-memory crashes with the same message and entirely different causes. Telling them apart by *when* they fire is the fastest triage.
 
@@ -61,7 +61,7 @@ Table: What one save costs, on a 681-page site
 
 `external` and `arrayBuffers` stay at 38–60 MB throughout, so this is plain JS objects — not sharp, and therefore not the same problem as the cold-build spike. A snapshot held 4.4M anonymous `Object` and 5.4M concatenated strings: a retained copy of the whole build.
 
-The bisect exonerated everything jedee controls. Measured before `--incremental` was in the dev script, when every rebuild was the whole site, the slope stayed within ±10 MB of ~368 MB with the CSS/JS `eleventy.before` hook off, the image transform plugin off, the interlinker off, the wiki dial at `private`, and with `--incremental`. `html-minifier-terser` only runs under `ELEVENTY_ENV=production`, and `svgToJpeg` is a no-op once the OG images exist. What remains is Eleventy holding the previous build's render graph. 3.1.7 still does it: re-measured on 2026-10-28 with `npm run dev:mem`, eight saves of one note, each rebuilding 197 of 704 pages, kept +159 MB apiece (1317 → 2589 MB), the same ~0.8 MB per page rendered.
+The bisect exonerated everything stomme controls. Measured before `--incremental` was in the dev script, when every rebuild was the whole site, the slope stayed within ±10 MB of ~368 MB with the CSS/JS `eleventy.before` hook off, the image transform plugin off, the interlinker off, the wiki dial at `private`, and with `--incremental`. `html-minifier-terser` only runs under `ELEVENTY_ENV=production`, and `svgToJpeg` is a no-op once the OG images exist. What remains is Eleventy holding the previous build's render graph. 3.1.7 still does it: re-measured on 2026-10-28 with `npm run dev:mem`, eight saves of one note, each rebuilding 197 of 704 pages, kept +159 MB apiece (1317 → 2589 MB), the same ~0.8 MB per page rendered.
 
 **Saves cannot be batched while `--incremental` is on.** ⚠ `setWatchThrottleWaitTime(ms)` looks like the lever and is accepted without complaint, but it cannot make one rebuild cover several saves: it is a debounce on when the first build *starts*, and under `--incremental` Eleventy then drains its watch queue one file per build. Five files saved inside a 500 ms window still produced five rebuilds. Eleventy says so in a comment at the top of `EleventyWatch.js` — "Incremental builds don't batch changes, they queue. Nonincremental builds batch." — and `getActiveQueue()` returns `[this.activeQueue[0]]` when incremental. The countdown in "You saved while Eleventy was running, let's run again. (4 changes)" is that queue draining, not Eleventy absorbing a burst. Dropping `--incremental` does batch, at the price of every rebuild being all 681 pages.
 
@@ -100,5 +100,3 @@ Eight consecutive CSS saves: zero rebuilds, memory flat, 0.79 s from save to com
 Only the *global* CSS moves. `local/*.css` is per-page by definition — which local files a page carries depends on its partials — so it stays on the bundle, and saving one still rebuilds the pages that use it.
 
 Both crashes are separate again from [[Watch loops]], which multiplied this leak: nine self-triggered rebuilds at ~370 MB apiece arrive as 3.3 GB at once, which is why a single keystroke could kill the server outright rather than merely bringing it nearer the wall.
-
-Raw sources: `src/_raw/dev-notes/How the dev server was made survivable.md`, `src/_raw/dev-notes/How a CSS save stopped rebuilding the site.md`

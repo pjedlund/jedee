@@ -1,5 +1,5 @@
 ---
-description: "Why hotlinking a third-party image costs privacy, reliability and control, and how jedee fetches and self-hosts every remote cover at build time."
+description: "Why hotlinking a third-party image costs privacy, reliability and control, and how stomme fetches and self-hosts every remote cover at build time."
 date: 2026-07-31
 updated: 2026-10-27
 ---
@@ -15,7 +15,7 @@ On a static site the fix is to move the fetch from the visitor's browser into th
 
 Two consequences worth planning for. The fetch now happens on every build, which makes a persistent build cache close to mandatory — see [[Three things called cache]]. And the build acquires a dependency on hosts it does not control, so it needs to survive one of them being down.
 
-## In jedee
+## In stomme
 
 The site shows plenty of images that live on someone else's server — album covers from Apple Music and Bandcamp, book covers, film posters, YouTube thumbnails. **None of them are requested by the visitor's browser.** Eleventy Image fetches, optimizes, and self-hosts each one during the build.
 
@@ -48,7 +48,7 @@ eleventyConfig.addPlugin(plugins.eleventyImageTransformPlugin, {
 
 **`widths: ['auto']` means the original width, whatever that happens to be.** Every plain `<img>` the transform touches therefore emits the source file at full size, so an image the page shows small still ships at the size it was scanned or shot at. The shortcodes don't have this problem — a `{% imageKeys %}` call states its `widths` — so it only surfaces on the transform route.
 
-The activities feed is the worked example. An activity's race map is a photographed scan up to 4032 px and ~2 MB, and the feed only needs enough to show the shape of a course:
+The activities feed is the worked example. An activity's map cover is a photographed scan up to 4032 px and ~2 MB, and the feed only needs enough to show the shape of a course:
 
 ```jinja2
 <img eleventy:widths="1200" src="{{ post.data.cover }}" alt="…">
@@ -62,7 +62,7 @@ The settled strategy is: **remote URL in `cover:`, plain `<img>`, build self-hos
 
 The second refusal (25 May 2026) has a reason worth keeping: **the Obsidian Web Clipper cannot download a `cover:` image.** It writes front matter and body text, and the local-images plugin pulls down *body* images only, never a front-matter cover. So "always bundled" would mean reviving the dropped script or adding a manual step to every clip — to buy something the build already delivers. The authoring tool set the shape of the convention, the same way it did for [[Per-type feeds]]; see [[Web Clipper templates]] for the tool itself and [[The authoring tool decides the data model]] for the pattern.
 
-**The escape hatch, when a cover must be permanent.** `dist/` is gitignored, so covers are refetched every build and the *repo* is not an archive of them — only the deployed site is. For any single post worth keeping forever, download the cover into `src/assets/images/reading/` and point `cover:` at that local path. It renders through the identical plain-`<img>` (the transform handles local paths too), gets committed, and adds no machinery. No reading post used it on 2026-10-27; the local covers then were the activities' race maps (22), the imported This Is My Jam covers (20) and one recipe.
+**The escape hatch, when a cover must be permanent.** `dist/` is gitignored, so covers are refetched every build and the *repo* is not an archive of them — only the deployed site is. For any single post worth keeping forever, download the cover into `src/assets/images/reading/` and point `cover:` at that local path. It renders through the identical plain-`<img>` (the transform handles local paths too), gets committed, and adds no machinery.
 
 ### Two details that bite later
 
@@ -103,5 +103,3 @@ export const youtubePoster = async slug => {
 ⚠ `netlify-plugin-cache` keeps eleventy-fetch's `.cache` warm between deploys. Removing it makes every deploy re-fetch every remote image.
 
 See also [[The YouTube embed]] and [[Hosting large originals off-repo]] — the opposite case, where a file deliberately stays *out* of the build.
-
-Raw sources: `src/_raw/dev-notes/How the YouTube embed loads.md`, `src/_raw/dev-notes/How the photo originals are hosted.md`

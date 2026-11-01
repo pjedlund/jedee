@@ -28,7 +28,7 @@ const body = item.data.page?.rawInput ?? '';
 
 No premature-use error, no separate collection, and no HTML to strip out afterwards. The cost is the mirror image: `rawInput` is the source *before* rendering, so everything the template layer would have resolved or removed is still sitting in it — template expressions, HTML comments, shortcode calls. Whatever the site's authors write has to be stripped by hand.
 
-## In jedee
+## In stomme
 
 One dial in `src/_data/settings.yaml` switches the whole feature:
 
@@ -45,7 +45,7 @@ search:
 
 `types` is a curated list, not every collection. The response types (likes, replies, reposts, RSVPs, bookmarks) stay out because they would drown prose results. The keys are **collection keys, and they are singular** — `article`, not `articles`; the plurals are archive URLs and produce an empty index with a green build. See [[Anatomy of a post type]].
 
-Activities are the one type where the whole collection is the wrong unit, so `only` narrows them by a front-matter key: 113 of 180 are orienteering, with real event and forest names worth looking up months later, while the rest carry Strava's defaults including 24 posts called "Morning Run". `only` is deliberately a general key/value match rather than an orienteering flag — it is the same few lines either way, and it keeps the answer to "what is searchable?" inside the dial.
+Activities are the one type where the whole collection is the wrong unit, so `only` narrows them by a front-matter key: an archive imported from a fitness export holds a few activities with names worth looking up months later, while the rest carry the service's defaults, a long run of posts called "Morning Run". `only` is deliberately a general key/value match rather than a flag for one sport — it is the same few lines either way, and it keeps the answer to "what is searchable?" inside the dial.
 
 Standalone prose pages are not in any post collection, so they opt in with `tags: ["searchable"]`, which gives a real `collections.searchable` the index can list beside the post types. `searchable` has to join `SYSTEM_TAGS` in `src/_config/collections.js` in the same edit — every other tag on this site is a public page, and without that one word `/tags/searchable/` quietly appears in the tag index.
 
@@ -79,11 +79,11 @@ The rest of the strip is ordinary markdown: fenced code and images before links,
 
 Result rows are built client-side, so their per-type icons cannot be rendered per result. The partial emits one `<template data-search-icon="<type>">` per searchable type and the script clones the matching one.
 
-Close to half the index has no body at all — 153 of 342 entries counted on 2026-09-20, mostly jams (82) and orienteering activities (63), which carry a title and front matter and nothing else. It was 153 of 289 and a clear majority until the wiki joined the searchable types; the bodyless count has not moved, the bodied one grew around it. A row with only an icon and a title is still the common case rather than the edge case, so the row omits the excerpt element entirely rather than rendering an empty one that leaves a ragged gap in the list. Design a result row against the body-less half, not against the posts that happen to have prose.
+On a site with archive imports, close to half the index can have no body at all — jams and imported activities carry a title and front matter and nothing else. A row with only an icon and a title is still the common case rather than the edge case, so the row omits the excerpt element entirely rather than rendering an empty one that leaves a ragged gap in the list. Design a result row against the body-less half, not against the posts that happen to have prose.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/site-search-panel.png" alt="A browser window with the search panel open under the header. The field holds the word night; below it seven results, each with a small type icon and a bold title. The first two, both orienteering activities, are a single line with no excerpt; the five below them — three wiki pages, a recipe and a jam — each carry two lines of gray excerpt text." width="1284" height="814">
-  <figcaption>Seven real hits for <code>night</code>. The top two rows are the common shape — icon and title, nothing else — and the row simply omits the excerpt element rather than leaving an empty one.</figcaption>
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/site-search-panel.png" alt="A browser window with the search panel open under the header. The field holds the word night; below it seven results, each with a small type icon and a bold title. The first two, both activities, are a single line with no excerpt; the five below them — three wiki pages, a recipe and a jam — each carry two lines of gray excerpt text." width="1284" height="814">
+  <figcaption>Seven example hits for <code>night</code>. The top two rows are the common shape — icon and title, nothing else — and the row simply omits the excerpt element rather than leaving an empty one.</figcaption>
 </figure>
 
 The include in `header.njk` is wrapped in an `{% if %}`, and the partial calls `{% svg %}`. That is the exact shape that once blanked the entire nav — see [[The interlinker's second render pass]]. It is safe only because `{% svg %}` is synchronous. If the panel ever renders empty with a green build, that is the first thing to check, not a template typo.
@@ -136,6 +136,5 @@ Measure these with an oklab→sRGB conversion, not a regex over `getComputedStyl
 
 pa11y only ever sees the panel closed, since it does not click ([[The accessibility test]]). The combobox, the listbox and the options exist only in the open state and have to be checked by hand.
 
-Related: [[The main menu]] — the other header disclosure, whose surface, shadow, drop distance and reduced-motion gate this one reuses. [[The activities archive]] — the type the `only` map exists for, and where the 113 orienteering entries come from.
+Related: [[The main menu]] — the other header disclosure, whose surface, shadow, drop distance and reduced-motion gate this one reuses. The `only` map exists for the activities type.
 
-Raw sources: `src/_raw/Building Search Index with Eleventy.md`, `src/_raw/dev-notes/How the search panel opens and clears.md`

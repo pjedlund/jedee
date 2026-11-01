@@ -27,25 +27,25 @@ The composite kind is what Jeremy Keith called [HTML web components](https://ada
 
 Her library, [Elena](https://elenajs.com/), is the worked example: 2.6 kB, no dependencies, at `v1.0.0-rc.7` when the article was published. Its server-rendering rule follows from the two layers. A component with no `render()` method is fully server-renderable, because it *is* its HTML; one with `render()` renders its first state without JavaScript and needs the script for interaction. The article announces a release candidate, so the package list and API may have moved since.
 
-## In jedee
+## In stomme
 
-jedee uses no component library. Every custom element on the site is of Ariel's composite kind, and there is **no Shadow DOM anywhere**: the only `attachShadow` in the shipped JavaScript is inside `is-land`, which recreates declarative shadow roots for its children, and no child here has one.
+stomme uses no component library. Every custom element on the site is of Ariel's composite kind, and there is **no Shadow DOM anywhere**: the only `attachShadow` in the shipped JavaScript is inside `is-land`, which recreates declarative shadow roots for its children, and no child here has one.
 
 Counted in a production build on 2026-09-14, the custom tags split three ways:
 
-Table: The custom tags in jedee and what their JavaScript does
+Table: The custom tags in stomme and what their JavaScript does
 | Tag | Defined by | What its JavaScript does |
 | --- | --- | --- |
 | `<is-land>` | `@11ty/is-land`, EE stock | holds back other scripts until a condition is met — see [[is-land]] |
-| `<place-map>` | jedee | reads the place list and route JSON rendered inside it and draws a MapLibre map from jedee's tiles — see [[The place map]] |
-| `<sortable-table>` | jedee (added 2026-09-15) | turns the column heads of the table inside it into sort buttons — see [[Tables]] |
-| `<photo-lightbox>` | jedee | wires PhotoSwipe to the single `<a>` inside it — see [[The PhotoSwipe lightbox]] |
+| `<place-map>` | stomme | reads the place list and route JSON rendered inside it and draws a MapLibre map from stomme's tiles — see [[The place map]] |
+| `<sortable-table>` | stomme (added 2026-09-15) | turns the column heads of the table inside it into sort buttons — see [[Tables]] |
+| `<photo-lightbox>` | stomme | wires PhotoSwipe to the single `<a>` inside it — see [[The PhotoSwipe lightbox]] |
 | `<lite-youtube>` | `lite-youtube-embed`, EE stock | swaps the poster for the player on click — see [[The YouTube embed]] |
 | `<custom-easteregg>` | EE stock | listens for a typed keyword; renders nothing itself |
 | `<custom-card>`, `<custom-youtube>`, `<custom-youtube-link>`, `<custom-peertube>`, `<custom-peertube-link>`, `<custom-masonry>` | nothing | never defined — tag names kept as CSS hooks |
 
-The first five are composite components by the book: without JavaScript the place map is a table of places, the sortable table is the same table in date order, the lightbox is a link to the full image, and the YouTube embed is a link to the video. The last row is the base layer with no enhancement layer at all. `<custom-masonry>` got there by subtraction: its masonry script was removed on 2026-09-06 because it shifted the layout ([[Layout shift]]), and the tag stayed so call sites and CSS did not have to change.
+The first five are composite components by the book: without JavaScript the place map is a table of places, the sortable table is the same table in date order, the lightbox is a link to the full image, and the YouTube embed is a link to the video. The last row is the base layer with no enhancement layer at all. `<custom-masonry>` got there by subtraction: its masonry script was removed on 2026-09-06 because it shifted the layout, and the tag stayed so call sites and CSS did not have to change.
 
 The `.webc` files in `src/_includes/webc/` are not web components, despite the name. WebC is Eleventy's build-time component syntax and outputs plain HTML; whether a browser custom element exists afterwards depends only on whether some script calls `customElements.define` for that tag.
 
-Raw source: `src/_raw/Progressive Web Components.md`, plus the custom tags in a production `dist/` and the `customElements.define` calls in `src/assets/scripts/components/` and `node_modules/`, read on 2026-09-14.
+Source: "Progressive Web Components", plus the custom tags in a production `dist/` and the `customElements.define` calls in `src/assets/scripts/components/` and `node_modules/`, read on 2026-09-14.

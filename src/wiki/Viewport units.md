@@ -26,7 +26,7 @@ const browser = await puppeteer.launch({
 
 The scrollbar then takes 15px on macOS Chrome, and `innerWidth - document.documentElement.clientWidth` reports it. The same default applies to anything built on Puppeteer that does not override it, which includes the [[The accessibility test|pa11y run]].
 
-## In jedee
+## In stomme
 
 On 2026-10-26 the [[The main menu|mega-menu]] and the [[Site search|search panel]] were sized and positioned from the dev grid: a column unit of `min(64rem, 100vw - var(--gap) * 2) / 64`, with each panel's right edge snapped back to the nearest column edge by a `round()` against `50%` of the header row. The unit came from `100vw`; the row it was snapped against did not include the scrollbar. With a classic scrollbar the grid came out 15px wider than the row, the rounding landed on a different column, and the panels moved by up to a column:
 
@@ -52,5 +52,3 @@ The fix removed the grid from both panels rather than correcting its unit. Each 
 ```
 
 Checked from 320 to 1600px with real scrollbars: both panels stay inside the row at every width. How the mega-menu's columns fit inside the 40rem is on [[The main menu]].
-
-Raw source: `src/_raw/dev-notes/How the header panels' width broke on classic scrollbars.md`

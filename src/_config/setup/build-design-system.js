@@ -1,5 +1,5 @@
 /**
- * Build the `project/` tree for the "jedee design system" Artifact (claude.ai/artifact/8SUYhAYSZX7ELYM8LhaTzH) into `_local/claude-design-system/`.
+ * Build the `project/` tree for a design-system bundle of the active theme into `_local/claude-design-system/`.
  *
  * Workflow:
  *   1. Build the site once so `src/_includes/css/global.css` is current

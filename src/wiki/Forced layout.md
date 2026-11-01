@@ -15,7 +15,7 @@ The reads that force layout are many and not obvious from their names: `offsetWi
 
 ## Finding it
 
-A forced-layout freeze looks like a slow network from the outside: something on the page stays blank. The network tools can rule that out, but only the Performance panel shows the cause. In a Chromium browser (Chrome, Edge, Helium), these are the recordings that matter, roughly in the order they narrow things down:
+A forced-layout freeze looks like a slow network from the outside: something on the page stays blank. The network tools can rule that out, but only the Performance panel shows the cause. In a Chromium browser (Chrome, Edge), these are the recordings that matter, roughly in the order they narrow things down:
 
 - **Network → Capture screenshots** (the gear in the Network panel) adds a filmstrip above the waterfall. It only adds a frame when the screen changes, and the overview's time-range selection hides frames outside it — double-click the overview to see the whole load.
 - **A screen recording** (<kbd><kbd>⌘</kbd><kbd>⇧</kbd><kbd>5</kbd></kbd> on macOS) films the real load on the real connection. Stepping it in QuickTime with the arrow keys shows one frame at a time. macOS only writes a frame when the screen changes, so a 60 fps file can hold far fewer frames than its length suggests.
@@ -24,7 +24,7 @@ A forced-layout freeze looks like a slow network from the outside: something on 
 
 In a running page, the [Long Animation Frames API](https://developer.chrome.com/docs/web-platform/long-animation-frames) reports the same thing per script: each entry's `scripts[].forcedStyleAndLayoutDuration`. It only reports frames that were actually rendered, so a background tab or a hidden automated browser reports nothing at all.
 
-## In jedee
+## In stomme
 
 The activities page showed an empty map box for over a second before [[The place map]]'s preloader appeared. A HAR showed `place-map.js` downloaded at 535 ms and the first tile request at 1,985 ms, with nothing in between — so the gap was not the network. The Performance trace showed one 1,233 ms task evaluating the module, a single 1,283 ms frame, and 1,201 ms of Rendering against 204 ms of Scripting. Grouping the trace's forced layouts by stack put **280 of the 286** on two lines of `cssColor()`, called once per activity row from `initPlaces()`.
 
@@ -44,4 +44,3 @@ function cssColor(el, prop) {
 
 The cache key is the custom property's value with its `var()`s already substituted, so a theme switch that changes a color produces a new key rather than a stale hit. That holds only while no `--place-color` or `--map-*` value contains `currentColor` or `light-dark()`, which stay unresolved in the value text. Timed on the live page against the same 140 rows: **1,600 ms before, 31 ms after**, identical colors out. On a production build the whole map setup dropped to about 103 ms of script, 39 ms of it forced layout.
 
-Raw source: `src/_raw/dev-notes/How the map preloader delay was traced to forced layout.md` (the session of 2026-10-07), with the HAR, screen recording and Performance trace in `_local/generated/preloader/`.

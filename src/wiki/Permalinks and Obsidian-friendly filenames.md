@@ -4,7 +4,7 @@ date: 2026-07-31
 updated: 2026-10-27
 ---
 
-The posts folder is an Obsidian vault as well as an Eleventy source, and the two want opposite things from a filename. Obsidian wants `Anna Karenina.md`, because `[[Anna Karenina]]` has to resolve by filename. The web wants `/reading/anna-karenina/`. The permalink pattern in each folder data file is what reconciles them.
+The posts folder is an Obsidian vault as well as an Eleventy source, and the two want opposite things from a filename. Obsidian wants `Sample Book.md`, because `[[Sample Book]]` has to resolve by filename. The web wants `/reading/sample-book/`. The permalink pattern in each folder data file is what reconciles them.
 
 ## The standard form
 
@@ -14,7 +14,7 @@ The posts folder is an Obsidian vault as well as an Eleventy source, and the two
 
 Eleven of the sixteen types use exactly this (eight in JSON, plus photo, recipe and video in their `.11tydata.js` — see [[Anatomy of a post type]]). `page.fileSlug` is the filename without its extension; `slugify` lowercases it, strips punctuation and diacritics, and joins words with hyphens. So the file keeps its Title Case, spaces and umlauts for Obsidian, and the URL comes out clean without anything being written twice.
 
-The `nice-permalinks` skill documents an `{{ id }}`-based pattern. It does not apply here — jedee posts carry no `id:` field, and `page.fileSlug` is the convention.
+The `nice-permalinks` skill documents an `{{ id }}`-based pattern. It does not apply here — stomme posts carry no `id:` field, and `page.fileSlug` is the convention.
 
 ## Four types take an override
 
@@ -24,7 +24,7 @@ Three types allow a hand-written slug to win:
 "permalink": "/watching/{{ (slug or page.fileSlug) | slugify }}/index.html"
 ```
 
-`jams`, `reading` and `watching` use this form. It exists because a title can be a bad URL. The only post currently using it is `O Brother, Where Art Thou.md`, whose front matter sets `slug: o-brother` — the filename keeps the full title for the wikilink, and the URL doesn't have to carry it.
+`jams`, `reading` and `watching` use this form. It exists because a title can be a bad URL. A post titled `A Very Long Title, With Commas.md` can set `slug: long-title` in front matter — the filename keeps the full title for the wikilink, and the URL doesn't have to carry it.
 
 **Article is the exception, and it slugs from the wrong thing:**
 
@@ -40,20 +40,20 @@ Articles derive their URL from the `title` field, not the filename. That makes `
 "permalink": "/activities/{{ date | formatDate('YYYY-MM-DD') }}-{{ page.fileSlug | slugify }}/index.html"
 ```
 
-The sixteenth type is the only one whose URL is not the slug alone. Its filenames are already date-led (`2021-09-14-parkol-trelleborg.md`) because the archive was imported in bulk from a Strava export where the date is the only reliable distinguishing feature — the same race at the same venue recurs year after year. The date is in the permalink pattern rather than left in the filename slug so the format is guaranteed rather than a filename convention that a hand-written post could forget.
+The sixteenth type is the only one whose URL is not the slug alone. Its filenames are already date-led (`2026-01-14-morning-run.md`) because an archive imported in bulk from a fitness export has the date as the only reliable distinguishing feature — the same route recurs year after year. The date is in the permalink pattern rather than left in the filename slug so the format is guaranteed rather than a filename convention that a hand-written post could forget.
 
 ## Page bundles slug from the file, not the folder
 
 A post that carries its images can live in a separate folder, EE's page-bundle layout. **The slug still comes from the `.md` filename** — Eleventy's `page.fileSlug` is the file's, not the folder's.
 
-`src/posts/reading/` had exactly one, and it showed the difference clearly:
+A bundle looks like this:
 
 ```
-Drottningar i Kungahalla/                        ← folder, ASCII
-  Drottningar i Kungahälla - Selma Lagerlöf.md   ← file, umlauts + author
+Queens of the Valley/                      ← folder, ASCII
+  Queens of the Välley - Example Author.md ← file, umlauts + author
 ```
 
-The URL came out of the file: `/reading/drottningar-i-kungahalla-selma-lagerlof/`. The folder name was free to differ, and did. On 2026-09-10 the file moved up into `reading/` so Sveltia CMS could list it, and the URL stayed the same, which confirms the rule. Worth knowing before renaming a folder in the hope of changing a URL — it won't. ⚠ Sveltia only lists files directly in a collection's folder unless the collection sets `nested`, so a bundle folder hides its post from the phone editor.
+The URL comes out of the file: `/reading/queens-of-the-valley-example-author/`. The folder name is free to differ. Moving the file up into `reading/` so Sveltia CMS can list it leaves the URL unchanged, which confirms the rule. Worth knowing before renaming a folder in the hope of changing a URL — it won't. ⚠ Sveltia only lists files directly in a collection's folder unless the collection sets `nested`, so a bundle folder hides its post from the phone editor.
 
 ## Redirects when a URL does change
 

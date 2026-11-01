@@ -16,7 +16,7 @@ This surprises people, which is why Eleventy Excellent ships that post: normal T
 
 ## What the configuration actually does
 
-Three settings do the inverting, all of them in `tailwind.config.js` (Andy Bell's original lines; jedee's `corePlugins` also switches off `fontVariantNumeric`, covered below):
+Three settings do the inverting, all of them in `tailwind.config.js` (Andy Bell's original lines; stomme's `corePlugins` also switches off `fontVariantNumeric`, covered below):
 
 ```js
 corePlugins: {preflight: false, textOpacity: false, backgroundOpacity: false, borderOpacity: false},
@@ -48,15 +48,15 @@ A second plugin generates a small family of utilities that set CUBE CSS custom p
 
 The arrangement arrives here through two hands, and knowing which is which explains one of the findings below.
 
-**Andy Bell** wrote it, in the Set Creative Studio [cube-boilerplate](https://github.com/Set-Creative-Studio/cube-boilerplate). His `tailwind.config.js` is the one jedee still runs, nearly line for line — the disabled preflight and opacity plugins, the blocklisted `container`, `optimizeUniversalDefaults`, the `variantOrder`, and both plugins. jedee's copy still carries his `© Andy Bell` header. But his `global.css` uses **plain `@import` with no `layer()` at all** — source order alone does the work, and the file says so. There are no cascade layers in the original.
+**Andy Bell** wrote it, in the Set Creative Studio [cube-boilerplate](https://github.com/Set-Creative-Studio/cube-boilerplate). His `tailwind.config.js` is the one stomme still runs, nearly line for line — the disabled preflight and opacity plugins, the blocklisted `container`, `optimizeUniversalDefaults`, the `variantOrder`, and both plugins. stomme's copy still carries his `© Andy Bell` header. But his `global.css` uses **plain `@import` with no `layer()` at all** — source order alone does the work, and the file says so. There are no cascade layers in the original.
 
 **Lene Saile** adopted it into Eleventy Excellent and wrapped every import in a named cascade layer. That is what produced the `tailwindBase` / `tailwindComponents` / `tailwindUtilities` names — and, because the CUBE folders kept their bare names, the collision described below. It could not exist in Andy's version, since his version names no layers. She also inverted his first two imports: Andy loads `blocks` then `compositions`, EE loads `compositions` then `blocks`, so a block outranks a composition here and the reverse is true upstream.
 
-**jedee** forked EE and replaced the token adapter (below), and diverged in one place worth knowing: Lene's EE grew a per-file `prefix` key, so a token file can name its custom-property prefix through a `tokenPrefixes` map. jedee's config predates that and hardcodes the prefixes in the `groups` array, so adding a token file means editing `tailwind.config.js` rather than the JSON.
+**stomme** forked EE and replaced the token adapter (below), and diverged in one place worth knowing: Lene's EE grew a per-file `prefix` key, so a token file can name its custom-property prefix through a `tokenPrefixes` map. stomme's config predates that and hardcodes the prefixes in the `groups` array, so adding a token file means editing `tailwind.config.js` rather than the JSON.
 
-## In jedee
+## In stomme
 
-jedee's divergence is the adapter between the tokens and the config. EE 4.0 flattens its token files with a `tokensToTailwind()` helper built around `slugify`; jedee's tokens are DTCG-conformant, so `src/_config/utils/dtcg-to-tailwind.js` replaces it with three functions that read the `$value` shape:
+stomme's divergence is the adapter between the tokens and the config. EE 4.0 flattens its token files with a `tokensToTailwind()` helper built around `slugify`; stomme's tokens are DTCG-conformant, so `src/_config/utils/dtcg-to-tailwind.js` replaces it with three functions that read the `$value` shape:
 
 - `dtcgToTailwind()` — recursive, joining nested key paths with hyphens, skipping `$`-prefixed metadata. A node can be both a leaf and a group (`red` with a `subdued` child), so it recurses either way.
 - `dtcgFluidToTailwind()` — same, but converts a fluid `{min, max}` pair into a `clamp()` string. Used for spacing and font sizes, which is how the Utopia scales reach the stylesheet.
@@ -75,17 +75,17 @@ tailwindBase → reset → fonts → tailwindComponents → variables →
 global → compositions → blocks → cubeUtilities → tailwindUtilities
 ```
 
-Compiled, on 2026-09-05: **`tailwindComponents` is 3.0 KB and contains zero class selectors** — it is the `:root` token block and nothing else, which is the arrangement working as intended. `tailwindUtilities` holds 52 selectors.
+Compiled, on 2026-11-01: **`tailwindComponents` is 4.0 KB and contains zero class selectors** — it is the `:root` token block and nothing else, which is the arrangement working as intended. `tailwindUtilities` holds 58 selectors.
 
 A count of that layer is misleading by itself, because **most of what is in it was never written as a class**. Tailwind's `content` scan reads every file under `src/` as plain text and keeps any substring that *could* be a class name. Plenty of ordinary English words qualify — `block`, `hidden`, `italic`, `absolute`, `static`, `table`, `visible`, `collapse`, `contents`, `filter`, `outline`, `transform`, `truncate`, `uppercase`, `resize`, `isolate` — so writing prose about CSS generates CSS.
 
-Checking each of the 52 against every `class=""` attribute in the project:
+Checking each selector in that layer against every `class=""` attribute in the project sorts them into three groups:
 
-- **28 appear in no class attribute anywhere.** Scanner noise, from prose and template comments. Excluding `src/wiki/`, `src/_raw/` and `src/posts/` from the scan drops the layer from 52 to 42, so this wiki's pages account for ten of them.
-- **Three exist only inside wiki code samples**: `.flex` and `.items-center` come from this page quoting `class="flex items-center gap-4"` as the anti-pattern to avoid, and `.grid` from a snippet on [[Favicons]]. Writing about the anti-pattern emitted it.
-- **The rest are the token utilities the setup exists to produce.** The three CUBE-property families (`gutter-s`, `gutter-xs-s`, `gutter-2xs`, `gutter-3xs`, `gutter-xs`, `flow-space-m`, `region-space-m`), the type scale (`text-step-1` in twelve files, `text-step-min-1` in eight, plus `-2`, `-4`, `min-2`), spacing named for the tokens themselves (`mt-xl`, `mt-s-m`, `mt-l-xl`, `my-s-m`, `p-s-m`), `font-base`, and a couple of alignment helpers (`justify-center`, `text-center`).
+- **Scanner noise.** Selectors that appear in no class attribute anywhere, picked up from prose and template comments. Excluding `src/wiki/` and `src/posts/` from the scan removes some of them, so a wiki's pages account for part of the layer.
+- **Wiki code samples.** Selectors that exist only inside a page quoting a class, such as `.flex` and `.items-center` from this page quoting `class="flex items-center gap-4"` as the anti-pattern to avoid, and `.grid` from a snippet on [[Favicons]]. Writing about the anti-pattern emitted it.
+- **The token utilities the setup exists to produce.** The three CUBE-property families (`gutter-s`, `gutter-xs-s`, `gutter-2xs`, `gutter-3xs`, `gutter-xs`, `flow-space-m`, `region-space-m`), the type scale (`text-step-1`, `text-step-min-1`, `text-step-2`, `text-step-4`), spacing named for the tokens themselves (`mt-xl`, `mt-s-m`, `mt-l-xl`, `my-s-m`, `p-s-m`), `font-base`, and a couple of alignment helpers (`justify-center`, `text-center`).
 
-The clearest demonstration arrived by accident. Saving these two source articles into `src/_raw/` on 2026-09-05 took the layer from **52 selectors to 55**, and one of the new ones is `.md\:text-right` — a responsive variant, shipped to every visitor, generated because Lene's article *names that class as an example* while explaining that responsive variants exist. Nobody wrote it in any markup. Clipping an article about Tailwind changed the CSS the site serves.
+The clearest demonstration is saving an article about Tailwind into `src/`: a responsive variant such as `.md\:text-right` appears in the layer, shipped to every visitor, because the article *names that class as an example* while explaining that responsive variants exist. Nobody wrote it in any markup. Clipping an article about Tailwind changes the CSS the site serves.
 
 (Her point stands by itself, and is worth knowing: variants like `md:text-right` really are available here, because `screens` is wired to `viewports.json`.)
 
@@ -105,4 +105,4 @@ The fix is one word — `@import 'utilities/*.css' layer(cubeUtilities)` — and
 
 **Tailwind's responsive variants end up outside every layer.** Parsed with PostCSS on 2026-10-18, the compiled `global.css` has exactly one top-level node that isn't a layer: `@media (min-width:1000px){.md\:text-right{…}}`, the scanner-noise variant from above. That holds in the build from before the EE 4.9.1 upgrade too, so the upgrade didn't cause it. An unlayered rule beats every layered one whatever its specificity, so a variant that real markup used would override the whole layer stack. Nothing uses this one, so it does no harm today. An earlier version of this page said the opposite twice: first that variants escape the layers, then, after a recount, that they sit inside `tailwindUtilities`. This measurement replaces both.
 
-Raw sources: `src/_raw/A CSS project boilerplate.md` (Andy Bell, 2024-02-12) · `src/_raw/What is Tailwind CSS doing here.md` (Lene Saile, 2023-11-30) · `src/_raw/dev-notes/How Tailwind is used as a token engine.md` (this site's measurements)
+Sources: Andy Bell, "A CSS project boilerplate" (2024-02-12) · Lene Saile, "What is Tailwind CSS doing here" (2023-11-30)

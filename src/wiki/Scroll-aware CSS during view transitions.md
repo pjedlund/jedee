@@ -65,8 +65,6 @@ A generated demo site with long scrollable pages: a control with no gate, and on
 
 Chromium-only in practice. Safari has cross-document view transitions but no `scroll-state()`; its scroll-driven animation support arrived in Safari 26, but the transition-pseudo reach was only verified in Chromium. Firefox has neither. **On a real site this can only ever be an enhancement layered over something that works without it.**
 
-## In jedee
+## In stomme
 
 **Nothing on this site ships it.** The breadcrumb animation that motivated the investigation was shelved for having too many hard-to-explain edge behaviors, and `main` uses the browser's plain cross-fade. The finding is kept here because the platform behavior stands regardless of whether this site uses it.
-
-Raw source: `src/_raw/dev-notes/CSS can see the scroll during a view transition.md`

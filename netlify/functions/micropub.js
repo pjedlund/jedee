@@ -1,4 +1,4 @@
-// jedee's Micropub server: turns an incoming h-entry into a .md in src/posts/<type>/, committed through the GitHub API. How and why: the wiki page "Micropub" and the `micropub` skill.
+// This site's Micropub server: turns an incoming h-entry into a .md in src/posts/<type>/, committed through the GitHub API. How and why: the wiki page "Micropub" and the `micropub` skill.
 // ⚠ Steer the engine (@benjifs/micropub 2.0.1) only through its constructor options, never by editing its source. The three patch points:
 //   • formatSlug -> this site's folder, minus the engine's unix-timestamp prefix (patch points 1+2)
 //   • store      -> rewrites the front matter to this site's shape before the commit (patch point 3)
@@ -135,7 +135,7 @@ export const formatSlug = (type = 'note', slug = '') =>
 export const deriveWorkoutTitle = (activityType, distanceKm) =>
   distanceKm ? `${activityType} · ${distanceKm} km` : activityType
 
-// Rewrite the engine's frontmatter to jedee conventions. Pure: returns the new frontmatter object; the body is left untouched.
+// Rewrite the engine's frontmatter to this codebase's conventions. Pure: returns the new frontmatter object; the body is left untouched.
 export const rewriteFrontmatter = (data = {}) => {
   const out = {}
   let mediaSeen = false
@@ -150,7 +150,7 @@ export const rewriteFrontmatter = (data = {}) => {
       continue
     }
     if (key === 'visibility') {
-      // Micropub `visibility` -> jedee's vocabulary, interpreted at build time in src/_config/plugins/drafts.js:
+      // Micropub `visibility` -> the site's vocabulary, interpreted at build time in src/_config/plugins/drafts.js:
       //   unlisted -> kept: out of every collection, feed and the sitemap, noindex, but its URL still works
       //   private  -> draft (a static build has no real private)
       //   public / absent / anything else -> dropped
@@ -349,7 +349,7 @@ export const ensureTitle = (data = {}, content = '') => {
 // --- store ----------------------------------------------------------------
 
 // A GitHubStore that rewrites front matter and re-slugs a title-less post just before the commit; `onLocation` keeps the Location header in sync.
-class JedeeStore {
+class SiteStore {
   constructor(opts, onLocation) {
     this.inner = new GitHubStore(opts)
     this.onLocation = onLocation
@@ -390,7 +390,7 @@ export const buildEndpoint = (onLocation) =>
     me: ME,
     tokenEndpoint: TOKEN_ENDPOINT,
     contentDir: CONTENT_DIR,
-    store: new JedeeStore(
+    store: new SiteStore(
       {
         token: GITHUB_TOKEN,
         user: GITHUB_USER,

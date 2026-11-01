@@ -25,9 +25,9 @@ The alternative is two ordinary `<img>` elements and CSS that hides one, keyed o
 
 A caption is secondary text, and the usual typographic advice is to keep it in the text's family and on the text's edges rather than centering it under the image. [[Typographic conventions]] covers the italic question and its readability cost; [[Line length]] covers why a text block's width is set in `ch`.
 
-## In jedee
+## In stomme
 
-Eleventy Excellent ships one `figcaption` rule in `global/base/global-styles.css`: centered, italic, one step smaller, `text-wrap: balance`. Since 2026-10-02 jedee's version of that rule is left-aligned, starts with an info icon, and wraps with `pretty`, and since 2026-10-05 it is upright rather than italic; the [[Text wrapping]] reasoning for `balance` went with the centering. The rest of this section is jedee's, and it covers every caption on the site: the markdown image title, the `{% image %}` shortcode, the lightbox component, a post's `credit:` under its featured image, and a `<figcaption>` written by hand.
+Eleventy Excellent ships one `figcaption` rule in `global/base/global-styles.css`: centered, italic, one step smaller, `text-wrap: balance`. Since 2026-10-02 stomme's version of that rule is left-aligned, starts with an info icon, and wraps with `pretty`, and since 2026-10-05 it is upright rather than italic; the [[Text wrapping]] reasoning for `balance` went with the centering. The rest of this section is stomme's, and it covers every caption on the site: the markdown image title, the `{% image %}` shortcode, the lightbox component, a post's `credit:` under its featured image, and a `<figcaption>` written by hand.
 
 ### The icon at the start of the line
 
@@ -177,5 +177,3 @@ figure[data-wiki-mockup] > :not(figcaption) {
 2rem is the popout gutter at full width, so on a wide screen the panel fills the popout figure exactly. The cap at `--gap` keeps a phone from scrolling sideways; at 375px the panel reaches the screen edges. A feature figure spans its whole width instead and pads the shot by the same inset, since a shot that wide can't line up with the text anyway. Measured on [[The main menu]] on 2026-10-04: the shot and the paragraphs both start at x = 19, 22, 36, 48 and 199 for windows of 320, 375, 600, 900 and 1440px.
 
 ⚠ A mockup loads the site's compiled stylesheets by name, so splitting a stylesheet breaks the mockups that load it without an error: they keep the first file and lose the rest. The search and place-map mockups ran on half their CSS for a day after one such split, and it only showed when they were re-shot.
-
-Raw sources: `src/_raw/dev-notes/How wiki figures get dark twins.md`, `src/_raw/dev-notes/How captions work.md`

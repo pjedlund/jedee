@@ -1,5 +1,5 @@
 ---
-description: "The three states a theme control has to represent, the blocking script that prevents a flash of the wrong one, and jedee's single SVG masked from sun to moon."
+description: "The three states a theme control has to represent, the blocking script that prevents a flash of the wrong one, and stomme's single SVG masked from sun to moon."
 date: 2026-07-31
 updated: 2026-10-31
 ---
@@ -12,7 +12,7 @@ Two problems arrive with the toggle, and both are more awkward than the button i
 
 **Motion.** A control that morphs one shape into another is exactly the decorative animation [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion) exists for. The state change still has to read clearly with the animation off, which means the reduced-motion path needs to be a designed alternative rather than `animation: none`.
 
-## In jedee
+## In stomme
 
 One button, one SVG: a sun that morphs into a moon when the theme goes dark. Adapted from [Adam Argyle's sun-and-moon theme switch](https://web.dev/building-a-theme-switch-component) (MIT). Four files carry it — `partials/theme-toggle.njk`, `local/theme-toggle.css` (the button), `local/sun-and-moon.css` (the icon and its animation), and `scripts/bundle/theme-toggle.js`.
 
@@ -33,7 +33,7 @@ The moon is the sun's disc with a circle masked out of it:
 In light mode the mask circle sits at `cx="24"`, outside the disc, so the mask does nothing. Going dark it slides left and bites the crescent while the disc grows and the eight ray lines fade out.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/theme-toggle-morph.png" alt="Five tiles in a row. The first is a light tile holding an orange sun with eight rays, labeled &quot;light&quot;. The remaining four are dark tiles holding a pale blue-gray glyph, labeled with a time in milliseconds. At 80ms the rays have faded to dim stubs and the disc is larger. At 260ms a plain circle with no rays and no bite taken out of it. At 420ms a circle with a rounded notch cut into its upper right. At 750ms a crescent moon." width="1368" height="376">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/theme-toggle-morph.png" alt="Five tiles in a row. The first is a light tile holding a dark teal sun with eight rays, labeled &quot;light&quot;. The remaining four are dark tiles holding a pale blue-gray glyph, labeled with a time in milliseconds. At 80ms the rays have faded to dim stubs and the disc is larger. At 260ms a plain circle with no rays and no bite taken out of it. At 420ms a circle with a rounded notch cut into its upper right. At 750ms a crescent moon." width="1368" height="376">
   <figcaption>The morph, frozen at five instants. The middle frame is the whole point: for a moment the moon is a plain disc, because a moon is all it ever is — a disc with a circle masked out of it. The color and the page behind it carry no transition, so they have already changed by the second tile while the shape is still most of the way a sun.</figcaption>
 </figure>
 
@@ -111,11 +111,6 @@ Table: Contrast of the lighter oranges on each theme's background
 | orange-400 `#f68f5a` | 2.12 | 7.76 |
 | **orange-500 `#d0621e`** | **3.50** | **4.70** |
 
-<figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/theme-toggle-sun-colors.png" alt="The same sun glyph four times on the site's light page color, in progressively deeper oranges, each labeled with its contrast ratio. The first at 1.16 to 1 is a pale cream barely separable from the background; the second at 1.54 and the third at 2.12 are legible but faint; only the fourth, at 3.50 to 1, reads as a solid mark." width="1264" height="280">
-  <figcaption>The same table, drawn. The sun is only ever shown on this background, and only the last of the four is a graphic a person could use to operate a control.</figcaption>
-</figure>
-
 This is a general constraint, not a palette flaw: a light background and a yellow object cannot both be true at 3:1, which is why yellow suns live on dark headers. orange-500 is the lightest shade that clears the bar in the theme where the sun is shown.
 
 The eight states as shipped, measured on the resolved colors against each theme's page color (re-measured 2026-10-28, after the 10-26 recolor). The icon now clears 4.5:1 in every state, the logomark clears 3:1:
@@ -137,5 +132,3 @@ The accessible name is a `visually-hidden` span, not the SVG, which is `aria-hid
 The name is a fixed "Toggle dark mode". It has to be: on a toggle button the state lives in `aria-pressed`, and a name that flips with it announces the state twice in two vocabularies. The tooltip is decoration, exposed to nobody, so it is free to say what a click *will* do — "Show dark mode" in light, "Show light mode" in dark, set by `reflectToggleState()` in the same breath as `aria-pressed`, so a theme change from any source (the button, the system preference listener, first load) updates both.
 
 The markup carries no `data-tooltip`; the script adds it. That keeps a wrong string from ever existing, and costs nothing, because the button is already hidden until its island upgrades. The `title` attribute that used to serve this purpose was removed, or the browser would draw its native tooltip beside the styled one.
-
-Raw source: `src/_raw/dev-notes/How the theme toggle works.md`

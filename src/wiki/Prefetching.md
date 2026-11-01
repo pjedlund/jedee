@@ -1,5 +1,5 @@
 ---
-description: "Fetching the next page before the click with the Speculation Rules API: eagerness and limits, how it works alongside a service worker, and why jedee uses Eleventy Excellent's hover rule rather than a script or a list built from analytics."
+description: "Fetching the next page before the click with the Speculation Rules API: eagerness and limits, how it works alongside a service worker, and why stomme uses Eleventy Excellent's hover rule rather than a script or a list built from analytics."
 date: 2026-09-15
 updated: 2026-10-27
 ---
@@ -52,9 +52,9 @@ Before the API, libraries did this in JavaScript. [instant.page](https://instant
 
 [Guess.js](https://github.com/guess-js/guess) (Google, alpha) built models of page-to-page transitions from Google Analytics and prefetched the likely next pages. Its npm package was last published in May 2022 and the repository has had only bot commits since. The approach needs traffic to learn from: on a small site, a model of "from A, people go to B" is noise, and every wrong guess spends the visitor's data on a page they never open.
 
-## In jedee
+## In stomme
 
-The rule is Eleventy Excellent's, added in 4.8 (upstream commit `1107a1b`): `src/_includes/head/speculation-rules.njk`, included in `base.njk` right after `head/meta-info.njk`, at `moderate`. The 4.8.0 merge left it out with the other files upstream added (see [[What jedee kept from Eleventy Excellent]]), and it was taken by itself afterward, with one change of jedee's: URLs that are not pages are excluded.
+The rule is Eleventy Excellent's, added in 4.8 (upstream commit `1107a1b`): `src/_includes/head/speculation-rules.njk`, included in `base.njk` right after `head/meta-info.njk`, at `moderate`. The 4.8.0 merge left it out with the other files upstream added, and it was taken by itself afterward, with one change of stomme's: URLs that are not pages are excluded.
 
 ```json
 "where": {
@@ -69,23 +69,21 @@ The built pages carried 510 links to feeds (`.xml`) and 136 to full-size `.jpeg`
 
 It pays off here because of how the rest is cached. Pages are network-first in the service worker, and [[Netlify]] serves HTML `max-age=0, must-revalidate` ([[Three things called cache]]), so every online click waits for at least a round-trip. The CSS is inlined into the HTML and the worker already holds the fonts, so the HTML is what a click waits for, and it is the one thing a prefetch fetches.
 
-- Works for returning visitors, through the worker. Verified in Chrome on the live site on 2026-09-15.
+- Works for returning visitors, through the worker. Verified in Chrome on a deployed site on 2026-09-15.
 - The worker copies every page it fetches from the network into its cache. If a prefetch reaches the worker as a navigation, a page that was only hovered is saved for offline use too. Not verified; harmless either way, since the cache is cleared on every deploy.
 - Umami counts a page view when its script runs, and a prefetch downloads HTML without running scripts, so the analytics are not inflated.
 
 Declined, both on 2026-09-15:
 
-- **instant.page and Quicklink.** In Safari, a Quicklink `fetch()` of a page is not a navigation, so jedee's worker files it under the cache-first asset branch, while the click takes the network-first page branch: the copy is never used online. That is read from the worker's code, not tested in Safari. In Firefox, the `max-age=0` header sends the click back to the server anyway.
+- **instant.page and Quicklink.** In Safari, a Quicklink `fetch()` of a page is not a navigation, so stomme's worker files it under the cache-first asset branch, while the click takes the network-first page branch: the copy is never used online. That is read from the worker's code, not tested in Safari. In Firefox, the `max-age=0` header sends the click back to the server anyway.
 - **A list built from Umami's statistics.** Too little traffic to predict from. If it is ever warranted, it is a second rule with a hard-coded `urls` list of two or three pages, not a script or an API call at build time.
 
 ### Testing it
 
 ⚠ **Three places report a failure that isn't one:**
 
-- **Helium** ships "Preload pages" switched off. Its `modify-default-prefs.patch` changes Chromium's `NetworkPredictionOptions` default to disabled, so every hover shows as a failure in DevTools → Application → Speculative loads. Switch it on under Settings → Performance, or test in Chrome.
+- **A browser with preloading switched off** shows every hover as a failure in DevTools → Application → Speculative loads. Some Chromium-based browsers ship with the preload setting off, so check it in the browser's settings, or test in Chrome.
 - **Claude Code's Browser pane** reports `HTMLScriptElement.supports('speculationrules')` as `true` and parses the rules, but never carries out a prefetch, not even for an `immediate` rule.
 - **localhost** can't show the worker's side of it, because the worker's dev bypass makes it intercept nothing there.
 
 In Chrome, the Speculative loads panel lists each hovered link as prefetched. On the page reached by the click, `performance.getEntriesByType('navigation')[0].deliveryType` reads `navigational-prefetch` when it came from a prefetch.
-
-Raw source: src/_raw/dev-notes/How hover prefetching was added.md

@@ -4,20 +4,17 @@
 <meta charset="utf-8">
 <title>Choreographing CSS animations — wiki mockup</title>
 
-<!-- ⚠ The site's compiled CSS plus the reveal's own local source, so the type, the logomark and every step time here ARE the shipped ones. global.css is a build artifact: run `npm start` or `npm run build` once if it is missing. -->
+<!-- ⚠ The site's compiled CSS plus the reveal's local source, so the type, the logomark and every step time here ARE the shipped ones. global.css is a build artifact: run `npm start` or `npm run build` once if it is missing. -->
 <link rel="stylesheet" href="../../_includes/css/global.css">
 <link rel="stylesheet" href="../../_includes/css/breadcrumb-leaf.css">
 <link rel="stylesheet" href="../../_includes/css/breadcrumb.css">
 <link rel="stylesheet" href="../../assets/css/local/breadcrumb-reveal.css">
 
 <style>
-  /* The bundle's own @font-face rules point at absolute /assets paths, which resolve to nothing under file://. */
-  @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../_includes/themes/jedee/fonts/source-sans/source-sans.woff2') format('woff2'); }
-  @font-face { font-family: 'Source Code Pro'; src: url('../../_includes/themes/jedee/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }
 
   body { margin: 0; padding: 40px; background: #ddd; }
 
-  /* A specimen carries its own paper the way a device frame carries its own bezel — so one shot reads deliberately on either theme of the wiki page. */
+  /* A specimen carries a paper the way a device frame carries a bezel — so one shot reads deliberately on either theme of the wiki page. */
   .specimen {
     inline-size: fit-content;
     background: var(--color-bg);
@@ -30,13 +27,13 @@
   .strip { display: grid; grid-template-columns: 270px 360px; align-items: center; row-gap: 2px; }
 
   .at {
-    font-family: 'Source Code Pro', ui-monospace, monospace;
+    font-family: ui-monospace, monospace;
     font-size: 12px; color: var(--color-text); opacity: 0.55;
     padding-inline-end: 18px; text-align: end;
   }
   .at b { display: block; font-weight: 400; opacity: 0.75; font-size: 11px; }
 
-  /* ⚠ Every frame is the same box: only the animation clock may differ between them. A frame sized to its own content would grow with the name and read as part of the reveal. */
+  /* ⚠ Every frame is the same box: only the animation clock may differ between them. A frame sized to its content would grow with the name and read as part of the reveal. */
   .frame {
     padding: 2px 16px;
     border-inline-start: 1px solid var(--color-bg-accent-2);
@@ -54,7 +51,7 @@
   // Freeze this page before anything is shot: the frames are built, seeked, and only then declared ready.
   window.__mockupReady = false;
 
-  const logo = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="16" height="16"><path d="m50 0 .588.003V0h9.706v30.882h-9.706v.009a19 19 0 0 0-.588-.009c-10.558 0-19.118 8.559-19.118 19.118S39.441 69.118 50 69.118 69.118 60.559 69.118 50V30.882C69.118 13.826 82.945 0 100 0v50c0 27.614-22.386 50-50 50S0 77.614 0 50 22.386 0 50 0"/></svg>`;
+  const logo = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="16" height="16"><path d="M50 0a50 50 0 1 0 0 100A50 50 0 0 0 50 0"/></svg>`;
 
   // The chain is 1s dead, 0.65s typing, two 0.75s blinks, 0.5s backspace — so these are the six instants that say something different about it.
   const frames = [
@@ -77,7 +74,7 @@
     frame.className = 'frame';
     frame.dataset.at = t;
     frame.dataset.compare = 'reveal';
-    frame.innerHTML = `<nav class="breadcrumb"><ol class="cluster" role="list"><li><a href="/" class="breadcrumb-home">${logo}<span class="breadcrumb-reveal" aria-hidden="true">Johan Edlund<span class="breadcrumb-caret"></span></span></a></li></ol></nav>`;
+    frame.innerHTML = `<nav class="breadcrumb"><ol class="cluster" role="list"><li><a href="/" class="breadcrumb-home">${logo}<span class="breadcrumb-reveal" aria-hidden="true">Stomme<span class="breadcrumb-caret"></span></span></a></li></ol></nav>`;
     strip.append(row, frame);
   }
 
@@ -89,7 +86,7 @@
         a.currentTime = Number(frame.dataset.at);
       }
     }
-    // ⚠ Two frames after seeking, not zero: the page's own warning is that a shot taken in the same batch as the pause can still show the previous frame.
+    // ⚠ Two frames after seeking, not zero: the page's warning is that a shot taken in the same batch as the pause can still show the previous frame.
     requestAnimationFrame(() => requestAnimationFrame(() => { window.__mockupReady = true; }));
   });
 </script>

@@ -19,30 +19,28 @@ Two agreeing sources are worth more than any amount of reasoning about what the 
 
 The related trap is the *destination* format. `2026-07-20T08:59:56+02:00` and `2026-07-20T06:59:56Z` are the same instant and both are correct ISO 8601; `2026-07-20T08:59:56` is neither, and pasting a UTC reading into an offset-bearing string without shifting it — writing `08:59:56+02:00` when the source meant `08:59:56Z` — is exactly the mistake this page is about, made at the other end.
 
-## In jedee
+## In stomme
 
-The activities archive is imported from Strava's bulk export, whose `activities.csv` has an `Aktivitetsdatum` column in the naive form above — no offset, no `Z`, and (on a Swedish account) Swedish month names.
+An activities archive imported from a fitness service's bulk export meets this problem directly: the export's `activities.csv` has a date column in the naive form above — no offset, no `Z`, and (on an account set to another language) month names in that language.
 
-The 2021 one-time backfill that created most of [[The activities archive]] assumed local time. Its script opens by pinning the process zone and says so in a comment:
+A one-time backfill script written for such an export assumed local time. It opened by pinning the process zone and said so in a comment:
 
 ```js
-process.env.TZ = 'Europe/Stockholm'; // CSV dates are local Swedish wall-clock time
+process.env.TZ = 'Europe/Berlin'; // CSV dates are local wall-clock time
 ```
 
-The comment is wrong. The column is UTC, and three independent sources say so for the same activity:
+The comment was wrong. The column was UTC, and three independent sources said so for the same activity:
 
 - the FIT recording's first `record` message — UTC by specification — reads `2026-07-20 08:59:56`, **identical** to the CSV rather than two hours from it;
-- the O-Ringen split printout photographed after the race gives a start time of 11:00:09 CEST, which is 09:00:09 UTC;
+- the printed result sheet from the event gives a start time of 11:00:09 local summer time, which is 09:00:09 UTC;
 - the recorded elapsed time, 69:41, matches the printout's official 69:06 with a few seconds of watch overrun at each end — so the activity is that race and not something two hours earlier.
 
 ```python
 # FIT record timestamps are absolute UTC by spec — the tiebreaker.
-fit = fitparse.FitFile(gzip.open('activities/20509907994.fit.gz','rb').read())
+fit = fitparse.FitFile(gzip.open('activities/example.fit.gz','rb').read())
 next(fit.get_messages('record')).get_value('timestamp')  # 2026-07-20 08:59:56
 ```
 
-The backfilled posts therefore carry `+02:00` on a value that was already UTC, putting their time of day two hours early. Only the time is affected: every one of those activities happened in daylight, so no date rolls over and no permalink is wrong (see [[Permalinks and Obsidian-friendly filenames]] — the activity permalink formats the date, not the time). It has not been swept; posts imported from 2026-08-09 onward are written correctly.
+The backfilled posts therefore carried `+02:00` on a value that was already UTC, putting their time of day two hours early. Only the time is affected: every one of those activities happened in daylight, so no date rolls over and no permalink is wrong (see [[Permalinks and Obsidian-friendly filenames]] — the activity permalink formats the date, not the time).
 
-What made it survivable is a rule the archive follows for its reasons: **frontmatter stores recorded numbers only, never derived ones.** A stored "10:59" would have to be found and recomputed; a stored instant is one arithmetic shift away from correct whenever the sweep happens.
-
-Raw source: `src/_raw/dev-notes/How activity posts are imported from a Strava export.md`
+What made it survivable is a rule an archive can follow: **frontmatter stores recorded numbers only, never derived ones.** A stored "10:59" would have to be found and recomputed; a stored instant is one arithmetic shift away from correct whenever the sweep happens.

@@ -68,8 +68,6 @@ Table: Build time and peak memory with the interlinker off and on
 
 **Memory is the binding constraint, not time.** The baseline stays flat — 368 MB at 8,000 notes — while the plugin's overhead roughly doubles with every doubling, hitting 4.2 GB. Time grows close to linearly until about 4,000 notes and then turns steeply super-linear: 4k→8k costs 2.7× for 2× the content.
 
-**jedee keeps the plugin.** A few hundred pages is exactly where it's comfortable, and the sync-`{% svg %}` fix removed the fragility. But anything at thousands of pages should not resolve wikilinks in the render pipeline at all: pre-compute the link and backlink graph in a step *before* Eleventy and hand it to templates as plain data. That's single-pass over the content and never touches async rendering — roughly the "off" column above.
+**stomme keeps the plugin.** A few hundred pages is exactly where it's comfortable, and the sync-`{% svg %}` fix removed the fragility. But anything at thousands of pages should not resolve wikilinks in the render pipeline at all: pre-compute the link and backlink graph in a step *before* Eleventy and hand it to templates as plain data. That's single-pass over the content and never touches async rendering — roughly the "off" column above.
 
 See also [[Wikilinks]] — the same plugin's intended behavior.
-
-Raw source: `src/_raw/dev-notes/Why the navigation disappeared.md`

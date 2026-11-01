@@ -9,13 +9,10 @@
 <link rel="stylesheet" href="../../_includes/css/code.css">
 
 <style>
-  /* The bundle's own @font-face rules point at absolute /assets paths, which resolve to nothing under file:// — re-declare the two faces this specimen uses by relative path. */
-  @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../_includes/themes/jedee/fonts/source-sans/source-sans.woff2') format('woff2'); }
-  @font-face { font-family: 'Source Code Pro'; src: url('../../_includes/themes/jedee/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }
 
   body { margin: 0; padding: 40px; background: #ddd; }
 
-  /* A specimen carries its own paper the way a device frame carries its own bezel — so one shot reads deliberately on either theme of the wiki page. */
+  /* A specimen carries a paper the way a device frame carries a bezel — so one shot reads deliberately on either theme of the wiki page. */
   .specimen {
     inline-size: 700px;
     background: var(--color-bg);
@@ -25,7 +22,7 @@
   }
 
   .label {
-    font-family: 'Source Code Pro', ui-monospace, monospace;
+    font-family: ui-monospace, monospace;
     font-size: 12px; color: var(--color-text); opacity: 0.55; margin: 0 0 12px;
   }
 

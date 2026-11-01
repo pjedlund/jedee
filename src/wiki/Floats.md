@@ -45,14 +45,12 @@ The `:has()` rule lets the floated component set up its wrapper, so the page usi
 
 A sidebar layout (text in one column, the image in another) looks the same as a float as long as the text is short. The difference shows with longer text: in two columns the text stays in its strip and leaves the space under the image empty, while a float lets it run on underneath. Bending a sidebar into a fixed-proportion two-column grid also needs a hand-kept breakpoint, because percentages on both sides never wrap by themselves. A float plus one container query is less code and the right model. See [[Configuring a layout composition]] for when a composition is the right tool.
 
-## In jedee
+## In stomme
 
-Post bodies are a subgrid: `.e-content` has `.wrapper-pass`, which exposes the wrapper's named columns to each block (see [[Layout breakouts]]). That makes each paragraph a grid item, so a float needs a wrapper block. On the *Bethink Yourselves!* note that block is the `<div lang="sv">` that already marks the Swedish text, and the pamphlet partial (see [[CSS 3D transforms]]) is its first child.
+Post bodies are a subgrid: `.e-content` has `.wrapper-pass`, which exposes the wrapper's named columns to each block (see [[Layout breakouts]]). That makes each paragraph a grid item, so a float needs a wrapper block. In stomme the only place the pamphlet partial (see [[CSS 3D transforms]]) is used is the Pamphlet sample on the design system page (`src/pages/design-system.njk`, lines 575-576), where the sample's `<div>` is that wrapper block and the partial is its first child.
 
 The pamphlet floats across 2 of the prose grid's 8 columns, never under 13rem, one gutter from the text: `max(calc(100% * 14.5 / 64), 13rem)` wide with a `calc(100% * 2 / 64)` margin, where a column is 6.25 and a gutter 2 of the 64 units of the 64rem prose. Its CSS gives the parent block `container: pamphlet-flow / inline-size; display: flow-root` through `:has(> .pamphlet)`, the same pattern as `is-land:has(> .site-search)` in the search CSS. One container query at 42.32rem (28rem of text and the 13rem minimum ÷ 62/64) decides both the float and the pamphlet's tilt. Measured at the edge on the design system page: at a 769 px viewport the block is 42.29rem and the pamphlet sits flat above the text; at 770 px it is 42.35rem and the pamphlet floats.
 
 Under the float, lines only reach the site's prose measure (see [[Line length]]), so the text running under the pamphlet is just a little wider than beside it.
 
 The first version used the Sidebar composition instead. A percentage row gap there (`gap: calc(100% * 2 / 64)`) let the text spill 20 px out of the sidebar on a phone: in a flex container whose height is not fixed, a percentage row gap is not counted in the height. Only the column gap can safely be a percentage.
-
-Raw source: `src/_raw/dev-notes/How the pamphlet and book mock-ups work.md`

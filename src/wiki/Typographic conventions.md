@@ -68,7 +68,7 @@ In CSS, `font-variant-numeric: ordinal` switches on the font's `ordn` feature. I
 
 Bringhurst has no rule for lists: neither the book's numbered rules nor webtypography.net covers bullets or list numbers. His figure rule still reaches them. A list number sits in lowercase running text, so by 3.2.1 it takes old-style figures. Butterick ([bulleted and numbered lists](https://practicaltypography.com/bulleted-and-numbered-lists.html)) says the bullet or number may differ in font and size from the item's text, a bullet should be noticeable but not big, hollow bullets are subtler than solid ones, and an asterisk is too small and sits too high to serve as one.
 
-Neither book says how far to indent a list. The nearest rule is the paragraph indent, borrowed here only for its measure: jedee separates paragraphs with space instead, which both books treat as the alternative to an indent, not something to combine with it. Bringhurst (2.3.2) asks for an indent of at least an en, and [webtypography.net](http://webtypography.net/2.3.2) suggests an indent of one line-height, so the indent and the leading make a square. Butterick ([first-line indents](https://practicaltypography.com/first-line-indents.html)) gives one to four times the point size.
+Neither book says how far to indent a list. The nearest rule is the paragraph indent, borrowed here only for its measure: stomme separates paragraphs with space instead, which both books treat as the alternative to an indent, not something to combine with it. Bringhurst (2.3.2) asks for an indent of at least an en, and [webtypography.net](http://webtypography.net/2.3.2) suggests an indent of one line-height, so the indent and the leading make a square. Butterick ([first-line indents](https://practicaltypography.com/first-line-indents.html)) gives one to four times the point size.
 
 Chrome's default stylesheet gives `::marker` `font-variant-numeric: tabular-nums` (checked 2026-09-14). By the one-property trap under Figures, that also makes list numbers lining, whatever the list item inherits. Old-style numbers need the marker set explicitly: `ol li::marker { font-variant-numeric: oldstyle-nums tabular-nums; }`. Tabular keeps "9." and "10." the same width.
 
@@ -80,8 +80,8 @@ A subtitle belongs to the title but is not part of it. HTML marks this with `<hg
 
 ```html
 <hgroup>
-  <h1>The Kingdom of God Is Within You</h1>
-  <p>Christianity Not as a Mystic Religion but as a New Theory of Life</p>
+  <h1>A Sample Book Title</h1>
+  <p>A longer subtitle that explains what the book is about</p>
 </hgroup>
 ```
 
@@ -96,9 +96,9 @@ WCAG says little here directly. [1.4.8](https://www.w3.org/WAI/WCAG22/Understand
 - **Capitals:** use them for labels, not paragraphs.
 - **Small caps and superscripts:** these keep the text's color. What makes them harder to read is their smaller size, not contrast.
 
-## In jedee
+## In stomme
 
-Set on 2026-09-10 after a research pass and an audit of the site; the decisions are in `_local/design/Plan - Typographic utility classes.md`. The `text-wrap` reset is Eleventy Excellent stock, the rest is jedee's. The design system page (`/design-system/`) shows each feature off and on under Typography → Type features.
+Set on 2026-09-10 after a research pass and an audit of the site. The `text-wrap` reset is Eleventy Excellent stock, the rest is stomme's. The design system page (`/design-system/`) shows each feature off and on under Typography → Type features.
 
 ### Figures
 
@@ -122,7 +122,7 @@ Capital labels (logo, breadcrumb, menu button, footer, buttons) share `--trackin
 
 ### Captions and quotations
 
-Captions are upright, left-aligned and `pretty`, one step smaller than the text; see [[Figures]]. Johan chose italic on 2026-09-29 despite the readability case above, and reversed it on 2026-10-05 for that case: every figure and table caption is upright now. A word set in `<em>` inside a caption shows as italic again, which it could not while the caption itself was italic.
+Captions are upright, left-aligned and `pretty`, one step smaller than the text; see [[Figures]]. Every figure and table caption is upright, for the readability case above. A word set in `<em>` inside a caption shows as italic again, which it could not while the caption itself was italic.
 
 Quotations balance. The rule is in `global-styles.css` and again in `prose.css`, whose `pretty` rule on `p` would otherwise win.
 
@@ -174,5 +174,3 @@ Links set `text-decoration-skip-ink: auto` (the reset) with `text-underline-offs
 ### Not done
 
 There is no `.figures` or `.balance` class, since the defaults cover them, and never `dlig`, which rewrites "he" and "she".
-
-Raw source: `src/_raw/dev-notes/How the typographic defaults were chosen.md`, `src/_raw/dev-notes/How the subtitle is marked up.md`

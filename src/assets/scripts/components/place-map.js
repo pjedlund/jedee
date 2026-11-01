@@ -64,7 +64,7 @@ function probeColor(el, value) {
 }
 
 // The map's colors live in place-map.css as --map-* properties, so a theme flip or a CSS tweak is picked up by re-reading them.
-function jedeeFlavor(el, theme) {
+function siteFlavor(el, theme) {
   const c = (name) => cssColor(el, `--map-${name}`);
   const land = c('land');
   const park = c('park');
@@ -187,7 +187,7 @@ function makeMap(el, { center, zoom, bounds, place, base = 'Map', fitPadding = 2
     };
     if (state.base === 'Map') {
       style.sources.protomaps = { type: 'vector', url: `pmtiles://${TILES_URL}`, attribution: `<a href="https://protomaps.com">Protomaps</a> ${ATTRIB_OSM}` };
-      style.layers = layers('protomaps', jedeeFlavor(el, state.theme), { lang: 'sv' });
+      style.layers = layers('protomaps', siteFlavor(el, state.theme), { lang: 'sv' });
     } else {
       style.sources.raster = { type: 'raster', tileSize: 256, ...RASTER_BASES[state.base] };
       style.layers = [{ id: 'raster', type: 'raster', source: 'raster' }];

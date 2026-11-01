@@ -34,26 +34,26 @@ Three attribute conventions carry the rest of it. `data-island="once"` on the te
 
 The honest limit is that the technique costs a decision per component and gives nothing automatically. Something has to be a genuinely deferrable island for this to pay, and a page made of twenty small islands is worse off than one that loaded a small script.
 
-## In jedee
+## In stomme
 
 The dependency (`@11ty/is-land` 5.0.1) and the way it loads are Eleventy Excellent stock since EE 4.9.1 (merged 2026-10-18). The package's minified file is copied to `/assets/components/is-land.min.js` (a passthrough copy in `eleventy.config.js`), and `head/js-defer.njk` loads it with `<script type="module">`: 5,151 bytes, 2,103 gzipped. Until then esbuild bundled it and `head/js-inline.njk` inlined it into the head of every page (4,054 bytes, see below). It is now a request, but one the browser caches across pages. A module script waits for the page to finish parsing, which changes nothing here: every island waits for `on:idle` or `on:visible` anyway.
 
 Seven elements use it, all with one of two conditions — `on:idle` for anything in the page chrome, `on:visible` for anything embedded in a post's body.
 
-Table: The islands in jedee: condition and origin
+Table: The islands in stomme: condition and origin
 | Island | Condition | Origin |
 | --- | --- | --- |
-| `webc/place-map.webc` | `on:visible on:idle` | jedee — both must hold: `on:visible` alone fired before the template below the slotted table was parsed; see [[The place map]] |
-| `webc/sortable-table.webc` | `on:idle` | jedee — inside the place map's island on `/activities/`; see [[Tables]] |
-| `webc/photo-lightbox.webc` | `on:idle` | jedee — see [[The PhotoSwipe lightbox]] |
-| `partials/search.njk` | `on:idle` | jedee — see [[Site search]] |
-| `partials/theme-toggle.njk` | `on:idle` | jedee's rewrite of EE's `theme-switch.njk` — see [[The theme toggle]] |
+| `webc/place-map.webc` | `on:visible on:idle` | stomme — both must hold: `on:visible` alone fired before the template below the slotted table was parsed; see [[The place map]] |
+| `webc/sortable-table.webc` | `on:idle` | stomme — inside the place map's island on `/activities/`; see [[Tables]] |
+| `webc/photo-lightbox.webc` | `on:idle` | stomme — see [[The PhotoSwipe lightbox]] |
+| `partials/search.njk` | `on:idle` | stomme — see [[Site search]] |
+| `partials/theme-toggle.njk` | `on:idle` | stomme's rewrite of EE's `theme-switch.njk` — see [[The theme toggle]] |
 | `webc/custom-youtube.webc` | `on:visible` | EE stock — see [[The YouTube embed]] |
 | `webc/custom-peertube.webc` | `on:visible` | EE stock |
 
 None of the seven uses `on:interaction`, `on:media` or `on:save-data`, and only the place map combines two. EE's `partials/gallery.njk` was an eighth until it was deleted as dead source on 2026-10-17. The sortable table is the one nested island; is-land's documentation says an island inside another inherits its parent's conditions as well as the ones it sets.
 
-`webc/custom-masonry.webc` was an eighth, EE stock and `on:visible`, until its masonry script was removed on 2026-09-06 because it shifted the layout ([[Layout shift]]). The `<custom-masonry>` tag stays, never defined, as a CSS hook ([[Web components]]).
+`webc/custom-masonry.webc` was an eighth, EE stock and `on:visible`, until its masonry script was removed on 2026-09-06 because it shifted the layout. The `<custom-masonry>` tag stays, never defined, as a CSS hook ([[Web components]]).
 
 ### The template boundary is a layout-shift trap
 

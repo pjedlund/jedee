@@ -3,7 +3,7 @@ description: "The community and building blocks behind independent publishing �
 date: 2026-09-06
 ---
 
-The IndieWeb is a community and a set of building blocks, not an organization or a single protocol. It started with [IndieWebCamp](https://indieweb.org/IndieWebCamp) in Portland in 2011 — Tantek Çelik, Aaron Parecki, Amber Case and Crystal Beasley — around the position that your content, your identity and your metadata should live at a domain you control. [[Personal websites]] covers that argument on its terms; this page is about the machinery built to act on it, and about who can actually use it.
+The IndieWeb is a community and a set of building blocks, not an organization or a single protocol. It started with [IndieWebCamp](https://indieweb.org/IndieWebCamp) in Portland in 2011 — Tantek Çelik, Aaron Parecki, Amber Case and Crystal Beasley — around the position that your content, your identity and your metadata should live at a domain you control. This page is about the machinery built to act on it, and about who can actually use it.
 
 ## Principles
 
@@ -42,7 +42,7 @@ The strongest criticism of the IndieWeb comes from inside it, and three of this 
 
 Taken together the criticism is not that the blocks are badly designed. It is that a movement premised on everyone controlling their content built tools usable by the people who build tools. The counter-examples exist and mostly predate the criticism — [Micro.blog](https://micro.blog/) ships Micropub, Webmention, IndieAuth and a custom domain hosted, [Bear Blog](https://bearblog.dev/), [Neocities](https://neocities.org/), [omg.lol](https://omg.lol/), Blot, WordPress.com — and the fact that they are the answer rather than the norm is roughly Böck's point.
 
-## In jedee
+## In stomme
 
 Every block above is wired here. That bears the criticism out rather than answering it: what it took is spelled out after the list.
 
@@ -55,10 +55,4 @@ Every block above is wired here. That bears the criticism out rather than answer
 
 Getting there took a forked starter ([[Themes and starters]]), a Node build, a git workflow, a Netlify account and nine wiring points per post type ([[Anatomy of a post type]]). That is a description, not a defence: it is exactly the stack Böck says should not be the price of keeping your content under your domain.
 
-Two things worth recording against the sources.
-
-**Mara's observation is why the wiki is unfeatured.** Her "I was struck by how many of them were *about* computers" describes a real genre — the personal site whose main subject is how the personal site was built. This wiki is precisely that material, and it is deliberately kept off the front of the site: public and linkable since 2026-09-05, but with no feed, no navigation entry, and reachable only by following a link. The site's dev-note genre was retired on 2026-07-31 for the same reason, with the factual writing moved here.
-
-**Böck's chart has no position for the on-ramp that actually worked here.** His barrier axis in 2022 ran from hosted platforms at the low end to self-rolled IndieWeb at the high end, with nothing in between except more code. The thing that got these blocks wired on this site was an AI assistant doing the work he describes as hard "even for professional devs" — which is not a simpler tool in Blot's sense, since it still requires the git repo and the Node build underneath, but it does move where the barrier sits. Whether it lowers the on-ramp for the birdwatchers Mara wants back is a different question, and this site is not evidence either way.
-
-Raw sources: `src/_raw/The IndieWeb for Everyone.md` (Max Böck, 2022-11-12) · `src/_raw/Technoelitism and the IndieWeb movement.md` (Lily Mara, 2024-07-20) · `src/_raw/Why are static site generators so complicated to use – The Jolly Teapot.md` (2024-10-15)
+Sources: Max Böck, "The IndieWeb for Everyone" (2022-11-12) · Lily Mara, "Technoelitism and the IndieWeb movement" (2024-07-20) · The Jolly Teapot, "Why are static site generators so complicated to use" (2024-10-15)

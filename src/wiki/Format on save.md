@@ -15,21 +15,21 @@ Three guards, from the file outward:
 - **Look at the diff before committing.** An emptied file shows as every line deleted. `git diff --stat` makes that obvious; a commit message about something else makes it easy to miss.
 - **Let git refuse it.** A [pre-commit hook](https://git-scm.com/docs/githooks#_pre_commit) runs before every commit and can stop one. A file that had content and is now empty is almost never intended, so it's a safe thing to block.
 
-## In jedee
+## In stomme
 
-This happened twice, both times from Nova's Prettier extension. On 2026-07-04 it blanked `src/pages/reading.njk`, and removing the extension fixed it. By 2026-09-22 the extension was installed again. A one-word typo fix to `src/pages/styleguide.njk` saved it at 0 bytes, and the empty file was committed and pushed under the message "set to draft". The first full run of the lint caught it, because a page with no front matter has no permalink, so `/styleguide/` stopped being built and the footer link to it went dead.
+A Prettier extension in the editor blanked a template twice: once a page, and again, after the extension had been installed back, a different page, saved at 0 bytes by a one-word typo fix. The empty file was committed under an unrelated message. A lint run caught it, because a page with no front matter has no permalink, so the page stopped being built and the link to it went dead.
 
 Running Prettier on the restored file reproduces the failure:
 
 ```
-[error] src/pages/styleguide.njk: SyntaxError: Unexpected closing tag "p". It may happen when the tag has already been closed by another tag.
+[error] src/pages/example.njk: SyntaxError: Unexpected closing tag "p". It may happen when the tag has already been closed by another tag.
 ```
 
 On standard output it prints nothing: 0 bytes, exit code 2. That empty output is what reached the file.
 
-The Prettier setup is Eleventy Excellent's: `.prettierrc` loads `prettier-plugin-jinja-template` and sends every `*.njk` file to its `jinja-template` parser. jedee only widened `printWidth`. EE's `.prettierignore` leaves most templates in scope.
+The Prettier setup is Eleventy Excellent's: `.prettierrc` loads `prettier-plugin-jinja-template` and sends every `*.njk` file to its `jinja-template` parser. stomme only widened `printWidth`. EE's `.prettierignore` leaves most templates in scope.
 
-jedee now has two of the three guards. `.prettierignore` ends with:
+stomme now has two of the three guards. `.prettierignore` ends with:
 
 ```
 # ⚠ Nova's Prettier extension saves an empty file when the jinja-template parser fails on a template.
@@ -57,5 +57,3 @@ fi
 `git cat-file -s ":path"` is the size of the staged copy and `"HEAD:path"` the size of the committed one, so the check is about what the commit would record, not what the editor shows. It only looks at modified files (`--diff-filter=M`), so deleting a file still works normally. Tested in a throwaway repository: emptying a file was blocked, an ordinary edit went through.
 
 [[Sveltia CMS]] is the other tool here that rewrites a whole file when it saves one, with a milder surprise of the same kind.
-
-Raw source: `src/_raw/dev-notes/How a format-on-save extension blanked a template.md`

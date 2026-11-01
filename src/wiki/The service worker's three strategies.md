@@ -1,20 +1,20 @@
 ---
-description: "What a service worker intercepts, the five conventional caching strategies, and the roughly 80 hand-written lines that make jedee offline-capable using three of them."
+description: "What a service worker intercepts, the five conventional caching strategies, and the roughly 80 hand-written lines that make stomme offline-capable using three of them."
 date: 2026-07-31
 updated: 2026-10-31
 ---
 
 A [service worker](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API) is a script the browser runs in the background, separate from any page, able to intercept the site's network requests. That interception is what makes offline browsing possible: the worker answers from a cache it controls when the network is gone or slow.
 
-Three lifecycle events matter. `install` fires once per version, and is where a worker usually pre-caches the few files it needs to be useful offline at all. `activate` fires when the new version takes over, and is where old caches get deleted — jedee spares the ones named in `settings.pwa.keepCaches`, for a site that keeps its data in a cache. `fetch` fires for every request a page makes, and is where the strategy actually lives.
+Three lifecycle events matter. `install` fires once per version, and is where a worker usually pre-caches the few files it needs to be useful offline at all. `activate` fires when the new version takes over, and is where old caches get deleted — stomme spares the ones named in `settings.pwa.keepCaches`, for a site that keeps its data in a cache. `fetch` fires for every request a page makes, and is where the strategy actually lives.
 
 Those strategies are conventionally listed as five: **cache-first** (fast, risks staleness), **network-first** (fresh, falls back to cache), **cache-only**, **network-only**, and **stale-while-revalidate** (serve the cached copy, refresh it in the background). Choosing between them is a question asked per resource rather than per site — content a reader expects to be current wants network-first, while fingerprinted assets that never change under a given URL want cache-first.
 
 It is small enough to hand-write. Libraries like [Workbox](https://developer.chrome.com/docs/workbox) exist because the edge cases multiply once a site wants precache manifests, expiry policies and background sync; a site that only wants "pages fresh, assets cached, everything wiped on deploy" is a few dozen lines and no dependency.
 
-## In jedee
+## In stomme
 
-jedee is an installable PWA, and a visited page is served back fully styled when the network is gone. That's about 80 lines of hand-written JavaScript, comments aside, in `src/pages/serviceworker.njk`, registered by a six-line inline script at the foot of `base.njk`, at the address in `settings.pwa.workerPath` (default `/serviceworker.js`). No Workbox, no npm package, no build step. Of the five strategies, it uses three.
+stomme is an installable PWA, and a visited page is served back fully styled when the network is gone. That's about 80 lines of hand-written JavaScript, comments aside, in `src/pages/serviceworker.njk`, registered by a six-line inline script at the foot of `base.njk`, at the address in `settings.pwa.workerPath` (default `/serviceworker.js`). No Workbox, no npm package, no build step. Of the five strategies, it uses three.
 
 Table: The service worker's strategies and what each is used for
 | Strategy | Behavior | Used for |
@@ -70,4 +70,3 @@ Workbox earns its keep where a precache manifest has to expand automatically as 
 
 Related: [[Three things called cache]] — the SW cache sits in front of the browser cache. [[Progressive web apps]] — the manifest and the installability half, and where this worker came from. [[Prefetching]] — pages are network-first here, so it's the hover prefetch, not this cache, that makes an online click fast.
 
-Source: `_local/project_docs/pwa-caching-pattern.html` (runtime caching shipped 23 Jun 2026, commits `105b0b7` and `01f1003`), re-verified against `src/pages/serviceworker.njk` on 2026-07-31.

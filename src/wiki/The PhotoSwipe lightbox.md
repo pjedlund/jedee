@@ -1,5 +1,5 @@
 ---
-description: "What a lightbox has to get right — a no-JS fallback, trapped focus, a responsive zoom target — and jedee's PhotoSwipe shortcode built on the Eleventy Image pipeline."
+description: "What a lightbox has to get right — a no-JS fallback, trapped focus, a responsive zoom target — and stomme's PhotoSwipe shortcode built on the Eleventy Image pipeline."
 date: 2026-07-31
 updated: 2026-10-27
 ---
@@ -14,20 +14,18 @@ What one has to get right:
 
 [PhotoSwipe](https://photoswipe.com/) is the common library for the gesture and zoom behavior. The progressive-enhancement question above is independent of it — whichever library animates the overlay, the no-JS fallback is the site's responsibility.
 
-## In jedee
+## In stomme
 
 A `{% lightbox %}` shortcode puts a zoomable PhotoSwipe image in any note, article, or page. It reuses the Eleventy Image pipeline, so one line of markdown produces a responsive `<picture>` on the page *and* a responsive zoomable image in the lightbox.
 
-**jedee's** — Eleventy Excellent ships no lightbox component. Built on `photo-lightbox.webc` + `photo-lightbox.js`.
-
-**`{% bento %}` is not on `main`.** The grouped-gallery shortcode that reuses this lightbox lives on `feat/bento-gallery`, **parked 2026-07-31** — and parked blocked: the branch's draft articles carry an incomplete `{% bento %}` call that fatally aborts the build. It is described below as the worked example of grouping, because that is what it does, but nothing on the live site calls it and the branch can't be merged as it stands.
+**stomme's** — Eleventy Excellent ships no lightbox component. Built on `photo-lightbox.webc` + `photo-lightbox.js`.
 
 ### Usage
 
 Positional arguments are identical to the `image` shortcode (`src, alt, caption, loading, containerClass, imageClass, widths, sizes, formats`); pass `null` to skip one. A caption renders in a `<figcaption>` *outside* the clickable area. `containerClass` takes the wrapper breakout classes so an image can exceed the text column:
 
 ```jinja2
-{% lightbox "/assets/images/photos/asturias-coast.jpg", "Alt text", "A caption", null, "feature" %}
+{% lightbox "/assets/images/photos/sample-coast.jpg", "Alt text", "A caption", null, "feature" %}
 ```
 
 That works inside a post body only because `e-content` passes the wrapper's named grid columns through via subgrid — see [[Microformats]]. For named arguments or `formats`, use `imageKeys` with `"lightbox": true`.
@@ -37,7 +35,7 @@ That works inside a post body only because `e-content` passes the wrapper's name
 **Two surfaces get it without asking for it**, both by calling the shortcode from a template rather than a post body:
 
 - any post with an `image:` field, via `entry-header.njk`, with `credit:` as the caption;
-- an activity's `cover:` — the photographed race map — via `activity.njk`. See [[The activities archive]].
+- an activity's `cover:` — the photographed race map — via `activity.njk`.
 
 The shortcode is local-only: it prepends `./src` to its source and breaks on a remote URL (see [[Self-hosting remote images at build time]]). That rules it out for the reading / watching / jam / recipe covers, which are remote service URLs, and is why activity covers — always local scans — were for a while the only cover with a lightbox. The constraint belongs to the shortcode rather than to the lightbox, though: a layout can invoke the component directly with any URL, which is what the photo, jam, reading and watching pages do (book covers and film posters since 2026-08-30).
 
@@ -58,14 +56,14 @@ A lightbox trigger that is narrower than its column needs the **width cap on the
 `containerClass` goes on that outer wrapper and `imageClass` on the `<img>`, so one call sets both. This does not arise for feature-width images, whose wrapper is the column.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/photoswipe-hit-area.png" alt="The same photographed race map twice, both capped to the same width. Around the left one, a tinted dashed rectangle extends well past the picture to the full width of the column; around the right one, the same rectangle hugs the picture." width="1360" height="708">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/photoswipe-hit-area.png" alt="The same picture twice, a sky gradient with a pale sun and two dark ridges, both capped to the same width. Around the left one, a tinted dashed rectangle extends well past the picture to the full width of the column; around the right one, the same rectangle hugs the picture." width="1360" height="708">
   <figcaption>The tint is the <code>&lt;a&gt;</code>'s box, not a drawn annotation — the picture paints over it, so what shows is exactly the clickable emptiness beside it. Left, the cap is on the image alone; right, <code>.cover-zoom</code> puts it on the wrapper too.</figcaption>
 </figure>
 
 ### Without JavaScript it is a link
 
 ```html
-<a href="/assets/images/asturias-coast-2000w.jpeg"
+<a href="/assets/images/sample-coast-2000w.jpeg"
    data-pswp-width="2000" data-pswp-height="1500"
    data-pswp-srcset="…650w, …2000w" target="_blank" rel="noopener">
   <picture>…avif/webp/jpeg…</picture>
@@ -94,13 +92,13 @@ this.lightbox = new PhotoSwipeLightbox({
 });
 ```
 
-- **Each `<photo-lightbox>` is a separate gallery** (`gallery: this, children: 'a'`), so multiple images in a post open independently with no prev/next. Grouping them is a `children`/shared-gallery change — which is exactly what the parked `{% bento %}` shortcode does, by putting several `<a>`s inside one element rather than rewriting the lightbox.
+- **Each `<photo-lightbox>` is a separate gallery** (`gallery: this, children: 'a'`), so multiple images in a post open independently with no prev/next. Grouping them is a `children`/shared-gallery change — which can be done by putting several `<a>`s inside one element rather than rewriting the lightbox.
 - **`pswpModule: () => import(…)`** is PhotoSwipe's code-splitting hook: the ~14 KB shell initializes up front, the ~52 KB core loads only when an image opens. esbuild bundles both into one file, so the split that actually matters here is the is-land one — nothing loads until idle.
 - **Zoom levels are tuned for large scans**: open fitted, second click goes to 1:1 native pixels, wheel zooms between.
 - PhotoSwipe handles the loading choreography itself — it grabs the thumbnail's `currentSrc` as a placeholder, plays the open animation, decodes the large image off-screen, then crossfades. No blank frames.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/photoswipe-overlay.png" alt="A browser-sized frame showing the lightbox open: the page dimmed behind a dark scrim, the full race map scan fitted to the height of the frame, and a zoom and a close button in the top right corner." width="1400" height="934">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/photoswipe-overlay.png" alt="A browser-sized frame showing the lightbox open: the page dimmed behind a dark scrim, the picture fitted to the height of the frame, and a zoom and a close button in the top right corner." width="1400" height="934">
   <figcaption>The overlay open over the page it came from. The image opens fitted, and the scrim leaves the page faintly visible rather than replacing it.</figcaption>
 </figure>
 
@@ -127,5 +125,3 @@ Skipping the shortcode lifts the local-only restriction, at the cost of assembli
 ⚠ **`slot="image"` must sit on a wrapper, never on the `<img>` itself.** WebC drops a slotted node carrying `eleventy:`-namespaced attributes, and the failure is silent — clean build, no warning, an `<a>` with correct `href` and `data-pswp-*` and nothing inside it. Wrap the image in a `<div slot="image">` and let the `<img>` keep its transform directives. This never arises through the shortcode, whose `{% image %}` output is a `<picture slot="image">` with the directives already consumed.
 
 See also [[Hosting large originals off-repo]] for how the photo pages point this at an 11 MB file that never enters the build.
-
-Raw sources: `src/_raw/dev-notes/How the lightbox shortcode works.md`, `src/_raw/dev-notes/How jam covers reach the lightbox.md`

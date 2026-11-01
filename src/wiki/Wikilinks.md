@@ -1,12 +1,12 @@
 ---
-description: "Title-addressed double-bracket links, why resolving them is a build-time job, and how jedee computes backlinks as page data rather than a collection."
+description: "Title-addressed double-bracket links, why resolving them is a build-time job, and how stomme computes backlinks as page data rather than a collection."
 date: 2026-07-31
 updated: 2026-10-31
 ---
 
 A wikilink is a link written as `[[Page Title]]` — naming its target by title rather than by path or URL. The form comes from [WikiWikiWeb](https://wiki.c2.com/), the original wiki, and survives in note-taking tools like Obsidian, Logseq and Roam, where it is the main way notes connect to each other.
 
-The appeal is that it costs almost nothing to write, so links actually get written. The cost is that a wikilink is not a link yet: `[[Anna Karenina]]` names a page, and something has to resolve that name into a real URL. In a note-taking app, the app does it. On a published site a build step has to, which means the build needs a directory of every page's title and URL before it can render any link at all.
+The appeal is that it costs almost nothing to write, so links actually get written. The cost is that a wikilink is not a link yet: `[[Sample Book]]` names a page, and something has to resolve that name into a real URL. In a note-taking app, the app does it. On a published site a build step has to, which means the build needs a directory of every page's title and URL before it can render any link at all.
 
 Two things follow from that resolution step, on any system that does it:
 
@@ -15,11 +15,11 @@ Two things follow from that resolution step, on any system that does it:
 
 The convention holding it together is **filename = title**: if a file is named for its title, the identical bracketed string resolves in the editor and in the build with nothing translating between them. That pins filenames to human-readable text, which then has to be reconciled with what a URL ought to look like — see [[Permalinks and Obsidian-friendly filenames]].
 
-## In jedee
+## In stomme
 
 Posts link to each other with Obsidian-style `[[double brackets]]` written directly in the body. Because the vault convention is filename = title, the same string is a working link in Obsidian and on the built site. The clean URL comes later, from the permalink setup slugifying the file slug.
 
-**Not Eleventy Excellent.** Vanilla EE ships no wikilinks; `@photogabble/eleventy-plugin-interlinker` and `partials/backlinks.njk` are jedee's addition, which is why they're freer to modify than EE's core templates.
+**Not Eleventy Excellent.** Vanilla EE ships no wikilinks; `@photogabble/eleventy-plugin-interlinker` and `partials/backlinks.njk` are stomme's addition, which is why they're freer to modify than EE's core templates.
 
 ### Backlinks are computed data, not a collection
 
@@ -59,7 +59,7 @@ eleventyConfig.addPlugin(plugins.interlinker, {
 
 The plugin's console dead-link report stays on and is the build-time warning that someone added a link they shouldn't have.
 
-**That was only true from 2026-08-03.** Until then the report carried 13 warnings and all 13 were false positives — code examples and an un-rendered template href, matched because the plugin scans raw source. A report with no true positives catches nothing, and this one was concealing a real one-way-rule breach: this page's `[[Anna Karenina]]` example was registering as a live link, giving a published post backlinks into the wiki. See [[Link checking]] for the mechanism and the fix.
+**Dead links only reached the report once code examples were ignored.** Before that, the report carried warnings that were all false positives — code examples and an un-rendered template href — matched because the plugin scans raw source. A report with no true positives catches nothing. See [[Link checking]] for the mechanism and the fix.
 
 ### Scale, and what the count actually means
 
@@ -68,5 +68,3 @@ The plugin's console dead-link report stays on and is the build-time warning tha
 Recounted 2026-08-03 across the markdown in `src/`: **483 bracket pairs, 219 distinct titles**, of which 16 pairs (11 titles) sit inside code and are now excluded from detection ([[Link checking]]). Neither figure is the number of *live* links, for the front-matter reason above. The number that actually matters is the dead-link report, which is **0** — so the plain-text fallback above is a net with nothing currently falling into it.
 
 See also [[The interlinker's second render pass]] — the same plugin's more dangerous side effect.
-
-Raw sources: `src/_raw/dev-notes/How backlinks work.md`, `src/_raw/dev-notes/How the dead-link report was made usable.md`

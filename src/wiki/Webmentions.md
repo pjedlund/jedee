@@ -1,5 +1,5 @@
 ---
-description: "The W3C notification protocol behind open-web replies and likes, and how jedee receives them while staying entirely static."
+description: "The W3C notification protocol behind open-web replies and likes, and how stomme receives them while staying entirely static."
 date: 2026-07-31
 updated: 2026-10-18
 ---
@@ -14,16 +14,16 @@ What the receiver *displays* is not part of the protocol. Parsing the source pag
 
 **Silos don't send webmentions.** Likes and comments on a syndicated copy stay on the platform unless something bridges them back. [Bridgy](https://brid.gy) is that bridge — it watches a silo account, finds reactions on syndicated copies, and sends webmentions to the original on their behalf.
 
-## In jedee
+## In stomme
 
-Eleventy Excellent ships no webmention layer; this is jedee's, live since 2026-06-05. Three parts: a hosted receiving endpoint, a build-time fetch, and a render partial.
+Eleventy Excellent ships no webmention layer; this is stomme's, live since 2026-06-05. Three parts: a hosted receiving endpoint, a build-time fetch, and a render partial.
 
 ### Receiving without a server
 
 [webmention.io](https://webmention.io) acts as the mailbox. Senders discover it through one tag in `head/meta-info.njk`:
 
 ```html
-<link rel="webmention" href="https://webmention.io/johanedlund.se/webmention" />
+<link rel="webmention" href="https://webmention.io/example.com/webmention" />
 ```
 
 That is the entire receiving side. Mentions accumulate there until the next build asks for them.
@@ -39,14 +39,14 @@ That is the entire receiving side. Mentions accumulate there until the next buil
 
 ### The self-echo filter
 
-Bridgy sometimes backfeeds a silo post *mentioning itself* — a Flickr photo whose description links back here arrives as a mention carrying the photo's caption. Never a genuine third-party response. `webmentionisOwn` drops those plus anything authored by one of Johan's identities:
+Bridgy sometimes backfeeds a silo post *mentioning itself* — a photo whose description links back to the site arrives as a mention carrying the photo's caption. Never a genuine third-party response. `webmentionisOwn` drops those plus anything authored by one of the site's identities:
 
 ```js
 const source = webmention['wm-source'] || '';
 if (/^https?:\/\/brid\.gy\/post\//.test(source)) return true;
 ```
 
-The test matches only `brid.gy/post/…`. Bridgy's `/comment/`, `/like/`, and `/repost/` URLs pass through, so real replies and likes — including Johan's genuine comments left on a silo — still render.
+The test matches only `brid.gy/post/…`. Bridgy's `/comment/`, `/like/`, and `/repost/` URLs pass through, so real replies and likes — including the site editor's genuine comments left on a silo — still render.
 
 ### Rendering
 
@@ -58,11 +58,8 @@ The test matches only `brid.gy/post/…`. Bridgy's `/comment/`, `/like/`, and `/
 
 ### Bridgy in practice
 
-Bridgy watching the Flickr account is how nine Flickr likes and one comment on a two-year-old photo arrived here. Two operational notes from that backfeed:
+Bridgy can watch a silo account (Flickr, for instance) and turn the likes and comments there into webmentions, including those on old posts. Two operational notes from that backfeed:
 
 - For a live post the flow is **"Resend for post" then "Discover"**. But *old, pre-Bridgy* reactions need a **per-response resend button for each like and comment individually** — "Poll now" skips anything it considers already handled.
 - **Verify against the webmention.io API, not Bridgy's UI.**
 
-See also [[Rebuilding an archive from the Wayback Machine]], which reuses this rendering for recovered reactions that are deliberately *not* presented as webmentions.
-
-Raw source: `src/_raw/dev-notes/How webmentions work on this site.md`

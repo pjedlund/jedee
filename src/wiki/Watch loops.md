@@ -12,9 +12,9 @@ It is easy to introduce and hard to see, because most tools ship with a default 
 
 **Two ignore lists, and the distinction matters.** Build tools that ignore files usually do so for two different purposes: deciding what is *input* (which files get discovered, compiled, or rendered) and deciding what is *watched*. Fixing a watch loop by adding paths to the input-ignore list can work by accident, but it risks making generated files unreadable to the build that needs them — a compiled stylesheet is not an input page, but it may still need to be `include`-able. The correct fix goes in a watch-only list, where it cannot affect resolution.
 
-## In jedee
+## In stomme
 
-Eleventy honors `.gitignore` by default, and jedee's build writes generated files into its input directory on every pass — 29 on 2026-09-22, 22 compiled stylesheets into `src/_includes/css/` and 7 bundled scripts into `src/_includes/scripts/`, from an `eleventy.before` event. Both directories are gitignored, so for a long time the watcher never saw them.
+Eleventy honors `.gitignore` by default, and stomme's build writes generated files into its input directory on every pass — 29 on 2026-09-22, 22 compiled stylesheets into `src/_includes/css/` and 7 bundled scripts into `src/_includes/scripts/`, from an `eleventy.before` event. Both directories are gitignored, so for a long time the watcher never saw them.
 
 Making the private wiki browsable locally broke that. `src/wiki/` is gitignored because it holds its inner git repo, so the only way to make Eleventy build it was to stop honoring `.gitignore` entirely:
 
@@ -80,4 +80,3 @@ Verified silent afterwards for forty seconds idle, for writes to `workspace.json
 
 The loop was not the whole story here — see [[The dev server's memory]] for the retention underneath it, which is what turned nine rebuilds into an immediate crash rather than a slow one.
 
-Raw source: `src/_raw/dev-notes/How the dev server was made survivable.md`; second loop: `src/_raw/dev-notes/How the Obsidian watch loop was found.md`

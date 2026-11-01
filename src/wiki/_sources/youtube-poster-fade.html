@@ -8,13 +8,10 @@
 <link rel="stylesheet" href="../../_includes/css/global.css">
 
 <style>
-  /* The bundle's own @font-face rules point at absolute /assets paths, dead under file:// — redeclare the faces this specimen uses by relative path. */
-  @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../_includes/themes/jedee/fonts/source-sans/source-sans.woff2') format('woff2'); }
-  @font-face { font-family: 'Source Code Pro'; src: url('../../_includes/themes/jedee/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }
 
-  body { margin: 0; padding: 40px; background: #ddd; font-family: 'Source Sans', system-ui, sans-serif; }
+  body { margin: 0; padding: 40px; background: #ddd; font-family: system-ui, sans-serif; }
 
-  /* A specimen carries its own paper the way a device frame carries its own bezel — so one shot reads deliberately on either theme of the wiki page. */
+  /* A specimen carries a paper the way a device frame carries a bezel — so one shot reads deliberately on either theme of the wiki page. */
   .specimen {
     inline-size: fit-content;
     background: var(--color-bg);
@@ -28,7 +25,7 @@
   /* ⚠ Equal columns: the frame's position along the fade is the ONLY thing that may differ. */
   .strip { display: grid; grid-template-columns: repeat(3, 214px); gap: 18px; }
 
-  .label { font-family: 'Source Code Pro', ui-monospace, monospace; font-size: 12px; color: var(--color-text); opacity: 0.55; margin: 0 0 10px; }
+  .label { font-family: ui-monospace, monospace; font-size: 12px; color: var(--color-text); opacity: 0.55; margin: 0 0 10px; }
 
   /* ---- copied VERBATIM from src/_includes/webc/custom-youtube.webc, whose <style> is inline in the component and so cannot be linked like a bundle ---- */
 
@@ -41,7 +38,7 @@
     width: 100%;
     border-radius: 0.2em;
     --yt-surface: color-mix(in oklab, white 45%, var(--color-bg));
-    --yt-logo-mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%23808080' fill-opacity='.1'%3E%3Cpath d='m50 0 .588.003V0h9.706v30.882h-9.706v.009a19 19 0 0 0-.588-.009c-10.558 0-19.118 8.559-19.118 19.118S39.441 69.118 50 69.118 69.118 60.559 69.118 50V30.882C69.118 13.826 82.945 0 100 0v50c0 27.614-22.386 50-50 50S0 77.614 0 50 22.386 0 50 0'/%3E%3C/svg%3E");
+    --yt-logo-mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%23808080' fill-opacity='.1'%3E%3Cpath d='M50 0a50 50 0 1 0 0 100A50 50 0 0 0 50 0'/%3E%3C/svg%3E");
     background-color: var(--yt-surface);
     background-image: var(--yt-logo-mark);
     background-repeat: no-repeat;
@@ -54,7 +51,7 @@
   is-land[ready] lite-youtube { animation: yt-poster-fade var(--yt-poster-fade, 350ms) ease-out; }
   @keyframes yt-poster-fade { from { opacity: 0 } to { opacity: 1 } }
 
-  /* ---- lite-yt-embed's own rules, enough of them to draw the box and the button ---- */
+  /* ---- lite-yt-embed's rules, enough of them to draw the box and the button ---- */
 
   lite-youtube { position: relative; display: block; contain: content; }
   lite-youtube::after { content: ''; display: block; padding-bottom: calc(100% / (16 / 9)); }
@@ -94,8 +91,8 @@
   // The frames are frozen at three instants of the real keyframe, so nothing is running when the shot is taken.
   window.__mockupReady = false;
 
-  // The build-time, self-hosted poster the `youtubePoster` filter writes — a real hqdefault at 480×360, letterbox bars and all, which is what `background-size: cover` is there to trim. Another build artifact: re-run a build if it is missing.
-  const POSTER = '../../../dist/assets/images/youtube/C-X9UQwxThw-480w.jpeg';
+  // A stand-in poster at 480×360 with letterbox bars, which is what `background-size: cover` is there to trim — drawn here so the shot holds no real video frame.
+  const POSTER = 'data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20480%20360%22%20width%3D%22480%22%20height%3D%22360%22%3E%3Crect%20width%3D%22480%22%20height%3D%22360%22%20fill%3D%22%23000%22%2F%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%234a7fb5%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23d9a441%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20y%3D%2245%22%20width%3D%22480%22%20height%3D%22270%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Ccircle%20cx%3D%22150%22%20cy%3D%22190%22%20r%3D%2248%22%20fill%3D%22%23f2efe6%22%20opacity%3D%22.85%22%2F%3E%3Cpath%20d%3D%22M0%20315V250l120-45%20110%2055%20120-70%20130%2050v75z%22%20fill%3D%22%232b4a63%22%20opacity%3D%22.8%22%2F%3E%3C%2Fsvg%3E';
 
   const image = new Image();
   image.src = POSTER;

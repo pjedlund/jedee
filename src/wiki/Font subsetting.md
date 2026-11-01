@@ -8,11 +8,6 @@ updated: 2026-10-31
 
 The cost is a failure that never announces itself. When a character is not in the font, the browser does not show an error or an empty box: it draws **that one character** in the next family of the `font-family` stack that has it, and the rest of the word in the web font. The result is a letter or a quote mark that looks slightly off, in a slightly different weight, on pages where nobody is looking for it.
 
-<figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/subsetting-fallback.png" alt="The same heading, I’m in “Düsseldorf” – again…, set twice in Source Serif Bold. In the upper line, from the old subset, six characters are underlined in orange: the apostrophe, both curly quotes, the ü, the en dash and the ellipsis. They are drawn in Georgia and look slightly heavier and differently shaped. The lower line, from the current subset, is uniform." width="1306" height="424">
-  <figcaption>This site's heading font before and after the 2026-09-10 fix, from the two real font files. The underlined characters were missing from the old subset and were drawn in the fallback, Georgia.</figcaption>
-</figure>
-
 The characters most likely to go missing are the ones an author never types:
 
 - **Typographer output.** A Markdown setting like markdown-it's `typographer` turns `'` into `’`, `"…"` into `“…”`, `--` into `–`. The source file only holds the straight versions, so a subset built from the source text misses every curly one the build creates.
@@ -75,11 +70,13 @@ The cmap scan above cannot see a missing style. It looks the family up by name, 
 
 A gap found this way is filled the subsetting way: cut the missing face from the full font, with the same character list as its sibling. A browser downloads a face only when a page uses it, so a style that appears on three headings costs nothing on the other pages.
 
-## In jedee
+## In stomme
 
-Eleventy Excellent ships **static, pre-subset `woff2` files** and has no subsetting step in the build. Its `@font-face` blocks have no `unicode-range`, so adding a character to a file is the whole fix: no CSS change. The full source fonts are bundled beside the subsets. The one exception is Cyrillic (below), which is a separate file behind a `unicode-range`. jedee's copies sit in its theme's `fonts/` folder (`src/_includes/themes/jedee/fonts/`) and are published at `/assets/fonts/`; a theme with no fonts has no such folder.
+The sample theme uses system fonts and ships no font files: `src/_includes/themes/sample/fonts.css` is empty and `main` holds no `.woff2` file. So the Source Sans and Source Serif files, character counts and sizes below cannot be found in this repo; they were measured on the site stomme was cut from and hold for any theme that ships those subsets. What stomme does carry is the dev-server font checker (`src/assets/scripts/bundle/font-check.js`), `typographer: true` in `src/_config/plugins/markdown.js`, NFC normalizing in `src/_config/filters/youtube-title.js`, and the never-italic code rule in `src/assets/css/local/code.css`.
 
-Table: The shipped font files, their character counts and their sources
+Eleventy Excellent ships **static, pre-subset `woff2` files** and has no subsetting step in the build. Its `@font-face` blocks have no `unicode-range`, so adding a character to a file is the whole fix: no CSS change. The full source fonts are bundled beside the subsets. The one exception is a second alphabet such as Cyrillic (below), which is a separate file behind a `unicode-range`. A theme's copies sit in its `fonts/` folder (`src/_includes/themes/<theme>/fonts/`) and are published at `/assets/fonts/`; a theme with no fonts has no such folder.
+
+Table: The font files of the site stomme was cut from, their character counts and their sources
 | file | kind | characters | source in the repo |
 | --- | --- | --- | --- |
 | `source-serif/source-serif.woff2` | static, Bold 700 only | 109 | `SourceSerif4-Bold.otf.woff2` |
@@ -90,9 +87,9 @@ Table: The shipped font files, their character counts and their sources
 | `source-sans/source-sans-italic-cyrillic.woff2` | variable, `unicode-range` | 102 | `_source/VF/SourceSans3VF-Italic.otf.woff2` |
 | `source-code-pro/source-code-pro.woff2` | variable | 241 | none bundled |
 
-The fallback faces behind each are the metric-matched Georgia, Arial and Courier New described on [[Layout shift]], so a fallen-back character is at least the right size.
+The fallback faces behind each are metric-matched system faces, so a fallen-back character is at least the right size.
 
-**Cyrillic** (2026-09-14) came from one Russian word on the *A Confession* reading page, drawn letter by letter in Arial. Rather than grow the files every page loads, the two Cyrillic faces cover U+0400–045F (Russian, Ukrainian, Serbian and the rest of modern Cyrillic) plus the pre-1918 letters ѣ, ѳ and ѵ. Each is declared after its main face under the same family name with a `unicode-range`, so only a page containing Cyrillic downloads it: 22 KB upright, 16 KB italic. Keep them after the main faces: for overlapping faces the last one declared is checked first. Source Serif has no Cyrillic, so a Russian word in a heading still falls back.
+**Cyrillic** is the case for a separate, range-limited face: one Cyrillic word on a page is otherwise drawn letter by letter in a fallback such as Arial. Rather than grow the files every page loads, a theme that needs Cyrillic would cut one extra face per style covering U+0400–045F (Russian, Ukrainian, Serbian and the rest of modern Cyrillic), plus the pre-1918 letters ѣ, ѳ and ѵ if old texts matter. Declare each after its main face under the same family name with a `unicode-range`, so only a page containing Cyrillic downloads it. Keep them after the main faces: for overlapping faces the last one declared is checked first. Source Serif has no Cyrillic, so a Russian word in a heading still falls back.
 
 **Checking while you work.** On the dev server only (`eleventy.env.runMode === "serve"` in `base.njk`), `src/assets/scripts/bundle/font-check.js` runs the blank-font test above on every page. It grays out and dot-underlines each character drawn by a fallback, outlines any element set in a style its family has no file for, gives both a hover title, and logs a count to the console. Emoji and pictographs such as `⚠` are skipped on purpose. On this page it flags nine characters, all in code where Source Code Pro lacks them (the symbols listed below, plus `Δ`), and the code keywords' missing italic.
 
@@ -109,10 +106,9 @@ Source Serif was deliberately kept small: the Latin-1 block was added and taken 
 
 **Styles.** `body` set `font-synthesis: none` for one day, 2026-09-13 to 09-14. It came out again once the dev-server checker could *show* fakes instead. Refusing a fake turns a missing italic upright, so the emphasis is lost, and the Georgia and Arial fallbacks, loaded as Regular only, lost their bold while the web fonts loaded. `.small-caps` still refuses fake small caps by itself. Checking the shipped files against the CSS turned up two faux italics and no faux bold:
 
-- **Italic in a serif heading.** Source Serif ships Bold only, so an `<em>` in an `h1`–`h3` was a slanted Bold: the RSVP card's "RSVP *yes*" (`partials/card-response.njk`; all three RSVPs are drafts for now) and one heading on [[The interlinker's second render pass]]. Both now use a real Bold Italic, `source-serif-bold-italic.woff2`, cut from the bundled `SourceSerif4-BoldIt` to the Bold's 109 characters: 17 KB, against 33 KB for the Bold. It is not preloaded, so only a page with italic in a heading downloads it.
+- **Italic in a serif heading.** Source Serif ships Bold only, so an `<em>` in an `h1`–`h3` was a slanted Bold: the RSVP card's "RSVP *yes*" (`partials/card-response.njk`) and one heading on [[The interlinker's second render pass]]. Both now use a real Bold Italic, `source-serif-bold-italic.woff2`, cut from the bundled `SourceSerif4-BoldIt` to the Bold's 109 characters: 17 KB, against 33 KB for the Bold. It is not preloaded, so only a page with italic in a heading downloads it.
 - **Italic in code.** The syntax theme sets `.token.keyword { font-style: italic }` (`src/assets/css/local/code.css`), and there is no Source Code Pro italic, so the keywords on 31 pages were slanted. Since 2026-09-14 code is never italic: `code, pre` in `src/assets/css/local/code.css` set `font-style: normal`, so code inside an `<em>` stays upright, and the keywords are upright and still violet. Bold code stays, because it is real (Source Code Pro is variable, 200–900); a day of never-bold code turned out to flatten wiki terms like **`animation-delay`**. A real italic needs Source Code Pro's italic downloaded first, like the code-block symbols above.
 - **Source Sans** is variable 200–900 in upright and italic, so every weight and style in body text is real. The breadcrumb's connector words use Source Sans rather than the serif for this reason (`.breadcrumb-connector` in `src/assets/css/local/breadcrumb-leaf.css`).
 
 The recipe itself needs a Python with fontTools and brotli; on this machine that is the python.org framework install, not the default `python3`.
 
-Raw sources: `src/_raw/dev-notes/How missing glyphs were found and filled.md`, `src/_raw/How to disable faux weights with CSS and font synthesis.md`

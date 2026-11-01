@@ -1,5 +1,5 @@
 ---
-description: "What a feed is, why splitting one per category helps subscribers, and how jedee gives fourteen of sixteen post types a feed each — plus what a feed silently drops."
+description: "What a feed is, why splitting one per category helps subscribers, and how stomme gives fourteen of sixteen post types a feed each — plus what a feed silently drops."
 date: 2026-07-31
 updated: 2026-10-17
 ---
@@ -10,7 +10,7 @@ A feed is a machine-readable list of a site's recent items that a reader applica
 
 **A feed carries the rendered body, and only the body.** This is the part that catches people out. Structured front matter — a rating, a cover image, a location, an author — is data the page templates read, and a feed template is precisely what *replaces* those templates. Anything that has to reach a subscriber must be in the body text or written into the feed template itself. A post whose meaning lives entirely in its metadata arrives in a reader as a blank entry.
 
-## In jedee
+## In stomme
 
 Fourteen of the sixteen post types publish a separate feed, so a reader can subscribe to the films without the books. Two publish none, each for its reason.
 
@@ -50,7 +50,7 @@ Table: The feed bodies and the post types that use each
 
 **Audio and video publish two feeds each, in two formats, and the interesting part is which one got the canonical URL.** Podcast clients read RSS 2.0 with `<enclosure url length type>` and the iTunes namespace; Atom and JSON Feed have no equivalent enclosure convention, so the podcast feed is a different format entirely rather than a variation of the shared body. Both formats want `/<section>/feed.xml`, and until 2026-08-10 the podcast feed had it — which was never a decision, only the order things were built in.
 
-The regular Atom feed took it instead, and the podcast moved to `/audio/podcast.xml` and `/videos/podcast.xml`. The reasoning (Johan, 2026-08-10) is about who actually subscribes: a feed reader is how someone follows a *section of a site*, and this site's audio is mostly field recordings rather than episodes of a show. The podcast feed serves a narrower audience through apps that will happily take whatever URL you hand them, because you subscribe to a podcast by pasting a URL once. The generic reader is the one that guesses `/audio/feed.xml`, so that's the one the guessable URL should reward.
+The regular Atom feed took it instead, and the podcast moved to `/audio/podcast.xml` and `/videos/podcast.xml`. The reasoning is about who actually subscribes: a feed reader is how someone follows a *section of a site*, and a site's audio is often recordings rather than episodes of a show. The podcast feed serves a narrower audience through apps that will happily take whatever URL you hand them, because you subscribe to a podcast by pasting a URL once. The generic reader is the one that guesses `/audio/feed.xml`, so that's the one the guessable URL should reward.
 
 The move was free: the podcast feed had never been submitted to a directory — its channel artwork is still the site's OpenGraph default, which is the tell — so nothing anywhere pointed at the old URL. Worth noting the general shape, since a section can only have one canonical feed URL: the format with the *narrower, more deliberate* audience is the one that can afford to move.
 
@@ -62,7 +62,7 @@ Both shared bodies render `post.content` — the markdown body — and **no fron
 
 Photo is the type where this bit. A photo post's image lives in `photo:` front matter, so a plain clone of the Notes feed would have syndicated photo entries with no photo in them. Hence the dedicated `photo-atom-body.njk` / `photo-json-body.njk` pair, which renders the image as an absolute-URL `<img>` ahead of the content.
 
-**Activity bit the same way, harder.** An activity's content *is* its recorded numbers — distance, duration, pace, heart rate — and when this was built 100 of the then 157 posts had no body at all, so a plain clone would have syndicated a hundred entries with a title and nothing else. `activity-atom-body.njk` renders the same stat line the archive card shows, plus the race map cover where there is one, ahead of the body. The JSON pair followed on 2026-08-10: the Atom feed shipped alone for a day, and Atom-only was never a decision so much as the smaller half of the job — every other non-podcast type publishes both, and `activity-json-body.njk` is the same stat line in the JSON Feed shape.
+**Activity bit the same way, harder.** An activity's content *is* its recorded numbers — distance, duration, pace, heart rate — and when this was built most posts had no body at all, so a plain clone would have syndicated many entries with a title and nothing else. `activity-atom-body.njk` renders the same stat line the archive card shows, plus the map cover where there is one, ahead of the body. The JSON pair followed on 2026-08-10: the Atom feed shipped alone for a day, and Atom-only was never a decision so much as the smaller half of the job — every other non-podcast type publishes both, and `activity-json-body.njk` is the same stat line in the JSON Feed shape.
 
 **Recipe is the more interesting case, because the same problem got solved by moving the data instead.** The spec planned a `recipe-body.njk` for exactly this reason: with `ingredients` and `instructions` in front matter, a subscriber would have received the headnote and none of the recipe. That body was never built — and doesn't need to be. The shipped recipe keeps its ingredients and instructions as ordinary markdown in the body, so the plain Atom body syndicates the whole thing. The reason recorded in `recipe.njk`:
 
@@ -85,6 +85,6 @@ Two details worth keeping. **RSVP must be tested before reply**, because an RSVP
 
 **Likes were grouped with reposts until 2026-08-10, and shouldn't have been.** The two look alike in the data — both are a URL plus a title, both come from the link-post cohort — but they differ in what they say. A like is a small judgment: *this was worth something*. A repost is a relay. So a likes feed is a recommendation stream, which is a thing people follow on purpose, and the "low-signal firehose" argument only ever applied to one of the pair. Worth remembering as a way the shared-shape reasoning misleads: two types built from the same fields can still deserve opposite answers, and the field shape is the weaker signal.
 
-Activities was the fourth of the group until earlier the same day, with no decision recorded anywhere — the type with no spec (see [[The activities archive]]), so it turned out to be an omission rather than a choice, and it now has one.
+Activities was the fourth of the group until earlier the same day, with no decision recorded anywhere — the type with no spec, so it turned out to be an omission rather than a choice, and it now has one.
 
 Related: [[The title-less post types]] — title-less entries syndicate an empty `<title>`.

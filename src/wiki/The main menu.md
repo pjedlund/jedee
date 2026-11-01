@@ -20,12 +20,12 @@ That covers more ground: JavaScript disabled, blocked by an extension, failed on
 
 The fallback that a hidden menu falls back *to* should not be the hidden layout with the hiding removed. A panel designed as a dropdown is sized, positioned and columned for a dropdown; dropped into normal flow it can be worse than useless while remaining, technically, visible.
 
-## In jedee
+## In stomme
 
 One disclosure: a `MENU ⌄` button drops a two-column, table-of-contents-style panel of every post type — icon, name, leader dots, count. It replaced a burger drawer. The markup is `partials/main-nav.njk`; the button lives in a `<template id="menu-template">` and is cloned by `scripts/bundle/nav-menu.js`, which inserts it **before** the list so tab order matches visual order. [[Site search]]'s panel anchors to the same header row, so each trigger closes the other.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/main-menu-open.png" alt="A browser window at 1280 pixels. In the header, a breadcrumb trail on the left and a MENU button on the right; below the button, an open panel listing sixteen post types in two columns, each row an icon, a name, a row of leader dots and a count." width="1284" height="642">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/main-menu-open.png" alt="A browser window at 1280 pixels. In the header, the site mark and a trail reading Notes on the left and a MENU button on the right; below the button, an open panel listing sixteen post types in two columns, each row an icon, a name, a row of leader dots and a count." width="1284" height="642">
   <figcaption>The disclosure open. Each row is icon, name, leader dots, count; the trigger fills with the panel's surface so the two read as one sheet.</figcaption>
 </figure>
 
@@ -59,10 +59,10 @@ For one day the width came from the dev grid instead: five columns wide, snapped
 
 ### The no-JS layout
 
-Without the button the panel keeps its `<ul>` but becomes a right-aligned row of wrapping pills in normal flow — three rows at 1280px, six at 375px. The leader dots are dropped (an empty flexible spacer only reads as a leader when every row shares a width) and the padding tightens.
+Without the button the panel keeps its `<ul>` but becomes a right-aligned row of wrapping pills in normal flow — two rows at 1280px, six at 375px. The leader dots are dropped (an empty flexible spacer only reads as a leader when every row shares a width) and the padding tightens.
 
 <figure class="feature" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/main-menu-no-js.png" alt="Two browser windows side by side, both without JavaScript. At 1280 pixels the post-type links form a right-aligned row of pills wrapping onto three lines beside the breadcrumb. At 375 pixels the same links wrap onto six lines under the breadcrumb." width="1724" height="556">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/main-menu-no-js.png" alt="Two browser windows side by side, both without JavaScript. At 1280 pixels the post-type links form a right-aligned row of pills wrapping onto two lines beside the site mark and trail. At 375 pixels the same links wrap onto six lines under them." width="1724" height="556">
   <figcaption>The fallback at both ends. No button, so the panel is a plain row of pills in normal flow — right-aligned, no leader dots, and wrapping to fit.</figcaption>
 </figure>
 
@@ -88,11 +88,6 @@ The header row is a `.repel` holding the [[Breadcrumb|breadcrumb]] and a cluster
 
 A fixed basis makes the row grow into what the trail leaves on a wide screen and wrap onto a separate full-width line on a narrow one. The trail's truncation is the `-webkit-line-clamp` described in [[Text wrapping]].
 
-<figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/main-menu-breadcrumb-crush.png" alt="Two browser windows stacked, identical except for the header row's flex declarations. In the upper one the breadcrumb reads Photos then a single truncated letter; in the lower one it reads Photos then Pier 4, Ribersborg in full." width="1284" height="972">
-  <figcaption>The same markup, the same width. Above, the cluster's pin relaxed to <code>flex: 1 1 auto</code> with the row still pinned to one line; below, the shipped pair. The trail is what pays for it.</figcaption>
-</figure>
-
 The two wrap values go through the compositions' custom properties rather than declaring `flex-wrap` from outside; `flex` and `min-inline-size` stay plain declarations because they size the element as an item of the row, not the cluster's internals. That distinction, and the two traps in converting a declaration to a knob, are in [[Configuring a layout composition]] — which is also where the no-JS pill row's `.cluster` class comes from, since this page's fallback row used to rebuild that composition by hand.
 
 The `:has(.mainnav)` guard is load-bearing: during the soft launch the header omits the nav entirely in production, which also means no button, and without it the cluster grew to 22rem around nothing but the theme toggle.
@@ -108,5 +103,3 @@ The count numbers are `color-mix(in oklab, var(--color-text) 80%, var(--color-bg
 - `role="list"` stays on the `<ul>` after `list-style: none`, which WebKit otherwise takes as license to drop list semantics.
 - A focused row gets `position: relative; z-index: 1` so its offset ring is not clipped by the next row's background — the same failure mode as [[Focus rings and paint containment]].
 - The reveal transition is inside `@media (prefers-reduced-motion: no-preference)`, the same opt-in-to-motion idiom as [[The theme toggle]].
-
-Raw source: `src/_raw/dev-notes/How the main menu degrades without JavaScript.md`

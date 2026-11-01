@@ -1,5 +1,5 @@
 ---
-description: "Why the tool that writes a file decides its data model, not the templates that read it — with the four times it happened on jedee."
+description: "Why the tool that writes a file decides its data model, not the templates that read it — with the four times it happened on stomme."
 date: 2026-07-31
 ---
 
@@ -11,9 +11,9 @@ So the practical rule is to find out what will write a field before designing it
 
 There is one legitimate escape, and it is worth naming because it is not "do it by hand": when a field genuinely must exist and no authoring tool can write it, compute it at build time from something they *can* write. That converts a permanent manual step into a one-off piece of code.
 
-## In jedee
+## In stomme
 
-The shape of a post's front matter here is usually decided by whatever writes the file — the Obsidian Web Clipper, a Strava export, the Micropub endpoint — rather than by what the templates would prefer. It has happened often enough, and been mistaken for unfinished work often enough, to be worth collecting.
+The shape of a post's front matter here is usually decided by whatever writes the file — the Obsidian Web Clipper, a fitness export, the Micropub endpoint — rather than by what the templates would prefer. It has happened often enough, and been mistaken for unfinished work often enough, to be worth collecting.
 
 ### Three times the clipper decided it
 
@@ -31,7 +31,7 @@ Two planned pieces of machinery evaporated with the nesting. See [[Per-type feed
 
 ### And once the export decided it
 
-The activities archive was imported in bulk from a Strava export, so its front matter records exactly what the export had — raw seconds, metric distance, the three URLs — and nothing derived. The permalink carries a date because the export's filenames were date-led and the same race recurs annually. Coordinates arrived later in two passes, from whichever source happened to publish them. See [[The activities archive]].
+An activities archive imported in bulk from a fitness export has front matter that records exactly what the export had — raw seconds, metric distance, the three URLs — and nothing derived. The permalink carries a date because the export's filenames are date-led and the same route recurs often.
 
 ### The same force from other tools
 

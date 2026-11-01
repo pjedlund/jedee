@@ -12,7 +12,7 @@ Microformats are the parsing layer of the IndieWeb: webmention receivers, feed r
 
 The one thing to internalize: **these classes look like CSS hooks but they are data.** Nothing in the stylesheet may reference them, so they always look unused — and removing one breaks external parsers silently: no build error, no visual change, the site just stops being machine-readable.
 
-## In jedee: data, not style hooks
+## In stomme: data, not style hooks
 
 Every post body is wrapped in `<div class="e-content | flow">`. `e-content` is the [h-entry](https://microformats.org/wiki/h-entry) property marking the element whose contents are the post's actual writing. Webmention receivers and feed readers parse the page, find that class, and take everything inside it as the body — ignoring header, footer, and navigation. **The class exists for parsers. It was never meant to style anything.** Adding it still caused a site-wide spacing bug.
 
@@ -56,12 +56,10 @@ Every post-type layout except `photo.njk` uses `class="e-content | wrapper-pass 
 
 so the body, the properties, and the hidden `<data>` targets all parse as children of the entry. `hidden-author.njk` moved *inside* that root, where it supplies the entry's single `u-url`.
 
-⚠ Two things are deliberately rendered **outside** the root: received webmentions (`webmentions.njk`) and the recovered This Is My Jam reactions (`jam-social.njk`). Both are `h-cite` cards about *other people's* posts, and nesting them inside the entry would make them read as children of it. The comments in those partials say so — don't tidy them into the `<article>`.
+⚠ Two things are deliberately rendered **outside** the root: received webmentions (`webmentions.njk`) and reactions recovered from an archived service (`jam-social.njk`). Both are `h-cite` cards about *other people's* posts, and nesting them inside the entry would make them read as children of it. The comments in those partials say so — don't tidy them into the `<article>`.
 
 If a spec still describes the nesting caveat as open, the spec is out of date on that point.
 
-**EE stock vs jedee:** `flow.css`, `wrapper.css`, and the reset are Eleventy Excellent's. The `e-content` wrapper, `wrapper-pass`, the entry root, and the mf2 vocabulary throughout the layouts are jedee's IndieWeb layer.
+**EE stock vs stomme:** `flow.css`, `wrapper.css`, and the reset are Eleventy Excellent's. The `e-content` wrapper, `wrapper-pass`, the entry root, and the mf2 vocabulary throughout the layouts are stomme's IndieWeb layer.
 
 Related: [[The title-less post types]] — where a missing `p-name` is the correct data, not an omission.
-
-Raw source: `src/_raw/dev-notes/How the e-content wrapper works.md`

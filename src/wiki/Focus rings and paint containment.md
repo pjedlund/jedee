@@ -1,5 +1,5 @@
 ---
-description: "Why an outset focus ring vanishes inside anything that clips painting, and the inset override jedee uses on the YouTube play button, and why a button's ring takes the text color."
+description: "Why an outset focus ring vanishes inside anything that clips painting, and the inset override stomme uses on the YouTube play button, and why a button's ring takes the text color."
 date: 2026-07-31
 updated: 2026-10-08
 ---
@@ -16,9 +16,9 @@ Most sites draw it with `outline`, for a reason worth knowing: unlike `border`, 
 
 Put a focusable child that fills its container inside one of those, give it an outset ring, and the ring lands just past the clip edge and vanishes. **Any box that paint-contains its content and holds a focusable child filling it needs an *inset* focus ring instead.** This is a silent accessibility failure — nothing errors, nothing looks wrong in the stylesheet, and a keyboard user simply sees nothing when they tab to the control. It is invisible in code review and obvious the moment you press Tab, which is why the check has to happen in a browser.
 
-## In jedee
+## In stomme
 
-The site's focus ring is **outset** by design: `global-styles.css` suppresses the always-on ring with `:focus { outline: none }` and restores a strong one on `:focus-visible`, drawn with `--focus-color` and offset outward by `--focus-offset` (`0.3ch`). Tokenizing the offset is what makes the fix below a one-property override rather than a re-declaration of the whole `outline`. This is Eleventy Excellent stock; the clipping cases below are jedee's. Every `a` also sets `border-radius: var(--border-radius-medium)`, since an outline follows the border radius, so link rings are rounded like the header controls. The meta-line links set `--focus-offset: 0` and pad the ring with padding instead (`meta.css`).
+The site's focus ring is **outset** by design: `global-styles.css` suppresses the always-on ring with `:focus { outline: none }` and restores a strong one on `:focus-visible`, drawn with `--focus-color` and offset outward by `--focus-offset` (`0.3ch`). Tokenizing the offset is what makes the fix below a one-property override rather than a re-declaration of the whole `outline`. This is Eleventy Excellent stock; the clipping cases below are stomme's. Every `a` also sets `border-radius: var(--border-radius-medium)`, since an outline follows the border radius, so link rings are rounded like the header controls. The meta-line links set `--focus-offset: 0` and pad the ring with padding instead (`meta.css`).
 
 **The ring's color.** Without `--focus-color` the ring falls back to `currentColor`, the element's text color. On a link that is the text, which stands out from the page. On a filled `.button` it is the label, which is close to the page color, light on light and dark on dark, so the ring all but vanished; it showed on the Close button of the shortcuts dialog ([[Keyboard shortcuts]]). Since 2026-10-08 `button.css` sets `--focus-color: var(--color-text)` on every button. Its fill would not do: the ghost and icon buttons are filled with the page color. The text color measures 7:1 against the page in light mode and 11:1 in dark, on all nine button styles in the style guide, against the 3:1 that WCAG 1.4.11 asks of a focus indicator. Where the ring matches the button's fill it still reads, because the offset leaves a strip of page between them.
 
@@ -31,7 +31,7 @@ is-land lite-youtube .lyt-playbtn { --focus-offset: -4px; }
 ```
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/focus-ring-contained.png" alt="The same focused play button twice, side by side on the embed's pale placeholder surface. On the left, at the site's outset offset, there is no ring at all — only the red play glyph. On the right, with the offset inverted, a thick slate ring runs inside the edge of the embed." width="1312" height="412">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/focus-ring-contained.png" alt="The same focused play button twice, side by side on the embed's pale placeholder surface. On the left, at the site's outset offset, there is no ring at all — only the red play glyph. On the right, with the offset inverted, a thick dark teal ring runs inside the edge of the embed." width="1312" height="410">
   <figcaption>Both halves are focused. On the left the ring is drawn 0.3ch outside the box and <code>contain: content</code> clips it away, so the missing outline <em>is</em> the finding; on the right the same ring at <code>-4px</code> lands inside the box and survives.</figcaption>
 </figure>
 
@@ -50,5 +50,3 @@ When adding any facade-style component — a video poster, a map canvas, a card 
 ⚠ Don't "fix" the `:focus { outline: none }` line in `global-styles.css`. It is not the bare-`outline:none` anti-pattern — the paired `:focus-visible` rule restores a strong ring for keyboard users, and removing it brings back the mouse-click rings the design deliberately drops.
 
 See also [[The YouTube embed]], where this surfaced.
-
-Raw source: `src/_raw/dev-notes/How the YouTube embed loads.md`

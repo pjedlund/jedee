@@ -1,5 +1,5 @@
 ---
-description: "Two machine-readable layers with different audiences, and why fifteen of jedee's sixteen post types share one generic JSON-LD envelope."
+description: "Two machine-readable layers with different audiences, and why fifteen of stomme's sixteen post types share one generic JSON-LD envelope."
 date: 2026-07-31
 updated: 2026-09-22
 ---
@@ -10,7 +10,7 @@ A page can carry two machine-readable layers at once, describing the same conten
 
 The two pull in opposite directions on granularity. The mf2 vocabulary is fine-grained and verb-like, with a distinct property for each kind of response. schema.org's types for written content are coarser, and — this is the practical part — each additional type usually costs a separate template to emit it. Sites therefore tend to converge on one generic envelope for most content and spend a precise type only where a [rich result](https://developers.google.com/search/docs/appearance/structured-data/search-gallery) is actually on offer. A precise type nothing consumes is markup with no reader.
 
-## In jedee
+## In stomme
 
 The mf2 layer is fine-grained and per-type — `u-listen-of`, `h-event`, `p-rsvp`. The JSON-LD layer is almost entirely one shape. That asymmetry is deliberate, and it's held in place by one line of template code.
 

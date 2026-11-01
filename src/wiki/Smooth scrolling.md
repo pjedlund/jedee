@@ -33,12 +33,10 @@ The fragment navigation now focuses the heading, the condition holds, and the ju
 
 Whether a scroll animated cannot be told from where it ended, only from the frames on the way. Recording `scrollY` on every `requestAnimationFrame` after a real click, in headless Chrome, shows it: one jump is two distinct values, a smooth scroll is dozens. A browser pane or tab running in the background may not paint frames at all and is no use for this.
 
-## In jedee
+## In stomme
 
-`html:focus-within { scroll-behavior: smooth }` is Eleventy Excellent's stock `src/assets/css/global/base/reset.css`, with `scroll-behavior: auto` under `prefers-reduced-motion: reduce`. jedee keeps it, so find-on-page stays instant.
+`html:focus-within { scroll-behavior: smooth }` is Eleventy Excellent's stock `src/assets/css/global/base/reset.css`, with `scroll-behavior: auto` under `prefers-reduced-motion: reduce`. stomme keeps it, so find-on-page stays instant.
 
 The section buttons at the top of `/design-system/` link to eight `<h2>`s, each with `tabindex="-1"` (`src/pages/design-system.njk`). Measured after the change: Grid animated over 90 frames, Patterns, about 21 500px down, over 81, with focus on the heading. Before, both cut straight to the target.
 
 Headings rendered from markdown elsewhere on the site have no `tabindex`, so a jump link to one, such as a hand-made table of contents in a wiki page, still cuts instead of scrolling. Doing it site-wide would mean adding `tabindex="-1"` where the markdown headings are rendered.
-
-Raw source: `src/_raw/dev-notes/How smooth scrolling to jump links works.md`

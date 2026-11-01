@@ -45,7 +45,7 @@ A shortcut nobody knows about is wasted, so sites that have several list them. [
 
 The native `<dialog>` does most of the work: `showModal()` makes the rest of the page inert, keeps focus inside, closes on <kbd>Esc</kbd> and returns focus to whatever opened it. A `<form method="dialog">` holding the Close button closes it with no script. The [`closedby="any"`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog) attribute adds closing on a click outside the box; where it is not yet supported, a click handler covers it by checking that the click landed outside the dialog's rectangle (a click on the backdrop is reported with the dialog itself as its target, and so is a click on the dialog's padding). Keys are written with `<kbd>`, which is the element for user input. A combination nests one `<kbd>` per key inside an outer `<kbd>`, as the HTML spec suggests, and the common look is a key cap: a light chip with a thicker bottom edge, so it reads as something pressed rather than typed, unlike a code chip.
 
-## In jedee
+## In stomme
 
 Since 2026-10-07 the whole site has four shortcuts, listed in a dialog:
 
@@ -61,5 +61,3 @@ Inside the search, <kbd>↑</kbd> and <kbd>↓</kbd> move through the results an
 The dialog is `partials/shortcuts.njk`, included from `base.njk`, with `bundle/shortcuts.js` and `local/shortcuts.css`, which also holds the styling of the footer button, so a site with the shortcuts switched off carries none of it. The markup uses the Mac symbols; on any other system the script swaps the symbol in each `<kbd>` that has a `data-pc` attribute for that attribute's text, so ⌘ becomes Ctrl. ⌘ and ⌥ were added to the Source Sans subset for the key caps ([[Font subsetting]]). Every `<kbd>` on the site, in the dialog and in prose, is drawn as a key cap by `src/assets/css/local/kbd.css`; the outer `<kbd>` of a combination stays plain (`kbd:not(:has(kbd))`). The dialog's heading takes the opening focus (`tabindex="-1"` and `autofocus`), so a screen reader starts with the title rather than "Close, button"; it gets no focus ring, since it can't be pressed. ⚠ `autofocus` on the `<dialog>` itself is the spec's way to focus the box, but Chromium ignores it and focuses Close.
 
 The footer has a **Keyboard shortcuts** button that opens the same dialog. It is rendered with `hidden`, and the script removes that, so without JavaScript the button never appears. It is also hidden on touch-only devices (`(hover: none) and (pointer: coarse)`), which have no keyboard to use it with. A tablet with a keyboard but no trackpad may still report a coarse pointer and lose the button; the shortcuts work there regardless.
-
-Raw source: `src/_raw/dev-notes/How the keyboard shortcuts came to the live site.md` (the session of 2026-10-07).

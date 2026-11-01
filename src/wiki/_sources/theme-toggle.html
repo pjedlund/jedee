@@ -10,12 +10,10 @@
 <link rel="stylesheet" href="../../_includes/css/theme-toggle.css">
 
 <style>
-  @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../_includes/themes/jedee/fonts/source-sans/source-sans.woff2') format('woff2'); }
-  @font-face { font-family: 'Source Code Pro'; src: url('../../_includes/themes/jedee/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }
 
   body { margin: 0; padding: 40px; background: #ddd; }
 
-  /* A specimen carries its own paper the way a device frame carries its own bezel — so one shot reads deliberately on either theme of the wiki page. */
+  /* A specimen carries a paper the way a device frame carries a bezel — so one shot reads deliberately on either theme of the wiki page. */
   .specimen {
     inline-size: fit-content;
     background: var(--color-bg);
@@ -26,7 +24,7 @@
   }
 
   .label {
-    font-family: 'Source Code Pro', ui-monospace, monospace;
+    font-family: ui-monospace, monospace;
     font-size: 12px; color: inherit; opacity: 0.55; text-align: center; margin: 12px 0 0;
   }
   .label b { display: block; font-weight: 400; opacity: 0.8; }
@@ -34,7 +32,7 @@
   /* ⚠ Equal columns: the animation clock is the only thing that may differ between frames. */
   .strip { display: grid; grid-template-columns: repeat(5, 132px); gap: 6px; }
   /* align-content start, or a cell with a shorter caption centres its whole stack in the stretched row and the labels step out of line. */
-  /* Each frame carries its own paper: the theme's background snaps at the click, so a shared ground would hide the very thing this strip is about. */
+  /* Each frame carries a paper: the theme's background snaps at the click, so a shared ground would hide the very thing this strip is about. */
   .cell { display: grid; justify-items: center; align-content: start; }
   .strip .cell { padding: 14px 8px 12px; border-radius: 5px; }
 
@@ -46,7 +44,7 @@
   .swatches { display: grid; grid-template-columns: repeat(4, 152px); gap: 8px; }
   .swatch { inline-size: 64px; block-size: 64px; }
   .swatch svg { inline-size: 100%; block-size: 100%; stroke-linecap: round; }
-  .ratio { font-size: 15px; font-family: 'Source Sans', sans-serif; color: var(--color-text); margin: 8px 0 0; }
+  .ratio { font-size: 15px; font-family: sans-serif; color: var(--color-text); margin: 8px 0 0; }
   .ratio b { font-weight: 700; }
   .fails { opacity: 0.55; }
 </style>
@@ -57,15 +55,12 @@
   <div class="strip" id="strip"></div>
 </div>
 
-<div class="specimen" data-shot="theme-toggle-sun-colors" data-light-only>
-  <div class="swatches" id="swatches"></div>
-</div>
 
 <script>
   // Freeze this page before anything is shot: the frames are built, seeked, and only then declared ready.
   window.__mockupReady = false;
 
-  // partials/theme-toggle.njk's SVG, verbatim. Each copy needs its own mask id or every glyph shares the first one's mask.
+  // partials/theme-toggle.njk's SVG, verbatim. Each copy needs a separate mask id or every glyph shares the first one's mask.
   const icon = i => `
     <svg class="sun-and-moon" aria-hidden="true" viewBox="0 0 24 24">
       <mask class="moon" id="moon-mask-${i}">
@@ -116,7 +111,7 @@
     const p = i === 0 ? light : dark;
     cell.style.background = p.bg;
     cell.style.color = p.text;
-    // The light tile shares the specimen's own paper, so without an edge it reads as a gap rather than a frame.
+    // The light tile shares the specimen's paper, so without an edge it reads as a gap rather than a frame.
     cell.style.border = `1px solid ${p.edge}`;
     // ⚠ data-compare goes on the GLYPH, not the cell: the cell also holds a label that differs per frame, so the gate would pass on the caption even if every glyph were identical.
     // ⚠ Built in the LIGHT state. A transition only exists where a value changes, so a frame rendered dark from the start has nothing to seek — every glyph came out as the finished moon.
@@ -124,29 +119,11 @@
     strip.append(cell);
   });
 
-  // orange-200 through orange-500 with their measured contrast on the light page — the one background the sun is ever drawn on.
-  const oranges = [
-    ['orange-200', '#ffdec3', '1.16'],
-    ['orange-300', '#ffb78a', '1.54'],
-    ['orange-400', '#f68f5a', '2.12'],
-    ['orange-500', '#d0621e', '3.50'],
-  ];
-  const swatches = document.getElementById('swatches');
-  oranges.forEach(([name, hex, ratio], i) => {
-    const cell = document.createElement('div');
-    cell.className = 'cell';
-    const passes = Number(ratio) >= 3;
-    cell.innerHTML = `<div class="swatch" data-compare="sun-colors" style="color:${hex}">${icon('s' + i)}</div>
-      <p class="ratio${passes ? '' : ' fails'}"><b>${ratio}:1</b></p>
-      <p class="label">${name}<b>${hex}</b></p>`;
-    swatches.append(cell);
-  });
-
   // The morph is built from TRANSITIONS, not animations — but a CSSTransition is an Animation, so the same pause-and-seek works.
   requestAnimationFrame(() => {
     // Frame 0 is the light resting state and is never flipped — it has no transitions to seek.
     const glyphs = [...strip.querySelectorAll('.glyph')].slice(1);
-    // data-theme goes on the frame rather than the root: every rule in the morph is a descendant selector, so each frame carries its own theme and five of them can sit side by side.
+    // data-theme goes on the frame rather than the root: every rule in the morph is a descendant selector, so each frame carries its theme and five of them can sit side by side.
     glyphs.forEach(g => { getComputedStyle(g.querySelector('.sun')).transform; g.dataset.theme = 'dark'; });
     glyphs.forEach((g, i) => {
       // Reading a computed value is what forces the recalc that creates the transitions — without it getAnimations() comes back empty.

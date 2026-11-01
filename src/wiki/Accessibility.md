@@ -18,9 +18,9 @@ Table: WCAG's four principles, with examples
 
 Each criterion has a level: A, AA or AAA. AA is the usual target and what most legislation references, including the EU's EN 301 549. The W3C advises against requiring AAA for a whole site, because some AAA criteria cannot be met for some content; single AAA criteria are still worth meeting where they cost little.
 
-Automated testing covers only what a rule engine can decide from markup and computed styles: a missing `alt`, a contrast ratio, a field with no label. Whether an alt text is *good*, whether the keyboard order makes sense, whether a screen reader announces a change — those need a person. [[The accessibility test]] covers what jedee's rule engine sees and what it cannot.
+Automated testing covers only what a rule engine can decide from markup and computed styles: a missing `alt`, a contrast ratio, a field with no label. Whether an alt text is *good*, whether the keyboard order makes sense, whether a screen reader announces a change — those need a person. [[The accessibility test]] covers what stomme's rule engine sees and what it cannot.
 
-## In jedee
+## In stomme
 
 The site's public [accessibility statement](/accessibility/) targets **WCAG 2.1 Level AA** and names pa11y-ci as its test. Two criteria new in 2.2, 2.4.11 Focus Not Obscured (Minimum) and 2.5.8 Target Size (Minimum), both AA, have not been checked here.
 
@@ -34,8 +34,8 @@ The site's public [accessibility statement](/accessibility/) targets **WCAG 2.1 
 
 ### What came from Eleventy Excellent
 
-Table: Accessibility conventions from Eleventy Excellent, and what jedee did with each
-| Convention | WCAG | Eleventy Excellent | jedee |
+Table: Accessibility conventions from Eleventy Excellent, and what stomme did with each
+| Convention | WCAG | Eleventy Excellent | stomme |
 | --- | --- | --- | --- |
 | Skip link to `#main` (`skip-link.css`, `header.njk`) | 2.4.1 Bypass Blocks (A) | stock | stock |
 | A strong `:focus-visible` ring, with the plain `:focus` ring removed | 2.4.7 Focus Visible (AA) | 3 `:focus-visible` rules | 16 |
@@ -57,4 +57,4 @@ Counted in both repositories' `src/assets/css/` on 2026-09-14.
 - **Low contrast on decoration is not a defect.** An `aria-hidden` icon beside a text label carries no information, so neither 1.4.3 Contrast (Minimum) nor 1.4.11 Non-text Contrast applies to it. On the mega-menu pass (2026-08-01) one such icon was raised to 4.97:1 and then reverted; its contrast is a design choice, not a fix.
 - **AA, plus AAA where it comes cheap.** The 54ch measure sets about 63 characters per line, inside the width part of 1.4.8. Wiki pages expand their abbreviations through a shared glossary (3.1.4), and motion honors `prefers-reduced-motion` (2.3.3). None of this is a claim of AAA conformance.
 
-Raw source: `src/pages/accessibility.md`, `src/_data/meta.js`, `src/assets/css/` in jedee and in Eleventy Excellent, and the pages linked above, read on 2026-09-14; WCAG 2.2 at w3.org.
+Raw source: `src/pages/accessibility.md`, `src/_data/meta.js`, `src/assets/css/` in stomme and in Eleventy Excellent, and the pages linked above, read on 2026-09-14; WCAG 2.2 at w3.org.
