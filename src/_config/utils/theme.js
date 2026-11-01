@@ -33,6 +33,12 @@ export const logoOutline = (svg, file = 'logo.svg') => {
 	return paths.join(' ');
 };
 
+// The logo as a one-line <svg> for a CSS data address, with single quotes so it sits inside url("…"). Encode it first where a parser needs that.
+export const logoDataSvg = (svg = loadLogo(), attributes = '') => {
+	const viewBox = svg.match(/\sviewBox="([^"]+)"/)?.[1] ?? '0 0 100 100';
+	return `<svg xmlns='http://www.w3.org/2000/svg' viewBox='${viewBox}'${attributes}><path d='${logoOutline(svg)}'/></svg>`;
+};
+
 // The font files a theme's fonts.css loads, each once; a rule with no file (a local() fallback) is left out.
 export const themeFontFiles = css => {
 	const files = new Map();

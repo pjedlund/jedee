@@ -148,3 +148,17 @@ test('lightbox CSS: only on a page with a lightbox, and in the blocks layer', as
   }
   assert.match(styleOf(site, 'plain/index.html'), /figure:is\(\.popout,\s*\.feature,\s*\.full\)/, 'a plain breakout figure lost its caption rule')
 })
+
+// A logo with its own number shape: if the CSS held a fixed path, this one could not reach the page.
+const OTHER_LOGO = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 40" fill="#123456"><path d="M1 1h18v38H1z" /></svg>\n'
+
+test('the map preloader mark comes from the theme logo, and the stem is a theme setting', async t => {
+  const site = await makeTempSite({ files: { 'src/_includes/themes/sample/logo.svg': OTHER_LOGO } })
+  t.after(() => site.cleanup())
+  await site.build()
+  const style = styleOf(site, 'design-system/index.html')
+  assert.ok(style.includes("viewBox='0 0 20 40'><path d='M1 1h18v38H1z'/>"), 'the preloader mark is not the theme logo')
+  assert.ok(!style.includes('__THEME_LOGO__'), 'the placeholder reached the page')
+  assert.ok(!style.includes('m50 0 .588'), 'a fixed logo is still in the CSS')
+  assert.match(style, /var\(--preloader-stem-width,\s*0\)/, 'the stem box is still fixed to one logo')
+})
