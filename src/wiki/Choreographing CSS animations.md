@@ -98,14 +98,14 @@ document.getAnimations()
 
 ## In stomme
 
-The start page — and only the start page — types its name. The header's logomark is followed by the site's name wiping in behind a caret, which blinks twice and then backspaces the name away, leaving the bare logomark that every other page shows.
+When `switches.nameReveal` is on (it is by default), the start page — and only the start page — types its name. The header's logomark is followed by the site's name wiping in behind a caret, which blinks twice and then backspaces the name away, leaving the bare logomark that every other page shows. The picture below shows stomme's header with the `sample` theme.
 
 <figure class="popout" data-wiki-mockup>
   <img eleventy:formats="webp,png" src="/assets/images/wiki/reveal-filmstrip.png" alt="Six stacked frames of the site header, each labeled with a time. At 1.080s only the letter S is visible with a caret bar beside it. At 1.325s the name has reached STOM. At 1.650s the full name STOMME stands with the caret parked a small gap past the last E. At 2.100s the name is complete and the caret has vanished. At 3.525s the name has shrunk back to STO with the caret on its edge. At 3.700s only the blue logomark is left." width="1260" height="884">
   <figcaption>The chain at six instants on its clock. The caret is one bar riding the wipe edge — the same duration and easing as the clip, and a percentage offset doing the tracking.</figcaption>
 </figure>
 
-The mockup is `src/wiki/_sources/breadcrumb-reveal.html`, and it is made with the technique in the section above: six copies of the real header, every animation in each paused and seeked to a different `currentTime`, so nothing is running when the shot is taken and the stale-frame trap cannot arise. It links the site's compiled `global.css` and this block's `breadcrumb-reveal.css`, so the type, the logomark and every step time in the picture are the shipped ones rather than a copy. `npm run mockups` re-shoots it.
+The mockup is `src/wiki/_sources/breadcrumb-reveal.html`, and it is made with the technique in the section above: six copies of the real header, every animation in each paused and seeked to a different `currentTime`, so nothing is running when the shot is taken and the stale-frame trap cannot arise. It links the site's compiled `global.css` and this block's `breadcrumb-reveal.css`, so the type, the logomark and every step time in the picture are those of stomme's `sample` theme rather than a copy. `npm run mockups` re-shoots it.
 
 **The first frame is 1.080s, not 1.000s, and the gate is why.** At the instant the wipe starts the frame is blank, and so is the frame past the end — `npm run mockups:check` rejected the two as pixel-identical, which is the right answer: they are the same picture even though they mean different things. The one second of dead time before the first glyph is prose, not a frame.
 

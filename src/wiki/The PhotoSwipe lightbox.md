@@ -37,7 +37,7 @@ That works inside a post body only because `e-content` passes the wrapper's name
 - any post with an `image:` field, via `entry-header.njk`, with `credit:` as the caption;
 - an activity's `cover:` — the photographed race map — via `activity.njk`.
 
-The shortcode is local-only: it prepends `./src` to its source and breaks on a remote URL (see [[Self-hosting remote images at build time]]). That rules it out for the reading / watching / jam / recipe covers, which are remote service URLs, and is why activity covers — always local scans — were for a while the only cover with a lightbox. The constraint belongs to the shortcode rather than to the lightbox, though: a layout can invoke the component directly with any URL, which is what the photo, jam, reading and watching pages do (book covers and film posters since 2026-08-30).
+The shortcode is local-only: it prepends `./src` to its source and breaks on a remote URL (see [[Self-hosting remote images at build time]]). That rules it out for the reading / watching / jam / recipe covers, which are remote service URLs, and is why activity covers — always local scans — are the cover that gets a lightbox through the shortcode. The constraint belongs to the shortcode rather than to the lightbox, though: a layout can invoke the component directly with any URL, which is what the photo, jam, reading and watching pages do.
 
 ### The clickable area is the wrapper's job, not the image's
 
@@ -124,4 +124,4 @@ Skipping the shortcode lifts the local-only restriction, at the cost of assembli
 
 ⚠ **`slot="image"` must sit on a wrapper, never on the `<img>` itself.** WebC drops a slotted node carrying `eleventy:`-namespaced attributes, and the failure is silent — clean build, no warning, an `<a>` with correct `href` and `data-pswp-*` and nothing inside it. Wrap the image in a `<div slot="image">` and let the `<img>` keep its transform directives. This never arises through the shortcode, whose `{% image %}` output is a `<picture slot="image">` with the directives already consumed.
 
-See also [[Hosting large originals off-repo]] for how the photo pages point this at an 11 MB file that never enters the build.
+See also [[Hosting large originals off-repo]] for how the photo pages point this at a very large file that never enters the build.

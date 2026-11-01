@@ -17,9 +17,9 @@ Three guards, from the file outward:
 
 ## In stomme
 
-A Prettier extension in the editor blanked a template twice: once a page, and again, after the extension had been installed back, a different page, saved at 0 bytes by a one-word typo fix. The empty file was committed under an unrelated message. A lint run caught it, because a page with no front matter has no permalink, so the page stopped being built and the link to it went dead.
+An editor's Prettier extension can blank a template: a one-word typo fix saves the page at 0 bytes, and the empty file can be committed under an unrelated message. A lint run catches it, because a page with no front matter has no permalink, so the page stops being built and the link to it goes dead.
 
-Running Prettier on the restored file reproduces the failure:
+Running Prettier on such a file reproduces the failure:
 
 ```
 [error] src/pages/example.njk: SyntaxError: Unexpected closing tag "p". It may happen when the tag has already been closed by another tag.
@@ -29,16 +29,16 @@ On standard output it prints nothing: 0 bytes, exit code 2. That empty output is
 
 The Prettier setup is Eleventy Excellent's: `.prettierrc` loads `prettier-plugin-jinja-template` and sends every `*.njk` file to its `jinja-template` parser. stomme only widened `printWidth`. EE's `.prettierignore` leaves most templates in scope.
 
-stomme now has two of the three guards. `.prettierignore` ends with:
+stomme has two of the three guards. `.prettierignore` ends with:
 
 ```
 # ⚠ Nova's Prettier extension saves an empty file when the jinja-template parser fails on a template.
 *.njk
 ```
 
-so no template gets formatted by Prettier at all. That's a departure from EE, which formats templates. Whether the Nova extension reads the ignore file wasn't checked; removing the extension is the surer guard.
+so no template gets formatted by Prettier at all. That's a departure from EE, which formats templates. Whether an editor extension reads the ignore file is not guaranteed; removing the extension is the surer guard.
 
-The pre-commit hook is local — `.git/hooks/` isn't tracked, so it doesn't come along with a fresh clone:
+The third guard, a pre-commit hook, is local — `.git/hooks/` isn't tracked, so it doesn't come along with a fresh clone. This one refuses a commit that empties a file:
 
 ```sh
 #!/bin/sh

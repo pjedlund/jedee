@@ -28,14 +28,14 @@ The scrollbar then takes 15px on macOS Chrome, and `innerWidth - document.docume
 
 ## In stomme
 
-On 2026-10-26 the [[The main menu|mega-menu]] and the [[Site search|search panel]] were sized and positioned from the dev grid: a column unit of `min(64rem, 100vw - var(--gap) * 2) / 64`, with each panel's right edge snapped back to the nearest column edge by a `round()` against `50%` of the header row. The unit came from `100vw`; the row it was snapped against did not include the scrollbar. With a classic scrollbar the grid came out 15px wider than the row, the rounding landed on a different column, and the panels moved by up to a column:
+The [[The main menu|mega-menu]] and the [[Site search|search panel]] were once sized and positioned from the dev grid: a column unit of `min(64rem, 100vw - var(--gap) * 2) / 64`, with each panel's right edge snapped back to the nearest column edge by a `round()` against `50%` of the header row. The unit came from `100vw`; the row it was snapped against did not include the scrollbar. With a classic scrollbar the grid came out 15px wider than the row, the rounding landed on a different column, and the panels moved by up to a column:
 
 | Window | Panel | Header row |
 |---|---|---|
 | 480px | −18 to 389px | 29 to 436px |
 | 900px | 248 to 741px | 48 to 837px |
 
-Past the left edge of the window at every width from 360 to 734px, and up to 96px short of the row's right edge above that. A headless sweep from 375 to 2560px the same evening had found nothing, for the reason above; the same sweep without `--hide-scrollbars` found 188 widths where the mega-menu spilled off the row.
+Past the left edge of the window at every width from 360 to 734px, and up to 96px short of the row's right edge above that. A headless sweep from 375 to 2560px found nothing, for the reason above; the same sweep without `--hide-scrollbars` found 188 widths where the mega-menu spilled off the row.
 
 The fix removed the grid from both panels rather than correcting its unit. Each is now a capped width, flush with the row's right edge:
 
@@ -51,4 +51,4 @@ The fix removed the grid from both panels rather than correcting its unit. Each 
 }
 ```
 
-Checked from 320 to 1600px with real scrollbars: both panels stay inside the row at every width. How the mega-menu's columns fit inside the 40rem is on [[The main menu]].
+Checked from 320 to 1600px with real scrollbars, both panels stay inside the row at every width. How the mega-menu's columns fit inside the 40rem is on [[The main menu]].

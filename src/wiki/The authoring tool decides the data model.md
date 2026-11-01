@@ -25,13 +25,13 @@ The shape of a post's front matter here is usually decided by whatever writes th
 
 Two planned pieces of machinery evaporated with the nesting. See [[Per-type feeds]] and [[One JSON-LD envelope for sixteen types]].
 
-**2. Covers stayed remote.** Bundling covers into the repo was declined twice; the second refusal (25 May 2026) turned on the clipper writing front matter and body text only — the local-images plugin pulls *body* images, never a front-matter `cover:`. Bundling would have meant a manual step on every clip to buy something the build already does. See [[Self-hosting remote images at build time]].
+**2. Covers stayed remote.** Bundling covers into the repo was declined twice; the second refusal turned on the clipper writing front matter and body text only — the local-images plugin pulls *body* images, never a front-matter `cover:`. Bundling would have meant a manual step on every clip to buy something the build already does. See [[Self-hosting remote images at build time]].
 
 **3. A field's YAML type is decided by whichever template claimed the name first.** The clipper's property types are registered vault-wide by *name*, and a template's `type` is only a seed that never overrides an existing registration. So the raw clipper's `author` had to be `multitext` because the Standard Ebooks template had already registered that name as a list. A new template's data model is constrained by an old one it has nothing to do with. See [[Web Clipper templates]].
 
 ### And once the export decided it
 
-An activities archive imported in bulk from a fitness export has front matter that records exactly what the export had — raw seconds, metric distance, the three URLs — and nothing derived. The permalink carries a date because the export's filenames are date-led and the same route recurs often.
+An activities archive imported in bulk from a fitness export would have front matter that records exactly what the export had — raw seconds, metric distance, the three URLs — and nothing derived. The permalink can carry a date because the export's filenames are date-led and the same route recurs often.
 
 ### The same force from other tools
 

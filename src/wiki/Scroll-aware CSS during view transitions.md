@@ -67,4 +67,4 @@ Chromium-only in practice. Safari has cross-document view transitions but no `sc
 
 ## In stomme
 
-**Nothing on this site ships it.** The breadcrumb animation that motivated the investigation was shelved for having too many hard-to-explain edge behaviors, and `main` uses the browser's plain cross-fade. The finding is kept here because the platform behavior stands regardless of whether this site uses it.
+**Nothing in stomme ships it.** The breadcrumb animation that motivated the investigation was shelved for having too many hard-to-explain edge behaviors, and pages use the browser's plain cross-fade. The finding is kept here because the platform behavior stands regardless of whether a site uses it.

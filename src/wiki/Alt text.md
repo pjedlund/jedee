@@ -21,17 +21,17 @@ Alt text reaches an image by a different route depending on which image pipeline
 - **The `{% image %}` / `{% imageKeys %}` shortcodes** take `alt` as a parameter. Eleventy Excellent stock. The photo type passes `photo.alt`, the audio type passes `posterAlt`.
 - **A plain `<img>`**, which the HTML Transform post-processes. This is the route every remote cover has to take, because the shortcodes break on a remote URL. The alt is written into the template by hand.
 
-### Cover images: `coverAlt`, added 2026-08-08
+### Cover images: `coverAlt`
 
-Five post types render a cover image — activity, jam, reading, recipe, watching — and until this date all five, plus the four archive cards showing the same covers in listings, **hardcoded the alt text in the template**:
+Five post types render a cover image — activity, jam, reading, recipe, watching — and so do the four archive cards showing the same covers in listings. A template that **hardcodes the alt text** looks like this:
 
 ```njk
 <img class="cover" src="{{ cover | safe }}" alt="Cover for {{ title }}" …>
 ```
 
-That is stomme's code, not EE stock — these post types are stomme additions. The effect was that a cover image could not be described at all: the value was a generated sentence naming the post, identical on every post of that type.
+That would be stomme's code, not EE stock — these post types are stomme additions. The effect would be that a cover image could not be described at all: the value would be a generated sentence naming the post, identical on every post of that type.
 
-All nine now read an optional `coverAlt` and fall back to the string they used to emit:
+All nine instead read an optional `coverAlt` and fall back to that generated string:
 
 ```njk
 alt="{{ coverAlt | default('Cover for ' + title) }}"

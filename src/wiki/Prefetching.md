@@ -54,7 +54,7 @@ Before the API, libraries did this in JavaScript. [instant.page](https://instant
 
 ## In stomme
 
-The rule is Eleventy Excellent's, added in 4.8 (upstream commit `1107a1b`): `src/_includes/head/speculation-rules.njk`, included in `base.njk` right after `head/meta-info.njk`, at `moderate`. The 4.8.0 merge left it out with the other files upstream added, and it was taken by itself afterward, with one change of stomme's: URLs that are not pages are excluded.
+The rule is Eleventy Excellent's, added in 4.8 (upstream commit `1107a1b`): `src/_includes/head/speculation-rules.njk`, included in `base.njk` right after `head/meta-info.njk`, at `moderate`. stomme changes one thing: URLs that are not pages are excluded.
 
 ```json
 "where": {
@@ -65,18 +65,18 @@ The rule is Eleventy Excellent's, added in 4.8 (upstream commit `1107a1b`): `src
 }
 ```
 
-The built pages carried 510 links to feeds (`.xml`) and 136 to full-size `.jpeg` images under `/assets/`; hovering those would download files nobody asked to open. `/admin/` is [[Sveltia CMS]] and `/api/` the [[Micropub]] endpoint. No page links to either today, and excluding them costs nothing. `/*` already keeps other sites' links out, since the pattern resolves against the page's origin. The exclusions can be checked in any browser console, prefetching or not: `new URLPattern('/*.xml', location.origin).test(location.origin + '/reading/feed.xml')` is `true`.
+The built pages link to feeds (`.xml`) and to full-size images under `/assets/`; hovering those would download files nobody asked to open. `/admin/` is [[Sveltia CMS]] and `/api/` the [[Micropub]] endpoint. No page links to either today, and excluding them costs nothing. `/*` already keeps other sites' links out, since the pattern resolves against the page's origin. The exclusions can be checked in any browser console, prefetching or not: `new URLPattern('/*.xml', location.origin).test(location.origin + '/reading/feed.xml')` is `true`.
 
-It pays off here because of how the rest is cached. Pages are network-first in the service worker, and [[Netlify]] serves HTML `max-age=0, must-revalidate` ([[Three things called cache]]), so every online click waits for at least a round-trip. The CSS is inlined into the HTML and the worker already holds the fonts, so the HTML is what a click waits for, and it is the one thing a prefetch fetches.
+It pays off here because of how the rest is cached. Pages are network-first in the service worker, and [[Netlify]] serves HTML `max-age=0, must-revalidate` ([[Three things called cache]]), so every online click waits for at least a round-trip. The CSS is inlined into the HTML and the worker already holds any font files, so the HTML is what a click waits for, and it is the one thing a prefetch fetches.
 
-- Works for returning visitors, through the worker. Verified in Chrome on a deployed site on 2026-09-15.
+- Works for returning visitors, through the worker. Verified in Chrome on a deployed site.
 - The worker copies every page it fetches from the network into its cache. If a prefetch reaches the worker as a navigation, a page that was only hovered is saved for offline use too. Not verified; harmless either way, since the cache is cleared on every deploy.
-- Umami counts a page view when its script runs, and a prefetch downloads HTML without running scripts, so the analytics are not inflated.
+- An analytics script counts a page view when it runs, and a prefetch downloads HTML without running scripts, so the analytics are not inflated.
 
-Declined, both on 2026-09-15:
+Declined:
 
 - **instant.page and Quicklink.** In Safari, a Quicklink `fetch()` of a page is not a navigation, so stomme's worker files it under the cache-first asset branch, while the click takes the network-first page branch: the copy is never used online. That is read from the worker's code, not tested in Safari. In Firefox, the `max-age=0` header sends the click back to the server anyway.
-- **A list built from Umami's statistics.** Too little traffic to predict from. If it is ever warranted, it is a second rule with a hard-coded `urls` list of two or three pages, not a script or an API call at build time.
+- **A list built from analytics statistics.** A low-traffic site has too little traffic to predict from. If it is ever warranted, it is a second rule with a hard-coded `urls` list of two or three pages, not a script or an API call at build time.
 
 ### Testing it
 

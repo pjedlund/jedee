@@ -4,7 +4,7 @@ date: 2026-07-31
 updated: 2026-10-27
 ---
 
-A [[Wikilinks|wikilink]] names its target by title — `[[Page Title]]` — rather than by path, so something has to work out where that title actually lives before a page can be built. On an [Eleventy](https://www.11ty.dev/) site that job belongs to a plugin, and the way this one does the lookup — by rendering every page a second time, mid-build — is the root of the worst failure this site has had. It is worth understanding before putting any conditional around an include.
+A [[Wikilinks|wikilink]] names its target by title — `[[Page Title]]` — rather than by path, so something has to work out where that title actually lives before a page can be built. On an [Eleventy](https://www.11ty.dev/) site that job belongs to a plugin, and the way this one does the lookup — by rendering every page a second time, mid-build — is the root of a failure that can blank the whole navigation. It is worth understanding before putting any conditional around an include.
 
 `@photogabble/eleventy-plugin-interlinker` resolves wikilinks by **re-rendering every page in a separate pass, mid-build**. That coupling of link resolution to render timing is what the rest of this page unpacks.
 
@@ -22,9 +22,9 @@ In the second render pass, the still-pending Promise gets dropped and **the enti
 
 The `{% svg %}` shortcode had been declared `async`, with an `await` around svgo's `optimize()`. That await did nothing — `optimize()` and `readFileSync` are both synchronous; the `async` was a leftover from svgo v1's Promise-based API. `main-nav.njk` calls `{% svg %}` for every post-type icon.
 
-The soft-launch commit (`3975491`, 2026-05-31) then wrapped the nav include in `{% if not meta.navigation.hideNav %}` to hide the nav until 1.0.0, and set `hideNav: true` in the same commit. The nav didn't just hide, it vanished from the built HTML entirely — and nobody noticed for three days, **because the same commit that broke it also hid it on purpose.** Empty and hidden look identical. `git bisect` landed exactly on that commit; swapping the wrapped include back to a bare one restored the nav, which is what isolated the cause. Vanilla Eleventy Excellent has no interlinker and an identical `main-nav.njk`, and that side-by-side ruled out include depth, svgo, and the Eleventy/Nunjucks version.
+A change that hid the nav until launch then wrapped the nav include in `{% if not meta.navigation.hideNav %}` and set `hideNav: true` in the same change. The nav didn't just hide, it vanished from the built HTML entirely — and nobody noticed for days, **because the same change that broke it also hid it on purpose.** Empty and hidden look identical. `git bisect` landed exactly on that change; swapping the wrapped include back to a bare one restored the nav, which is what isolated the cause. Vanilla Eleventy Excellent has no interlinker and an identical `main-nav.njk`, and that side-by-side ruled out include depth, svgo, and the Eleventy/Nunjucks version.
 
-Fixed in `ffd4a17` (2026-06-03) by dropping the `async`/`await`, with the reason recorded in the file (`src/_config/shortcodes/svg.js`, cut to one line on 2026-09-28):
+The fix is dropping the `async`/`await`, with the reason recorded in the file (`src/_config/shortcodes/svg.js`):
 
 ```js
 // ⚠ Keep this synchronous: the interlinker plugin drops an async shortcode's Promise inside {% if %}-wrapped includes, and the nav renders empty.

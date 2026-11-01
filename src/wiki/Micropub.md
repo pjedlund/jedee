@@ -18,9 +18,9 @@ The consequence worth naming is that this makes the authoring tool a second auth
 
 ## In stomme
 
-One Netlify Function at `/api/micropub` (`netlify/functions/micropub.js`, 441 lines on 2026-10-27), the site's first. It turns an incoming `h-entry` into a shape-correct `.md` committed through the GitHub Contents API — the same kind of file, in the same `src/posts/<type>/` folder, that an Obsidian Web Clipper clip produces. The two are complementary authoring paths over one content layer; see [[Web Clipper templates]].
+One Netlify Function at `/api/micropub` (`netlify/functions/micropub.js`). It turns an incoming `h-entry` into a shape-correct `.md` committed through the GitHub Contents API — the same kind of file, in the same `src/posts/<type>/` folder, that an Obsidian Web Clipper clip produces. The two are complementary authoring paths over one content layer; see [[Web Clipper templates]].
 
-The engine is `@benjifs/micropub` 2.0.1 plus `@benjifs/github-store`, used **vendor-but-patch**: the engine's conventions are steered through its documented constructor options rather than by editing its source. Three of those conventions do not match this site, and each needed a seam.
+The engine is `@benjifs/micropub` 2.0.1 plus `@benjifs/github-store`, used **vendor-but-patch**: the engine's conventions are steered through its documented constructor options rather than by editing its source. Three of those conventions do not match stomme, and each needed a seam.
 
 **1. The filename prefix.** The engine prefixes a titled post's slug with a unix timestamp — `1733436000-sample-book`. stomme's filenames are the title alone, because they double as Obsidian wikilink targets ([[Permalinks and Obsidian-friendly filenames]]). `formatSlug` strips it:
 

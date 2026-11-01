@@ -5,6 +5,8 @@ date: 2026-07-31
 
 The wiki documenting web techniques and how stomme is designed and built. Maintained by Claude Code, following conventions kept in the project's instructions. Pages are named after their concept where one exists ("Microformats", "Text wrapping"): general explanation first, then an "In stomme" section. Purely project-internal pages keep descriptive titles and live under "Stomme itself".
 
+stomme is the shared foundation these pages describe: the code and conventions that every site built on it has in common, apart from a site's posts, settings, theme and extra files. An "In stomme" section describes that foundation.
+
 Each entry below says what a page covers and why you would open it. The traps and the measurements live on the pages themselves.
 
 ## Web standards & markup
@@ -21,7 +23,7 @@ Each entry below says what a page covers and why you would open it. The traps an
 ## CSS & design
 
 - [[Text wrapping]] — `text-wrap: balance` and `pretty`, and the end of JavaScript widow-fixers.
-- [[OpenType features]] — ligatures, small caps, figure styles and stylistic sets, and which of them this site's fonts actually carry.
+- [[OpenType features]] — ligatures, small caps, figure styles and stylistic sets, and what one pair of font families carries, as an example of how to check.
 - [[Typographic conventions]] — Bringhurst's and Butterick's rules for figures, capitals, captions, superscripts, ordinals and subtitles, and what each costs in accessibility.
 - [[Line length]] — how many characters a line of text should hold, why `54ch` is not 54 characters, and why the capped blocks hang from the left edge rather than being centered.
 - [[Vertical rhythm]] — spacing a page in fractions of its body line, what it costs for images, tables and small text, its musical side, how Ariel Salminen's Scale.css, CUBE CSS, Every Layout and Eleventy Excellent handle it, and a quarter-line prototype on the style guide.
@@ -39,10 +41,10 @@ Each entry below says what a page covers and why you would open it. The traps an
 - [[Floats]] — the one job floats are still for, wrapping text around a box, what the container has to provide, and a container query that decides when to stop floating.
 - [[CSS 3D transforms]] — building a solid-looking object from flat layers, keeping its shape at every size, and painting on its light and shadow. The pamphlet and book mock-ups.
 - [[Shadows]] — layered box-shadows that look like real shadows, one light source, tinting and dark mode, and balancing painted light against a cast shadow.
-- [[Tables]] — markup that reads correctly unstyled, the browser defaults worth overriding, alignment, sticky headers, and what a table wider than the page needs. Ends with this site's activities table.
+- [[Tables]] — markup that reads correctly unstyled, the browser defaults worth overriding, alignment, sticky headers, and what a table wider than the page needs. Ends with the activities table.
 - [[Tooltips]] — the three kinds of tooltip, and when each one is honest.
 - [[Design token sync]] — generating a design tool's tokens from the code that holds them, what does not survive the trip, and switching non-color things with the theme.
-- [[Icons]] — outline versus filled icon sets, picking a set by how many of your icons it really has, inline SVG colored by `currentColor`, and the filled Phosphor set this site uses.
+- [[Icons]] — outline versus filled icon sets, picking a set by how many of your icons it really has, inline SVG colored by `currentColor`, and the filled Phosphor set stomme uses.
 - [[External-link icons]] — the arrow after an outbound link: when to announce it, drawing it as a mask so it can change color, and moving it without letting it wrap alone.
 
 ## Images & media
@@ -53,7 +55,7 @@ Each entry below says what a page covers and why you would open it. The traps an
 - [[Hosting large originals off-repo]] — the deliberate inverse: large scans kept in a bucket the build never touches.
 - [[The PhotoSwipe lightbox]] — a lightbox loaded only once it is needed, degrading to a plain link without JavaScript.
 - [[The YouTube embed]] — a stand-in with a self-hosted thumbnail, so loading a page sends nothing to Google.
-- [[The place map]] — a map component on this site's tiles, with three modes chosen by the markup: single pin, place groups, and a recorded route.
+- [[The place map]] — a map component on one vector basemap, with three modes chosen by the markup: single pin, places, and a recorded route.
 
 ## Publishing & the IndieWeb
 
@@ -70,7 +72,7 @@ Each entry below says what a page covers and why you would open it. The traps an
 ## Build & delivery
 
 - [[Netlify]] — the host that builds on every push: headers and redirects from files, a serverless function, and what a clean build machine has to carry over.
-- [[Three things called cache]] — the build cache, the browser cache and the service-worker cache, and why this site busts cache by inlining rather than by hashed filenames.
+- [[Three things called cache]] — the build cache, the browser cache and the service-worker cache, and why stomme busts cache by inlining rather than by hashed filenames.
 - [[The service worker's three strategies]] — network-first pages, cache-first assets, and a cache that clears itself on every deploy, in about 25 lines.
 - [[Prefetching]] — fetching the next page before the click with speculation rules, and the script libraries that predate them.
 - [[Progressive web apps]] — what makes a site installable, and how little changes when someone installs it.

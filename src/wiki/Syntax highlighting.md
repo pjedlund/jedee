@@ -29,16 +29,16 @@ An untagged block is often correct. Terminal sessions mixing a command with its 
 
 Markdown fences go through `markdown-it-prism`, configured in `src/_config/plugins/markdown.js` with `defaultLanguage: 'plaintext'`. `plaintext` is not a Prism grammar either, so the fallback path emits `class="language-plaintext"` and no tokens at all — deliberate for bare fences, invisible when it happens by accident.
 
-It happened by accident to every ` ```njk ` fence, 15 of them, almost all on wiki pages quoting layouts. **Prism has no Nunjucks grammar.** Every one of them had been rendering flat while the `js` and `css` blocks beside them were colored.
+It happens by accident to every ` ```njk ` fence, which on wiki pages quoting layouts is common. **Prism has no Nunjucks grammar.** Every one of them would render flat while the `js` and `css` blocks beside them are colored.
 
 <figure class="popout" data-wiki-mockup>
   <img eleventy:formats="webp,png" src="/assets/images/wiki/syntax-njk-vs-jinja2.png" alt="The same three lines of Nunjucks in two code panels, laid out identically. The upper panel is a single flat color, every character the same. In the lower panel the if and endif keywords, the variable names, the h2 tag name and the class attribute name each have a separate color, and the braces and percent signs are gray." width="1400" height="548">
-  <figcaption>The same fence, above as it rendered for fifteen blocks and below after the rewrite. The upper panel is not broken-looking — it is simply a code block, which is why nobody noticed.</figcaption>
+  <figcaption>The same fence, above as it renders without the rewrite and below with it. The upper panel is not broken-looking — it is simply a code block, which is why nobody noticed.</figcaption>
 </figure>
 
 That is the whole difficulty in one picture. Nothing about the flat block says *failure*; it says *plaintext*, which is a legitimate thing for a fence to be. The two are only distinguishable side by side, and only ever became visible because a colored `js` block happened to sit next to one.
 
-The mockup is `src/wiki/_sources/syntax-highlighting.html`. Its two panels are the literal output of `markdownLib.render()` for the same source string, pasted in, and it links the site's compiled `global.css` so the token colors are `code.css`'s rather than a copy of them. Regenerate the two panels with the one-liner at the foot of this page; `npm run mockups` re-shoots it. The size and `white-space` have to be forced onto every descendant of both `<pre>`s: `code.css` sizes `code` as well as `pre`, and left alone the highlighted half wrapped where the flat half did not — a difference in line breaks that has nothing to do with the finding.
+The mockup is `src/wiki/_sources/syntax-highlighting.html`. Its two panels are the literal output of `markdownLib.render()` for the same source string, pasted in, and it links the site's compiled `global.css` so the token colors are `code.css`'s rather than a copy of them, and the accent that tints them is the `sample` theme's. Regenerate the two panels with the one-liner at the foot of this page; `npm run mockups` re-shoots it. The size and `white-space` have to be forced onto every descendant of both `<pre>`s: `code.css` sizes `code` as well as `pre`, and left alone the highlighted half wrapped where the flat half did not — a difference in line breaks that has nothing to do with the finding.
 
 The fix leans on `jinja2` (an alias of Prism's `django`), whose delimiters are Nunjucks' delimiters. Aliasing the grammar directly — `prism.languages.njk = prism.languages.jinja2` — is the version that looks right and reads wrong, because it skips the markup-templating hook described above and leaves the HTML around the tags as undifferentiated `token operator` / `token variable`. What works is rewriting the fence's language before Prism sees it, so the name stays `jinja2`:
 
@@ -55,7 +55,7 @@ The fix leans on `jinja2` (an alias of Prism's `django`), whose delimiters are N
 
 The block's class becomes `language-jinja2`; nothing depends on the language class, since `code.css` styles `.token.*` generically.
 
-The audit behind the fix found every other tag in use — `js`, `css`, `json`, `html`, `markdown`, `yaml`, `toml`, `python`, `bash`, `jinja2` — already mapped to a real grammar, and the 13 genuinely bare fences all correctly bare.
+The audit behind the fix found every other tag in use — `js`, `css`, `json`, `html`, `markdown`, `yaml`, `toml`, `python`, `bash`, `jinja2` — already mapped to a real grammar, and the genuinely bare fences all correctly bare.
 
 **EE stock vs stomme:** `markdown-it-prism`, the `plaintext` default, and the `.token.*` rules in `code.css` are Eleventy Excellent stock; the color values they point at are stomme's (see Colors). The `njk_as_jinja2` core rule is stomme's. `@11ty/eleventy-plugin-syntaxhighlight` is also registered (EE stock) but serves the `{% highlight %}` template shortcode, which nothing in the repo uses; markdown fences never touch it.
 
@@ -67,7 +67,7 @@ node -e "import('./src/_config/plugins/markdown.js').then(m => console.log(m.mar
 
 ### Colors
 
-The token colors started as Eleventy Excellent's palette, which names its variables by hue in `code.css`: orange 30°, indigo 260°, violet 314°, pink 350°, a gray and a blue. stomme changed saturation and lightness per theme to clear WCAG AA against the code block background (commit `ce80897`, 2026-03-08). On 2026-10-11 the palette was reworked after GitHub's color-blind themes, described below. The `.token.*` rules map Prism's token types onto five colors: orange, blue, purple, gold and gray. Strings, numbers and attribute values stay in the plain code text color.
+The token colors started as Eleventy Excellent's palette, which names its variables by hue in `code.css`: orange 30°, indigo 260°, violet 314°, pink 350°, a gray and a blue. stomme changed saturation and lightness per theme to clear WCAG AA against the code block background. The palette was then reworked after GitHub's color-blind themes, described below. The `.token.*` rules map Prism's token types onto five colors: orange, blue, purple, gold and gray. Strings, numbers and attribute values stay in the plain code text color.
 
 GitHub's *protanopia and deuteranopia* themes (`light_colorblind` and `dark_colorblind` in [Primer's primitives](https://github.com/primer/primitives)) start from the default syntax colors and swap out exactly the ones red–green color-blind readers confuse:
 
@@ -92,11 +92,11 @@ Table: The weakest color pair in each palette under simulated color blindness
 | stomme light, before the tint | gold / text 8.7 | gold / gray 9.5 |
 | GitHub light, color-blind | tag / class name 2.3 | tag / class name 2.4 |
 
-On the page each color is then mixed with 20% of the site's orange accent (`--code-tint` and `--code-tint-amount`), so code sits in the site's palette rather than beside it. The mix pulls colors together, so the light theme's base colors were retuned for it: a darker orange, a deeper brown gold, a slate blue and a lighter purple. Measured after the mix, the weakest pairs are 7.2 in dark mode (blue / purple, deuteranopia) and 7.6 in light (orange / gray, deuteranopia), and every color clears 5.3:1 against the code background. A 15% mix of the slate text color was tried first and measured about the same; the orange was chosen instead. Any change to either knob moves every pair, and a darker orange in light mode quickly merges with the gold, so re-measure the rendered colors after a change.
+On the page each color is then mixed with 20% of the theme's accent (`--code-tint` is `--color-accent-orange`, whatever color the theme gives that token; the amount is `--code-tint-amount`), so code sits in the site's palette rather than beside it. The mix pulls colors together, so the light theme's base colors were retuned for it: a darker orange, a deeper brown gold, a slate blue and a lighter purple. Measured after the mix with an orange accent, the weakest pairs were 7.2 in dark mode (blue / purple, deuteranopia) and 7.6 in light (orange / gray, deuteranopia), and every color cleared 5.3:1 against the code background. A different accent moves every pair, and so does either knob, and a darker orange in light mode quickly merges with the gold, so re-measure the rendered colors after a change.
 
-Before the rework, stomme's weakest pairs were 5.8 in light mode and 6.0 in dark mode. Plain text was not in that check. Adding it showed that the old dark-mode blue, a near-white at 95% lightness, was 1.5 from the text color, so attribute names looked like their values to every reader. Every color now also clears 5:1 against the code block background in both themes, measured on the page. Two limits: the simulation models the most severe form of each condition, and a distance says nothing about which colors a reader with the condition finds comfortable. Run the check again after any change to the palette.
+Adding the plain text color to the check showed that a near-white blue at 95% lightness is only 1.5 from the text color, so attribute names look like their values to every reader. Every color should also clear 5:1 against the code block background in both themes, measured on the page. Two limits: the simulation models the most severe form of each condition, and a distance says nothing about which colors a reader with the condition finds comfortable. Run the check again after any change to the palette.
 
-⚠ The light palette sits in a `prefers-color-scheme: light` query guarded by `:root:not([data-theme='dark'])`. Without the guard, a reader whose device is in light mode and who switches the site to dark gets the light theme's dark blue, brown and deep red on the dark code background. That was the case until 2026-10-06, and it first showed on an iPhone, where it read as washed-out code.
+⚠ The light palette sits in a `prefers-color-scheme: light` query guarded by `:root:not([data-theme='dark'])`. Without the guard, a reader whose device is in light mode and who switches the site to dark gets the light theme's dark blue, brown and deep red on the dark code background, which reads as washed-out code.
 
 ### Inline code
 
@@ -105,7 +105,7 @@ Inline code never reaches Prism. A backtick span is a markdown-it `code_inline` 
 Table: Inline code: Ariel Salminen's chip and stomme's
 | Ariel | stomme |
 | --- | --- |
-| `background: var(--color-surface)` | `--color-bg-accent` mixed 65% into `--color-bg` (half and half until 2026-10-08), since the plain surface read too strong in both themes |
+| `background: var(--color-surface)` | `--color-bg-accent` mixed 65% into `--color-bg`, since the plain surface read too strong in both themes |
 | `border-radius: var(--border-radius)` | `--border-radius-medium`, the same radius as a code block |
 | `box-shadow: var(--box-shadow-dimmed)` | `--box-shadow-chip`, and `-chip-dark` on the dark theme, a new pair in `shadows.json`, smaller than `popup` |
 | `padding: .188rem .5rem` | `--space-3xs --space-xs` |
@@ -130,19 +130,19 @@ Table: Where the chip's middle sits against the middle of the body text's capita
 |---|---|---|---|
 | Figtree + Roboto Mono (EE, 2024) | 0.038em | 0.002em | −0.042em |
 | Atkinson Hyperlegible + `ui-monospace` (EE today) | 0.071em | 0.032em | 0.008em |
-| Source Sans + Source Code Pro (stomme) | 0.053em | 0.013em | −0.027em |
+| Source Sans + Source Code Pro (one pair, as an example) | 0.053em | 0.013em | −0.027em |
 
-The February value centers EE's 2024 pair almost exactly. EE has since changed fonts and kept the value, which leaves today's pair 0.032em low; that row is SF Mono on macOS, since `ui-monospace` is a different font on other systems. In stomme's fonts the chip sits 0.053em low without the nudge, about 1.5px at the largest body size. stomme keeps the letters on the baseline instead, a choice between two alignments rather than a fix: the nudge would move them 0.04em off the line the prose sits on. It was tried on 2026-09-15 and compared side by side (1.17px low without it at 24.9px text, 0.18px with it) and left out; the baseline won. The chip also stays `display: inline`. Measured, `inline-block` keeps the text on the baseline too, since an inline-block's baseline is its last line of text; what changes is that the vertical padding then counts toward the line's height (the test paragraph grew 0.84px), and a long span can no longer wrap onto the next line. The selector is EE's, and so was the plain `0.1em 0.4em` padding it replaces. The chip is stomme's.
+The February value centers EE's 2024 pair almost exactly. EE has since changed fonts and kept the value, which leaves today's pair 0.032em low; that row is SF Mono on macOS, since `ui-monospace` is a different font on other systems. With Source Sans and Source Code Pro the chip sits 0.053em low without the nudge, about 1.5px at a large body size. stomme keeps the letters on the baseline instead, a choice between two alignments rather than a fix: the nudge would move them 0.04em off the line the prose sits on. The two were compared side by side and the baseline won. The chip also stays `display: inline`. Measured, `inline-block` keeps the text on the baseline too, since an inline-block's baseline is its last line of text; what changes is that the vertical padding then counts toward the line's height (the test paragraph grew 0.84px), and a long span can no longer wrap onto the next line. The selector is EE's, and so was the plain `0.1em 0.4em` padding it replaces. The chip is stomme's.
 
 ### Scroll cues
 
-A code block too wide for its box scrolls sideways, and on a phone nothing says so: iOS hides the scrollbar until you touch the block. Since 2026-10-06 code blocks carry the same scroll cues as tables ([[Tables]]): a soft glow on each edge that has more code beyond it, gone once that edge is reached. It is Lea Verou's `background-attachment: local` technique, four backgrounds on the `<pre>`: two radial-gradient glows pinned to the box's edges (`scroll`), and two covers in `--color-code-bg` that move with the code (`local`) and slide over a glow when that end comes into view.
+A code block too wide for its box scrolls sideways, and on a phone nothing says so: iOS hides the scrollbar until you touch the block. Code blocks carry the same scroll cues as tables ([[Tables]]): a soft glow on each edge that has more code beyond it, gone once that edge is reached. It is Lea Verou's `background-attachment: local` technique, four backgrounds on the `<pre>`: two radial-gradient glows pinned to the box's edges (`scroll`), and two covers in `--color-code-bg` that move with the code (`local`) and slide over a glow when that end comes into view.
 
 Two things differ from the table version:
 
 - **The glow is twice as strong.** `--code-shadow` mixes 40% of `--color-text`, the table's `--table-shadow` 20%. At 20% the glow vanished on the near-black dark-theme code background. At 40% it reads in both themes, and in the light theme it looks about like the table's.
 - **The `<code>` inside the `<pre>` must have no background.** `code.css` gives `code` and `pre` the same background color, so the inner element painted a solid band over every line and hid the glow behind the text. `pre code { background: none; }` clears it.
 
-The cue only shows when there is some way to scroll. A block that overflows by less than the 4em cover still has the cover sitting over most of its glow: on [[Vertical rhythm]] one block overflows by 21px at a 375px window and shows almost nothing. The blocks on this page, [[The interlinker's second render pass]] and [[The accessibility test]] overflow by hundreds of pixels and show it clearly.
+The cue only shows when there is some way to scroll. A block that overflows by less than the 4em cover still has the cover sitting over most of its glow, and shows almost nothing; a block that overflows by hundreds of pixels shows it clearly.
 
 Related: [[The interlinker's second render pass]] — the other thing in this pipeline that rewrites content mid-build, and a reminder that markdown plugin order is load-bearing. [[Wikilinks]] — the interlinker deliberately ignores wikilinks inside code blocks, the other place fenced content gets special treatment.

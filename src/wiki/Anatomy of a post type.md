@@ -33,7 +33,7 @@ eleventyComputed: {
 }
 ```
 
-It was ported from `photos.json` so EXIF could be read from the file at build time — and `photoExif` is a **top-level** key rather than nested under `photo`, because a computed key that reads its parent is a self-reference in the data cascade. Worth knowing before writing a script that globs `src/posts/*/*.json` expecting sixteen hits: it finds ten. Jams, reading and watching followed photo into JavaScript on 2026-08-29 and 2026-09-09, for lightbox covers and Open Graph cards, and recipes and videos on 2026-10-11, so their Open Graph cards could use their artwork.
+It was ported from `photos.json` so EXIF could be read from the file at build time — and `photoExif` is a **top-level** key rather than nested under `photo`, because a computed key that reads its parent is a self-reference in the data cascade. Worth knowing before writing a script that globs `src/posts/*/*.json` expecting sixteen hits: it finds ten. Jams, reading, watching, recipes and videos followed photo into JavaScript, for lightbox covers and Open Graph cards that use their artwork.
 
 ## Registration: one array, explicit aliases
 

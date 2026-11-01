@@ -54,10 +54,10 @@ The git-tracked export is the source of truth; the live copy inside the extensio
 
 ### Finding the right vault
 
-Obsidian names a vault after the folder it opens. This site's content is in `src/` — **the same folder name every Eleventy site uses**, so every Eleventy vault on the machine is named `src` and pointing the Clipper at the name is ambiguous.
+Obsidian names a vault after the folder it opens. A site's content is in `src/` — **the same folder name every Eleventy site uses**, so every Eleventy vault on the machine is named `src` and pointing the Clipper at the name is ambiguous.
 
-Underneath the name each vault has a stable sixteen-character ID, minted when Obsidian first opens the folder, listed in `~/Library/Application Support/obsidian/obsidian.json` keyed by ID with the path as value. **Put the ID, not the name, in the Clipper's Vaults field.** `262cea0685d5b4ac` identifies exactly one vault; "src" identifies four.
+Underneath the name each vault has a stable sixteen-character ID, minted when Obsidian first opens the folder, listed in `~/Library/Application Support/obsidian/obsidian.json` keyed by ID with the path as value. **Put the ID, not the name, in the Clipper's Vaults field.** An ID identifies exactly one vault; "src" may identify several.
 
-The collision is a feature in the other direction: a fork keeps its content in `src/` too, so the templates in this repo can target the *name* and work unchanged for anyone who forks — on their machine "src" is probably the only vault by that name. The sameness that forces an ID locally is what makes the templates portable.
+The collision is a feature in the other direction: a fork keeps its content in `src/` too, so the templates in this repo can target the *name* and work unchanged for a fork — on that machine "src" is probably the only vault by that name. The sameness that forces an ID locally is what makes the templates portable.
 
 ⚠ Until a vault is registered, the save button reads "Save file…" and downloads the clip instead of saving it. It's a split button — click the chevron and pick "Add to Obsidian" once.
