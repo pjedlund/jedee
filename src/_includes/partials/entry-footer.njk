@@ -1,0 +1,33 @@
+{# Shared chrome footer for post-type layouts. Renders below the per-type body content. #}
+
+{% set hasVisibleTags = false %}
+{% if tags %}
+  {% for tag in tags %}{% if tag != "posts" and tag != category %}{% set hasVisibleTags = true %}{% endif %}{% endfor %}
+{% endif %}
+
+{% if hasVisibleTags %}
+  <p class="cluster gutter-xs-s">
+    {% for tag in tags %}{% if tag != "posts" and tag != category %}
+      <a class="button" href="/tags/{{ tag | slugify }}/" data-small-button>{{ tag }}</a>
+    {% endif %}{% endfor %}
+  </p>
+{% endif %}
+
+{% if syndication %}
+  <p class="text-step-min-1 cluster gutter-xs-s">
+    {{ words.alsoOn }}
+    {% for url in syndication %}
+      <a class="u-syndication" rel="syndication" href="{{ url }}">{{ url }}</a>
+    {% endfor %}
+  </p>
+{% endif %}
+
+{% if meta.switches.webmentions %}
+  <p class="text-step-min-1">
+    {{ words.webmentionPrompt }}
+    <a href="https://indieweb.org/Webmention">{{ words.webmentionLink }}</a>
+  </p>
+{% endif %}
+
+{# Received webmentions are rendered PER-LAYOUT (article/note/photo only), not here — see partials/webmentions.njk + each layout's bare include. The text CTA above stays on all post types. #}
+{% include 'partials/edit-on.njk' %}

@@ -1,0 +1,91 @@
+identity:
+  name: Stomme
+  email: hello@example.com
+  website: https://example.com
+  avatar: /assets/images/template/webmention-avatar.svg
+  tagline: A plain frame to build a site on.
+  bio: A shared base for small websites.
+  description: A shared base for small websites.
+  feedDescription: Everything posted on this site.
+  ogAlt: The site's name on a plain background.
+profiles:
+  github:
+    url: https://github.com/example
+    relMe: true
+  mastodon:
+    url: https://mastodon.social/@example
+    relMe: true
+    handle: '@example@mastodon.social'
+  x:
+    url: https://x.com/example
+    relMe: false
+  flickr:
+    url: https://www.flickr.com/people/example
+    relMe: false
+  dribbble:
+    url: https://dribbble.com/example
+    relMe: false
+  bluesky:
+    url: https://bsky.app/profile/example.com
+    relMe: false
+  strava:
+    url: https://www.strava.com/athletes/example
+    relMe: false
+repos:
+  site: https://github.com/example/site
+  licence: https://github.com/example/licence
+site:
+  lang: en
+  locale: en_US
+  type: Person
+theme: sample
+switches:
+  breadcrumb: true
+  nameReveal: true
+  easteregg: true
+  viewRepo: true
+  header: true
+  mainNav: true
+  themeToggle: true
+  footer: true
+  shortcuts: true
+  tooltips: true
+  devGrid: true
+  serviceWorker: true
+  feeds: true
+  webmentions: false
+  micropub: false
+  relMe: true
+  hideFeatured: false
+  hideNav: false
+  noindexSite: true
+pwa:
+  workerPath: /serviceworker.js
+wiki:
+  visibility: private
+  attribution: pages written by an AI, supervised by the site's editor.
+search:
+  enabled: true
+  types:
+    - article
+    - note
+    - reading
+    - watching
+    - jam
+    - photo
+    - recipe
+    - event
+    - audio
+    - video
+    - activity
+    - searchable
+  only:
+    activity:
+      activityType: orienteering
+a11yPaths:
+  - /
+  - /about/
+  - /accessibility/
+  - /design-system/
+  - /now/
+analytics: {}

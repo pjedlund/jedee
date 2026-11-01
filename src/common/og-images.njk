@@ -1,0 +1,89 @@
+---
+pagination:
+  data: collections.titleCards
+  size: 1
+  alias: post
+permalink: '/assets/og-images/{{ post.data.title | slugify }}-preview.svg'
+eleventyExcludeFromCollections: true
+---
+
+<svg
+  width="1200"
+  height="630"
+  viewBox="0 0 1200 630"
+  version="1.1"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+>
+  {% set og = meta.themeOg %}{% set titleInLines = post.data.title | splitlines(22) %}
+  {% set numberOfLines = titleInLines.length %}
+  {% if numberOfLines == 1 %}
+    {% set verticalStartingPoint = 340 %}
+    {% elseif numberOfLines == 2 %}
+    {% set verticalStartingPoint = 290 %}
+    {% elseif numberOfLines == 3 %}
+    {% set verticalStartingPoint = 250 %}
+    {% elseif numberOfLines == 4 %}
+    {% set verticalStartingPoint = 210 %}
+    {% elseif numberOfLines == 5 %}
+    {% set verticalStartingPoint = 170 %}
+  {% endif %}
+
+  <rect id="bg" width="100%" height="100%" opacity="1" fill="{{ og.background }}" />
+  <!-- ground: the site's own mark where Eleventy Excellent's template put its star. Same size, position and 10% as the fallback card in generate-og-default.js, so the two read as one set. -->
+  <g transform="translate(666,96) scale(4.38,4.38)">
+    <path fill="{{ og.accent }}" opacity="0.1" d="{{ meta.logoMark }}" />
+  </g>
+
+  <!-- date -->
+  <text
+    font-family="{{ og.body.family }},sans-serif"
+    font-size="18"
+    font-weight="500"
+    fill="{{ og.text }}"
+  >
+    <tspan x="160" y="{{ verticalStartingPoint - 120 }}">
+      {{ post.date | formatDate('YYYY/MM/DD') }}
+    </tspan>
+  </text>
+
+  <!-- title -->
+  <text
+    id="text"
+    font-family="'{{ og.display.family }}',serif"
+    font-size="80"
+    font-weight="700"
+    letter-spacing="-1"
+    fill="{{ og.text }}"
+  >
+    {% for line in titleInLines %}
+      <tspan x="160" y="{{ verticalStartingPoint - 20 + loop.index0 * 85 }}"> {{ line }} </tspan>
+    {% endfor %}
+  </text>
+
+  {# <!-- url --> <text
+    font-family="Dank Mono"
+    font-size="20"
+    font-style="italic"
+    font-weight="300"
+    letter-spacing="-1"
+    fill="{{ og.text }}" >
+    <tspan x="160" y="580">{{ meta.siteDomain }}</tspan> </text> #}
+
+
+  <!-- sitename -->
+  <text
+    font-family="{{ og.body.family }}, sans-serif"
+    font-size="18"
+    font-weight="600"
+    fill="{{ og.muted }}"
+    letter-spacing="-1"
+  >
+    <tspan x="950" y="580">{{ meta.siteDomain }}</tspan>
+  </text>
+
+  <!-- signature mark, in the accent orange. ⚠ It was the base-dark grey {{ og.muted }} here, the value that measured 1.67 on the light page and was fixed everywhere else on the site. -->
+  <g transform="translate(916,560) scale(0.2,0.2)">
+    <path fill="{{ og.accent }}" d="{{ meta.logoMark }}" />
+  </g>
+</svg>

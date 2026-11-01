@@ -1,0 +1,83 @@
+{# The likes and comments each jam got on This Is My Jam (2012–2015), recovered from the Wayback Machine; not live webmentions, but styled like them. Data: src/_data/jamSocial.json, keyed by `page.fileSlug`. #}
+{# ⚠ Keep it outside the post's h-entry, so the h-cite cards don't nest in it. #}
+
+{% set social = jamSocial[page.fileSlug] %}
+
+{% if social and (social.likes | length or social.comments | length) %}
+  <aside class="webmentions | wrapper flow region prose">
+    <h2 id="thisismyjam">{{ words.jamSocialHeading }}</h2>
+    <p class="text-step-min-1">
+      {{ words.jamSocialIntro }}
+      <a href="https://web.archive.org/" rel="noreferrer">{{ words.internetArchive }}</a>.
+    </p>
+
+    {% if social.likes | length %}
+      <div class="flow">
+        <h3>{{ social.likes | length }} {{ words.like if social.likes | length == 1 else words.likes }}</h3>
+        <ul class="avatars | cluster gutter-3xs" role="list">
+          {% for like in social.likes %}
+            <li>
+              <a class="h-card u-url no-indicator" href="{{ like.url }}" rel="noreferrer">
+                <img
+                  eleventy:ignore
+                  class="u-photo"
+                  src="{{ like.photo or (meta.webmentions.fallbackAvatar | url) }}"
+                  alt=""
+                  width="40"
+                  height="40"
+                  loading="lazy"
+                />
+                <span class="visually-hidden p-name">{{ like.name }}</span>
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    {% if social.comments | length %}
+      <div class="flow">
+        <h3>{{ social.comments | length }} {{ words.comment if social.comments | length == 1 else words.comments }}</h3>
+        <ul class="webmention-list | flow" role="list">
+          {% for comment in social.comments %}
+            <li>
+              <article class="webmention h-cite | flow">
+                <div class="cluster">
+                  <a
+                    class="author p-author h-card u-url no-indicator"
+                    href="{{ comment.url }}"
+                    rel="noreferrer"
+                  >
+                    <img
+                      eleventy:ignore
+                      class="u-photo"
+                      src="{{ comment.photo or (meta.webmentions.fallbackAvatar | url) }}"
+                      alt=""
+                      width="48"
+                      height="48"
+                      loading="lazy"
+                    />
+                    <strong class="p-name">{{ comment.name }}</strong>
+                  </a>
+
+                  {% if comment.date %}
+                    <time datetime="{{ comment.date }}" title="{{ words.approximateDate }}">
+                      {{ comment.date | formatDate('MMM YYYY') }}
+                    </time>
+                  {% endif %}
+                </div>
+
+                <div class="p-content | flow">
+                  <p>{{ comment.text }}</p>
+                  {% for link in comment.links %}
+                    <p class="text-step-min-1"><a href="{{ link }}" rel="noopener noreferrer">{{ link }}</a></p>
+                  {% endfor %}
+                </div>
+              </article>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+  </aside>
+{% endif %}

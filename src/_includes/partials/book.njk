@@ -1,0 +1,9 @@
+{#- Book mock-up. Expects `book.src` (a cover path or remote URL, self-hosted by the Image transform) and `book.alt`; optional `book.ratio` (cover width / height, default 2 / 3) and `book.depth` (thickness as a share of the width, default 0.18). ⚠ No blank lines: in markdown, a blank line followed by indented HTML turns into a code block. -#}
+<div class="book"{% if book.ratio or book.depth %} style="{% if book.ratio %}--book-ratio: {{ book.ratio }};{% endif %}{% if book.depth %} --book-depth: {{ book.depth }};{% endif %}"{% endif %}>
+  <div>
+    <i></i>
+    <b></b>
+    <div><img eleventy:optional="placeholder" src="{{ book.src | safe }}" alt="{{ book.alt }}" loading="lazy" eleventy:widths="240,480" sizes="auto"></div>
+  </div>
+</div>
+{%- css "local" -%}{%- include 'css/book.css' -%}{%- endcss -%}

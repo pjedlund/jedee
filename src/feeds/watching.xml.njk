@@ -1,0 +1,14 @@
+---
+# pagination only gates the file: an empty type gets no feed
+pagination:
+  data: collections.watching
+  size: 100000
+permalink: /watching/feed.xml
+eleventyExcludeFromCollections: true
+excludeFromSitemap: true
+---
+{%- set feedCollection = collections.watching -%}
+{%- set feedTitle = words.feedWatching -%}
+{%- set feedDescription = words.feedWatchingDescription -%}
+{%- set feedSelfUrl = "/watching/feed.xml" -%}
+{%- include "feeds/atom-body.njk" -%}

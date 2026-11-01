@@ -1,0 +1,10 @@
+/*
+BACKLINKS
+The "Backlinks" list at the foot of a post or wiki page (partials/backlinks.njk). Its heading is an h2 for the outline but keeps the look of a bold body-size label.
+*/
+.backlinks h2 {
+  font: inherit;
+  font-weight: var(--font-bold);
+  letter-spacing: inherit;
+  color: inherit;
+}

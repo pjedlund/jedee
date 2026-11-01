@@ -1,0 +1,136 @@
+/*
+SITE SEARCH
+A disclosure panel dropping from the header row, sharing the mega-menu's surface and shadow so the two read as one system. Local bundle: it only ships when partials/search.njk is included, which is what the settings.yaml dial switches.
+*/
+
+.site-search {
+  /* Same lifted-off-the-page surface as the mega-menu. Redeclared rather than inherited: main-nav.css declares it on .mainnav, which is absent while the nav is hidden. */
+  --search-surface: color-mix(in oklab, var(--color-base-white) 45%, var(--color-bg));
+
+  display: flex;
+  align-items: center;
+}
+
+:root[data-theme='dark'] .site-search {
+  --search-surface: color-mix(in oklab, var(--color-base-white) 7%, var(--color-bg));
+}
+
+/* no JS / before hydration: hide the control entirely */
+is-land:not(:defined) .site-search {
+  display: none;
+}
+
+/* The header is-land inherits the body's tall line-height (~36px), which would sit the button on an oversized text baseline. Flex-center the wrapper so the magnifier lands level with the MENU trigger and the moon. */
+is-land:has(> .site-search) {
+  display: flex;
+  align-items: center;
+}
+
+/* ---------- the magnifier ---------- */
+
+.search-toggle {
+  /* Outer box matches .theme-toggle beside it; the glyph is the header icon size, and the padding takes up the difference. ⚠ Size the glyph from a token, not from `em` — the header's inherited font-size is ~27px, which rendered the magnifier half again as big as the sun. */
+  --search-toggle-box: calc(var(--size-step-min-1) + var(--space-2xs) * 2);
+  --search-toggle-size: var(--site-header-icon-size, var(--size-step-min-2));
+  --search-toggle-color: var(--color-text-header-dim);
+  --search-toggle-border-color: transparent;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* WCAG 2.5.8 (AA) target of 24px, matching .theme-toggle. border-box so the min covers the whole button. */
+  box-sizing: border-box;
+  min-block-size: 24px;
+  min-inline-size: 24px;
+  /* Padding absorbs both the smaller glyph and the always-present hairline, so the outer box is unchanged. */
+  padding: calc((var(--search-toggle-box) - var(--search-toggle-size)) / 2 - var(--border-thickness));
+  background: transparent;
+  border: var(--border-thickness) solid var(--search-toggle-border-color);
+  border-radius: var(--border-radius-medium);
+  color: var(--search-toggle-color);
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.search-toggle svg {
+  inline-size: var(--search-toggle-size);
+  block-size: var(--search-toggle-size);
+}
+
+.search-toggle:is(:hover, :focus-visible) {
+  --search-toggle-color: var(--color-text-strong);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .search-toggle {
+    transition: color var(--transition-duration) var(--transition-timing);
+  }
+}
+
+/* open: the same fill + hairline the MENU trigger takes when the mega-menu is open, so the two read as one control set */
+.search-toggle[aria-expanded='true'] {
+  --search-toggle-border-color: color-mix(in oklab, var(--color-text) 18%, var(--color-bg));
+
+  background: var(--search-surface);
+}
+
+/* Open panel: the tooltip has served its purpose and would sit on top of the panel it just opened. ⚠ [data-tooltip] is repeated to outweigh tooltip.css's own :hover rule, which is otherwise an exact specificity tie. */
+.search-toggle[data-tooltip][aria-expanded='true']::after {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* ---------- the panel ---------- */
+
+.search-panel {
+  /* 30rem, or the row on narrow screens; narrower than the mega-menu, which needs room for two columns. */
+  --search-panel-width: min(30rem, 100%);
+  --search-panel-shadow: var(--shadow-raised);
+  --flow-space: var(--space-xs);
+
+  position: absolute;
+  /* Matches the mega-menu: on the lattice just under the buttons. */
+  inset-block-start: var(--site-header-panel-top, calc(100% - var(--space-3xs)));
+  inset-inline-end: 0;
+  z-index: 5;
+
+  inline-size: var(--search-panel-width);
+  padding: var(--space-s);
+  background: var(--search-surface);
+  border-radius: var(--border-radius-medium);
+  box-shadow: var(--search-panel-shadow);
+}
+
+@media (forced-colors: active) {
+  .search-panel {
+    border: 1px solid CanvasText;
+  }
+}
+
+/* visibility, not opacity alone, so a closed panel's links are not Tab-focusable */
+.search-toggle[aria-expanded='false'] + .search-panel {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.search-toggle[aria-expanded='true'] + .search-panel {
+  visibility: visible;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* ⚠ visibility flips instantly on the way OPEN and only waits out the fade on the way closed — a transitioned `visibility` is still `hidden` for the first frame, and focus() on a hidden input silently does nothing. */
+  .search-panel {
+    transform: translateY(-0.5rem);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear;
+  }
+
+  .search-toggle[aria-expanded='false'] + .search-panel {
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
+  }
+
+  .search-toggle[aria-expanded='true'] + .search-panel {
+    transform: translateY(0);
+  }
+}

@@ -1,0 +1,78 @@
+{
+	"schemaVersion": "0.1.0",
+	"name": "IMDb",
+	"behavior": "create",
+	"noteContentFormat": "",
+	"properties": [
+		{
+			"name": "title",
+			"value": "{{schema:name}}",
+			"type": "text"
+		},
+		{
+			"name": "draft",
+			"value": "true",
+			"type": "checkbox"
+		},
+		{
+			"name": "date",
+			"value": "{{date}}",
+			"type": "text"
+		},
+		{
+			"name": "genre",
+			"value": "{{schema:genre|wikilink}}",
+			"type": "multitext"
+		},
+		{
+			"name": "url",
+			"value": "{{url}}",
+			"type": "text"
+		},
+		{
+			"name": "myUrl",
+			"value": "",
+			"type": "text"
+		},
+		{
+			"name": "director",
+			"value": "{{schema:director[*].name|wikilink}}",
+			"type": "multitext"
+		},
+		{
+			"name": "scoreImdb",
+			"value": "{{schema:aggregateRating.ratingValue}}",
+			"type": "number"
+		},
+		{
+			"name": "scoreMy",
+			"value": "",
+			"type": "number"
+		},
+		{
+			"name": "cast",
+			"value": "{{schema:actor[*].name|slice:0,5|wikilink}}",
+			"type": "multitext"
+		},
+		{
+			"name": "cover",
+			"value": "{{schema:image}}",
+			"type": "text"
+		},
+		{
+			"name": "plot",
+			"value": "{{schema:description}}",
+			"type": "text"
+		},
+		{
+			"name": "year",
+			"value": "{{schema:datePublished|date:\"YYYY\"}}",
+			"type": "number"
+		}
+	],
+	"triggers": [
+		"https://www.imdb.com/title/"
+	],
+	"noteNameFormat": "{{schema:name|safe_name}}",
+	"path": "posts/watching/"
+}

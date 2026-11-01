@@ -1,0 +1,22 @@
+/* NUMERALS: figure classes that combine; each fills one slot, so `lining-nums tabular-nums` keeps both and a class inside .prose keeps its old-style default. ⚠ prose.css repeats the slot list; change both. */
+:is(.lining-nums, .tabular-nums, .fraction, .slashed-zero) {
+  font-variant-numeric: var(--nums-figure,) var(--nums-spacing,) var(--nums-fraction,) var(--nums-zero,);
+}
+
+.lining-nums {
+  --nums-figure: lining-nums;
+}
+
+.tabular-nums {
+  --nums-spacing: tabular-nums;
+}
+
+.fraction {
+  --nums-fraction: diagonal-fractions;
+}
+
+/* ⚠ Source Sans has no slashed old-style zero, so this sets lining figures too, as codes and serials want anyway. */
+.slashed-zero {
+  --nums-figure: lining-nums;
+  --nums-zero: slashed-zero;
+}

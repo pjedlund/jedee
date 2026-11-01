@@ -1,0 +1,20 @@
+---
+layout: base
+title: Jams
+description: The music, and other sounds, I'm listening to right now.
+pagination:
+  data: collections.jam
+  size: 50
+permalink: 'jams/{% if pagination.pageNumber >=1 %}page-{{ pagination.pageNumber + 1 }}/{% endif %}index.html'
+---
+
+{% set archiveDescription %}
+  One song at a time — music I can't stop playing. Newest first.
+{% endset %}
+
+{% set cardPartial = "card-jam.njk" %}
+{% set masonryLayout = "33-33-33" %}
+{% set collectionToPaginate = collections.jam %}
+{% set paginationMetaKey = "blog" %}
+
+{% include "partials/archive-listing.njk" %}

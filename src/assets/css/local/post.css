@@ -1,0 +1,53 @@
+/* ⚠ Loaded by every post-type layout; don't scope with `.post` — that body class exists on articles only. */
+article h1 {
+  font-size: var(--size-step-6);
+}
+
+/* Subtitle under the page title (the <p> in <hgroup>): Source Sans italic, four steps below the h1. ⚠ --flow-space sits on the p itself, or prose's "space after a heading" rule wins. */
+hgroup > p {
+  --flow-space: var(--line-quarter, var(--space-2xs));
+
+  font-family: var(--font-base);
+  font-weight: var(--font-regular);
+  font-style: italic;
+  font-size: var(--size-step-2);
+  line-height: round(nearest, calc(1em * var(--leading-fine)), var(--line-quarter, 1px));
+  color: var(--color-headline);
+  text-wrap: balance;
+}
+
+/* Lede / intro — a slightly larger, gently de-emphasised summary under the title. */
+.intro {
+  color: var(--color-text-accent);
+  max-inline-size: 54ch;
+  text-wrap: balance;
+}
+
+article h2 {
+  font-size: var(--size-step-3);
+}
+
+article h3 {
+  font-size: var(--size-step-2);
+}
+
+/* Featured image always 16/9. Second selector: the featured image is a lightbox now, so the element after the h1 is its div.feature wrapper, not a bare picture/figure. */
+:is(h1, hgroup) + :is(picture, figure) img,
+:is(h1, hgroup) + .feature picture img {
+  max-inline-size: var(--max-img-width, 100%);
+  block-size: auto;
+  aspect-ratio: 16/9;
+  --img-ratio: 9 / 16; /* the prose rhythm pads the image by this, not the file's own ratio */
+  object-fit: cover;
+  object-position: center;
+}
+
+.credit {
+  font-size: var(--size-step-min-1);
+  color: var(--color-text-accent);
+  background-color: var(--color-bg);
+  padding: var(--space-xs) var(--space-s);
+  border-radius: var(--border-radius-medium);
+  transform: translateY(-4ch) translateX(-0.5ch);
+  max-inline-size: fit-content;
+}

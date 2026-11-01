@@ -1,0 +1,151 @@
+/* Global variables.  */
+
+/* Basic variable definitions for color schemes */
+:root {
+  --gutter: var(--space-m-l);
+  --transition-duration: 250ms;
+  --transition-timing: ease;
+  /* Quad easing (easings.net), for motion that should start or stop gently rather than linearly. */
+  --ease-out-quad: cubic-bezier(0.5, 1, 0.89, 1);
+  --wrapper-width: 97rem;
+  --tracking: -0.04ch;
+  --tracking-s: -0.075ch;
+  /* Capitals and small caps: 0.16ch is ~8% of the size (1ch = 0.497em), inside Bringhurst's 5–10% (2.1.6). */
+  --tracking-wide: 0.16ch;
+  /* The site's one border width. button.css and code.css already referenced --border-thickness, but nothing defined it, so they fell back to `medium` — 3px. Sourced from borderWidth.json, shared with Penpot's border.thin. */
+  --border-thickness: var(--border-width-thin);
+  --stroke: var(--border-thickness) solid var(--color-bg-accent);
+  /* The link underline weight, everywhere a link is underlined. In ex so it grows with the text, unlike the 1px border. */
+  --underline-thickness: 0.2ex;
+
+  --gradient-conic: conic-gradient(
+    var(--color-accent-orange) 0 28%,
+    var(--color-accent-blue) 0 67%,
+    var(--color-accent-green) 0 100%
+  );
+  --gradient-slate: linear-gradient(
+    90deg,
+    var(--color-base-darkest),
+    var(--color-base-dark),
+    var(--color-base-light),
+    var(--color-base-lightest)
+  );
+  --gradient-stripes: linear-gradient(
+    45deg,
+    var(--color-gray-900) 0 75%,
+    var(--color-accent-orange) 0 85%,
+    var(--color-accent-blue) 0 92%,
+    var(--color-accent-green) 0 100%
+  );
+
+  --color-light: var(--color-gray-100);
+  --color-dark: var(--color-gray-900);
+  --color-mid: var(--color-gray-400);
+
+  /* One value for every page and both themes: the pale grey it used to take in light (1.67:1) and the deep brown in dark (2.01:1) both failed the 3:1 a graphic needs to be legible. */
+  --color-logo-icon: var(--color-accent-orange);
+
+  --color-border-height: 1rem;
+}
+
+/* Light theme */
+:root,
+:root[data-theme='light'] {
+  --color-text: var(--color-base-darkest);
+  --color-headline: var(--color-base-darkest);
+  --color-bg: var(--color-base-lightest);
+
+  --color-accent-orange: var(--color-orange-500);
+  /* orange-500 is 3.5:1 on the light bg; text that carries meaning needs 4.5:1. */
+  --color-accent-orange-text: var(--color-orange-600);
+  --color-accent-blue: var(--color-blue);
+  --color-accent-green: var(--color-green);
+
+  --color-text-accent: var(--color-gray-700);
+  --color-text-subdued: var(--color-base-subdued);
+  /* The dimmest text still at 4.5:1 on --color-bg (4.58). ⚠ Tuned for --color-bg only; on another surface re-check contrast. */
+  --color-text-dim: color-mix(in srgb, var(--color-gray-500) 60%, var(--color-gray-400));
+  /* A dim link lighting up on hover: orange in light, white with a faint glow in dark. */
+  --color-text-lit: var(--color-accent-orange-text);
+  /* Header text and icons at rest, brightening to --color-text-strong on hover. 82% is the lowest that keeps 4.5:1 in light (4.6:1); dark is 68% (5.2:1). */
+  --color-text-header-dim: color-mix(in oklab, var(--color-base-darkest) 82%, var(--color-base-lightest));
+  --color-text-strong: var(--color-base-darkest);
+  /* Two shadow tiers, deeper in dark: on-page for images and maps lying on the page, raised for panels floating above it (mega-menu, search). */
+  --shadow-on-page: var(--box-shadow-thumb);
+  --shadow-raised: var(--box-shadow-panel);
+  --text-glow-lit: none;
+  --color-bg-accent: var(--color-base-white);
+  --color-bg-accent-2: var(--color-gray-300);
+  /* Hairline rules. Warmer than the gray ramp, to sit on the warm page rather than cut across it. */
+  --color-rule: var(--color-base-rule);
+  --color-bg-head: color-mix(in srgb, var(--color-base-dark) 35%, var(--color-bg)); /* in srgb, not oklab: this stands in for a 40% alpha wash, and CSS composites alpha in srgb */
+  /* border top for body */
+  --color-border-top: var(--color-base-light);
+
+  --color-code-bg: color-mix(in oklab, var(--color-bg) 97%, var(--color-base-black));
+  --code-border-color: color-mix(in oklab, var(--color-bg) 96%, var(--color-base-black));
+
+}
+
+/* Dark theme */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-text: var(--color-gray-250);
+    --color-headline: var(--color-gray-200);
+    --color-bg: var(--color-gray-900);
+
+    --color-accent-orange: var(--color-orange-500);
+    --color-accent-orange-text: var(--color-orange-500);
+    --color-accent-blue: var(--color-blue-subdued);
+    --color-accent-green: var(--color-green-subdued);
+
+    --color-text-accent: var(--color-gray-200);
+    --color-text-subdued: var(--color-gray-300);
+    --color-text-dim: var(--color-gray-400);
+    --color-text-lit: var(--color-base-white);
+    --color-text-header-dim: color-mix(in oklab, var(--color-gray-250) 68%, var(--color-gray-900));
+    --color-text-strong: var(--color-base-lightest);
+    --shadow-on-page: var(--box-shadow-thumb-dark);
+    --shadow-raised: var(--box-shadow-panel-dark);
+    --text-glow-lit: 0 0 0.5em color-mix(in srgb, var(--color-base-white) 35%, transparent);
+    --color-bg-accent: var(--color-gray-700);
+    --color-bg-accent-2: var(--color-gray-600);
+    --color-rule: var(--color-base-rule-dark);
+    --color-bg-head: color-mix(in srgb, var(--color-base-dark) 4%, var(--color-bg));
+    /* border top for body: a band a shade darker than the page (#0d0e10) */
+    --color-border-top: color-mix(in srgb, var(--color-gray-900) 64%, var(--color-base-black));
+
+    --color-code-bg: color-mix(in oklab, var(--color-bg) 80%, var(--color-base-black));
+    --code-border-color: color-mix(in oklab, var(--color-bg) 95%, var(--color-base-white));
+  }
+}
+
+:root[data-theme='dark'] {
+  --color-text: var(--color-gray-250);
+  --color-headline: var(--color-gray-200);
+  --color-bg: var(--color-gray-900);
+
+  --color-accent-orange: var(--color-orange-500);
+  --color-accent-orange-text: var(--color-orange-500);
+  --color-accent-blue: var(--color-blue-subdued);
+  --color-accent-green: var(--color-green-subdued);
+
+  --color-text-accent: var(--color-gray-200);
+  --color-text-subdued: var(--color-gray-300);
+  --color-text-dim: var(--color-gray-400);
+  --color-text-lit: var(--color-base-white);
+  --color-text-header-dim: color-mix(in oklab, var(--color-gray-250) 68%, var(--color-gray-900));
+  --color-text-strong: var(--color-base-lightest);
+  --shadow-on-page: var(--box-shadow-thumb-dark);
+  --shadow-raised: var(--box-shadow-panel-dark);
+  --text-glow-lit: 0 0 0.5em color-mix(in srgb, var(--color-base-white) 35%, transparent);
+  --color-bg-accent: var(--color-gray-700);
+  --color-bg-accent-2: var(--color-gray-600);
+  --color-rule: var(--color-base-rule-dark);
+  --color-bg-head: color-mix(in srgb, var(--color-base-dark) 15%, var(--color-bg));
+  /* border top for body */
+  --color-border-top: color-mix(in srgb, var(--color-gray-900) 64%, var(--color-base-black));
+
+  --color-code-bg: color-mix(in oklab, var(--color-bg) 80%, var(--color-base-black));
+  --code-border-color: color-mix(in oklab, var(--color-bg) 95%, var(--color-base-white));
+}

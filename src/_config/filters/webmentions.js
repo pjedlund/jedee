@@ -1,0 +1,43 @@
+import {author} from '../../_data/meta.js';
+
+// Three small, composable webmention filters. Ported from Lene Saile's pattern — the TEMPLATE (partials/webmentions.njk) does the grouping; these just slice the flat JF2 `children` array. Registered in eleventy.config.js and re-exported from the filters.js barrel. Unit-tested in _local/tests/webmentions.test.js.
+
+/** All mentions whose `wm-target` is this page's absolute URL — or any of a list, so language twins share theirs. One source reacting the same way to both twins counts once. */
+export const webmentionGetForUrl = (webmentions, urls) => {
+  const targets = [urls].flat();
+  const seen = new Set();
+  return webmentions.children.filter(entry => {
+    if (!targets.includes(entry['wm-target'])) return false;
+    const key = entry['wm-source'] && `${entry['wm-source']} ${entry['wm-property']}`;
+    if (key && seen.has(key)) return false;
+    if (key) seen.add(key);
+    return true;
+  });
+};
+
+/** True if the mention is one of the site owner's own / a self-echo, so the template can exclude it. Two cases:
+ * (1) Bridgy backfeeds the silo POST itself: `wm-source` is a brid.gy `/post/` URL (vs `/comment/`, `/like/`, `/repost/`) — never a genuine response, always drop.
+ * (2) the author is one of the site owner's own identities (POSSE copies bouncing back). NB: silo profiles (e.g. Flickr) are excluded, so his own genuine `/comment/` mentions still render. */
+export const webmentionisOwn = webmention => {
+  // (1) Self-syndication echo: the silo post mentioning itself.
+  const source = webmention['wm-source'] || '';
+  if (/^https?:\/\/brid\.gy\/post\//.test(source)) return true;
+
+  // (2) Author is one of the site owner's own identities.
+  const urls = [author.website, ...author.me];
+  const authorUrl = webmention.author ? webmention.author.url : false;
+  return authorUrl && urls.includes(authorUrl);
+};
+
+/** Oldest-first by `published`. NB: sorts in place (matches Lene's original). */
+export const webmentionSort = mentions => {
+  return mentions.sort((a, b) => {
+    if (a['published'] < b['published']) {
+      return -1;
+    }
+    if (a['published'] > b['published']) {
+      return 1;
+    }
+    return 0;
+  });
+};

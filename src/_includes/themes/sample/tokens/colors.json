@@ -1,0 +1,118 @@
+{
+  "$type": "color",
+  "gray": {
+    "100": {
+      "$value": "#f6f9f9"
+    },
+    "200": {
+      "$value": "#e2e5e5"
+    },
+    "250": {
+      "$value": "#c5cccb"
+    },
+    "300": {
+      "$value": "#acaeaf"
+    },
+    "400": {
+      "$value": "#7c8182"
+    },
+    "500": {
+      "$value": "#5f6465"
+    },
+    "600": {
+      "$value": "#43494a"
+    },
+    "700": {
+      "$value": "#363c3c"
+    },
+    "800": {
+      "$value": "#2a2f2f"
+    },
+    "900": {
+      "$value": "#131717"
+    }
+  },
+  "orange": {
+    "100": {
+      "$value": "#e6f3ff"
+    },
+    "200": {
+      "$value": "#cfeeff"
+    },
+    "300": {
+      "$value": "#a0d5ff"
+    },
+    "400": {
+      "$value": "#75b1fb"
+    },
+    "500": {
+      "$value": "#4588d7"
+    },
+    "600": {
+      "$value": "#1e63af"
+    },
+    "700": {
+      "$value": "#004c96"
+    },
+    "800": {
+      "$value": "#003c79"
+    },
+    "900": {
+      "$value": "#001537"
+    }
+  },
+  "red": {
+    "$value": "#7a3b3b",
+    "subdued": {
+      "$value": "#734040"
+    },
+    "vivid": {
+      "$value": "#c8413f"
+    }
+  },
+  "blue": {
+    "$value": "#2a5a8a",
+    "subdued": {
+      "$value": "#355a80"
+    },
+    "vivid": {
+      "$value": "#3a86c8"
+    }
+  },
+  "green": {
+    "$value": "#3f6b4a",
+    "subdued": {
+      "$value": "#47694e"
+    },
+    "vivid": {
+      "$value": "#2f9455"
+    }
+  },
+  "base-darkest": {
+    "$value": "#1f5f5b"
+  },
+  "base-dark": {
+    "$value": "#a9c0bd"
+  },
+  "base-light": {
+    "$value": "#d5e2e0"
+  },
+  "base-lightest": {
+    "$value": "#f6f8f7"
+  },
+  "base-rule": {
+    "$value": "#d3dcda"
+  },
+  "base-rule-dark": {
+    "$value": "#1f2624"
+  },
+  "base-subdued": {
+    "$value": "#3a716d"
+  },
+  "base-white": {
+    "$value": "#ffffff"
+  },
+  "base-black": {
+    "$value": "#000000"
+  }
+}

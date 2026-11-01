@@ -1,0 +1,26 @@
+@layer blocks {
+.site-footer {
+  --cluster-horizontal-alignment: center;
+    font-weight: var(--font-bold);
+    font-size: var(--size-step-min-2);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+}
+
+/* increase tab size */
+.site-footer a:not(.creator a) {
+  padding: var(--space-xs);
+}
+.site-footer .creator a:hover {
+  color: transparent;
+  background-image: var(--gradient-slate);
+  background-size: 100%;
+  background-repeat: repeat;
+  background-clip: text;
+}
+
+.site-footer .creator a:hover svg {
+  color: var(--color-accent-orange);
+}
+
+}

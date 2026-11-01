@@ -1,0 +1,68 @@
+---
+layout: base
+schema: BlogPosting
+---
+
+<div class="region" style="--region-space-top: var(--space-xl-2xl)">
+  <article class="wrapper flow prose h-entry">
+    {% include 'partials/entry-header.njk' %}
+
+    {# Cover renders as a plain <img> (the Image transform self-hosts remote URLs and resolves local paths); never the {% image %} shortcode, which is local-only and errors on a remote URL. Alt text comes from `coverAlt` when the post writes one. `default` substitutes only on UNDEFINED, so `coverAlt: ""` is honoured as empty — the right answer for a cover that just repeats the title beside it. #}
+    {% if cover %}
+      {# `coverZoom` is computed in jams.11tydata.js and is null when the artwork is missing, unreachable, or no bigger than the displayed cover — so a jam only gets the lightbox when there is genuinely more to see. The .cover-zoom wrapper caps the component's display:block <a>, which would otherwise make the whole column width clickable. #}
+      {% if coverZoom %}
+        <div class="cover-zoom">
+          <photo-lightbox @href="{{ coverZoom.url }}" @width="{{ coverZoom.width }}" @height="{{ coverZoom.height }}">
+            {# ⚠ The slot="image" must sit on a wrapper, not on the <img> itself: WebC drops a slotted node carrying eleventy:-namespaced attributes, and the cover silently renders as an empty link. #}
+            <div slot="image">
+              <img class="cover" eleventy:optional="placeholder" src="{{ cover | safe }}" alt="{{ coverAlt | default(words.coverFor | replace('{title}', title)) }}" loading="lazy" eleventy:widths="160,224,448" sizes="auto">
+            </div>
+          </photo-lightbox>
+        </div>
+      {% else %}
+        <img class="cover" eleventy:optional="placeholder" src="{{ cover | safe }}" alt="{{ coverAlt | default(words.coverFor | replace('{title}', title)) }}" loading="lazy" eleventy:widths="160,224,448" sizes="auto">
+      {% endif %}
+    {% endif %}
+
+    {# Optional embedded performance (e.g. an archived This Is My Jam YouTube link). Reuses the shipped custom-youtube WebC component, which renders here because the WebC plugin runs with useTransform:true (same pattern as video.njk). #}
+    {% if youtubeSlug %}
+      {# One slug or a list of them; a bare {% for %} over a string would walk it character by character, same as `genre` below. #}
+      {% set slugs = [youtubeSlug] if youtubeSlug is string else youtubeSlug %}
+      {% for slug in slugs %}
+        <custom-youtube @slug="{{ slug }}" @poster="{{ slug | youtubePoster }}" @label="{{ slug | youtubeTitle(title) }}"></custom-youtube>
+      {% endfor %}
+    {% endif %}
+
+    {% if source %}<data hidden class="u-listen-of" value="{{ source }}"></data>{% endif %}
+
+    <div class="e-content | wrapper-pass flow">
+      {{ content | safe }}
+    </div>
+
+    {# Genre chips link into /jams/genres/, slugged the same way genreList groups them so a chip can't point at a missing page. #}
+    {% if genre %}
+      {# ⚠ A clipper property typed `text` gives one string, which a bare {% for %} walks character by character. #}
+      {% set genres = [genre] if genre is string else genre %}
+      <ul class="cluster gutter-s" role="list">
+        {% for name in genres | unwikilink %}
+          <li>
+            <a href="/jams/genres/{{ name | slugify }}/" class="button" data-small-button>{{ name }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    {% include 'partials/backlinks.njk' %}
+    {% include 'partials/entry-footer.njk' %}
+    {% include 'partials/hidden-author.njk' %}
+  </article>
+
+  {# This Is My Jam likes + comments (recovered from the Internet Archive) — OUTSIDE the h-entry root, like received webmentions, so the h-cite cards don't nest as children of the entry. Bare include, interlinker-safe. Renders nothing when the jam has no recovered social data. #}
+  {% include 'partials/jam-social.njk' %}
+</div>
+
+{%- css "local" -%}
+  {%- include 'css/post.css' -%}
+  {%- include 'css/cover.css' -%}
+  {%- include 'css/webmentions.css' -%}
+{%- endcss -%}

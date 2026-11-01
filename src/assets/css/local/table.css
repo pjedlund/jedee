@@ -1,0 +1,145 @@
+/* TABLE — data tables and the scroll region around them. Included by base.njk only on pages with a table; markdown.js writes the wrapper (see the wiki page Tables). */
+
+.table-wrapper {
+  /* The look of every table: tweak here. Cells inherit these from the wrapper. */
+  --table-bg: var(--color-bg);
+  --table-head-bg: var(--color-bg-head); /* opaque on purpose: a sticky head cell shows the scrolled rows through a translucent one */
+  --table-stripe: transparent; /* off, after Rutter and Barker; color-mix(in oklab, var(--color-text) 4%, transparent) turns them on */
+  --table-rule-color: var(--color-rule);
+  --table-rule: var(--border-thickness) solid var(--table-rule-color);
+  --table-side: calc(var(--border-thickness) * 2) solid var(--table-rule-color); /* the frame's sides, matching the doubled band rules that close top and bottom; none removes them */
+  --table-radius: var(--border-radius-medium);
+  --table-font-size: 1em; /* body cells at the text size: Rutter warns against shrinking a table to fit */
+  --table-head-size: var(--size-step-min-1); /* type.table.header sets the head a step below the body text, not level with it */
+  --table-head-color: var(--color-text-subdued);
+  --table-head-caps: normal; /* small caps instead: all-small-caps here, and --table-head-tracking carries the extra letter-spacing they want */
+  --table-head-transform: none;
+  --table-head-weight: var(--font-regular); /* small caps replace bold rather than add to it (Butterick) */
+  --table-head-tracking: var(--tracking-wide);
+  --table-cell-padding-block: var(--line-quarter, var(--space-s));
+  --table-cell-padding-inline: var(--space-s);
+  --table-edge-padding: var(--space-m-l); /* the caption's, first column's and last column's inset; kept equal to the prose one on purpose so every table matches (picked 2026-09-29) — a prose table takes the popout one below instead */
+  --table-popout-edge-padding: var(--space-m-l); /* ⚠ keep this on the 2rem popout track: its 31px maximum is what lands a prose table's text on the prose's own edge */
+  --table-cell-align: baseline;
+  --table-caption-size: var(--size-step-min-1);
+  --table-shadow: color-mix(in oklab, var(--color-text) 20%, transparent);
+  --table-fixed-min-inline-size: 40rem;
+  --table-row-hover: color-mix(in oklab, var(--color-text) 8%, transparent); /* linked rows only; it lies over the text, so keep it faint */
+  --table-row-hover-in: 0s; /* lights up on the frame the pointer arrives */
+  --table-row-hover-out: 1s; /* and decays behind it */
+  --table-row-hover-ease: var(--ease-out-quad);
+
+  overflow-x: auto;
+  /* ⚠ Prose breaks words anywhere below sm, which would shrink columns to single letters instead of letting the table scroll. */
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: manual;
+  border-radius: var(--table-radius);
+
+  /* Scroll cues (Lea Verou, via Adrian Roselli): page-colored covers scroll with the content and hide the edge shadows once an edge is reached. */
+  background:
+    linear-gradient(to right, var(--table-bg) 30%, transparent),
+    linear-gradient(to left, var(--table-bg) 30%, transparent) 100% 0,
+    radial-gradient(farthest-side at 0 50%, var(--table-shadow), transparent),
+    radial-gradient(farthest-side at 100% 50%, var(--table-shadow), transparent) 100% 0;
+  background-color: var(--table-bg);
+  background-repeat: no-repeat;
+  background-size: 4em 100%, 4em 100%, 1.4em 100%, 1.4em 100%;
+  background-attachment: local, local, scroll, scroll;
+}
+
+/* The markdown renderer wraps every table in a prose body in .popout, where the inset has that job to do; a standalone table (activities, styleguide) is in no popout track and is free to take any inset. */
+/* A full line after a table, a step up from prose's three-quarter gap, so the next paragraph doesn't read as its caption. */
+.prose .table-wrapper + * {
+  --flow-space: var(--line);
+}
+
+.table-wrapper.popout {
+  --table-edge-padding: var(--table-popout-edge-padding);
+}
+
+table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  border-inline: var(--table-side); /* on the table, not the wrapper, so the caption stays outside the frame */
+  font-size: var(--table-font-size);
+}
+
+caption,
+th,
+td {
+  padding: var(--table-cell-padding-block) var(--table-cell-padding-inline);
+  text-align: start;
+  vertical-align: var(--table-cell-align);
+}
+
+/* Fixed at every width: at full popout width the text lines up with the prose, and a narrower box keeps the same inset. ⚠ Tables outside a prose body (activities, styleguide) are not in popout, so there the inset lines up with nothing. */
+.table-wrapper :is(caption, tr > :first-child) {
+  padding-inline-start: var(--table-edge-padding);
+}
+
+/* The same inset on the closing edge, so an end-aligned last column sits as far from the table's edge as the first column does — and a sort chevron drawn outside its head's box has room. */
+.table-wrapper tr > :last-child {
+  padding-inline-end: var(--table-edge-padding);
+}
+
+caption {
+  padding-block: var(--line-quarter, var(--space-xs));
+  font-size: var(--table-caption-size);
+}
+
+thead th {
+  vertical-align: bottom;
+  font-size: var(--table-head-size);
+  font-variant-caps: var(--table-head-caps);
+  font-weight: var(--table-head-weight);
+  letter-spacing: var(--table-head-tracking);
+  text-transform: var(--table-head-transform);
+  color: var(--table-head-color);
+  background: var(--table-head-bg);
+}
+
+/* The band rules are painted inside the cells like the row rules, so they add no height to the prose rhythm. */
+:is(thead, tfoot) > tr > * {
+  box-shadow:
+    inset 0 calc(var(--border-thickness) * 2) 0 var(--table-rule-color),
+    inset 0 calc(var(--border-thickness) * -2) 0 var(--table-rule-color);
+}
+
+/* With no box around the table, the last body row closes it; a tfoot carries its own rule. */
+tbody:last-child > tr:last-child > * {
+  box-shadow: inset 0 calc(var(--border-thickness) * -2) 0 var(--table-rule-color);
+}
+
+/* Row rules match the band rules: doubled, in --table-rule-color. Painted, not bordered, so they add no height and stay clear of the last row's closing box-shadow. */
+tbody tr + tr > * {
+  --table-rule-layer: linear-gradient(
+    to bottom,
+    var(--table-rule-color) 0 calc(var(--border-thickness) * 2),
+    transparent calc(var(--border-thickness) * 2)
+  );
+}
+
+tbody tr:nth-child(even) > * {
+  --table-stripe-layer: linear-gradient(var(--table-stripe) 0 0);
+}
+
+/* On the cells, not the row: a translucent image lets the scroll shadows through and still tints the opaque sticky row header. Rule over stripe, both optional. */
+tbody tr > * {
+  background-image: var(--table-rule-layer, none), var(--table-stripe-layer, none);
+  background-repeat: no-repeat;
+}
+
+tfoot {
+  font-weight: var(--font-bold);
+}
+
+/* Row headers stay put while the rest scrolls; ⚠ a sticky cell needs its own background or the scrolled cells show through it. */
+table:has(tbody th) :is(th, td):first-child {
+  position: sticky;
+  inset-inline-start: 0;
+}
+
+:is(tbody, tfoot) th {
+  background-color: var(--table-bg);
+}

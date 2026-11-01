@@ -1,0 +1,14 @@
+---
+# pagination only gates the file: an empty type gets no feed
+pagination:
+  data: collections.rsvp
+  size: 100000
+permalink: /rsvps/feed.xml
+eleventyExcludeFromCollections: true
+excludeFromSitemap: true
+---
+{%- set feedCollection = collections.rsvp -%}
+{%- set feedTitle = words.feedRsvps -%}
+{%- set feedDescription = words.feedRsvpsDescription -%}
+{%- set feedSelfUrl = "/rsvps/feed.xml" -%}
+{%- include "feeds/link-atom-body.njk" -%}

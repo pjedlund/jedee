@@ -1,0 +1,14 @@
+---
+# pagination only gates the file: an empty type gets no feed
+pagination:
+  data: collections.recipe
+  size: 100000
+permalink: /recipes/feed.xml
+eleventyExcludeFromCollections: true
+excludeFromSitemap: true
+---
+{%- set feedCollection = collections.recipe -%}
+{%- set feedTitle = words.feedRecipes -%}
+{%- set feedDescription = words.feedRecipesDescription -%}
+{%- set feedSelfUrl = "/recipes/feed.xml" -%}
+{%- include "feeds/atom-body.njk" -%}

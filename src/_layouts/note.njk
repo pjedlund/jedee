@@ -1,0 +1,26 @@
+---
+layout: base
+schema: BlogPosting
+---
+
+<div class="region" style="--region-space-top: var(--space-xl-2xl)">
+  <article class="wrapper flow prose h-entry">
+    {% include 'partials/entry-header.njk' %}
+
+    <div class="e-content | wrapper-pass flow">
+      {{ content | safe }}
+    </div>
+
+    {% include 'partials/backlinks.njk' %}
+    {% include 'partials/entry-footer.njk' %}
+    {% include 'partials/hidden-author.njk' %}
+  </article>
+
+  {# Received webmentions — OUTSIDE the h-entry root (Lene/Max pattern). Bare include, interlinker-safe. webmentionUrl = the entry's u-url = each mention's wm-target. #}
+  {% set webmentionUrl = page.url | url | absoluteUrl(meta.url) %}
+  {% include "partials/webmentions.njk" %}
+</div>
+
+{%- css "local" -%}
+  {%- include 'css/post.css' -%}
+{%- endcss -%}

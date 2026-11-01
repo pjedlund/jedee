@@ -1,0 +1,21 @@
+/*
+SITE HEADER
+The full-width header band. The <header> spans the viewport while its contents stay aligned to the centered content column via the .wrapper grid it carries (header.njk) — edge-to-edge without abandoning the editorial column.
+*/
+@layer blocks {
+.site-header {
+  /* One size for every glyph in the header row — logomark, magnifier, sun/moon; the MENU caret keeps its own smaller size. */
+  --site-header-icon-size: calc(var(--size-step-min-2) * 1.2);
+}
+
+/* Two lines tall under the quarter-line top bar, so its row centres on line 1¼. No bottom rule: the band ends in space, not a line. */
+@supports (width: round(1px, 1px)) {
+  .site-header {
+    min-block-size: var(--line-2);
+    align-content: center;
+    /* Panels (mega-menu, search) open a quarter line above the header's bottom edge — line 2 of the lattice — measured from the centred row they're positioned in. */
+    --site-header-panel-top: calc(50% + var(--line-2) / 2 - var(--line-quarter));
+  }
+
+}
+}

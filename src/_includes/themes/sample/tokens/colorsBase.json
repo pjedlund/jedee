@@ -1,0 +1,78 @@
+{
+  "title": "Colors",
+  "description": "Hex color codes that can be shared, cross-platform. They can be converted at point of usage, such as HSL for web or CMYK for print. neutral and vibrant colors are converted to color palettes, fixed colors are kept as they are",
+  "palette": [
+    {
+      "name": "base-darkest",
+      "value": "#1f5f5b"
+    },
+    {
+      "name": "base-dark",
+      "value": "#a9c0bd"
+    },
+    {
+      "name": "base-light",
+      "value": "#d5e2e0"
+    },
+    {
+      "name": "base-lightest",
+      "value": "#f6f8f7"
+    },
+    {
+      "name": "base-rule",
+      "value": "#d3dcda"
+    },
+    {
+      "name": "base-rule-dark",
+      "value": "#1f2624"
+    },
+    {
+      "name": "base-subdued",
+      "value": "#3a716d"
+    },
+    {
+      "name": "base-white",
+      "value": "#ffffff"
+    },
+    {
+      "name": "base-black",
+      "value": "#000000"
+    }
+  ],
+  "shades_neutral": [
+    {
+      "name": "Gray",
+      "value": "#45585a"
+    }
+  ],
+  "shades_vibrant": [
+    {
+      "name": "Orange",
+      "value": "#3578c6"
+    }
+  ],
+  "light_dark": [
+    {
+      "name": "Red",
+      "value": "#7a3b3b",
+      "vivid": "#c8413f"
+    },
+    {
+      "name": "Blue",
+      "value": "#2a5a8a",
+      "vivid": "#3a86c8"
+    },
+    {
+      "name": "Green",
+      "value": "#3f6b4a",
+      "vivid": "#2f9455"
+    }
+  ],
+  "standalone": [
+    {
+      "group": "gray",
+      "label": "250",
+      "value": "#c5cccb"
+    }
+  ]
+}

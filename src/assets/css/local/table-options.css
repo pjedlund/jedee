@@ -1,0 +1,80 @@
+/* TABLE OPTIONS — the opt-in data-table-* variants (fixed layout, linked rows, priority columns). Included by base.njk beside table.css, only on pages that use one. */
+
+/* Equal-width columns, opt-in:wiki tables mix one-word and one-sentence columns. The minimum width makes a narrow screen scroll instead of squeezing. */
+.table-wrapper[data-table-layout='fixed'] table {
+  inline-size: max(var(--table-fixed-min-inline-size), 100%);
+  table-layout: fixed;
+}
+
+/* Rows that each open a page (data-table-rows="link"): the row header's link covers the row. ⚠ No sticky column here: a sticky cell becomes the link's containing box and shrinks the click area to that cell. */
+.table-wrapper[data-table-rows='link'] :is(th, td):first-child {
+  position: static;
+}
+
+.table-wrapper[data-table-rows='link'] tbody tr {
+  position: relative;
+}
+
+/* The hover tint rides the link's overlay and fades by opacity, so a theme flip never animates a color. */
+.table-wrapper[data-table-rows='link'] tbody th a::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--table-row-hover);
+  opacity: 0;
+}
+
+.table-wrapper[data-table-rows='link'] tbody :is(tr:hover a, a:focus-visible)::after {
+  opacity: 1;
+}
+
+/* Asymmetric on purpose: a rule's transition is the one that plays on the way INTO that state, so the resting rule times the fade-out and the hover rule the fade-in. */
+@media (prefers-reduced-motion: no-preference) {
+  .table-wrapper[data-table-rows='link'] tbody th a::after {
+    transition: opacity var(--table-row-hover-out) var(--table-row-hover-ease);
+  }
+
+  .table-wrapper[data-table-rows='link'] tbody :is(tr:hover a, a:focus-visible)::after {
+    transition-duration: var(--table-row-hover-in);
+  }
+}
+
+/* Long names (Swedish compounds) break at syllables rather than setting the row header's minimum width. ⚠ No opaque background here: the rows are positioned, and Firefox paints a positioned row's cell backgrounds over the table's collapsed rules. */
+.table-wrapper[data-table-rows='link'] tbody th {
+  background-color: transparent;
+  hyphens: auto;
+}
+
+/* Columns a narrowing table drops, highest priority number first (data-table-priority on the head and its cells). Only for linked rows, whose pages show everything. ⚠ Each threshold sits just above the min-content width of the table WITHOUT that column, measured on the activities table; re-measure if its columns change. */
+.table-wrapper:has([data-table-priority]) {
+  container-type: inline-size;
+}
+
+@container (inline-size < 55rem) {
+  [data-table-priority='5'] {
+    display: none;
+  }
+}
+
+@container (inline-size < 50rem) {
+  [data-table-priority='4'] {
+    display: none;
+  }
+
+  /* :last-child is still the hidden Heart rate, so the closing inset moves by hand to Time, the last column left that ends on its digits. */
+  tr > [data-table-priority='2'] {
+    padding-inline-end: var(--table-edge-padding);
+  }
+}
+
+@container (inline-size < 42rem) {
+  [data-table-priority='3'] {
+    display: none;
+  }
+}
+
+@container (inline-size < 35rem) {
+  [data-table-priority='2'] {
+    display: none;
+  }
+}

@@ -1,0 +1,75 @@
+/*
+SEARCH FIELD
+The input row inside the search panel; included by search.njk beside search.css.
+*/
+
+.search-field {
+  --gutter: var(--space-2xs);
+  --cluster-wrap: nowrap;
+
+  /* The whole panel keys off the mega-menu's step, not the header's inherited --size-step-0. */
+  font-size: var(--size-step-min-1);
+}
+
+.search-field > svg {
+  flex: none;
+  inline-size: 0.95em;
+  block-size: 0.95em;
+  color: color-mix(in oklab, var(--color-text) 60%, var(--search-surface));
+}
+
+.search-input {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  padding: var(--space-2xs);
+  background: transparent;
+  border: none;
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.search-input:focus {
+  outline: none;
+}
+
+/* WebKit's own cancel button is drawn at a fixed pixel size, so it stops matching the row the moment the page is zoomed — .search-clear is the one that scales. */
+.search-input::-webkit-search-cancel-button {
+  display: none;
+}
+
+/* The UA default measured 4.37:1 in light and 3.42:1 in dark. Placeholder text is text — same 80/72 pair as .search-more. */
+.search-input::placeholder {
+  color: color-mix(in oklab, var(--color-text) 80%, var(--search-surface));
+  opacity: 1;
+}
+
+:root[data-theme='dark'] .search-input::placeholder {
+  color: color-mix(in oklab, var(--color-text) 72%, var(--search-surface));
+}
+
+/* ⚠ `display` on the class outranks the UA's [hidden] rule, so the empty-field state needs saying explicitly — without it a dead X sits in the field from the moment the panel opens. */
+.search-clear[hidden] {
+  display: none;
+}
+
+.search-clear {
+  flex: none;
+  display: inline-flex;
+  font-size: inherit;
+  padding: var(--space-3xs);
+  background: transparent;
+  border: none;
+  border-radius: var(--border-radius-medium);
+  color: color-mix(in oklab, var(--color-text) 60%, var(--search-surface));
+  cursor: pointer;
+}
+
+.search-clear svg {
+  inline-size: 0.95em;
+  block-size: 0.95em;
+}
+
+.search-clear:hover {
+  color: var(--color-text);
+}

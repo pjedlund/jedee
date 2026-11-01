@@ -1,0 +1,21 @@
+---
+layout: base
+title: Reposts
+description: 'Things worth amplifying.'
+pagination:
+  data: collections.repost
+  size: 10
+permalink: 'reposts/{% if pagination.pageNumber >=1 %}page-{{ pagination.pageNumber + 1 }}/{% endif %}index.html'
+---
+
+{% set archiveDescription %}
+  This page has a pagination of <strong>{{ pagination.size }}</strong> reposts per page.<br>
+  The pagination is only shown if there are more reposts ({{ collections.repost.length }}) than items per page ({{ pagination.size }}).
+{% endset %}
+
+{% set cardPartial = "card-response.njk" %}
+{% set masonryLayout = "50-50" %}
+{% set collectionToPaginate = collections.repost %}
+{% set paginationMetaKey = "blog" %}
+
+{% include "partials/archive-listing.njk" %}

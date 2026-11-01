@@ -1,0 +1,6 @@
+{
+  "layout": "bookmark",
+  "tags": "posts",
+  "category": "bookmark",
+  "permalink": "/bookmarks/{{ page.fileSlug | slugify }}/index.html"
+}

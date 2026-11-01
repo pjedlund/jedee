@@ -1,0 +1,21 @@
+---
+layout: base
+title: Articles
+description: 'All articles can be found here'
+pagination:
+  data: collections.article
+  size: 8
+permalink: 'articles/{% if pagination.pageNumber >=1 %}page-{{ pagination.pageNumber + 1 }}/{% endif %}index.html'
+---
+
+{% set archiveDescription %}
+  This page has a pagination of <strong>{{ pagination.size }}</strong> posts per page.<br>
+  The pagination is only shown if there are more articles ({{ collections.article.length }}) than items per page ({{ pagination.size }}).
+{% endset %}
+
+{% set cardPartial = "card-blog.njk" %}
+{% set masonryLayout = "thirds" %}
+{% set collectionToPaginate = collections.article %}
+{% set paginationMetaKey = "blog" %}
+
+{% include "partials/archive-listing.njk" %}

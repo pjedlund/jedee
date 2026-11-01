@@ -1,0 +1,67 @@
+# Node modules
+node_modules
+
+# generated files
+dist
+_site
+src/_includes/css
+src/_includes/scripts
+
+# cache
+.cache
+
+# secret data
+.env
+
+# Editor configs
+.nova
+.vscode
+.DS_Store
+
+# All local-only project material, under one umbrella (anchored so it can never match a folder inside src/)
+/_local/
+
+# Local Netlify folder
+.netlify
+
+# Obsidian
+.obsidian
+.vault-nickname
+# Vault tooling stays local, but the Web Clipper templates are tracked: they're the source of truth
+src/_obsidian/*
+!src/_obsidian/clipper/
+
+/src/posts/articles/-drafts
+# Raw import source texts, not site content
+/src/_raw/
+
+
+# Images the Obsidian local-images plugin pulls down from a raw clip; add one with `git add -f` if a post needs it
+/src/assets/images/*_MD5.*
+
+# Uncompressed audio masters run to hundreds of MB, so a stray `git add -A` must not pull one in
+*.wav
+*.WAV
+*.aif
+*.aiff
+*.flac
+*.FLAC
+
+.claude
+.omc
+.github
+
+# Project notes, local only; AGENTS.md is tracked on purpose, so keep anything personal out of it
+CLAUDE.md
+SITE.md
+IDEAS.md
+LOG.md
+TODO.md
+ROADMAP.md
+# AI tool config, local only
+.mcp.json
+.superpowers
+
+
+# Netlify dev regenerates this lockfile on every run; the production build never uses Deno
+deno.lock

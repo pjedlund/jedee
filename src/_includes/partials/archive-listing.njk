@@ -1,0 +1,39 @@
+{# Shared archive page template. Called from per-type wrappers in src/pages/. The wrapper sets the following variables before including this partial:
+     - archiveTitle      (string)   page heading
+     - archiveDescription(string)   intro paragraph copy
+     - cardPartial       (string)   filename in partials/, e.g. "card-blog.njk"
+     - masonryLayout     (string)   "thirds" | "50-50"
+     - collectionToPaginate (array) the source collection, used for the count + pagination gate
+     - paginationMetaKey (string)   meta.js pagination key, e.g. "blog"
+     - archiveBody       (html, optional) rendered INSTEAD of the card grid — for an archive that lists its own way (see activities.njk). A direct .wrapper child, so breakout classes (.feature etc.) work on its root. A page that sets this needs no `pagination:` frontmatter.
+   `pagination.size`/`.items`/`.pageNumber` come from the wrapper's `pagination:` frontmatter, resolved per page. #}
+
+<div class="wrapper">
+  <header class="full | section" style="--spot-color: var(--color-accent-blue)">
+    <div class="section__inner flow region" style="--region-space-top: var(--space-xl-2xl)">
+      <h1 class="text-center" style="color: var(--color-light);">{{ archiveTitle or title }}</h1>
+    </div>
+
+    {% svg "divider/edgy", null, "divider" %}
+  </header>
+
+  <div class="region flow prose" style="--region-space-top: var(--space-xl-2xl)">
+    {% if archiveDescription %}<p>{{ archiveDescription | safe }}</p>{% endif %}
+  </div>
+
+  {% if archiveBody %}
+    {{ archiveBody | safe }}
+  {% else %}
+    <custom-masonry layout="{{ masonryLayout }}">
+      {% asyncEach item in pagination.items %}
+        {% include "partials/" + cardPartial %}
+      {% endeach %}
+    </custom-masonry>
+  {% endif %}
+
+  {% set metaKey = paginationMetaKey or "blog" %}
+  {% if collectionToPaginate.length > pagination.size %}
+    {% include 'partials/pagination.njk' %}
+  {% endif %}
+</div>
+{%- css "local" -%}{%- include 'css/seperator.css' -%}{%- endcss -%}

@@ -1,0 +1,75 @@
+{# Shared chrome header for post-type layouts (post, note, reading, jam, watching, ...). The per-type layout wraps this inside <div class="region"><div class="wrapper flow prose">, so this partial only renders the title/image/meta block. Tags moved to entry-footer.njk. #}
+
+{# The page heading is always shown: it's the document outline / SEO / microformats `p-name`. With the breadcrumb on it sits just below the trail (the standard breadcrumb + heading pattern); with the breadcrumb off it's the page's only title. #}
+{# titleLang comes from front matter, or is detected for Swedish activity titles — see eleventyComputed.js. Otherwise it is undefined, so the h1 stays at the page's language. #}
+{# A subtitle rides in <hgroup> as a <p>, the WHATWG pattern; it isn't part of p-name. #}
+{% if title and subtitle %}
+  <hgroup class="flow">
+    <h1 class="p-name"{% if titleLang %} lang="{{ titleLang }}"{% endif %}>{{ title }}</h1>
+    <p>{{ subtitle }}</p>
+  </hgroup>
+{% elif title %}
+  <h1 class="p-name"{% if titleLang %} lang="{{ titleLang }}"{% endif %}>{{ title }}</h1>
+{% endif %}
+
+{# A language twin (front-matter `translation:`, see twin.js) gets a link right under the heading, labelled in the twin's own language. #}
+{%- set twin = collections.all | twinOf(page.url, translation) %}
+{%- if twin %}
+  {%- set twinLang = twin.data.lang or meta.lang %}
+  <p><a class="button" data-small-button href="{{ twin.url }}" hreflang="{{ twinLang }}" lang="{{ twinLang }}" rel="alternate">{{ words.readInSwedish if twinLang == 'sv' else words.readInEnglish }}</a></p>
+{%- endif %}
+
+{# The featured image is always a lightbox. credit renders as the figcaption, outside the clickable area ("credit" was never a shortcode option — the old pass-through silently dropped it). sizes matches the .feature breakout width, same as the photo layout's hero. #}
+{% if image %}
+  {%
+    imageKeys {
+      "src": image,
+      "alt": alt or "",
+      "caption": credit,
+      "loading": "eager",
+      "containerClass": "feature",
+      "sizes": "(min-width: 82rem) 78rem, 100vw",
+      "lightbox": true
+    }
+  %}
+{% endif %}
+
+<p class="meta | cluster gutter-s-m">
+  {%- if draft -%}
+    <span class="button" data-small-button data-button-variant="tertiary">{{ words.draft }}</span>
+  {%- endif %}
+  {# The post type, linked to its archive — icon and name come from navigation.postTypes, matched on the folder's category. #}
+  {%- for pt in navigation.postTypes %}{% if pt.collection == category %}
+    <a class="meta-item" href="{{ pt.url }}">{% svg 'posts/' + pt.icon, '', 'meta-icon' %}{{ pt.text }}</a>
+  {%- endif %}{% endfor %}
+  {# Activity pages only: the activity type with its own glyph, to the left of the date. activityType is set only on activity posts, so this block never renders on other types. Small local icon+label map — the site's four types ("Gym" is the weight-training label). #}
+  {%- if activityType %}
+    {%- set activityMeta = {
+      "orienteering": {"icon": "compass", "label": words.activityOrienteering},
+      "weight training": {"icon": "dumbbell", "label": words.activityGym},
+      "run": {"icon": "footprints", "label": words.activityRun},
+      "hike": {"icon": "mountain", "label": words.activityHike}
+    } -%}
+    {%- set at = activityMeta[activityType] -%}
+    {%- if at %}
+      <span class="meta-item" data-activity="{{ activityType | slugify }}">{% svg 'posts/' + at.icon, '', 'meta-icon' %}{{ at.label }}</span>
+    {%- endif %}
+  {%- endif %}
+  {# The date, with a calendar glyph, on every post type. Kept here (not in date.njk) so it rides only the post meta line — date.njk is shared by every archive card too. #}
+  {% if date %}
+    <span class="meta-item">{% svg 'posts/calendar', '', 'meta-icon' %}{% set definedDate = date %}{% set dateFormat = words.dateLong %}{% include "partials/date.njk" %}</span>
+  {% endif %}
+  {% if scoreMy %}
+    {% set rating = scoreMy %}{% include "partials/rating.njk" %}
+  {% endif %}
+  {# Same as wiki.njk: the last commit to the file, linked on GitHub. Left off types that are logged rather than revised. #}
+  {%- set unrevisedTypes = ['activity', 'bookmark', 'like', 'repost', 'reply', 'rsvp'] %}
+  {%- set revision = page.inputPath | gitRevision if not (category in unrevisedTypes) %}
+  {%- if revision and meta.viewRepo.allow and (revision.date | formatDate('YYYY-MM-DD')) != (date | formatDate('YYYY-MM-DD')) %}
+    <span class="meta-item"><a data-meta-tight href="{{ settings.repos.site }}/commit/{{ revision.hash }}">{% svg 'platform/github', '', 'meta-icon' %}{{ words.revised }} <time class="dt-updated" datetime="{{ revision.date | toIsoString }}">{{ revision.date | formatDate(words.dateLong) }}</time></a></span>
+  {%- endif %}
+</p>
+
+{% css "local" %}
+  {% include "css/meta.css" %}
+{% endcss %}

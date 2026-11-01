@@ -1,0 +1,17 @@
+---
+# pagination only gates the file: an empty type gets no feed
+pagination:
+  data: collections.video
+  size: 100000
+permalink: /videos/feed.xml
+eleventyExcludeFromCollections: true
+excludeFromSitemap: true
+---
+{# The regular Atom feed — see audio.xml.njk for why it, and not the RSS 2.0
+   vodcast feed, holds the canonical section URL. The vodcast feed is at
+   /videos/podcast.xml. #}
+{%- set feedCollection = collections.video -%}
+{%- set feedTitle = words.feedVideos -%}
+{%- set feedDescription = words.feedVideosDescription -%}
+{%- set feedSelfUrl = "/videos/feed.xml" -%}
+{%- include "feeds/atom-body.njk" -%}

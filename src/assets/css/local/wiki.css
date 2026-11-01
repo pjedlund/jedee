@@ -1,0 +1,117 @@
+/*
+WIKI EYEBROW
+The "part of the AI wiki" banner at the top of every wiki page. Reads like a code block — popout width, same corner radius — but a touch darker in both themes, so it's clearly a note *about* the page rather than page content. Derived from the code tokens so it tracks any future change to them.
+*/
+.wiki-eyebrow {
+  --wiki-eyebrow-bg: color-mix(in oklab, var(--color-code-bg) 90%, var(--color-base-black));
+  --wiki-eyebrow-border: color-mix(in oklab, var(--code-border-color) 80%, var(--color-base-black));
+
+  font-size: var(--size-step-min-1);
+  padding: var(--space-s) var(--space-m);
+  background-color: var(--wiki-eyebrow-bg);
+  border: 1px solid var(--wiki-eyebrow-border);
+  border-radius: var(--border-radius-medium);
+}
+
+/*
+WIKI LOG ENTRIES
+_log.md is a run of dated records whose h2 is the whole record — "[2026-08-29] ingest | The PhotoSwipe lightbox" — not a chapter title. At the global h2 size each one wraps to two lines and the page reads as forty chapters. Scoped by data-wiki-log (set in wiki.njk) so ordinary wiki headings keep the display size.
+*/
+.prose[data-wiki-log] h2 {
+  --flow-space: var(--line-1h);
+
+  font-size: var(--size-step-1);
+  line-height: round(nearest, calc(1em * var(--leading-standard)), var(--line-quarter));
+  padding-block-start: var(--line-half);
+  /* ⚠ Not var(--stroke): that resolves to --color-bg-accent, a surface token that is white in the light theme and vanishes as a line on the page. --color-bg-accent-2 is what the site's own <hr> uses. An inset shadow, not a border, so the rule adds no height to the rhythm. */
+  box-shadow: inset 0 var(--border-thickness) 0 var(--color-bg-accent-2);
+}
+
+/*
+WIKI CAPTIONS
+Italic and a step smaller than the prose, starting on the prose's edge and held to the paragraphs' measure, so its right edge lines up with theirs. A breakout figure hands its caption the content column through subgrid.
+*/
+/* ⚠ Registered as a length so 54ch resolves at the body size on .prose and inherits as px; an unregistered 54ch would re-resolve at the caption's smaller size. */
+@property --wiki-prose-measure {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+
+.prose {
+  --wiki-prose-measure: 54ch;
+}
+
+.prose figcaption {
+  max-inline-size: var(--wiki-prose-measure);
+  text-wrap: pretty;
+}
+
+/*
+DARK FIGURES
+A shot with a dark twin ships both images (the wiki-dark-figures preprocessor); these rules show the one matching the theme, keyed like variables.css so the theme toggle wins over the system setting. The hidden one is lazy and never downloads.
+*/
+[data-wiki-dark] {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) [data-wiki-light] {
+    display: none;
+  }
+
+  :root:not([data-theme='light']) [data-wiki-dark] {
+    display: revert;
+  }
+}
+
+:root[data-theme='dark'] [data-wiki-light] {
+  display: none;
+}
+
+:root[data-theme='dark'] [data-wiki-dark] {
+  display: revert;
+}
+
+/*
+MOCKUP SHOTS
+Shot on transparency (shoot-mockups.js strips the specimen's paper) and set here on a borderless panel the color of a code block. A popout shot sits in the text column, so its left edge meets the prose on every screen, and the panel reaches a fixed inset past it; a feature shot is padded inside its own width. Needs the breakout subgrid from global-styles.css.
+*/
+figure[data-wiki-mockup] {
+  --wiki-mockup-bg: var(--color-code-bg);
+  --wiki-mockup-radius: var(--border-radius-medium);
+  --wiki-mockup-pad: var(--line);
+  /* 2rem is the popout gutter at full width; ⚠ capped at the page gap so a phone never scrolls sideways. */
+  --wiki-mockup-inset: min(2rem, var(--gap));
+}
+
+figure[data-wiki-mockup]::before {
+  content: '';
+  grid-column: content;
+  grid-row: 1;
+  margin-inline: calc(-1 * var(--wiki-mockup-inset));
+  background: var(--wiki-mockup-bg);
+  border-radius: var(--wiki-mockup-radius);
+}
+
+figure[data-wiki-mockup] > :not(figcaption) {
+  grid-column: content;
+  grid-row: 1;
+  padding-block: var(--wiki-mockup-pad);
+}
+
+figure.feature[data-wiki-mockup]::before {
+  grid-column: 1 / -1;
+  margin-inline: 0;
+}
+
+figure.feature[data-wiki-mockup] > :not(figcaption) {
+  grid-column: 1 / -1;
+  padding-inline: var(--wiki-mockup-inset);
+}
+
+[data-wiki-mockup] img {
+  border: none;
+  border-radius: 0;
+  outline: none;
+}

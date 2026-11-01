@@ -1,0 +1,67 @@
+// Shoots every [data-shot] element in this folder's mockups to src/assets/images/wiki/<data-shot>.png. Run: npm run mockups (or `npm run mockups -- place-map` for the mockups whose filename contains that)
+import { fileURLToPath } from 'node:url';
+import { readdirSync, readFileSync } from 'node:fs';
+import path from 'node:path';
+import puppeteer from 'puppeteer';
+import { serveMockups, launchArgs } from './serve-mockups.js';
+
+const here = path.dirname(fileURLToPath(import.meta.url));
+const outputDir = path.resolve(here, '../../assets/images/wiki');
+const only = process.argv[2] || '';
+const mockups = readdirSync(here).filter(f => f.endsWith('.html') && f.includes(only)).sort();
+
+const { base, server } = await serveMockups(here);
+
+// puppeteer arrives transitively under pa11y-ci and hunts for its own pinned build — point it at an installed Chrome, same as meta.tests.pa11y.chromePath does.
+const chromePath = process.env.PA11Y_CHROME || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+
+const browser = await puppeteer.launch({ executablePath: chromePath, headless: 'new', args: launchArgs });
+const page = await browser.newPage();
+// ⚠ deviceScaleFactor 2 is load-bearing: a wiki page declares each shot at its full pixel size and lets CSS scale it down, so a 1x shot renders soft.
+await page.setViewport({ width: 1400, height: 1400, deviceScaleFactor: 2 });
+
+const sizes = [];
+
+// A mockup opts into a second, dark shot of each [data-shot] with data-dark-shot on <html>; it is saved as <data-shot>-dark.png. data-light-only on a shot opts that one back out.
+const passes = mockups.flatMap(file => {
+  const dark = readFileSync(path.join(here, file), 'utf8').includes('data-dark-shot');
+  return dark ? [{ file, theme: 'light' }, { file, theme: 'dark' }] : [{ file, theme: 'light' }];
+});
+
+for (const { file, theme } of passes) {
+  await page.emulateMediaFeatures([{ name: 'prefers-color-scheme', value: theme }]);
+  await page.goto(`${base}/${file}${theme === 'dark' ? '?theme=dark' : ''}`, { waitUntil: 'networkidle0' });
+  // A mockup that freezes an animation sets window.__mockupReady = false up front and true once it has settled; one that does not is ready as soon as it loads.
+  await page.waitForFunction(() => window.__mockupReady !== false, { timeout: 30000 });
+
+  // The mockup's own ground and drop shadows are dropped so each shot sits on the wiki page itself, in either theme.
+  await page.evaluate(() => {
+    document.body.style.background = 'transparent';
+    document.querySelectorAll('[data-shot]').forEach(el => (el.style.boxShadow = 'none'));
+    // A specimen's paper, border and padding go too: wiki.css draws the panel around the figure, so it tracks the code-block color and the text edge.
+    document.querySelectorAll('.specimen[data-shot]').forEach(el => Object.assign(el.style, { background: 'transparent', border: '0', padding: '0', borderRadius: '0' }));
+  });
+
+  // A [data-shot] with data-light-only is left out of the dark pass: its subject is the light theme itself.
+  const selector = theme === 'dark' ? '[data-shot]:not([data-light-only])' : '[data-shot]';
+  const shots = await page.$$eval(selector, els =>
+    els.map(el => {
+      const { x, y, width, height } = el.getBoundingClientRect();
+      return { name: el.dataset.shot, clip: { x, y, width, height } };
+    })
+  );
+  if (theme === 'dark') shots.forEach(s => (s.name += '-dark'));
+
+  for (const { name, clip } of shots) {
+    // omitBackground keeps rounded corners transparent; clipping to the element itself is what removes the box around it.
+    const buf = await page.screenshot({ path: `${outputDir}/${name}.png`, clip, omitBackground: true });
+    // Read the size out of the PNG's own IHDR rather than doubling the clip — rounding the clip is off by one often enough to ship a soft image.
+    sizes.push(`${name}.png  ${buf.readUInt32BE(16)}×${buf.readUInt32BE(20)}`);
+  }
+}
+
+await browser.close();
+server.close();
+console.log(`Wrote ${sizes.length} shots to ${outputDir}:`);
+sizes.forEach(s => console.log(`  ${s}`));
+console.log('⚠ Those are the intrinsic sizes — they must be the width/height on each <img>, or eleventy-img ships a soft image.');

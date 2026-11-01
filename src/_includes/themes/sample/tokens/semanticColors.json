@@ -1,0 +1,38 @@
+{
+  "$type": "color",
+  "$description": "Semantic color tokens that swap between light and dark themes. Names mirror the --color-* CSS variables in src/assets/css/global/base/variables.css. Values reference palette tokens from colors.json via {curly.brackets} so any palette change cascades automatically. `accent-orange` is deliberately the same value in both themes — variables.css sets it from orange-500 in light and dark alike, unlike accent-blue and accent-green, whose theme pair already reaches the design tools as the light_dark colors from colors.json. Pushed to Penpot's theme/light and theme/dark sets by build-penpot-tokens.js. `bg-head`, `text-header-dim` and dark `border-top` are flat hex rather than references: variables.css builds them with color-mix, which has no token equivalent, so these mirror the resolved values and have to be re-resolved by hand if a mix changes.",
+  "themes": {
+    "light": {
+      "bg":          "{color.base.lightest}",
+      "bg-accent":   "#ffffff",
+      "bg-accent-2": "{color.gray.300}",
+      "rule":        "{color.base.rule}",
+      "bg-head": "#dee2e2",
+      "text":        "{color.base.darkest}",
+      "text-subdued": "{color.base.subdued}",
+      "text-accent": "{color.gray.700}",
+      "text-header-dim": "#5e7274",
+      "text-strong": "{color.base.darkest}",
+      "headline":    "{color.base.darkest}",
+      "logo-icon":   "{color.orange.500}",
+      "accent-orange": "{color.orange.500}",
+      "border-top":  "{color.base.light}"
+    },
+    "dark": {
+      "bg":          "{color.gray.900}",
+      "bg-accent":   "{color.gray.700}",
+      "bg-accent-2": "{color.gray.600}",
+      "rule":        "{color.base.rule-dark}",
+      "bg-head": "#2a3131",
+      "text":        "{color.gray.250}",
+      "text-subdued": "{color.gray.300}",
+      "text-accent": "{color.gray.200}",
+      "text-header-dim": "#878b8b",
+      "text-strong": "{color.base.lightest}",
+      "headline":    "{color.gray.200}",
+      "logo-icon":   "{color.orange.500}",
+      "accent-orange": "{color.orange.500}",
+      "border-top":  "#0c0f0f"
+    }
+  }
+}

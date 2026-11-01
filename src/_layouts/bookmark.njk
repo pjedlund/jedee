@@ -1,0 +1,24 @@
+---
+layout: base
+schema: BlogPosting
+---
+
+<div class="region" style="--region-space-top: var(--space-xl-2xl)">
+  <article class="wrapper flow prose h-entry">
+    {% include 'partials/entry-header.njk' %}
+
+    <p>{{ words.bookmarked }} <a class="u-bookmark-of" href="{{ bookmarkOf }}">{{ bookmarkOf }}</a></p>
+
+    <div class="e-content | wrapper-pass flow">
+      {{ content | safe }}
+    </div>
+
+    {% include 'partials/backlinks.njk' %}
+    {% include 'partials/entry-footer.njk' %}
+    {% include 'partials/hidden-author.njk' %}
+  </article>
+</div>
+
+{%- css "local" -%}
+  {%- include 'css/post.css' -%}
+{%- endcss -%}

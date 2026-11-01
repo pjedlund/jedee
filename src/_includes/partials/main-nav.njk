@@ -1,0 +1,41 @@
+{# The main nav: one disclosure listing every post type, on Manuel Matuzović's progressive-enhancement pattern; without JS it is a plain visible list. See the wiki "The main menu". #}
+{# ⚠ {% svg %} must stay synchronous: an async shortcode through header.njk's {% if %}-wrapped include renders to nothing. #}
+{# ⚠ Nav scripts target #mainnav explicitly: the breadcrumb is a second <nav> before this one. #}
+
+<nav id="mainnav" class="mainnav" aria-label="{{ meta.navigation.ariaTop }}">
+  <ul id="megamenu" class="megamenu | cluster" role="list" data-no-flash>
+    {% for item in navigation.postTypes %}
+      {% if collections[item.collection].length %}
+        {% set iconName = "posts/" + item.icon %}
+        <li>
+          <a
+            href="{{ item.url }}"
+            {{ helpers.getLinkActiveState(item.url, page.url) | safe }}
+          >
+            {% svg iconName %}
+            <span class="megamenu-label">{{ item.text }}</span>
+            <span class="megamenu-dots" aria-hidden="true"></span>
+            <span class="megamenu-count">{{ collections[item.collection].length }}</span>
+          </a>
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+</nav>
+
+{# The disclosure button only exists when JS can clone it — so the no-JS fallback is "panel already visible". Inserted before the list so Tab order is button → first link. Based on Manuel Matuzović / the Web Accessibility Cookbook. #}
+<template id="menu-template">
+  <button data-menu-toggle class="menu-toggle" type="button" aria-expanded="false" aria-controls="megamenu">
+    <span>{{ meta.navigation.navLabel }}</span>
+    {% svg "misc/chev-down" %}
+  </button>
+</template>
+
+{% css "local" %}
+  {% include "css/nav-menu-cls.css" %}
+  {% include "css/main-nav.css" %}
+{% endcss %}
+
+{% js "defer" %}
+  {% include "scripts/nav-menu.js" %}
+{% endjs %}

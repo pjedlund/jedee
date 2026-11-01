@@ -1,0 +1,79 @@
+/*
+SHORTCUTS
+The keyboard-shortcuts dialog (partials/shortcuts.njk): keys on the left, what they do on the right.
+*/
+.shortcuts {
+  --shortcuts-bg: var(--color-bg);
+  --shortcuts-padding: var(--space-l);
+  --shortcuts-width: 34rem;
+  --flow-space: var(--space-m);
+
+  inset: 0;
+  margin: auto;
+  inline-size: min(var(--shortcuts-width), 100% - var(--space-m) * 2);
+  padding: var(--shortcuts-padding);
+  background: var(--shortcuts-bg);
+  color: var(--color-text);
+  border: var(--stroke);
+  border-radius: var(--border-radius-medium);
+}
+
+.shortcuts h2 {
+  font-size: var(--size-step-2);
+}
+
+/* The heading takes the opening focus (autofocus) so a screen reader reads the title first; it can't be pressed, so no focus ring. */
+.shortcuts h2:focus-visible {
+  outline: none;
+}
+
+.shortcuts::backdrop {
+  background-image: var(--gradient-stripes);
+  opacity: 0.9;
+  filter: brightness(50%);
+}
+
+.shortcuts-list {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: var(--space-xs) var(--space-m);
+  align-items: baseline;
+}
+
+.shortcuts-list dd {
+  margin: 0;
+}
+
+/* Roomier caps than in prose, where they must not stretch the line; kbd.css draws the rest. */
+.shortcuts kbd:not(:has(kbd)) {
+  display: inline-block;
+  min-inline-size: 2em;
+  padding: 0.1em 0.45em;
+  text-align: center;
+}
+
+@layer blocks {
+.site-footer .footer-shortcuts:not(.creator a) {
+  padding: var(--space-xs);
+}
+
+/* A button that opens the shortcuts dialog, dressed as its neighbouring links. */
+.site-footer .footer-shortcuts {
+  cursor: pointer;
+  border-radius: var(--border-radius-medium);
+  text-decoration: underline var(--underline-thickness) var(--color-accent-orange);
+  text-underline-offset: 0.3ch;
+  transition: color 0.2s ease-out;
+}
+
+.site-footer .footer-shortcuts:hover {
+  color: var(--color-accent-orange);
+}
+
+/* Touch-only devices have no keyboard to use the shortcuts with. */
+@media (hover: none) and (pointer: coarse) {
+  .site-footer .footer-shortcuts {
+    display: none;
+  }
+}
+}

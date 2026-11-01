@@ -1,0 +1,20 @@
+---
+layout: base
+title: Reading
+description: 'All books can be found here'
+pagination:
+  data: collections.reading
+  size: 10
+permalink: 'reading/{% if pagination.pageNumber >=1 %}page-{{ pagination.pageNumber + 1 }}/{% endif %}index.html'
+---
+
+{% set archiveDescription %}
+  Books I've read, with notes along the way. Newest first.
+{% endset %}
+
+{% set cardPartial = "card-reading.njk" %}
+{% set masonryLayout = "33-33-33" %}
+{% set collectionToPaginate = collections.reading %}
+{% set paginationMetaKey = "blog" %}
+
+{% include "partials/archive-listing.njk" %}

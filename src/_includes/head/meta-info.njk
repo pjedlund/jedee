@@ -1,0 +1,132 @@
+{% set metaDescription %}
+  {%- if discover.description -%}
+    {{- discover.description -}}
+  {%- elif description -%}
+    {{- description -}}
+  {%- elif autoDescription -%}
+    {{- autoDescription -}}
+  {%- else -%}
+    {{- meta.siteDescription -}}
+  {%- endif -%}
+{% endset %}
+
+<meta name="description" content="{{ metaDescription }}" />
+<meta name="theme-color" content="{{ meta.themeDark }}" media="(prefers-color-scheme: dark)" />
+<meta name="theme-color" content="{{ meta.themeLight }}" media="(prefers-color-scheme: light)" />
+<!-- Search Engines -->
+{# Site-wide noindex during the soft-launch (meta.noindexSite); per-post noindex for `visibility: unlisted` posts (computed in _config/plugins/drafts.js). At 1.0.0, flip meta.noindexSite to false — unlisted posts keep their noindex. #}
+{% if meta.noindexSite or noindex %}
+  <meta name="robots" content="noindex,nofollow" />
+  <meta name="googlebot" content="noindex,nofollow" />
+{% endif %}
+<!-- Made with Eleventy! -->
+<meta name="generator" content="{{ eleventy.generator }}" />
+<!-- Disable automatic detection and formatting of possible phone numbers -->
+<meta name="format-detection" content="telephone=no" />
+<!-- supports both dark and light color schemes, page author prefers light as default. -->
+<meta name="color-scheme" content="light dark" />
+<!-- Helps prevent duplicate content issues -->
+<link rel="canonical" href="{{ meta.url }}{{ page.url }}" />
+<!-- Links to information about the author(s) of the document -->
+<link type="text/plain" rel="author" href="/humans.txt" />
+
+{% if meta.switches.relMe and meta.author.me and meta.author.me.length %}
+  <!-- rel=me profiles -->
+  {% for url in meta.author.me %}
+    <link rel="me" href="{{ url }}" />
+  {% endfor %}
+{% endif %}
+
+{% if meta.switches.relMe and meta.author.fediverse %}
+  <!-- fediverse creator tag -->
+  <meta name="fediverse:creator" content="{{ meta.author.fediverse }}" />
+{% endif %}
+
+{% if meta.switches.webmentions %}
+  <!-- Webmention endpoint -->
+  <link rel="webmention" href="https://webmention.io/{{ meta.siteDomain }}/webmention" />
+{% endif %}
+
+{% if meta.switches.micropub %}
+  <!-- Micropub endpoint + IndieAuth discovery (see meta.indieweb in _data/meta.js) -->
+  <link rel="micropub" href="{{ meta.indieweb.micropub }}" />
+  <link rel="authorization_endpoint" href="{{ meta.indieweb.authorizationEndpoint }}" />
+  <link rel="token_endpoint" href="{{ meta.indieweb.tokenEndpoint }}" />
+{% endif %}
+
+<!-- Open Graph meta  -->
+<meta property="og:url" content="{{ meta.url }}{{ page.url }}" />
+<meta property="og:type" content="website" />
+<meta
+  property="og:title"
+  content="{%- if discover.title -%}
+    {{- discover.title -}}
+  {%- elif title -%}
+    {{- title -}}
+  {%- else -%}
+    {{- meta.siteName -}}
+  {%- endif -%}"
+/>
+{# Four sources, most specific first. `ogCard` is an artwork post's composited card (npm run og:cards); `ogImage` is the post's own artwork self-hosted at build time (src/_config/utils/og-image.js), set by the photo, jam, video and recipe data files and null everywhere else; then Eleventy Excellent's generated title card for articles and notes (collections.titleCards); then the site default. #}
+<meta
+  property="og:image"
+  content="{%- if ogCard -%}
+    {{- meta.url -}}{{- ogCard -}}
+  {%- elif ogImage -%}
+    {{- meta.url -}}{{- ogImage.url -}}
+  {%- elif layout == 'post' or layout == 'note' -%}
+    {{- meta.url -}}/assets/og-images/{{ title | slugify }}-preview.jpeg
+  {%- else -%}
+    {{- meta.url -}}{{- meta.opengraph_default -}}
+  {%- endif -%}"
+/>
+{% set ogImageAlt %}
+  {%- if ogCard -%}
+    {{- words.cardAlt | replace('{title}', title) -}}
+  {%- elif ogImage -%}
+    {{- photo.alt | default(ogAlt | default(coverAlt | default(words.coverFor | replace('{title}', title)))) -}}
+  {%- elif layout == 'post' or layout == 'note' -%}
+    {{- title -}}
+  {%- else -%}
+    {{- meta.opengraph_default_alt -}}
+  {%- endif -%}
+{% endset %}
+<meta property="og:image:alt" content="{{ ogImageAlt }}" />
+{# ⚠ These must match the file actually served: a platform that reads no twitter:card has only the declared ratio to tell it whether to draw a wide card or a small square one. #}
+<meta property="og:image:width" content="{{ ogImage.width if (ogImage and not ogCard) else 1200 }}" />
+<meta property="og:image:height" content="{{ ogImage.height if (ogImage and not ogCard) else 630 }}" />
+<meta property="og:description" content="{{ metaDescription }}" />
+<meta property="og:site_name" content="{{ meta.siteName }}" />
+<meta property="og:locale" content="{{ 'sv_SE' if lang == 'sv' else meta.locale }}" />
+<meta property="article:author" content="{{ meta.author.name }}" />
+
+{# Eleventy Excellent removed the Twitter tags in v2 and X reads the og: ones for title, description and image — but NOT for the card's shape or its alt text, which is why these two came back. #}
+{# ⚠ `twitter:card` picks the layout: without it X draws the small square summary card, which is the whole thing the 1200x630 cards exist to avoid. #}
+{# X crops a large card to 2:1, so `summary` is the kinder answer only for a square or portrait image, where that crop would cut the subject away. 1.2 puts a 4:3 photograph on the large card and an album cover on the small one. #}
+<meta name="twitter:card" content="{{ 'summary' if (ogImage and not ogCard and ogImage.width < (ogImage.height * 1.2)) else 'summary_large_image' }}" />
+<meta name="twitter:image:alt" content="{{ ogImageAlt }}" />
+
+{# Language twins (see twin.js) name each other, and themselves, for search engines. #}
+{%- set twin = collections.all | twinOf(page.url, translation) %}
+{%- if twin %}
+  <link rel="alternate" hreflang="{{ lang or meta.lang }}" href="{{ page.url | url | absoluteUrl(meta.url) }}" />
+  <link rel="alternate" hreflang="{{ twin.data.lang or meta.lang }}" href="{{ twin.url | url | absoluteUrl(meta.url) }}" />
+{%- endif %}
+
+{% if meta.switches.feeds %}
+  <!-- RSS Autodiscovery. Loops over meta.blog.feedLinks -->
+  {% for feedLink in meta.blog.feedLinks %}
+    <link
+      rel="alternate"
+      type="{{ feedLink.type }}"
+      title="{{ feedLink.title }}: {{ meta.siteName }}"
+      href="{{ feedLink.url }}"
+    />
+  {% endfor %}
+{% endif %}
+
+<!-- Favicon: https://evilmartians.com/chronicles/how-to-favicon-in-2021-six-files-that-fit-most-needs -- now called How to Favicon in 2025: Three files that fit most needs -->
+<link rel="icon" href="{{ '/favicon.ico' | url }}" sizes="any" />
+<link rel="icon" href="{{ '/favicon.svg' | url }}" type="image/svg+xml" />
+<link rel="apple-touch-icon" sizes="180x180" href="{{ '/apple-touch-icon.png' | url }}" />
+<link rel="manifest" href="{{ '/site.webmanifest' | url }}" />

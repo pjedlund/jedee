@@ -1,0 +1,265 @@
+/*
+	Global styles
+
+	Low-specificity, global styles that apply to the whole
+	project: https://cube.fyi/css.html
+*/
+
+html {
+  color-scheme: light dark;
+}
+
+/* Cross-document view transitions: a crossfade between same-origin pages instead of a white flash. ⚠ The only @view-transition opt-in, and it must stay gated: the reset's reduced-motion clamp doesn't reach ::view-transition-* pseudos. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-base);
+  font-size: var(--size-step-0);
+  font-weight: var(--font-regular);
+  line-height: var(--leading-standard);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  accent-color: var(--color-accent-orange);
+  /* Wherever hyphens: auto is on, leave two letters behind and take three forward (Bringhurst 2.4.1). */
+  hyphenate-limit-chars: auto 2 3;
+  /* A quarter line; the first region pads the page back onto the lattice below the header (region.css). The token is the fallback where the lattice is off. */
+  border-block-start: var(--line-quarter, var(--color-border-height)) solid var(--color-border-top);
+}
+
+/* THE LINE: the unit of the vertical rhythm, here and not with the prose because the page chrome (top bar, site header) sits on the same lattice. Wiki: Vertical rhythm. */
+/* ⚠ Registered as a length so the line resolves once, at the body's size, and inherits as px; unregistered, each element would resolve its own (wiki: Typographic conventions). ⚠ The initial value must be absolute, or the registration is dropped whole, silently. */
+@property --line {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+
+/* ⚠ Without round() (Baseline 2024) the registered --line falls to 0px and every prose line collapses, so older browsers get prose without the rhythm. */
+@supports (width: round(1px, 1px)) {
+  /* ⚠ The line is a whole pixel, or a lattice of 1/64px-rounded fractions drifts ~0.05px a block. Fluid from 1.4 at the type scale's 320px end to 1.5 at its 1350px end; ⚠ the middle term is tuned to --size-step-0's ends and needs redoing if they change. Set on body so the page chrome (top bar, site header) sits on the same lattice as the prose, counted from the top of the page. */
+  body {
+    --line: round(clamp(1.4em, 1.3635rem + 1.4951vw, 1.5em), 1px);
+    --line-quarter: calc(var(--line) / 4);
+    --line-half: calc(var(--line) / 2);
+    --line-3q: calc(var(--line) * 0.75);
+    --line-1h: calc(var(--line) * 1.5);
+    --line-2: calc(var(--line) * 2);
+  }
+}
+
+main {
+  flex: auto;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: var(--font-bold);
+  line-height: var(--leading-fine);
+  letter-spacing: var(--tracking);
+  color: var(--color-headline);
+}
+
+h1 {
+  font-size: var(--size-step-6);
+  line-height: var(--leading-extrafine);
+}
+
+h2 {
+  font-size: var(--size-step-4);
+}
+
+h3 {
+  font-size: var(--size-step-2);
+}
+
+blockquote {
+  padding: var(--space-m-l);
+  border-inline-start: 0.5rem solid var(--color-accent-orange);
+  font-size: var(--size-step-2);
+}
+
+/* Quotes are short blocks of big text: even out their lines (Chrome stops balancing above six). */
+blockquote,
+blockquote p {
+  text-wrap: balance;
+}
+
+blockquote > * + * {
+  margin-block-start: var(--space-m-l);
+}
+
+/* The source line. ⚠ `>` keeps it off the line's own last child, which unset the italic of a closing *Title*. */
+blockquote > :last-child {
+  font-family: var(--font-base);
+  font-style: normal;
+  font-size: var(--size-step-0);
+}
+
+input,
+textarea {
+  caret-color: var(--color-accent-orange);
+}
+
+svg {
+  block-size: 0.6lh;
+  inline-size: auto;
+  flex: none;
+}
+
+b,
+strong {
+  font-weight: var(--font-bold);
+}
+
+/* Dots drawn as a background, since a dotted underline can't set its gap. ⚠ The row is placed from the bottom of the text box, not the baseline, so --abbr-lift places it, not an underline offset. */
+abbr[title] {
+  --abbr-dot: var(--underline-thickness); /* the link underline's thickness */
+  --abbr-gap: 0.25em; /* calibration knob: dot to dot; 10 under WCAG in body text */
+  --abbr-dot-color: color-mix(in oklab, currentColor 50%, transparent); /* dimmed: a hint, not a link */
+  --abbr-lift: 0.075em; /* calibration knob: centres the dots on a link underline */
+
+  cursor: help;
+  text-decoration: none;
+  background: radial-gradient(circle closest-side, var(--abbr-dot-color) calc(100% - 0.5px), transparent) 0 calc(100% - var(--abbr-lift)) / var(--abbr-gap) var(--abbr-dot) repeat-x;
+}
+
+hr {
+  border: none;
+  height: 1px;
+  width: 10%;
+  margin-block: var(--flow-space, var(--space-m-l));
+  margin-inline-start: 0;
+  background-color: var(--color-bg-accent-2);
+}
+
+/* An image figure is as wide as its image, and the caption wraps inside that width instead of widening it. ⚠ Breakouts and non-image figures (a video embed has no width of its own) keep the full column. */
+figure:has(> picture, > img, > a > picture):not(.popout, .feature, .full, :is(.popout, .feature, .full) *) {
+  inline-size: fit-content;
+}
+
+figure:has(> picture, > img, > a > picture) > figcaption {
+  contain: inline-size;
+}
+
+/* A breakout figure keeps its caption in the text column: the figure, and a lightbox's wrappers around it, pass the page grid's columns through. */
+@supports (grid-template-columns: subgrid) {
+  :is(.wrapper, .wrapper-pass) > figure:is(.popout, .feature, .full),
+  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full):has(> is-land > photo-lightbox > figure),
+  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full) > is-land:has(> photo-lightbox > figure),
+  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full) > is-land > photo-lightbox:has(> figure),
+  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full) > is-land > photo-lightbox > figure {
+    display: grid;
+    grid-template-columns: subgrid;
+  }
+
+  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full) > is-land,
+  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full) > is-land > photo-lightbox,
+  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full) > is-land > photo-lightbox > figure,
+  :is(.wrapper, .wrapper-pass) > figure:is(.popout, .feature, .full) > :not(figcaption),
+  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full) > is-land > photo-lightbox > figure > :not(figcaption) {
+    grid-column: 1 / -1;
+  }
+
+  :is(.wrapper, .wrapper-pass) > figure:is(.popout, .feature, .full) > figcaption,
+  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full) > is-land > photo-lightbox > figure > figcaption {
+    grid-column: content;
+  }
+}
+
+/* Icon gap and line weight shared with custom-youtube-link and custom-peertube-link, so image and video captions read as one family. */
+figcaption {
+  --caption-icon-size: 1cap;
+  --caption-icon-gap: var(--space-xs);
+  --caption-icon-color: var(--color-text-subdued);
+  --caption-icon-opacity: 0.6;
+  --caption-icon-stroke: 0.2ex;
+
+  margin-block-start: var(--space-s);
+  font-size: var(--size-step-min-1);
+  text-align: start;
+  padding-block-end: var(--space-xs);
+  /* text-emphasis: dot closed; */
+  text-wrap: pretty;
+}
+
+/* Lucide's info icon drawn in CSS, so its lines are ex-relative like the link underline: a ring, a stem and a dot. Cap-height, floated at the start of the first line so a second line runs under it. ⚠ A float never makes a line taller, an inline icon can. */
+figcaption::before {
+  content: '';
+  float: inline-start;
+  box-sizing: border-box;
+  inline-size: var(--caption-icon-size);
+  block-size: var(--caption-icon-size);
+  margin-block-start: calc((1lh - var(--caption-icon-size)) / 2);
+  margin-inline-end: var(--caption-icon-gap);
+  border: var(--caption-icon-stroke) solid var(--caption-icon-color);
+  border-radius: 50%;
+  opacity: var(--caption-icon-opacity);
+  background:
+    radial-gradient(circle closest-side, var(--caption-icon-color) 85%, transparent) 50% 22% / var(--caption-icon-stroke) var(--caption-icon-stroke) no-repeat,
+    linear-gradient(var(--caption-icon-color) 0 0) 50% 78% / var(--caption-icon-stroke) 32% no-repeat;
+}
+
+/* figcaption:after {
+  border-block: var(--stroke);
+  content: '';
+  display: block;
+  margin-block: var(--space-xs);
+  /* block-size: 1rem; */
+/* inline-size: 50%;
+  margin-inline: auto;
+  opacity: 0.8;
+} */
+
+a {
+  /* font-weight: 500; */
+  /* Rounds the focus ring to the header controls' corner; outlines follow border-radius. */
+  border-radius: var(--border-radius-medium);
+  text-decoration-thickness: var(--underline-thickness);
+  text-underline-offset: 0.3ch;
+  text-decoration-color: var(--color-accent-orange);
+  transition: color 0.2s ease-out, text-decoration-color 0.2s ease-out;
+}
+
+a:not([class]):hover {
+  color: var(--color-accent-orange);
+}
+
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus-color, currentColor);
+  outline-offset: var(--focus-offset, 0.3ch);
+}
+
+/* reduce focus offset for Firefox
+*/
+@supports (-moz-appearance: none) {
+  :root {
+    --focus-offset: 0.08em;
+  }
+}
+
+::selection {
+  background-color: var(--color-text);
+  color: var(--color-bg);
+}
+
+.preload-transitions * {
+  transition: none !important;
+}
+
+@media (scripting: none) {
+  .require-js {
+    display: none;
+  }
+}

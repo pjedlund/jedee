@@ -1,0 +1,14 @@
+{
+  "$type": "color",
+  "$description": "Penpot-only: Chrome's native <audio> player colors per theme, sampled from the live page on 2026-10-28, for the player drawn on Penpot's Audio post type board. The site never sets these — the browser draws the player — so no CSS reads this file. Pushed into theme/light and theme/dark by build-penpot-tokens.js, names verbatim.",
+  "themes": {
+    "light": {
+      "ui.audio.bg": "#F1F3F4",
+      "ui.audio.fg": "#000000"
+    },
+    "dark": {
+      "ui.audio.bg": "#3A3A3A",
+      "ui.audio.fg": "#FFFFFF"
+    }
+  }
+}

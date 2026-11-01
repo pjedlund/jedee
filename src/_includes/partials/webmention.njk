@@ -1,0 +1,41 @@
+{# One received webmention as an h-cite card. #}
+{# ⚠ No `dt-published` on the date: that property belongs to this site's own posts. ⚠ Never `| safe` on content.text: a remote mention's HTML is untrusted. #}
+
+<article id="webmention-{{ webmention['wm-id'] }}" class="webmention h-cite | flow">
+  <div class="cluster">
+    {% if webmention.author and webmention.author.name %}
+      <a
+        class="author p-author h-card u-url no-indicator"
+        href="{{ webmention.author.url or webmention.url }}"
+        rel="noreferrer"
+      >
+        <img
+          eleventy:ignore
+          class="u-photo"
+          src="{{ webmention.author.photo or (meta.webmentions.fallbackAvatar | url) }}"
+          alt=""
+          width="48"
+          height="48"
+          loading="lazy"
+        />
+        <strong class="p-name">{{ webmention.author.name }}</strong>
+      </a>
+    {% else %}
+      <strong class="author">{{ words.anonymous }}</strong>
+    {% endif %}
+
+    {% if webmention['wm-received'] %}
+      <time datetime="{{ webmention['wm-received'] | toIsoString }}">
+        {{ webmention['wm-received'] | formatDate('D MMM YYYY') }}
+      </time>
+    {% endif %}
+  </div>
+
+  <div class="p-content">
+    {{ webmention.content.text | truncate }}
+  </div>
+
+  {% if webmention.url %}
+    <a class="u-url" href="{{ webmention.url }}" rel="noopener noreferrer">{{ words.source }}</a>
+  {% endif %}
+</article>

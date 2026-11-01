@@ -1,0 +1,6 @@
+{
+  "layout": "audio",
+  "tags": "posts",
+  "category": "audio",
+  "permalink": "/audio/{{ page.fileSlug | slugify }}/index.html"
+}

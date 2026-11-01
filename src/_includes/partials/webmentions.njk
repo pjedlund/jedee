@@ -1,0 +1,77 @@
+{# Received webmentions, rendered at build: text mentions as reply cards, likes/reposts/bookmarks as a facepile, nothing when empty. The layout sets `webmentionUrl` first. See the wiki "Webmentions". #}
+{# ⚠ No shortcodes here or in webmention.njk: avatars are plain <img eleventy:ignore>, hotlinked through webmention.io. #}
+
+{%- if meta.switches.webmentions -%}
+{# A page with a language twin (see twin.js) shows the mentions sent to either version. #}
+{% set twin = collections.all | twinOf(page.url, translation) %}
+{% set allMentions = webmentions | webmentionGetForUrl([webmentionUrl, twin.url | url | absoluteUrl(meta.url)] if twin else webmentionUrl) %}
+
+{% set reactionsPhoto = [] %}
+{% set reactionsNoPhoto = [] %}
+{% set replies = [] %}
+{% for webmention in allMentions %}
+  {% if not (webmention | webmentionisOwn) %}
+    {% if webmention.content and webmention.content.text %}
+      {% set replies = replies.concat([webmention]) %}
+    {% elif webmention.url %}
+      {% if webmention.author.photo %}
+        {% set reactionsPhoto = reactionsPhoto.concat([webmention]) %}
+      {% else %}
+        {% set reactionsNoPhoto = reactionsNoPhoto.concat([webmention]) %}
+      {% endif %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+{% set reactions = reactionsPhoto.concat(reactionsNoPhoto) %}
+
+{% if reactions | length or replies | length %}
+  {%- css "local" -%}{%- include 'css/webmentions.css' -%}{%- endcss -%}
+  <aside class="webmentions | wrapper flow region prose">
+    <h2 id="webmentions">{{ words.webmentions }}</h2>
+    <p class="text-step-min-1">
+      {{ words.webmentionsIntro }}
+      <a href="https://webmention.io" rel="noreferrer">webmention.io</a>.
+    </p>
+
+    {% if reactions | length %}
+      <div class="flow">
+        <h3>
+          {{ reactions | length }} {{ words.reaction if reactions | length == 1 else words.reactions }}
+          <span class="kinds">{{ words.reactionKinds }}</span>
+        </h3>
+        <ul class="avatars | cluster gutter-3xs" role="list">
+          {% for webmention in reactions %}
+            <li>
+              <a class="h-card u-url no-indicator" href="{{ webmention.url }}" rel="noreferrer">
+                <img
+                  eleventy:ignore
+                  class="u-photo"
+                  src="{{ webmention.author.photo or (meta.webmentions.fallbackAvatar | url) }}"
+                  alt=""
+                  width="40"
+                  height="40"
+                  loading="lazy"
+                />
+                <span class="visually-hidden p-name">{{ webmention.author.name or words.aReaction }}</span>
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    {% if replies | length %}
+      <div class="flow">
+        <h3>
+          {{ replies | length }} {% if replies | length == 1 %}{{ words.reply }}{% else %}{{ words.replies }}{% endif %}
+        </h3>
+        <ul class="webmention-list | flow" role="list">
+          {% for webmention in (replies | webmentionSort) %}
+            <li>{% include "partials/webmention.njk" %}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+  </aside>
+{% endif %}
+{%- endif -%}

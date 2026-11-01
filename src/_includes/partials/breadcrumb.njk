@@ -1,0 +1,42 @@
+{# The header breadcrumb. The trail is the global `breadcrumbs` computed data, shared with the BreadcrumbList schema so the two never drift; separators are drawn in CSS so assistive tech never reads them. The leaf's label comes from breadcrumb-leaf.njk. #}
+
+{# ⚠ The `{%-` trims are load-bearing: an untrimmed `<li>` leaves whitespace text nodes either side of the crumb, which drag-selection paints as a stray block past the link. #}
+<nav aria-label="{{ words.breadcrumb }}" class="breadcrumb">
+  <ol class="cluster" role="list">
+    {% for crumb in breadcrumbs %}
+      <li>
+        {%- if crumb.isHome -%}
+          <a
+            href="/"
+            class="breadcrumb-home"
+            data-tooltip="{{ meta.navigation.homeTooltip }}"
+            data-tooltip-align="start"
+            {%- if crumb.current %} aria-current="page"{% endif %}
+          >
+            {% svg "logo" %}
+            <span class="visually-hidden">{{ words.homeLabel | replace('{name}', meta.siteName) }}</span>
+            {# Decorative copy of the name — the real one is the visually-hidden label above, so this is aria-hidden. Switched off with meta.navigation.nameReveal. #}
+            {% if crumb.current and meta.navigation.nameReveal %}
+              <span class="breadcrumb-reveal" aria-hidden="true">{{ meta.siteName }}<span class="breadcrumb-caret"></span></span>
+            {% endif %}
+          </a>
+        {%- elif crumb.current -%}
+          <span class="breadcrumb-current" aria-current="page">{%- include "partials/breadcrumb-leaf.njk" -%}</span>
+        {%- else -%}
+          <a href="{{ crumb.url }}">{{ crumb.label }}</a>
+        {%- endif -%}
+      </li>
+    {% endfor %}
+  </ol>
+</nav>
+
+{% css "local" %}
+  {% include "css/breadcrumb-leaf.css" %}
+  {% include "css/breadcrumb.css" %}
+{% endcss %}
+
+{% if page.url == "/" and meta.navigation.nameReveal %}
+  {% css "local" %}
+    {% include "css/breadcrumb-reveal.css" %}
+  {% endcss %}
+{% endif %}

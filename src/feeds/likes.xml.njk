@@ -1,0 +1,14 @@
+---
+# pagination only gates the file: an empty type gets no feed
+pagination:
+  data: collections.like
+  size: 100000
+permalink: /likes/feed.xml
+eleventyExcludeFromCollections: true
+excludeFromSitemap: true
+---
+{%- set feedCollection = collections.like -%}
+{%- set feedTitle = words.feedLikes -%}
+{%- set feedDescription = words.feedLikesDescription -%}
+{%- set feedSelfUrl = "/likes/feed.xml" -%}
+{%- include "feeds/link-atom-body.njk" -%}

@@ -1,0 +1,20 @@
+---
+layout: base
+title: Photos
+description: Photographs I've published.
+pagination:
+  data: collections.photo
+  size: 10
+permalink: 'photos/{% if pagination.pageNumber >=1 %}page-{{ pagination.pageNumber + 1 }}/{% endif %}index.html'
+---
+
+{% set archiveDescription %}
+  Photographs I've published, newest first.<br>
+{% endset %}
+
+{% set cardPartial = "card-photo.njk" %}
+{% set masonryLayout = "50-50" %}
+{% set collectionToPaginate = collections.photo %}
+{% set paginationMetaKey = "blog" %}
+
+{% include "partials/archive-listing.njk" %}

@@ -1,0 +1,18 @@
+/*
+CARD BADGES
+Small pills in the content slot of the recipe, audio and video cards; included by those card partials beside custom-card.css.
+*/
+
+.card-badges {
+  --gutter: var(--space-xs);
+  margin-block-start: var(--space-xs);
+  font-size: var(--size-step-min-2);
+}
+
+.card-badges [data-badge] {
+  padding-inline: var(--space-xs);
+  padding-block: 0.2em;
+  border-radius: var(--border-radius-medium);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}

@@ -1,0 +1,6 @@
+{
+  "layout": "repost",
+  "tags": "posts",
+  "category": "repost",
+  "permalink": "/reposts/{{ page.fileSlug | slugify }}/index.html"
+}

@@ -1,0 +1,14 @@
+---
+# pagination only gates the file: an empty type gets no feed
+pagination:
+  data: collections.bookmark
+  size: 100000
+permalink: /bookmarks/feed.json
+eleventyExcludeFromCollections: true
+excludeFromSitemap: true
+---
+{%- set feedCollection = collections.bookmark -%}
+{%- set feedTitle = words.feedBookmarks -%}
+{%- set feedDescription = words.feedBookmarksDescription -%}
+{%- set feedSelfUrl = "/bookmarks/feed.json" -%}
+{%- include "feeds/link-json-body.njk" -%}

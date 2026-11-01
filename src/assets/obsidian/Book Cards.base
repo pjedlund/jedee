@@ -1,0 +1,17 @@
+views:
+  - type: table
+    name: Table
+    filters:
+      and:
+        - file.folder == "reading"
+  - type: cards
+    name: View
+    filters:
+      and:
+        - file.folder == "reading"
+    order:
+      - title
+      - author
+    imageFit: contain
+    image: note.coverUrl
+    imageAspectRatio: 1.5

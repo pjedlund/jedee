@@ -1,0 +1,31 @@
+---
+permalink: llms.txt
+eleventyExcludeFromCollections: true
+---
+
+# {{ settings.identity.name }}
+
+> {{ settings.identity.bio }}
+{% set sections = [
+  { collection: collections.article, title: words.llmsArticles },
+  { collection: collections.note, title: words.llmsNotes },
+  { collection: collections.reading, title: words.llmsReading },
+  { collection: collections.watching, title: words.llmsWatching },
+  { collection: collections.jam, title: words.llmsMusic },
+  { collection: collections.photo, title: words.llmsPhotos },
+  { collection: collections.recipe, title: words.llmsRecipes },
+  { collection: collections.bookmark, title: words.llmsBookmarks },
+  { collection: collections.reply, title: words.llmsReplies },
+  { collection: collections.event, title: words.llmsEvents },
+  { collection: collections.audio, title: words.llmsAudio },
+  { collection: collections.video, title: words.llmsVideo }
+] %}
+{%- for section in sections %}
+{%- if section.collection.length %}
+## {{ section.title }}
+
+{% for page in section.collection -%}
+- [{{ page.data.title | safe }}]({{ meta.url }}{{ page.url }}){% if page.data.llms %}: {{ page.data.llms | safe }}{% endif %}
+{% endfor -%}
+{%- endif %}
+{%- endfor %}

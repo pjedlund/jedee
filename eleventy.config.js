@@ -1,0 +1,304 @@
+/**
+ * Most adjustments must be made in `./src/_config/*`
+ *
+ * Hint VS Code for eleventyConfig autocompletion.
+ * © Henry Desroches - https://gist.github.com/xdesro/69583b25d281d055cd12b144381123bf
+ * @param {import("@11ty/eleventy/src/UserConfig")} eleventyConfig -
+ * @returns {Object} -
+ */
+
+// register dotenv for process.env.* variables to pickup
+import dotenv from 'dotenv';
+dotenv.config();
+
+// add yaml support (js-yaml 5 is ESM-only and dropped its default export)
+import {load as yamlLoad} from 'js-yaml';
+import fs from 'node:fs';
+
+// The wiki dial (src/_data/settings.yaml). Read here too because ignores must be set at config time, before the data cascade runs.
+const settings = yamlLoad(fs.readFileSync('./src/_data/settings.yaml', 'utf8'));
+
+//  config import
+import { POST_TYPES, POST_TYPE_DIRS, enabledPostTypes, byCategory, showInSitemap, tagList, genreList, featured, resolvePicks } from './src/_config/collections.js';
+import events from './src/_config/events.js';
+import filters from './src/_config/filters.js';
+import plugins from './src/_config/plugins.js';
+import {resolveOrPlainText} from './src/_config/plugins/interlinker-resolver.js';
+import ignoreWikilinksInCode from './src/_config/plugins/interlinker-ignore-code.js';
+import shortcodes from './src/_config/shortcodes.js';
+import {themeDir} from './src/_config/utils/theme.js';
+import {loadWords} from './src/_config/utils/site.js';
+import {resolveSwitches} from './src/_config/utils/switches.js';
+
+// Caps how many images fetch + encode at once, to keep a cold build's memory down. Lower it if a cold build still runs out of memory.
+import Image from '@11ty/eleventy-img';
+Image.concurrency = 4;
+
+export default async function(eleventyConfig) {
+  // --------------------- Events: before build
+  let cssWatcher;
+  eleventyConfig.on('eleventy.before', async ({runMode}) => {
+    await events.buildAllCss();
+    await events.buildAllJs();
+    // ⚠ Must come after the first buildAllCss — the watcher only recompiles, it does not write the first copy.
+    if (runMode === 'serve' && !cssWatcher) cssWatcher = events.watchGlobalCss();
+  });
+
+  // create a build time for serviceworker.njk
+  // TODO: is this the correct way?
+  eleventyConfig.addGlobalData('buildTime', () => new Date());
+
+  // --------------------- custom watch targets
+  eleventyConfig.addWatchTarget('./src/assets/**/*.{css,js,svg,png,jpeg}');
+  eleventyConfig.addWatchTarget('./src/_includes/**/*.{webc}');
+  eleventyConfig.addWatchTarget('./src/_config/words/*.yaml');
+  eleventyConfig.addWatchTarget('./src/_includes/themes/*/words.yaml');
+
+  // `npm run dev:mem` prints retained heap after each build. See the wiki "The dev server's memory".
+  if (process.env.MEMLOG) {
+    eleventyConfig.on('eleventy.after', async () => {
+      global.gc?.(); global.gc?.();
+      const m = process.memoryUsage();
+      console.log(`[mem] heapUsed ${Math.round(m.heapUsed / 1048576)} MB  external ${Math.round(m.external / 1048576)} MB  rss ${Math.round(m.rss / 1048576)} MB`);
+    });
+  }
+
+  // ⚠ Keep these ignored or every build retriggers itself: `eleventy.before` rewrites both dirs; .gitignore covers them today, this is the net if it stops. See the wiki "Watch loops".
+  eleventyConfig.watchIgnores.add('src/_includes/css/**');
+  eleventyConfig.watchIgnores.add('src/_includes/scripts/**');
+  // ⚠ Global CSS stays out of the watcher: watchGlobalCss recompiles it and the dev server swaps it in place, where a rebuild would cost every page. See the wiki "The dev server's memory".
+  eleventyConfig.watchIgnores.add('src/assets/css/global/**');
+  // ⚠ Same for a theme's CSS. Its fonts and DESIGN.md feed no page, so saving them shouldn't rebuild every page either.
+  eleventyConfig.watchIgnores.add('src/_includes/themes/*/*.{css,md}');
+  eleventyConfig.watchIgnores.add('src/_includes/themes/*/fonts/**');
+  eleventyConfig.setServerOptions({watch: ['dist/assets/css/global.css']});
+  // ⚠ The Obsidian vault is src/, and Eleventy reads the .gitignore line `.obsidian` as ./.obsidian at the repo root, so without this every Obsidian click (workspace.json) triggers a full rebuild. See the wiki "Watch loops".
+  eleventyConfig.watchIgnores.add('src/.obsidian/**');
+  eleventyConfig.ignores.add('src/.obsidian/**');
+
+  // --------------------- layout aliases
+  eleventyConfig.addLayoutAlias('base', 'base.njk');
+  eleventyConfig.addLayoutAlias('page', 'page.njk');
+  eleventyConfig.addLayoutAlias('note', 'note.njk');
+  eleventyConfig.addLayoutAlias('reading', 'reading.njk');
+  eleventyConfig.addLayoutAlias('watching', 'watching.njk');
+  eleventyConfig.addLayoutAlias('jam', 'jam.njk');
+  eleventyConfig.addLayoutAlias('bookmark', 'bookmark.njk');
+  eleventyConfig.addLayoutAlias('reply', 'reply.njk');
+  eleventyConfig.addLayoutAlias('rsvp', 'rsvp.njk');
+  eleventyConfig.addLayoutAlias('like', 'like.njk');
+  eleventyConfig.addLayoutAlias('repost', 'repost.njk');
+  eleventyConfig.addLayoutAlias('photo', 'photo.njk');
+  eleventyConfig.addLayoutAlias('recipe', 'recipe.njk');
+  eleventyConfig.addLayoutAlias('event', 'event.njk');
+  eleventyConfig.addLayoutAlias('audio', 'audio.njk');
+  eleventyConfig.addLayoutAlias('video', 'video.njk');
+  eleventyConfig.addLayoutAlias('activity', 'activity.njk');
+  eleventyConfig.addLayoutAlias('post', 'post.njk');
+  eleventyConfig.addLayoutAlias('tags', 'tags.njk');
+
+  //	---------------------  Collections
+  // Per-type collections each filter on `data.category` (set in src/posts/<type>/<type>.json). POST_TYPES drives registration — add a new type's category to that array in collections.js. collections.posts (firehose) is still auto-created by Eleventy from the `tags: "posts"` string in each folder JSON.
+  POST_TYPES.forEach(type => eleventyConfig.addCollection(type, byCategory(type)));
+  eleventyConfig.addCollection('showInSitemap', showInSitemap);
+  eleventyConfig.addCollection('tagList', tagList);
+  eleventyConfig.addCollection('genreList', genreList);
+  eleventyConfig.addCollection('featured', featured);
+  // The posts that get the generated title card (src/common/og-images.njk); head/meta-info.njk names the same layouts.
+  eleventyConfig.addCollection('titleCards', c => [...byCategory('article')(c), ...byCategory('note')(c)]);
+  // /now's pickers: a list of paths inside one post folder → the posts, in order (same rules as Featured).
+  eleventyConfig.addFilter('pickPosts', (items, type, posts) => resolvePicks(items, (posts ?? []).map(post => ({ type, post }))));
+
+  // ---------------------  Plugins
+  // Patches the parser prototype, so it has to land before the plugin builds its parser.
+  await ignoreWikilinksInCode();
+
+  eleventyConfig.addPlugin(plugins.interlinker, {
+    // stubUrl false → a dead wikilink arrives at the resolver with href === false instead of the plugin's default "/stubs/" link, so it can render as plain text.
+    stubUrl: false,
+    resolvingFns: new Map([['default', resolveOrPlainText]])
+  });
+
+  eleventyConfig.addPlugin(plugins.htmlConfig);
+  eleventyConfig.addPlugin(plugins.drafts);
+
+  eleventyConfig.addPlugin(plugins.EleventyRenderPlugin);
+  eleventyConfig.addPlugin(plugins.rss);
+  eleventyConfig.addPlugin(plugins.syntaxHighlight);
+
+  eleventyConfig.addPlugin(plugins.webc, {
+    components: ['./src/_includes/webc/**/*.webc'],
+    useTransform: true,
+    // ⚠ A transform sees no global data of its own: without this a component's $data.words is undefined.
+    transformData: {words: loadWords()}
+  });
+
+  eleventyConfig.addPlugin(plugins.eleventyImageTransformPlugin, {
+    transform: (sharp) => {
+      sharp.keepMetadata();
+    },
+    formats: ['webp', 'jpeg'],
+    widths: ['auto'],
+    htmlOptions: {
+      imgAttributes: {
+        loading: 'lazy',
+        decoding: 'async'
+      },
+      pictureAttributes: {}
+    }
+  });
+
+  // ---------------------  bundle
+  eleventyConfig.addBundle('css', { hoist: true });
+
+  // 	--------------------- Library and Data
+  eleventyConfig.setLibrary('md', plugins.markdownLib);
+
+  // Appends markdown-it-abbr definitions from a `glossary` data key, so <abbr> comes from one list instead of per-page markup. Only src/wiki/ sets the key.
+  // ⚠ The key must NOT be called `abbreviations`: markdown-it-abbr reads `env.abbreviations`, and Eleventy passes page data as the env.
+  eleventyConfig.addPreprocessor('glossary', 'md', (data, content) => {
+    if (!data.glossary) return;
+    const defs = Object.entries(data.glossary).map(([short, long]) => `*[${short}]: ${long}`);
+    return `${content}\n\n${defs.join('\n')}`;
+  });
+
+  // A wiki figure whose shot has a <name>-dark.png twin gets both <img>s; wiki.css shows the one matching the theme.
+  eleventyConfig.addPreprocessor('wiki-dark-figures', 'md', (data, content) => {
+    if (!data.page.inputPath.startsWith('./src/wiki/')) return;
+    return content.replace(/<img\b[^>]*\bsrc="\/assets\/images\/wiki\/([\w-]+)\.png"[^>]*>/g, (tag, name) => {
+      if (!fs.existsSync(`./src/assets/images/wiki/${name}-dark.png`)) return tag;
+      const dark = tag.replace(`${name}.png`, `${name}-dark.png`).replace('<img', '<img data-wiki-dark');
+      return `${tag.replace('<img', '<img data-wiki-light')}\n  ${dark}`;
+    });
+  });
+
+  eleventyConfig.addDataExtension('yaml', contents => yamlLoad(contents));
+
+  // --------------------- Filters
+  eleventyConfig.addFilter('toIsoString', filters.toISOString);
+  eleventyConfig.addFilter('formatDate', filters.formatDate);
+  eleventyConfig.addFilter('gitRevision', filters.gitRevision);
+  eleventyConfig.addFilter('markdownFormat', filters.markdownFormat);
+  eleventyConfig.addFilter('splitlines', filters.splitlines);
+  eleventyConfig.addFilter('striptags', filters.striptags);
+  eleventyConfig.addFilter('shuffle', filters.shuffleArray);
+  eleventyConfig.addFilter('alphabetic', filters.sortAlphabetically);
+  eleventyConfig.addFilter('slugify', filters.slugifyString);
+  eleventyConfig.addFilter('unwikilink', filters.unwikilink);
+  eleventyConfig.addFilter('hostname', filters.hostname);
+  // posts that carry lat/lon frontmatter → the place-map overview
+  eleventyConfig.addFilter('located', filters.located);
+  eleventyConfig.addFilter('routeGeoJSON', filters.routeGeoJSON);
+  eleventyConfig.addFilter('youtubePoster', filters.youtubePoster);
+  eleventyConfig.addFilter('youtubeTitle', filters.youtubeTitle);
+  eleventyConfig.addFilter('dtcgItems', filters.dtcgItems);
+  eleventyConfig.addFilter('colorRef', filters.colorRef);
+  // Recipe durations (§9): integer minutes OR PT…M → normalized PT…M + human-readable.
+  eleventyConfig.addFilter('toISODuration', filters.toISODuration);
+  eleventyConfig.addFilter('formatDuration', filters.formatDuration);
+  // Activity pace/speed (/activities/): derive min/km (+ /mi) or km/h (+ mph) from stored raw distance + duration at render — the activity post type never stores the derived value. withMiles pairs a stored km distance with its mi equivalent.
+  eleventyConfig.addFilter('paceOrSpeed', filters.paceOrSpeed);
+  eleventyConfig.addFilter('pace', filters.pace);
+  eleventyConfig.addFilter('withMiles', filters.withMiles);
+  // Event archive partition (§9): build-time upcoming/past split + event-date sorts.
+  eleventyConfig.addFilter('filterUpcoming', filters.filterUpcoming);
+  eleventyConfig.addFilter('filterPast', filters.filterPast);
+  eleventyConfig.addFilter('sortByStartAsc', filters.sortByStartAsc);
+  eleventyConfig.addFilter('sortByStartDesc', filters.sortByStartDesc);
+  // Audio/Video podcast feed (spec §8–§10): itunes:duration clock + <enclosure> byte-length/MIME stat'd from the source media file at build.
+  eleventyConfig.addFilter('itunesDuration', filters.itunesDuration);
+  eleventyConfig.addFilter('enclosureBytes', filters.enclosureBytes);
+  eleventyConfig.addFilter('enclosureType', filters.enclosureType);
+  // Webmention render (Phase 2): three composable slicers; the partial groups.
+  eleventyConfig.addFilter('webmentionGetForUrl', filters.webmentionGetForUrl);
+  eleventyConfig.addFilter('webmentionisOwn', filters.webmentionisOwn);
+  eleventyConfig.addFilter('webmentionSort', filters.webmentionSort);
+  eleventyConfig.addFilter('twinOf', filters.twinOf);
+
+  // --------------------- Shortcodes
+  eleventyConfig.addShortcode('svg', shortcodes.svgShortcode);
+  eleventyConfig.addShortcode('image', shortcodes.imageShortcode);
+  eleventyConfig.addShortcode('imageKeys', shortcodes.imageKeysShortcode);
+  eleventyConfig.addShortcode('lightbox', shortcodes.lightboxShortcode);
+  eleventyConfig.addShortcode('year', () => `${new Date().getFullYear()}`);
+
+  // --------------------- Events: after build
+  if (process.env.ELEVENTY_RUN_MODE === 'serve') {
+    eleventyConfig.on('eleventy.after', events.svgToJpeg);
+  }
+
+  // --------------------- Passthrough File Copy
+  // -- same path: self-hosted .mp3/.mp4/.vtt and the This Is My Jam avatars (`jams-social`, rendered with `eleventy:ignore`), which Eleventy Image never moves.
+  ['src/assets/images/template', 'src/assets/images/recipes', 'src/assets/images/jams-social', 'src/assets/og-images', 'src/assets/audio', 'src/assets/video', 'src/assets/map'].forEach(path =>
+    eleventyConfig.addPassthroughCopy(path)
+  );
+
+  eleventyConfig.addPassthroughCopy({
+    // -- the active theme's fonts, at the same address whichever theme it is
+    [`${themeDir()}/fonts`]: 'assets/fonts',
+
+    // -- to root
+    'src/assets/images/favicon/*': '/',
+    'src/assets/images/avatar/*': '/',
+
+    // -- Sveltia CMS, served at /admin/
+    admin: 'admin',
+
+    // -- node_modules
+    'node_modules/lite-youtube-embed/src/lite-yt-embed.{css,js}': `assets/components/`,
+    // Single-file (non-glob) source: must name the destination file explicitly. A trailing-slash dir target writes a file literally named `components`, clobbering the lite-youtube glob's directory (Eleventy 3.x behaviour).
+    'node_modules/photoswipe/dist/photoswipe.css': `assets/components/photoswipe.css`,
+    // MapLibre's JS is bundled into place-map.js by esbuild; only its stylesheet needs copying.
+    'node_modules/maplibre-gl/dist/maplibre-gl.css': `assets/components/maplibre-gl.css`,
+    'node_modules/@11ty/is-land/dist/is-land.min.js': `assets/components/is-land.min.js`
+  });
+
+  // ---------------------- switched-off parts that are pages: ignores must be set here, before the data cascade runs
+  const switches = resolveSwitches(settings);
+  if (!switches.feeds) {
+    eleventyConfig.ignores.add('src/common/feed-*.njk');
+    eleventyConfig.ignores.add('src/feeds/**');
+  }
+  if (!switches.serviceWorker) eleventyConfig.ignores.add('src/pages/serviceworker.njk');
+
+  // A switched-off post type builds nothing: no posts, no archive page, no feeds. ⚠ A type name in settings.postTypes that doesn't exist stops the build.
+  const postTypesOn = enabledPostTypes(settings);
+  for (const [type, dir] of Object.entries(POST_TYPE_DIRS)) {
+    if (postTypesOn.includes(type)) continue;
+    eleventyConfig.ignores.add(`src/posts/${dir}/**`);
+    eleventyConfig.ignores.add(`src/pages/${dir}.njk`);
+    eleventyConfig.ignores.add(`src/feeds/${dir}*`);
+  }
+
+  // ----------------------  ignore test files
+  if (process.env.ELEVENTY_ENV != 'test') {
+    eleventyConfig.ignores.add('src/common/pa11y.njk');
+  }
+
+  // ---------------------- LLM wiki (src/wiki/): "private" never builds it, "local" builds it outside production only, "public" builds it everywhere.
+  // ⚠ A production build (what Netlify runs) includes the wiki only when the dial is explicitly "public".
+  const wikiVisibility = settings?.wiki?.visibility;
+  if (!['private', 'local', 'public'].includes(wikiVisibility)) {
+    throw new Error(
+      `settings.wiki.visibility is "${wikiVisibility}" — only "private", "local" and "public" are built so far. See _local/design/Plan - LLM wiki (private-first).md §6.`
+    );
+  }
+  const buildWiki =
+    wikiVisibility === 'public' ||
+    (wikiVisibility === 'local' && process.env.ELEVENTY_ENV !== 'production');
+  if (!buildWiki) {
+    eleventyConfig.ignores.add('src/wiki/**');
+  }
+
+  // --------------------- general config
+  return {
+    markdownTemplateEngine: 'njk',
+
+    dir: {
+      output: 'dist',
+      input: 'src',
+      includes: '_includes',
+      layouts: '_layouts'
+    }
+  };
+}

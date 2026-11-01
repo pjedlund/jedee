@@ -1,0 +1,131 @@
+/*
+BOOK
+A hardcover standing on the page, built in 3D after Sebastien Castiel's CSS book (https://dev.to/scastiel/create-an-animated-3d-book-in-css-step-by-step-26ic), with the pamphlet's light and shadows; turned to show its pages, it faces the reader on hover. Floated right into the text it sits in, like the pamphlet.
+Markup: partials/book.njk, placed first inside the block of text it floats in — .book > div is the object; inside it, i is the back board, b the page block and div the front cover.
+*/
+
+/* the text block it sits in measures the room, and holds the float in */
+:has(> .book) {
+  container: book-flow / inline-size;
+  display: flow-root;
+}
+
+.book {
+  --book-width: 13rem;
+  --book-ratio: 2 / 3;
+  --book-depth: 0.18; /* thickness as a share of the width; about a 400-page hardcover */
+  --book-back: #3a3631;
+  --book-pages: #f3eee3;
+  --book-pages-line: #ddd5c4;
+  --book-shadow: var(--box-shadow-thumb);
+  --book-shadow-back: var(--box-shadow-panel);
+  --book-turn: 0deg;
+
+  inline-size: var(--book-width);
+  max-inline-size: 100%;
+  margin-block-end: var(--space-s-m);
+  container-type: inline-size;
+}
+
+/* the pamphlet's measures: 2 of the prose grid's 8 columns, one gutter from the text, and only while the text keeps 28rem; below that it stands above the text */
+@container book-flow (inline-size >= 42.32rem) {
+  .book {
+    --book-width: max(calc(100% * 14.5 / 64), 13rem);
+
+    float: inline-end;
+    margin-inline-start: calc(100% * 2 / 64);
+  }
+}
+
+.book > div {
+  --book-size: 100cqi;
+  --book-thickness: calc(var(--book-size) * var(--book-depth));
+
+  position: relative;
+  aspect-ratio: var(--book-ratio);
+  transform-style: preserve-3d;
+  /* viewing distance scales with the width, so the book looks the same at every size */
+  transform: perspective(calc(var(--book-size) * 3.5)) rotateY(var(--book-turn));
+}
+
+/* turned only where hovering can bring it face-on again */
+@media (hover: hover) {
+  .book {
+    --book-turn: -32deg;
+  }
+
+  /* ⚠ the turn brings the near edge forward, 6% of the width past the box at top and bottom */
+  .book > div {
+    margin-block: calc(var(--book-size) * 0.06);
+  }
+
+  .book > div:hover {
+    --book-turn: 0deg;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .book > div {
+    transition: transform 0.5s var(--ease-out-quad);
+  }
+}
+
+.book > div > * {
+  position: absolute;
+  inset: 0;
+}
+
+/* back board */
+.book i {
+  background: var(--book-back);
+  border-radius: var(--border-radius-small) 1px 1px var(--border-radius-small);
+  transform: translateZ(calc(var(--book-thickness) / -2));
+  box-shadow: var(--book-shadow-back);
+}
+
+/* the page block along the fore-edge, set in a little from the boards, darker where it meets them */
+.book b {
+  inset: 3px auto 3px calc(100% - var(--book-thickness) / 2 - 3px);
+  inline-size: var(--book-thickness);
+  background:
+    linear-gradient(90deg, rgb(0 0 0 / 0.18), transparent 12%, transparent 88%, rgb(0 0 0 / 0.18)),
+    repeating-linear-gradient(90deg, var(--book-pages) 0 1px, var(--book-pages-line) 1px 2px);
+  transform: rotateY(90deg);
+}
+
+/* front cover */
+.book > div > div {
+  border-radius: 1px var(--border-radius-small) var(--border-radius-small) 1px;
+  overflow: hidden;
+  transform: translateZ(calc(var(--book-thickness) / 2));
+  box-shadow: var(--book-shadow);
+}
+
+.book img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+/* the groove beside the spine of a hardcover, and light from the top left */
+.book > div > div::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgb(0 0 0 / 0.2), rgb(255 255 255 / 0.18) 1.4%, rgb(0 0 0 / 0.22) 2.8%, transparent 5%),
+    linear-gradient(165deg, rgb(255 255 255 / 0.22), transparent 45%, rgb(30 20 10 / 0.18));
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .book {
+    --book-shadow: var(--box-shadow-thumb-dark);
+    --book-shadow-back: var(--box-shadow-panel-dark);
+  }
+}
+
+:root[data-theme='dark'] .book {
+  --book-shadow: var(--box-shadow-thumb-dark);
+  --book-shadow-back: var(--box-shadow-panel-dark);
+}

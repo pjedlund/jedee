@@ -1,0 +1,24 @@
+/*
+ACTIVITY STATS
+The recorded-data block on an activity post (activity.njk). Type-specific, so it lives in a local bundle included by that layout rather than the shared CSS. Hierarchy comes from type size alone; numbers use tabular figures so columns of stats line up.
+*/
+.activity-stats {
+  row-gap: var(--line-half, var(--gutter, var(--space-s-l)));
+}
+
+.activity-stats > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.activity-stats dt {
+  font-size: var(--size-step-min-1);
+}
+
+.activity-stats dd {
+  margin-inline-start: 0;
+  font-size: var(--size-step-1);
+  /* ⚠ Same slot list as utilities/numerals.css, so the prose's old-style figures stay. */
+  --nums-spacing: tabular-nums;
+  font-variant-numeric: var(--nums-figure,) var(--nums-spacing,) var(--nums-fraction,) var(--nums-zero,);
+}

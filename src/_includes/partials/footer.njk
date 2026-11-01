@@ -1,0 +1,80 @@
+{%- if meta.switches.footer -%}
+<footer class="site-footer | mt-l-xl p-s-m">
+  <div class="wrapper">
+    <div class="cluster gutter-xs">
+      <nav class="footer-links | cluster text-step-min-2" aria-label="{{ meta.navigation.ariaBottom }}">
+        {% include "themes/" + meta.theme + "/footer-credit.njk" %}
+        <a href="{{ settings.repos.site }}" rel="noopener"
+          >{{ pkg.name | upper }} <small>{{ pkg.version }}</small>
+        </a>
+
+        {% for item in navigation.bottom %}
+          <a
+            href="{{ item.url }}"
+            {{
+              helpers.getLinkActiveState(item.url,
+              page.url)
+              |
+              safe
+            }}
+            >{{ item.text }}</a
+          >
+        {% endfor %}
+      </nav>
+
+      {% if meta.switches.shortcuts %}
+        {# Unhidden by shortcuts.js, so it never shows without the script that makes it work. #}
+        <button type="button" class="footer-shortcuts" data-shortcuts-open aria-haspopup="dialog" hidden>{{ words.keyboardShortcuts }}</button>
+      {% endif %}
+
+      <nav class="cluster" aria-label="{{ meta.navigation.ariaPlatforms }}">
+        {% if meta.switches.feeds %}
+          <!-- gets the first item from the feed loop set in meta -->
+          <a
+            href="{{ meta.blog.feedLinks[0].url }}"
+            rel="alternate"
+            type="{{ meta.blog.feedLinks[0].type }}"
+            class="button"
+            data-icon
+            data-tooltip="{{ meta.blog.feedLinks[0].title }}"
+            data-tooltip-position="top"
+          >
+            <span class="visually-hidden">{{ meta.blog.feedLinks[0].title }}</span>
+            {% svg "misc/rss" %}
+          </a>
+        {% endif %}
+
+        {% for key, value in personal.platforms %}
+          {% if value != "" %}
+            {# `capitalize` lowercases the rest of the word, which only GitHub minds — and now that the name is shown, not just announced. #}
+            {% set platformName = key | capitalize | replace("Github", "GitHub") %}
+            <!-- regular platforms -->
+            <a
+              class="no-indicator button"
+              data-icon
+              href="{{ value }}"
+              {% if meta.switches.relMe %}rel="me"{% endif %}
+              data-tooltip="{{ platformName }}"
+              data-tooltip-position="top"
+            >
+              <span class="visually-hidden">{{ platformName }}</span>
+              {% svg 'platform/' + key %}
+            </a>
+          {% endif %}
+        {% endfor %}
+      </nav>
+    </div>
+
+    {# <aside class="creator | cluster gutter-2xs text-step-min-1 mt-xl">
+      Made with <span class="visually-hidden">love</span> <span>{% svg "misc/heart" %}</span> and
+      <a class="no-indicator" href="https://www.11ty.dev/">
+        <span class="visually-hidden">Eleventy</span>
+        {% svg "misc/11ty" %}
+      </a>
+      by {{ meta.creator.name }} </aside> #}
+  </div>
+</footer>
+{# ⚠ button.css keeps a block of its own: base.njk loads it the same way. #}
+{%- css "local" -%}{%- include 'css/button.css' -%}{%- endcss -%}
+{%- css "local" -%}{%- include 'css/site-footer.css' -%}{%- endcss -%}
+{%- endif -%}

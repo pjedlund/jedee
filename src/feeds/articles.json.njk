@@ -1,0 +1,14 @@
+---
+# pagination only gates the file: an empty type gets no feed
+pagination:
+  data: collections.article
+  size: 100000
+permalink: /articles/feed.json
+eleventyExcludeFromCollections: true
+excludeFromSitemap: true
+---
+{%- set feedCollection = collections.article -%}
+{%- set feedTitle = words.feedArticles -%}
+{%- set feedDescription = words.feedArticlesDescription -%}
+{%- set feedSelfUrl = "/articles/feed.json" -%}
+{%- include "feeds/json-body.njk" -%}

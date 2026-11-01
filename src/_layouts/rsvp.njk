@@ -1,0 +1,25 @@
+---
+layout: base
+schema: BlogPosting
+---
+
+<div class="region" style="--region-space-top: var(--space-xl-2xl)">
+  <article class="wrapper flow prose h-entry">
+    {% include 'partials/entry-header.njk' %}
+
+    {# &nbsp; after </data>: the HTML minifier strips a normal space directly following a <data> tag, which would join "yes" and "to". #}
+    <p><data class="p-rsvp" value="{{ rsvp }}">{{ words.rsvp }}: {{ rsvp }}</data>&nbsp;{{ words.to }} <a class="u-in-reply-to" href="{{ inReplyTo }}">{{ inReplyTo }}</a></p>
+
+    <div class="e-content | wrapper-pass flow">
+      {{ content | safe }}
+    </div>
+
+    {% include 'partials/backlinks.njk' %}
+    {% include 'partials/entry-footer.njk' %}
+    {% include 'partials/hidden-author.njk' %}
+  </article>
+</div>
+
+{%- css "local" -%}
+  {%- include 'css/post.css' -%}
+{%- endcss -%}

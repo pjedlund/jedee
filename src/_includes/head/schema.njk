@@ -1,0 +1,6 @@
+{% include "schemas/WebSite.njk" %}
+{% if meta.switches.breadcrumb %}{% include "schemas/BreadcrumbList.njk" %}{% endif %}
+
+{% if schema %}
+  {%- include "schemas/" + schema + ".njk" -%}
+{% endif %}

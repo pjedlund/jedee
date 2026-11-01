@@ -1,0 +1,6 @@
+{
+  "$type": "dimension",
+  "small": { "$value": "0.1875rem" },
+  "medium": { "$value": "0.3rem" },
+  "pill": { "$value": "999px" }
+}

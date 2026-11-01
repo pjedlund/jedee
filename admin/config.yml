@@ -1,0 +1,365 @@
+# yaml-language-server: $schema=https://unpkg.com/@sveltia/cms@0.248.0/schema/sveltia-cms.json
+# Sveltia CMS at /admin/ — see _local/design/Reference - Sveltia CMS as the edit layer.md. ⚠ Never add a `category` field: it's inherited from each folder's data file.
+
+backend:
+  name: github
+  repo: pjedlund/stomme
+  branch: main
+  # "Sign In with GitHub" asks for write access to public repos only (the default `repo` covers private ones too). ⚠ Needs the GitHub OAuth provider installed in Netlify.
+  auth_scope: public_repo
+
+media_folder: src/assets/images
+public_folder: /assets/images
+
+output:
+  omit_empty_optional_fields: true
+
+# Keep Title-Case filenames for Obsidian; punctuation still becomes a space.
+slug:
+  lowercase: false
+  sanitize_replacement: ' '
+
+# Each type shows only the fields worth editing on a phone; `thumbnail` and `filter` must name a field in the form (a hidden one will do); every other key in a post is kept as-is on save. New posts only in notes, articles, events and recipes — the rest come from Micropub or the Web Clipper.
+collections:
+  - name: notes
+    label: Notes
+    label_singular: Note
+    folder: src/posts/notes
+    create: true
+    sortable_fields: &by_date { fields: [date, title], default: { field: date, direction: descending } }
+    fields: &post_fields
+      - &title { name: title, label: Title, widget: string }
+      - &description { name: description, label: Description, widget: text, required: false }
+      # Native picker in Swedish time with seconds; saved as YYYY-MM-DDTHH:mm:ss+02:00, but only once the date is edited.
+      - &date { name: date, label: Date, widget: datetime, input_timezone: Europe/Stockholm, step: 1 }
+      - &tags { name: tags, label: Tags, widget: list, required: false }
+      - &syndication { name: syndication, label: Also on (URLs), widget: list, required: false, hint: 'One URL per line — shown as "Also on" at the foot of the post' }
+      - &draft { name: draft, label: Draft, widget: boolean, required: false }
+      - &body { name: body, label: Body, widget: markdown, modes: [raw], required: false }
+
+  # Depth 2 = top level (where Micropub writes) plus year folders; skips the ignored `-drafts/` and the starter's pheasant demo, both one level deeper.
+  - { name: articles, label: Articles, label_singular: Article, folder: src/posts/articles, nested: { depth: 2, subfolders: false }, create: true, sortable_fields: *by_date, fields: *post_fields }
+  - name: photos
+    label: Photos
+    label_singular: Photo
+    folder: src/posts/photos
+    thumbnail: false # ⚠ photo.src is a ./src/… build path Sveltia can't show, and image names don't follow post names
+    create: false
+    sortable_fields: *by_date
+    fields:
+      - *title
+      # ⚠ Leave photo.src and photo.downloads undeclared: they're kept as-is on save, and a field would rewrite src's path or retype the R2 byte counts.
+      - name: photo
+        label: Photo
+        widget: object
+        fields:
+          - { name: alt, label: Alt text, widget: text }
+          - { name: caption, label: Caption, widget: string, required: false }
+          - { name: format, label: Format, widget: string, required: false, hint: 'e.g. 6×17' }
+          - { name: exposure, label: Exposure, widget: string, required: false }
+          - { name: film, label: Film, widget: string, required: false }
+          - { name: development, label: Development, widget: string, required: false }
+          - { name: scanner, label: Scanner, widget: string, required: false }
+      - *description
+      - *date
+      - *tags
+      - *syndication
+      - *draft
+      - *body
+  # Depth 2 = new jams plus the This Is My Jam archive in `thisismyjam/`, shown as a folder tree.
+  - name: jams
+    label: Jams
+    label_singular: Jam
+    folder: src/posts/jams
+    nested: { depth: 2, subfolders: false }
+    thumbnail: cover
+    create: false
+    sortable_fields: *by_date
+    fields: &jam_fields
+      - *title
+      - *description
+      - *date
+      - *tags
+      # Upload a file or paste a URL; uploads go beside the other local covers. A remote URL is fetched and self-hosted at build.
+      - { name: cover, label: Cover, widget: image, required: false, media_folder: /src/assets/images/listening, public_folder: /assets/images/listening }
+      - { name: coverAlt, label: Cover alt text, widget: string, required: false, hint: 'Leave empty for "Cover for <title>"' }
+      - { name: genre, label: Genre, widget: list, required: false, hint: 'One per line, as [[post-rock]] so Obsidian links it; reuse a genre from /jams/genres/ where one fits' }
+      - *syndication
+      - *draft
+      - *body
+  - name: watching
+    label: Watching
+    label_singular: Film
+    folder: src/posts/watching
+    thumbnail: cover
+    create: false
+    sortable_fields: *by_date
+    fields:
+      - *title
+      - &score { name: scoreMy, label: My rating, widget: select, required: false, hint: 'Out of 5 with halves, like Letterboxd; saved as a number', options: [{ label: '½', value: 0.5 }, { label: '★', value: 1 }, { label: '★½', value: 1.5 }, { label: '★★', value: 2 }, { label: '★★½', value: 2.5 }, { label: '★★★', value: 3 }, { label: '★★★½', value: 3.5 }, { label: '★★★★', value: 4 }, { label: '★★★★½', value: 4.5 }, { label: '★★★★★', value: 5 }] }
+      - { name: plot, label: Plot, widget: text, required: false, hint: 'The synopsis, usually from the Web Clipper; the card shows it when Description is empty' }
+      - { name: description, label: Description, widget: text, required: false, hint: 'A one-liner in your words; replaces the plot on the card' }
+      - *date
+      - *tags
+      - { name: cover, label: Cover, widget: image, required: false, media_folder: /src/assets/images/watching, public_folder: /assets/images/watching }
+      - *syndication
+      - *draft
+      - *body
+  - name: reading
+    label: Reading
+    label_singular: Book
+    folder: src/posts/reading
+    thumbnail: cover
+    create: false
+    sortable_fields: *by_date
+    fields:
+      - *title
+      - { name: subtitle, label: Subtitle, widget: string, required: false, hint: 'Shows under the title; title case, short words lowercase' }
+      - *score
+      - *description
+      - *date
+      - *tags
+      - { name: cover, label: Cover, widget: image, required: false, media_folder: /src/assets/images/reading, public_folder: /assets/images/reading }
+      - *syndication
+      - *draft
+      - *body
+  - name: activities
+    label: Activities
+    label_singular: Activity
+    folder: src/posts/activities
+    thumbnail: cover
+    create: false
+    sortable_fields: *by_date
+    fields: [*title, *description, *date, *tags, { name: cover, label: Cover, widget: image, required: false, media_folder: /src/assets/images/activities, public_folder: /assets/images/activities }, *syndication, *draft, *body]
+  - { name: audio, label: Audio, label_singular: Recording, folder: src/posts/audio, create: false, sortable_fields: *by_date, fields: *post_fields }
+  - { name: videos, label: Videos, label_singular: Video, folder: src/posts/videos, create: false, sortable_fields: *by_date, fields: *post_fields }
+  - name: events
+    label: Events
+    label_singular: Event
+    folder: src/posts/events
+    create: true
+    sortable_fields: *by_date
+    fields:
+      - *title
+      - name: event
+        label: Event
+        widget: object
+        fields:
+          - { name: start, label: Starts, widget: datetime, input_timezone: Europe/Stockholm, step: 1 }
+          - { name: end, label: Ends, widget: datetime, required: false, input_timezone: Europe/Stockholm, step: 1 }
+          - { name: location, label: Location, widget: string, required: false }
+          - { name: url, label: Event page (URL), widget: string, required: false }
+          - { name: status, label: Status, widget: select, required: false, hint: 'Anything but scheduled shows as a badge', options: [scheduled, cancelled, postponed, rescheduled, moved-online] }
+      - *description
+      - *date
+      - *tags
+      - *syndication
+      - *draft
+      - *body
+  - name: recipes
+    label: Recipes
+    label_singular: Recipe
+    folder: src/posts/recipes
+    thumbnail: cover
+    create: true
+    sortable_fields: *by_date
+    fields:
+      - *title
+      - *description
+      - *date
+      - { name: cover, label: Cover, widget: image, required: false, media_folder: /src/assets/images/recipes, public_folder: /assets/images/recipes }
+      - { name: yield, label: Yields, widget: string, required: false, hint: 'e.g. 8 servings' }
+      - { name: totalTime, label: Total time, widget: string, required: false, hint: 'PT45M = 45 min, PT1H30M = 1 h 30 min', pattern: ['^PT(\d+H)?(\d+M)?$', 'Write it as PT1H30M'] }
+      - *tags
+      - *syndication
+      - *draft
+      - *body
+
+  # Response types: the shared fields plus the link each one answers.
+  - name: bookmarks
+    label: Bookmarks
+    label_singular: Bookmark
+    folder: src/posts/bookmarks
+    create: false
+    sortable_fields: *by_date
+    fields: [*title, { name: bookmarkOf, label: Bookmarked URL, widget: string }, *description, *date, *tags, *syndication, *draft, *body]
+  - name: likes
+    label: Likes
+    label_singular: Like
+    folder: src/posts/likes
+    create: false
+    sortable_fields: *by_date
+    fields: [*title, { name: likeOf, label: Liked URL, widget: string }, *description, *date, *tags, *syndication, *draft, *body]
+  - name: replies
+    label: Replies
+    label_singular: Reply
+    folder: src/posts/replies
+    create: false
+    sortable_fields: *by_date
+    fields: [*title, { name: inReplyTo, label: In reply to (URL), widget: string }, *description, *date, *tags, *syndication, *draft, *body]
+  - name: reposts
+    label: Reposts
+    label_singular: Repost
+    folder: src/posts/reposts
+    create: false
+    sortable_fields: *by_date
+    fields: [*title, { name: repostOf, label: Reposted URL, widget: string }, *description, *date, *tags, *syndication, *draft, *body]
+  - name: rsvps
+    label: RSVPs
+    label_singular: RSVP
+    folder: src/posts/rsvps
+    create: false
+    sortable_fields: *by_date
+    fields: [*title, { name: inReplyTo, label: Event URL, widget: string }, { name: rsvp, label: RSVP, widget: select, options: ['yes', 'no', 'maybe', 'interested'], required: false }, *description, *date, *tags, *syndication, *draft, *body]
+
+  # Pages with layout: page (About, Accessibility, …). ⚠ Their Nunjucks tags (e.g. {{ personal.address }}) are kept as typed in the plain markdown body; new pages are made on the laptop, since they need a permalink.
+  - name: pages
+    label: Pages
+    label_singular: Page
+    folder: src/pages
+    extension: md
+    format: frontmatter
+    create: false
+    filter: { field: layout, value: page }
+    fields:
+      - *title
+      - *description
+      - { name: layout, widget: hidden } # only so `filter` can name it
+      - { name: date, label: Last changed, widget: string, required: false, hint: 'YYYY-MM-DD. On Accessibility and Privacy, bump only when the text changes in substance', pattern: ['^\d{4}-\d{2}-\d{2}', 'Start with YYYY-MM-DD'] }
+      - *body
+
+# The site's settings file. ⚠ Sveltia rewrites the whole file on save and drops every comment, so settings.yaml has none: its notes live here, as hints.
+singletons:
+  - name: settings
+    label: Site settings
+    file: src/_data/settings.yaml
+    fields:
+      - name: identity
+        label: Identity
+        widget: object
+        fields:
+          - { name: name, label: Name, widget: string }
+          - { name: email, label: Email, widget: string }
+          - { name: website, label: Website, widget: string, hint: 'The canonical address; its host name also goes into the webmention endpoint, robots.txt and the preview images' }
+          - { name: avatar, label: Avatar path, widget: string }
+          - { name: tagline, label: Tagline, widget: string, hint: "Mirrors the start page's second sentence; drawn on the fallback preview image (npm run og:default, laptop)" }
+          - { name: bio, label: Bio, widget: text, hint: 'llms.txt' }
+          - { name: description, label: Site description, widget: string }
+          - { name: feedDescription, label: Feed description, widget: string }
+          - { name: ogAlt, label: Share image description, widget: string, hint: 'Alt text for the fallback preview image; it should describe what npm run og:default draws' }
+          - { name: address, label: Postal address, widget: text, required: false, hint: 'Shown on the legal and privacy pages' }
+      - name: profiles
+        label: Profiles
+        widget: object
+        hint: 'Footer icons, in this order. rel=me: also listed as rel="me" in the head, and the profile must link back. A new platform needs an icon in src/assets/svg/platform/ and a line in admin/config.yml.'
+        fields:
+          - { name: github, label: GitHub, widget: object, fields: &profile [{ name: url, label: URL, widget: string }, { name: relMe, label: rel=me, widget: boolean }] }
+          - { name: mastodon, label: Mastodon, widget: object, fields: [{ name: url, label: URL, widget: string }, { name: relMe, label: rel=me, widget: boolean }, { name: handle, label: Fediverse handle, widget: string, hint: 'For fediverse:creator, e.g. @name@mastodon.social' }] }
+          - { name: x, label: X, widget: object, fields: *profile }
+          - { name: flickr, label: Flickr, widget: object, fields: *profile }
+          - { name: dribbble, label: Dribbble, widget: object, fields: *profile }
+          - { name: bluesky, label: Bluesky, widget: object, fields: *profile }
+          - { name: strava, label: Strava, widget: object, fields: *profile }
+      - name: repos
+        label: Repositories
+        widget: object
+        fields:
+          - { name: site, label: Site repo, widget: string }
+          - { name: licence, label: Licence repo, widget: string }
+      - name: site
+        label: Site
+        widget: object
+        fields:
+          - { name: lang, label: Language, widget: select, options: [en, sv], hint: 'The language of the interface words and of <html lang>. A language needs a file in src/_config/words, and a line here, in admin/config.yml. A language with no file stops the build' }
+          - { name: locale, label: Locale, widget: string, hint: 'For og:locale and the structured data, written en_US or sv_SE' }
+          - { name: type, label: Who the site is for, widget: select, options: [{ label: A person, value: Person }, { label: A club or organisation, value: Organization }], hint: 'What the structured data calls whoever the site is for: a Person or an Organization' }
+      - { name: theme, label: Theme, widget: select, options: [sample], hint: "The site's look: a folder in src/_includes/themes. A new theme needs a line here, in admin/config.yml. A name with no folder stops the build" }
+      - { name: postTypes, label: Post types, widget: select, multiple: true, required: false, dropdown_threshold: 20, hint: 'The types the site builds. Empty = all 16. A type left out has no posts, archive page, feed or menu link, and a Featured or /now pick of it is skipped', options: [{ label: Articles, value: article }, { label: Notes, value: note }, { label: Books, value: reading }, { label: Films, value: watching }, { label: Jams, value: jam }, { label: Photos, value: photo }, { label: Recipes, value: recipe }, { label: Events, value: event }, { label: Bookmarks, value: bookmark }, { label: Replies, value: reply }, { label: Reposts, value: repost }, { label: Likes, value: like }, { label: RSVPs, value: rsvp }, { label: Recordings, value: audio }, { label: Videos, value: video }, { label: Activities, value: activity }] }
+      - name: switches
+        label: Switches
+        widget: object
+        fields:
+          - { name: breadcrumb, label: Breadcrumb, widget: boolean, hint: 'On: the trail in the header. Off: logomark + wordmark' }
+          - { name: nameReveal, label: Name reveal, widget: boolean, hint: 'Start page only: the wordmark types in beside the logomark, blinks twice, backspaces away' }
+          - { name: easteregg, label: Easter egg, widget: boolean, hint: 'Typing the trigger word anywhere on a page (not in a field) sets off confetti; never for visitors who ask for reduced motion' }
+          - { name: eastereggKeyword, label: Easter egg trigger word, widget: string, required: false, hint: 'Letters and spaces; case does not matter. Empty = "eleventy" and "excellent"' }
+          # Any single emoji works as a shape; add one here to offer it.
+          - { name: eastereggShape, label: Easter egg shape, widget: select, required: false, hint: 'Empty = star', options: [{ label: '⭐️ Star', value: '⭐️' }, { label: '🎉 Party popper', value: '🎉' }, { label: '❤️ Heart', value: '❤️' }, { label: '✝️ Cross', value: '✝️' }, { label: '🎵 Note', value: '🎵' }, { label: '🌍 Globe', value: '🌍' }, { label: '☀️ Sun', value: '☀️' }] }
+          - { name: viewRepo, label: View on GitHub link, widget: boolean }
+          - { name: header, label: Header, widget: boolean, hint: 'Off: no header at all, and no skip link, so the site supplies them itself' }
+          - { name: mainNav, label: Main menu, widget: boolean, hint: 'Off: no menu in the header' }
+          - { name: themeToggle, label: Light and dark button, widget: boolean, hint: 'Off: no button in the header; the page follows the light or dark setting of the device' }
+          - { name: footer, label: Footer, widget: boolean }
+          - { name: shortcuts, label: Keyboard shortcuts dialog, widget: boolean, hint: 'Off: no dialog, no script and no footer button' }
+          - { name: tooltips, label: Tooltips, widget: boolean, hint: 'Off: no tooltip script, no tooltip styles and no hover labels' }
+          - { name: devGrid, label: Layout grid for development, widget: boolean, hint: 'Off: no grid script or styles (Alt+G and Alt+R do nothing)' }
+          - { name: serviceWorker, label: Offline support, widget: boolean, hint: 'Off: no service worker file and nothing registers it' }
+          - { name: feeds, label: Feeds, widget: boolean, hint: 'Off: no feed files at all, no feed links in the head, and no feed button in the footer' }
+          - { name: webmentions, label: Webmentions, widget: boolean, hint: 'Off: no webmention link in the head, nothing fetched at build time, and none shown on posts' }
+          - { name: micropub, label: Micropub and IndieAuth links, widget: boolean, hint: 'Off: the three links in the head go. ⚠ The Netlify function that takes the posts is still deployed' }
+          - { name: relMe, label: rel=me and fediverse:creator, widget: boolean, hint: 'Off: no rel="me" on profile links, in the head or the footer, and no fediverse:creator tag' }
+      - name: pwa
+        label: Service worker
+        widget: object
+        fields:
+          - { name: workerPath, label: Service worker address, widget: string, required: false, hint: 'Starts with / and ends in .js. Empty = /serviceworker.js. ⚠ A worker only covers the folder it is in, so a nested address like /app/sw.js leaves the rest of the site out' }
+          - { name: keepCaches, label: Caches to keep, widget: list, required: false, hint: 'Names of caches the worker must not delete when it updates, such as one that holds a log the visitor made. Empty = none' }
+          - { name: push, label: Push notification code, widget: string, required: false, hint: 'A path under src/_includes, such as pwa/push.js. Empty = no push code. A path with no file stops the build' }
+      - name: analytics
+        label: Analytics
+        widget: object
+        fields:
+          - { name: umamiId, label: Umami website ID, widget: string, required: false, hint: 'Empty = no analytics script at all. Otherwise the Umami script loads on deployed builds only, never on the dev server' }
+      - name: wiki
+        label: Wiki
+        widget: object
+        fields:
+          - { name: visibility, label: Visibility, widget: select, options: [private, local, public], hint: 'private: never built. local: dev server only. public: built everywhere, production included' }
+          - { name: attribution, label: Byline on wiki pages, widget: string, required: false, hint: 'The end of the line above every wiki page: "Part of the wiki — " followed by this text' }
+      - name: search
+        label: Search
+        widget: object
+        fields:
+          - { name: enabled, label: Site search, widget: boolean, hint: 'Off removes /search.json, the header magnifier, and their CSS and JS' }
+          - { name: types, label: Searched post types, widget: select, multiple: true, dropdown_threshold: 20, options: [{ label: Articles, value: article }, { label: Notes, value: note }, { label: Books, value: reading }, { label: Films, value: watching }, { label: Jams, value: jam }, { label: Photos, value: photo }, { label: Recipes, value: recipe }, { label: Events, value: event }, { label: Recordings, value: audio }, { label: Videos, value: video }, { label: Activities, value: activity }, { label: Pages tagged searchable, value: searchable }, { label: Bookmarks, value: bookmark }, { label: Likes, value: like }, { label: Replies, value: reply }, { label: Reposts, value: repost }, { label: RSVPs, value: rsvp }] }
+  - name: featured
+    label: Featured
+    file: src/_data/featured.yaml
+    fields:
+      # One item per post: pick its type, then the post. Saved as { type: <folder in src/posts>, post: <path in it> }; ⚠ a post that no longer exists stops the build.
+      - name: posts
+        label: Featured posts
+        widget: list
+        required: false
+        hint: 'The first one is shown on the start page, under "Featured". Drag to reorder.'
+        types:
+          - { name: articles, label: Article, widget: object, fields: [{ name: post, label: Article, widget: relation, collection: articles, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }] }
+          - { name: notes, label: Note, widget: object, fields: [{ name: post, label: Note, widget: relation, collection: notes, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }] }
+          - { name: photos, label: Photo, widget: object, fields: [{ name: post, label: Photo, widget: relation, collection: photos, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }] }
+          - { name: jams, label: Jam, widget: object, fields: [{ name: post, label: Jam, widget: relation, collection: jams, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }] }
+          - { name: watching, label: Film, widget: object, fields: [{ name: post, label: Film, widget: relation, collection: watching, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }] }
+          - { name: reading, label: Book, widget: object, fields: [{ name: post, label: Book, widget: relation, collection: reading, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }] }
+          - { name: activities, label: Activity, widget: object, fields: [{ name: post, label: Activity, widget: relation, collection: activities, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }] }
+          - { name: audio, label: Recording, widget: object, fields: [{ name: post, label: Recording, widget: relation, collection: audio, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }] }
+          - { name: videos, label: Video, widget: object, fields: [{ name: post, label: Video, widget: relation, collection: videos, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }] }
+          - { name: events, label: Event, widget: object, fields: [{ name: post, label: Event, widget: relation, collection: events, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }] }
+          - { name: recipes, label: Recipe, widget: object, fields: [{ name: post, label: Recipe, widget: relation, collection: recipes, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }] }
+          - { name: bookmarks, label: Bookmark, widget: object, fields: [{ name: post, label: Bookmark, widget: relation, collection: bookmarks, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }] }
+          - { name: likes, label: Like, widget: object, fields: [{ name: post, label: Like, widget: relation, collection: likes, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }] }
+          - { name: replies, label: Reply, widget: object, fields: [{ name: post, label: Reply, widget: relation, collection: replies, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }] }
+          - { name: reposts, label: Repost, widget: object, fields: [{ name: post, label: Repost, widget: relation, collection: reposts, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }] }
+          - { name: rsvps, label: RSVP, widget: object, fields: [{ name: post, label: RSVP, widget: relation, collection: rsvps, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }] }
+  # /now (nownownow.com): what I'm up to, plus picked jams, films and books. ⚠ Picks are paths inside each folder; a pick that no longer exists stops the build.
+  - name: now
+    label: Now
+    file: src/pages/now.md
+    fields:
+      - *title
+      - *description
+      - { name: date, label: Last updated, widget: string, hint: 'YYYY-MM-DD — bump it whenever the page changes; shown at the top', pattern: ['^\d{4}-\d{2}-\d{2}', 'Start with YYYY-MM-DD'] }
+      - { name: location, label: Where I am, widget: string, required: false, hint: 'Shown after the date, e.g. a town and a country' }
+      - { name: listening, label: Listening to, widget: relation, collection: jams, multiple: true, max: 3, required: false, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }
+      - { name: watching, label: Watching, widget: relation, collection: watching, multiple: true, max: 3, required: false, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }
+      - { name: reading, label: Reading, widget: relation, collection: reading, multiple: true, max: 3, required: false, search_fields: [title], display_fields: [title], filters: [{ field: draft, values: [true], exclude: true }] }
+      - *draft
+      - { name: body, label: What I'm doing, widget: markdown, modes: [raw], required: false }

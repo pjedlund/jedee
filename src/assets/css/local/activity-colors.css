@@ -1,0 +1,31 @@
+/* One color per activity type: map dots, the table's icons and the page's meta icon. In the variables layer, where it was in the shared CSS, so a theme can still override it. ⚠ Orienteering changes shade per theme so it never matches the green's lightness — the two are only told apart by lightness under red–green color blindness. */
+@layer variables {
+:root {
+  --color-activity-orienteering-on-light: var(--color-orange-600);
+  --color-activity-orienteering-on-dark: var(--color-orange-300);
+  --color-activity-hike: var(--color-green-vivid);
+  --color-activity-run: var(--color-blue-vivid);
+  --color-activity-weight-training: var(--color-red-vivid);
+}
+
+:root,
+:root[data-theme='light'] {
+  --color-activity-orienteering: var(--color-activity-orienteering-on-light);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-activity-orienteering: var(--color-activity-orienteering-on-dark);
+  }
+}
+
+:root[data-theme='dark'] {
+  --color-activity-orienteering: var(--color-activity-orienteering-on-dark);
+}
+
+/* Activity type → its color, for anything carrying data-activity (a table row, the meta line). */
+[data-activity='orienteering'] { --activity-color: var(--color-activity-orienteering); }
+[data-activity='hike'] { --activity-color: var(--color-activity-hike); }
+[data-activity='run'] { --activity-color: var(--color-activity-run); }
+[data-activity='weight-training'] { --activity-color: var(--color-activity-weight-training); }
+}

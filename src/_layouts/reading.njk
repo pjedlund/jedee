@@ -1,0 +1,42 @@
+---
+layout: base
+schema: BlogPosting
+---
+
+<div class="region" style="--region-space-top: var(--space-xl-2xl)">
+  <article class="wrapper flow prose h-entry">
+    {% include 'partials/entry-header.njk' %}
+
+    {# Cover renders as a plain <img> (the Image transform self-hosts remote URLs and resolves local paths); never the {% image %} shortcode, which is local-only and errors on a remote URL. Alt text comes from `coverAlt` when the post writes one. `default` substitutes only on UNDEFINED, so `coverAlt: ""` is honoured as empty — the right answer for a cover that just repeats the title beside it. #}
+    {% if cover %}
+      {# `coverZoom` is computed in reading.11tydata.js and is null when the cover is missing, unreachable, or no bigger than the displayed cover — so a post only gets the lightbox when there is genuinely more to see. The .cover-zoom wrapper caps the component's display:block <a>, which would otherwise make the whole column width clickable. #}
+      {% if coverZoom %}
+        <div class="cover-zoom">
+          <photo-lightbox @href="{{ coverZoom.url }}" @width="{{ coverZoom.width }}" @height="{{ coverZoom.height }}">
+            {# ⚠ The slot="image" must sit on a wrapper, not on the <img> itself: WebC drops a slotted node carrying eleventy:-namespaced attributes, and the cover silently renders as an empty link. #}
+            <div slot="image">
+              <img class="cover" eleventy:optional="placeholder" src="{{ cover | safe }}" alt="{{ coverAlt | default(words.coverFor | replace('{title}', title)) }}" loading="lazy" eleventy:widths="160,224,448" sizes="auto">
+            </div>
+          </photo-lightbox>
+        </div>
+      {% else %}
+        <img class="cover" eleventy:optional="placeholder" src="{{ cover | safe }}" alt="{{ coverAlt | default(words.coverFor | replace('{title}', title)) }}" loading="lazy" eleventy:widths="160,224,448" sizes="auto">
+      {% endif %}
+    {% endif %}
+
+    {% if link %}<data hidden class="u-read-of" value="{{ link }}"></data>{% endif %}
+
+    <div class="e-content | wrapper-pass flow">
+      {{ content | safe }}
+    </div>
+
+    {% include 'partials/backlinks.njk' %}
+    {% include 'partials/entry-footer.njk' %}
+    {% include 'partials/hidden-author.njk' %}
+  </article>
+</div>
+
+{%- css "local" -%}
+  {%- include 'css/post.css' -%}
+  {%- include 'css/cover.css' -%}
+{%- endcss -%}

@@ -1,0 +1,40 @@
+---
+layout: base
+schema: BlogPosting
+---
+
+<div class="region" style="--region-space-top: var(--space-xl-2xl)">
+  <article class="wrapper flow prose h-entry">
+    {% include 'partials/entry-header.njk' %}
+
+    {% if description %}<p>{{ description }}</p>{% endif %}
+
+    {# Dish photo is cover-style: a remote URL (clipped) or a local passthrough path. A plain <img> lets eleventy-img's HTML Transform handle either — the {% image %} shortcode is local-only and breaks on a remote URL. `default` substitutes only on UNDEFINED, so `coverAlt: ""` is honoured as empty. #}
+    {% if cover %}
+      <img class="cover" eleventy:optional="placeholder" src="{{ cover | safe }}" alt="{{ coverAlt | default(title) }}" loading="lazy" eleventy:widths="320,640,960" sizes="auto">
+    {% endif %}
+
+    {% if yield or totalTime %}
+      <dl class="recipe-meta">
+        {% if yield %}<dt>{{ words.yields }}</dt><dd>{{ yield }}</dd>{% endif %}
+        {% if totalTime %}<dt>{{ words.totalTime }}</dt><dd><time datetime="{{ totalTime | toISODuration }}">{{ totalTime | formatDuration }}</time></dd>{% endif %}
+      </dl>
+    {% endif %}
+
+    {# Ingredients + instructions live in the note body as markdown (kepano shape) — the Obsidian Web Clipper can't emit a nested `recipe:` object, so a recipe is a body-driven post like every other type. #}
+    <div class="e-content | wrapper-pass flow">
+      {{ content | safe }}
+    </div>
+
+    {% if source %}<p class="recipe-source">{{ words.recipeFrom }} <a href="{{ source }}">{{ source }}</a></p>{% endif %}
+
+    {% include 'partials/backlinks.njk' %}
+    {% include 'partials/entry-footer.njk' %}
+    {% include 'partials/hidden-author.njk' %}
+  </article>
+</div>
+
+{%- css "local" -%}
+  {%- include 'css/post.css' -%}
+  {%- include 'css/cover.css' -%}
+{%- endcss -%}

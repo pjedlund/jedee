@@ -1,0 +1,7 @@
+[
+  {"path": "/", "note": "home"},
+  {"path": "/now/", "note": "now page"},
+  {"path": "/design-system/", "note": "design system, has tables"},
+  {"path": "/accessibility/", "note": "plain page"},
+  {"path": "/about/", "note": "plain page"}
+]

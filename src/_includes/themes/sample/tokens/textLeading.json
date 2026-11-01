@@ -1,0 +1,8 @@
+{
+  "$type": "lineHeight",
+  "flat": { "$value": 1 },
+  "extrafine": { "$value": 1.1 },
+  "fine": { "$value": 1.2 },
+  "standard": { "$value": 1.45 },
+  "fibonacci": { "$value": 1.612 }
+}

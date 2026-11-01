@@ -1,0 +1,87 @@
+{
+  "$type": "typography",
+  "$description": "Typography composite tokens — bundled type styles that apply font family, weight, size, and line height in one token. Mirrors the type styles in src/assets/css/global/base/global-styles.css. Inner values reference atomic tokens from fonts.json / textWeights.json / textSizes.json / textLeading.json so any change cascades. PENPOT-ONLY FILE: tailwind.config.js does not read this, so nothing here reaches the CSS. That is why letterSpacing carries a bare number that does NOT match the stylesheet — the CSS uses ch units, which Penpot has no equivalent for, so the Penpot value is matched by eye instead. Do not 'correct' these to the CSS numbers; the two sides are deliberately unlinked. Only heading.1 was matched by eye (verified 2026-08-22, 0.7% off the CSS -0.04ch); heading.2 and heading.3 are heading.1 scaled by font size, so confirm them the first time one appears on a board.",
+  "letterSpacing": {
+    "wide": {
+      "$value": "2.23",
+      "$description": "--tracking-wide (0.16ch) at the 28px body size, e.g. the event card's month. Penpot has no ch, so each size gets its own px value: 0.16 × 0.497 × size (taking 1ch as 0.497em)."
+    },
+    "label": {
+      "$value": "1.27",
+      "$description": "--tracking-wide at 16px (step-min-2): capital labels — breadcrumb, Menu, footer, tags, small buttons."
+    },
+    "table": {
+      "$value": "1.75",
+      "$description": "--tracking-wide at 22px (step-min-1): table column heads."
+    }
+  },
+  "styles": {
+    "body": {
+      "fontFamily": "{font.family.base}",
+      "fontWeight": "{font.weight.regular}",
+      "fontSize": "{font.size.step-0}",
+      "lineHeight": "{font.lineHeight.standard}"
+    },
+    "heading.1": {
+      "fontFamily": "{font.family.display}",
+      "fontWeight": "{font.weight.bold}",
+      "fontSize": "{font.size.step-6}",
+      "lineHeight": "{font.lineHeight.extrafine}",
+      "letterSpacing": "-5"
+    },
+    "heading.2": {
+      "fontFamily": "{font.family.display}",
+      "fontWeight": "{font.weight.bold}",
+      "fontSize": "{font.size.step-4}",
+      "lineHeight": "{font.lineHeight.fine}",
+      "letterSpacing": "-3.2"
+    },
+    "heading.3": {
+      "fontFamily": "{font.family.display}",
+      "fontWeight": "{font.weight.bold}",
+      "fontSize": "{font.size.step-2}",
+      "lineHeight": "{font.lineHeight.fine}",
+      "letterSpacing": "-2.1"
+    },
+    "blockquote": {
+      "fontFamily": "{font.family.base}",
+      "fontWeight": "{font.weight.regular}",
+      "fontSize": "{font.size.step-2}",
+      "lineHeight": "{font.lineHeight.standard}"
+    },
+    "citation": {
+      "fontFamily": "{font.family.base}",
+      "fontWeight": "{font.weight.regular}",
+      "fontSize": "{font.size.step-1}",
+      "lineHeight": "{font.lineHeight.standard}"
+    },
+    "caption": {
+      "fontFamily": "{font.family.base}",
+      "fontWeight": "{font.weight.regular}",
+      "fontSize": "{font.size.step-min-1}",
+      "lineHeight": "{font.lineHeight.standard}"
+    },
+    "intro": {
+      "fontFamily": "{font.family.base}",
+      "fontWeight": "{font.weight.regular}",
+      "fontSize": "{font.size.step-1}",
+      "lineHeight": "{font.lineHeight.standard}",
+      "letterSpacing": "-0.5"
+    },
+    "label": {
+      "fontFamily": "{font.family.base}",
+      "fontWeight": "{font.weight.bold}",
+      "fontSize": "{font.size.step-min-2}",
+      "lineHeight": "{font.lineHeight.flat}",
+      "letterSpacing": "{font.letterSpacing.label}",
+      "textCase": "uppercase"
+    },
+    "table.header": {
+      "fontFamily": "{font.family.base}",
+      "fontWeight": "{font.weight.regular}",
+      "fontSize": "{font.size.step-min-1}",
+      "lineHeight": "{font.lineHeight.standard}",
+      "letterSpacing": "{font.letterSpacing.table}"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+---
+# pagination only gates the file: an empty type gets no feed
+pagination:
+  data: collections.reply
+  size: 100000
+permalink: /replies/feed.json
+eleventyExcludeFromCollections: true
+excludeFromSitemap: true
+---
+{%- set feedCollection = collections.reply -%}
+{%- set feedTitle = words.feedReplies -%}
+{%- set feedDescription = words.feedRepliesDescription -%}
+{%- set feedSelfUrl = "/replies/feed.json" -%}
+{%- include "feeds/link-json-body.njk" -%}

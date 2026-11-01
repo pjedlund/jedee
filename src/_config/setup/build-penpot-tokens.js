@@ -1,0 +1,256 @@
+// Builds a DTCG JSON of the design tokens for Penpot's Tokens panel; full mapping notes in _local/penpot/penpot-tokens.md.
+// Workflow: edit the active theme's tokens/ (run `npm run colors` after colorsBase.json) → `npm run penpot:tokens` → import `_local/penpot/penpot-tokens.dtcg.json` in Penpot.
+// Mapping:
+//   nesting            -> dot names (gray.100 -> color.gray.100)
+//   fluid { min, max } -> the max, in px
+//   border radii       -> px ⚠ Penpot's radius binding rejects rem, though rem imports fine
+//   viewports.json     -> "<n>px" dimensions
+//   light_dark colors  -> the value to theme/light, .subdued to theme/dark
+// ⚠ Type names are plural (fontFamilies…) because Penpot's importer expects them; if themes import empty, set their members by hand in Penpot's Themes tab.
+
+import {mkdir, writeFile} from 'node:fs/promises';
+import {dirname, resolve} from 'node:path';
+import {fileURLToPath, pathToFileURL} from 'node:url';
+import {loadTokens} from '../utils/theme.js';
+
+const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../../..');
+// The test points PENPOT_TOKENS_OUT at a temp file so it never overwrites the real export.
+const OUTPUT_PATH = process.env.PENPOT_TOKENS_OUT || resolve(REPO_ROOT, '_local/penpot/penpot-tokens.dtcg.json');
+
+// Top-level keys in colors.json that have a .subdued sibling and represent the light/dark semantic colors.
+const LIGHT_DARK_COLOR_NAMES = ['red', 'blue', 'green'];
+
+// Set order matters in Penpot: when the same token name exists in multiple active sets, the latter wins. theme/* must come last so it overrides core/*.
+const CORE_SETS = ['core/colors', 'core/typography', 'core/spacing', 'core/layout', 'core/button'];
+const SET_ORDER = [...CORE_SETS, 'theme/light', 'theme/dark'];
+
+const readJSON = async file => loadTokens(file);
+
+function setLeaf(obj, dottedPath, value) {
+	const parts = dottedPath.split('.');
+	let cur = obj;
+	for (let i = 0; i < parts.length - 1; i++) {
+		cur[parts[i]] ??= {};
+		cur = cur[parts[i]];
+	}
+	cur[parts.at(-1)] = value;
+}
+
+function token(value, type, description) {
+	const t = {$value: value, $type: type};
+	if (description) t.$description = description;
+	return t;
+}
+
+function fluidMaxToPx(v) {
+	if (v && typeof v === 'object' && 'max' in v) return `${v.max}px`;
+	if (typeof v === 'number') return `${v}px`;
+	return v;
+}
+
+// rem → px at the 16px root base; px/unitless pass through.
+function remToPx(v) {
+	if (typeof v === 'string' && v.trim().endsWith('rem')) {
+		return `${parseFloat(v) * 16}px`;
+	}
+	return v;
+}
+
+export async function build() {
+	const [colors, fonts, spacing, textSizes, textLeading, textWeights, borderRadius, borderWidth, shadows, viewports, semanticColors, typography, buttonColors, megamenuColors, audioPlayerColors, themeVisibility] = await Promise.all([
+		readJSON('colors.json'),
+		readJSON('fonts.json'),
+		readJSON('spacing.json'),
+		readJSON('textSizes.json'),
+		readJSON('textLeading.json'),
+		readJSON('textWeights.json'),
+		readJSON('borderRadius.json'),
+		readJSON('borderWidth.json'),
+		readJSON('shadows.json'),
+		readJSON('viewports.json'),
+		readJSON('semanticColors.json'),
+		readJSON('typography.json'),
+		readJSON('buttonColors.json'),
+		readJSON('megamenuColors.json'),
+		readJSON('audioPlayerColors.json'),
+		readJSON('themeVisibility.json'),
+	]);
+
+	const out = {};
+
+	// ---------- core/colors ----------
+	const coreColors = {};
+	for (const [topKey, val] of Object.entries(colors)) {
+		if (topKey.startsWith('$')) continue;
+		if (LIGHT_DARK_COLOR_NAMES.includes(topKey)) {
+			// The light/dark pair goes to the theme sets below; a vivid variant is the same in both themes, so it is core.
+			if (val.vivid?.$value) setLeaf(coreColors, `color.${topKey}.vivid`, token(val.vivid.$value, 'color'));
+			continue;
+		}
+
+		if (val.$value !== undefined) {
+			// e.g. base-darkest → color.base.darkest
+			const [head, ...rest] = topKey.split('-');
+			const path = rest.length ? `color.${head}.${rest.join('-')}` : `color.${topKey}`;
+			setLeaf(coreColors, path, token(val.$value, 'color'));
+		} else {
+			// Nested palette: gray: { 100: { $value }, 200: { $value }, ... }
+			for (const [shadeKey, shadeVal] of Object.entries(val)) {
+				if (shadeVal?.$value !== undefined) {
+					setLeaf(coreColors, `color.${topKey}.${shadeKey}`, token(shadeVal.$value, 'color'));
+				}
+			}
+		}
+	}
+	out['core/colors'] = coreColors;
+
+	// ---------- theme/light + theme/dark ----------
+	const themeLight = {};
+	const themeDark = {};
+	for (const name of LIGHT_DARK_COLOR_NAMES) {
+		const data = colors[name];
+		if (!data) continue;
+		if (data.$value) {
+			setLeaf(themeLight, `color.semantic.${name}`, token(data.$value, 'color'));
+		}
+		if (data.subdued?.$value) {
+			setLeaf(themeDark, `color.semantic.${name}`, token(data.subdued.$value, 'color'));
+		}
+	}
+	// Semantic functional colors (bg, text, headline, etc.) — names mirror the --color-* CSS variables. Values are references to palette tokens, kept in sync via the {curly.brackets} DTCG reference syntax.
+	const semanticType = semanticColors.$type ?? 'color';
+	for (const [name, value] of Object.entries(semanticColors.themes?.light ?? {})) {
+		setLeaf(themeLight, `color.${name}`, token(value, semanticType));
+	}
+	for (const [name, value] of Object.entries(semanticColors.themes?.dark ?? {})) {
+		setLeaf(themeDark, `color.${name}`, token(value, semanticType));
+	}
+	// Component colors (buttons, mega-menu, audio player) and the theme-visibility opacity switches. Names emitted verbatim — no color.* prefix — to match the bindings the Penpot components already carry. `core` goes to its own core set, `themes` holds the color-mix() results, flattened per theme.
+	for (const componentColors of [buttonColors, megamenuColors, audioPlayerColors, themeVisibility]) {
+		const componentType = componentColors.$type ?? 'color';
+		const coreSetName = componentColors.$penpotCoreSet;
+		if (coreSetName) {
+			const coreSet = (out[coreSetName] ??= {});
+			for (const [name, value] of Object.entries(componentColors.core ?? {})) {
+				setLeaf(coreSet, name, token(value, componentType));
+			}
+		}
+		for (const [name, value] of Object.entries(componentColors.themes?.light ?? {})) {
+			setLeaf(themeLight, name, token(value, componentType));
+		}
+		for (const [name, value] of Object.entries(componentColors.themes?.dark ?? {})) {
+			setLeaf(themeDark, name, token(value, componentType));
+		}
+	}
+	// Shadows. The JSON pairs each recipe with a `-dark` sibling for tailwind's flat :root; Penpot wants one name in both theme sets, so the pairs are split apart again here. Layers pass through as-is.
+	const shadowType = shadows.$type ?? 'shadow';
+	for (const [k, v] of Object.entries(shadows)) {
+		if (k.startsWith('$')) continue;
+		const isDark = k.endsWith('-dark');
+		const target = isDark ? themeDark : themeLight;
+		const name = isDark ? k.slice(0, -'-dark'.length) : k;
+		setLeaf(target, `shadow.${name}`, token(v.$value, shadowType));
+	}
+	out['theme/light'] = themeLight;
+	out['theme/dark'] = themeDark;
+
+	// ---------- core/typography ----------
+	const coreTypo = {};
+	for (const [k, v] of Object.entries(fonts)) {
+		if (k.startsWith('$')) continue;
+		// Penpot only knows specific font names from its registry (e.g. "Source Serif 4"), not the full CSS fallback stack. Use the explicit `penpot` field if present; otherwise fall back to the first family in the $value array.
+		const family = v.penpot ?? (Array.isArray(v.$value) ? v.$value[0] : v.$value);
+		setLeaf(coreTypo, `font.family.${k}`, token([family], 'fontFamilies', v.$description));
+	}
+	for (const [k, v] of Object.entries(textWeights)) {
+		if (k.startsWith('$')) continue;
+		setLeaf(coreTypo, `font.weight.${k}`, token(v.$value, 'fontWeights'));
+	}
+	for (const [k, v] of Object.entries(textSizes)) {
+		if (k.startsWith('$')) continue;
+		setLeaf(coreTypo, `font.size.${k}`, token(fluidMaxToPx(v.$value), 'fontSizes'));
+	}
+	for (const [k, v] of Object.entries(textLeading)) {
+		if (k.startsWith('$')) continue;
+		setLeaf(coreTypo, `font.lineHeight.${k}`, token(String(v.$value), 'number'));
+	}
+	// Letter spacing, Penpot-only like the composites: the CSS uses ch, so these are px measured at the text size.
+	for (const [k, v] of Object.entries(typography.letterSpacing ?? {})) {
+		setLeaf(coreTypo, `font.letterSpacing.${k}`, token(v.$value, 'letterSpacing', v.$description));
+	}
+	// Typography composite tokens — bundled type styles (family + weight + size + lineHeight). Inner keys are singular per Penpot's `typography` token shape.
+	const typographyType = typography.$type ?? 'typography';
+	for (const [styleName, parts] of Object.entries(typography.styles ?? {})) {
+		setLeaf(coreTypo, `type.${styleName}`, token(parts, typographyType));
+	}
+	out['core/typography'] = coreTypo;
+
+	// ---------- core/spacing ----------
+	const coreSpacing = {};
+	for (const [k, v] of Object.entries(spacing)) {
+		if (k.startsWith('$')) continue;
+		setLeaf(coreSpacing, `space.${k}`, token(fluidMaxToPx(v.$value), 'spacing'));
+	}
+	out['core/spacing'] = coreSpacing;
+
+	// ---------- core/layout ----------
+	const coreLayout = {};
+	for (const [k, v] of Object.entries(borderRadius)) {
+		if (k.startsWith('$')) continue;
+		setLeaf(coreLayout, `radius.${k}`, token(remToPx(v.$value), 'borderRadius'));
+	}
+	for (const [k, v] of Object.entries(borderWidth)) {
+		if (k.startsWith('$')) continue;
+		setLeaf(coreLayout, `border.${k}`, token(v.$value, 'borderWidth'));
+	}
+	for (const [k, v] of Object.entries(viewports)) {
+		if (typeof v !== 'number') continue; // skip title, description
+		setLeaf(coreLayout, `breakpoint.${k}`, token(`${v}px`, 'dimension'));
+	}
+	out['core/layout'] = coreLayout;
+
+	// ---------- $themes + $metadata (Tokens Studio convention) ----------
+	const enabledCore = Object.fromEntries(CORE_SETS.map((s) => [s, 'enabled']));
+	out.$themes = [
+		{
+			id: 'light',
+			name: 'Light',
+			selectedTokenSets: {...enabledCore, 'theme/light': 'enabled'},
+		},
+		{
+			id: 'dark',
+			name: 'Dark',
+			selectedTokenSets: {...enabledCore, 'theme/dark': 'enabled'},
+		},
+	];
+	out.$metadata = {tokenSetOrder: SET_ORDER};
+
+	return out;
+}
+
+function countTokens(setObj) {
+	let n = 0;
+	(function walk(node) {
+		if (!node || typeof node !== 'object') return;
+		if ('$value' in node && '$type' in node) n++;
+		else for (const v of Object.values(node)) walk(v);
+	})(setObj);
+	return n;
+}
+
+// Run the file directly to write Penpot's copy; `build` is imported by build-figma-tokens.js for Figma's copy.
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+	const dtcg = await build();
+	await mkdir(dirname(OUTPUT_PATH), {recursive: true});
+	await writeFile(OUTPUT_PATH, JSON.stringify(dtcg, null, 2) + '\n', 'utf8');
+
+	const lines = SET_ORDER.map((name) => `  ${name.padEnd(20)} ${String(countTokens(dtcg[name])).padStart(3)} tokens`);
+	const total = SET_ORDER.reduce((sum, n) => sum + countTokens(dtcg[n]), 0);
+
+	console.log(`Wrote ${OUTPUT_PATH.replace(REPO_ROOT + '/', '')}\n`);
+	console.log('Set summary:');
+	console.log(lines.join('\n'));
+	console.log(`  ${''.padEnd(20)} ${'---'.padStart(3)}`);
+	console.log(`  ${'Total'.padEnd(20)} ${String(total).padStart(3)} tokens\n`);
+	console.log('Next: open the design tokens file in Penpot, Tokens panel → import → select the file above.');
+}

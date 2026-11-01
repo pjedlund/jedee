@@ -1,0 +1,64 @@
+/*
+THEME TOGGLE — animated sun ↔ moon
+Single icon button in the header, showing the CURRENT theme: sun in light, moon in dark. The icon's animation is sun-and-moon.css. Adapted from Adam Argyle's "Building a theme switch component" (web.dev, MIT), rewritten flat with the easings inlined and motion gated on prefers-reduced-motion.
+Progressive enhancement: hidden until <is-land> upgrades — a toggle that can't run shouldn't show. The no-flash theme itself is set by the inline theme-toggle.js.
+*/
+@layer blocks {
+.theme-toggle {
+  /* Outer box sized to sit alongside the wordmark logo in the header; the glyph is the header icon size, and the padding takes up the difference. */
+  --theme-toggle-box: calc(var(--size-step-min-1) + var(--space-2xs) * 2);
+  --theme-toggle-size: var(--site-header-icon-size, var(--size-step-min-2));
+  /* Dim like the rest of the header chrome, brightening on hover; only the logomark keeps the accent. */
+  --theme-toggle-color: var(--color-text-header-dim);
+  --theme-toggle-color-hover: var(--color-text-strong);
+
+  /* Open Props elastic/standard easings, inlined to avoid a runtime @import */
+  --ease-3: cubic-bezier(0.25, 0, 0.3, 1);
+  --ease-out-5: cubic-bezier(0, 0, 0, 1);
+  --ease-elastic-3: cubic-bezier(0.5, 1.25, 0.75, 1.25);
+  --ease-elastic-4: cubic-bezier(0.5, 1.5, 0.75, 1.25);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* WCAG 2.5.8 (AA) target of 24px, kept tight on purpose: a bigger hit area here is empty space that pushes the moon away from the nav. border-box so the min covers the whole button. */
+  box-sizing: border-box;
+  min-block-size: 24px;
+  min-inline-size: 24px;
+  padding: calc((var(--theme-toggle-box) - var(--theme-toggle-size)) / 2);
+  color: var(--theme-toggle-color);
+  background: none;
+  border: none;
+  border-radius: var(--border-radius-small);
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.theme-toggle:is(:hover, :focus-visible) {
+  --theme-toggle-color: var(--theme-toggle-color-hover);
+}
+
+.theme-toggle svg {
+  block-size: var(--theme-toggle-size);
+  inline-size: var(--theme-toggle-size);
+  stroke-linecap: round;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .theme-toggle {
+    transition: color var(--transition-duration) var(--transition-timing);
+  }
+}
+
+/* no JS / before hydration: hide the control entirely */
+is-land:not(:defined) .theme-toggle {
+  display: none;
+}
+
+/* The header is-land inherits the body's tall line-height (~36px), which would sit the inline-flex button on an oversized text baseline. Flex-center the wrapper so the toggle lands level with the MENU trigger and the breadcrumb logomark. */
+is-land:has(> .theme-toggle) {
+  display: flex;
+  align-items: center;
+}
+}

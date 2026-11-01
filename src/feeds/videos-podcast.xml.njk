@@ -1,0 +1,16 @@
+---
+# pagination only gates the file: an empty type gets no feed
+pagination:
+  data: collections.video
+  size: 100000
+permalink: /videos/podcast.xml
+eleventyExcludeFromCollections: true
+excludeFromSitemap: true
+---
+{# Moved off /videos/feed.xml on 2026-08-10 — see audio-podcast.xml.njk for the
+   reasoning, which applies identically here. #}
+{%- set feedCollection = collections.video -%}
+{%- set feedTitle = words.feedVideos -%}
+{%- set feedDescription = words.feedVideosDescription -%}
+{%- set feedSelfUrl = "/videos/podcast.xml" -%}
+{%- include "feeds/podcast-body.njk" -%}
