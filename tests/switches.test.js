@@ -343,3 +343,11 @@ test('maps with tiles: the script loads, and holds the address and box from sett
   assert.ok(script.includes(TILES), 'the tile address is not in the script')
   assert.match(script, /\[1\.5,\s*2\.5,\s*3\.5,\s*4\.5\]/, 'the coverage box is not in the script')
 })
+
+test('wording: the comments named in the Plan 2 list say what they mean', () => {
+  const read = file => readFileSync(path.join(ROOT, file), 'utf8')
+  const OWN = /\bown(s|er|ers|ing|ership)?\b/i
+  for (const file of ['src/_includes/themes/sample/tokens/shadows.json', 'src/_config/setup/build-design-md.js', 'src/_config/setup/build-design-system.js', 'src/_includes/head/meta-info.njk', 'src/_layouts/base.njk', 'src/assets/css/global/base/global-styles.css', 'src/assets/scripts/components/place-map.js', 'src/_data/meta.js', 'src/_includes/schemas/TechArticle.njk', 'eleventy.config.js']) assert.ok(!OWN.test(read(file)), `${file} has the word`)
+  const comment = read('src/assets/css/local/external-link.css').match(/\/\*[\s\S]*?\*\//)[0]
+  assert.ok(!comment.includes('orange'), 'the external link comment names a color that depends on the theme')
+})

@@ -92,7 +92,7 @@ function siteFlavor(el, theme) {
 
 const outsideCoverage = ([w, s, e, n]) => COVERAGE && (w < COVERAGE[0] || s < COVERAGE[1] || e > COVERAGE[2] || n > COVERAGE[3]);
 
-// Marker popup: the date in italics, then the place's name on its own line, linked to the post. Styling is in place-map.css.
+// Marker popup: the date in italics, then the place's name on a separate line, linked to the post. Styling is in place-map.css.
 const popupHtml = (p) => {
   const name = p.url ? `<a href="${p.url}">${p.name}</a>` : p.name;
   return p.date ? `<i class="place-popup-date">${p.date}</i>${name}` : name;

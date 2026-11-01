@@ -149,7 +149,7 @@ test('lightbox CSS: only on a page with a lightbox, and in the blocks layer', as
   assert.match(styleOf(site, 'plain/index.html'), /figure:is\(\.popout,\s*\.feature,\s*\.full\)/, 'a plain breakout figure lost its caption rule')
 })
 
-// A logo with its own number shape: if the CSS held a fixed path, this one could not reach the page.
+// A logo of a different shape: if the CSS held a fixed path, this one could not reach the page.
 const OTHER_LOGO = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 40" fill="#123456"><path d="M1 1h18v38H1z" /></svg>\n'
 
 test('the map preloader mark comes from the theme logo, and the stem is a theme setting', async t => {

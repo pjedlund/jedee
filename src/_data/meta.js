@@ -11,7 +11,7 @@ import {resolveSwitches} from '../_config/utils/switches.js';
 export const settings = yamlLoad(fs.readFileSync(new URL('./settings.yaml', import.meta.url), 'utf8'));
 const {identity, profiles} = settings;
 const flags = settings.switches ?? {};
-// The parts of the site that are on unless settings say false (utils/switches.js); `flags` holds the rest of settings.switches under their own names below.
+// The parts of the site that are on unless settings say false (utils/switches.js); `flags` holds the rest of settings.switches under the same names below.
 export const switches = resolveSwitches(settings);
 // The service worker's address, protected caches and push code (utils/pwa.js).
 export const pwa = resolvePwa(settings);
@@ -158,7 +158,7 @@ export const tests = {
     // settings.a11yPaths: the pages to test; [] tests every page. ⚠ A path that doesn't exist scores zero errors and passes silently, so keep the list in step by hand.
     customPaths: settings.a11yPaths ?? ['/', '/accessibility/', '/design-system/'],
     globalIgnore: [],
-    // Point pa11y at an already-installed Chrome. Do not empty this: puppeteer then hunts for its own pinned build and fails with "Could not find Chrome (ver. …)" — see the wiki, "The accessibility test". Override with PA11Y_CHROME= where Chrome lives elsewhere.
+    // Point pa11y at an already-installed Chrome. Do not empty this: puppeteer then hunts for a pinned build of its choosing and fails with "Could not find Chrome (ver. …)" — see the wiki, "The accessibility test". Override with PA11Y_CHROME= where Chrome lives elsewhere.
     chromePath: process.env.PA11Y_CHROME || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
   }
 };

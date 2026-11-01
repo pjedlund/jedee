@@ -130,7 +130,7 @@ export default async function(eleventyConfig) {
   eleventyConfig.addPlugin(plugins.webc, {
     components: ['./src/_includes/webc/**/*.webc'],
     useTransform: true,
-    // ⚠ A transform sees no global data of its own: without this a component's $data.words is undefined.
+    // ⚠ A transform sees no global data by itself: without this a component's $data.words is undefined.
     transformData: {words: loadWords(), maps: resolveMaps(settings)}
   });
 
