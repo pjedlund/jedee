@@ -172,3 +172,16 @@ test('the YouTube placeholder mark comes from the theme logo', async t => {
   assert.ok(!html.includes('__THEME_LOGO_MARK__'), 'the placeholder reached the page')
   assert.ok(!html.includes('m50 0 .588'), 'a fixed logo is still in the markup')
 })
+
+// A feed's body holds the embed's <style> too. It goes through the page's transforms, which is why the placeholder is filled in there as well.
+test('the YouTube placeholder never reaches a feed', async t => {
+  const note = '---\ntitle: A filmed note\ndate: 2026-01-01\n---\n\n<div><custom-youtube @slug="abc123" @label="A film"> </custom-youtube></div>\n'
+  const site = await makeTempSite({ files: { 'src/posts/notes/a-filmed-note.md': note } })
+  t.after(() => site.cleanup())
+  await site.build()
+  for (const file of ['feed.xml', 'feed.json']) {
+    const text = site.read(file)
+    assert.ok(text.includes('--yt-logo-mark'), `${file} has no embed to check`)
+    assert.ok(!text.includes('__THEME_LOGO_MARK__'), `the placeholder reached ${file}`)
+  }
+})
