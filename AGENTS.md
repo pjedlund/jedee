@@ -16,6 +16,7 @@ A boilerplate built with [Eleventy (11ty) v3](https://www.11ty.dev) on the [Elev
 
 - ⚠ A site's first merge from stomme is always `git merge --allow-unrelated-histories -s ours upstream/main`, never plain. Stomme contains Eleventy Excellent 4.9.1 in its history, so a plain first merge starts a real merge against that old version and stops on conflicts. The `-s ours` merge joins the histories and changes no file. Later merges are ordinary ones.
 - When stomme changes `src/_data/settings.yaml`, a site keeps its file and adds any new line by hand. The merge conflict in that file is expected: take the site's version, then read stomme's for what is new.
+- Stomme keeps no remote for Lene's repo, on purpose. Her releases are fetched by address, `git fetch https://github.com/madrilene/eleventy-excellent --tags`, then merged by tag. Never add her repo as a remote, so neither git nor `gh` can aim at it from a stomme clone.
 - `npm run compare:upstream` lists every shared file in a site that differs from `upstream/main` as last fetched, and exits non-zero if any do. When `upstream` isn't stomme, as in stomme itself, it says so and exits 0.
 
 ## Tech Stack

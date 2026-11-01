@@ -205,3 +205,18 @@ test('a Sveltia save of settings.yaml keeps theme, site, analytics, postTypes an
   for (const key of ['theme', 'site', 'analytics', 'postTypes']) if (key in before) assert.deepEqual(saved[key], before[key], `${key} changes in a save`)
   for (const name of SWITCHES) assert.equal(saved.switches[name], before.switches[name], `switches.${name} is lost or changed in a save`)
 })
+
+test('humans.txt names no tool that belongs to one site, and a theme can add its tools', async t => {
+  const plain = await makeTempSite()
+  t.after(() => plain.cleanup())
+  await plain.build()
+  const text = plain.read('humans.txt')
+  for (const tool of ['Warp', 'Nova', 'Penpot', 'Obsidian', 'Claude Code', 'Cloudflare R2']) assert.ok(!text.includes(tool), `humans.txt still names ${tool}`)
+  assert.match(text, /Components: 11ty, Eleventy Excellent/)
+  assert.ok(!text.includes('Software:'), 'an empty Software line is left behind')
+
+  const themed = await makeTempSite({ files: { 'src/_includes/themes/sample/words.yaml': 'humansComponents: 11ty and a shed\nhumansSoftware: A pencil\n' } })
+  t.after(() => themed.cleanup())
+  await themed.build()
+  assert.match(themed.read('humans.txt'), /Components: 11ty and a shed\n\s*Software: A pencil/)
+})
