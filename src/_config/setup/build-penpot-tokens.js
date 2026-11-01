@@ -252,5 +252,5 @@ if (import.meta.url === pathToFileURL(process.argv[1]).href) {
 	console.log(lines.join('\n'));
 	console.log(`  ${''.padEnd(20)} ${'---'.padStart(3)}`);
 	console.log(`  ${'Total'.padEnd(20)} ${String(total).padStart(3)} tokens\n`);
-	console.log('Next: open JEDEE - design tokens in Penpot, Tokens panel → import → select the file above.');
+	console.log('Next: open the design tokens file in Penpot, Tokens panel → import → select the file above.');
 }

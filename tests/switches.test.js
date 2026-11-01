@@ -38,6 +38,9 @@ const MARKERS = {
 // Markers that need no posts to show up. The menu needs posts and hideNav off, so it has a case of its own.
 const PAGE = 'privacy/index.html'
 
+// ⚠ A site's settings may turn some off, so these cases name them; left to the file, a marker can be missing for the wrong reason.
+const ALL_ON = Object.fromEntries(Object.keys(MARKERS).map(name => [name, true]))
+
 test('every switch has a marker here', () => {
   assert.deepEqual(Object.keys(MARKERS).sort(), SWITCHES.filter(name => name !== 'mainNav').sort())
 })
@@ -70,12 +73,12 @@ test('the shortcuts dialog lists the search keys only when there is a search to 
   assert.ok(off.read(PAGE).includes('id="shortcuts"') && !off.read(PAGE).includes('<kbd>K</kbd>'), 'the dialog still lists the search keys')
 })
 
-test('on by default: the header, menu button area and footer are not empty', async t => {
-  const site = await makeTempSite()
+test('on: the header, menu button area and footer are not empty', async t => {
+  const site = await makeTempSite({ settings: { switches: ALL_ON } })
   t.after(() => site.cleanup())
   await site.build()
   const page = pageAndScripts(site, PAGE)
-  for (const [name, marker] of Object.entries(MARKERS)) assert.ok(page.includes(marker), `${name}: ${marker} is missing with the default settings`)
+  for (const [name, marker] of Object.entries(MARKERS)) assert.ok(page.includes(marker), `${name}: ${marker} is missing with every switch on`)
   // ⚠ A partial that renders to nothing inside a wrapped include would leave the tags and an empty shell, so look inside.
   const header = site.read(PAGE).match(/<header class="site-header[^>]*>([\s\S]*?)<\/header>/)[1]
   assert.match(header, /class="skip-link"/)
@@ -89,7 +92,7 @@ test('on by default: the header, menu button area and footer are not empty', asy
 
 for (const name of Object.keys(MARKERS)) {
   test(`${name} off: its marker is gone`, async t => {
-    const site = await makeTempSite({ settings: { switches: { [name]: false } } })
+    const site = await makeTempSite({ settings: { switches: { ...ALL_ON, [name]: false } } })
     t.after(() => site.cleanup())
     await site.build()
     const page = pageAndScripts(site, PAGE)
@@ -166,7 +169,7 @@ const SAVED = JSON.stringify({ lastFetched: '2026-01-02T00:00:00.000Z', children
 
 test('webmentions: saved ones show on a note, and not when the switch is off', async t => {
   const files = { 'src/posts/notes/a-small-note.md': NOTE, '.cache/webmentions.json': SAVED }
-  const on = await makeTempSite({ files })
+  const on = await makeTempSite({ settings: { switches: { webmentions: true } }, files })
   t.after(() => on.cleanup())
   await on.build()
   assert.match(on.read('notes/a-small-note/index.html'), /A saved reply text/)

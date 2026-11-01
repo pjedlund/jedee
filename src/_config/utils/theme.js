@@ -8,8 +8,8 @@ const ROOT = fileURLToPath(new URL('../../..', import.meta.url));
 const THEMES = 'src/_includes/themes';
 
 export function themeName() {
-  // @until the boilerplate — the default stays jedee only while JEDEE is the only site; a new site must choose.
-  const name = yamlLoad(fs.readFileSync(path.join(ROOT, 'src/_data/settings.yaml'), 'utf8')).theme || 'jedee';
+  const name = yamlLoad(fs.readFileSync(path.join(ROOT, 'src/_data/settings.yaml'), 'utf8')).theme;
+  if (!name) throw new Error(`settings.theme is missing: name a folder in ${THEMES} in src/_data/settings.yaml`);
   if (!fs.existsSync(path.join(ROOT, THEMES, name))) throw new Error(`settings.theme is "${name}", but ${THEMES}/${name} doesn't exist`);
   return name;
 }

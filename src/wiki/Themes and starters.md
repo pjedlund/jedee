@@ -44,17 +44,15 @@ The word "template" shows the problem. Eleventy's [glossary](https://www.11ty.de
 
 What Eleventy has instead is the starter: a complete repo you copy and then keep as your site. [Eleventy Excellent](https://github.com/madrilene/eleventy-excellent) is one. Lene Saile calls it a starter rather than a theme, which is the accurate word — the moment it is copied it stops being a layer and becomes the site.
 
-The trade against Hugo is not one-sided. A forked starter is uglier to upgrade, because the upgrade is a merge rather than a version bump. But a merge conflict is a *message*: it names the file and shows both versions. A stale Hugo override says nothing at all. That holds for files both sides changed; a file upstream *adds* merges in without a word, which is how the 4.8.0 upgrade nearly let a starter file take over the address of jedee's llms.txt — see [[What jedee kept from Eleventy Excellent]]. In practice a heavily customized Hugo site also accumulates a `layouts/` full of copied theme files — the same fork, without git tracking which upstream version each copy came from.
+The trade against Hugo is not one-sided. A forked starter is uglier to upgrade, because the upgrade is a merge rather than a version bump. But a merge conflict is a *message*: it names the file and shows both versions. A stale Hugo override says nothing at all. That holds for files both sides changed; a file upstream *adds* merges in without a word, which is how the 4.8.0 upgrade nearly let a starter file take over the address of stomme's llms.txt. In practice a heavily customized Hugo site also accumulates a `layouts/` full of copied theme files — the same fork, without git tracking which upstream version each copy came from.
 
-## In jedee
+## In stomme
 
-jedee is a fork of Eleventy Excellent, not an installation of it. The consequences follow directly from the above:
+stomme is a fork of Eleventy Excellent, not an installation of it. The consequences follow directly from the above:
 
-- **Upgrades are a git merge**, handled by hand, and the seam between stock and fork exists only as a written record — [[What jedee kept from Eleventy Excellent]] is that record.
+- **Upgrades are a git merge**, handled by hand, and the seam between stock and fork exists only as a written record — a site keeps that record in its notes.
 - **The folder structure carries no layer boundary between the starter and the fork**, which is what makes it read as untidy next to Hugo's. Nothing in `src/` marks which files came from the starter and which belong to this site; the line between shared files and site files is drawn in `tests/site-files.json` instead.
 - **One genuine piece of mess is EE's choice, not Eleventy's**: compiled CSS and JS are written into `src/_includes/css/` and `src/_includes/scripts/` so a template can inline them, which puts build output inside a source directory. That arrangement is the precondition for the rebuild loop described in [[Watch loops]].
 - **The underscore convention is inconsistent** — `_data` and `_includes` are marked, `assets` and `posts` are not, and nothing in the tree explains the difference.
 
-Reorganizing toward an explicit stock/fork separation was considered on 2026-09-05 and deferred: without a lookup order in the tool, any separation would be convention only, enforced by nothing. It has since been done on the one axis that matters for reuse, between what belongs to one site and what is shared, and it is enforced by tests rather than by the tool: see [[Shared files and site files]]. The stock/fork seam with Eleventy Excellent is still only the written record.
-
-Raw source: `src/_raw/dev-notes/How an Eleventy project has no theme layer.md`
+Reorganizing toward an explicit stock/fork separation was deferred: without a lookup order in the tool, any separation would be convention only, enforced by nothing. It has been done on the one axis that matters for reuse, between what belongs to one site and what is shared, and it is enforced by tests rather than by the tool: see [[Shared files and site files]]. The stock/fork seam with Eleventy Excellent is still only the written record.

@@ -1,10 +1,9 @@
-// Serves the mockups over http for both shooters. MapLibre builds absolute URLs from location.origin ("null" on file://), and the tile file needs a real origin. /assets/ maps to dist/ the way the site serves it.
+// Serves the mockups over http for both shooters, so the pages get a real origin. /assets/ maps to dist/ the way the site serves it.
 import { readFile } from 'node:fs';
 import { createServer } from 'node:http';
 import path from 'node:path';
 
-// ⚠ R2's CORS policy only admits johanedlund.se and localhost:8080, so the random port needs web security off to read the tile file.
-export const launchArgs = ['--disable-web-security', '--enable-unsafe-swiftshader'];
+export const launchArgs = ['--enable-unsafe-swiftshader'];
 
 const types = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.json': 'application/json', '.png': 'image/png', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.pbf': 'application/x-protobuf' };
 

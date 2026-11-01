@@ -54,7 +54,7 @@ A tooltip centered under its control is `inset-inline-start: 50%` plus a `-50%` 
 The vertical version of the same thing is easier to miss: a tooltip *below* a control near the foot of the page extends past the document, adding dead scroll under the footer that nothing visible accounts for. Both are worth measuring rather than eyeballing — compare `documentElement.scrollWidth` / `scrollHeight` against `clientWidth` / `clientHeight` with the tooltip hidden.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/tooltip-edge-anchors.png" alt="Two frames standing in for a page, one above the other. In the upper frame, labeled &quot;centred and below on every control&quot;, three dark tooltips are cut off by the frame edges: a Home label clipped at the left, a &quot;Show dark mode&quot; label clipped mid-word at the right, and an Atom feed label clipped at the bottom. In the lower frame, labeled &quot;align=start, align=end, position=top&quot;, the same three labels sit fully inside the frame — the first two anchored to the controls' edges, the third opening upwards above its control." width="1188" height="1012">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/tooltip-edge-anchors.png" alt="Two frames standing in for a page, one above the other. In the upper frame, labeled &quot;centred and below on every control&quot;, three dark tooltips are cut off by the frame edges: a Home label clipped at the left, a &quot;Show dark mode&quot; label clipped mid-word at the right, and an Atom feed label clipped at the bottom. In the lower frame, labeled &quot;align=start, align=end, position=top&quot;, the same three labels sit fully inside the frame — the first two anchored to the controls' edges, the third opening upwards above its control." width="1192" height="1012">
   <figcaption>The three exceptions, and what they exist for. ⚠ The frame clips here so the failure is visible in a still; on a real page nothing is clipped — the label lands outside the viewport and the document grows a scrollbar instead, on every page rather than only while the tooltip shows.</figcaption>
 </figure>
 
@@ -66,7 +66,7 @@ Keeping the two axes independent is worth a little care, or a control that needs
 
 Fading a tooltip with `opacity` alone leaves it in the hit-testing and layout picture while invisible. `visibility: hidden` takes it out, and it can be transitioned alongside opacity — `visibility` animates as a step function, so it flips at the end of the delay rather than interpolating. Transition both, or the fade-out reveals the element snapping away.
 
-## In jedee
+## In stomme
 
 One CUBE block, `src/assets/css/local/tooltip.css`, about 55 lines. It and its script load only where something carries a label: the header, the footer, the shortcuts dialog, or a `data-tooltip` in the page's content, and not at all with the `tooltips` switch off. The block itself is CSS only; a control may opt into one extra behavior with one extra line of script (see "Dismissing after use" below). Not Eleventy Excellent stock — EE ships no tooltip. Adapted from the header tooltip on [arielsalminen.com](https://arielsalminen.com/), retokenized and given the triggers below.
 
@@ -79,7 +79,7 @@ The colors need no dark-mode rules. Background is `--color-text` and text is `--
 Three behaviors the source design did not have:
 
 - **`:focus-visible` as well as `:hover`.** Verified with a real Tab press — Chromium does not honor `element.focus({focusVisible: true})` from script, so a scripted focus reports `:focus-visible` as false and reads as broken CSS.
-- **Two edge anchors**, `data-tooltip-align="start"` and `="end"`, because both header controls are at opposite edges, and a `data-tooltip-position="top"` for the footer's feed icon, which sits close enough to the bottom of the document that a tooltip below it added 16px of dead scroll — measured, not guessed. The defaults stay centered and below for anything placed inland.
+- **Two edge anchors**, `data-tooltip-align="start"` and `="end"`, because both header controls are at opposite edges, and a `data-tooltip-position="top"` for the footer's feed icon, which sits close enough to the bottom of the document that a tooltip below it adds dead scroll. The defaults stay centered and below for anything placed inland.
 - **Suppressed on `aria-current`.** The source spells this `:not(.active)` on its nav items; the attribute already carries the state, so `[data-tooltip][aria-current]::after` does it without a class. On the start page the logomark *is* the current page, and its tooltip would have landed on top of the wordmark typing itself in (see [[Choreographing CSS animations]]).
 
 ### A `::after` inherits from a control styled not to look like text
@@ -104,7 +104,7 @@ Instead the control's script sets a `data-tooltip-dismissed` attribute on click 
 
 ### Esc
 
-WCAG 1.4.13 does not exempt a tooltip for repeating a hidden label: anything that appears on hover or focus and covers other content has to be dismissible without moving the pointer or focus. The footer tooltips open upwards over the footer links, so they cover content. Since 2026-10-08 `bundle/tooltip.js`, included on every page from `base.njk`, listens for Esc on the document and sets the same `data-tooltip-dismissed` on whichever `[data-tooltip]` matches `:hover` or `:focus-visible`, clearing it on that control's next `pointerleave` or `blur`. Focus stays where it was. It runs alongside the other Esc handlers (the menu, the search, the shortcuts dialog), which close their things.
+WCAG 1.4.13 does not exempt a tooltip for repeating a hidden label: anything that appears on hover or focus and covers other content has to be dismissible without moving the pointer or focus. The footer tooltips open upwards over the footer links, so they cover content. `bundle/tooltip.js`, included on every page from `base.njk`, listens for Esc on the document and sets the same `data-tooltip-dismissed` on whichever `[data-tooltip]` matches `:hover` or `:focus-visible`, clearing it on that control's next `pointerleave` or `blur`. Focus stays where it was. It runs alongside the other Esc handlers (the menu, the search, the shortcuts dialog), which close their things.
 
 ### What is not built
 
@@ -113,5 +113,3 @@ No `bottom`/`left`/`right` placements beyond the three that a real control neede
 Related: [[Accessibility]] — where this page sits among the site's accessibility work. [[The theme toggle]] — the other half of the header's right-hand cluster, and the control the first tooltip was built for. [[Focus rings and paint containment]] — the other case where a decoration positioned outside a control's box gets clipped or overflows by surprise.
 
 The figure is `src/wiki/_sources/tooltips.html`, drawn with real controls against the site's compiled `global.css` — the offsets, the two nudge properties and all three placement exceptions are the block's rather than a redrawing. The one thing the mockup overrides is visibility: a tooltip exists only on `:hover` / `:focus-visible`, and a screenshot has neither.
-
-Raw source: `src/_raw/dev-notes/How the header tooltips work.md`

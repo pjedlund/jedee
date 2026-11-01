@@ -12,7 +12,7 @@ Microformats are the parsing layer of the IndieWeb: webmention receivers, feed r
 
 The one thing to internalize: **these classes look like CSS hooks but they are data.** Nothing in the stylesheet may reference them, so they always look unused — and removing one breaks external parsers silently: no build error, no visual change, the site just stops being machine-readable.
 
-## In jedee: data, not style hooks
+## In stomme: data, not style hooks
 
 Every post body is wrapped in `<div class="e-content | flow">`. `e-content` is the [h-entry](https://microformats.org/wiki/h-entry) property marking the element whose contents are the post's actual writing. Webmention receivers and feed readers parse the page, find that class, and take everything inside it as the body — ignoring header, footer, and navigation. **The class exists for parsers. It was never meant to style anything.** Adding it still caused a site-wide spacing bug.
 
@@ -42,13 +42,13 @@ The fix isn't removing the wrapper — parsers need it — but making one elemen
 
 ### `wrapper-pass` — the same root cause, a different consequence
 
-Every post-type layout except `photo.njk` uses `class="e-content | wrapper-pass flow"` (only `post.njk` and `note.njk` did until 2026-10-02). `wrapper-pass` (added June 2026, in `compositions/wrapper.css`) re-exposes the wrapper's named grid columns via `grid-template-columns: subgrid`, so breakout widths (`popout`, `feature`, `full`) work inside the body. Breakouts are grid-column assignments that only apply to direct children of `.wrapper` — so the same wrapper that broke the spacing also broke the breakouts, by the same demotion, needing a different fix. In browsers without subgrid, content simply stays at content width.
+Every post-type layout except `photo.njk` uses `class="e-content | wrapper-pass flow"`. `wrapper-pass` (in `compositions/wrapper.css`) re-exposes the wrapper's named grid columns via `grid-template-columns: subgrid`, so breakout widths (`popout`, `feature`, `full`) work inside the body. Breakouts are grid-column assignments that only apply to direct children of `.wrapper` — so the same wrapper that broke the spacing also broke the breakouts, by the same demotion, needing a different fix. In browsers without subgrid, content simply stays at content width.
 
 ### The entry root sits on the `<article>` — in all sixteen layouts
 
-`e-content` only means anything *inside* an `h-entry`. For a long stretch the only `h-entry` on a post page was the hidden authorship block, which left the visible body and every `u-*` property outside the entry — so a strict parser saw an entry with no content and a set of orphaned properties. Every one of the fifteen per-type specs documents this as a deferred caveat.
+`e-content` only means anything *inside* an `h-entry`. If the only `h-entry` on a post page were the hidden authorship block, the visible body and every `u-*` property would sit outside the entry, and a strict parser would see an entry with no content and a set of orphaned properties.
 
-**It is no longer true.** All sixteen layouts now open the same way:
+stomme avoids that: all sixteen layouts open the same way:
 
 ```njk
 <article class="wrapper flow prose h-entry">
@@ -56,12 +56,9 @@ Every post-type layout except `photo.njk` uses `class="e-content | wrapper-pass 
 
 so the body, the properties, and the hidden `<data>` targets all parse as children of the entry. `hidden-author.njk` moved *inside* that root, where it supplies the entry's single `u-url`.
 
-⚠ Two things are deliberately rendered **outside** the root: received webmentions (`webmentions.njk`) and the recovered This Is My Jam reactions (`jam-social.njk`). Both are `h-cite` cards about *other people's* posts, and nesting them inside the entry would make them read as children of it. The comments in those partials say so — don't tidy them into the `<article>`.
+⚠ Two things are deliberately rendered **outside** the root: received webmentions (`webmentions.njk`) and reactions recovered from an archived service (`jam-social.njk`). Both are `h-cite` cards about *other people's* posts, and nesting them inside the entry would make them read as children of it. The comments in those partials say so — don't tidy them into the `<article>`.
 
-If a spec still describes the nesting caveat as open, the spec is out of date on that point.
 
-**EE stock vs jedee:** `flow.css`, `wrapper.css`, and the reset are Eleventy Excellent's. The `e-content` wrapper, `wrapper-pass`, the entry root, and the mf2 vocabulary throughout the layouts are jedee's IndieWeb layer.
+**EE stock vs stomme:** `flow.css`, `wrapper.css`, and the reset are Eleventy Excellent's. The `e-content` wrapper, `wrapper-pass`, the entry root, and the mf2 vocabulary throughout the layouts are stomme's IndieWeb layer.
 
 Related: [[The title-less post types]] — where a missing `p-name` is the correct data, not an omission.
-
-Raw source: `src/_raw/dev-notes/How the e-content wrapper works.md`

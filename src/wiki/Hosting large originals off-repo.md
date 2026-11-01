@@ -1,5 +1,5 @@
 ---
-description: "Why write-once binaries do not belong in git, and how jedee serves multi-megabyte photo originals from a Cloudflare R2 bucket the build never touches."
+description: "Why write-once binaries do not belong in git, and how stomme serves multi-megabyte photo originals from a Cloudflare R2 bucket the build never touches."
 date: 2026-07-31
 updated: 2026-10-27
 ---
@@ -12,9 +12,9 @@ For files that are *published* rather than *versioned*, the simpler option is to
 
 What it costs is that the build no longer knows anything about those files. Nothing verifies the link still resolves, and nothing catches a stated file size or type that has drifted from what is actually being served. Any metadata the page displays about the file is a claim, not a measurement, so it has to be checked by hand when it changes.
 
-## In jedee
+## In stomme
 
-Photo pages show a modest responsive strip — an Eleventy Image `<picture>` capped at 2000px. But the lightbox zoom target and the download links point at much larger files: an 11 MB full-size JPEG and a 146 MB archival TIFF. Those files are **not in the repo and not part of the build**. They sit in a Cloudflare R2 bucket and the page reaches them by plain URL.
+Photo pages show a modest responsive strip — an Eleventy Image `<picture>` capped at 2000px. But the lightbox zoom target and the download links point at much larger files, such as a full-size JPEG of several megabytes and an archival TIFF of a hundred or more. Those files are **not in the repo and not part of the build**. They sit on a separate host and the page reaches them by plain URL.
 
 This is the deliberate inverse of [[Self-hosting remote images at build time]]: covers get pulled *in* at build, originals stay *out* permanently.
 
@@ -23,23 +23,23 @@ This is the deliberate inverse of [[Self-hosting remote images at build time]]: 
 ```yaml
 photo:
   downloads:
-    - label: Full-size JPEG (9437×3375, 11 MB)
-      url: https://pub-…r2.dev/photos/120-R012-F01-S01-E01.jpg
+    - label: Full-size JPEG (6000×4000, 11 MB)
+      url: https://pub-…r2.dev/photos/roll-01-frame-01.jpg
       format: JPEG
-      width: 9437
-      height: 3375
-      bytes: 11456471
+      width: 6000
+      height: 4000
+      bytes: 11400000
     - label: Original (TIFF, 146MB)
-      url: https://pub-…r2.dev/photos/120-R012-F01-S01-E01-positive.tif
+      url: https://pub-…r2.dev/photos/roll-01-frame-01-positive.tif
       format: TIFF
-      bytes: 146448308
+      bytes: 146000000
 ```
 
 `downloads` sits under `photo:`, beside `src` and `alt`; `photo.njk` reads `photo.downloads`, so a top-level `downloads:` is ignored and the page renders with no lightbox and no download links.
 
 - **The order is a contract.** `downloads[0]` is always the full-size raster; it carries `width`/`height` and drives both the lightbox and the Resolution row in the metadata block. `downloads[1]` is the archival scan.
 - ⚠ **`bytes` must match the served `content-length`.** It records the exact size of the file in the bucket; re-upload a file and the frontmatter has to follow.
-- **The URL shape is the addressing scheme**: the bucket's public r2.dev hostname plus `/photos/<name>.<ext>`, where the name is the scan's roll/frame/scan/exposure identifier — not the post slug.
+- **A stable URL shape keeps the contract simple**: one public hostname plus `/photos/<name>.<ext>`, where the name identifies the scan or exposure rather than the post slug, so a renamed post does not move its files.
 
 ### The wiring
 
@@ -62,10 +62,6 @@ photo:
 
 ### The host
 
-A Cloudflare R2 bucket named `johanedlund-photos`, served through the bucket's public r2.dev URL. **No custom domain, so no DNS involved.** The free tier covers this comfortably and egress is free; r2.dev is rate-limited, which is fine at this traffic.
+Any host that serves a public URL works. A Cloudflare R2 bucket served through its public r2.dev address is one cheap arrangement: **no custom domain, so no DNS involved**, free egress, and a free tier that covers modest use; r2.dev is rate-limited, which is fine at low traffic. The machinery is then one bucket and one public URL: no storage zone, CDN, separate subdomain or certificate to keep.
 
-This replaced an earlier Bunny.net setup — storage zone, CDN, separate subdomain, certificate — after a surprise charge. The current machinery is one bucket and one public URL.
-
-**The build never touches these files:** no fetch, no processing, no size checks. The repo stores two URLs and a byte count, and the page trusts them. That trust is the price of keeping 157 MB per photograph out of git, and the `bytes` discipline above is what keeps it honest.
-
-Raw source: `src/_raw/dev-notes/How the photo originals are hosted.md`
+**The build never touches these files:** no fetch, no processing, no size checks. The repo stores two URLs and a byte count, and the page trusts them. That trust is the price of keeping very large originals out of git, and the `bytes` discipline above is what keeps it honest.

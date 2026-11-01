@@ -50,9 +50,9 @@ A shadow is darkness subtracted from a lit surface. On a near-black page there i
 
 An object built in CSS, a book or a sheet of paper, often carries two kinds of shade: light painted onto its surface with gradients (a highlight toward the light, darkening away from it), and the shadow it casts on the page. The two have to agree, and they do not weigh the same in both themes. On a light page, strong darkening on the object reads as the object being dirty or in shade, while its cast shadow is faint; the eye wants the reverse, a surface that stays bright and a shadow that lands beside it. So in light mode the painted darkening stays faint and the cast shadow does the work, offset away from the light. On a dark page the painted light is what gives the object form, and the cast shadow can barely show, so the balance flips back.
 
-## In jedee
+## In stomme
 
-The shadows are tokens in `src/_includes/themes/jedee/tokens/shadows.json`, stored as Penpot-shaped layers (offset, blur, spread, 8-digit hex color) and composed into `--box-shadow-*` custom properties by `dtcgShadowToTailwind()` (see [[Tailwind]]); the same file feeds the Penpot export (see [[Design token sync]]). Each token has a `-dark` twin. Since 2026-10-26 two theme-level aliases in `global/base/variables.css` carry the common cases: `--shadow-on-page` (`thumb`) for images and maps lying on the page, and `--shadow-raised` (`panel`) for panels floating above it. The theme rules swap each to its `-dark` twin, so a component that reads an alias needs no separate dark-theme rule; the others still swap their twin in a dark-theme rule. The rule in `DESIGN.md` is that nothing invents a shadow: a component takes one of these.
+The shadows are tokens in `src/_includes/themes/<theme>/tokens/shadows.json`, stored as Penpot-shaped layers (offset, blur, spread, 8-digit hex color) and composed into `--box-shadow-*` custom properties by `dtcgShadowToTailwind()` (see [[Tailwind]]); the same file feeds the Penpot export (see [[Design token sync]]). Each token has a `-dark` twin. Two theme-level aliases in `global/base/variables.css` carry the common cases: `--shadow-on-page` (`thumb`) for images and maps lying on the page, and `--shadow-raised` (`panel`) for panels floating above it. The theme rules swap each to its `-dark` twin, so a component that reads an alias needs no separate dark-theme rule; the others still swap their twin in a dark-theme rule. The rule in `DESIGN.md` is that nothing invents a shadow: a component takes one of these.
 
 | Token | Shape | Used by |
 |---|---|---|
@@ -62,9 +62,9 @@ The shadows are tokens in `src/_includes/themes/jedee/tokens/shadows.json`, stor
 | `thumb` | Ahlin's five layers, straight down | the book's cover, and every prose image and the place map (through `--shadow-on-page`) |
 | `thumb-cast` | `thumb` pushed right by half the drop, stronger in light | the pamphlet (see [[CSS 3D transforms]]) |
 
-`thumb` was picked from a local comparison page that put Ahlin's layers, Comeau's low, medium and high, Brumm's eased layers, the existing `popup` and a value from the Penpot file on six album covers from near-black to near-white, two photos and two plain squares, in both themes. In light mode it is tinted with `#414958`, a dark blue-gray from the site's text color, at 0.075 a layer; in dark mode it is black at 0.18 a layer.
+`thumb` is Ahlin's five layers, chosen over Comeau's low, medium and high and Brumm's eased layers by trying them on covers from near-black to near-white. Each theme tints it: in the `sample` theme the light version is a dark blue-gray at 0.075 a layer, and the dark version is black at 0.18 a layer.
 
-`thumb-cast` came out of the pamphlet on the *Bethink Yourselves!* note. Its cover had a gradient darkening to 34% brown at the bottom right, which looked heavy on the light page while its shadow was faint. In light mode the darkening is now 10%, the highlight 22% and the spine shade 15%, and the shadow is `thumb-cast` (offsets 0.5, 1, 2, 4 and 8px across, alpha 0.133 a layer). The dark theme keeps the stronger painted light, and `thumb-cast-dark` equals `thumb-dark`. The three amounts are custom properties at the top of `local/pamphlet.css`, with the dark values in its dark-theme rules:
+`thumb-cast` exists for the pamphlet. A heavy painted darkening on its cover looks wrong on a light page when the shadow is faint, so in light mode the darkening is 10%, the highlight 22% and the spine shade 15%, and the shadow is `thumb-cast` (offsets 0.5, 1, 2, 4 and 8px across, alpha 0.133 a layer in the `sample` theme). The dark theme keeps the stronger painted light, and `thumb-cast-dark` equals `thumb-dark`. The three amounts are custom properties at the top of `local/pamphlet.css`, with the dark values in its dark-theme rules:
 
 ```css
 .pamphlet {
@@ -77,5 +77,3 @@ The shadows are tokens in `src/_includes/themes/jedee/tokens/shadows.json`, stor
 ```
 
 None of this is Eleventy Excellent stock: EE ships no shadow tokens, and the layer format exists because Penpot stores shadows that way.
-
-Raw source: `src/_raw/dev-notes/How the shadow tokens were picked.md`

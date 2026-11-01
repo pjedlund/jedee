@@ -92,3 +92,14 @@ search:
   only:
     activity:
       activityType: orienteering
+a11yPaths:
+  - /
+  - /accessibility/
+  - /articles/
+  - /design-system/
+  - /audio/nybrostrand-beach/
+  - /activities/
+  - /jams/50ft-queenie/
+  - /reading/a-confession/
+  - /watching/the-killing/
+  - /now/

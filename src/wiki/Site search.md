@@ -28,9 +28,9 @@ const body = item.data.page?.rawInput ?? '';
 
 No premature-use error, no separate collection, and no HTML to strip out afterwards. The cost is the mirror image: `rawInput` is the source *before* rendering, so everything the template layer would have resolved or removed is still sitting in it — template expressions, HTML comments, shortcode calls. Whatever the site's authors write has to be stripped by hand.
 
-## In jedee
+## In stomme
 
-One dial in `src/_data/settings.yaml` switches the whole feature:
+One dial in `src/_data/settings.yaml` switches the whole feature (the values below are an example):
 
 ```yaml
 search:
@@ -45,9 +45,9 @@ search:
 
 `types` is a curated list, not every collection. The response types (likes, replies, reposts, RSVPs, bookmarks) stay out because they would drown prose results. The keys are **collection keys, and they are singular** — `article`, not `articles`; the plurals are archive URLs and produce an empty index with a green build. See [[Anatomy of a post type]].
 
-Activities are the one type where the whole collection is the wrong unit, so `only` narrows them by a front-matter key: 113 of 180 are orienteering, with real event and forest names worth looking up months later, while the rest carry Strava's defaults including 24 posts called "Morning Run". `only` is deliberately a general key/value match rather than an orienteering flag — it is the same few lines either way, and it keeps the answer to "what is searchable?" inside the dial.
+Some types are the wrong unit as a whole collection, so `only` narrows them by a front-matter key: an archive imported from a fitness export may hold a few activities with names worth looking up months later, while the rest carry the service's defaults, a long run of posts called "Morning Run". `only` is deliberately a general key/value match rather than a flag for one sport — it is the same few lines either way, and it keeps the answer to "what is searchable?" inside the dial.
 
-Standalone prose pages are not in any post collection, so they opt in with `tags: ["searchable"]`, which gives a real `collections.searchable` the index can list beside the post types. `searchable` has to join `SYSTEM_TAGS` in `src/_config/collections.js` in the same edit — every other tag on this site is a public page, and without that one word `/tags/searchable/` quietly appears in the tag index.
+Standalone prose pages are not in any post collection, so they opt in with `tags: ["searchable"]`, which gives a real `collections.searchable` the index can list beside the post types. `searchable` has to join `SYSTEM_TAGS` in `src/_config/collections.js` in the same edit — every other tag is a public page, and without that one word `/tags/searchable/` quietly appears in the tag index.
 
 ### The index
 
@@ -64,11 +64,11 @@ Each entry carries `url`, `title`, `type`, `date`, a ~140-character `text` excer
 
 ### What `rawInput` still contains
 
-Both of these shipped into the index before being caught, and both are the general trap above in concrete form:
+Both of these are the general trap above in concrete form:
 
 ```js
-.replace(/<!--[\s\S]*?-->/g, ' ')      // authoring TODOs made /about/ findable by searching "todo"
-.replace(/\{[{%][\s\S]*?[}%]\}/g, ' ') // /imprint/ indexed "{{ personal.address }}" verbatim
+.replace(/<!--[\s\S]*?-->/g, ' ')      // authoring TODOs would make a page findable by searching "todo"
+.replace(/\{[{%][\s\S]*?[}%]\}/g, ' ') // a template expression like "{{ personal.address }}" would be indexed verbatim
 ```
 
 The rest of the strip is ordinary markdown: fenced code and images before links, or their inner brackets are eaten as link syntax first; `[[wikilinks]]` reduced to their label ([[Wikilinks]]); heading markers and emphasis to spaces; whitespace collapsed. The excerpt cuts at the last word boundary rather than mid-word.
@@ -79,11 +79,11 @@ The rest of the strip is ordinary markdown: fenced code and images before links,
 
 Result rows are built client-side, so their per-type icons cannot be rendered per result. The partial emits one `<template data-search-icon="<type>">` per searchable type and the script clones the matching one.
 
-Close to half the index has no body at all — 153 of 342 entries counted on 2026-09-20, mostly jams (82) and orienteering activities (63), which carry a title and front matter and nothing else. It was 153 of 289 and a clear majority until the wiki joined the searchable types; the bodyless count has not moved, the bodied one grew around it. A row with only an icon and a title is still the common case rather than the edge case, so the row omits the excerpt element entirely rather than rendering an empty one that leaves a ragged gap in the list. Design a result row against the body-less half, not against the posts that happen to have prose.
+On a site with archive imports, close to half the index can have no body at all — jams and imported activities carry a title and front matter and nothing else. A row with only an icon and a title is still the common case rather than the edge case, so the row omits the excerpt element entirely rather than rendering an empty one that leaves a ragged gap in the list. Design a result row against the body-less half, not against the posts that happen to have prose.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/site-search-panel.png" alt="A browser window with the search panel open under the header. The field holds the word night; below it seven results, each with a small type icon and a bold title. The first two, both orienteering activities, are a single line with no excerpt; the five below them — three wiki pages, a recipe and a jam — each carry two lines of gray excerpt text." width="1284" height="814">
-  <figcaption>Seven real hits for <code>night</code>. The top two rows are the common shape — icon and title, nothing else — and the row simply omits the excerpt element rather than leaving an empty one.</figcaption>
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/site-search-panel.png" alt="A browser window with the search panel open under the header. The field holds the word night; below it seven results, each with a small type icon and a bold title. The first two, both activities, are a single line with no excerpt; the five below them — three wiki pages, a recipe and a jam — each carry two lines of gray excerpt text." width="1284" height="814">
+  <figcaption>Seven example hits for <code>night</code>. The top two rows are the common shape — icon and title, nothing else — and the row simply omits the excerpt element rather than leaving an empty one.</figcaption>
 </figure>
 
 The include in `header.njk` is wrapped in an `{% if %}`, and the partial calls `{% svg %}`. That is the exact shape that once blanked the entire nav — see [[The interlinker's second render pass]]. It is safe only because `{% svg %}` is synchronous. If the panel ever renders empty with a green build, that is the first thing to check, not a template typo.
@@ -124,18 +124,17 @@ The clear button was the same shape of mistake one property along. It ships with
 
 The search panel and the mega-menu both anchor to the header row (`.repel.ontop`) with `inset-inline-end: 0`, so open together they sit on top of each other. Each trigger's click handler sets the other's `aria-expanded` to `false`.
 
-`search.css` redeclares the panel surface rather than reading the nav's `--megamenu-surface`, because that property is declared on `.mainnav` — which does not exist at all in a production build while the soft-launch dial hides the nav. An inherited custom property that is only sometimes in scope is the failure in [[Undefined custom properties]].
+`search.css` redeclares the panel surface rather than reading the nav's `--megamenu-surface`, because that property is declared on `.mainnav` — which does not exist at all when the `hideNav` setting hides the nav. An inherited custom property that is only sometimes in scope is the failure in [[Undefined custom properties]].
 
-The panel also had no `font-size` at first, so it inherited the header's ~26px and every `em`-sized icon scaled off that: the magnifier rendered at 34px beside the theme toggle's 21px. The result rows now sit on `--size-step-min-1` with `0.95em` icons (`search-results.css`). That matched the mega-menu's rows until 2026-10-26, when the open mega-menu's icons went to `1.2em` of the text (`main-nav.css`).
+The panel needs a `font-size` set on it, or it inherits the header's large size and every `em`-sized icon scales off that: the magnifier renders far larger than the theme toggle beside it. The result rows sit on `--size-step-min-1` with `0.95em` icons (`search-results.css`); the open mega-menu's icons are `1.2em` of the text (`main-nav.css`).
 
 ### Contrast on a lifted panel
 
-The excerpt color cleared 4.5:1 against the panel at `color-mix(… 80%, …)` and then failed at **4.31** on the *highlighted* row, whose 4% tint darkens the ground beneath it. A `color-mix()` is only valid on the surface it was tuned on, and a row that changes background on hover is two surfaces. Shipped 84% in light, 72% in dark — light and dark run out of headroom at different percentages, so one number does not fix both.
+An excerpt color can clear 4.5:1 against the panel and still fail on the *highlighted* row, whose 4% tint darkens the ground beneath it. A `color-mix()` is only valid on the surface it was tuned on, and a row that changes background on hover is two surfaces. Light and dark run out of headroom at different percentages, so one number does not fix both: the shipped mixes are 84% in light and 72% in dark.
 
-Measure these with an oklab→sRGB conversion, not a regex over `getComputedStyle().color`. Chromium serializes an oklab mix as `oklab(L a b)`, and a parser expecting `rgb()` reads those three floats as channels and reports a confident pass — it scored the failing values above as 1.00 and 2.73 before the conversion went in.
+Measure these with an oklab→sRGB conversion, not a regex over `getComputedStyle().color`. Chromium serializes an oklab mix as `oklab(L a b)`, and a parser expecting `rgb()` reads those three floats as channels and reports a confident pass — it scores failing values as passes.
 
 pa11y only ever sees the panel closed, since it does not click ([[The accessibility test]]). The combobox, the listbox and the options exist only in the open state and have to be checked by hand.
 
-Related: [[The main menu]] — the other header disclosure, whose surface, shadow, drop distance and reduced-motion gate this one reuses. [[The activities archive]] — the type the `only` map exists for, and where the 113 orienteering entries come from.
+Related: [[The main menu]] — the other header disclosure, whose surface, shadow, drop distance and reduced-motion gate this one reuses.
 
-Raw sources: `src/_raw/Building Search Index with Eleventy.md`, `src/_raw/dev-notes/How the search panel opens and clears.md`

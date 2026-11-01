@@ -9,12 +9,10 @@
 <link rel="stylesheet" href="../../_includes/css/tooltip.css">
 
 <style>
-  @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../_includes/themes/jedee/fonts/source-sans/source-sans.woff2') format('woff2'); }
-  @font-face { font-family: 'Source Code Pro'; src: url('../../_includes/themes/jedee/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }
 
-  body { margin: 0; padding: 24px; background: #ddd; font-family: 'Source Sans', system-ui, sans-serif; }
+  body { margin: 0; padding: 24px; background: #ddd; font-family: system-ui, sans-serif; }
 
-  /* A specimen carries its own paper the way a device frame carries its own bezel — so one shot reads deliberately on either theme of the wiki page. */
+  /* A specimen carries a paper the way a device frame carries a bezel — so one shot reads deliberately on either theme of the wiki page. */
   .specimen {
     inline-size: fit-content;
     background: var(--color-bg);
@@ -50,7 +48,7 @@
   .control svg { inline-size: 20px; block-size: 20px; }
 
   .caption {
-    font-family: 'Source Code Pro', ui-monospace, monospace;
+    font-family: ui-monospace, monospace;
     font-size: 15px; color: var(--color-text); opacity: 0.6; margin: 0 0 10px;
   }
   .caption b { font-weight: 400; opacity: 1; color: var(--color-accent-green); }

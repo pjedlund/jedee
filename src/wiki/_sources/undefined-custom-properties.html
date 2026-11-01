@@ -4,13 +4,10 @@
 <meta charset="utf-8">
 <title>Undefined custom properties — wiki mockup</title>
 <style>
-  /* The site's own face, read straight from the repo so the buttons are the real typography and not an approximation. */
-  @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../_includes/themes/jedee/fonts/source-sans/source-sans.woff2') format('woff2'); }
-  @font-face { font-family: 'Source Code Pro'; src: url('../../_includes/themes/jedee/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }
 
   /* Light-theme palette, copied from the built global.css so every color-mix() below resolves exactly as it does on the site. */
   :root {
-    --color-text: #495464;
+    --color-text: #1f5f5b;
     --color-bg: #f4f4f2;
     --color-light: #f7f8fb;
     --color-dark: #141619;
@@ -22,9 +19,9 @@
   /* The site's dark theme: gray.250, gray.900, the subdued blue and green, gray.700; orange and light are shared. */
   [data-theme="dark"] { --color-text: #c8cacc; --color-bg: #141619; --color-accent-blue: #2f536e; --color-accent-green: #62644e; --rule: #383b3f; }
 
-  body { margin: 0; padding: 40px; background: #ddd; font-family: 'Source Sans', system-ui, sans-serif; }
+  body { margin: 0; padding: 40px; background: #ddd; font-family: system-ui, sans-serif; }
 
-  /* A specimen carries its own paper the way a device frame carries its own bezel — so one shot reads deliberately on either theme of the wiki page. */
+  /* A specimen carries a paper the way a device frame carries a bezel — so one shot reads deliberately on either theme of the wiki page. */
   .specimen {
     inline-size: fit-content;
     background: var(--color-bg);
@@ -34,12 +31,12 @@
   }
 
   .label {
-    font-family: 'Source Code Pro', ui-monospace, monospace;
+    font-family: ui-monospace, monospace;
     font-size: 12px; color: var(--color-text); opacity: 0.55; margin: 0 0 14px;
   }
   .row[data-unset] { margin-block-end: 28px; }
 
-  /* ⚠ Equal columns, buttons stretched: the border width is the ONLY thing that may differ between the two rows. Sizing the buttons to their own content would let the 3px row grow 4px per button and pass that off as part of the finding. */
+  /* ⚠ Equal columns, buttons stretched: the border width is the ONLY thing that may differ between the two rows. Sizing the buttons to their content would let the 3px row grow 4px per button and pass that off as part of the finding. */
   .row { display: grid; grid-template-columns: repeat(5, 120px); gap: 12px; }
 
   /* button.css, verbatim minus the parts that do not show in a still: the token names resolved to the values they carry at the narrow end of their clamps. */

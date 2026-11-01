@@ -154,9 +154,8 @@ export const greenweb = {
 };
 export const tests = {
   pa11y: {
-    // Empty = test all pages. Four layout shapes are covered: chrome-and-prose (the first four), a media post (/audio/), a very long index inside a custom element (/activities/), and a post whose image opens in the lightbox (/jams/).
-    // ⚠ Keep this list in step by hand when a post is renamed or deleted — a path that no longer exists scores zero errors and passes silently.
-    customPaths: ['/', '/accessibility/', '/articles/', '/design-system/', '/audio/nybrostrand-beach/', '/activities/', '/jams/50ft-queenie/', '/reading/a-confession/', '/watching/the-killing/', '/now/'],
+    // settings.a11yPaths: the pages to test; [] tests every page. ⚠ A path that doesn't exist scores zero errors and passes silently, so keep the list in step by hand.
+    customPaths: settings.a11yPaths ?? ['/', '/accessibility/', '/design-system/'],
     globalIgnore: [],
     // Point pa11y at an already-installed Chrome. Do not empty this: puppeteer then hunts for its own pinned build and fails with "Could not find Chrome (ver. …)" — see the wiki, "The accessibility test". Override with PA11Y_CHROME= where Chrome lives elsewhere.
     chromePath: process.env.PA11Y_CHROME || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'

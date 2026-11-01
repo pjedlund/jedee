@@ -1,5 +1,5 @@
 ---
-description: "The unrelated stores that share the name cache — build, browser, service worker — which of them ever reach a visitor, and jedee's inlining approach to cache-busting."
+description: "The unrelated stores that share the name cache — build, browser, service worker — which of them ever reach a visitor, and stomme's inlining approach to cache-busting."
 date: 2026-07-31
 updated: 2026-10-29
 ---
@@ -14,7 +14,7 @@ The stores that commonly coexist on a static site:
 
 **Cache-busting** is the counter-move to the second one: making a URL change whenever its contents change, so the browser has no cached copy to reuse. The usual technique is a content hash in the filename (`global.a1b2c3.css`), which lets the file be cached effectively forever, because a new version is by definition a new URL. For small enough assets there is another option — give it no separate URL at all and inline it into the HTML document, which is itself revalidated on every visit.
 
-## In jedee
+## In stomme
 
 The word means three different things here, in three different places, and two of the three never touch a visitor.
 
@@ -36,9 +36,9 @@ package = "netlify-plugin-cache"
   paths = [ ".cache", "dist/assets/images" ]
 ```
 
-`.cache/` is `@11ty/eleventy-fetch`'s store. Two build steps fill it: remote cover images pulled in and self-hosted by the image transform (see [[Self-hosting remote images at build time]]), and webmentions fetched by `src/_data/webmentions.js`. Until 2026-10-29 a third filled it too: a static map picture per photo and audio post from Geoapify. The second path, `dist/assets/images/`, is eleventy-img's output for local images, which it skips re-encoding when the file already exists; see [[Netlify]].
+`.cache/` is `@11ty/eleventy-fetch`'s store. Two build steps fill it: remote cover images pulled in and self-hosted by the image transform (see [[Self-hosting remote images at build time]]), and webmentions fetched by `src/_data/webmentions.js`. The second path, `dist/assets/images/`, is eleventy-img's output for local images, which it skips re-encoding when the file already exists; see [[Netlify]].
 
-**The cache is excluded from Netlify's secret scanning.** The old Geoapify URLs carry `MAP_API_KEY` in their query string, eleventy-fetch stores request URLs verbatim, and the persisted cache keeps those entries after the maps were retired. Netlify scans build-generated files for leaked secrets and would flag them:
+**The cache is excluded from Netlify's secret scanning.** eleventy-fetch stores request URLs verbatim, so a URL that ever carried an API key in its query string stays in the persisted cache after the request is retired. Netlify scans build-generated files for leaked secrets and would flag them:
 
 ```toml
 [build.environment]
@@ -64,11 +64,11 @@ The fonts get a year, and so do `/img/*` (eleventy-img's output) and `/bundle/*`
 
 ### Cache-busting by inlining, not by filename
 
-jedee takes the second option above and gets the guarantee for free, because in a production build the CSS and JS **ride inside the HTML**. `head/css-inline.njk` inlines the whole stylesheet as a `<style>` block; the site's JavaScript is inlined the same way. There is no stylesheet request to go stale. Since the HTML revalidates on every visit, so does everything inlined in it.
+stomme takes the second option above and gets the guarantee for free, because in a production build the CSS and JS **ride inside the HTML**. `head/css-inline.njk` inlines the whole stylesheet as a `<style>` block; the site's JavaScript is inlined the same way. There is no stylesheet request to go stale. Since the HTML revalidates on every visit, so does everything inlined in it.
 
-**The `/bundle/<hash>.css` paths are dev-only.** Eleventy's bundle plugin can emit content-hashed files and does — but `css-inline.njk` only *links* them under `npm start`, so a refresh picks up edits. A production build emits no `/bundle/` directory at all. The year-long `/bundle/*` rule in `netlify.toml` (since 2026-08-01) therefore has nothing to act on in production.
+**The `/bundle/<hash>.css` paths are dev-only.** Eleventy's bundle plugin can emit content-hashed files and does — but `css-inline.njk` only *links* them under `npm start`, so a refresh picks up edits. A production build emits no `/bundle/` directory at all. The year-long `/bundle/*` rule in `netlify.toml` therefore has nothing to act on in production.
 
-**So a dev build is the wrong place to measure page weight.** The two builds put the same CSS in different places, and a page that looks like 50 kB with three stylesheet links under `npm start` is 85 kB with everything inline in production. Measuring [[WebC|a component's inline CSS]] on the dev output in September 2026 produced both a percentage and a cacheability argument that a production build contradicted.
+**So a dev build is the wrong place to measure page weight.** The two builds put the same CSS in different places, and a page that looks light with three stylesheet links under `npm start` is much heavier with everything inline in production. Measuring [[WebC|a component's inline CSS]] on the dev output can produce both a percentage and a cacheability argument that a production build contradicts.
 
 ### A long cache on an unhashed URL is a time bomb
 
@@ -89,7 +89,7 @@ Note that for a visitor with the service worker active, these headers never come
 
 ### What each path actually costs
 
-Measured on the live site on 2026-08-30 with `place-map.js` (156 KB), navigating between two pages that both use the component. The browser's resource timings report `deliveryType` and `transferSize`, so "bytes over the network" is observed rather than inferred.
+As an example, measured on a deployed site with `place-map.js` (156 KB at the time), navigating between two pages that both use the component. The browser's resource timings report `deliveryType` and `transferSize`, so "bytes over the network" is observed rather than inferred.
 
 Table: A repeat request for `place-map.js`, by visitor
 | Visitor | Answered by | Bytes over the network | Time |
@@ -100,6 +100,5 @@ Table: A repeat request for `place-map.js`, by visitor
 
 The middle row is what `max-age=0, must-revalidate` costs: one small round-trip per page load, not a re-download. The top row is the common case, and it is why the header choice matters less than it looks — most repeat views never reach the network at all. Both non-zero timings sit off the critical path anyway, because the scripts load on idle inside an `<is-land>`.
 
-⚠ **A committed header is not a live header.** This fix was committed on 2026-08-11 but production went on serving the old year-long value until 2026-08-30, because a stale `netlify.toml` was riding along in Netlify's build cache. Two ordinary deploys did not dislodge it; only *Clear cache and deploy site* did. When a header does not match the file, check what the deploy is actually serving (`curl -sI`) before assuming the config is wrong — and note that a cache-cleared deploy also reinstalls every dependency from scratch, which is a risk in itself if any of them have gone stale.
+⚠ **A committed header is not a live header.** Production can go on serving an old value because a stale `netlify.toml` rides along in Netlify's build cache; ordinary deploys may not dislodge it, and *Clear cache and deploy site* does. When a header does not match the file, check what the deploy is actually serving (`curl -sI`) before assuming the config is wrong — and note that a cache-cleared deploy also reinstalls every dependency from scratch, which is a risk in itself if any of them have gone stale.
 
-Source: `_local/project_docs/build-and-browser-caching.html` (written 23 Jun 2026), re-verified against `netlify.toml` on 2026-07-31; corrected 2026-08-11 when the component-script header was fixed from a year to `max-age=0, must-revalidate`; measured against production and confirmed live on 2026-08-30.

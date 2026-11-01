@@ -4,9 +4,9 @@ date: 2026-07-31
 updated: 2026-10-31
 ---
 
-jedee has **sixteen** post types. Adding one is not a design problem but a wiring problem: there are nine places a type has to appear before it works, and fifteen of the sixteen fill them the same way. This page is the checklist and the places types legitimately diverge.
+stomme has **sixteen** post types. Adding one is not a design problem but a wiring problem: there are nine places a type has to appear before it works, and fifteen of the sixteen fill them the same way. This page is the checklist and the places types legitimately diverge.
 
-The sixteen: article, note, reading, watching, jam, photo, recipe, event, bookmark, reply, repost, like, rsvp, audio, video, activity. A site may build only some of them: `settings.postTypes` lists the ones to build, a missing list builds all sixteen, and `[]` builds none. A type left out has its posts, archive page and feeds ignored, so it has no menu link either (see [[Shared files and site files]]). Fifteen have a written spec in `_local/project_docs/`; **activities has none** — it arrived through a different route (see [[The activities archive]]) and is the type most likely to be the exception below.
+The sixteen: article, note, reading, watching, jam, photo, recipe, event, bookmark, reply, repost, like, rsvp, audio, video, activity. A site may build only some of them: `settings.postTypes` lists the ones to build, a missing list builds all sixteen, and `[]` builds none. A type left out has its posts, archive page and feeds ignored, so it has no menu link either (see [[Shared files and site files]]).
 
 ## The four-key folder data file
 
@@ -21,9 +21,9 @@ Every type is a folder under `src/posts/` with a data file of the same name, and
 }
 ```
 
-**`category` is the type; `tags` is the user's vocabulary.** This split is the load-bearing decision of the whole system. Eleventy's natural instinct is to put the type in `tags` — but `tags` also drives the public `/tags/` index, so a type name in there would publish a `/tags/note/` page nobody asked for. Instead the type lives in `category`, and `tags: "posts"` puts every post into one firehose collection. `collections.js` keeps a `SYSTEM_TAGS` list (`posts`, `docs`, `all`, `searchable`) that `tagList` filters out, so the tag index only ever shows words Johan chose.
+**`category` is the type; `tags` is the user's vocabulary.** This split is the load-bearing decision of the whole system. Eleventy's natural instinct is to put the type in `tags` — but `tags` also drives the public `/tags/` index, so a type name in there would publish a `/tags/note/` page nobody asked for. Instead the type lives in `category`, and `tags: "posts"` puts every post into one firehose collection. `collections.js` keeps a `SYSTEM_TAGS` list (`posts`, `docs`, `all`, `searchable`) that `tagList` filters out, so the tag index only ever shows words the site's editor chose.
 
-This is a **jedee divergence** — Eleventy Excellent ships two types (`articles`, `notes`) and tags them directly.
+This is a **stomme divergence** — Eleventy Excellent ships two types (`articles`, `notes`) and tags them directly.
 
 **Six types are configured in JavaScript, not JSON.** Ten types have a `<type>.json`; photos, jams, reading, watching, recipes and videos have a `<type>.11tydata.js`, an ES module carrying the same four keys plus computed ones. Photo's was the first, with a fifth key:
 
@@ -33,7 +33,7 @@ eleventyComputed: {
 }
 ```
 
-It was ported from `photos.json` so EXIF could be read from the file at build time — and `photoExif` is a **top-level** key rather than nested under `photo`, because a computed key that reads its parent is a self-reference in the data cascade. Worth knowing before writing a script that globs `src/posts/*/*.json` expecting sixteen hits: it finds ten. Jams, reading and watching followed photo into JavaScript on 2026-08-29 and 2026-09-09, for lightbox covers and Open Graph cards, and recipes and videos on 2026-10-11, so their Open Graph cards could use their artwork.
+It was ported from `photos.json` so EXIF could be read from the file at build time — and `photoExif` is a **top-level** key rather than nested under `photo`, because a computed key that reads its parent is a self-reference in the data cascade. Worth knowing before writing a script that globs `src/posts/*/*.json` expecting sixteen hits: it finds ten. Jams, reading, watching, recipes and videos followed photo into JavaScript, for lightbox covers and Open Graph cards that use their artwork.
 
 ## Registration: one array, explicit aliases
 
@@ -77,4 +77,3 @@ export const POST_TYPES = ['article', 'note', 'reading', /* … */ 'activity'];
 - **Navigation** — one entry in `src/_data/navigation.js` with a Phosphor icon ([[Icons]]) and the collection key for the count. All sixteen are listed. Jam is asymmetric: URL `/jams/`, collection key `jam`.
 - **Schema** — a `schema:` line in the layout's front matter. See [[One JSON-LD envelope for sixteen types]].
 
-Source: the fifteen per-type specs in `_local/project_docs/`, checked against live code 2026-07-31.

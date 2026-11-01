@@ -1,7 +1,7 @@
 class customEasteregg extends HTMLElement {
   constructor() {
     super();
-    // jedee: a `keyword` attribute (settings.yaml → switches.eastereggKeyword) replaces the starter's two defaults instead of adding to them.
+    // Added to the starter: a `keyword` attribute (settings.yaml → switches.eastereggKeyword) replaces the starter's two defaults instead of adding to them.
     const customKeyword = this.getAttribute('keyword');
     this.keywords = customKeyword ? [customKeyword.toLowerCase()] : ['eleventy', 'excellent'];
 
@@ -12,7 +12,7 @@ class customEasteregg extends HTMLElement {
   }
 
   connectedCallback() {
-    this.onKeydown ??= this.handleKeydown.bind(this); // jedee: one bound copy, so removing the listener actually removes it
+    this.onKeydown ??= this.handleKeydown.bind(this); // Added to the starter: one bound copy, so removing the listener actually removes it
     document.addEventListener('keydown', this.onKeydown);
   }
 
@@ -21,7 +21,7 @@ class customEasteregg extends HTMLElement {
   }
 
   handleKeydown(event) {
-    // jedee: never while typing in a field (the search box), or searching for the word would set it off.
+    // Added to the starter: never while typing in a field (the search box), or searching for the word would set it off.
     if (event.target.closest?.('input, textarea, select, [contenteditable]')) return;
     const key = event.key.toLowerCase();
     this.codes.forEach((code, idx) => {
@@ -47,7 +47,7 @@ class customEasteregg extends HTMLElement {
         shapes: [customShape],
         scalar,
         particleCount: this.particleCount,
-        disableForReducedMotion: true // jedee: no confetti at all for visitors who ask for reduced motion
+        disableForReducedMotion: true // Added to the starter: no confetti at all for visitors who ask for reduced motion
       });
     });
   }
