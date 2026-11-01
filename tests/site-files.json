@@ -17,6 +17,7 @@
   "src/assets/images/template/opengraph-default.jpg",
   "src/assets/images/favicon/**",
   "src/assets/images/demo/**",
+  "src/assets/audio/demo/**",
   "src/assets/og-images/**",
   "admin/config.yml",
   "package.json",
