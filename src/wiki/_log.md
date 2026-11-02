@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-11-02] ingest | Eleventy
+
+"Shared files and site files" becomes [[Eleventy]], the wiki's first page on the tool itself: how a build works (template languages, the data cascade in order, layouts, collections, permalinks, the config file) and why Eleventy draws no line between content and design. The jedee facts (the site-files list, theme folders, switches, post-type list, words and the tests) stay under "In jedee", without the second-site framing, since that plan stopped today. The old address redirects; [[Anatomy of a post type]], [[Themes and starters]] and [[What jedee kept from Eleventy Excellent]] now link here.
+
 ## [2026-11-02] lint | is-land after the on:visible fix
 
 The wiki lint after the stomme undo found the wiki back as it was, with one page behind the day's code. [[is-land]] no longer says the package's file is the one copied to the site (it is the corrected copy in `src/assets/vendor/`), keeps one ⚠ (the new on:visible paragraph; the YouTube `<noscript>` one is now plain prose) and carries an `updated` date.

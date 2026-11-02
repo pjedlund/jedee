@@ -15,7 +15,7 @@ The source is Lene's documentation collection, `src/docs/` in the upstream check
 These are EE's, unchanged, and this wiki should not describe them as jedee inventions:
 
 - **The config module layout.** `src/_config/` splits into `collections.js`, `events.js`, `filters.js`, `plugins.js`, `shortcodes.js`, each a barrel over a folder of the same name, plus `setup/` and `utils/`. jedee's tree matches EE's file for file, plus one extra module, `search-index.js`. `eleventy.config.js` only registers; the logic lives in the modules.
-- **The cascade layer order**, the same in both `global/global.css` apart from three things: jedee calls the utilities layer `cubeUtilities` (see [[Tailwind]]), its fonts arrive from the active theme, and a last `theme` layer holds the theme's CSS. The `blocks` layer has no `@import` in jedee: each block arrives through a page's local CSS and wraps itself in `@layer blocks`. See [[Shared files and site files]].
+- **The cascade layer order**, the same in both `global/global.css` apart from three things: jedee calls the utilities layer `cubeUtilities` (see [[Tailwind]]), its fonts arrive from the active theme, and a last `theme` layer holds the theme's CSS. The `blocks` layer has no `@import` in jedee: each block arrives through a page's local CSS and wraps itself in `@layer blocks`. See [[Eleventy]].
 
   ```css
   @import 'tailwindcss/base' layer(tailwindBase);
