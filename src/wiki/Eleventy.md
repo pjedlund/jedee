@@ -8,6 +8,8 @@ redirectFrom:
 
 [Eleventy](https://www.11ty.dev/) (also written 11ty) is a static site generator: a Node.js program that reads a folder of files, combines each one with the data that applies to it, and writes plain HTML to an output folder. Nothing of Eleventy runs in the browser, and nothing runs on a server when a page is requested; any JavaScript a page carries is something the site added. Zach Leatherman released it in 2017 as a JavaScript take on Jekyll; version 3 (2024) made the configuration an ES module.
 
+**Eleventy is being renamed Build Awesome.** Font Awesome bought the project in September 2024, and on 2026-03-03 [announced](https://www.11ty.dev/blog/build-awesome/) that Eleventy v4 will ship as Build Awesome v4: the same code, maintainer and MIT license, with Eleventy plugins still working. v4 is published as both `@awesome.me/buildawesome` and `@11ty/eleventy`, but as of 2026-11 it is still an alpha; the stable release is 3.1.7. Its breaking changes include Node 22.15 as the minimum, a fork of Nunjucks, no `slug` filter and no `page.dir` ([release notes](https://github.com/11ty/eleventy/releases)). Build Awesome Pro, a paid hosted site builder announced alongside it, is not needed to use the generator.
+
 ## How a build works
 
 **Input and output.** Eleventy reads an input folder and writes to an output folder. Every file in the input with a known template extension becomes a page. Anything else is ignored unless the configuration copies it through untouched (a *passthrough copy*, used for fonts, images and scripts).
@@ -44,7 +46,7 @@ This is deliberate. Eleventy's stated position is that it does not dictate proje
 
 ## In jedee
 
-jedee runs Eleventy 3.1, forked from the [Eleventy Excellent](https://github.com/madrilene/eleventy-excellent) starter. Input is `src/`, output `dist/`, layouts are in `src/_layouts/`, partials in `src/_includes/`, and Markdown's second language is Nunjucks (`markdownTemplateEngine: 'njk'`), all EE stock. So is the configuration's split into `src/_config/` (collections, filters, shortcodes, plugins, events); [[What jedee kept from Eleventy Excellent]] lists what jedee changed. The parts of Eleventy with a page of their own here: [[Anatomy of a post type]] for collections and directory data, [[Permalinks and Obsidian-friendly filenames]], [[WebC]], [[is-land]], [[The interlinker's second render pass]], [[The dev server's memory]] and [[Watch loops]].
+jedee runs Eleventy 3.1 and stays there until v4 is stable and reaches Eleventy Excellent; then it comes in through the usual upstream merge, with the three `{% asyncEach %}` templates and the build events in `eleventy.config.js` as the parts to test. The site is forked from the [Eleventy Excellent](https://github.com/madrilene/eleventy-excellent) starter. Input is `src/`, output `dist/`, layouts are in `src/_layouts/`, partials in `src/_includes/`, and Markdown's second language is Nunjucks (`markdownTemplateEngine: 'njk'`), all EE stock. So is the configuration's split into `src/_config/` (collections, filters, shortcodes, plugins, events); [[What jedee kept from Eleventy Excellent]] lists what jedee changed. The parts of Eleventy with a page of their own here: [[Anatomy of a post type]] for collections and directory data, [[Permalinks and Obsidian-friendly filenames]], [[WebC]], [[is-land]], [[The interlinker's second render pass]], [[The dev server's memory]] and [[Watch loops]].
 
 jedee draws the line Eleventy leaves out, inside the one repo, in four ways:
 

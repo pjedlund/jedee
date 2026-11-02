@@ -7,7 +7,7 @@ Append-only. One entry per ingest / query-filed / lint, newest first. Entry form
 
 ## [2026-11-02] ingest | Eleventy
 
-"Shared files and site files" becomes [[Eleventy]], the wiki's first page on the tool itself: how a build works (template languages, the data cascade in order, layouts, collections, permalinks, the config file) and why Eleventy draws no line between content and design. The jedee facts (the site-files list, theme folders, switches, post-type list, words and the tests) stay under "In jedee", without the second-site framing, since that plan stopped today. The old address redirects; [[Anatomy of a post type]], [[Themes and starters]] and [[What jedee kept from Eleventy Excellent]] now link here.
+"Shared files and site files" becomes [[Eleventy]], the wiki's first page on the tool itself: how a build works (template languages, the data cascade in order, layouts, collections, permalinks, the config file) and why Eleventy draws no line between content and design. The jedee facts (the site-files list, theme folders, switches, post-type list, words and the tests) stay under "In jedee", without the second-site framing, since that plan stopped today. The old address redirects; [[Anatomy of a post type]], [[Themes and starters]] and [[What jedee kept from Eleventy Excellent]] now link here. A paragraph on the rename to Build Awesome (v4 still alpha) and when jedee would follow came the same day.
 
 ## [2026-11-02] lint | is-land after the on:visible fix
 
