@@ -250,7 +250,8 @@ export default async function(eleventyConfig) {
     'node_modules/photoswipe/dist/photoswipe.css': `assets/components/photoswipe.css`,
     // MapLibre's JS is bundled into place-map.js by esbuild; only its stylesheet needs copying.
     'node_modules/maplibre-gl/dist/maplibre-gl.css': `assets/components/maplibre-gl.css`,
-    'node_modules/@11ty/is-land/dist/is-land.min.js': `assets/components/is-land.min.js`
+    // ⚠ A corrected copy of is-land 5.0.1: on:visible read only the first report and could stay asleep. Go back to node_modules once is-land fixes it; see the wiki, "is-land".
+    'src/assets/vendor/is-land.min.js': `assets/components/is-land.min.js`
   });
 
   // ---------------------- switched-off parts that are pages: ignores must be set here, before the data cascade runs
