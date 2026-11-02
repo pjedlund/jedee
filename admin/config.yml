@@ -299,7 +299,7 @@ singletons:
           - { name: serviceWorker, label: Offline support, widget: boolean, hint: 'Off: no service worker file and nothing registers it' }
           - { name: feeds, label: Feeds, widget: boolean, hint: 'Off: no feed files at all, no feed links in the head, and no feed button in the footer' }
           - { name: webmentions, label: Webmentions, widget: boolean, hint: 'Off: no webmention link in the head, nothing fetched at build time, and none shown on posts' }
-          - { name: micropub, label: Micropub and IndieAuth links, widget: boolean, hint: 'Off: the three links in the head go. ⚠ The Netlify function that takes the posts is still deployed' }
+          - { name: micropub, label: Micropub and IndieAuth links, widget: boolean, hint: 'Off: the three links in the head go. The Netlify function that takes the posts answers only when the ME variable is set in Netlify, and gives a 404 otherwise' }
           - { name: relMe, label: rel=me and fediverse:creator, widget: boolean, hint: 'Off: no rel="me" on profile links, in the head or the footer, and no fediverse:creator tag' }
       - name: pwa
         label: Service worker
@@ -313,6 +313,22 @@ singletons:
         widget: object
         fields:
           - { name: umamiId, label: Umami website ID, widget: string, required: false, hint: 'Empty = no analytics script at all. Otherwise the Umami script loads on deployed builds only, never on the dev server' }
+      - name: maps
+        label: Maps
+        widget: object
+        required: false
+        fields:
+          - { name: tiles, label: Map tiles address, widget: string, required: false, hint: 'The address of a .pmtiles file. Empty = no maps: pages show no map or empty box and the map script stays away, and the build says so' }
+          - name: coverage
+            label: Area the tiles cover
+            widget: object
+            required: false
+            hint: 'A map reaching past this area opens on Topographic. Fill in all four, or leave all empty for tiles of the whole world'
+            fields:
+              - { name: west, label: West, widget: number, value_type: float, required: false }
+              - { name: south, label: South, widget: number, value_type: float, required: false }
+              - { name: east, label: East, widget: number, value_type: float, required: false }
+              - { name: north, label: North, widget: number, value_type: float, required: false }
       - name: wiki
         label: Wiki
         widget: object

@@ -56,7 +56,7 @@ export const TYPE_DIR = {
 
 ### What is not wired
 
-v1 is **create-only, text post-types**. The media endpoint, updates and deletes are all supported by the engine and simply not connected. Auth is hosted IndieAuth (`indieauth.com/auth` and `tokens.indieauth.com/token`) rather than a self-hosted authorization server, which means real client auth presupposes the public `me` domain being live with bidirectional `rel="me"` — the endpoint and the domain go live together or not at all.
+v1 is **create-only, text post-types**. The media endpoint, updates and deletes are all supported by the engine and simply not connected. Auth is hosted IndieAuth (`indieauth.com/auth` and `tokens.indieauth.com/token`) rather than a self-hosted authorization server, which means real client auth presupposes the public `me` domain being live with bidirectional `rel="me"` — the endpoint and the domain go live together or not at all. A site that doesn't use Micropub still deploys the function, because Netlify deploys every file in `netlify/functions/`: with no `ME` variable set it answers every request with a 404.
 
 Unit tests live in `tests/micropub.test.js`, run by `npm run test:unit`. The helpers are exported from the Function purely so they can be tested.
 

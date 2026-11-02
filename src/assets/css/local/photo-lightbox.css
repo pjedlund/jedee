@@ -1,0 +1,23 @@
+/* A breakout lightbox keeps its caption in the text column: the lightbox's wrappers around the figure pass the page grid's columns through, as a plain breakout figure does in global-styles.css. */
+@layer blocks {
+@supports (grid-template-columns: subgrid) {
+  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full):has(> is-land > photo-lightbox > figure),
+  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full) > is-land:has(> photo-lightbox > figure),
+  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full) > is-land > photo-lightbox:has(> figure),
+  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full) > is-land > photo-lightbox > figure {
+    display: grid;
+    grid-template-columns: subgrid;
+  }
+
+  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full) > is-land,
+  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full) > is-land > photo-lightbox,
+  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full) > is-land > photo-lightbox > figure,
+  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full) > is-land > photo-lightbox > figure > :not(figcaption) {
+    grid-column: 1 / -1;
+  }
+
+  :is(.wrapper, .wrapper-pass) > :is(.popout, .feature, .full) > is-land > photo-lightbox > figure > figcaption {
+    grid-column: content;
+  }
+}
+}

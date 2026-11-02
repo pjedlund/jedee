@@ -9,11 +9,12 @@
  * ⚠ The Artifact type CANNOT read DTCG. Its tokens.json wants a flat LIST per family — a name-to-value map makes the family render empty. This script is the DTCG-to-lists converter; the repo keeps DTCG as the source of truth, exactly as build-penpot-tokens.js does.
  */
 
+import {existsSync} from 'node:fs';
 import {readFile, writeFile, mkdir, copyFile, rm} from 'node:fs/promises';
 import {dirname, resolve, basename} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {settings} from '../../_data/meta.js';
-import {TOKENS_DIR, loadTokens, themeDir, themeName} from '../utils/theme.js';
+import {TOKENS_DIR, loadTokens, themeDir, themeFontFiles, themeName} from '../utils/theme.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(HERE, '../../..');
@@ -22,10 +23,15 @@ const OUT = resolve(REPO_ROOT, '_local/claude-design-system/project');
 const THEME_DS = resolve(REPO_ROOT, themeDir(), 'design-system');
 const SYSTEM = themeName();
 
+if (!existsSync(THEME_DS)) {
+	console.error(`The theme "${SYSTEM}" has no design-system folder, so there is nothing to bundle. Add ${themeDir()}/design-system with the previews and docs to use this command.`);
+	process.exit(1);
+}
+
 const readJSON = async f => loadTokens(f);
 const globalCss = await readFile(resolve(REPO_ROOT, 'src/_includes/css/global.css'), 'utf8');
 
-/* ── Resolve the site's own custom properties, per theme ───────────── */
+/* ── Resolve the site's custom properties, per theme ───────────── */
 
 // Brace-walk the compiled CSS collecting :root declarations, so a value here is the one the browser would use rather than a guess. Dark comes from both the media query and the explicit attribute.
 function collectRootVars(css) {
@@ -70,7 +76,7 @@ function matchBrace(s, open) {
 	return s.length;
 }
 
-// ⚠ These pieces carry their own :root variables, not in global.css any more, and the tokens still list them.
+// ⚠ These pieces carry :root variables that aren't in global.css any more, and the tokens still list them.
 let pieceCss = '';
 for (const name of ['activity-colors', 'code', 'main-nav', 'place-map', 'tooltip']) pieceCss += await readFile(resolve(REPO_ROOT, 'src/_includes/css', `${name}.css`), 'utf8');
 const raw = collectRootVars(globalCss + pieceCss);
@@ -109,7 +115,7 @@ const USAGE = {
 	'--color-accent-green': 'Desaturated companion for category cues and the conic logo.',
 	'--color-logo-icon': 'The logomark in the breadcrumb. One value in both themes so it holds 3:1 either way.',
 	'--color-route-line': 'Orienteering course on the activity map — reads on every tile set.',
-	'--color-route-start': 'Route start dot. A saturated green of its own, because the accent green reads grey on a map.',
+	'--color-route-start': 'Route start dot. A separate saturated green, because the accent green reads grey on a map.',
 	'--color-light': 'Lightest neutral, for text on a dark fill.',
 	'--color-dark': 'Darkest neutral, for fills and scrims.',
 	'--color-mid': 'Mid neutral for muted marks.'
@@ -192,13 +198,7 @@ const sizes = await readJSON('textSizes.json');
 const fontsSrc = await readJSON('fonts.json');
 const px = step => `${sizes[step].$value.max}px`;
 
-const FONT_FILES = [
-	{family: 'Source Sans', file: 'fonts/source-sans.woff2', weight: '200 900', style: 'normal'},
-	{family: 'Source Sans', file: 'fonts/source-sans-italic.woff2', weight: '200 900', style: 'italic'},
-	{family: 'Source Serif', file: 'fonts/source-serif.woff2', weight: '700', style: 'normal'},
-	{family: 'Source Serif', file: 'fonts/source-serif-bold-italic.woff2', weight: '700', style: 'italic'},
-	{family: 'Source Code Pro', file: 'fonts/source-code-pro.woff2', weight: '200 900', style: 'normal'}
-];
+const FONT_FILES = themeFontFiles(await readFile(resolve(REPO_ROOT, themeDir(), 'fonts.css'), 'utf8'));
 
 const type = {
 	fonts: FONT_FILES,
@@ -256,8 +256,8 @@ await mkdir(resolve(OUT, 'fonts'), {recursive: true});
 
 await writeFile(resolve(OUT, 'tokens.json'), JSON.stringify(tokens, null, 2));
 
-// The site's own stylesheet rides in as bundle.css, which the type preloads into every preview — so a preview is styled by the real CSS, not a reconstruction. ⚠ Fonts sit a level up from components/.
-// ⚠ custom-card, the chrome and the small pieces ship as per-page bundles, not in global.css — a preview linking its own stylesheet would be inert here, so they are concatenated in.
+// The site's stylesheet rides in as bundle.css, which the type preloads into every preview — so a preview is styled by the real CSS, not a reconstruction. ⚠ Fonts sit a level up from components/.
+// ⚠ custom-card, the chrome and the small pieces ship as per-page bundles, not in global.css — a preview linking another stylesheet would be inert here, so they are concatenated in.
 const localBundles = ['custom-card', 'activity-colors', 'button', 'code', 'external-link', 'prose-rhythm', 'prose', 'seperator', 'skip-link', 'nav-menu-cls', 'breadcrumb-leaf', 'breadcrumb', 'main-nav', 'site-header', 'site-logo', 'sun-and-moon', 'theme-toggle', 'site-footer', 'tooltip', 'kbd', 'section', 'textgradient'].map(name => `${name}.css`);
 let localCss = '';
 for (const f of localBundles) localCss += `\n${await readFile(resolve(REPO_ROOT, 'src/_includes/css', f), 'utf8')}`;
@@ -265,11 +265,7 @@ const bundleCss = (globalCss + localCss).replace(/url\(\/assets\/fonts\/[^/)]*\/
 if (/<\/style/i.test(bundleCss)) throw new Error('bundle.css contains </style — the type refuses it');
 await writeFile(resolve(OUT, 'components/bundle.css'), bundleCss);
 
-for (const f of FONT_FILES) {
-	const name = basename(f.file);
-	const [dir] = name.replace('.woff2', '').split(/-(?=italic|bold|cyrillic)/);
-	await copyFile(resolve(REPO_ROOT, themeDir(), 'fonts', dir, name), resolve(OUT, 'fonts', name));
-}
+for (const f of FONT_FILES) await copyFile(resolve(REPO_ROOT, themeDir(), 'fonts', f.source), resolve(OUT, f.file));
 
 await copyFile(resolve(THEME_DS, 'docs/README.md'), resolve(OUT, 'README.md'));
 
@@ -301,9 +297,9 @@ for (const c of COMPONENTS) {
 	let html = await inlineIcons(await readFile(resolve(THEME_DS, 'previews', c.src), 'utf8'));
 	html = html
 		.replace(/^<!-- @dsCard[^>]*-->\n/, '')
-		// The frame preloads tokens.css, bundle.css and the fonts; a preview that links its own would be inert anyway.
+		// The frame preloads tokens.css, bundle.css and the fonts; a preview that links them again would be inert anyway.
 		.replace(/\t*<link rel="stylesheet"[^>]*>\n/g, '')
-		// Page chrome belongs to a standalone page, not to a card: the card carries its own title and the page its own theme control.
+		// Page chrome belongs to a standalone page, not to a card: the card carries a title and the page a theme control.
 		.replace(/\t*<div class="repel">\s*<h1[^>]*>.*?<\/h1>\s*<button class="button" data-small-button[^>]*>.*?<\/button>\s*<\/div>\n/s, '')
 		.replace(/\t*<h1 class="text-step-4">.*?<\/h1>\n/s, '')
 		.replace(/\t*<script>\s*(?:const toggle = )?document\.getElementById\('theme'\)[\s\S]*?<\/script>\n/g, '')

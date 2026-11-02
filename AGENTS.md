@@ -16,6 +16,7 @@ A boilerplate built with [Eleventy (11ty) v3](https://www.11ty.dev) on the [Elev
 
 - ⚠ A site's first merge from stomme is always `git merge --allow-unrelated-histories -s ours upstream/main`, never plain. Stomme contains Eleventy Excellent 4.9.1 in its history, so a plain first merge starts a real merge against that old version and stops on conflicts. The `-s ours` merge joins the histories and changes no file. Later merges are ordinary ones.
 - When stomme changes `src/_data/settings.yaml`, a site keeps its file and adds any new line by hand. The merge conflict in that file is expected: take the site's version, then read stomme's for what is new.
+- Stomme keeps no remote for Lene's repo, on purpose. Her releases are fetched by address, `git fetch https://github.com/madrilene/eleventy-excellent --tags`, then merged by tag. Never add her repo as a remote, so neither git nor `gh` can aim at it from a stomme clone.
 - `npm run compare:upstream` lists every shared file in a site that differs from `upstream/main` as last fetched, and exits non-zero if any do. When `upstream` isn't stomme, as in stomme itself, it says so and exits 0.
 
 ## Tech Stack
@@ -47,7 +48,7 @@ npm run test:unit          # Unit tests (node --test, files in tests/)
 npm run rebuild            # Rebuild dist/ with drafts and hidden things included (BUILD_DRAFTS=1 SHOW_HIDDEN=1), keeping the image folders
 npm run compare            # Compare dist/ with the saved build in _local/baseline/ (add -- --shots to compare pictures too)
 npm run compare:upstream   # In a site: list the shared files that differ from stomme
-npm run bare               # Build a bare page (every switch off, no post types, the sample theme) and print what it weighs and what it asks for
+npm run bare               # Build a bare page (every switch off, no post types, the sample theme, no default share picture) and print what it weighs and what it asks for
 npm run test:skip-link     # Press Tab on the built pages and check the skip link takes focus (run after a build)
 npm run design:system      # Rebuild the local design-system bundle in _local/claude-design-system (needs a theme with a design-system folder)
 npm run mockups            # Re-shoot the wiki's mockup pictures (npm run mockups:check lists the ones that have drifted)
@@ -127,7 +128,7 @@ Every part that used to be always on has a yes/no setting under `switches` in `s
 
 `settings.postTypes` lists the post types the site builds (the category names, such as `note` and `recipe`). A missing value builds all sixteen, `[]` builds none, and a name that isn't a post type stops the build. ⚠ `[]` is a hand edit: the admin form never saves an empty selection, so clearing the form in the CMS puts the site back to all sixteen, not to none. A type left out has no posts, archive page, feeds or menu link, and a Featured or /now pick of it is skipped.
 
-A page's CSS is loaded by what the page uses: the header, footer, menu, prose, buttons, code and the other pieces are each a file in `src/assets/css/local/` that the template using it includes. In dev, saving prose, button or code CSS now costs an Eleventy rebuild, where a file in `src/assets/css/global/` only recompiles the global stylesheet. `npm run bare` is the measure of what is left when everything is off; keep it from growing.
+A page's CSS is loaded by what the page uses: the header, footer, menu, prose, buttons, code and the other pieces are each a file in `src/assets/css/local/` that the template using it includes. In dev, saving prose, button or code CSS now costs an Eleventy rebuild, where a file in `src/assets/css/global/` only recompiles the global stylesheet. `npm run bare` is the measure of what is left when everything is off; keep it from growing. Three things leave a page by what it holds rather than by a switch: `is-land.min.js` and the speculation rules go when the finished page has no island or no link on the site (`src/_config/plugins/finished-page.js`, which must stay after the WebC plugin), and the share-image tags go when neither the page nor the site has a picture to name.
 
 ## Design Tokens
 
@@ -144,7 +145,7 @@ All tokens live in the active theme's `tokens/*.json` and are consumed by the Ta
 
 ## Site Metadata
 
-Identity and social profiles live in `src/_data/settings.yaml`; `src/_data/meta.js` builds the site-wide config (OG defaults, and the theme colors from the active theme's `theme.json`) from it, and `src/_data/personal.js` maps the same values onto Eleventy Excellent's `personal.*` names. `a11yPaths` in `settings.yaml` lists the pages `npm run test:a11y` checks, and `[]` checks every page; with no such key it checks a short list of pages every site has.
+Identity and social profiles live in `src/_data/settings.yaml`; `src/_data/meta.js` builds the site-wide config (OG defaults, and the theme colors from the active theme's `theme.json`) from it, and `src/_data/personal.js` maps the same values onto Eleventy Excellent's `personal.*` names. `maps` in `settings.yaml` holds the address of the map tiles and the area they cover; with no tiles, `<place-map>` shows no map, and the build says so. `a11yPaths` in `settings.yaml` lists the pages `npm run test:a11y` checks, and `[]` checks every page; with no such key it checks a short list of pages every site has.
 
 ## Language and Words
 

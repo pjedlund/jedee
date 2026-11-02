@@ -90,7 +90,7 @@ figure:has(> picture, > img, > a > picture) > figcaption {
 
 ### Breakout captions on the prose edge
 
-A figure at `.popout`, `.feature` or `.full` width starts left of the text, and so would its caption. The figure passes the wrapper's named columns down through subgrid and puts the caption back in `content` ([[Layout breakouts]] covers the columns). The featured image at the top of a post is a lightbox, and its `.feature` class sits on a wrapper three elements above the figure, so each element in between passes the columns on as well:
+A figure at `.popout`, `.feature` or `.full` width starts left of the text, and so would its caption. The figure passes the wrapper's named columns down through subgrid and puts the caption back in `content` ([[Layout breakouts]] covers the columns). The featured image at the top of a post is a lightbox, and its `.feature` class sits on a wrapper three elements above the figure, so each element in between passes the columns on as well. The rules sit in two files, shown together here: the plain figure's in `src/assets/css/global/base/global-styles.css`, and the lightbox's in `src/assets/css/local/photo-lightbox.css`, which only a page with a lightbox loads.
 
 ```css
 @supports (grid-template-columns: subgrid) {

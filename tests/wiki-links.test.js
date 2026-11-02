@@ -34,3 +34,10 @@ test('in a site with wiki pages of its content, a shared page linking to one of 
   const dead = findDeadLinks(Object.keys(pages), file => pages[file], file => file === 'Site Page.md')
   assert.deepEqual(dead, ['Shared.md -> [[Site Page]]'])
 })
+
+test('the wiki index has no empty section, and its intro holds on a site with a section of its pages', () => {
+  const text = readFileSync(path.join(wikiDir, 'index.md'), 'utf8')
+  const empty = [...text.matchAll(/^## (.+)\n\s*(?=^## |$(?![\s\S]))/gm)].map(match => match[1])
+  assert.deepEqual(empty, [], `Empty sections: ${empty.join(', ')}`)
+  assert.ok(!text.includes('live under "Stomme itself"'), 'the intro says every project page sits under one heading')
+})

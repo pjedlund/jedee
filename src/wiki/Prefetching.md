@@ -54,7 +54,7 @@ Before the API, libraries did this in JavaScript. [instant.page](https://instant
 
 ## In stomme
 
-The rule is Eleventy Excellent's, added in 4.8 (upstream commit `1107a1b`): `src/_includes/head/speculation-rules.njk`, included in `base.njk` right after `head/meta-info.njk`, at `moderate`. stomme changes one thing: URLs that are not pages are excluded.
+The rule is Eleventy Excellent's, added in 4.8 (upstream commit `1107a1b`): `src/_includes/head/speculation-rules.njk`, included in `base.njk` right after `head/meta-info.njk`, at `moderate`. stomme changes two things: URLs that are not pages are excluded, and a page with no link on the site doesn't carry the rules at all (`src/_config/plugins/finished-page.js` takes them out of the finished page).
 
 ```json
 "where": {

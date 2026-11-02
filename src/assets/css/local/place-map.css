@@ -1,13 +1,13 @@
 /*
 PLACE-MAP
-A reusable MapLibre map drawn from our own Protomaps tiles, authored like an image (place-map.webc + place-map.js). Each page renders an empty box; once it scrolls into view the JS fills it with a live map (drag + zoom buttons; wheel/pinch off so the page keeps scrolling). The maximize button grows THE SAME map into a modal overlay where wheel + pinch turn on.
+A reusable MapLibre map drawn from the site's Protomaps tiles, authored like an image (place-map.webc + place-map.js). Each page renders an empty box; once it scrolls into view the JS fills it with a live map (drag + zoom buttons; wheel/pinch off so the page keeps scrolling). The maximize button grows THE SAME map into a modal overlay where wheel + pinch turn on.
 MapLibre's stylesheet loads after this bundle, so its overrides are scoped under the [data-place-map-canvas] hook (set in JS) to win on specificity instead of !important.
 */
 
 /* In the variables layer, where they were in the shared CSS, so a theme can still override them. */
 @layer variables {
   :root {
-    /* Route start marker on the activity map. The accent green is a muted olive that reads gray on the map, so the "start" dot uses a saturated green of its own — one value works on both light and dark tile sets. */
+    /* Route start marker on the activity map. The accent green is a muted olive that reads gray on the map, so the "start" dot uses a separate saturated green — one value works on both light and dark tile sets. */
     --color-route-start: var(--color-green-vivid);
 
     /* A route line (track + start/finish symbols) on the activity map; place-map-places.css swaps in the activity type's color. This fallback is the accent orange, which reads on every tile set (topo green, satellite, light and dark), where a purple vanished on some. */
@@ -25,6 +25,11 @@ place-map > .place-map-live + :not(script, link) {
   margin-block-start: var(--space-l);
 }
 
+/* A site with no tiles (settings.maps): no map, and no empty box where one would be. What else is in <place-map>, such as the activities table, stays. ⚠ No tag name here: until it wakes, is-land renames the element to is-land--place-map. */
+[data-no-tiles] [data-place-map-box] {
+  display: none;
+}
+
 /* Live inline map. Rendered server-side so its ratio holds the space from first paint, and the box keeps its height when the canvas moves out to the overlay. position:relative anchors the maximize button. */
 .place-map-live {
   position: relative;
@@ -35,7 +40,7 @@ place-map > .place-map-live + :not(script, link) {
   background: var(--map-park); /* pre-tile surface: the forest green */
   overflow: hidden;
   isolation: isolate;
-  /* Pads the box down to the next quarter line, as prose-rhythm.css does for images; a % margin measures the box's own column. */
+  /* Pads the box down to the next quarter line, as prose-rhythm.css does for images; a % margin measures the box's column. */
   --place-map-block-size: calc(100% / (var(--place-map-ratio, 16 / 9)));
   margin-block-end: calc(round(up, var(--place-map-block-size), var(--line-quarter, 1px)) - var(--place-map-block-size));
 }
@@ -60,7 +65,7 @@ place-map > .place-map-live + :not(script, link) {
   --preloader-size: 6rem; /* 120% of the first 5rem, for more room around the number */
   --preloader-fill: color-mix(in oklab, var(--map-park), var(--map-park-shade) 12%); /* the forest green of the box, darkened a touch (lightened in dark mode) */
   --preloader-track: var(--map-land);
-  --preloader-logo: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='m50 0 .588.003V0h9.706v30.882h-9.706v.009a19 19 0 0 0-.588-.009c-10.558 0-19.118 8.559-19.118 19.118S39.441 69.118 50 69.118 69.118 60.559 69.118 50V30.882C69.118 13.826 82.945 0 100 0v50c0 27.614-22.386 50-50 50S0 77.614 0 50 22.386 0 50 0'/></svg>"); /* ⚠ a copy of the path in src/assets/svg/misc/logo.svg: update both */
+  --preloader-logo: url("data:image/svg+xml,__THEME_LOGO__"); /* build-css.js swaps in the active theme's logo.svg */
 
   position: absolute;
   inset: 0;
@@ -85,7 +90,7 @@ place-map > .place-map-live + :not(script, link) {
   aspect-ratio: 1;
   --preloader-stem: clamp(0, (var(--preloader-progress, 0) - 91.667) / 8.333, 1); /* 0→1 over the last 30deg of the sweep, which only the stem's box shows */
   background:
-    linear-gradient(to right, var(--preloader-fill) calc(var(--preloader-stem) * 100%), var(--preloader-track) 0) calc(var(--preloader-size) * 0.5) 0 / calc(var(--preloader-size) * 0.103) calc(var(--preloader-size) * 0.31) no-repeat, /* the stem wipes left to right, as a straight edge, instead of the sweep's slanted wedge; ⚠ box = the stem in logo.svg */
+    linear-gradient(to right, var(--preloader-fill) calc(var(--preloader-stem) * 100%), var(--preloader-track) 0) calc(var(--preloader-size) * 0.5) 0 / calc(var(--preloader-size) * var(--preloader-stem-width, 0)) calc(var(--preloader-size) * var(--preloader-stem-height, 0)) no-repeat, /* a logo with a straight stem at the top: it wipes left to right as a straight edge, instead of the sweep's slanted wedge. The theme gives the stem's size as a share of the logo; ⚠ no size, no stem layer */
     conic-gradient(from 30deg, var(--preloader-fill) calc(var(--preloader-progress, 0) * 1%), var(--preloader-track) 0);
   mask: var(--preloader-logo) center / contain no-repeat;
 }
@@ -167,7 +172,7 @@ place-map > .place-map-live + :not(script, link) {
   }
 }
 
-/* The map's own colors, read by place-map.js on every render — tweak here or live in devtools, then flip the theme to redraw. ⚠ Set on the canvas, not <place-map>: the canvas moves into the overlay outside it. The box gets them too, for its forest-green loading surface. */
+/* The map's colors, read by place-map.js on every render — tweak here or live in devtools, then flip the theme to redraw. ⚠ Set on the canvas, not <place-map>: the canvas moves into the overlay outside it. The box gets them too, for its forest-green loading surface. */
 .place-map-live,
 [data-place-map-canvas] {
   --map-land: var(--color-bg);

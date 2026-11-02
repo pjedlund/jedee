@@ -30,7 +30,8 @@ import {
   workoutFile,
   ymd,
   TYPE_DIR,
-  deriveWorkoutTitle
+  deriveWorkoutTitle,
+  default as micropub
 } from '../netlify/functions/micropub.js'
 
 test('formatSlug: maps engine post-type to the site folder', () => {
@@ -447,7 +448,7 @@ test('resolveFilename: a filename that does not match dir/folder/slug -> returne
 
 // Title derivation — every post should carry a title (a title-less post degrades
 // in <title>, OG tags, feeds, the notes card headline, and the h-entry p-name).
-// Media/article keep their own title; these cover the title-less types.
+// Media/article keep the title they came with; these cover the title-less types.
 
 test('titleFromContent: first line, trailing periods trimmed, opening capitalized', () => {
   assert.equal(titleFromContent('Lorem ipsum dolar sit amet..'), 'Lorem ipsum dolar sit amet')
@@ -641,4 +642,19 @@ test('rewriteFrontmatter: elevation-gain/elevation-loss + health-export-id map +
   assert.equal(out.elevationLoss, 85.5)
   assert.equal(out.healthExportId, 'abc-123') // string, not coerced — not in WORKOUT_NUMERIC
   assert.ok(!('elevation-gain' in out) && !('elevation-loss' in out) && !('health-export-id' in out))
+})
+
+// A second site deploys every file in netlify/functions/, so with no ME the function must stay shut.
+test('the function answers 404 when ME is unset, and takes requests once it is set', async () => {
+  const saved = process.env.ME
+  const request = () => new Request('https://example.com/api/micropub', { method: 'POST', body: new URLSearchParams({ h: 'entry', content: 'hello' }) })
+  try {
+    delete process.env.ME
+    assert.equal((await micropub(request())).status, 404)
+    process.env.ME = 'https://example.com/'
+    assert.notEqual((await micropub(request())).status, 404)
+  } finally {
+    if (saved === undefined) delete process.env.ME
+    else process.env.ME = saved
+  }
 })
