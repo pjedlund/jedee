@@ -448,7 +448,7 @@ test('resolveFilename: a filename that does not match dir/folder/slug -> returne
 
 // Title derivation — every post should carry a title (a title-less post degrades
 // in <title>, OG tags, feeds, the notes card headline, and the h-entry p-name).
-// Media/article keep their own title; these cover the title-less types.
+// Media/article keep the title they came with; these cover the title-less types.
 
 test('titleFromContent: first line, trailing periods trimmed, opening capitalized', () => {
   assert.equal(titleFromContent('Lorem ipsum dolar sit amet..'), 'Lorem ipsum dolar sit amet')

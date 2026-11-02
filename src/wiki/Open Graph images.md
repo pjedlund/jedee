@@ -62,7 +62,7 @@ The event and the conversion script are Eleventy Excellent stock, unmodified. Th
 
 ### A site with no fallback picture
 
-A site that deletes `opengraph-default.jpg` has no picture to offer on a page without one, so the `og:image` tags and both `twitter:` tags stay off that page (`meta.hasDefaultShareImage`), rather than naming a file that isn't there. A page with its own card, its own artwork or a title card keeps them.
+A site that deletes `opengraph-default.jpg` has no picture to offer on a page without one, so the `og:image` tags and both `twitter:` tags stay off that page (`meta.hasDefaultShareImage`), rather than naming a file that isn't there. A page with a composited card, artwork of the post or a title card keeps them.
 
 ### The fallback is not Eleventy Excellent's promo card
 

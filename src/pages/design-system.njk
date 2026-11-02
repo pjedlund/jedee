@@ -143,11 +143,11 @@ colorGroups:
       <div class="grid" data-layout="50-50">
         <div class="type-sample | flow">
           <p class="type-sample-label">Plain</p>
-          <p>Founded in 1994, the W3C made CSS 2.1 a recommendation in 2011. Code keeps its own figures: <code>--tracking-wide: 0.16ch</code>.</p>
+          <p>Founded in 1994, the W3C made CSS 2.1 a recommendation in 2011. Code keeps lining figures: <code>--tracking-wide: 0.16ch</code>.</p>
         </div>
         <div class="type-sample prose | flow">
           <p class="type-sample-label">Site</p>
-          <p>Founded in 1994, the <abbr title="World Wide Web Consortium">W3C</abbr> made CSS 2.1 a Recommendation in 2011. Code keeps its own figures: <code>--tracking-wide: 0.16ch</code>.</p>
+          <p>Founded in 1994, the <abbr title="World Wide Web Consortium">W3C</abbr> made CSS 2.1 a Recommendation in 2011. Code keeps lining figures: <code>--tracking-wide: 0.16ch</code>.</p>
         </div>
       </div>
     </div>
@@ -200,12 +200,12 @@ colorGroups:
       <div class="grid" data-layout="50-50">
         <div class="type-sample | flow">
           <p class="type-sample-label">Plain</p>
-          <figure><figcaption style="text-wrap: wrap; max-inline-size: 31ch">A caption long enough to run onto a second line under its picture, where the last word used to sit on its own.</figcaption></figure>
+          <figure><figcaption style="text-wrap: wrap; max-inline-size: 31ch">A caption long enough to run onto a second line under its picture, where the last word used to sit alone.</figcaption></figure>
           <blockquote style="text-wrap: wrap; max-inline-size: 22ch">Simple is almost always more effective than complex, and short.</blockquote>
         </div>
         <div class="type-sample | flow">
           <p class="type-sample-label">Site</p>
-          <figure><figcaption style="max-inline-size: 31ch">A caption long enough to run onto a second line under its picture, where the last word used to sit on its own.</figcaption></figure>
+          <figure><figcaption style="max-inline-size: 31ch">A caption long enough to run onto a second line under its picture, where the last word used to sit alone.</figcaption></figure>
           <blockquote style="max-inline-size: 22ch">Simple is almost always more effective than complex, and short.</blockquote>
         </div>
       </div>
@@ -228,7 +228,7 @@ colorGroups:
 
     <div class="flow">
       <h4>Footnote numbers</h4>
-      <p>The font's own superscript figures, bare, rather than a shrunken, raised number in brackets. They don't push the lines apart.</p>
+      <p>The font's superscript figures, bare, rather than a shrunken, raised number in brackets. They don't push the lines apart.</p>
       <div class="grid" data-layout="50-50">
         <div class="type-sample | flow">
           <p class="type-sample-label">Plain</p>
@@ -442,7 +442,7 @@ colorGroups:
     <h3 class="heading-line">Breakouts</h3>
     <p>Anything on the page can step out of its column by a fixed amount: <code>.popout</code> by a gutter each side, <code>.feature</code> by a column and a gutter, <code>.full</code> to the window's edges. The bands below are drawn by those classes at their real widths, around the 64rem prose column, as in a post; widen the window to see each step.</p>
   </section>
-  {# A full-bleed strip is a wrapper of its own here, at the prose column's 64rem, so the bands break out as they do in a post. #}
+  {# A full-bleed strip is a separate wrapper here, at the prose column's 64rem, so the bands break out as they do in a post. #}
   <div class="breakout-demo | full wrapper prose-wrapper flow" aria-hidden="true">
     <div class="breakout-band">content</div>
     <div class="breakout-band | popout">.popout</div>
@@ -515,7 +515,7 @@ colorGroups:
   </section>
   <section class="flow region">
     <h3 class="heading-line">Platforms</h3>
-    <p>Platform logos come from <a href="https://simpleicons.org/">Simple Icons</a>, each brand's own mark in one color. Phosphor has no mark for several of them, and two sets side by side in the footer would differ in size.</p>
+    <p>Platform logos come from <a href="https://simpleicons.org/">Simple Icons</a>, each brand's mark in one color. Phosphor has no mark for several of them, and two sets side by side in the footer would differ in size.</p>
     <ul class="icon-specimens | grid" role="list">
       {%- for key, url in personal.platforms %}
         <li>{% svg 'platform/' + key %}<code>{{ key }}</code></li>

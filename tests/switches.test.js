@@ -12,7 +12,7 @@ import { resolveMaps } from '../src/_config/utils/maps.js'
 const ROOT = path.resolve(import.meta.dirname, '..')
 const NOTE = '---\ntitle: A small note\ndate: 2026-01-01\n---\n\nHello.\n'
 
-// The page, plus every script file it loads: the deferred scripts are bundled into a file of their own.
+// The page, plus every script file it loads: the deferred scripts are bundled into a separate file.
 function pageAndScripts(site, file) {
   const html = site.read(file)
   const scripts = [...html.matchAll(/<script[^>]*\ssrc="(\/[^"]+\.js)"/g)].map(match => match[1].slice(1)).filter(src => site.exists(src))
@@ -36,7 +36,7 @@ const MARKERS = {
   footer: '<footer class="site-footer',
 }
 
-// Markers that need no posts to show up. The menu needs posts and hideNav off, so it has a case of its own.
+// Markers that need no posts to show up. The menu needs posts and hideNav off, so it has a separate case.
 const PAGE = 'privacy/index.html'
 
 // ⚠ A site's settings may turn some off, so these cases name them; left to the file, a marker can be missing for the wrong reason.
@@ -347,7 +347,7 @@ test('maps with tiles: the script loads, and holds the address and box from sett
 test('wording: the comments named in the Plan 2 list say what they mean', () => {
   const read = file => readFileSync(path.join(ROOT, file), 'utf8')
   const OWN = /\bown(s|er|ers|ing|ership)?\b/i
-  for (const file of ['src/_includes/themes/sample/tokens/shadows.json', 'src/_config/setup/build-design-md.js', 'src/_config/setup/build-design-system.js', 'src/_includes/head/meta-info.njk', 'src/_layouts/base.njk', 'src/assets/css/global/base/global-styles.css', 'src/assets/scripts/components/place-map.js', 'src/_data/meta.js', 'src/_includes/schemas/TechArticle.njk', 'eleventy.config.js']) assert.ok(!OWN.test(read(file)), `${file} has the word`)
+  for (const file of ['src/_includes/themes/sample/tokens/shadows.json', 'src/_config/setup/build-design-md.js', 'src/_config/setup/build-design-system.js', 'src/_includes/head/meta-info.njk', 'src/_layouts/base.njk', 'src/assets/css/global/base/global-styles.css', 'src/assets/scripts/components/place-map.js', 'src/_data/meta.js', 'src/_includes/schemas/TechArticle.njk', 'src/pages/design-system.njk', 'eleventy.config.js']) assert.ok(!OWN.test(read(file)), `${file} has the word`)
   const comment = read('src/assets/css/local/external-link.css').match(/\/\*[\s\S]*?\*\//)[0]
   assert.ok(!comment.includes('orange'), 'the external link comment names a color that depends on the theme')
 })
