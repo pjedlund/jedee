@@ -38,6 +38,8 @@ The honest limit is that the technique costs a decision per component and gives 
 
 The dependency (`@11ty/is-land` 5.0.1) and the way it loads are Eleventy Excellent stock since EE 4.9.1 (merged 2026-10-18). The package's minified file is copied to `/assets/components/is-land.min.js` (a passthrough copy in `eleventy.config.js`), and `head/js-defer.njk` loads it with `<script type="module">`: 5,151 bytes, 2,103 gzipped. Until then esbuild bundled it and `head/js-inline.njk` inlined it into the head of every page (4,054 bytes, see below). It is now a request, but one the browser caches across pages. A module script waits for the page to finish parsing, which changes nothing here: every island waits for `on:idle` or `on:visible` anyway.
 
+⚠ **Since 2026-11-02 the copied file is a corrected one, `src/assets/vendor/is-land.min.js`, not the package's.** In 5.0.1 `on:visible` reads only the first entry its IntersectionObserver hands over (`let [entry] = entries`). When two arrive together, as `[not visible, visible]`, the island never wakes: a page already scrolled to a map at the moment it finishes loading kept a blank box. The copy checks every entry (`entries.some(e => e.isIntersecting)`), a one-line change to the minified file. Point the passthrough copy back at `node_modules` once a fixed is-land is released.
+
 Seven elements use it, all with one of two conditions — `on:idle` for anything in the page chrome, `on:visible` for anything embedded in a post's body.
 
 Table: The islands in jedee: condition and origin
