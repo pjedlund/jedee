@@ -12,6 +12,10 @@ A site adds stomme as a remote named `upstream`. Its first merge is always `git 
 
 When stomme changes `src/_data/settings.yaml`, a site keeps its file and adds any new line by hand.
 
+## How stomme takes updates from Eleventy Excellent
+
+Stomme keeps no remote for Lene's repo, on purpose. Her releases are fetched by address, `git fetch https://github.com/madrilene/eleventy-excellent --tags`, then merged by tag. Never add her repo as a remote, so neither git nor `gh` can aim at it from a stomme clone.
+
 ## Site files
 
 These belong to one site, and each site replaces them; everything else is shared. The list is `tests/site-files.json`.

@@ -9,7 +9,7 @@ import postcssImport from 'postcss-import';
 import tailwindcss from 'tailwindcss';
 import tailwindConfig, {themeFromTokens} from '../../../tailwind.config.js';
 import {siteDomain} from '../../_data/meta.js';
-import {themeDir} from '../utils/theme.js';
+import {logoDataSvg, themeDir} from '../utils/theme.js';
 
 const buildCss = async (inputPath, outputPaths) => {
   const inputContent = await fs.readFile(inputPath, 'utf-8');
@@ -30,8 +30,8 @@ const buildCss = async (inputPath, outputPaths) => {
     autoprefixer,
     cssnano
   ]).process(inputContent, {from: inputPath});
-  // ⚠ cssnano drops the quotes round the placeholder, and a dotted host is only valid inside quotes: the browser would throw the whole rule away. The site's own links get no ↗.
-  const css = result.css.replace(/\[href\*=["']?__SITE_DOMAIN__["']?\]/g, `[href*="${siteDomain}"]`).replaceAll('__SITE_DOMAIN__', siteDomain);
+  // ⚠ cssnano drops the quotes round the placeholder, and a dotted host is only valid inside quotes: the browser would throw the whole rule away. The site's links to itself get no ↗.
+  const css = result.css.replace(/\[href\*=["']?__SITE_DOMAIN__["']?\]/g, `[href*="${siteDomain}"]`).replaceAll('__SITE_DOMAIN__', siteDomain).replaceAll('__THEME_LOGO__', logoDataSvg());
 
   for (const outputPath of outputPaths) {
     await fs.mkdir(path.dirname(outputPath), {recursive: true});
@@ -63,7 +63,7 @@ export const watchGlobalCss = () => {
       50
     );
   };
-  // ⚠ unref() is what lets Ctrl+C stop the dev server: Eleventy's SIGINT handler only closes its own watchers, and an open fs.watch keeps Node alive.
+  // ⚠ unref() is what lets Ctrl+C stop the dev server: Eleventy's SIGINT handler only closes the watchers it made, and an open fs.watch keeps Node alive.
   return ['src/assets/css/global', themeDir()].map(folder => watch(folder, {recursive: true}, rebuild).unref());
 };
 

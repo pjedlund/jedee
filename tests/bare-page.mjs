@@ -1,4 +1,4 @@
-// Builds a bare page (every switch off, no post types, the sample theme) and prints what it weighs and what it asks for. Run: npm run bare
+// Builds a bare page (every switch off, no post types, the sample theme, no default share picture) and prints what it weighs and what it asks for. Run: npm run bare
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { brotliCompressSync, gzipSync } from 'node:zlib';
@@ -12,7 +12,7 @@ const BARE_PAGE = '---\ntitle: Bare\nlayout: base\npermalink: /bare/\n---\n\n<p>
 const BEFORE = { total: 88, gzip: 21, sharedCss: 54, pageCss: 8, html: 23 };
 
 const switches = Object.fromEntries([...SWITCHES, 'nameReveal', 'viewRepo'].map(name => [name, false]));
-const site = await makeTempSite({ settings: { theme: 'sample', postTypes: [], switches }, files: { 'src/pages/bare.njk': BARE_PAGE } });
+const site = await makeTempSite({ settings: { theme: 'sample', postTypes: [], switches }, files: { 'src/pages/bare.njk': BARE_PAGE, 'src/assets/images/template/opengraph-default.jpg': null } });
 try {
   await site.build();
   const html = site.read('bare/index.html');
@@ -25,7 +25,7 @@ try {
   const gzip = gzipSync(html, { level: 9 }).length;
   const brotli = brotliCompressSync(html).length;
 
-  console.log(`Bare page /bare/ (theme sample, every switch off, postTypes: [])\n`);
+  console.log(`Bare page /bare/ (theme sample, every switch off, postTypes: [], no default share picture)\n`);
   console.log(`Page total        ${kb(html.length)}   (before: ${BEFORE.total} KB)`);
   console.log(`Compressed        ${kb(gzip)} gzip, ${kb(brotli)} brotli   (before: ${BEFORE.gzip} KB)`);
   console.log(`CSS, shared       ${kb(shared.length)}   (before: ${BEFORE.sharedCss} KB)`);

@@ -67,7 +67,9 @@
     {{- meta.siteName -}}
   {%- endif -%}"
 />
-{# Four sources, most specific first. `ogCard` is an artwork post's composited card (npm run og:cards); `ogImage` is the post's own artwork self-hosted at build time (src/_config/utils/og-image.js), set by the photo, jam, video and recipe data files and null everywhere else; then Eleventy Excellent's generated title card for articles and notes (collections.titleCards); then the site default. #}
+{%- set hasShareImage = ogCard or ogImage or layout == 'post' or layout == 'note' or meta.hasDefaultShareImage -%}
+{% if hasShareImage %}
+{# Four sources, most specific first. `ogCard` is an artwork post's composited card (npm run og:cards); `ogImage` is the post's artwork self-hosted at build time (src/_config/utils/og-image.js), set by the photo, jam, video and recipe data files and null everywhere else; then Eleventy Excellent's generated title card for articles and notes (collections.titleCards); then the site default. #}
 <meta
   property="og:image"
   content="{%- if ogCard -%}
@@ -95,16 +97,19 @@
 {# ⚠ These must match the file actually served: a platform that reads no twitter:card has only the declared ratio to tell it whether to draw a wide card or a small square one. #}
 <meta property="og:image:width" content="{{ ogImage.width if (ogImage and not ogCard) else 1200 }}" />
 <meta property="og:image:height" content="{{ ogImage.height if (ogImage and not ogCard) else 630 }}" />
+{% endif %}
 <meta property="og:description" content="{{ metaDescription }}" />
 <meta property="og:site_name" content="{{ meta.siteName }}" />
 <meta property="og:locale" content="{{ 'sv_SE' if lang == 'sv' else meta.locale }}" />
 <meta property="article:author" content="{{ meta.author.name }}" />
 
+{% if hasShareImage %}
 {# Eleventy Excellent removed the Twitter tags in v2 and X reads the og: ones for title, description and image — but NOT for the card's shape or its alt text, which is why these two came back. #}
 {# ⚠ `twitter:card` picks the layout: without it X draws the small square summary card, which is the whole thing the 1200x630 cards exist to avoid. #}
 {# X crops a large card to 2:1, so `summary` is the kinder answer only for a square or portrait image, where that crop would cut the subject away. 1.2 puts a 4:3 photograph on the large card and an album cover on the small one. #}
 <meta name="twitter:card" content="{{ 'summary' if (ogImage and not ogCard and ogImage.width < (ogImage.height * 1.2)) else 'summary_large_image' }}" />
 <meta name="twitter:image:alt" content="{{ ogImageAlt }}" />
+{% endif %}
 
 {# Language twins (see twin.js) name each other, and themselves, for search engines. #}
 {%- set twin = collections.all | twinOf(page.url, translation) %}

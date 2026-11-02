@@ -14,6 +14,7 @@ import { drafts } from './plugins/drafts.js';
 
 // Custom transforms
 import { htmlConfig } from './plugins/html-config.js';
+import { finishedPage } from './plugins/finished-page.js';
 
 export default {
   EleventyRenderPlugin,
@@ -24,5 +25,6 @@ export default {
   markdownLib,
   drafts,
   htmlConfig,
+  finishedPage,
   interlinker
 };

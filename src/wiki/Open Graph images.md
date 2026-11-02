@@ -60,6 +60,10 @@ Eleventy Excellent's version has only the `layout == 'post'` branch and the defa
 
 The event and the conversion script are Eleventy Excellent stock, unmodified. The template and the head are not: the template paginates `collections.titleCards` and carries the site's mark and accent color, and the head picks from four sources (both below). The **fallback image** is stomme's; that and the content around the pipeline are where the findings are.
 
+### A site with no fallback picture
+
+A site that deletes `opengraph-default.jpg` has no picture to offer on a page without one, so the `og:image` tags and both `twitter:` tags stay off that page (`meta.hasDefaultShareImage`), rather than naming a file that isn't there. A page with a composited card, artwork of the post or a title card keeps them.
+
 ### The fallback is not Eleventy Excellent's promo card
 
 Eleventy Excellent's `meta.opengraph_default` points at the starter's shipped `opengraph-default.jpg` — a yellow 11ty card reading "ELEVENTY-EXCELLENT / Opinionated Eleventy 3.0 starter with CUBE CSS…". Given the scoping below, that would be the image on every note, photo, jam, reading entry and response post a site shares: the great majority of its shareable pages would advertise the starter rather than the site. It is the same class of leftover as the orphaned JPEGs, but louder, and nothing in the build could flag it — a valid image at a valid URL is all the pipeline checks.

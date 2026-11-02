@@ -41,7 +41,7 @@ search:
       activityType: orienteering
 ```
 
-`enabled: false` does three things at once and only one of them is written anywhere: the index template's `permalink` returns `false` so no `/search.json` is emitted; one `{% if %}` in `partials/header.njk` skips the partial; and because the partial is what pulls in its CSS and JS through `{% css "local" %}` and `{% js "defer" %}`, skipping it is what actually stops both from shipping. That last point is why the panel is a plain Nunjucks partial rather than a WebC component — the same reason [[The main menu]] is one.
+The panel in the header is the index's only reader, so with `switches.header` off `/search.json` isn't written either. `enabled: false` does three things at once and only one of them is written anywhere: the index template's `permalink` returns `false` so no `/search.json` is emitted; one `{% if %}` in `partials/header.njk` skips the partial; and because the partial is what pulls in its CSS and JS through `{% css "local" %}` and `{% js "defer" %}`, skipping it is what actually stops both from shipping. That last point is why the panel is a plain Nunjucks partial rather than a WebC component — the same reason [[The main menu]] is one.
 
 `types` is a curated list, not every collection. The response types (likes, replies, reposts, RSVPs, bookmarks) stay out because they would drown prose results. The keys are **collection keys, and they are singular** — `article`, not `articles`; the plurals are archive URLs and produce an empty index with a green build. See [[Anatomy of a post type]].
 
@@ -54,7 +54,7 @@ Standalone prose pages are not in any post collection, so they opt in with `tags
 `src/search.json.11ty.js` is a thin wrapper; all the logic is in `src/_config/search-index.js` as pure functions, so it is unit-testable without Eleventy. Two wrinkles in the template are worth knowing:
 
 ```js
-permalink: data => (data.settings.search.enabled ? '/search.json' : false),
+permalink: data => (data.settings.search.enabled && data.meta.switches.header ? '/search.json' : false),
 eleventyImport: {collections: search.types}
 ```
 

@@ -1,4 +1,4 @@
-// Regenerates DESIGN.md's YAML front matter from the design tokens; the markdown body is left untouched, since people own the prose.
+// Regenerates DESIGN.md's YAML front matter from the design tokens; the markdown body is left untouched, since people write the prose.
 // Workflow: edit the active theme's tokens/ (run `npm run colors` after colorsBase.json) → `npm run design:md` (or `penpot:tokens`, which runs both) → review the diff.
 // Mapping:
 //   semantic roles  -> the SEMANTIC_ROLES map below; edit it to rebrand
