@@ -1,4 +1,4 @@
-// This site's Micropub server: turns an incoming h-entry into a .md in src/posts/<type>/, committed through the GitHub API. How and why: the wiki page "Micropub" and the `micropub` skill.
+// jedee's Micropub server: turns an incoming h-entry into a .md in src/posts/<type>/, committed through the GitHub API. How and why: the wiki page "Micropub" and the `micropub` skill.
 // ⚠ Steer the engine (@benjifs/micropub 2.0.1) only through its constructor options, never by editing its source. The three patch points:
 //   • formatSlug -> this site's folder, minus the engine's unix-timestamp prefix (patch points 1+2)
 //   • store      -> rewrites the front matter to this site's shape before the commit (patch point 3)
@@ -10,15 +10,13 @@ import matter from 'gray-matter'
 
 // --- environment (set in Netlify) ---------------------------------------
 const {
+  ME,
   TOKEN_ENDPOINT = 'https://tokens.indieauth.com/token',
   GITHUB_TOKEN,
   GITHUB_USER,
   GITHUB_REPO,
   GITHUB_BRANCH // optional — unset commits to the repo's default branch (main)
 } = process.env
-
-// ⚠ Read per request, never at load: a site with no ME gets a 404 from the function below.
-const me = () => process.env.ME
 
 export const CONTENT_DIR = 'src/posts'
 const FIREHOSE_TAG = 'posts' // every post carries tags:"posts" via its folder JSON
@@ -137,7 +135,7 @@ export const formatSlug = (type = 'note', slug = '') =>
 export const deriveWorkoutTitle = (activityType, distanceKm) =>
   distanceKm ? `${activityType} · ${distanceKm} km` : activityType
 
-// Rewrite the engine's frontmatter to this codebase's conventions. Pure: returns the new frontmatter object; the body is left untouched.
+// Rewrite the engine's frontmatter to jedee conventions. Pure: returns the new frontmatter object; the body is left untouched.
 export const rewriteFrontmatter = (data = {}) => {
   const out = {}
   let mediaSeen = false
@@ -152,7 +150,7 @@ export const rewriteFrontmatter = (data = {}) => {
       continue
     }
     if (key === 'visibility') {
-      // Micropub `visibility` -> the site's vocabulary, interpreted at build time in src/_config/plugins/drafts.js:
+      // Micropub `visibility` -> jedee's vocabulary, interpreted at build time in src/_config/plugins/drafts.js:
       //   unlisted -> kept: out of every collection, feed and the sitemap, noindex, but its URL still works
       //   private  -> draft (a static build has no real private)
       //   public / absent / anything else -> dropped
@@ -244,7 +242,7 @@ export const resolveFilename = (filename, data = {}, content = '', derivedTitle 
   const m = filename.match(/^(.*)\/([^/]+)\/([^/]+)\.md$/)
   if (!m) return unchanged
   const [, dir, folder, slug] = m
-  const publicUrl = (name) => (me() ? `${me().replace(/\/$/, '')}/${folder}/${name}` : null)
+  const publicUrl = (name) => (ME ? `${ME.replace(/\/$/, '')}/${folder}/${name}` : null)
 
   if (data.title) {
     const name = titleToFilename(data.title)
@@ -275,7 +273,7 @@ export const workoutFile = (filename, data = {}) => {
   const folder = 'activities'
   const slug = [ymd(data.date), slugify(data.title || data.activityType)].filter(Boolean).join('-')
   if (!slug) return unchanged
-  const location = me() ? `${me().replace(/\/$/, '')}/${folder}/${slug}` : null
+  const location = ME ? `${ME.replace(/\/$/, '')}/${folder}/${slug}` : null
   return { finalName: `${dir}/${folder}/${slug}.md`, location }
 }
 
@@ -351,7 +349,7 @@ export const ensureTitle = (data = {}, content = '') => {
 // --- store ----------------------------------------------------------------
 
 // A GitHubStore that rewrites front matter and re-slugs a title-less post just before the commit; `onLocation` keeps the Location header in sync.
-class SiteStore {
+class JedeeStore {
   constructor(opts, onLocation) {
     this.inner = new GitHubStore(opts)
     this.onLocation = onLocation
@@ -366,7 +364,7 @@ class SiteStore {
     const parsed = matter(content)
     const data = rewriteFrontmatter(parsed.data)
 
-    // A workout routes to src/posts/activities/ with a dated filename and a title of its kind, so it skips the generic title/slug path.
+    // A workout routes to src/posts/activities/ with a dated filename and its own title, so it skips the generic title/slug path.
     if ('activityType' in data) {
       const { finalName, location } = workoutFile(filename, data)
       if (location && this.onLocation) this.onLocation(location)
@@ -389,10 +387,10 @@ class SiteStore {
 
 export const buildEndpoint = (onLocation) =>
   new MicropubEndpoint({
-    me: me(),
+    me: ME,
     tokenEndpoint: TOKEN_ENDPOINT,
     contentDir: CONTENT_DIR,
-    store: new SiteStore(
+    store: new JedeeStore(
       {
         token: GITHUB_TOKEN,
         user: GITHUB_USER,
@@ -424,8 +422,6 @@ export const buildEndpoint = (onLocation) =>
   })
 
 export default async (req) => {
-  if (!me()) return new Response('Not found', { status: 404 })
-
   // Per request so the Location-capture closure is request-local.
   let finalLocation = null
   const endpoint = buildEndpoint((loc) => { finalLocation = loc })

@@ -4,17 +4,20 @@
 <meta charset="utf-8">
 <title>Line length — wiki mockup</title>
 <style>
+  @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../_includes/themes/jedee/fonts/source-sans/source-sans.woff2') format('woff2'); }
+  @font-face { font-family: 'Source Code Pro'; src: url('../../_includes/themes/jedee/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }
 
-  :root { --ink: #1f5f5b; --paper: #f6f8f7; --rule: #cbcdd2; --flag: #d0621e; }
+  :root { --ink: #495464; --paper: #f4f4f2; --rule: #cbcdd2; --flag: #d0621e; }
+  /* The site's dark theme: color.text, color.bg, gray.700; the orange is shared. */
   [data-theme="dark"] { --ink: #C8CACC; --paper: #141619; --rule: #383b3f; }
   body { margin: 0; padding: 40px; background: #ddd; }
   .specimen { inline-size: fit-content; background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 22px 28px 26px; }
-  .label { font-family: ui-monospace, monospace; font-size: 13px; color: var(--ink); opacity: 0.6; margin: 0 0 8px; }
-  /* Body text as the site sets it: a sans-serif, --leading 1.5, the prose rule's 54ch. Size is irrelevant to the count — ch scales with the font. */
-  .measure { font-family: sans-serif; font-size: 20px; line-height: 1.5; color: var(--ink); max-inline-size: 54ch; margin: 0; }
+  .label { font-family: 'Source Code Pro', ui-monospace, monospace; font-size: 13px; color: var(--ink); opacity: 0.6; margin: 0 0 8px; }
+  /* Body text as the site sets it: Source Sans, --leading 1.5, the prose rule's 54ch. Size is irrelevant to the count — ch scales with the font. */
+  .measure { font-family: 'Source Sans', sans-serif; font-size: 20px; line-height: 1.5; color: var(--ink); max-inline-size: 54ch; margin: 0; }
   .ruler { white-space: nowrap; border-inline-end: 2px solid var(--flag); inline-size: 54ch; letter-spacing: 0; }
-  .wrap { display: grid; grid-template-columns: 54ch auto; column-gap: 28px; font-size: 20px; font-family: sans-serif; }
-  .counts { font-family: ui-monospace, monospace; font-size: 13px; color: var(--flag); line-height: 30px; margin: 0; }
+  .wrap { display: grid; grid-template-columns: 54ch auto; column-gap: 20px; font-size: 20px; }
+  .counts { font-family: 'Source Code Pro', ui-monospace, monospace; font-size: 13px; color: var(--flag); line-height: 30px; margin: 0; }
   .para { border-inline-end: 2px solid var(--flag); }
   .gap { block-size: 18px; }
 </style>

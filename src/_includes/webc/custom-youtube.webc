@@ -25,7 +25,7 @@
     width: 100%;
     border-radius: 0.2em;
     --yt-surface: color-mix(in oklab, var(--color-base-white) 45%, var(--color-bg));
-    --yt-logo-mark: __THEME_LOGO_MARK__;
+    --yt-logo-mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%23808080' fill-opacity='.1'%3E%3Cpath d='m50 0 .588.003V0h9.706v30.882h-9.706v.009a19 19 0 0 0-.588-.009c-10.558 0-19.118 8.559-19.118 19.118S39.441 69.118 50 69.118 69.118 60.559 69.118 50V30.882C69.118 13.826 82.945 0 100 0v50c0 27.614-22.386 50-50 50S0 77.614 0 50 22.386 0 50 0'/%3E%3C/svg%3E");
     background-color: var(--yt-surface);
     background-image: var(--yt-logo-mark);
     background-repeat: no-repeat;
@@ -68,7 +68,7 @@
   custom-youtube {
     display: grid;
   }
-  /* Pads the 16:9 player down to the next quarter line; a % margin measures the player's column. */
+  /* Pads the 16:9 player down to the next quarter line; a % margin measures the player's own column. */
   custom-youtube > is-land {
     --video-block-size: calc(100% * 9 / 16);
     margin-block-end: calc(round(up, var(--video-block-size), var(--line-quarter, 1px)) - var(--video-block-size));

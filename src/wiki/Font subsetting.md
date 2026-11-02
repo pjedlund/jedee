@@ -8,6 +8,11 @@ updated: 2026-10-31
 
 The cost is a failure that never announces itself. When a character is not in the font, the browser does not show an error or an empty box: it draws **that one character** in the next family of the `font-family` stack that has it, and the rest of the word in the web font. The result is a letter or a quote mark that looks slightly off, in a slightly different weight, on pages where nobody is looking for it.
 
+<figure class="popout" data-wiki-mockup>
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/subsetting-fallback.png" alt="The same heading, I’m in “Düsseldorf” – again…, set twice in Source Serif Bold. In the upper line, from the old subset, six characters are underlined in orange: the apostrophe, both curly quotes, the ü, the en dash and the ellipsis. They are drawn in Georgia and look slightly heavier and differently shaped. The lower line, from the current subset, is uniform." width="1306" height="424">
+  <figcaption>This site's heading font before and after the 2026-09-10 fix, from the two real font files. The underlined characters were missing from the old subset and were drawn in the fallback, Georgia.</figcaption>
+</figure>
+
 The characters most likely to go missing are the ones an author never types:
 
 - **Typographer output.** A Markdown setting like markdown-it's `typographer` turns `'` into `’`, `"…"` into `“…”`, `--` into `–`. The source file only holds the straight versions, so a subset built from the source text misses every curly one the build creates.
@@ -45,9 +50,7 @@ pyftsubset Full-Font.otf.woff2 --unicodes-file=targets.txt --flavor=woff2 --layo
 
 Then check before replacing the file: nothing the old cmap had is gone, the new characters are present, and a variable font still has its `fvar` table. Don't pass `--instance`, which would flatten the weight axis. `--layout-features='*'` keeps the font's ligatures, small caps and other switches; without it they're stripped (see [[OpenType features]] for what these subsets keep). A variable subset cannot be extended from static per-weight files: the glyphs have to come from a variable source, or the axis is lost.
 
-A character drawn too wide can be scaled separately: a second `@font-face` for just those code points, pointing at the same file with `size-adjust`, shrinks them without touching the rest. And a fresh subset loses any hand edit made to a glyph in the old file, so a hand-raised or hand-drawn glyph has to be redone after every re-subset.
-
-Every character added is paid for on every page that loads the file. Whole blocks are tempting ("add all of Latin-1") and expensive: the full Latin-1 Supplement took one heading font from 33 KB to 45 KB, for letters no heading used. Add characters as pages need them.
+Every character added is paid for on every page that loads the file. Whole blocks are tempting ("add all of Latin-1") and expensive: the full Latin-1 Supplement took this site's heading font from 33 KB to 45 KB, for letters no heading used. Add characters as pages need them.
 
 ## Missing styles
 
@@ -72,21 +75,44 @@ The cmap scan above cannot see a missing style. It looks the family up by name, 
 
 A gap found this way is filled the subsetting way: cut the missing face from the full font, with the same character list as its sibling. A browser downloads a face only when a page uses it, so a style that appears on three headings costs nothing on the other pages.
 
-## In stomme
+## In jedee
 
-Which fonts a site loads is a theme's choice, so no font file belongs to the shared code. A theme's `fonts.css` holds its `@font-face` rules, and the files in its `fonts/` folder (`src/_includes/themes/<theme>/fonts/`) are published at `/assets/fonts/`; a theme with no fonts has no such folder and nothing is published. The `sample` theme is one of those: it uses system fonts and its `fonts.css` is empty. What the shared code does carry is the dev-server font checker (`src/assets/scripts/bundle/font-check.js`), `typographer: true` in `src/_config/plugins/markdown.js`, NFC normalizing in `src/_config/filters/youtube-title.js`, and the never-italic code rule in `src/assets/css/local/code.css`.
+Eleventy Excellent ships **static, pre-subset `woff2` files** and has no subsetting step in the build. Its `@font-face` blocks have no `unicode-range`, so adding a character to a file is the whole fix: no CSS change. The full source fonts are bundled beside the subsets. The one exception is Cyrillic (below), which is a separate file behind a `unicode-range`. jedee's copies sit in its theme's `fonts/` folder (`src/_includes/themes/jedee/fonts/`) and are published at `/assets/fonts/`; a theme with no fonts has no such folder.
 
-Eleventy Excellent ships **static, pre-subset `woff2` files** and has no subsetting step in the build, so a theme that ships subsets works the way the sections above describe: adding a character to a file is the whole fix, as long as its `@font-face` blocks have no `unicode-range`. A second alphabet such as Cyrillic is the exception, and is better as a separate file behind a `unicode-range`.
+Table: The shipped font files, their character counts and their sources
+| file | kind | characters | source in the repo |
+| --- | --- | --- | --- |
+| `source-serif/source-serif.woff2` | static, Bold 700 only | 109 | `SourceSerif4-Bold.otf.woff2` |
+| `source-serif/source-serif-bold-italic.woff2` | static, Bold Italic 700 only | 109 | `_source/TTF/SourceSerif4-BoldIt.ttf.woff2` |
+| `source-sans/source-sans.woff2` | variable | 210 | `_source/VF/SourceSans3VF-Upright.otf.woff2` |
+| `source-sans/source-sans-italic.woff2` | variable | 209 | `_source/VF/SourceSans3VF-Italic.otf.woff2` |
+| `source-sans/source-sans-cyrillic.woff2` | variable, `unicode-range` | 102 | `_source/VF/SourceSans3VF-Upright.otf.woff2` |
+| `source-sans/source-sans-italic-cyrillic.woff2` | variable, `unicode-range` | 102 | `_source/VF/SourceSans3VF-Italic.otf.woff2` |
+| `source-code-pro/source-code-pro.woff2` | variable | 241 | none bundled |
 
-**Cyrillic** is the case for a separate, range-limited face: one Cyrillic word on a page is otherwise drawn letter by letter in a fallback such as Arial. Rather than grow the files every page loads, a theme that needs Cyrillic would cut one extra face per style covering U+0400–045F (Russian, Ukrainian, Serbian and the rest of modern Cyrillic), plus the pre-1918 letters ѣ, ѳ and ѵ if old texts matter. Declare each after its main face under the same family name with a `unicode-range`, so only a page containing Cyrillic downloads it. Keep them after the main faces: for overlapping faces the last one declared is checked first. A family with no Cyrillic glyphs still falls back for a Russian word, so check the family before relying on it.
+The fallback faces behind each are the metric-matched Georgia, Arial and Courier New described on [[Layout shift]], so a fallen-back character is at least the right size.
 
-**Checking while you work.** On the dev server only (`eleventy.env.runMode === "serve"` in `base.njk`), `src/assets/scripts/bundle/font-check.js` runs the blank-font test above on every page. It grays out and dot-underlines each character drawn by a fallback, outlines any element set in a style its family has no file for, gives both a hover title, and logs a count to the console. Emoji and pictographs such as `⚠` are skipped on purpose. It reads the `@font-face` rules the page actually loaded, so it checks whichever theme is active, and a theme with no font files gives it nothing to flag.
+**Cyrillic** (2026-09-14) came from one Russian word on the *A Confession* reading page, drawn letter by letter in Arial. Rather than grow the files every page loads, the two Cyrillic faces cover U+0400–045F (Russian, Ukrainian, Serbian and the rest of modern Cyrillic) plus the pre-1918 letters ѣ, ѳ and ѵ. Each is declared after its main face under the same family name with a `unicode-range`, so only a page containing Cyrillic downloads it: 22 KB upright, 16 KB italic. Keep them after the main faces: for overlapping faces the last one declared is checked first. Source Serif has no Cyrillic, so a Russian word in a heading still falls back.
 
-**What a scan finds.** Typographer output is the usual first gap: with `typographer: true`, every heading with an apostrophe asks its font for `’`, so a subset cut from the source text alone misses the curly quotes, dashes and ellipsis the build creates. Characters that no web font carries, such as emoji and most symbols, are best left to the system font.
+**Checking while you work.** On the dev server only (`eleventy.env.runMode === "serve"` in `base.njk`), `src/assets/scripts/bundle/font-check.js` runs the blank-font test above on every page. It grays out and dot-underlines each character drawn by a fallback, outlines any element set in a style its family has no file for, gives both a hover title, and logs a count to the console. Emoji and pictographs such as `⚠` are skipped on purpose. On this page it flags nine characters, all in code where Source Code Pro lacks them (the symbols listed below, plus `Δ`), and the code keywords' missing italic.
 
-**Styles.** `body` does not set `font-synthesis: none`: refusing a fake turns a missing italic upright, so the emphasis is lost, and a fallback font loaded as Regular only loses its bold while the web fonts load. `.small-caps` (`src/assets/css/global/utilities/small-caps.css`) does refuse fake small caps by itself. The dev-server checker shows fakes instead of forbidding them. Two cases are worth knowing:
+**The 2026-09-10 scan.** All 641 built pages, 34 characters falling back. The biggest was Source Serif having **no curly quotes at all**: with `typographer: true` in `src/_config/plugins/markdown.js`, every heading with an apostrophe drew its `’` in Georgia. Filled since: ‘ ’ “ ” – — … and `ü` in Source Serif; `~ ← ↑ → ↓ ↔ Δ` in Source Sans upright and italic. On 2026-10-07 ⌘ and ⌥ went into Source Sans upright only, for the key caps in the keyboard-shortcuts dialog: 432 bytes. Source Sans draws both a full em wide, so a second `@font-face` in `fonts.css` maps just those two code points to the same file with `size-adjust: 75%`. ⚠ The ⌘ outline in the shipped file is also raised 180 units so it sits from the baseline to cap height; a fresh subset from the original font loses that, and the ⌘ drops below the baseline again. The YouTube captions on two jam pages had NFD accents from YouTube's titles; `youtubeTitle` in `src/_config/filters/youtube-title.js` now normalizes to NFC (see [[The YouTube embed]]).
 
-- **Italic in a heading.** If a theme ships a heading font in Bold only, an `<em>` in an `h1`–`h3` is a slanted Bold. The fix is a real Bold Italic file cut from the full font to the Bold's character list. Leave it out of the preload list, so only a page with italic in a heading downloads it.
-- **Italic in code.** A syntax theme often sets keywords in italic, but `code, pre` in `src/assets/css/local/code.css` set `font-style: normal`, so code is never italic, even inside an `<em>`, unless the code font has a real italic. Bold code stays, because a variable code font has real bold.
+Left falling back on purpose:
 
-The recipe itself needs a Python with fontTools and brotli.
+- **Emoji.** No text font has them, and the system emoji font is the right one.
+- **`⚠`**, on most wiki pages. It is in no Source font, so the wiki's warning marker always comes from a system font. Decorative; left.
+- **`⁂`, `❖`, `↩︎`** (the last is the footnote back-link). Also in no Source font.
+- **Code-block symbols** (`→ ← │ ⌄ ⚠`). The code font is a trimmed variable subset with no full variable source bundled; fixing it means downloading Source Code Pro's variable release first.
+
+Source Serif was deliberately kept small: the Latin-1 block was added and taken back out the same day. Add accented letters to it one at a time, when a heading actually needs one. Add each one to the Bold Italic too: the two files share one character list, and a character in only one of them falls back in the other.
+
+**Styles.** `body` set `font-synthesis: none` for one day, 2026-09-13 to 09-14. It came out again once the dev-server checker could *show* fakes instead. Refusing a fake turns a missing italic upright, so the emphasis is lost, and the Georgia and Arial fallbacks, loaded as Regular only, lost their bold while the web fonts loaded. `.small-caps` still refuses fake small caps by itself. Checking the shipped files against the CSS turned up two faux italics and no faux bold:
+
+- **Italic in a serif heading.** Source Serif ships Bold only, so an `<em>` in an `h1`–`h3` was a slanted Bold: the RSVP card's "RSVP *yes*" (`partials/card-response.njk`; all three RSVPs are drafts for now) and one heading on [[The interlinker's second render pass]]. Both now use a real Bold Italic, `source-serif-bold-italic.woff2`, cut from the bundled `SourceSerif4-BoldIt` to the Bold's 109 characters: 17 KB, against 33 KB for the Bold. It is not preloaded, so only a page with italic in a heading downloads it.
+- **Italic in code.** The syntax theme sets `.token.keyword { font-style: italic }` (`src/assets/css/local/code.css`), and there is no Source Code Pro italic, so the keywords on 31 pages were slanted. Since 2026-09-14 code is never italic: `code, pre` in `src/assets/css/local/code.css` set `font-style: normal`, so code inside an `<em>` stays upright, and the keywords are upright and still violet. Bold code stays, because it is real (Source Code Pro is variable, 200–900); a day of never-bold code turned out to flatten wiki terms like **`animation-delay`**. A real italic needs Source Code Pro's italic downloaded first, like the code-block symbols above.
+- **Source Sans** is variable 200–900 in upright and italic, so every weight and style in body text is real. The breadcrumb's connector words use Source Sans rather than the serif for this reason (`.breadcrumb-connector` in `src/assets/css/local/breadcrumb-leaf.css`).
+
+The recipe itself needs a Python with fontTools and brotli; on this machine that is the python.org framework install, not the default `python3`.
+
+Raw sources: `src/_raw/dev-notes/How missing glyphs were found and filled.md`, `src/_raw/How to disable faux weights with CSS and font synthesis.md`

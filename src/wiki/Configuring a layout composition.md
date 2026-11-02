@@ -54,7 +54,7 @@ Not everything a component sets on a composition belongs in the composition's AP
 
 Once several blocks legitimately write the same knob, which one wins is decided by selector specificity, which is a property of how the selectors happen to be written rather than a recorded decision. Where the deciding condition is known at build time, the honest fix is to state it in the markup — an attribute the composition already understands — and leave CSS to arbitrate only what markup cannot know.
 
-## In stomme
+## In jedee
 
 The site header row is one element: `<div class="repel ontop gutter-s breadcrumb-bar">` in `partials/header.njk`, with the breadcrumb on the left and a `.cluster` holding the nav and theme toggle on the right. Three files had opinions about it.
 
@@ -74,10 +74,12 @@ The site header row is one element: `<div class="repel ontop gutter-s breadcrumb
 }
 ```
 
-`repel.css` is **Eleventy Excellent stock**; the `--repel-wrap` knob is stomme's, added to mirror cluster's existing `--cluster-wrap` so `breadcrumb.css` (which pins the row to one line) and `main-nav.css` (which relaxes that pin when the menu button was never injected) both configure rather than override. The stock `[data-nowrap]` exception now sets the same property, so there is one mechanism instead of two.
+`repel.css` is **Eleventy Excellent stock**; the `--repel-wrap` knob is jedee's, added to mirror cluster's existing `--cluster-wrap` so `breadcrumb.css` (which pins the row to one line) and `main-nav.css` (which relaxes that pin when the menu button was never injected) both configure rather than override. The stock `[data-nowrap]` exception now sets the same property, so there is one mechanism instead of two.
 
 Both traps above were found here rather than read about. The `--cluster-wrap: nowrap` that pins the header cluster inherited straight into the pill row nested inside it, which had just become a cluster itself — hence the `--cluster-wrap: wrap` re-assert in the block above. And because `blocks` outranks `compositions`, `breadcrumb.css`'s hard `flex-wrap: nowrap` had to convert in the same commit or `main-nav.css`'s knob would have been inert.
 
 The residue is live: `main-nav.css` wins over `breadcrumb.css` because `.site-header .repel:has(.mainnav):not(:has(.menu-toggle))` outweighs `.breadcrumb-bar`, which nobody decided. `header.njk` already evaluates `meta.navigation.breadcrumb` at build time and could emit `data-nowrap` itself, leaving CSS to handle only the "did the script run" axis that a build cannot know. Not done — there is no third writer yet.
 
 The flex-item side of the same row is covered in [[The main menu]], including why `flex: 1 1 22rem` rather than `auto` is what keeps the breadcrumb from being crushed. For the adjacent failure where a `var()` points at nothing at all, see [[Undefined custom properties]].
+
+Raw source: `src/_raw/dev-notes/How the header row's wrapping got a knob.md`

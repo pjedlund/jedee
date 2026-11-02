@@ -6,7 +6,7 @@ enhanced nav (MENU button + closed panel). The fallback pill row exists only whe
 don't run, and its contrast numbers were hand-measured. This walks the real no-JS page in
 both themes and measures text against its effective background.
 
-Run the dev server first (`npm start` — serve mode always shows the main nav, whatever `hideNav` says), then:
+Run the dev server first (`npm start` — the nav is only revealed in serve mode), then:
   ~/.nvm/versions/node/v22.22.3/bin/node tests/a11y-nojs.js
 
 ⚠ Why this doesn't just run pa11y: pa11y's runner is async, and in a page where scripting

@@ -4,19 +4,22 @@
 <meta charset="utf-8">
 <title>Focus rings and paint containment — wiki mockup</title>
 <style>
+  /* The site's own face, read straight from the repo so the specimen is the real typography and not an approximation. */
+  @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../_includes/themes/jedee/fonts/source-sans/source-sans.woff2') format('woff2'); }
+  @font-face { font-family: 'Source Code Pro'; src: url('../../_includes/themes/jedee/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }
 
   /* Light-theme values, copied from the built global.css so --yt-surface mixes exactly as it does on the site. */
   :root {
-    --color-text: #1f5f5b;
+    --color-text: #495464;
     --color-bg: #f4f4f2;
     --rule: #cbcdd2;
   }
   /* The site's dark theme: color.text, color.bg, gray.700. */
   [data-theme="dark"] { --color-text: #c8cacc; --color-bg: #141619; --rule: #383b3f; }
 
-  body { margin: 0; padding: 40px; background: #ddd; font-family: system-ui, sans-serif; }
+  body { margin: 0; padding: 40px; background: #ddd; font-family: 'Source Sans', system-ui, sans-serif; }
 
-  /* A specimen carries a paper the way a device frame carries a bezel — so one shot reads deliberately on either theme of the wiki page. */
+  /* A specimen carries its own paper the way a device frame carries its own bezel — so one shot reads deliberately on either theme of the wiki page. */
   .specimen {
     inline-size: fit-content;
     background: var(--color-bg);
@@ -31,14 +34,14 @@
   .pair { display: grid; grid-template-columns: 318px 318px; gap: 20px; }
 
   .label {
-    font-family: ui-monospace, monospace;
+    font-family: 'Source Code Pro', ui-monospace, monospace;
     font-size: 12px; color: var(--color-text); opacity: 0.55; margin: 0 0 12px;
   }
 
   /* custom-youtube.webc's wrapper: the placeholder surface and faint logo mark that show through the transparent lite-youtube. */
   .video-wrapper {
     --yt-surface: color-mix(in oklab, white 45%, var(--color-bg));
-    --yt-logo-mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%23808080' fill-opacity='.1'%3E%3Cpath d='M50 0a50 50 0 1 0 0 100A50 50 0 0 0 50 0'/%3E%3C/svg%3E");
+    --yt-logo-mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%23808080' fill-opacity='.1'%3E%3Cpath d='m50 0 .588.003V0h9.706v30.882h-9.706v.009a19 19 0 0 0-.588-.009c-10.558 0-19.118 8.559-19.118 19.118S39.441 69.118 50 69.118 69.118 60.559 69.118 50V30.882C69.118 13.826 82.945 0 100 0v50c0 27.614-22.386 50-50 50S0 77.614 0 50 22.386 0 50 0'/%3E%3C/svg%3E");
     display: block;
     border-radius: 0.2em;
     background-color: var(--yt-surface);
@@ -51,7 +54,7 @@
   /* custom-youtube.webc's dark surface. */
   [data-theme="dark"] .video-wrapper { --yt-surface: color-mix(in oklab, white 7%, var(--color-bg)); }
 
-  /* lite-yt-embed's rule. `contain: content` is the whole subject of the page: it paint-clips anything drawn outside this box. */
+  /* lite-yt-embed's own rule. `contain: content` is the whole subject of the page: it paint-clips anything drawn outside this box. */
   .lite-youtube {
     position: relative;
     display: block;

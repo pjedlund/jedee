@@ -14,7 +14,7 @@ import assert from 'node:assert/strict'
 import { escapeHtml } from '../src/_config/shortcodes/image.js'
 
 test('escapeHtml: straight double-quotes become &quot; (the build-breaking case)', () => {
-  // The exact shape that once broke a build: a comma in the title.
+  // The exact shape that broke the "Pier 4, Ribersborg" build.
   const alt = 'The black film rebate with "Kodak Ektar 100" edge markings'
   const escaped = escapeHtml(alt)
 

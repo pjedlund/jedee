@@ -2,10 +2,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 import { makeTempSite } from './lib/temp-site.mjs';
-import { themeFontFiles } from '../src/_config/utils/theme.js';
 
 // The sample theme's themeColor, which nothing else in the site uses.
 const SAMPLE_MARKER = '#1f5f5b';
@@ -38,10 +37,11 @@ test('unknown theme stops the build', async t => {
   await assert.rejects(site.build(), /settings\.theme is "nope", but src\/_includes\/themes\/nope doesn't exist/);
 });
 
-test('a missing theme stops the build', async t => {
+test('no theme setting still builds', async t => {
   const site = await makeTempSite({ settings: { theme: null } });
   t.after(() => site.cleanup());
-  await assert.rejects(site.build(), /settings\.theme is missing/);
+  await site.build();
+  assert.ok(site.exists('index.html'), 'dist/index.html is missing');
 });
 
 test('sample theme replaces the look', async t => {
@@ -57,14 +57,12 @@ test('sample theme replaces the look', async t => {
 });
 
 // The favicons are generated once per site (npm run favicons), so they belong to the site rather than the theme.
-const BELONGS_TO_SITE = new Set(['favicon.svg']);
+const SITE_OWNED = new Set(['favicon.svg']);
 const JEDEE_FONTS = ['source serif', 'source sans', 'source code pro'];
 // ⚠ This page's prose names a font, as content rather than styling; changing it would change the site's content.
 const NAMES_A_FONT_IN_PROSE = new Set(['design-system/index.html']);
 
-const JEDEE_THEME = existsSync(path.join(themes, 'jedee')) ? false : 'needs the jedee theme, which only that site has';
-
-test('no JEDEE colour or font is left in a sample build', { skip: JEDEE_THEME }, async t => {
+test('no JEDEE colour or font is left in a sample build', async t => {
   const sample = themeColours('sample');
   const jedeeOnly = [...themeColours('jedee')].filter(hex => !sample.has(hex)).flatMap(spellings);
   assert.ok(jedeeOnly.length > 50, `only ${jedeeOnly.length} JEDEE colours found`);
@@ -79,7 +77,7 @@ test('no JEDEE colour or font is left in a sample build', { skip: JEDEE_THEME },
 
   const dist = path.join(site.dir, 'dist');
   const found = textFiles(dist)
-    .filter(file => !BELONGS_TO_SITE.has(file))
+    .filter(file => !SITE_OWNED.has(file))
     .flatMap(file => {
       const text = readFileSync(path.join(dist, file), 'utf8').toLowerCase();
       const left = [...jedeeOnly.filter(hex => new RegExp(`${hex}(?![0-9a-f])`).test(text)), ...JEDEE_FONTS.filter(font => !NAMES_A_FONT_IN_PROSE.has(file) && text.includes(font))];
@@ -89,7 +87,7 @@ test('no JEDEE colour or font is left in a sample build', { skip: JEDEE_THEME },
 });
 
 test('theme.css comes last', async t => {
-  const site = await makeTempSite({ settings: { theme: 'sample' }, files: { 'src/_includes/themes/sample/theme.css': ':root { --theme-marker: 1; }\n' } });
+  const site = await makeTempSite({ files: { 'src/_includes/themes/jedee/theme.css': ':root { --theme-marker: 1; }\n' } });
   t.after(() => site.cleanup());
   await site.build();
   const home = site.read('index.html');
@@ -103,10 +101,9 @@ test('theme.css comes last', async t => {
 test("only the chosen theme's templates make classes", async t => {
   const unused = ['gutter-3xl', 'flow-space-2xl-3xl'];
   const site = await makeTempSite({
-    settings: { theme: 'sample' },
     files: {
-      'src/_includes/themes/another/home.njk': `<p class="${unused[0]}"></p>`,
-      'src/_includes/themes/sample/DESIGN.md': `Set \`${unused[1]}\` on it.`,
+      'src/_includes/themes/sample/home.njk': `<p class="${unused[0]}"></p>`,
+      'src/_includes/themes/jedee/DESIGN.md': `Set \`${unused[1]}\` on it.`,
     },
   });
   t.after(() => site.cleanup());
@@ -117,14 +114,14 @@ test("only the chosen theme's templates make classes", async t => {
 
 // What the dev server does: one process, a token edited between two CSS builds.
 test('an edited token reaches the next CSS build', async t => {
-  const site = await makeTempSite({ settings: { theme: 'sample' } });
+  const site = await makeTempSite();
   t.after(() => site.cleanup());
   const script = `
     import fs from 'node:fs';
     import {buildGlobalCss} from './src/_config/events/build-css.js';
-    const file = 'src/_includes/themes/sample/tokens/colors.json';
+    const file = 'src/_includes/themes/jedee/tokens/colors.json';
     await buildGlobalCss();
-    fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace('#1f5f5b', '#123456'));
+    fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace('#495464', '#123456'));
     console.log((await buildGlobalCss()).includes('#123456'));
   `;
   const output = execFileSync(process.execPath, ['--input-type=module', '-e', script], { cwd: site.dir, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
@@ -136,28 +133,4 @@ test('logoOutline joins every path and stops with the file name when there is no
   assert.equal(logoOutline('<svg><path d="M0 0h1"/></svg>'), 'M0 0h1');
   assert.equal(logoOutline('<svg><path d="M0 0h1"/><path fill="red" d="M2 2h1"/></svg>'), 'M0 0h1 M2 2h1');
   assert.throws(() => logoOutline("<svg><path d='M0 0'/></svg>", 'themes/x/logo.svg'), /themes\/x\/logo\.svg/);
-});
-
-test('design:system on a theme with no design-system folder names the folder, and stops', async t => {
-  const site = await makeTempSite({ settings: { theme: 'sample' } });
-  t.after(() => site.cleanup());
-  let failure;
-  try {
-    execFileSync(process.execPath, ['src/_config/setup/build-design-system.js'], { cwd: site.dir, encoding: 'utf8', stdio: 'pipe' });
-  } catch (error) {
-    failure = error;
-  }
-  assert.ok(failure, 'the script finished with nothing to work from');
-  assert.match(failure.stderr, /src\/_includes\/themes\/sample\/design-system/);
-  assert.ok(!/ENOENT|at .*\.js:\d+/.test(failure.stderr), `a raw error came out:\n${failure.stderr}`);
-});
-
-test('design:system reads its font list from the theme, not from a list of one site\'s fonts', () => {
-  const css = `@font-face { font-family: 'Plain Sans'; font-style: italic; font-weight: 200 900; src: url('/assets/fonts/plain/plain-italic.woff2') format('woff2'); }
-@font-face { font-family: 'Plain Fallback'; src: local('Arial'); size-adjust: 100%; }`;
-  assert.deepEqual(themeFontFiles(css), [{ family: 'Plain Sans', file: 'fonts/plain-italic.woff2', source: 'plain/plain-italic.woff2', weight: '200 900', style: 'italic' }]);
-  assert.equal(themeFontFiles(css + css).length, 1, 'a file named twice is copied twice');
-  assert.deepEqual(themeFontFiles(''), []);
-  const script = readFileSync(path.resolve(import.meta.dirname, '../src/_config/setup/build-design-system.js'), 'utf8');
-  assert.ok(!/Source (Sans|Serif|Code)|JEDEE/i.test(script), 'the script still names one site');
 });

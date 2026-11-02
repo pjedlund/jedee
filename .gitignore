@@ -13,12 +13,13 @@ src/_includes/scripts
 # secret data
 .env
 
-# Editor configs
+# Editor configs mm
 .nova
 .vscode
 .DS_Store
 
-# All local-only project material, under one umbrella (anchored so it can never match a folder inside src/)
+# All local-only project material lives under one umbrella (anchored so it can
+# never match anything inside src/). See _local/generated/Plan - Folder reorg (_local umbrella).md
 /_local/
 
 # Local Netlify folder
@@ -27,7 +28,8 @@ src/_includes/scripts
 # Obsidian
 .obsidian
 .vault-nickname
-# Vault tooling stays local, but the Web Clipper templates are tracked: they're the source of truth
+# Vault tooling stays local (Bases, note templates), but the Web Clipper
+# templates are tracked — they're the source of truth (see _local/project_docs/web-clipper-pattern.html).
 src/_obsidian/*
 !src/_obsidian/clipper/
 
@@ -36,10 +38,14 @@ src/_obsidian/*
 /src/_raw/
 
 
-# Images the Obsidian local-images plugin pulls down from a raw clip; add one with `git add -f` if a post needs it
+# Body images the Obsidian local-images plugin pulls down from a raw wiki clip — third-party
+# media that belongs to the source, not to this site. Post clips have empty bodies and have
+# never produced one of these; if a post ever genuinely needs one, add it with `git add -f`.
 /src/assets/images/*_MD5.*
 
-# Uncompressed audio masters run to hundreds of MB, so a stray `git add -A` must not pull one in
+# Uncompressed audio masters. A field-recording master runs to hundreds of MB (the Nybrostrand
+# take is 336 MB), and the repo pattern is the same as for photos: the small derived file ships
+# in src/assets/, the original lives on R2. A stray `git add -A` must not be able to pull one in.
 *.wav
 *.WAV
 *.aif
@@ -51,17 +57,17 @@ src/_obsidian/*
 .omc
 .github
 
-# Project notes, local only; AGENTS.md is tracked on purpose, so keep anything personal out of it
+# Project notes (kept locally, not in repo); AGENTS.md is tracked on purpose, so keep anything personal out of it
 CLAUDE.md
 SITE.md
 IDEAS.md
 LOG.md
 TODO.md
 ROADMAP.md
-# AI tool config, local only
+# AI tool config, kept local (decided 2026-07-31)
 .mcp.json
-.superpowers
 
 
-# Netlify dev regenerates this lockfile on every run; the production build never uses Deno
+# Netlify dev regenerates this Edge Functions bootstrap lockfile on every run;
+# the production build (npm run build -> Eleventy) never uses Deno.
 deno.lock

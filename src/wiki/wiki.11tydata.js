@@ -7,7 +7,7 @@ export default {
   // `searchable` is the existing non-post-type route into /search.json (settings.yaml search.types); it is a SYSTEM_TAG, so it makes no /tags/ page.
   tags: ['searchable'],
 
-  // JSON-LD type for head/schema.njk (via base.njk). TechArticle, not the post types' BlogPosting, because these pages are reference rather than posts — and because that template carries the author/editor split (Claude wrote it, the site's editor supervised). Without a `schema` key matching a src/_includes/schemas/*.njk template, the build fails.
+  // JSON-LD type for head/schema.njk (via base.njk). TechArticle, not the post types' BlogPosting, because these pages are reference rather than posts — and because that template carries the author/editor split (Claude wrote it, Johan supervised). Without a `schema` key matching a src/_includes/schemas/*.njk template, the build fails.
   schema: 'TechArticle',
 
   // The pages are a techniques wiki, full of {% … %} / {{ … }} code examples, so they must
@@ -63,6 +63,6 @@ export default {
     // The interlinker skips any page whose `data.title` is undefined (it needs a title to
     // register the page's [[links]]), and these pages carry no front matter — so derive one
     // from the filename. The filename already equals the wikilink text, so links resolve.
-    title: data => (data.page.fileSlug === 'wiki' ? data.words.wikiName : data.page.fileSlug)
+    title: data => (data.page.fileSlug === 'wiki' ? 'jedee wiki' : data.page.fileSlug)
   }
 };

@@ -39,10 +39,12 @@ a[href^='http']:where(:not([href*='example.com'], [href*='localhost'], .no-indic
 
 If the dim color is mixed from `currentColor`, a link whose color changes on hover will tint the icon anyway, which can make a broken hover rule look half-working.
 
-## In stomme
+## In jedee
 
-Eleventy Excellent ships an `external-link.css` that marks every outbound link on the site except buttons, as an absolutely positioned `inline-block` from `/assets/images/template/external.svg`, with visually hidden text "(external link)" read out as its alternative. stomme replaced it with a decorative arrow scoped to body text: links open in the same tab, so nothing is announced.
+Eleventy Excellent ships an `external-link.css` that marks every outbound link on the site except buttons, as an absolutely positioned `inline-block` from `/assets/images/template/external.svg`, with visually hidden text "(external link)" read out as its alternative. jedee replaced it with a decorative arrow scoped to body text: links open in the same tab, so nothing is announced.
 
-The rule is `src/assets/css/local/external-link.css`, scoped to `:is(.prose, .design-system)` and using EE's SVG as a mask. At rest the arrow is `currentColor` at 45%, like the dimmed dots under an [[Abbreviations|abbreviation]]; on hover it turns `--color-accent-orange`, the link text's hover color, and lifts `--external-lift` (0.1em) up and to the right by moving the mask. The lift eases in like a plane leaving a runway and settles back with `--ease-out-quad`; with reduced motion only the color changes (see [[Choreographing CSS animations]] for the site's other motion). `.no-indicator` opts a link out, for links whose content is a picture rather than words.
+The rule is `src/assets/css/local/external-link.css`, scoped to `:is(.prose, .design-system)` and using EE's SVG as a mask. At rest the arrow is `currentColor` at 45%, like the dimmed dots under an [[Abbreviations|abbreviation]]; on hover it turns `--color-accent-orange`, the link text's hover color, and lifts `--external-lift` (0.1em, about 2px) up and to the right by moving the mask. The lift eases in like a plane leaving a runway and settles back with `--ease-out-quad`; with reduced motion only the color changes (see [[Choreographing CSS animations]] for the site's other motion). `.no-indicator` opts a link out, for links whose content is a picture rather than words.
 
-Outbound links still without an arrow, on purpose: the footer's links (site chrome, not reading text) and the headline links on bookmark, like, RSVP and repost cards, which opt out with `no-indicator`.
+Outbound links still without an arrow, on purpose: the footer's SDG and JEDEE links (site chrome, not reading text) and the headline links on bookmark, like, RSVP and repost cards, which opt out with `no-indicator`.
+
+Raw source: `src/_raw/dev-notes/How the external-link arrow works.md`

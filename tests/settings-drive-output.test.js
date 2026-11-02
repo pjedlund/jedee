@@ -42,15 +42,8 @@ test('a different identity.website puts the new host name in the CSS', async t =
   assert.ok(!home.includes('__SITE_DOMAIN__'), 'the placeholder is still in the CSS')
 })
 
-test("the wiki's start page takes its title from the words", async t => {
-  const site = await makeTempSite({ settings: { theme: 'sample', wiki: { visibility: 'public' } }, files: { 'src/wiki/wiki.md': '---\ndescription: x\ndate: 2026-01-01\n---\n\nHello.\n', 'src/_includes/themes/sample/words.yaml': 'wikiName: Some notes\n' } })
-  t.after(() => site.cleanup())
-  await site.build()
-  assert.match(site.read('wiki/index.html'), /<title>\s*Some notes\s*<\/title>/)
-})
-
 test('a wiki page with no byline setting has no dangling dash', async t => {
-  const site = await makeTempSite({ settings: { wiki: { visibility: 'public', attribution: null } }, files: { 'src/wiki/Sample page.md': '---\ndescription: A sample.\ndate: 2026-01-01\n---\n\nText.\n' } })
+  const site = await makeTempSite({ settings: { wiki: { attribution: null } }, files: { 'src/wiki/Sample page.md': '---\ndescription: A sample.\ndate: 2026-01-01\n---\n\nText.\n' } })
   t.after(() => site.cleanup())
   await site.build()
   const eyebrow = site.read('wiki/sample-page/index.html').match(/<p class="wiki-eyebrow[^>]*>([\s\S]*?)<\/p>/)

@@ -22,7 +22,7 @@ function deepMerge(base, extra) {
 const isContent = file => /^src\/(posts|wiki)\/.*\.md$/.test(file);
 
 export async function makeTempSite({ settings = {}, files = {} } = {}) {
-  const dir = mkdtempSync(path.join(tmpdir(), 'stomme-site-'));
+  const dir = mkdtempSync(path.join(tmpdir(), 'jedee-site-'));
   const made = new Set();
   const put = (file, text) => {
     const target = path.join(dir, file);
@@ -45,17 +45,15 @@ export async function makeTempSite({ settings = {}, files = {} } = {}) {
   const settingsFile = 'src/_data/settings.yaml';
   put(settingsFile, dump(deepMerge(load(readFileSync(path.join(root, settingsFile), 'utf8')), settings), { lineWidth: -1 }));
 
-  // The picks may name posts that aren't here, so both lists start empty. ⚠ The /now/ body is dropped too: a site's may fetch a YouTube poster over the network.
+  // The picks name posts that no longer exist, so both lists start empty. ⚠ The /now/ body is dropped too: its YouTube poster is fetched over the network.
   const featuredFile = 'src/_data/featured.yaml';
-  const featured = existsSync(path.join(root, featuredFile)) ? load(readFileSync(path.join(root, featuredFile), 'utf8')) : {};
-  put(featuredFile, dump({ ...featured, posts: [] }, { lineWidth: -1 }));
+  put(featuredFile, dump({ ...load(readFileSync(path.join(root, featuredFile), 'utf8')), posts: [] }, { lineWidth: -1 }));
   const nowFile = 'src/pages/now.md';
   const now = matter(readFileSync(path.join(root, nowFile), 'utf8'));
   for (const pick of ['listening', 'watching', 'reading']) if (pick in now.data) now.data[pick] = [];
   put(nowFile, matter.stringify('', now.data));
 
-  // A null removes the file.
-  for (const [file, text] of Object.entries(files)) text === null ? rmSync(path.join(dir, file), { force: true }) : put(file, text);
+  for (const [file, text] of Object.entries(files)) put(file, text);
 
   return {
     dir,

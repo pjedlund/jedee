@@ -1,5 +1,5 @@
 ---
-description: "The three states a theme control has to represent, the blocking script that prevents a flash of the wrong one, and stomme's single SVG masked from sun to moon."
+description: "The three states a theme control has to represent, the blocking script that prevents a flash of the wrong one, and jedee's single SVG masked from sun to moon."
 date: 2026-07-31
 updated: 2026-10-31
 ---
@@ -12,7 +12,7 @@ Two problems arrive with the toggle, and both are more awkward than the button i
 
 **Motion.** A control that morphs one shape into another is exactly the decorative animation [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion) exists for. The state change still has to read clearly with the animation off, which means the reduced-motion path needs to be a designed alternative rather than `animation: none`.
 
-## In stomme
+## In jedee
 
 One button, one SVG: a sun that morphs into a moon when the theme goes dark. Adapted from [Adam Argyle's sun-and-moon theme switch](https://web.dev/building-a-theme-switch-component) (MIT). Four files carry it — `partials/theme-toggle.njk`, `local/theme-toggle.css` (the button), `local/sun-and-moon.css` (the icon and its animation), and `scripts/bundle/theme-toggle.js`.
 
@@ -33,11 +33,11 @@ The moon is the sun's disc with a circle masked out of it:
 In light mode the mask circle sits at `cx="24"`, outside the disc, so the mask does nothing. Going dark it slides left and bites the crescent while the disc grows and the eight ray lines fade out.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/theme-toggle-morph.png" alt="Five tiles in a row. The first is a light tile holding a dark teal sun with eight rays, labeled &quot;light&quot;. The remaining four are dark tiles holding a pale blue-gray glyph, labeled with a time in milliseconds. At 80ms the rays have faded to dim stubs and the disc is larger. At 260ms a plain circle with no rays and no bite taken out of it. At 420ms a circle with a rounded notch cut into its upper right. At 750ms a crescent moon." width="1368" height="376">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/theme-toggle-morph.png" alt="Five tiles in a row. The first is a light tile holding an orange sun with eight rays, labeled &quot;light&quot;. The remaining four are dark tiles holding a pale blue-gray glyph, labeled with a time in milliseconds. At 80ms the rays have faded to dim stubs and the disc is larger. At 260ms a plain circle with no rays and no bite taken out of it. At 420ms a circle with a rounded notch cut into its upper right. At 750ms a crescent moon." width="1368" height="376">
   <figcaption>The morph, frozen at five instants. The middle frame is the whole point: for a moment the moon is a plain disc, because a moon is all it ever is — a disc with a circle masked out of it. The color and the page behind it carry no transition, so they have already changed by the second tile while the shape is still most of the way a sun.</figcaption>
 </figure>
 
-The mockup is `src/wiki/_sources/theme-toggle.html`. It links the site's compiled `global.css`, so the easings, the durations and the mask geometry in the picture are the stylesheet's rather than a copy, and the colors are the `sample` theme's at the time of the shot; each frame is a real transition paused and seeked with `getAnimations()`. The glyph is drawn far larger than its shipped 24px, where the mask circle's whole travel is about three pixels. The first tile is the light resting state, before the click; the other four are past it, which is why they wear the dark page color and a fixed glyph color from their first millisecond — the mockup holds the glyph color still, so the colors snapped while only the shape animated. The button itself fades its color with `transition: color`; the colors are the subject further down.
+The mockup is `src/wiki/_sources/theme-toggle.html`. It links the site's compiled `global.css`, so the easings, the durations, the mask geometry and both palettes in the picture are this stylesheet's rather than a copy, and each frame is a real transition paused and seeked with `getAnimations()`. The glyph is drawn far larger than its shipped 24px, where the mask circle's whole travel is about three pixels. The first tile is the light resting state, before the click; the other four are past it, which is why they wear the dark page color and the moon's blue-gray from their first millisecond — when the figure was shot, neither the icon color nor the background was in any transition list, so both snapped while only the shape animated. Since 2026-10-26 the button fades its color with `transition: color`, and the icon is no longer orange or blue-gray; the colors are the subject further down.
 
 ⚠ **A transition only exists where a value changes.** The first version rendered each frame with `data-theme="dark"` already on it, so nothing ever transitioned and `getAnimations()` had nothing to seek — all five frames came out as the finished moon. They have to be built in the light state, flipped, and *then* frozen. Reading a computed value in between is what forces the recalc that creates the transitions.
 
@@ -80,13 +80,51 @@ The choice lives in `localStorage` under `theme-preference` and is applied as `d
 
 ### Why the icon can't be yellow
 
-Like the rest of the header chrome, the icon rests at `--color-text-header-dim` in both themes and brightens to `--color-text-strong` on hover and keyboard focus; only the logomark takes the accent color. The reasoning below still holds for any colored icon in a header.
+Since 2026-10-26 the icon is neither orange nor blue. Like the rest of the header chrome it rests at `--color-text-header-dim` in both themes and brightens to `--color-text-strong` on hover and keyboard focus; only the logomark keeps the accent orange. The rest of this section is how the earlier colors were chosen, kept because the contrast reasoning still holds for any colored icon in this header.
 
-A colored icon is held to the same contrast rule as any graphic you need in order to operate a control: [WCAG 1.4.11 Non-text Contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html) wants 3:1 for it, notwithstanding its `aria-hidden` (that attribute governs the accessibility *tree*, not what a sighted user has to see). So a yellower, lighter sun is not reachable in a light theme: a light background and a yellow object cannot both be true at 3:1, which is why yellow suns live on dark headers. A warm accent only works if it is dark enough, so measure the lightest shade of the accent ramp against the page color before choosing it.
+The **sun** was `--color-accent-orange` (`#d0621e`), the same orange as the breadcrumb logomark at the other end of the header, and hover only deepened it — `color-mix(in oklab, var(--color-accent-orange) 82%, var(--color-text))`. Mixing toward the *text* color rather than a fixed second color is what lets one declaration work in both themes: it darkens on the light page and lightens on the dark one, which is the direction that preserves contrast each way.
 
-Mixing a hover color toward the *text* color, rather than a fixed second color, is what lets one declaration work in both themes: it darkens on the light page and lightens on the dark one, which is the direction that preserves contrast each way. A tint added to the text color for a moon has to come from a vivid shade of the hue, since the theme's plain accent token can be desaturated in dark mode and barely register.
+The **moon** was not orange — a night-sky object rather than a warm one. It was `--color-text` cooled by 12% `--color-blue-vivid` (`#b9c3cd`), with the accent orange kept for its hover. So the two glyphs did not share a color, and the dark override was where that was expressed.
 
-Check every state, not only the resting one: light and dark, rest and hover, for the toggle icon and for the logomark beside it. The icon should clear 4.5:1 in each, and the logomark 3:1. A header logomark that takes a token other than the accent can fail contrast on every page but the start page, so keep the home crumb on the same token as everywhere else.
+The tint is a nod to perception rather than physics. The lunar surface is gray-brown with an albedo close to worn asphalt, and moonlight is reflected sunlight, so spectrally it is faintly *warm*. We see night as blue because of the [Purkinje effect](https://en.wikipedia.org/wiki/Purkinje_effect): in dim light vision shifts to the rods, whose peak sensitivity lies further toward blue-green. An icon should follow the perception.
+
+Two practical notes. There is no light blue to reach for — the ramp is three dark values (`#245375`, `#2f536e`, `#3d8ecc`), and the lightest reads as a link blue, an interface color that would compete with the orange logomark a few centimetres to its left in the same header. And the mix has to come from blue-**vivid**: `--color-accent-blue` resolves to the desaturated `#2f536e` in dark, so 12% of it barely registers (chroma 0.010 against 0.018). Contrast is not the constraint here the way it was for the sun — every mix from 6% to 30% lands between 8.9 and 10.6 on the dark background, so the percentage is purely an aesthetic dial.
+
+Table: Blue mixed into the dark theme's text color: contrast and chroma
+| mix into `--color-text` | hex | on `#141619` | chroma |
+|---|---|---|---|
+| none (`#c8cacc`) | `#c8cacc` | 11.03 | 0.004 |
+| 6% blue-vivid | `#c0c7cc` | 10.58 | 0.011 |
+| **12% blue-vivid** | **`#b9c3cd`** | **10.14** | **0.018** |
+| 20% blue-vivid | `#aebfcd` | 9.58 | 0.027 |
+| 30% blue-vivid | `#a1b9cd` | 8.91 | 0.039 |
+
+Fixing the logomark to match found two live contrast failures on every page but the start page, where the trail's home crumb takes `--color-logo-icon` rather than the `aria-current` orange: that token was `--color-base-dark` (`#bbbfca`) in light, measuring **1.67**, and `--color-orange-700` (`#8c2100`) in dark, measuring **2.01**. Both are now the one accent orange, and the `aria-current` special case is gone with them — the home crumb no longer differs from anywhere else.
+
+A yellower, lighter sun was the design intent and is not reachable. The sun only ever appears in the light theme, on `#f4f4f2`, and [WCAG 1.4.11 Non-text Contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html) wants 3:1 for a graphic you need in order to operate a control — which an icon-only button's icon is, notwithstanding its `aria-hidden` (that attribute governs the accessibility *tree*, not what a sighted user has to see). Measured against that background, the palette's lighter oranges are nowhere close:
+
+Table: Contrast of the lighter oranges on each theme's background
+| | on `#f4f4f2` | on `#141619` |
+|---|---|---|
+| orange-200 `#ffdec3` | 1.16 | 14.23 |
+| orange-300 `#ffb78a` | 1.54 | 10.70 |
+| orange-400 `#f68f5a` | 2.12 | 7.76 |
+| **orange-500 `#d0621e`** | **3.50** | **4.70** |
+
+<figure class="popout" data-wiki-mockup>
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/theme-toggle-sun-colors.png" alt="The same sun glyph four times on the site's light page color, in progressively deeper oranges, each labeled with its contrast ratio. The first at 1.16 to 1 is a pale cream barely separable from the background; the second at 1.54 and the third at 2.12 are legible but faint; only the fourth, at 3.50 to 1, reads as a solid mark." width="1264" height="280">
+  <figcaption>The same table, drawn. The sun is only ever shown on this background, and only the last of the four is a graphic a person could use to operate a control.</figcaption>
+</figure>
+
+This is a general constraint, not a palette flaw: a light background and a yellow object cannot both be true at 3:1, which is why yellow suns live on dark headers. orange-500 is the lightest shade that clears the bar in the theme where the sun is shown.
+
+The eight states as shipped, measured on the resolved colors against each theme's page color (re-measured 2026-10-28, after the 10-26 recolor). The icon now clears 4.5:1 in every state, the logomark clears 3:1:
+
+Table: Contrast of the logomark and the toggle icon in all eight states
+| | light rest | light hover | dark rest | dark hover |
+|---|---|---|---|---|
+| logomark | 3.50 | 3.94 | 4.70 | 5.56 |
+| toggle icon | 4.63 | 6.97 | 5.24 | 16.46 |
 
 ### Current state, not target state
 
@@ -94,8 +132,10 @@ Because the CSS selects on `[data-theme='dark']` and the icon's resting form is 
 
 ### The label
 
-The accessible name is a `visually-hidden` span, not the SVG, which is `aria-hidden`; `aria-pressed` carries the state. There is also a visible tooltip on hover and keyboard focus — see [[Tooltips]] — and the two strings deliberately say different things.
+The accessible name is a `visually-hidden` span, not the SVG, which is `aria-hidden`; `aria-pressed` carries the state. Since 2026-09-02 there is also a visible tooltip on hover and keyboard focus — see [[Tooltips]] — and the two strings deliberately say different things.
 
 The name is a fixed "Toggle dark mode". It has to be: on a toggle button the state lives in `aria-pressed`, and a name that flips with it announces the state twice in two vocabularies. The tooltip is decoration, exposed to nobody, so it is free to say what a click *will* do — "Show dark mode" in light, "Show light mode" in dark, set by `reflectToggleState()` in the same breath as `aria-pressed`, so a theme change from any source (the button, the system preference listener, first load) updates both.
 
 The markup carries no `data-tooltip`; the script adds it. That keeps a wrong string from ever existing, and costs nothing, because the button is already hidden until its island upgrades. The `title` attribute that used to serve this purpose was removed, or the browser would draw its native tooltip beside the styled one.
+
+Raw source: `src/_raw/dev-notes/How the theme toggle works.md`

@@ -1,92 +1,322 @@
 {
-  "added": [],
+  "added": [
+    {
+      "path": "/wiki/shared-files-and-site-files/",
+      "reason": "New wiki page describing shared files and site files"
+    }
+  ],
   "changed": [
-    {"path": "/wiki/abbreviations/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; links to pages that stay here removed (88 words out, 45 in, of 948)"},
-    {"path": "/wiki/accessibility/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; dates and dated stories taken out (76 words out, 90 in, of 896)"},
-    {"path": "/wiki/alt-text/", "reason": "Stomme's copy: the history of hardcoded alt text became an example; \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; personal details and this site's examples replaced (47 words out, 35 in, of 911)"},
-    {"path": "/wiki/anatomy-of-a-post-type/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\"; dates and dated stories taken out; personal details and this site's examples replaced; links to pages that stay here removed (66 words out, 11 in, of 974)"},
-    {"path": "/wiki/breadcrumb/", "reason": "Stomme's copy: this site's jam title replaced by a sample title; \"jedee\" reads \"stomme\", heading included; raw-source lines removed; this site's examples made neutral (14 words out, 11 in, of 729)"},
-    {"path": "/wiki/css-3d-transforms/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; this site's examples made neutral (25 words out, 18 in, of 966)"},
-    {"path": "/wiki/choreographing-css-animations/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; personal details and this site's examples replaced; pictures are stomme's, in the sample theme (65 words out, 42 in, of 1600)"},
-    {"path": "/wiki/configuring-a-layout-composition/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed (12 words out, 2 in, of 937)"},
-    {"path": "/wiki/design-token-sync/", "reason": "Stomme's copy: the Penpot near-miss's counts removed, and the rule stated for any theme; \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; measurements reworded for any site (820 words out, 168 in, of 3165)"},
-    {"path": "/wiki/external-link-icons/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; measurements reworded for any site (15 words out, 3 in, of 596)"},
-    {"path": "/wiki/favicons/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; measurements reworded for any site; personal details and this site's examples replaced; pictures are stomme's, in the sample theme (89 words out, 153 in, of 1819)"},
-    {"path": "/wiki/figures/", "reason": "Stomme's copy: the dated history of the caption and icons removed; \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; measurements reworded for any site (246 words out, 66 in, of 2132)"},
-    {"path": "/wiki/floats/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; measurements reworded for any site; personal details and this site's examples replaced (40 words out, 40 in, of 922)"},
-    {"path": "/wiki/focus-rings-and-paint-containment/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; pictures are stomme's, in the sample theme (48 words out, 19 in, of 1060)"},
-    {"path": "/wiki/font-subsetting/", "reason": "Stomme's copy: the table of this site's font files is gone, with fonts described as a theme's choice; \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; measurements reworded for any site; this site's examples made neutral; links to pages that stay here removed; a figure dropped (900 words out, 390 in, of 2453)"},
-    {"path": "/wiki/forced-layout/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; measurements reworded for any site; this site's examples made neutral (104 words out, 56 in, of 964)"},
-    {"path": "/wiki/format-on-save/", "reason": "Stomme's copy: the story of two dated incidents became a general warning; \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; this site's examples made neutral (71 words out, 47 in, of 736)"},
-    {"path": "/wiki/hosting-large-originals-off-repo/", "reason": "Stomme's copy: the bucket, file names and sizes replaced by an example setup; \"jedee\" reads \"stomme\", heading included; raw-source lines removed; measurements reworded for any site; personal details and this site's examples replaced (81 words out, 86 in, of 798)"},
-    {"path": "/wiki/icons/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out (30 words out, 21 in, of 1145)"},
-    {"path": "/wiki/keyboard-shortcuts/", "reason": "Stomme's copy: the date it arrived removed, and font subsets described as a theme's need; \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out (29 words out, 15 in, of 1086)"},
-    {"path": "/wiki/layout-breakouts/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; measurements reworded for any site; pictures are stomme's, in the sample theme (431 words out, 109 in, of 2354)"},
-    {"path": "/wiki/line-length/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; measurements reworded for any site; personal details and this site's examples replaced; links to pages that stay here removed; pictures are stomme's, in the sample theme (269 words out, 139 in, of 1113)"},
-    {"path": "/wiki/link-checking/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; this site's examples made neutral (231 words out, 115 in, of 1256)"},
-    {"path": "/wiki/microformats/", "reason": "Stomme's copy: the dated history of the nesting caveat removed; \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out (78 words out, 22 in, of 990)"},
-    {"path": "/wiki/micropub/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; this site's examples made neutral; links to pages that stay here removed (32 words out, 10 in, of 1028)"},
-    {"path": "/wiki/netlify/", "reason": "Stomme's copy: now says one Micropub function rather than two endpoints, and that the build command empties dist/ except its image folders; \"jedee\" reads \"stomme\", heading included; raw-source lines removed; links to pages that stay here removed (86 words out, 67 in, of 641)"},
-    {"path": "/wiki/one-json-ld-envelope-for-sixteen-types/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; dates and dated stories taken out (59 words out, 33 in, of 858)"},
-    {"path": "/wiki/open-graph-images/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; measurements reworded for any site; personal details and this site's examples replaced (477 words out, 199 in, of 3418)"},
-    {"path": "/wiki/opentype-features/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; this site's examples made neutral; links to pages that stay here removed; a figure dropped (266 words out, 94 in, of 1242)"},
-    {"path": "/wiki/per-type-feeds/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; dates and dated stories taken out; personal details and this site's examples replaced; links to pages that stay here removed (270 words out, 77 in, of 1891)"},
-    {"path": "/wiki/permalinks-and-obsidian-friendly-filenames/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\"; dates and dated stories taken out; personal details and this site's examples replaced (65 words out, 49 in, of 644)"},
-    {"path": "/wiki/prefetching/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; links to pages that stay here removed (81 words out, 44 in, of 1303)"},
-    {"path": "/wiki/progressive-web-apps/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; personal details and this site's examples replaced; pictures are stomme's, in the sample theme (41 words out, 17 in, of 1334)"},
-    {"path": "/wiki/scroll-aware-css-during-view-transitions/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed (18 words out, 6 in, of 814)"},
-    {"path": "/wiki/self-hosting-remote-images-at-build-time/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; measurements reworded for any site; this site's examples made neutral (69 words out, 24 in, of 1478)"},
-    {"path": "/wiki/shadows/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; this site's examples made neutral (91 words out, 49 in, of 1135)"},
-    {"path": "/wiki/shared-files-and-site-files/", "reason": "Stomme's copy: rewritten to describe stomme's list of site files, and what a site adds to it; \"jedee\" reads \"stomme\", heading included; personal details and this site's examples replaced (22 words out, 94 in, of 601)"},
-    {"path": "/wiki/site-search/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; measurements reworded for any site; personal details and this site's examples replaced; links to pages that stay here removed; pictures are stomme's, in the sample theme (185 words out, 102 in, of 2203)"},
-    {"path": "/wiki/smooth-scrolling/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; measurements reworded for any site (33 words out, 9 in, of 528)"},
-    {"path": "/wiki/sveltia-cms/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; personal details and this site's examples replaced (178 words out, 57 in, of 2446)"},
-    {"path": "/wiki/syntax-highlighting/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; measurements reworded for any site; this site's examples made neutral; pictures are stomme's, in the sample theme (228 words out, 127 in, of 2696)"},
-    {"path": "/wiki/tables/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; measurements reworded for any site; personal details and this site's examples replaced; links to pages that stay here removed (746 words out, 202 in, of 5015)"},
-    {"path": "/wiki/tailwind/", "reason": "Stomme's copy: counts of tokens and selectors from dated measurements replaced by what a project finds in its build; \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; measurements reworded for any site; this site's examples made neutral (323 words out, 249 in, of 2263)"},
-    {"path": "/wiki/text-wrapping/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; pictures are stomme's, in the sample theme (44 words out, 40 in, of 844)"},
-    {"path": "/wiki/the-indieweb/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; links to pages that stay here removed (257 words out, 27 in, of 1337)"},
-    {"path": "/wiki/the-photoswipe-lightbox/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; measurements reworded for any site; this site's examples made neutral; links to pages that stay here removed; pictures are stomme's, in the sample theme (129 words out, 32 in, of 1753)"},
-    {"path": "/wiki/the-youtube-embed/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; links to pages that stay here removed; pictures are stomme's, in the sample theme (74 words out, 42 in, of 1278)"},
-    {"path": "/wiki/the-accessibility-test/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; dates and dated stories taken out; measurements reworded for any site; personal details and this site's examples replaced; links to pages that stay here removed (555 words out, 236 in, of 2409)"},
-    {"path": "/wiki/the-authoring-tool-decides-the-data-model/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; dates and dated stories taken out; personal details and this site's examples replaced; links to pages that stay here removed (32 words out, 13 in, of 897)"},
-    {"path": "/wiki/the-dev-servers-memory/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out (79 words out, 65 in, of 1857)"},
-    {"path": "/wiki/the-interlinkers-second-render-pass/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\"; raw-source lines removed; dates and dated stories taken out (40 words out, 23 in, of 1036)"},
-    {"path": "/wiki/the-lang-attribute/", "reason": "Stomme's copy: the homepage's Swedish greeting and other examples of this site replaced by neutral ones; \"jedee\" reads \"stomme\", heading included; raw-source lines removed; personal details and this site's examples replaced (88 words out, 93 in, of 735)"},
-    {"path": "/wiki/the-main-menu/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; measurements reworded for any site; a figure dropped; pictures are stomme's, in the sample theme (152 words out, 55 in, of 1434)"},
-    {"path": "/wiki/the-place-map/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; measurements reworded for any site; personal details and this site's examples replaced; links to pages that stay here removed; a figure dropped (655 words out, 198 in, of 4795)"},
-    {"path": "/wiki/the-service-workers-three-strategies/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; dates and dated stories taken out (24 words out, 6 in, of 1095)"},
-    {"path": "/wiki/the-theme-toggle/", "reason": "Stomme's copy: the history of the icon's earlier colors removed; \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; this site's examples made neutral; a figure dropped; pictures are stomme's, in the sample theme (801 words out, 214 in, of 2293)"},
-    {"path": "/wiki/the-title-less-post-types/", "reason": "Stomme's copy: only the date in one parenthesis removed, nothing else (4 words out, 1 in, of 734)"},
-    {"path": "/wiki/themes-and-starters/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; links to pages that stay here removed (35 words out, 11 in, of 1091)"},
-    {"path": "/wiki/three-things-called-cache/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; dates and dated stories taken out; measurements reworded for any site; this site's examples made neutral (108 words out, 45 in, of 1654)"},
-    {"path": "/wiki/timestamps-without-a-time-zone/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; personal details and this site's examples replaced; links to pages that stay here removed (69 words out, 51 in, of 717)"},
-    {"path": "/wiki/tooltips/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; measurements reworded for any site; pictures are stomme's, in the sample theme (19 words out, 4 in, of 2201)"},
-    {"path": "/wiki/typographic-conventions/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; personal details and this site's examples replaced (184 words out, 109 in, of 2970)"},
-    {"path": "/wiki/undefined-custom-properties/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; measurements reworded for any site; this site's examples made neutral; pictures are stomme's, in the sample theme (90 words out, 30 in, of 1781)"},
-    {"path": "/wiki/vertical-rhythm/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; measurements reworded for any site; personal details and this site's examples replaced; links to pages that stay here removed; a figure dropped; pictures are stomme's, in the sample theme (464 words out, 110 in, of 6232)"},
-    {"path": "/wiki/viewport-units/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out (20 words out, 4 in, of 697)"},
-    {"path": "/wiki/watch-loops/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; measurements reworded for any site (67 words out, 31 in, of 1262)"},
-    {"path": "/wiki/web-clipper-templates/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed (56 words out, 10 in, of 1004)"},
-    {"path": "/wiki/web-components/", "reason": "Stomme's copy: dated counts removed; \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; links to pages that stay here removed (28 words out, 15 in, of 832)"},
-    {"path": "/wiki/webc/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; dates and dated stories taken out; measurements reworded for any site; personal details and this site's examples replaced; links to pages that stay here removed (52 words out, 33 in, of 1782)"},
-    {"path": "/wiki/webmentions/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; personal details and this site's examples replaced; links to pages that stay here removed (77 words out, 41 in, of 968)"},
-    {"path": "/wiki/wikilinks/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; raw-source lines removed; dates and dated stories taken out; this site's examples made neutral (134 words out, 46 in, of 1154)"},
-    {"path": "/wiki/is-land/", "reason": "Stomme's copy: \"jedee\" reads \"stomme\", heading included; dates and dated stories taken out; links to pages that stay here removed (44 words out, 17 in, of 1358)"},
-    {"path": "/wiki/the-activities-archive/", "reason": "A page that stays with this site, text unchanged: only its backlinks list changes, because shared pages no longer link to it"},
-    {"path": "/wiki/rebuilding-an-archive-from-the-wayback-machine/", "reason": "A page that stays with this site, text unchanged: only its backlinks list changes, because shared pages no longer link to it"},
-    {"path": "/wiki/what-jedee-kept-from-eleventy-excellent/", "reason": "A page that stays with this site, text unchanged: only its backlinks list changes, because shared pages no longer link to it"},
-    {"path": "/wiki/layout-shift/", "reason": "A page that stays with this site, text unchanged: only its backlinks list changes, because shared pages no longer link to it"},
-    {"path": "/wiki/personal-websites/", "reason": "A page that stays with this site, text unchanged: only its backlinks list changes, because shared pages no longer link to it"},
-    {"path": "/wiki/", "reason": "The catalog is stomme's, with one line saying johanedlund.se is built on stomme and a \"This site\" section at the end for the five pages that stay"},
-    {"path": "/design-system/", "reason": "The map example's place changes from Nybrostrand Beach, Skåne, to Stockholm: its coordinates, place name and the \"Map of …\" text. The map itself is drawn from the same tiles; and page text reworded: \"Code keeps lining figures\" (twice), \"used to sit alone\" (twice), \"The font's superscript figures\", \"each brand's mark in one color\" and \"drawn from the site's map tiles in the site's colors\""},
-    {"path": "/search.json", "reason": "The search index holds the text of the shared wiki pages, now stomme's wording; no entry outside /wiki/ changes"},
-    {"path": "/sitemap.xml", "reason": "The start page's date here is its template file's modified date, and that file was replaced, so its entry has a new date and moves down the list; no address is added or removed"},
-    {"path": "/feed.xml", "reason": "One word gone from a CSS comment inside the embed's <style>; nothing a reader sees changes"},
-    {"path": "/feed.json", "reason": "One word gone from a CSS comment inside the embed's <style>; nothing a reader sees changes"},
-    {"path": "/activities/feed.xml", "reason": "One word gone from a CSS comment inside the embed's <style>; nothing a reader sees changes"},
-    {"path": "/activities/feed.json", "reason": "One word gone from a CSS comment inside the embed's <style>; nothing a reader sees changes"},
-    {"path": "/watching/feed.xml", "reason": "One word gone from a CSS comment inside the embed's <style>; nothing a reader sees changes"},
-    {"path": "/watching/feed.json", "reason": "One word gone from a CSS comment inside the embed's <style>; nothing a reader sees changes"}
+    {
+      "path": "/wiki/the-indieweb/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/design-system/",
+      "reason": "The link to the token files points at their new folder in the theme, and the printed name of the prose-rhythm stylesheet now gives its real folder"
+    },
+    {
+      "path": "/wiki/accessibility/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/anatomy-of-a-post-type/",
+      "reason": "Text updated to describe what a site owns, switches and the post-type list, and a link to the new page; the revised date moved"
+    },
+    {
+      "path": "/wiki/design-token-sync/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/external-link-icons/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/favicons/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/font-subsetting/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/",
+      "reason": "One line added for the new page 'Shared files and site files'"
+    },
+    {
+      "path": "/wiki/keyboard-shortcuts/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/layout-shift/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/line-length/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/link-checking/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/log/",
+      "reason": "The wiki log has a new entry at the top"
+    },
+    {
+      "path": "/wiki/microformats/",
+      "reason": "Only the list of pages that link here changed, because the wiki gained a page and some pages now link to it; the text of the page is the same"
+    },
+    {
+      "path": "/wiki/micropub/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/opentype-features/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/progressive-web-apps/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/self-hosting-remote-images-at-build-time/",
+      "reason": "Only the list of pages that link here changed, because the wiki gained a page and some pages now link to it; the text of the page is the same"
+    },
+    {
+      "path": "/wiki/shadows/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/sveltia-cms/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/tailwind/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/text-wrapping/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/the-accessibility-test/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/the-activities-archive/",
+      "reason": "Only the list of pages that link here changed, because the wiki gained a page and some pages now link to it; the text of the page is the same"
+    },
+    {
+      "path": "/wiki/the-interlinkers-second-render-pass/",
+      "reason": "Only the list of pages that link here changed, because the wiki gained a page and some pages now link to it; the text of the page is the same"
+    },
+    {
+      "path": "/wiki/the-place-map/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/the-service-workers-three-strategies/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/the-theme-toggle/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/the-title-less-post-types/",
+      "reason": "Only the list of pages that link here changed, because the wiki gained a page and some pages now link to it; the text of the page is the same"
+    },
+    {
+      "path": "/wiki/themes-and-starters/",
+      "reason": "Text updated to describe what a site owns, switches and the post-type list, and a link to the new page; the revised date moved"
+    },
+    {
+      "path": "/wiki/tooltips/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/vertical-rhythm/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/watch-loops/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/wiki/what-jedee-kept-from-eleventy-excellent/",
+      "reason": "Text updated: the layer order and the moved block files, the token folder, and a link to the new page; the revised date moved"
+    },
+    {
+      "path": "/wiki/wikilinks/",
+      "reason": "Wiki text corrected where it named an old folder or test path, or described code that has since changed; the revised date moved"
+    },
+    {
+      "path": "/search.json",
+      "reason": "The search index holds wiki text, so it carries the edited and the new wiki pages"
+    },
+    {
+      "path": "/sitemap.xml",
+      "reason": "The new wiki page 'Shared files and site files' is listed"
+    },
+    {
+      "path": "/wiki/abbreviations/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/alt-text/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/breadcrumb/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/css-3d-transforms/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/choreographing-css-animations/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/configuring-a-layout-composition/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/figures/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/floats/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/focus-rings-and-paint-containment/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/format-on-save/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/hosting-large-originals-off-repo/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/icons/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/layout-breakouts/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/netlify/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/one-json-ld-envelope-for-sixteen-types/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/open-graph-images/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/per-type-feeds/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/permalinks-and-obsidian-friendly-filenames/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/personal-websites/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/prefetching/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/rebuilding-an-archive-from-the-wayback-machine/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/scroll-aware-css-during-view-transitions/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/site-search/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/smooth-scrolling/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/syntax-highlighting/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/tables/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/the-photoswipe-lightbox/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/the-youtube-embed/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/the-dev-servers-memory/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/the-lang-attribute/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/the-main-menu/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/three-things-called-cache/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/timestamps-without-a-time-zone/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/typographic-conventions/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/undefined-custom-properties/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/web-clipper-templates/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/web-components/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/webc/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/webmentions/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    },
+    {
+      "path": "/wiki/is-land/",
+      "reason": "Wording only: the word \"own\" taken out of the wiki"
+    }
   ]
 }

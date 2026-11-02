@@ -51,24 +51,24 @@ The one genuine loss is the browser's back button. The platform gesture still wo
 
 The Böck article is from **2017-07-07**, and three of its specifics have been overtaken. `sw-precache` is retired — [Workbox](https://developer.chrome.com/docs/workbox) is its successor. The Lighthouse Chrome extension it recommends installing is no longer needed: Lighthouse has been a built-in DevTools panel for years. And "a better Google ranking" as a reason to adopt HTTPS reads as a 2017 argument; HTTPS is simply the default now. The three-step shape of the article — manifest, HTTPS, service worker — is unchanged, and the misconceptions it opens with are, if anything, more worth stating now than then.
 
-## In stomme
+## In jedee
 
 The site is installable, and a page you have visited comes back fully styled with the network gone.
 
 **Most of it is Eleventy Excellent stock**, which is worth stating because it is easy to assume otherwise. `src/common/site-manifest.njk` (a Nunjucks template with `permalink: /site.webmanifest`, so every value comes from `src/_data/meta.js`), the `<link rel="manifest">` in `meta-info.njk`, and both `<meta name="theme-color">` tags are all upstream. An unmodified EE site already ships a manifest and is one service worker away from installable.
 
-stomme's only manifest divergence is `name`. EE writes `"{{ meta.siteName }} - {{ meta.siteDescription }}"`; here `name` and `short_name` are both just `meta.siteName`. A short site name fits the budget a launcher gives `short_name` anyway, so there is nothing to abbreviate and nothing to gain from a longer `name` that only ever appears in the install dialog.
+jedee's only manifest divergence is `name`. EE writes `"{{ meta.siteName }} - {{ meta.siteDescription }}"`; here `name` and `short_name` are both just `meta.siteName`. "Johan Edlund" is twelve characters, inside the budget a launcher gives `short_name` anyway, so there is nothing to abbreviate and nothing to gain from a longer `name` that only ever appears in the install dialog.
 
-**The service worker** comes from [Max Böck's](https://github.com/maxboeck/eleventastic/blob/master/src/serviceworker.njk) — credited in a comment at the top of `src/pages/serviceworker.njk` — extended with runtime caching. Registration is six lines at the foot of `base.njk`, at the address in `pwa.workerPath` (`/serviceworker.js` unless a site sets another; a worker placed in a folder can only control that folder), with no `scope` argument (the default, the origin root, is what is wanted) and no `.then()`/`.catch()` logging, since a failed registration is not something a visitor can act on.
+**The service worker was written for this site**, and it comes from [Max Böck's](https://github.com/maxboeck/eleventastic/blob/master/src/serviceworker.njk) — credited in a comment at the top of `src/pages/serviceworker.njk` — extended with runtime caching on 23 June 2026. Registration is six lines at the foot of `base.njk`, at the address in `pwa.workerPath` (`/serviceworker.js` unless a site sets another; a worker placed in a folder can only control that folder), with no `scope` argument (the default, the origin root, is what is wanted) and no `.then()`/`.catch()` logging, since a failed registration is not something a visitor can act on.
 
 ⚠ **`start_url` is `meta.url`, resolved at build time.** Change the domain or the deploy environment and the manifest is wrong until the site is rebuilt — the same build-time coupling that bites elsewhere in this repo.
 
-**Two colors, and the manifest usually loses.** `theme_color` is the theme's `themeColor`, but the `<meta name="theme-color">` tags override it the moment a page renders. So the manifest's color only paints the surfaces that exist *before* any page does — the splash screen and the app-switcher card. Everything after that is `themeLight` or `themeDark`. [[Favicons]] has the full account, and the six device frames showing the icon on each of those surfaces.
+**Two colors, and the manifest usually loses.** `theme_color` is the brand slate `#495464`, but the `<meta name="theme-color">` tags override it the moment a page renders. So the manifest's color only paints the surfaces that exist *before* any page does — the splash screen and the app-switcher card. Everything after that is `themeLight` or `themeDark`. [[Favicons]] has the full account, and the six device frames showing the icon on each of those surfaces.
 
 `/offline/` is a plain page precached on install, returned only for a URL that has never been visited; everything visited comes back from the runtime cache instead. [[The service worker's three strategies]] covers why.
 
-**What is deliberately absent:** no install-prompt UI — `beforeinstallprompt` is not intercepted anywhere, so the browser's prompt is the only affordance. Push notifications are off unless a site sets `pwa.push` to a file that the worker includes; no background sync, no share target, no `shortcuts`, and no `screenshots` array, which is what a richer install dialog would draw on. For a site that people mostly read in a tab, the installable path is a bonus rather than the intended one.
+**What is deliberately absent:** no install-prompt UI — `beforeinstallprompt` is not intercepted anywhere, so the browser's prompt is the only affordance. Push notifications are off unless a site sets `pwa.push` to a file that the worker includes; no background sync, no share target, no `shortcuts`, and no `screenshots` array, which is what a richer install dialog would draw on. For a personal site that people mostly read in a tab, the installable path is a bonus rather than the intended one.
 
 Related: [[The service worker's three strategies]] — what the worker does with the requests it intercepts. [[Favicons]] — the icon set the manifest points at, and where each size is actually used. [[Three things called cache]] — the service-worker cache is only one of three.
 
-Source: Max Böck, "How to turn your website into a PWA" (2017-07-07).
+Raw source: `src/_raw/dev-notes/How the site is a PWA.md`, and the clip `src/_raw/How to turn your website into a PWA.md` (Max Böck, 2017-07-07).

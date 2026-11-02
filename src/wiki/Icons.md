@@ -32,9 +32,9 @@ The convention that makes inline SVG easy is `currentColor`. An icon drawn with 
 
 An icon next to a text label that says the same thing is decoration: it gets `aria-hidden="true"` so a screen reader does not announce it twice ([[Alt text]]). An icon-only control needs its name from somewhere else, usually a visually hidden span inside the button. Sara Soueidan's [Accessible Icon Buttons](https://www.sarasoueidan.com/blog/accessible-icon-buttons/) (2019) covers the techniques and which ones fail. A [[Tooltips|tooltip]] can show the name to sighted users as well, but is not the accessible name.
 
-## In stomme
+## In jedee
 
-The icons are filled, to match a solid logo mark. The set is [Phosphor](https://phosphoricons.com/)'s fill weight, chosen after comparing eight filled sets against the icons in use; it was the only one with a real match for all of them, and its rounded shapes are also the closest to a rounded logo.
+The site's icons are filled, to match the solid logo mark. Until 2026-10-14 they were Lucide outlines; eight filled sets were compared against the 28 icons in use, and [Phosphor](https://phosphoricons.com/)'s fill weight was the only one with a real match for all 28. Phosphor's rounded shapes are also the closest to the logo's.
 
 The files live in `src/assets/svg/`, by role:
 
@@ -46,7 +46,7 @@ Table: The icon folders
 | `activity/` | One icon per activity type, in the activities table and on the design system page; the meta line uses the `posts/` glyphs instead | Phosphor fill |
 | `platform/` | Footer platform logos, the GitHub mark beside "Revised", the video-link icons | Simple Icons |
 
-Each Phosphor file is the icon's path in a `viewBox="0 0 256 256"` with `width="1em" height="1em" fill="currentColor"`. `{% svg 'posts/camera' %}` inlines one, runs it through svgo and adds `aria-hidden="true"` unless an accessible name is passed, in which case it adds `role="img"` and the name as `aria-label` ([[The interlinker's second render pass]] covers why the shortcode must stay synchronous). Eleventy Excellent ships the shortcode and the folder; the choice of set is stomme's.
+Each Phosphor file is the icon's path in a `viewBox="0 0 256 256"` with `width="1em" height="1em" fill="currentColor"`. `{% svg 'posts/camera' %}` inlines one, runs it through svgo and adds `aria-hidden="true"` unless an accessible name is passed, in which case it adds `role="img"` and the name as `aria-label` ([[The interlinker's second render pass]] covers why the shortcode must stay synchronous). Eleventy Excellent ships the shortcode and the folder; the choice of set is jedee's.
 
 The files kept their Lucide names when their contents changed, so no template or data file had to change, and `src/_data/navigation.js` still names a post type's icon by the old word. Several no longer describe what they draw: `chef-hat.svg` is a cooking pot, `dumbbell.svg` a barbell, `repeat-2.svg` Phosphor's repeat, `reply.svg` a bent arrow. The design system page lists every icon with its file name.
 
@@ -59,3 +59,5 @@ Three post types sit uneasily in the filled set because their icons are open str
 ⚠ **A `stroke-width` rule on a filled icon does nothing, without warning.** Phosphor files have no stroke, so any CSS that set a line weight on the old outlines now has no effect: `.menu-toggle svg { stroke-width: 3 }` in `main-nav.css`, and the `stroke-width: var(--caption-icon-stroke)` plus `vector-effect: non-scaling-stroke` that matched the YouTube and PeerTube link icons to the caption icon ([[Figures]]). Changing those values changes nothing on the page.
 
 Two icon-like graphics are not files and were not part of the change: the theme toggle's sun and moon, drawn as SVG shapes that animate ([[The theme toggle]]), and the info icon on figure captions, drawn with CSS borders and gradients ([[Figures]]). Both are still lines.
+
+Raw source: `src/_raw/dev-notes/How the icon set was chosen.md`

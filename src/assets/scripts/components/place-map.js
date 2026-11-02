@@ -1,14 +1,13 @@
-// <place-map> — fills a slotted empty box with a live, maximizable MapLibre map drawn from the site's Protomaps tiles (settings.maps). esbuild bundles MapLibre into this file, so nothing loads until the is-land hydrates on idle. The inline map never wheel-zooms, so the page keeps scrolling; the maximize button grows THE SAME instance into a modal overlay where wheel + pinch turn on.
+// <place-map> — fills a slotted empty box with a live, maximizable MapLibre map drawn from our own Protomaps tiles. esbuild bundles MapLibre into this file, so nothing loads until the is-land hydrates on idle. The inline map never wheel-zooms, so the page keeps scrolling; the maximize button grows THE SAME instance into a modal overlay where wheel + pinch turn on.
 // Three modes, decided by the slotted markup: single pin (data-lat/data-lon on the element), places (a slotted [data-place-list] whose [data-lat] rows are the data AND the no-JS path), route (a slotted GeoJSON LineString).
 import maplibregl from 'maplibre-gl';
 import { Protocol } from 'pmtiles';
 import { layers, namedFlavor } from '@protomaps/basemaps';
 import { countStep, easeInOutQuad } from '../preloader-count.js';
 
-// Both are filled in by build-js.js from settings.maps. place-map.webc doesn't load this script on a site with no tiles.
-const TILES_URL = __MAP_TILES__;
-// ⚠ Outside this box the tile file is empty, so a map reaching past it opens on Topographic instead. Null: tiles everywhere.
-const COVERAGE = __MAP_COVERAGE__; // west, south, east, north
+const TILES_URL = 'https://pub-820f82fa11f94b03ab1d34e77b3572f6.r2.dev/maps/sweden-20260916.pmtiles';
+// ⚠ Outside this box the tile file is empty, so a map reaching past it opens on Topographic instead.
+const COVERAGE = [10.5, 55.0, 24.5, 69.2]; // west, south, east, north
 const ASSETS = '/assets/map';
 const ATTRIB_OSM = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 // Fixed alternate styles offered by the switch. Esri's URL is {z}/{y}/{x} (row before column).
@@ -65,7 +64,7 @@ function probeColor(el, value) {
 }
 
 // The map's colors live in place-map.css as --map-* properties, so a theme flip or a CSS tweak is picked up by re-reading them.
-function siteFlavor(el, theme) {
+function jedeeFlavor(el, theme) {
   const c = (name) => cssColor(el, `--map-${name}`);
   const land = c('land');
   const park = c('park');
@@ -90,9 +89,9 @@ function siteFlavor(el, theme) {
   };
 }
 
-const outsideCoverage = ([w, s, e, n]) => COVERAGE && (w < COVERAGE[0] || s < COVERAGE[1] || e > COVERAGE[2] || n > COVERAGE[3]);
+const outsideCoverage = ([w, s, e, n]) => w < COVERAGE[0] || s < COVERAGE[1] || e > COVERAGE[2] || n > COVERAGE[3];
 
-// Marker popup: the date in italics, then the place's name on a separate line, linked to the post. Styling is in place-map.css.
+// Marker popup: the date in italics, then the place's name on its own line, linked to the post. Styling is in place-map.css.
 const popupHtml = (p) => {
   const name = p.url ? `<a href="${p.url}">${p.name}</a>` : p.name;
   return p.date ? `<i class="place-popup-date">${p.date}</i>${name}` : name;
@@ -178,22 +177,22 @@ function makeMap(el, { center, zoom, bounds, place, base = 'Map', fitPadding = 2
   const render = () => {
     // How light the drawn map is, for colors that need a light- and a dark-surface shade (place-map-places.css). Topographic is always light, satellite always dark.
     el.closest('place-map')?.setAttribute('data-map-surface', state.base === 'Topographic' ? 'light' : state.base === 'Satellite' ? 'dark' : state.theme);
-    const extra = overlays();
+    const own = overlays();
     const style = {
       version: 8,
       glyphs: `${location.origin}${ASSETS}/fonts/{fontstack}/{range}.pbf`,
       sprite: `${location.origin}${ASSETS}/sprites/${state.theme === 'dark' ? 'black' : 'white'}`,
-      sources: { ...extra.sources },
+      sources: { ...own.sources },
       layers: [],
     };
     if (state.base === 'Map') {
       style.sources.protomaps = { type: 'vector', url: `pmtiles://${TILES_URL}`, attribution: `<a href="https://protomaps.com">Protomaps</a> ${ATTRIB_OSM}` };
-      style.layers = layers('protomaps', siteFlavor(el, state.theme), { lang: 'sv' });
+      style.layers = layers('protomaps', jedeeFlavor(el, state.theme), { lang: 'sv' });
     } else {
       style.sources.raster = { type: 'raster', tileSize: 256, ...RASTER_BASES[state.base] };
       style.layers = [{ id: 'raster', type: 'raster', source: 'raster' }];
     }
-    style.layers.push(...extra.layers);
+    style.layers.push(...own.layers);
     map.setStyle(style, { diff: map.isStyleLoaded() }); // the very first render replaces the empty placeholder style
   };
 
@@ -300,7 +299,6 @@ function trapTab(e) {
 
 class PlaceMap extends HTMLElement {
   connectedCallback() {
-    if (!TILES_URL) return;
     this.place = this.dataset.place || '';
     const routeScript = this.querySelector('script[type="application/json"][data-route]');
     const placeList = this.querySelector('[data-place-list]');

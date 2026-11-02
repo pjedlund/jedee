@@ -17,12 +17,12 @@ p  { text-wrap: pretty; }  /* better paragraph endings — running text */
 Both, rendered in the site's faces at the same measure. Each pair is one string set twice; the only thing that differs between the columns is the property.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/textwrap-balance.png" alt="The same heading twice at equal width. On the left, greedy wrapping sets it as Why every small, site deserves a plain, and static build on a short third line. On the right, balance moves the word plain down so all three lines are close to the same length." width="1298" height="296">
-  <figcaption><code>balance</code> on a heading. Greedy wrapping leaves a short last line, <em>static build</em>; balance evens the three lines instead.</figcaption>
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/textwrap-balance.png" alt="The same heading twice at equal width. On the left, greedy wrapping leaves the word Machine alone on a third line. On the right, balance redistributes the words so all three lines are close to the same length." width="1298" height="298">
+  <figcaption><code>balance</code> on a heading. Greedy wrapping strands <em>Machine</em>; balance evens the three lines instead.</figcaption>
 </figure>
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/textwrap-pretty.png" alt="The same paragraph twice at equal width. On the left, greedy wrapping leaves the word entity alone on a fourth line. On the right, pretty pulls the preceding word down so the last line reads space entity." width="1298" height="284">
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/textwrap-pretty.png" alt="The same paragraph twice at equal width. On the left, greedy wrapping leaves the word entity alone on a fourth line. On the right, pretty pulls the preceding word down so the last line reads space entity." width="1298" height="286">
   <figcaption><code>pretty</code> on running text. Greedy strands <em>entity.</em>; pretty pulls a word down onto the last line, at the same line count.</figcaption>
 </figure>
 
@@ -30,18 +30,18 @@ Both, rendered in the site's faces at the same measure. Each pair is one string 
 
 **Age note on the source.** The raw clip below dates from **2024-04**, when `balance` was everywhere except Safari and `pretty` existed only in Chrome and Opera. Those caveats are the article's main hedge and are obsolete: `balance` finished landing across the major browsers during 2024, `pretty` during 2025 ([caniuse](https://caniuse.com/?search=text-wrap)). Both are safe to ship unconditionally — where unsupported, text simply wraps the old greedy way, which is the state you were in anyway.
 
-## In stomme
+## In jedee
 
 Both values are shipped, at these places in the cascade:
 
 - `global/base/reset.css` — the broad defaults, in the `reset` layer: `* { text-wrap: pretty }` and `h1, h2, h3, h4 { text-wrap: balance }`. This is the whole site's baseline.
 - `src/assets/css/local/prose.css` — `.prose :is(p, li, dl, blockquote, ul:not([class]), ol:not([class]))` repeats `text-wrap: pretty` alongside the `54ch` measure (what that measure actually sets is on [[Line length]]). Redundant with the reset in effect, but it keeps the prose block's typographic decisions self-contained.
 - `local/post.css` — `.intro` (the lede under a post title) gets `text-wrap: balance`: a short, display-adjacent block, so it takes the heading treatment rather than the paragraph one.
-- `global/base/global-styles.css`: `blockquote` (with its `p`) takes `balance`, since a quotation is a short block like a heading. `figcaption` is on `pretty` since captions are left-aligned ([[Figures]]). ⚠ Inside `.prose` the quote needs the rule again in `prose.css`. There, `.prose :is(p, …)` sets `pretty` in a later layer and matches the quote's paragraphs directly.
+- `global/base/global-styles.css`: `blockquote` (with its `p`) takes `balance`, since a quotation is a short block like a heading. `figcaption` took `balance` too while captions were centered, from 2026-09-10; since they went left-aligned on 2026-10-02 it is back on `pretty` ([[Figures]]). ⚠ Inside `.prose` the quote needs the rule again in `prose.css`. There, `.prose :is(p, …)` sets `pretty` in a later layer and matches the quote's paragraphs directly.
 - `src/assets/css/local/breadcrumb-leaf.css` — **the gotcha.** The current-page crumb must stay on one line, but the global `* { text-wrap: pretty }` reset re-enables wrapping *even against an explicit `white-space: nowrap`*. The block clamps with `-webkit-line-clamp: 1` instead, which wins where `nowrap` loses. Any future single-line truncation on this site has the same fight ahead of it — the reset's universal selector reaches everything.
 
-**EE stock vs stomme:** the two reset rules and the `prose.css` `pretty` are Eleventy Excellent's stock typography. stomme's additions are the `.intro` balance, the quotation `balance` in `global-styles.css` and again in `prose.css`, the `figcaption` rule, the subtitle's `balance` (`hgroup > p` in `local/post.css`), and the breadcrumb line-clamp workaround.
+**EE stock vs jedee:** the two reset rules and the `prose.css` `pretty` are Eleventy Excellent's stock typography. jedee's additions are the `.intro` balance, the quotation `balance` in `global-styles.css` and again in `prose.css`, the `figcaption` rule, the subtitle's `balance` (`hgroup > p` in `local/post.css`), and the breadcrumb line-clamp workaround.
 
 Related: [[Microformats]] — the other page where a universal-selector reset interacts with a specific block in a non-obvious way (there `margin: 0`, here `text-wrap`).
 
-Source: Josh Crain, "Prevent Widows in Post Titles with CSS" (2024-04-24).
+Raw source: `src/_raw/Prevent Widows in Post Titles with CSS.md` (Josh Crain, 2024-04-24) — the wiki's first external clip.

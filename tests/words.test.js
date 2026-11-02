@@ -116,7 +116,7 @@ test('a theme with no words.yaml builds, and the neutral feed texts show', async
   const feed = site.read('reading/feed.xml')
   assert.ok(feed.includes('Books and notes on them.'), 'the neutral reading feed text is missing')
   assert.ok(!/\bI(?:'|&#39;)?(?:m|ve)\b|\bmy\b/.test(feed), 'the feed has first-person wording')
-  assert.ok(!feed.includes('reading.'), 'A site\'s feed text leaked into a sample build')
+  assert.ok(!feed.includes('reading.'), 'JEDEE\'s own feed text leaked into a sample build')
 })
 
 test('every word a theme sets exists in English too', () => {

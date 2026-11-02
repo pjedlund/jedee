@@ -14,7 +14,7 @@ import matter from 'gray-matter';
 import {author} from '../../_data/meta.js';
 
 const CACHE = '_local/data/musicbrainz-genres.json';
-const UA = `site-genre-enrichment/1.0 (${author.website}; ${author.email})`;
+const UA = `jedee-genre-enrichment/1.0 (${author.website}; ${author.email})`;
 const MAX_GENRES = 3;
 
 // MusicBrainz asks for 1 req/s and a descriptive User-Agent; going faster gets the IP throttled.

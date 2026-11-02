@@ -29,7 +29,6 @@ import shortcodes from './src/_config/shortcodes.js';
 import {themeDir} from './src/_config/utils/theme.js';
 import {loadWords} from './src/_config/utils/site.js';
 import {resolveSwitches} from './src/_config/utils/switches.js';
-import {resolveMaps} from './src/_config/utils/maps.js';
 
 // Caps how many images fetch + encode at once, to keep a cold build's memory down. Lower it if a cold build still runs out of memory.
 import Image from '@11ty/eleventy-img';
@@ -130,12 +129,9 @@ export default async function(eleventyConfig) {
   eleventyConfig.addPlugin(plugins.webc, {
     components: ['./src/_includes/webc/**/*.webc'],
     useTransform: true,
-    // ⚠ A transform sees no global data by itself: without this a component's $data.words is undefined.
-    transformData: {words: loadWords(), maps: resolveMaps(settings)}
+    // ⚠ A transform sees no global data of its own: without this a component's $data.words is undefined.
+    transformData: {words: loadWords()}
   });
-
-  // ⚠ After WebC: this one reads the page once the components have become their markup.
-  eleventyConfig.addPlugin(plugins.finishedPage, {maps: resolveMaps(settings)});
 
   eleventyConfig.addPlugin(plugins.eleventyImageTransformPlugin, {
     transform: (sharp) => {

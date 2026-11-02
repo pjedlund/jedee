@@ -1,18 +1,20 @@
-// Shared files must not carry one site's personal details. ⚠ The words are in _local/personal-words.json, never in a tracked file, so with no such file this skips. Run: node --test tests/no-personal-details.test.js
+// Shared files must not carry one site's personal details; the files that belong to a site are listed in tests/site-files.json. Run: node --test tests/no-personal-details.test.js
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { execFileSync } from 'node:child_process'
-import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync } from 'node:fs'
-import { tmpdir } from 'node:os'
+import { readFileSync, readdirSync } from 'node:fs'
 import path from 'node:path'
-import { isSiteFile } from './lib/site-files.mjs'
 
 const root = path.resolve(import.meta.dirname, '..')
-const wordsFile = path.join(root, '_local/personal-words.json')
-const skip = existsSync(wordsFile) ? false : 'needs _local/personal-words.json, a local list that is not in the repo'
+const siteFiles = JSON.parse(readFileSync(path.join(root, 'tests/site-files.json'), 'utf8'))
+const PERSONAL = ['Johan', 'Edlund', 'johanedlund', 'pjedlund', 'Malmö', 'Soli Deo', 'Västra', 'Tolstoy', '75b79efd']
 
-test('no personal details in shared files', { skip }, () => {
-  const words = JSON.parse(readFileSync(wordsFile, 'utf8'))
+// A pattern is a path where ** matches anything and * matches anything but a slash.
+const toRegExp = pattern => new RegExp('^' + pattern.split('**').map(part => part.split('*').map(piece => piece.replace(/[.+?^${}()|[\]\\]/g, '\\$&')).join('[^/]*')).join('.*') + '$')
+const sitePatterns = siteFiles.map(toRegExp)
+const isSiteFile = file => sitePatterns.some(pattern => pattern.test(file))
+
+test('no personal details in shared files', () => {
   const tracked = execFileSync('git', ['ls-files', '-z'], { cwd: root, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 }).split('\0').filter(Boolean)
   const found = []
   for (const file of tracked) {
@@ -25,23 +27,9 @@ test('no personal details in shared files', { skip }, () => {
     }
     if (buffer.includes(0)) continue
     const text = buffer.toString('utf8')
-    for (const { word, kind, except = [] } of words) if (text.includes(word) && !except.includes(file)) found.push(`${file}: ${kind}`)
+    for (const word of PERSONAL) if (text.includes(word)) found.push(`${file}: ${word}`)
   }
   assert.deepEqual(found, [], `Personal details in shared files. Reword them, read them from settings, or (if the file belongs to the site) list it in tests/site-files.json:\n${found.join('\n')}`)
-})
-
-test('with no word list the check skips and names the file it needs', () => {
-  // ⚠ With this variable set, a nested test run prints nothing.
-  const { NODE_TEST_CONTEXT, ...env } = process.env
-  const dir = mkdtempSync(path.join(tmpdir(), 'stomme-words-'))
-  try {
-    mkdirSync(path.join(dir, 'tests/lib'), { recursive: true })
-    for (const file of ['package.json', 'tests/no-personal-details.test.js', 'tests/site-files.json', 'tests/lib/site-files.mjs']) copyFileSync(path.join(root, file), path.join(dir, file))
-    const output = execFileSync(process.execPath, ['--test', '--test-reporter=tap', '--test-name-pattern=no personal details in shared files', 'tests/no-personal-details.test.js'], { cwd: dir, encoding: 'utf8', env })
-    assert.match(output, /# SKIP .*_local\/personal-words\.json/)
-  } finally {
-    rmSync(dir, { recursive: true, force: true })
-  }
 })
 
 test('the language word files hold no first-person wording', () => {

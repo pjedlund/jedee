@@ -127,7 +127,7 @@ if (settingsSingleton) {
   const before = flatten(jsyaml.load(text));
   const after = flatten(jsyaml.load(sveltiaSaveData(text, settingsSingleton.fields).text));
   for (const key of Object.keys(before)) if (!(key in after)) console.log(`   ! ${settingsSingleton.file}: a save drops ${key}`);
-  // postTypes can be left out of the file (missing means all), so check a list of them survives a save too.
+  // postTypes is left out of the file for JEDEE (missing means all), so check a list of them survives a save too.
   const withTypes = `${text.trimEnd()}\npostTypes:\n  - note\n  - recipe\n`;
   if (!isDeepStrictEqual(jsyaml.load(sveltiaSaveData(withTypes, settingsSingleton.fields).text).postTypes, ['note', 'recipe'])) console.log(`   ! ${settingsSingleton.file}: a save changes postTypes`);
   if (!settingsSingleton.fields.some(([field]) => field === 'postTypes')) console.log(`   ! ${settingsSingleton.file}: postTypes has no field in admin/config.yml`);

@@ -159,8 +159,6 @@ play: Play
 onWikipedia: on Wikipedia
 bpm: bpm
 humansLanguages: ''
-humansComponents: 11ty, Eleventy Excellent (Eleventy Starter Kit), Git/Github, Netlify, PhotoSwipe
-humansSoftware: ''
 llmsArticles: Articles
 llmsNotes: Notes
 llmsReading: Reading

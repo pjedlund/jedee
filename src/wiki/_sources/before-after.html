@@ -1,0 +1,88 @@
+<!-- "After" reads the committed icons, so it tracks the live set. "Before" is the pre-orange set recovered from 894b44a~1 and frozen in icons-before/ — it exists nowhere else. -->
+<!doctype html>
+<meta charset="utf-8">
+<title>Favicon: before / after</title>
+<style>
+  body { margin: 0; padding: 32px; font: 14px/1.5 -apple-system, system-ui, sans-serif; background: #F4F4F2; color: #23292F; }
+  h1 { font-size: 18px; margin: 0 0 4px; }
+  h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: #68727F; margin: 32px 0 12px; font-weight: 600; }
+  .lede { color: #68727F; margin: 0 0 8px; }
+  .row { display: flex; gap: 40px; align-items: flex-start; flex-wrap: wrap; }
+  .col { display: flex; flex-direction: column; gap: 8px; }
+  .label { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: #9EB1BF; font-weight: 600; }
+  .tab { display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 8px 8px 0 0; width: 220px; font-size: 12px; }
+  .tab.light { background: #fff; color: #23292F; border: 1px solid #e3e3e0; border-bottom: none; }
+  .tab.dark  { background: #2b2f36; color: #dcdcdc; }
+  .tab img { width: 16px; height: 16px; flex: none; }
+  .big { display: flex; gap: 16px; align-items: center; }
+  .big img { image-rendering: pixelated; }
+  .chip { width: 64px; height: 64px; border: 1px dashed #cfd4d8; }
+  .chip.onlight { background: #fff; }
+  .chip.ondark  { background: #2b2f36; }
+  .tile { width: 120px; height: 120px; border-radius: 26px; box-shadow: 0 4px 12px rgb(0 0 0 / .18); }
+  .mask { width: 120px; height: 120px; border-radius: 50%; box-shadow: 0 4px 12px rgb(0 0 0 / .18); }
+  .home { padding: 24px; border-radius: 12px; display: flex; gap: 32px; align-items: flex-start; }
+  .home.dark  { background: linear-gradient(160deg,#4a5a6a,#2b333d); }
+  .home.light { background: linear-gradient(160deg,#e8e4dc,#cfc8bd); }
+  .home + .home { margin-top: 12px; }
+  .wall { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; font-weight: 600; align-self: center; width: 92px; }
+  .home.dark .wall  { color: #9fb0c0; }
+  .home.light .wall { color: #8b8377; }
+  .home.dark .label  { color: #c9d2da; }
+  .home.light .label { color: #6f675c; }
+</style>
+
+<h1>Favicon — before / after</h1>
+<p class="lede">Left is what shipped before, right is what ships: 14px mark in the 16px tab, and the mark knocked out of a solid orange tile.</p>
+
+<h2>Browser tab, actual size (16px)</h2>
+<div class="row">
+  <div class="col"><span class="label">Before</span>
+    <div class="tab light"><img src="icons-before/favicon.svg" alt=""><span>Johan Edlund</span></div>
+    <div class="tab dark"><img src="icons-before/favicon.svg" alt=""><span>Johan Edlund</span></div>
+  </div>
+  <div class="col"><span class="label">After</span>
+    <div class="tab light"><img src="../../assets/images/favicon/favicon.svg" alt=""><span>Johan Edlund</span></div>
+    <div class="tab dark"><img src="../../assets/images/favicon/favicon.svg" alt=""><span>Johan Edlund</span></div>
+  </div>
+</div>
+
+<h2>The .ico at 32px, blown up 2× — mark is now 28 of 32 (same ratio as 14 of 16)</h2>
+<div class="row">
+  <div class="col"><span class="label">Before</span>
+    <div class="big">
+      <img class="chip onlight" src="icons-before/favicon.ico" alt="">
+      <img class="chip ondark" src="icons-before/favicon.ico" alt="">
+    </div>
+  </div>
+  <div class="col"><span class="label">After</span>
+    <div class="big">
+      <img class="chip onlight" src="../../assets/images/favicon/favicon.ico" alt="">
+      <img class="chip ondark" src="../../assets/images/favicon/favicon.ico" alt="">
+    </div>
+  </div>
+</div>
+
+<h2>iOS home screen (apple-touch-icon)</h2>
+<div class="home dark">
+  <span class="wall">Dark wall</span>
+  <div class="col"><span class="label">Before</span><img class="tile" src="icons-before/apple-touch-icon.png" alt=""></div>
+  <div class="col"><span class="label">After</span><img class="tile" src="../../assets/images/favicon/apple-touch-icon.png" alt=""></div>
+</div>
+<div class="home light">
+  <span class="wall">Light wall</span>
+  <div class="col"><span class="label">Before</span><img class="tile" src="icons-before/apple-touch-icon.png" alt=""></div>
+  <div class="col"><span class="label">After</span><img class="tile" src="../../assets/images/favicon/apple-touch-icon.png" alt=""></div>
+</div>
+
+<h2>Android launcher (maskable, circular crop)</h2>
+<div class="home dark">
+  <span class="wall">Dark wall</span>
+  <div class="col"><span class="label">Before</span><img class="mask" src="icons-before/maskable-icon.png" alt=""></div>
+  <div class="col"><span class="label">After</span><img class="mask" src="../../assets/images/favicon/maskable-icon.png" alt=""></div>
+</div>
+<div class="home light">
+  <span class="wall">Light wall</span>
+  <div class="col"><span class="label">Before</span><img class="mask" src="icons-before/maskable-icon.png" alt=""></div>
+  <div class="col"><span class="label">After</span><img class="mask" src="../../assets/images/favicon/maskable-icon.png" alt=""></div>
+</div>

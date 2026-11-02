@@ -8,11 +8,13 @@
 <link rel="stylesheet" href="../../_includes/css/global.css">
 
 <style>
+  @font-face { font-family: 'Source Sans'; font-weight: 100 1000; src: url('../../_includes/themes/jedee/fonts/source-sans/source-sans.woff2') format('woff2'); }
+  @font-face { font-family: 'Source Code Pro'; src: url('../../_includes/themes/jedee/fonts/source-code-pro/source-code-pro.woff2') format('woff2'); }
 
   /* ⚠ --gap is clamp(1rem, 6vw, 3rem), so the gutter here is the VIEWPORT's, not the specimen's. At the shooter's 1400px it clamps to its 3rem maximum — the same gutter a desktop reader gets. A narrower viewport would draw a different picture. */
-  body { margin: 0; padding: 24px; background: #ddd; font-family: system-ui, sans-serif; }
+  body { margin: 0; padding: 24px; background: #ddd; font-family: 'Source Sans', system-ui, sans-serif; }
 
-  /* A specimen carries a paper the way a device frame carries a bezel — so one shot reads deliberately on either theme of the wiki page. */
+  /* A specimen carries its own paper the way a device frame carries its own bezel — so one shot reads deliberately on either theme of the wiki page. */
   .specimen {
     inline-size: fit-content;
     background: var(--color-bg);
@@ -26,11 +28,11 @@
   .stage { inline-size: 1040px; }
   .stage-narrow { inline-size: 760px; }
 
-  .mono { font-family: ui-monospace, monospace; }
+  .mono { font-family: 'Source Code Pro', ui-monospace, monospace; }
 
   /* The ruler is placed on the SAME grid as the bars, one cell per track, so it can only ever show the tracks that actually resolved. */
   .ruler > * {
-    font-family: ui-monospace, monospace;
+    font-family: 'Source Code Pro', ui-monospace, monospace;
     font-size: 11px; text-align: center; color: var(--color-text); opacity: 0.5;
     padding-block: 4px; border: 1px dashed var(--color-bg-accent-2); border-radius: 3px;
     overflow: hidden;
@@ -44,7 +46,7 @@
   .ruler > :nth-child(7) { grid-column: 7; }
 
   .bar {
-    font-family: ui-monospace, monospace;
+    font-family: 'Source Code Pro', ui-monospace, monospace;
     font-size: 17px; text-align: center; color: var(--color-bg);
     background: var(--color-accent-green); border-radius: 4px; padding-block: 9px;
     margin-block-start: 8px;
@@ -53,11 +55,11 @@
   .bar.popout, .bar.feature, .bar.full { background: var(--color-accent-blue); }
 
   .caption {
-    font-family: ui-monospace, monospace;
+    font-family: 'Source Code Pro', ui-monospace, monospace;
     font-size: 15px; color: var(--color-text); opacity: 0.6; margin: 0 0 8px;
   }
   .panel + .panel { margin-block-start: 26px; }
-  /* The failing panel's wrapper is a plain div — no class, so nothing here can accidentally rescue it. */
+  /* The failing panel's own wrapper is a plain div — no class, so nothing here can accidentally rescue it. */
   .panel .verdict { color: var(--color-accent-blue); opacity: 1; }
   /* Dark shot: the dark accents are muted surface colors, so the bars take light text and the verdict the vivid blue. */
   :root[data-theme='dark'] .bar { color: var(--color-headline); }

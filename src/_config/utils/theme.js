@@ -8,8 +8,8 @@ const ROOT = fileURLToPath(new URL('../../..', import.meta.url));
 const THEMES = 'src/_includes/themes';
 
 export function themeName() {
-  const name = yamlLoad(fs.readFileSync(path.join(ROOT, 'src/_data/settings.yaml'), 'utf8')).theme;
-  if (!name) throw new Error(`settings.theme is missing: name a folder in ${THEMES} in src/_data/settings.yaml`);
+  // @until the boilerplate — the default stays jedee only while JEDEE is the only site; a new site must choose.
+  const name = yamlLoad(fs.readFileSync(path.join(ROOT, 'src/_data/settings.yaml'), 'utf8')).theme || 'jedee';
   if (!fs.existsSync(path.join(ROOT, THEMES, name))) throw new Error(`settings.theme is "${name}", but ${THEMES}/${name} doesn't exist`);
   return name;
 }
@@ -31,22 +31,4 @@ export const logoOutline = (svg, file = 'logo.svg') => {
 	const paths = [...svg.matchAll(/\sd="([^"]+)"/g)].map(match => match[1]);
 	if (!paths.length) throw new Error(`${file} has no path with a double-quoted d="…", so the share cards have no logo mark.`);
 	return paths.join(' ');
-};
-
-// The logo as a one-line <svg> for a CSS data address, with single quotes so it sits inside url("…"). Encode it first where a parser needs that.
-export const logoDataSvg = (svg = loadLogo(), attributes = '') => {
-	const viewBox = svg.match(/\sviewBox="([^"]+)"/)?.[1] ?? '0 0 100 100';
-	return `<svg xmlns='http://www.w3.org/2000/svg' viewBox='${viewBox}'${attributes}><path d='${logoOutline(svg)}'/></svg>`;
-};
-
-// The font files a theme's fonts.css loads, each once; a rule with no file (a local() fallback) is left out.
-export const themeFontFiles = css => {
-	const files = new Map();
-	for (const [, rule] of css.matchAll(/@font-face\s*\{([^}]*)\}/g)) {
-		const source = rule.match(/url\(['"]?\/assets\/fonts\/([^'")]+\.woff2)/)?.[1];
-		if (!source || files.has(source)) continue;
-		const value = name => rule.match(new RegExp(`${name}:\\s*([^;]+)`))?.[1].trim();
-		files.set(source, {family: value('font-family').replace(/['"]/g, ''), file: `fonts/${path.basename(source)}`, source, weight: value('font-weight') ?? '400', style: value('font-style') ?? 'normal'});
-	}
-	return [...files.values()];
 };

@@ -1,5 +1,5 @@
 ---
-description: "The abbr element and the markdown syntax for it; in stomme one glossary in directory data feeds every wiki page, and why the data key must not be called `abbreviations`."
+description: "The abbr element and the markdown syntax for it; in jedee one glossary in directory data feeds every wiki page, and why the data key must not be called `abbreviations`."
 date: 2026-09-07
 updated: 2026-10-08
 ---
@@ -18,20 +18,20 @@ FOFT is a font-loading strategy.
 
 Two properties of that plugin decide how it is best used. It rewrites only `text` tokens, so a code span or a fenced block is never touched — `process.env.TZ` in a sample stays plain while `TZ` in a sentence does not. And it wraps *every* occurrence, not the first, which makes a common abbreviation a row of dotted underlines down the page. The selection of what to define is therefore the whole design decision.
 
-## In stomme
+## In jedee
 
 `markdown-it-abbr` is Eleventy Excellent stock: it is already in the markdown pipeline (`src/_config/plugins/markdown.js`), and EE styles `abbr[title]` in `base/global-styles.css` with a dotted underline and `cursor: help`.
 
-The dots are stomme's addition. A dotted `text-decoration` can't set the gap between its dots, so the row is a `radial-gradient` background repeated along the bottom of the text: each dot is as wide as a link underline is thick (`--underline-thickness`, `0.2ex`, so it grows with the text), dots sit `0.25em` apart (ten under WCAG in body text), and they are the text color at 50%, which comes out darker on the light theme and lighter on the dark one and reads as a hint rather than a link. A background is placed from the bottom of the text box, not the baseline, so `--abbr-lift` (`0.075em`) lifts the row onto the line a link underline would take; it was measured against a link in one font (Source Sans), and other fonts may need a different value.
+The dots are jedee's since 2026-10-08. A dotted `text-decoration` can't set the gap between its dots, so the row is a `radial-gradient` background repeated along the bottom of the text: each dot is as wide as a link underline is thick (`--underline-thickness`, `0.2ex`, so it grows with the text), dots sit `0.25em` apart (ten under WCAG in body text), and they are the text color at 50%, which comes out darker on the light theme and lighter on the dark one and reads as a hint rather than a link. A background is placed from the bottom of the text box, not the baseline, so `--abbr-lift` (`0.075em`) lifts the row onto the line a link underline would take; it was measured against a link in Source Sans, and Source Serif headings come out the same. Neither had ever been used by the wiki. The only definition in the repo was a `*[WAV]:` line at the bottom of one audio post.
 
-Definitions are per-document, which is the wrong shape for a wiki of many pages. stomme's addition is one glossary in the wiki's directory data, `src/wiki/wiki.11tydata.js`:
+Definitions are per-document, which is the wrong shape for a wiki of fifty pages and growing. jedee's addition is one glossary in the wiki's directory data, `src/wiki/wiki.11tydata.js`:
 
 ```js
 glossary: {
   ARIA: 'Accessible Rich Internet Applications',
   BCP: 'Best Current Practice',
   CLS: 'Cumulative Layout Shift',
-  // … and more
+  // … 31 in total
 }
 ```
 
@@ -47,11 +47,11 @@ eleventyConfig.addPreprocessor('glossary', 'md', (data, content) => {
 
 It is registered for all markdown but gated on `data.glossary`, and only `src/wiki/` sets that key. Appending at the end is safe: `abbr_def` is a block rule and the replacement is a core rule that runs after every block is parsed, so a definition never has to precede its use.
 
-The glossary holds opaque jargon only — FOFT, POSSE, PESOS, DTCG, CUBE, EXIF, RDFa, BCP, OOM, FIT and the rest. CSS, HTML, JS, JSON, API, URL and DOM are deliberately left out, and so is EE: "CSS" alone appears so often across these pages that a dotted underline on each would be noise rather than help.
+The glossary holds opaque jargon only — FOFT, POSSE, PESOS, DTCG, CUBE, EXIF, RDFa, BCP, OOM, FIT and the rest. CSS, HTML, JS, JSON, API, URL and DOM are deliberately left out, and so is EE: "CSS" alone appears 192 times across these pages, and 192 dotted underlines is noise rather than help. 31 terms produce 179 elements across the built wiki.
 
 ### ⚠ The data key must not be called `abbreviations`
 
-Naming the key `abbreviations` breaks it. The build stays green and most abbreviations come out correct, but a long page also carries many of these:
+The first version of this named the key `abbreviations`. The build was green and most abbreviations were correct, but [[Layout shift]] also carried fifteen of these:
 
 ```html
 <abbr title="undefined">A</abbr> tall container nudged a few pixels …
@@ -69,6 +69,8 @@ token_o.attrs = [['title', state.env.abbreviations[':' + m[2]]]]
 
 Against an unprefixed glossary, every key is read one character short: `UA` becomes the pattern `A`, `TZ` becomes `Z`, `OG` becomes `G`. The lookup then misses, and the title serializes as the string `undefined`. Every standalone "A" in the prose was wrapped.
 
-What makes it hard to see is that the glossary's definitions still work. The preprocessor's `*[FOFT]: …` lines were parsed into the same object *with* the `:` intact, so FOFT, CLS and the rest resolve correctly next to the broken single letters, and the page looks mostly right.
+What made it hard to see is that the site's definitions still worked. The preprocessor's `*[FOFT]: …` lines were parsed into the same object *with* the `:` intact, so FOFT, CLS and the rest resolved correctly next to the broken single letters, and the page looked mostly right.
 
 Renaming the key is the whole fix. The general form is worth carrying: **a markdown-it plugin's per-render state shares an object with the page data**, so a front-matter or directory-data key can silently drive a plugin that never heard of it. Check which `env.*` keys a plugin claims before naming a data key. It is the same class of surprise as [[The interlinker's second render pass]] — a markdown-it plugin reaching further into the build than its syntax suggests.
+
+Raw source: `src/_raw/dev-notes/How the wiki gets its abbr elements.md`

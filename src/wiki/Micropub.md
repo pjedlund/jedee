@@ -16,13 +16,13 @@ A static site has no admin interface by construction: publishing means writing a
 
 The consequence worth naming is that this makes the authoring tool a second author of the data model, alongside whatever the layouts expect. See [[The authoring tool decides the data model]].
 
-## In stomme
+## In jedee
 
-One Netlify Function at `/api/micropub` (`netlify/functions/micropub.js`). It turns an incoming `h-entry` into a shape-correct `.md` committed through the GitHub Contents API — the same kind of file, in the same `src/posts/<type>/` folder, that an Obsidian Web Clipper clip produces. The two are complementary authoring paths over one content layer; see [[Web Clipper templates]].
+One Netlify Function at `/api/micropub` (`netlify/functions/micropub.js`, 441 lines on 2026-10-27), the site's first. It turns an incoming `h-entry` into a shape-correct `.md` committed through the GitHub Contents API — the same kind of file, in the same `src/posts/<type>/` folder, that an Obsidian Web Clipper clip produces. The two are complementary authoring paths over one content layer; see [[Web Clipper templates]].
 
-The engine is `@benjifs/micropub` 2.0.1 plus `@benjifs/github-store`, used **vendor-but-patch**: the engine's conventions are steered through its documented constructor options rather than by editing its source. Three of those conventions do not match stomme, and each needed a seam.
+The engine is `@benjifs/micropub` 2.0.1 plus `@benjifs/github-store`, used **vendor-but-patch**: the engine's conventions are steered through its documented constructor options rather than by editing its source. Three of those conventions do not match this site, and each needed a seam.
 
-**1. The filename prefix.** The engine prefixes a titled post's slug with a unix timestamp — `1733436000-sample-book`. stomme's filenames are the title alone, because they double as Obsidian wikilink targets ([[Permalinks and Obsidian-friendly filenames]]). `formatSlug` strips it:
+**1. The filename prefix.** The engine prefixes a titled post's slug with a unix timestamp — `1733436000-anna-karenina`. jedee's filenames are the title alone, because they double as Obsidian wikilink targets ([[Permalinks and Obsidian-friendly filenames]]). `formatSlug` strips it:
 
 ```js
 export const formatSlug = (type = 'note', slug = '') =>
@@ -35,7 +35,7 @@ export const formatSlug = (type = 'note', slug = '') =>
 
 ### ⚠ The `category` collision
 
-The one trap that will bite anyone reading the spec against this codebase. **Micropub's `category` is the post's user-visible tags.** **stomme's `category` is the post *type*** — the thing that drives `byCategory()` collections and the layout ([[Anatomy of a post type]]). They are different fields with the same name.
+The one trap that will bite anyone reading the spec against this codebase. **Micropub's `category` is the post's user-visible tags.** **jedee's `category` is the post *type*** — the thing that drives `byCategory()` collections and the layout ([[Anatomy of a post type]]). They are different fields with the same name.
 
 The Function resolves it by never writing `category` at all. Micropub `category` becomes `tags`, and the post type falls out of the data cascade from the destination folder's directory-data JSON. Routing a post is therefore purely *choosing its folder*:
 
@@ -50,13 +50,14 @@ export const TYPE_DIR = {
 ### The rest of the wrapper
 
 - **Every post gets a title**, derived if the client sent none, so nothing lands blank in `<title>`, the OG tags, the feeds or a card. A title-less post's slug comes from the first ~10 words of its body, or — for a reply, repost or RSVP — the last meaningful path segment of its target URL, so the filename, the URL and the `<h1>` all agree instead of reading as a bare timestamp.
-- **`visibility` is translated into stomme's vocabulary**, interpreted centrally at build time in `drafts.js`. `unlisted` keeps the native key and the build drops the post from every collection, feed and the sitemap while its permalink still resolves. `private` reuses the `draft` mechanism, because **there is no true private on a public static build** — a documented limitation, not encryption. Anything else is dropped so no stray `visibility:` line leaks into frontmatter.
+- **`visibility` is translated into jedee's vocabulary**, interpreted centrally at build time in `drafts.js`. `unlisted` keeps the native key and the build drops the post from every collection, feed and the sitemap while its permalink still resolves. `private` reuses the `draft` mechanism, because **there is no true private on a public static build** — a documented limitation, not encryption. Anything else is dropped so no stray `visibility:` line leaks into frontmatter.
 - **Cover URLs are upgraded to full resolution.** Sparkles' Movie/Book/Listen editors hand over thumbnails — Apple Music's `100x100bb`, OpenLibrary's `-M` — and the `.cover` block caps width without upscaling, so a thumbnail renders tiny. Known providers are rewritten (`/1000x1000bb.`, `-L`); unknown hosts pass through.
-- **Workouts arrive through the same door.** A phone Shortcut posts a flat `h-entry` with `activity`, `distance`, `heart-rate` and friends. There is no engine post-type for a workout, so the engine routes it as a `note` and the store wrapper detects `activity` and reroutes it to `src/posts/activities/`. Pace is derived at render, never stored — only recorded raw numbers land in frontmatter.
+- **Workouts arrive through the same door.** An Apple Watch → iOS Shortcut posts a flat `h-entry` with `activity`, `distance`, `heart-rate` and friends. There is no engine post-type for a workout, so the engine routes it as a `note` and the store wrapper detects `activity` and reroutes it to `src/posts/activities/` ([[The activities archive]]). Pace is derived at render, never stored — only recorded raw numbers land in frontmatter.
 
 ### What is not wired
 
-v1 is **create-only, text post-types**. The media endpoint, updates and deletes are all supported by the engine and simply not connected. Auth is hosted IndieAuth (`indieauth.com/auth` and `tokens.indieauth.com/token`) rather than a self-hosted authorization server, which means real client auth presupposes the public `me` domain being live with bidirectional `rel="me"` — the endpoint and the domain go live together or not at all. A site that doesn't use Micropub still deploys the function, because Netlify deploys every file in `netlify/functions/`: with no `ME` variable set it answers every request with a 404.
+v1 is **create-only, text post-types**. The media endpoint, updates and deletes are all supported by the engine and simply not connected. Auth is hosted IndieAuth (`indieauth.com/auth` and `tokens.indieauth.com/token`) rather than a self-hosted authorization server, which means real client auth presupposes the public `me` domain being live with bidirectional `rel="me"` — the endpoint and the domain go live together or not at all.
 
 Unit tests live in `tests/micropub.test.js`, run by `npm run test:unit`. The helpers are exported from the Function purely so they can be tested.
 
+Raw source: `netlify/functions/micropub.js` and `_local/project_docs/micropub-pattern.html`, read on 2026-09-06.

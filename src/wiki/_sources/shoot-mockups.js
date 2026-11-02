@@ -12,7 +12,7 @@ const mockups = readdirSync(here).filter(f => f.endsWith('.html') && f.includes(
 
 const { base, server } = await serveMockups(here);
 
-// puppeteer arrives transitively under pa11y-ci and hunts for its pinned build — point it at an installed Chrome, same as meta.tests.pa11y.chromePath does.
+// puppeteer arrives transitively under pa11y-ci and hunts for its own pinned build — point it at an installed Chrome, same as meta.tests.pa11y.chromePath does.
 const chromePath = process.env.PA11Y_CHROME || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 
 const browser = await puppeteer.launch({ executablePath: chromePath, headless: 'new', args: launchArgs });
@@ -34,7 +34,7 @@ for (const { file, theme } of passes) {
   // A mockup that freezes an animation sets window.__mockupReady = false up front and true once it has settled; one that does not is ready as soon as it loads.
   await page.waitForFunction(() => window.__mockupReady !== false, { timeout: 30000 });
 
-  // The mockup's ground and drop shadows are dropped so each shot sits on the wiki page itself, in either theme.
+  // The mockup's own ground and drop shadows are dropped so each shot sits on the wiki page itself, in either theme.
   await page.evaluate(() => {
     document.body.style.background = 'transparent';
     document.querySelectorAll('[data-shot]').forEach(el => (el.style.boxShadow = 'none'));
@@ -55,7 +55,7 @@ for (const { file, theme } of passes) {
   for (const { name, clip } of shots) {
     // omitBackground keeps rounded corners transparent; clipping to the element itself is what removes the box around it.
     const buf = await page.screenshot({ path: `${outputDir}/${name}.png`, clip, omitBackground: true });
-    // Read the size out of the PNG's IHDR rather than doubling the clip — rounding the clip is off by one often enough to ship a soft image.
+    // Read the size out of the PNG's own IHDR rather than doubling the clip — rounding the clip is off by one often enough to ship a soft image.
     sizes.push(`${name}.png  ${buf.readUInt32BE(16)}×${buf.readUInt32BE(20)}`);
   }
 }

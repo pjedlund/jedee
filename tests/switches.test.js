@@ -7,12 +7,11 @@ import path from 'node:path'
 import { load } from 'js-yaml'
 import { makeTempSite } from './lib/temp-site.mjs'
 import { SWITCHES, resolveSwitches } from '../src/_config/utils/switches.js'
-import { resolveMaps } from '../src/_config/utils/maps.js'
 
 const ROOT = path.resolve(import.meta.dirname, '..')
 const NOTE = '---\ntitle: A small note\ndate: 2026-01-01\n---\n\nHello.\n'
 
-// The page, plus every script file it loads: the deferred scripts are bundled into a separate file.
+// The page, plus every script file it loads: the deferred scripts are bundled into a file of their own.
 function pageAndScripts(site, file) {
   const html = site.read(file)
   const scripts = [...html.matchAll(/<script[^>]*\ssrc="(\/[^"]+\.js)"/g)].map(match => match[1].slice(1)).filter(src => site.exists(src))
@@ -36,11 +35,8 @@ const MARKERS = {
   footer: '<footer class="site-footer',
 }
 
-// Markers that need no posts to show up. The menu needs posts and hideNav off, so it has a separate case.
+// Markers that need no posts to show up. The menu needs posts and hideNav off, so it has a case of its own.
 const PAGE = 'privacy/index.html'
-
-// ⚠ A site's settings may turn some off, so these cases name them; left to the file, a marker can be missing for the wrong reason.
-const ALL_ON = Object.fromEntries(Object.keys(MARKERS).map(name => [name, true]))
 
 test('every switch has a marker here', () => {
   assert.deepEqual(Object.keys(MARKERS).sort(), SWITCHES.filter(name => name !== 'mainNav').sort())
@@ -74,12 +70,12 @@ test('the shortcuts dialog lists the search keys only when there is a search to 
   assert.ok(off.read(PAGE).includes('id="shortcuts"') && !off.read(PAGE).includes('<kbd>K</kbd>'), 'the dialog still lists the search keys')
 })
 
-test('on: the header, menu button area and footer are not empty', async t => {
-  const site = await makeTempSite({ settings: { switches: ALL_ON } })
+test('on by default: the header, menu button area and footer are not empty', async t => {
+  const site = await makeTempSite()
   t.after(() => site.cleanup())
   await site.build()
   const page = pageAndScripts(site, PAGE)
-  for (const [name, marker] of Object.entries(MARKERS)) assert.ok(page.includes(marker), `${name}: ${marker} is missing with every switch on`)
+  for (const [name, marker] of Object.entries(MARKERS)) assert.ok(page.includes(marker), `${name}: ${marker} is missing with the default settings`)
   // ⚠ A partial that renders to nothing inside a wrapped include would leave the tags and an empty shell, so look inside.
   const header = site.read(PAGE).match(/<header class="site-header[^>]*>([\s\S]*?)<\/header>/)[1]
   assert.match(header, /class="skip-link"/)
@@ -93,7 +89,7 @@ test('on: the header, menu button area and footer are not empty', async t => {
 
 for (const name of Object.keys(MARKERS)) {
   test(`${name} off: its marker is gone`, async t => {
-    const site = await makeTempSite({ settings: { switches: { ...ALL_ON, [name]: false } } })
+    const site = await makeTempSite({ settings: { switches: { [name]: false } } })
     t.after(() => site.cleanup())
     await site.build()
     const page = pageAndScripts(site, PAGE)
@@ -170,7 +166,7 @@ const SAVED = JSON.stringify({ lastFetched: '2026-01-02T00:00:00.000Z', children
 
 test('webmentions: saved ones show on a note, and not when the switch is off', async t => {
   const files = { 'src/posts/notes/a-small-note.md': NOTE, '.cache/webmentions.json': SAVED }
-  const on = await makeTempSite({ settings: { switches: { webmentions: true } }, files })
+  const on = await makeTempSite({ files })
   t.after(() => on.cleanup())
   await on.build()
   assert.match(on.read('notes/a-small-note/index.html'), /A saved reply text/)
@@ -205,149 +201,4 @@ test('a Sveltia save of settings.yaml keeps theme, site, analytics, postTypes an
   const before = load(readFileSync(path.join(ROOT, 'src/_data/settings.yaml'), 'utf8'))
   for (const key of ['theme', 'site', 'analytics', 'postTypes']) if (key in before) assert.deepEqual(saved[key], before[key], `${key} changes in a save`)
   for (const name of SWITCHES) assert.equal(saved.switches[name], before.switches[name], `switches.${name} is lost or changed in a save`)
-})
-
-test('humans.txt names no tool that belongs to one site, and a theme can add its tools', async t => {
-  const plain = await makeTempSite({ settings: { theme: 'sample' } })
-  t.after(() => plain.cleanup())
-  await plain.build()
-  const text = plain.read('humans.txt')
-  for (const tool of ['Warp', 'Nova', 'Penpot', 'Obsidian', 'Claude Code', 'Cloudflare R2']) assert.ok(!text.includes(tool), `humans.txt still names ${tool}`)
-  assert.match(text, /Components: 11ty, Eleventy Excellent/)
-  assert.ok(!text.includes('Software:'), 'an empty Software line is left behind')
-
-  const themed = await makeTempSite({ settings: { theme: 'sample' }, files: { 'src/_includes/themes/sample/words.yaml': 'humansComponents: 11ty and a shed\nhumansSoftware: A pencil\n' } })
-  t.after(() => themed.cleanup())
-  await themed.build()
-  assert.match(themed.read('humans.txt'), /Components: 11ty and a shed\n\s*Software: A pencil/)
-})
-
-// A bare page: every switch off, no post types, as `npm run bare` builds it. Tests of what it carries add their pages through `files`.
-const BARE_SWITCHES = Object.fromEntries([...SWITCHES, 'nameReveal', 'viewRepo'].map(name => [name, false]))
-const bareSite = (files = {}) => makeTempSite({ settings: { theme: 'sample', postTypes: [], switches: BARE_SWITCHES }, files })
-const pageFile = (slug, body) => ({ [`src/pages/${slug}.njk`]: `---\ntitle: ${slug}\nlayout: base\npermalink: /${slug}/\n---\n\n${body}\n` })
-const IS_LAND = '/assets/components/is-land.min.js'
-
-test('is-land: a page with no island asks for no script', async t => {
-  const site = await bareSite(pageFile('words', '<p>Just words.</p>'))
-  t.after(() => site.cleanup())
-  await site.build()
-  assert.ok(!site.read('words/index.html').includes(IS_LAND), 'the bare page still loads is-land')
-})
-
-// ⚠ The half that matters: a wrong gate makes islands silently never start, and an embed only becomes an <is-land> after WebC has run.
-test('is-land: a page whose only island comes from a YouTube embed still loads the script', async t => {
-  const site = await bareSite(pageFile('tube', '<custom-youtube @slug="abc123" @label="A film"></custom-youtube>'))
-  t.after(() => site.cleanup())
-  await site.build()
-  const html = site.read('tube/index.html')
-  assert.match(html, /<is-land\b/, 'the embed did not render an island')
-  assert.ok(html.includes(IS_LAND), 'an island with no is-land script never starts')
-})
-
-test('is-land: the theme toggle, an island in the header, still gets the script', async t => {
-  const site = await makeTempSite()
-  t.after(() => site.cleanup())
-  await site.build()
-  const html = site.read(PAGE)
-  assert.match(html, /<is-land\b/)
-  assert.ok(html.includes(IS_LAND))
-})
-
-test('speculation rules: only on a page with a link on the site to fetch ahead', async t => {
-  const site = await bareSite({
-    ...pageFile('words', '<p>Just words.</p>'),
-    ...pageFile('outward', '<p><a href="https://example.org/">Away</a> and <a href="#here">here</a>.</p>'),
-    ...pageFile('linked', '<p><a href="/words/">Words</a>.</p>'),
-  })
-  t.after(() => site.cleanup())
-  await site.build()
-  const rules = '"speculationrules"'
-  assert.ok(!site.read('words/index.html').includes(rules), 'a page with no links carries the rules')
-  assert.ok(!site.read('outward/index.html').includes(rules), 'a page with no link on the site carries the rules')
-  assert.ok(site.read('linked/index.html').includes(rules), 'a page with a link on the site lost the rules')
-})
-
-const SHARE_PICTURE = 'src/assets/images/template/opengraph-default.jpg'
-const SHARE_TAGS = ['og:image"', 'og:image:alt', 'og:image:width', 'og:image:height', 'twitter:card', 'twitter:image:alt']
-
-test('share-image tags: a site with no default picture prints none on a page with no picture', async t => {
-  const site = await bareSite({ [SHARE_PICTURE]: null, ...pageFile('words', '<p>Just words.</p>') })
-  t.after(() => site.cleanup())
-  await site.build()
-  const html = site.read('words/index.html')
-  for (const tag of SHARE_TAGS) assert.ok(!html.includes(tag), `${tag} is on a page with no picture to name`)
-  assert.ok(html.includes('og:title'), 'the other share tags went too')
-})
-
-test('share-image tags: a page with its picture has them, and a default picture covers the rest', async t => {
-  const withPicture = { 'src/pages/pictured.njk': '---\ntitle: Pictured\nlayout: base\npermalink: /pictured/\nogImage:\n  url: /assets/images/a.jpg\n  width: 800\n  height: 600\n---\n<p>Words.</p>\n' }
-  const noDefault = await bareSite({ [SHARE_PICTURE]: null, ...withPicture })
-  t.after(() => noDefault.cleanup())
-  await noDefault.build()
-  const pictured = noDefault.read('pictured/index.html')
-  for (const tag of SHARE_TAGS) assert.ok(pictured.includes(tag), `${tag} is missing from a page with a picture`)
-  assert.match(pictured, /og:image"\s+content="[^"]*\/assets\/images\/a\.jpg"/)
-
-  const withDefault = await bareSite(pageFile('words', '<p>Just words.</p>'))
-  t.after(() => withDefault.cleanup())
-  await withDefault.build()
-  const words = withDefault.read('words/index.html')
-  for (const tag of SHARE_TAGS) assert.ok(words.includes(tag), `${tag} is missing where the default picture applies`)
-  assert.match(words, /og:image"\s+content="[^"]*opengraph-default\.jpg"/)
-})
-
-test('search.json: not built with the header off, built with it on', async t => {
-  const off = await makeTempSite({ settings: { switches: { header: false } } })
-  t.after(() => off.cleanup())
-  await off.build()
-  assert.ok(!off.exists('search.json'), 'search.json is built with no header to search from')
-  const on = await makeTempSite({ settings: { switches: { header: true } } })
-  t.after(() => on.cleanup())
-  await on.build()
-  assert.ok(on.exists('search.json'), 'search.json is missing with the header on')
-})
-
-const TILES = 'https://tiles.example/maps/somewhere.pmtiles'
-const MAP_SCRIPT = '/assets/scripts/components/place-map.js'
-
-test('resolveMaps: tiles and a whole coverage box, or nothing', () => {
-  assert.deepEqual(resolveMaps({}), { tiles: null, coverage: null })
-  assert.deepEqual(resolveMaps({ maps: { tiles: '' } }), { tiles: null, coverage: null })
-  assert.deepEqual(resolveMaps({ maps: { tiles: TILES } }), { tiles: TILES, coverage: null })
-  assert.deepEqual(resolveMaps({ maps: { tiles: TILES, coverage: { west: 1, south: 2, east: 3, north: 4 } } }), { tiles: TILES, coverage: [1, 2, 3, 4] })
-  assert.throws(() => resolveMaps({ maps: { tiles: TILES, coverage: { west: 1, south: 2 } } }), /settings\.maps\.coverage/)
-})
-
-test('maps with no tiles: no script, no box, and the build says so', async t => {
-  const site = await makeTempSite({ settings: { maps: null } })
-  t.after(() => site.cleanup())
-  const output = await site.build()
-  const html = site.read('design-system/index.html')
-  assert.match(html, /<place-map\b[^>]*\sdata-no-tiles/, 'the map is not marked as having no tiles')
-  assert.ok(!html.includes(MAP_SCRIPT), 'a map with no tiles still loads its 289 KB script')
-  assert.match(html, /[;}]\[data-no-tiles\]\s*\[data-place-map-box\]\{display:none\}/, 'the empty box still shows, or the rule names a tag that is-land renames')
-  assert.match(output, /settings\.maps\.tiles/, 'the build does not say why there is no map')
-  assert.ok(!site.read(MAP_SCRIPT.slice(1)).includes('r2.dev'), 'one site\'s tile address is still in the script')
-})
-
-test('maps with tiles: the script loads, and holds the address and box from settings', async t => {
-  const site = await makeTempSite({ settings: { maps: { tiles: TILES, coverage: { west: 1.5, south: 2.5, east: 3.5, north: 4.5 } } } })
-  t.after(() => site.cleanup())
-  const output = await site.build()
-  const html = site.read('design-system/index.html')
-  assert.ok(html.includes(MAP_SCRIPT), 'the map script is missing')
-  assert.ok(!/<place-map\b[^>]*\sdata-no-tiles/.test(html), 'a map with tiles is marked as having none')
-  assert.ok(!output.includes('settings.maps.tiles'), 'the build warns though tiles are set')
-  const script = site.read(MAP_SCRIPT.slice(1))
-  assert.ok(script.includes(TILES), 'the tile address is not in the script')
-  assert.match(script, /\[1\.5,\s*2\.5,\s*3\.5,\s*4\.5\]/, 'the coverage box is not in the script')
-})
-
-test('wording: the comments named in the Plan 2 list say what they mean', () => {
-  const read = file => readFileSync(path.join(ROOT, file), 'utf8')
-  const OWN = /\bown(s|er|ers|ing|ership)?\b/i
-  for (const file of ['src/_includes/themes/sample/tokens/shadows.json', 'src/_config/setup/build-design-md.js', 'src/_config/setup/build-design-system.js', 'src/_includes/head/meta-info.njk', 'src/_layouts/base.njk', 'src/assets/css/global/base/global-styles.css', 'src/assets/scripts/components/place-map.js', 'src/_data/meta.js', 'src/_includes/schemas/TechArticle.njk', 'src/pages/design-system.njk', 'eleventy.config.js']) assert.ok(!OWN.test(read(file)), `${file} has the word`)
-  const comment = read('src/assets/css/local/external-link.css').match(/\/\*[\s\S]*?\*\//)[0]
-  assert.ok(!comment.includes('orange'), 'the external link comment names a color that depends on the theme')
 })

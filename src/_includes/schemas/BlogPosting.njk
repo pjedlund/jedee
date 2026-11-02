@@ -11,7 +11,7 @@
     "@id": "{{ url }}",
     "headline": "{{ title or meta.siteName }}",
     "description": "{{ discover.description or description or meta.siteDescription }}",
-    {% if discover.image or meta.hasDefaultShareImage %}"image": "{{ meta.url }}{% if discover.image %}/assets/images/{{ discover.image }}{% else %}{{ meta.opengraph_default }}{% endif %}",{% endif %}
+    "image": "{{ meta.url }}{% if discover.image %}/assets/images/{{ discover.image }}{% else %}{{ meta.opengraph_default }}{% endif %}",
     "inLanguage": "{{ 'sv-SE' if lang == 'sv' else (meta.locale | replace('_', '-')) }}",
     "publisher": {
       "@type": "{{ meta.siteType }}",

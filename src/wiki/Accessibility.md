@@ -18,30 +18,32 @@ Table: WCAG's four principles, with examples
 
 Each criterion has a level: A, AA or AAA. AA is the usual target and what most legislation references, including the EU's EN 301 549. The W3C advises against requiring AAA for a whole site, because some AAA criteria cannot be met for some content; single AAA criteria are still worth meeting where they cost little.
 
-Automated testing covers only what a rule engine can decide from markup and computed styles: a missing `alt`, a contrast ratio, a field with no label. Whether an alt text is *good*, whether the keyboard order makes sense, whether a screen reader announces a change — those need a person. [[The accessibility test]] covers what stomme's rule engine sees and what it cannot.
+Automated testing covers only what a rule engine can decide from markup and computed styles: a missing `alt`, a contrast ratio, a field with no label. Whether an alt text is *good*, whether the keyboard order makes sense, whether a screen reader announces a change — those need a person. [[The accessibility test]] covers what jedee's rule engine sees and what it cannot.
 
-## In stomme
+## In jedee
 
-The accessibility work this wiki describes targets **WCAG 2.1 Level AA** and uses pa11y-ci as its test. A site's public statement of that, such as the `/accessibility/` page, is a site file rather than shared code. Two criteria new in 2.2, 2.4.11 Focus Not Obscured (Minimum) and 2.5.8 Target Size (Minimum), both AA, are not covered by the test.
+The site's public [accessibility statement](/accessibility/) targets **WCAG 2.1 Level AA** and names pa11y-ci as its test. Two criteria new in 2.2, 2.4.11 Focus Not Obscured (Minimum) and 2.5.8 Target Size (Minimum), both AA, have not been checked here.
 
 ### What is tested
 
-`npm run test:a11y` runs pa11y-ci with HTML_CodeSniffer's `WCAG2AA` rules over the paths in `settings.a11yPaths` (read by `meta.js`; `[]` tests every page). Three limits, each written up on [[The accessibility test]]:
+`npm run test:a11y` runs pa11y-ci with HTML_CodeSniffer's `WCAG2AA` rules over the paths listed in `meta.js`. Three limits, each written up on [[The accessibility test]]:
 
-- It is a spot check of the pages listed, which should be chosen to cover the layout shapes, not the whole site.
+- It is a spot check of **ten pages**, chosen to cover the layout shapes, not the whole site.
 - It sees **light mode only**. Dark mode is checked by a separate script, `tests/a11y-nojs.js`, which also covers the no-JavaScript rendering pa11y cannot load.
-- ⚠ A passing contrast rule over a `color-mix()` color can mean the engine could not read the color, not that it passed. In one case a button measured 3.45:1 while pa11y reported nothing.
+- ⚠ A passing contrast rule over a `color-mix()` color can mean the engine could not read the color, not that it passed. The style guide's primary button measured 3.45:1 on 2026-08-04 while pa11y reported nothing.
 
 ### What came from Eleventy Excellent
 
-Table: Accessibility conventions from Eleventy Excellent, and what stomme did with each
-| Convention | WCAG | Eleventy Excellent | stomme |
+Table: Accessibility conventions from Eleventy Excellent, and what jedee did with each
+| Convention | WCAG | Eleventy Excellent | jedee |
 | --- | --- | --- | --- |
 | Skip link to `#main` (`skip-link.css`, `header.njk`) | 2.4.1 Bypass Blocks (A) | stock | stock |
-| A strong `:focus-visible` ring, with the plain `:focus` ring removed | 2.4.7 Focus Visible (AA) | a few `:focus-visible` rules | extended to the interactive blocks |
-| Reduced motion: the reset shortens every animation under `reduce`, and effects opt in under `no-preference` | 2.3.3 Animation from Interactions (AAA) | a few `prefers-reduced-motion` rules | more of them, one per animated block |
-| `.visually-hidden` text labels on icon-only controls | 4.1.2 Name, Role, Value (A) | stock | wherever an icon is the only content |
-| `forced-colors` rules for Windows high-contrast mode | — | none | in the main menu and search |
+| A strong `:focus-visible` ring, with the plain `:focus` ring removed | 2.4.7 Focus Visible (AA) | 3 `:focus-visible` rules | 16 |
+| Reduced motion: the reset shortens every animation under `reduce`, and effects opt in under `no-preference` | 2.3.3 Animation from Interactions (AAA) | 3 `prefers-reduced-motion` rules | 12 |
+| `.visually-hidden` text labels on icon-only controls | 4.1.2 Name, Role, Value (A) | stock | in 17 places in templates |
+| `forced-colors` rules for Windows high-contrast mode | — | none | 5, in the main menu, search and place map |
+
+Counted in both repositories' `src/assets/css/` on 2026-09-14.
 
 ### Where the rest lives
 
@@ -52,7 +54,7 @@ Table: Accessibility conventions from Eleventy Excellent, and what stomme did wi
 
 ### Decisions
 
-- **Low contrast on decoration is not a defect.** An `aria-hidden` icon beside a text label carries no information, so neither 1.4.3 Contrast (Minimum) nor 1.4.11 Non-text Contrast applies to it. Raising such an icon's contrast is a design choice, not a fix.
-- **AA, plus AAA where it comes cheap.** The 54ch measure sets lines inside the width limit of 1.4.8 (80 characters) with typical text fonts. Wiki pages expand their abbreviations through a shared glossary (3.1.4), and motion honors `prefers-reduced-motion` (2.3.3). None of this is a claim of AAA conformance.
+- **Low contrast on decoration is not a defect.** An `aria-hidden` icon beside a text label carries no information, so neither 1.4.3 Contrast (Minimum) nor 1.4.11 Non-text Contrast applies to it. On the mega-menu pass (2026-08-01) one such icon was raised to 4.97:1 and then reverted; its contrast is a design choice, not a fix.
+- **AA, plus AAA where it comes cheap.** The 54ch measure sets about 63 characters per line, inside the width part of 1.4.8. Wiki pages expand their abbreviations through a shared glossary (3.1.4), and motion honors `prefers-reduced-motion` (2.3.3). None of this is a claim of AAA conformance.
 
-Raw source: `src/pages/accessibility.md`, `src/_data/meta.js`, `src/assets/css/` and the pages linked above; WCAG 2.2 at w3.org.
+Raw source: `src/pages/accessibility.md`, `src/_data/meta.js`, `src/assets/css/` in jedee and in Eleventy Excellent, and the pages linked above, read on 2026-09-14; WCAG 2.2 at w3.org.
