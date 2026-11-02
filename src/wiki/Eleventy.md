@@ -28,7 +28,7 @@ redirectFrom:
 
 Objects and arrays merge rather than replace. Most "why is this value wrong" questions in Eleventy come down to which of these sources won.
 
-**Layouts.** `layout: post.njk` wraps a page's rendered content in another template, which can name a layout of its own, so a post sits inside a post frame inside the base HTML document. Layouts and partials live in their folders (`_includes` by default) and never become pages.
+**Layouts.** `layout: post.njk` wraps a page's rendered content in another template, which can name a further layout, so a post sits inside a post frame inside the base HTML document. Layouts and partials live in their folders (`_includes` by default) and never become pages.
 
 **Collections.** A page with `tags: post` joins `collections.post`, and `collections.all` holds every page. The configuration can build other collections with a function, by folder, date or any rule. A template loops over a collection to make an archive, a feed or a sitemap, and *pagination* turns one template into many pages, such as one page per tag.
 
@@ -46,7 +46,7 @@ This is deliberate. Eleventy's stated position is that it does not dictate proje
 
 ## In jedee
 
-jedee runs Eleventy 3.1 and stays there until v4 is stable and reaches Eleventy Excellent; then it comes in through the usual upstream merge, with the three `{% asyncEach %}` templates and the build events in `eleventy.config.js` as the parts to test. The site is forked from the [Eleventy Excellent](https://github.com/madrilene/eleventy-excellent) starter. Input is `src/`, output `dist/`, layouts are in `src/_layouts/`, partials in `src/_includes/`, and Markdown's second language is Nunjucks (`markdownTemplateEngine: 'njk'`), all EE stock. So is the configuration's split into `src/_config/` (collections, filters, shortcodes, plugins, events); [[What jedee kept from Eleventy Excellent]] lists what jedee changed. The parts of Eleventy with a page of their own here: [[Anatomy of a post type]] for collections and directory data, [[Permalinks and Obsidian-friendly filenames]], [[WebC]], [[is-land]], [[The interlinker's second render pass]], [[The dev server's memory]] and [[Watch loops]].
+jedee runs Eleventy 3.1 and stays there until v4 is stable and reaches Eleventy Excellent; then it comes in through the usual upstream merge, with the three `{% asyncEach %}` templates and the build events in `eleventy.config.js` as the parts to test. The site is forked from the [Eleventy Excellent](https://github.com/madrilene/eleventy-excellent) starter. Input is `src/`, output `dist/`, layouts are in `src/_layouts/`, partials in `src/_includes/`, and Markdown's second language is Nunjucks (`markdownTemplateEngine: 'njk'`), all EE stock. So is the configuration's split into `src/_config/` (collections, filters, shortcodes, plugins, events); [[What jedee kept from Eleventy Excellent]] lists what jedee changed. The parts of Eleventy with a separate page here: [[Anatomy of a post type]] for collections and directory data, [[Permalinks and Obsidian-friendly filenames]], [[WebC]], [[is-land]], [[The interlinker's second render pass]], [[The dev server's memory]] and [[Watch loops]].
 
 jedee draws the line Eleventy leaves out, inside the one repo, in four ways:
 
