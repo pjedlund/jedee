@@ -1,7 +1,7 @@
 ---
 description: "Partial hydration as a custom element: markup that works by itself, with the JavaScript that upgrades it held back until a condition is met."
 date: 2026-09-06
-updated: 2026-10-18
+updated: 2026-11-02
 ---
 
 Most JavaScript on a page is not needed when the page arrives. A lightbox matters when someone clicks a photo, a map when it scrolls into view, a search field when the browser has nothing better to do. Loading all of it up front is the arrangement that produces a page which looks finished and does nothing for another second and a half.
@@ -36,7 +36,7 @@ The honest limit is that the technique costs a decision per component and gives 
 
 ## In jedee
 
-The dependency (`@11ty/is-land` 5.0.1) and the way it loads are Eleventy Excellent stock since EE 4.9.1 (merged 2026-10-18). The package's minified file is copied to `/assets/components/is-land.min.js` (a passthrough copy in `eleventy.config.js`), and `head/js-defer.njk` loads it with `<script type="module">`: 5,151 bytes, 2,103 gzipped. Until then esbuild bundled it and `head/js-inline.njk` inlined it into the head of every page (4,054 bytes, see below). It is now a request, but one the browser caches across pages. A module script waits for the page to finish parsing, which changes nothing here: every island waits for `on:idle` or `on:visible` anyway.
+The dependency (`@11ty/is-land` 5.0.1) and the way it loads are Eleventy Excellent stock since EE 4.9.1 (merged 2026-10-18). A minified file is copied to `/assets/components/is-land.min.js` (a passthrough copy in `eleventy.config.js`; since 2026-11-02 it is jedee's corrected copy, below, not the package's), and `head/js-defer.njk` loads it with `<script type="module">`: 5,151 bytes, 2,103 gzipped. Until then esbuild bundled it and `head/js-inline.njk` inlined it into the head of every page (4,054 bytes, see below). It is now a request, but one the browser caches across pages. A module script waits for the page to finish parsing, which changes nothing here: every island waits for `on:idle` or `on:visible` anyway.
 
 ⚠ **Since 2026-11-02 the copied file is a corrected one, `src/assets/vendor/is-land.min.js`, not the package's.** In 5.0.1 `on:visible` reads only the first entry its IntersectionObserver hands over (`let [entry] = entries`). When two arrive together, as `[not visible, visible]`, the island never wakes: a page already scrolled to a map at the moment it finishes loading kept a blank box. The copy checks every entry (`entries.some(e => e.isIntersecting)`), a one-line change to the minified file. Point the passthrough copy back at `node_modules` once a fixed is-land is released.
 
@@ -65,7 +65,7 @@ Anything inside `<template data-island>` does not exist until hydration — whic
 
 `is-land:not(:defined)` is the natural hook and it is what [[The theme toggle]] and [[Site search]] use — the element is undefined until the runtime defines it, so the control never flashes up dead. Both are pure enhancement with no no-JS story, so hiding them is the whole design.
 
-⚠ [[The YouTube embed]] tried the same rule and had to move it to `<noscript>` instead. The difference is that the embed *is* reserving space: `is-land:not(:defined)` matches during exactly the window the reservation exists to cover, so the rule hid the box for the moment it was most needed. `<noscript>` applies only when scripting is genuinely off, which is the condition that was actually meant. Worth knowing which of the two you want, because the selectors read as interchangeable and are not.
+[[The YouTube embed]] tried the same rule and had to move it to `<noscript>` instead. The difference is that the embed *is* reserving space: `is-land:not(:defined)` matches during exactly the window the reservation exists to cover, so the rule hid the box for the moment it was most needed. `<noscript>` applies only when scripting is genuinely off, which is the condition that was actually meant. Worth knowing which of the two you want, because the selectors read as interchangeable and are not.
 
 ### The breakout has to go on the `<is-land>`, not the component
 
