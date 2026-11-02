@@ -54,7 +54,8 @@ export async function makeTempSite({ settings = {}, files = {} } = {}) {
   for (const pick of ['listening', 'watching', 'reading']) if (pick in now.data) now.data[pick] = [];
   put(nowFile, matter.stringify('', now.data));
 
-  for (const [file, text] of Object.entries(files)) put(file, text);
+  // A null removes the file.
+  for (const [file, text] of Object.entries(files)) text === null ? rmSync(path.join(dir, file), { force: true }) : put(file, text);
 
   return {
     dir,

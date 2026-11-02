@@ -103,3 +103,10 @@ a11yPaths:
   - /reading/a-confession/
   - /watching/the-killing/
   - /now/
+maps:
+  tiles: https://pub-820f82fa11f94b03ab1d34e77b3572f6.r2.dev/maps/sweden-20260916.pmtiles
+  coverage:
+    west: 10.5
+    south: 55
+    east: 24.5
+    north: 69.2

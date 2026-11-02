@@ -79,8 +79,14 @@
     {"path": "/wiki/layout-shift/", "reason": "A page that stays with this site, text unchanged: only its backlinks list changes, because shared pages no longer link to it"},
     {"path": "/wiki/personal-websites/", "reason": "A page that stays with this site, text unchanged: only its backlinks list changes, because shared pages no longer link to it"},
     {"path": "/wiki/", "reason": "The catalog is stomme's, with one line saying johanedlund.se is built on stomme and a \"This site\" section at the end for the five pages that stay"},
-    {"path": "/design-system/", "reason": "The map example's place changes from Nybrostrand Beach, Skåne, to Stockholm: its coordinates, place name and the \"Map of …\" text. The map itself is drawn from the same tiles"},
+    {"path": "/design-system/", "reason": "The map example's place changes from Nybrostrand Beach, Skåne, to Stockholm: its coordinates, place name and the \"Map of …\" text. The map itself is drawn from the same tiles; and page text reworded: \"Code keeps lining figures\" (twice), \"used to sit alone\" (twice), \"The font's superscript figures\", \"each brand's mark in one color\" and \"drawn from the site's map tiles in the site's colors\""},
     {"path": "/search.json", "reason": "The search index holds the text of the shared wiki pages, now stomme's wording; no entry outside /wiki/ changes"},
-    {"path": "/sitemap.xml", "reason": "The start page's date here is its template file's modified date, and that file was replaced, so its entry has a new date and moves down the list; no address is added or removed"}
+    {"path": "/sitemap.xml", "reason": "The start page's date here is its template file's modified date, and that file was replaced, so its entry has a new date and moves down the list; no address is added or removed"},
+    {"path": "/feed.xml", "reason": "One word gone from a CSS comment inside the embed's <style>; nothing a reader sees changes"},
+    {"path": "/feed.json", "reason": "One word gone from a CSS comment inside the embed's <style>; nothing a reader sees changes"},
+    {"path": "/activities/feed.xml", "reason": "One word gone from a CSS comment inside the embed's <style>; nothing a reader sees changes"},
+    {"path": "/activities/feed.json", "reason": "One word gone from a CSS comment inside the embed's <style>; nothing a reader sees changes"},
+    {"path": "/watching/feed.xml", "reason": "One word gone from a CSS comment inside the embed's <style>; nothing a reader sees changes"},
+    {"path": "/watching/feed.json", "reason": "One word gone from a CSS comment inside the embed's <style>; nothing a reader sees changes"}
   ]
 }

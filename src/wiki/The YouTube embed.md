@@ -57,7 +57,7 @@ is-land[ready] lite-youtube { animation: yt-poster-fade var(--yt-poster-fade, 35
 </figure>
 
 - **A one-shot keyframe, not a default `opacity: 0`.** If it were `opacity: 0` and hydration ever stalled so `[ready]` never landed, the play button would be stranded invisible. With a keyframe the default opacity stays `1`, so the worst case is a thumbnail with no fade.
-- **A mid-gray logomark works in both themes.** At `fill-opacity: .1` it darkens the light sheet and lightens the dark one, so a single mark reads correctly against both.
+- **A mid-gray logomark works in both themes.** At `fill-opacity: .1` it darkens the light sheet and lightens the dark one, so a single mark reads correctly against both. The mark is the active theme's `logo.svg`: a WebC `<style>` can't take a value from data, so the component holds a placeholder for `--yt-logo-mark` and `src/_config/plugins/finished-page.js` writes the logo in once the page is finished.
 
 ### Reserving the space before hydration
 

@@ -5,6 +5,7 @@ import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 import { makeTempSite } from './lib/temp-site.mjs';
+import { themeFontFiles } from '../src/_config/utils/theme.js';
 
 // The sample theme's themeColor, which nothing else in the site uses.
 const SAMPLE_MARKER = '#1f5f5b';
@@ -135,4 +136,28 @@ test('logoOutline joins every path and stops with the file name when there is no
   assert.equal(logoOutline('<svg><path d="M0 0h1"/></svg>'), 'M0 0h1');
   assert.equal(logoOutline('<svg><path d="M0 0h1"/><path fill="red" d="M2 2h1"/></svg>'), 'M0 0h1 M2 2h1');
   assert.throws(() => logoOutline("<svg><path d='M0 0'/></svg>", 'themes/x/logo.svg'), /themes\/x\/logo\.svg/);
+});
+
+test('design:system on a theme with no design-system folder names the folder, and stops', async t => {
+  const site = await makeTempSite({ settings: { theme: 'sample' } });
+  t.after(() => site.cleanup());
+  let failure;
+  try {
+    execFileSync(process.execPath, ['src/_config/setup/build-design-system.js'], { cwd: site.dir, encoding: 'utf8', stdio: 'pipe' });
+  } catch (error) {
+    failure = error;
+  }
+  assert.ok(failure, 'the script finished with nothing to work from');
+  assert.match(failure.stderr, /src\/_includes\/themes\/sample\/design-system/);
+  assert.ok(!/ENOENT|at .*\.js:\d+/.test(failure.stderr), `a raw error came out:\n${failure.stderr}`);
+});
+
+test('design:system reads its font list from the theme, not from a list of one site\'s fonts', () => {
+  const css = `@font-face { font-family: 'Plain Sans'; font-style: italic; font-weight: 200 900; src: url('/assets/fonts/plain/plain-italic.woff2') format('woff2'); }
+@font-face { font-family: 'Plain Fallback'; src: local('Arial'); size-adjust: 100%; }`;
+  assert.deepEqual(themeFontFiles(css), [{ family: 'Plain Sans', file: 'fonts/plain-italic.woff2', source: 'plain/plain-italic.woff2', weight: '200 900', style: 'italic' }]);
+  assert.equal(themeFontFiles(css + css).length, 1, 'a file named twice is copied twice');
+  assert.deepEqual(themeFontFiles(''), []);
+  const script = readFileSync(path.resolve(import.meta.dirname, '../src/_config/setup/build-design-system.js'), 'utf8');
+  assert.ok(!/Source (Sans|Serif|Code)|JEDEE/i.test(script), 'the script still names one site');
 });

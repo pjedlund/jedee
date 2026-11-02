@@ -8,7 +8,8 @@ const {search} = yamlLoad(fs.readFileSync('./src/_data/settings.yaml', 'utf8'));
 export default class {
   data() {
     return {
-      permalink: data => (data.settings.search.enabled ? '/search.json' : false),
+      // The menu's search in the header is the only reader.
+      permalink: data => (data.settings.search.enabled && data.meta.switches.header ? '/search.json' : false),
       eleventyExcludeFromCollections: true,
       eleventyImport: {collections: search.types}
     };
