@@ -1,0 +1,201 @@
+skipContent: Hoppa till innehållet
+menu: Meny
+home: Hem
+homeLabel: '{name}, startsidan'
+navMain: Huvudmeny
+navComplementary: Kompletterande
+navPlatforms: Plattformar
+breadcrumb: Sökväg
+themeToggle: Växla mörkt läge
+showDark: Visa mörkt läge
+showLight: Visa ljust läge
+search: Sök
+searchThisSite: Sök på den här webbplatsen
+searchPlaceholder: Sök…
+searchClear: Rensa sökningen
+searchResults: Sökresultat
+searchMore: fler träffar
+searchEmpty: Inget hittades.
+feedAtom: Atom-flöde
+feedJson: JSON-flöde
+tagSingle: Etikett
+tagPlural: Etiketter
+tagMore: 'Fler etiketter:'
+genreSingle: Genre
+genrePlural: Genrer
+genreMore: 'Fler genrer:'
+paginationLabel: Artiklar
+paginationPage: Sida
+previous: Föregående
+next: Nästa
+close: Stäng
+rsvps: OSA-svar
+viewOnGithub: Visa den här sidan på GitHub
+reportAccessibility: Rapportera tillgänglighetsproblem
+backlinks: Länkar hit
+featured: Utvalt
+webmentions: Webmentions
+webmentionsIntro: Svar på den här sidan från hela webben, insamlade via
+reaction: Reaktion
+reactions: Reaktioner
+reactionKinds: (gillningar, delningar och bokmärken)
+aReaction: En reaktion
+reply: Svar
+replies: Svar
+anonymous: Anonym
+source: Källa
+like: Gillning
+likes: Gillningar
+comment: Kommentar
+comments: Kommentarer
+jamSocialHeading: Från This Is My Jam
+jamSocialIntro: Gillningarna och kommentarerna som den här jamen fick på This Is My Jam (2012–2015), återskapade från
+internetArchive: Internet Archive
+approximateDate: Ungefärligt datum
+keyboardShortcuts: Kortkommandon
+shortcutSearch: Öppna sökningen
+shortcutMove: Gå bland sökresultaten
+shortcutOpen: Öppna det valda resultatet
+shortcutClose: Stäng sökningen eller den här listan
+shortcutGrid: Visa eller dölj layoutrutnätet
+shortcutRhythm: Visa eller dölj rytmlinjerna
+shortcutList: Öppna den här listan
+alsoOn: 'Även på:'
+webmentionPrompt: Har du skrivit ett svar på det här på din egen webbplats?
+webmentionLink: Skicka adressen.
+draft: utkast
+readInSwedish: Läs på svenska
+readInEnglish: Read in English
+dateLong: 'D MMMM YYYY'
+revised: Reviderad
+activityOrienteering: Orientering
+activityGym: Gym
+activityRun: Löpning
+activityHike: Vandring
+by: av
+on: den
+at: kl.
+episode: Avsnitt
+coverFor: 'Omslag till {title}'
+posterFor: 'Affisch till {title}'
+cardAlt: '{title}, på ett kort bredvid omslaget'
+photo: Foto
+bookmarked: Bokmärkt
+inReplyTo: Som svar på
+rsvpTo: OSA till
+rsvp: OSA
+liked: Gillade
+reposted: Delade
+to: till
+mapOfRoute: Karta över rutten
+mapOfActivities: Karta över aktiviteterna
+mapOfPlace: 'Karta över {place}'
+thisPlace: den här platsen
+type: Typ
+date: Datum
+activity: Aktivitet
+allActivities: Alla aktiviteter
+distance: Distans
+duration: Varaktighet
+time: Tid
+pace: Tempo
+heartRate: Puls
+max: max
+elevation: Höjdskillnad
+energy: Energi
+viewOn: Visa på
+camera: Kamera
+format: Format
+exposure: Exponering
+film: Film
+development: Framkallning
+taken: Taget
+place: Plats
+coordinates: Koordinater
+resolution: Upplösning
+scanAperture: Skanningens bländare
+scanShutter: Skanningens slutartid
+scanFocalLength: Skanningens brännvidd
+scanner: Skanner
+scanLens: Skanningens objektiv
+software: Programvara
+digitized: Digitaliserad
+scanTechnicalData: Skanning och teknisk data
+photographDetails: Om fotografiet
+recordingDetails: Om inspelningen
+recorder: Inspelare
+microphone: Mikrofon
+windProtection: Vindskydd
+length: Längd
+transcript: Utskrift
+downloadTranscript: Ladda ner utskriften (WebVTT)
+publicDomain: Allmän egendom (CC0)
+downloadFree: '&mdash; ladda ner och återanvänd fritt.'
+when: När
+where: Var
+link: Länk
+eventStatus-cancelled: Inställt
+eventStatus-postponed: Uppskjutet
+eventStatus-moved-online: Flyttat online
+eventUpcoming: Kommande
+eventPast: Tidigare
+eventsHeading: Evenemang
+eventsIntro: Kommande evenemang först, sedan tidigare. Inställda evenemang står kvar under sitt datum.
+eventsNoneUpcoming: Inget i kalendern just nu.
+eventsNonePast: Inga tidigare evenemang ännu.
+yields: Ger
+totalTime: Total tid
+recipeFrom: Recept från
+lastUpdated: Senast uppdaterad
+nowListening: Lyssnar på
+nowWatching: Tittar på
+nowReading: Läser
+wikiPartOf: Del av
+wikiName: wikin
+wiki: Wiki
+ratedStars: '{rating} av 5 stjärnor'
+rated: 'Betyg {rating} av 5'
+play: Spela
+onWikipedia: på Wikipedia
+bpm: bpm
+humansLanguages: ''
+llmsArticles: Artiklar
+llmsNotes: Anteckningar
+llmsReading: Läser
+llmsWatching: Tittar
+llmsMusic: Musik
+llmsPhotos: Foton
+llmsRecipes: Recept
+llmsBookmarks: Bokmärken
+llmsReplies: Svar
+llmsEvents: Evenemang
+llmsAudio: Ljud
+llmsVideo: Video
+feedActivities: Aktiviteter
+feedActivitiesDescription: Löpningar, tävlingar och träningspass.
+feedArticles: Artiklar
+feedArticlesDescription: Längre inlägg.
+feedAudio: Ljud
+feedAudioDescription: Inspelningar och avsnitt.
+feedBookmarks: Bokmärken
+feedBookmarksDescription: Länkar värda att spara.
+feedJams: Jams
+feedJamsDescription: Musik på repeat.
+feedLikes: Gillningar
+feedLikesDescription: Saker som gillats på andra ställen på webben.
+feedNotes: Anteckningar
+feedNotesDescription: Korta tankar och iakttagelser.
+feedPhotos: Foton
+feedPhotosDescription: Fotografier.
+feedReading: Läser
+feedReadingDescription: Böcker och anteckningar om dem.
+feedRecipes: Recept
+feedRecipesDescription: Recept.
+feedReplies: Svar
+feedRepliesDescription: Svar till andra på webben.
+feedRsvps: OSA-svar
+feedRsvpsDescription: Svar på evenemang.
+feedVideos: Videor
+feedVideosDescription: Egenhostade klipp och inbäddningar.
+feedWatching: Tittar
+feedWatchingDescription: Filmer och serier som setts.
