@@ -139,7 +139,7 @@ test('logoOutline joins every path and stops with the file name when there is no
 });
 
 test('design:system on a theme with no design-system folder names the folder, and stops', async t => {
-  const site = await makeTempSite();
+  const site = await makeTempSite({ settings: { theme: 'sample' } });
   t.after(() => site.cleanup());
   let failure;
   try {

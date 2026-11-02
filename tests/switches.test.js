@@ -208,7 +208,7 @@ test('a Sveltia save of settings.yaml keeps theme, site, analytics, postTypes an
 })
 
 test('humans.txt names no tool that belongs to one site, and a theme can add its tools', async t => {
-  const plain = await makeTempSite()
+  const plain = await makeTempSite({ settings: { theme: 'sample' } })
   t.after(() => plain.cleanup())
   await plain.build()
   const text = plain.read('humans.txt')
@@ -216,7 +216,7 @@ test('humans.txt names no tool that belongs to one site, and a theme can add its
   assert.match(text, /Components: 11ty, Eleventy Excellent/)
   assert.ok(!text.includes('Software:'), 'an empty Software line is left behind')
 
-  const themed = await makeTempSite({ files: { 'src/_includes/themes/sample/words.yaml': 'humansComponents: 11ty and a shed\nhumansSoftware: A pencil\n' } })
+  const themed = await makeTempSite({ settings: { theme: 'sample' }, files: { 'src/_includes/themes/sample/words.yaml': 'humansComponents: 11ty and a shed\nhumansSoftware: A pencil\n' } })
   t.after(() => themed.cleanup())
   await themed.build()
   assert.match(themed.read('humans.txt'), /Components: 11ty and a shed\n\s*Software: A pencil/)
@@ -224,7 +224,7 @@ test('humans.txt names no tool that belongs to one site, and a theme can add its
 
 // A bare page: every switch off, no post types, as `npm run bare` builds it. Tests of what it carries add their pages through `files`.
 const BARE_SWITCHES = Object.fromEntries([...SWITCHES, 'nameReveal', 'viewRepo'].map(name => [name, false]))
-const bareSite = (files = {}) => makeTempSite({ settings: { postTypes: [], switches: BARE_SWITCHES }, files })
+const bareSite = (files = {}) => makeTempSite({ settings: { theme: 'sample', postTypes: [], switches: BARE_SWITCHES }, files })
 const pageFile = (slug, body) => ({ [`src/pages/${slug}.njk`]: `---\ntitle: ${slug}\nlayout: base\npermalink: /${slug}/\n---\n\n${body}\n` })
 const IS_LAND = '/assets/components/is-land.min.js'
 
