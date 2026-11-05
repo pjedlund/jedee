@@ -1,6 +1,7 @@
 ---
 description: "Layout compositions are meant to be configured through published custom properties rather than overridden from outside — and the two traps that come with using a custom property as the knob: it inherits into nested instances, and it loses to a hard declaration on the same element."
 date: 2026-08-23
+updated: 2026-11-05
 ---
 
 A layout composition is a reusable arrangement — a row that pushes its two items apart, a group that wraps, a stack with consistent vertical rhythm — held in one file and applied by class name. [Every Layout](https://every-layout.dev) is the canonical set of them; [CUBE CSS](https://cube.fyi) makes them its **C** layer, the one that decides how elements sit relative to each other, deliberately above and before any component styling.
@@ -39,6 +40,12 @@ Or register the property so it does not inherit at all:
 ```
 
 [`@property`](https://developer.mozilla.org/en-US/docs/Web/CSS/@property) with `inherits: false` makes descendants fall to the `var()` fallback instead of the ancestor's value. Tested directly: with a plain custom property, an outer element set to `nowrap` gave a nested element `nowrap`; with the registered property, the same nesting gave `wrap`.
+
+A flow nested in a flow has the same problem one level closer, and neither fix reaches it. `.flow > * + * { margin-block-start: var(--flow-space) }` resolves the knob on the *child*, so `--flow-space` set on an inner flow is read twice: by the inner flow for the gaps between its items, and by the outer flow for the gap above the inner flow itself. On jedee's home page, `--flow-space: var(--line-quarter)` on the intro list spaced its items 9px apart as meant, and also cut the gap above the list from 27px (the ¾-line prose gap) to 9px. `@property` cannot help, because both readings happen on the same element. The fix there was to state the outer gap beside the knob:
+
+```html
+<ol class="[ intro ] [ flow ] [ text-step-1 ]" style="--flow-space: var(--line-quarter); margin-block-start: var(--rhythm-gap)">
+```
 
 ## A knob loses to a declaration on the same element
 
@@ -82,4 +89,4 @@ The residue is live: `main-nav.css` wins over `breadcrumb.css` because `.site-he
 
 The flex-item side of the same row is covered in [[The main menu]], including why `flex: 1 1 22rem` rather than `auto` is what keeps the breadcrumb from being crushed. For the adjacent failure where a `var()` points at nothing at all, see [[Undefined custom properties]].
 
-Raw source: `src/_raw/dev-notes/How the header row's wrapping got a knob.md`
+Raw source: `src/_raw/dev-notes/How the header row's wrapping got a knob.md`, `src/_raw/dev-notes/How the home list's spacing reached the gap above it.md`
