@@ -1,11 +1,13 @@
-/* Landing intro fades and slides in, staggered: h1, intro, then the header, and the logo's name types in once the header has landed. ⚠ Cosmetic only: it does not hide or score away the font swap — see the wiki "Layout shift". */
+/* Landing intro fades and slides in, staggered: h1, intro, the intro list's items, then the header, and the logo's name types in once the header has landed. ⚠ Cosmetic only: it does not hide or score away the font swap — see the wiki "Layout shift". */
 :root {
   --hero-reveal-in: 0.6s;
   --hero-reveal-step: 0.15s; /* the gap between one element starting and the next */
+  --hero-reveal-header-at: calc(var(--hero-reveal-step) * 5); /* after h1, intro and three list items; ⚠ add a step per extra list item */
 }
 
 @media (prefers-reduced-motion: no-preference) {
   [data-reveal] > :is(:first-child, :nth-child(2)),
+  [data-reveal] > ol > li,
   .site-header {
     animation: hero-reveal var(--hero-reveal-in) ease-out var(--hero-reveal-at, 0s) backwards; /* ⚠ not both: a held translate would make the header a containing block for the fixed nav drawer */
   }
@@ -14,14 +16,26 @@
     --hero-reveal-at: var(--hero-reveal-step);
   }
 
-  .site-header {
+  [data-reveal] > ol > li:nth-child(1) {
     --hero-reveal-at: calc(var(--hero-reveal-step) * 2);
+  }
+
+  [data-reveal] > ol > li:nth-child(2) {
+    --hero-reveal-at: calc(var(--hero-reveal-step) * 3);
+  }
+
+  [data-reveal] > ol > li:nth-child(3) {
+    --hero-reveal-at: calc(var(--hero-reveal-step) * 4);
+  }
+
+  .site-header {
+    --hero-reveal-at: var(--hero-reveal-header-at);
     --hero-reveal-from: -0.5rem; /* drops in from above rather than rising */
   }
 
   /* The name starts typing as the header finishes. */
   .breadcrumb-home .breadcrumb-reveal { /* ⚠ doubled class: this file bundles before breadcrumb-reveal.css */
-    --reveal-delay: calc(var(--hero-reveal-step) * 2 + var(--hero-reveal-in));
+    --reveal-delay: calc(var(--hero-reveal-header-at) + var(--hero-reveal-in));
   }
 }
 
