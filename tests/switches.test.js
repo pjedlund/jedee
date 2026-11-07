@@ -26,6 +26,7 @@ const MARKERS = {
   devGrid: 'className="dev-grid"',
   themeToggle: 'id="theme-toggle"',
   serviceWorker: 'serviceWorker.register',
+  pullToRefresh: 'class="ptr"',
   webmentions: 'rel="webmention"',
   micropub: 'rel="micropub"',
   relMe: 'rel="me"',

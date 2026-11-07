@@ -1,0 +1,7 @@
+{# Pull to refresh, only in the Home Screen app: the script sets data-ptr, and without it the svg stays hidden. #}
+<svg class="ptr" viewBox="-12 -12 24 24" aria-hidden="true" focusable="false">
+  <g class="spokes"><line y1="-5" y2="-9" style="--s:0"/><line y1="-5" y2="-9" style="--s:1" transform="rotate(45)"/><line y1="-5" y2="-9" style="--s:2" transform="rotate(90)"/><line y1="-5" y2="-9" style="--s:3" transform="rotate(135)"/><line y1="-5" y2="-9" style="--s:4" transform="rotate(180)"/><line y1="-5" y2="-9" style="--s:5" transform="rotate(225)"/><line y1="-5" y2="-9" style="--s:6" transform="rotate(270)"/><line y1="-5" y2="-9" style="--s:7" transform="rotate(315)"/></g>
+  <circle class="arc" r="6.5" pathLength="100"/>
+</svg>
+{% js "defer" %}{% include "scripts/pull-to-refresh.js" %}{% endjs %}
+{%- css "local" -%}{%- include 'css/pull-to-refresh.css' -%}{%- endcss -%}
