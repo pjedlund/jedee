@@ -281,7 +281,7 @@ export default async function(eleventyConfig) {
   const wikiVisibility = settings?.wiki?.visibility;
   if (!['private', 'local', 'public'].includes(wikiVisibility)) {
     throw new Error(
-      `settings.wiki.visibility is "${wikiVisibility}" — only "private", "local" and "public" are built so far. See _local/design/Plan - LLM wiki (private-first).md §6.`
+      `settings.wiki.visibility is "${wikiVisibility}" — only "private", "local" and "public" are built so far. See _local/generated/Plan - LLM wiki (private-first).md §6.`
     );
   }
   const buildWiki =

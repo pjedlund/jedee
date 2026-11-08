@@ -2,7 +2,7 @@
 //
 // Two automations point at this one file: a timer-based one for the routine Running/Gym net, and a manual-trigger-only one (Health Auto Export's own "Manual Export" action) with `?mode=manual` on the URL, which skips the activity-type filter entirely — for one-off activities outside that net (a hike, a ski tour).
 //
-// See _local/design/Plan - Apple Watch workout pipeline (POSSE + orienteering backfill).md
+// See _local/generated/Plan - Apple Watch workout pipeline (POSSE + orienteering backfill).md
 
 import matter from 'gray-matter'
 import GitHubStore from '@benjifs/github-store'

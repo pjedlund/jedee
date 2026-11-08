@@ -4,7 +4,7 @@ import EleventyFetch from '@11ty/eleventy-fetch';
 
 const API = 'https://webmention.io/api';
 
-// `fetcher` is injected only so the failure paths are testable — see _local/tests/webmention-fetch.test.js.
+// `fetcher` is injected only so the failure paths are testable — see tests/webmention-fetch.test.js.
 export const fetchWebmentions = async ({domain, token, since, perPage = 10000, fetcher = EleventyFetch}) => {
   if (!domain) {
     console.warn('>>> unable to fetch webmentions: no domain name specified');
