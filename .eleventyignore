@@ -1,9 +1,7 @@
-# Obsidian vault tooling — never part of the built site.
-# (.gitignore already hides most of it, but the clipper/ subfolder is
-# git-tracked, so this keeps Eleventy from ever discovering it regardless.)
+# Obsidian vault tooling is never part of the site; this also covers the tracked clipper/ templates, which .gitignore doesn't hide.
 src/_obsidian/
 
-# The wiki's own source artifacts (the device-frame preview page) — tracked in the wiki's inner repo, never a page.
+# The wiki's figure sources (mockup pages and their scripts) are tracked, but never pages.
 src/wiki/_sources/
 
 # Design system sources — previews and guideline docs assembled into _local/claude-design-system/ by build-design-system.js, never pages.
