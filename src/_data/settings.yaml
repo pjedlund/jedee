@@ -60,6 +60,7 @@ switches:
   tooltips: true
   devGrid: true
   serviceWorker: true
+  pullToRefresh: true
   feeds: true
   webmentions: true
   micropub: true

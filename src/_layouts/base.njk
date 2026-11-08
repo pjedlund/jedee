@@ -47,6 +47,9 @@
   </head>
 
   <body class="{{ layout }}">
+    {%- if meta.switches.pullToRefresh -%}
+      {% include "partials/pull-to-refresh.njk" %}
+    {%- endif -%}
     {% set indicateActiveHome %}
       {% if page.url == "/" %}
         aria-current=page

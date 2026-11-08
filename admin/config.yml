@@ -297,6 +297,7 @@ singletons:
           - { name: tooltips, label: Tooltips, widget: boolean, hint: 'Off: no tooltip script, no tooltip styles and no hover labels' }
           - { name: devGrid, label: Layout grid for development, widget: boolean, hint: 'Off: no grid script or styles (Alt+G and Alt+R do nothing)' }
           - { name: serviceWorker, label: Offline support, widget: boolean, hint: 'Off: no service worker file and nothing registers it' }
+          - { name: pullToRefresh, label: Pull to refresh, widget: boolean, hint: 'Home Screen app only: pull the page down to reload it. Off: no script, styles or spinner' }
           - { name: feeds, label: Feeds, widget: boolean, hint: 'Off: no feed files at all, no feed links in the head, and no feed button in the footer' }
           - { name: webmentions, label: Webmentions, widget: boolean, hint: 'Off: no webmention link in the head, nothing fetched at build time, and none shown on posts' }
           - { name: micropub, label: Micropub and IndieAuth links, widget: boolean, hint: 'Off: the three links in the head go. ⚠ The Netlify function that takes the posts is still deployed' }

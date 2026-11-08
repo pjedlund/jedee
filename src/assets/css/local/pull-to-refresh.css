@@ -1,0 +1,46 @@
+/*
+PULL TO REFRESH
+Home Screen app only. pull-to-refresh.js sets data-ptr (ios|android), data-pull (drag|settle), data-spin, --pull (px moved) and --p (0–1 towards a refresh).
+*/
+@layer blocks {
+:root[data-ptr] { overscroll-behavior-y: none; } /* ⚠ or the phone's own bounce or stretch runs on top of ours */
+
+.ptr { display: none; position: fixed; inset-inline-start: 50%; z-index: 10; overflow: visible; }
+:root[data-pull] .ptr { display: block; }
+.ptr line { stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.ptr .arc { fill: none; stroke: var(--color-accent-blue); stroke-width: 2.25; stroke-linecap: round; }
+
+/* iPhone: the page slides down and grey spokes appear one by one, then turn. */
+:root[data-ptr='ios'] .ptr {
+  inset-block-start: calc(env(safe-area-inset-top) + var(--space-s));
+  inline-size: 1.75rem;
+  translate: -50% 0;
+  color: var(--color-text-subdued);
+  opacity: var(--p);
+}
+:root[data-ptr='ios'] .arc { display: none; }
+:root[data-ptr='ios'] .ptr line { opacity: clamp(0, var(--p) * 8 - var(--s), 1); }
+:root[data-ptr='ios'][data-spin] .ptr line { opacity: calc(0.25 + var(--s) * 0.107); }
+:root[data-ptr='ios'][data-spin] .ptr { animation: ptr-spin 0.8s steps(8) infinite; } /* ⚠ on the svg, not its <g>: Safari ignores CSS rotate inside an svg */
+:root[data-ptr='ios'][data-pull] body > :not(.ptr) { translate: 0 var(--pull); }
+
+/* Android: a round disc drops over the still page with a blue ring that grows, then spins. */
+:root[data-ptr='android'] .ptr {
+  inset-block-start: calc(env(safe-area-inset-top) - 2.5rem);
+  inline-size: 2.5rem;
+  padding: 0.5rem;
+  border-radius: 50%;
+  background: var(--color-bg-accent);
+  box-shadow: var(--shadow-raised);
+  translate: -50% var(--pull);
+  opacity: min(1, var(--p) * 2);
+}
+:root[data-ptr='android'] .spokes { display: none; }
+:root[data-ptr='android'] .arc { stroke-dasharray: calc(var(--p) * 80) 100; rotate: calc(var(--p) * 200deg - 90deg); }
+:root[data-ptr='android'][data-spin] .arc { animation: ptr-spin 1s linear infinite, ptr-ring 1.4s ease-in-out infinite; }
+
+:root[data-pull='settle'] :is(body > *, .ptr) { transition: translate 0.35s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.35s; }
+
+@keyframes ptr-spin { from { rotate: -90deg; } to { rotate: 270deg; } }
+@keyframes ptr-ring { 0%, 100% { stroke-dasharray: 10 100; } 50% { stroke-dasharray: 70 100; } }
+}
