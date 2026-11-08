@@ -90,7 +90,7 @@ Each entry below says what a page covers and why you would open it. The traps an
 - [[Font subsetting]] — shipping only the characters a site needs, and how to find the ones you have missed.
 - [[is-land]] — holding JavaScript back until a condition is met, around markup that already works without it.
 - [[WebC]] — Eleventy's single-file component format, which expands a tag into HTML at build time and then gets out of the way.
-- [[Eleventy]] — how Eleventy turns a folder of files into pages (templates, the data cascade, layouts, collections), why it draws no line between content and design, and how jedee draws one.
+- [[Eleventy]] — how Eleventy turns a folder of files into pages (templates, the data cascade, layouts, collections, passthrough copy), why it draws no line between content and design, and how jedee draws one.
 - [[Themes and starters]] — why an Eleventy project is a site rather than a theme, and what that means when a new release of the starter lands.
 
 ## The jedee site itself

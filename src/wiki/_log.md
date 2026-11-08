@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-11-08] ingest | Eleventy
+
+A paragraph on passthrough copy: a glob in the object form's key flattens the folders while the build passes, so every font address 404s; a `filter` option keeps the tree. Measured on Eleventy 3.1.7 when the theme fonts were cut to the files the pages use; the In jedee section gained the numbers and a link to [[Font subsetting]].
+
 ## [2026-11-08] lint | Fonts
 
 The theme had been publishing 193 font files (17 MB) while pages load 7. Eleventy Excellent's Atkinson Hyperlegible and Red Hat Display, and Figtree, left the theme; the passthrough now copies only each family's top-level `.woff2`, so the `_source/` originals stay in the repo unpublished. *Font subsetting* and *What jedee kept from Eleventy Excellent* follow.

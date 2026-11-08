@@ -1,7 +1,7 @@
 ---
 description: "How Eleventy turns a folder of files into a website — templates, the data cascade, layouts, collections and the config file — and why it draws no line between a site's content and its design."
 date: 2026-10-31
-updated: 2026-11-02
+updated: 2026-11-08
 redirectFrom:
   - /wiki/shared-files-and-site-files/
 ---
@@ -36,6 +36,8 @@ Objects and arrays merge rather than replace. Most "why is this value wrong" que
 
 **The configuration file.** `eleventy.config.js` exports a function that registers everything else: plugins, filters and shortcodes for templates, collections, passthrough copies, transforms that rewrite each page's HTML after rendering, and the folder names. A plugin is a function that makes the same calls, so a plugin can do nothing the configuration could not.
 
+**Passthrough copy.** `addPassthroughCopy('src/fonts')` copies a folder as it is, and the object form `{ 'src/fonts': 'assets/fonts' }` copies it to another address. ⚠ A glob in the object form's key copies the matching files but not their folders: on Eleventy 3.1.7, `{ 'src/fonts/*/*.woff2': 'assets/fonts' }` drops every file straight into `assets/fonts/`, the build exits cleanly, and every page that asks for `/assets/fonts/<family>/<file>` gets a 404. To copy only some files and keep the folders, leave the folder as the key and pass a filter as the second argument, which Eleventy hands on to its copy step: `addPassthroughCopy({ 'src/fonts': 'assets/fonts' }, { filter: ['**/*.woff2', '!**/_source/**'] })`. A green build says nothing about this kind of mistake; checking that each address the built pages ask for exists in the output does.
+
 ## No line between content and design
 
 Eleventy does not divide a project into content and presentation. A blog post, the layout around it, the template that writes the RSS feed and the JSON file of site settings sit in the same input folder, and the tool calls each of them a template or data. Its [glossary](https://www.11ty.dev/docs/glossary/) defines a template as "a content file written in a format such as Markdown", and a layout as a template that wraps another: one word for the writing and for the frame around it.
@@ -58,3 +60,7 @@ jedee draws the line Eleventy leaves out, inside the one repo, in four ways:
 Switching a part off removes its CSS as well as its markup, because each piece of CSS is loaded by the thing that needs it: the `blocks` layer has no `@import`, and a block arrives through a page's local CSS. `npm run bare` builds a page with every switch off, no post types and the `sample` theme. On 2026-10-31 that came to 25.4 KB in total (7.1 KB compressed), against 88 KB before the split; run it again after any change to shared CSS.
 
 Tests keep the line from blurring. `tests/no-personal-details.test.js` fails if a shared file contains this site's name, address or analytics id. `npm run compare` (`tests/compare-builds.mjs`) checks a build against a saved one page by page, with pictures, and `tests/compare-allowed.json` lists the intended differences, each with a reason. `tests/switches.test.js`, `tests/css-split.test.js` and `tests/post-types.test.js` build throwaway copies of the site with one setting changed and check what appears and what does not.
+
+jedee's theme fonts are copied with that filter: each family's top-level `.woff2` files are published and the `_source/` originals stay in the repo for re-subsetting ([[Font subsetting]]). On 2026-11-08 that took the published fonts from 193 files (17 MB) to the 9 the theme ships (464 KB).
+
+Raw source: `src/_raw/dev-notes/How the theme fonts lost their folders.md` (the session of 2026-11-08).
