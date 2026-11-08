@@ -18,7 +18,7 @@ A personal website built with [Eleventy (11ty) v3](https://www.11ty.dev) and the
 - **Templating:** Nunjucks (`.njk`), WebC (`.webc`), Markdown
 - **CSS:** PostCSS + Tailwind CSS (used to generate CSS custom properties from design tokens — not a utility-class framework)
 - **Bundling:** esbuild (JS), PostCSS CLI (CSS)
-- **Deployment:** Netlify (build: `npm run build`, publish dir: `dist`)
+- **Deployment:** Netlify (publish dir: `dist`). Netlify doesn't run `npm run build`: its command in `netlify.toml` clears `dist/` but keeps the image folders, then runs `npm run build:11ty`
 - **Markdown extensions:** markdown-it with footnotes, wikilinks, attributes, abbr, anchors, emoji, syntax highlight
 - **Wikilinks / backlinks:** `@photogabble/eleventy-plugin-interlinker` + `markdown-it-wikilinks-plus`
 
@@ -44,6 +44,11 @@ npm run test:skip-link     # Press Tab on the built pages and check the skip lin
 npm run design:system      # Rebuild the local design-system bundle in _local/claude-design-system (needs the jedee theme's design-system folder)
 npm run mockups            # Re-shoot the wiki's mockup pictures (npm run mockups:check lists the ones that have drifted)
 npm run flags              # List the @until comments that expire at a milestone
+npm run design:md          # Rewrite the theme's DESIGN.md front matter from the tokens (penpot:tokens runs it too)
+npm run og:default         # Make the default share image; og:cards makes the per-post ones
+npm run genres:fetch       # Jam genres from MusicBrainz into a cache; genres:apply shows the changes, add -- --write to save
+npm run descriptions:fetch # Genre descriptions from Wikipedia into a cache; descriptions:build shows them, add -- --write to save
+npm run dev:mem            # The dev server with a memory log, for chasing its leak
 ```
 
 ## Directory Structure
@@ -59,7 +64,7 @@ src/
   assets/          # Images, SVGs, OG images
   common/          # Shared pages (pa11y test config, service worker, redirects, etc.)
   feeds/           # Atom / JSON feeds, per type
-  pages/           # Static pages (about, per-type indexes, styleguide, etc.)
+  pages/           # Static pages (about, per-type indexes, the design system page, etc.)
   posts/           # All content, one folder per post type:
     activities/    # Workouts / races        photos/
     articles/      # Long-form, by year      reading/
@@ -70,6 +75,7 @@ src/
     likes/                                   videos/
     notes/                                   watching/
   wiki/            # The LLM wiki (see below)
+  search.json.11ty.js  # The site search index
 admin/             # Sveltia CMS (index.html, config.yml)
 netlify/           # Netlify Functions (micropub, health-export)
 tests/             # Unit tests (*.test.js), the build comparison (compare-builds.mjs and compare-allowed.json), the bare-page report (bare-page.mjs) and site-files.json, the list of files that belong to this site alone
@@ -81,15 +87,15 @@ _local/            # ALL local-only project material (see below)
 
 **The comparison:** `npm run compare` checks a build in `dist/` against a saved build in `_local/baseline/` (page addresses, markup, feeds and text files; with `-- --shots`, pictures of 20 sample pages too). `tests/compare-allowed.json` lists the differences that are meant, each with a reason; anything else fails. `_local/baseline/` is not in git, so a fresh clone has to build it first. `npm run rebuild` is the build to compare with: it clears `dist/` except the image folders and builds with drafts and hidden things on.
 
-**What's local only:** everything under `_local/` — `design/` (plans, references), `project_docs/` (the HTML specs), `penpot/`, `generated/` (session handoffs, scratch scripts), `baseline/` and `compare/` (the saved build and the difference pictures from `npm run compare`), plus import scratch (`strava/`, `originals/`, `resources/`). One `.gitignore` rule, `/_local/`, covers all of it. A single leading underscore means local-only.
+**What's local only:** everything under `_local/` — `generated/` (plans, references, handoffs and drafts; `scripts/` for one-off scripts, `demos/` for test pages and previews, `_archive/` for finished notes), `project_docs/` (the HTML specs), `penpot/`, `figma/`, `claude-design-system/` and `token-panel/` (written or read by npm scripts), `baseline/` and `compare/` (the saved build and the difference pictures from `npm run compare`), `data/` (genre lists), `originals/` (source files only: photos, audio, video, map tiles, logo and icon masters, `.penpot` backups), `strava/` and `resources/` (imports, clips, notes), and `archive/` (retired tools and old material). One `.gitignore` rule, `/_local/`, covers all of it. A single leading underscore means local-only.
 
-Also local only, but kept at the root as everyday surface files: `SITE.md` (this site's own facts), `TODO.md`, `LOG.md`, `IDEAS.md`, `ROADMAP.md`, and the AI tool files `CLAUDE.md`, `.mcp.json`, `.claude/`. Don't expect any of these in `git status`, and don't cite them from a tracked file.
+Also local only, but kept at the root as everyday surface files: `SITE.md` (this site's own facts), `TODO.md`, `LOG.md`, `IDEAS.md`, and the AI tool files `CLAUDE.md` and `.claude/`. Don't expect any of these in `git status`, and don't cite them from a tracked file.
 
 A theme's `DESIGN.md` and `_local/penpot/penpot-tokens.dtcg.json` are derived artifacts regenerated by `npm run penpot:tokens`. The markdown body of `DESIGN.md` is hand-authored; only the YAML front matter is rewritten.
 
 ## Content Types & Frontmatter
 
-There are **16** post types, one folder each under `src/posts/` (`activities`, `articles`, `audio`, `bookmarks`, `events`, `jams`, `likes`, `notes`, `photos`, `reading`, `recipes`, `replies`, `reposts`, `rsvps`, `videos`, `watching`). Don't add a 17th. The authoritative per-type front matter is the Phase 3 spec, `_local/design/Plan - Phase 3 (10 new post types) - final.md`.
+There are **16** post types, one folder each under `src/posts/` (`activities`, `articles`, `audio`, `bookmarks`, `events`, `jams`, `likes`, `notes`, `photos`, `reading`, `recipes`, `replies`, `reposts`, `rsvps`, `videos`, `watching`). Don't add a 17th. The authoritative per-type front matter is the Phase 3 spec, `_local/generated/Plan - Phase 3 (10 new post types) - final.md`.
 
 Each folder has a directory data file that sets its defaults (layout, `category`, permalink): `<type>.json` for ten types, and `<type>.11tydata.js` for `jams`, `photos`, `reading`, `recipes`, `videos` and `watching`, which compute values. Every one sets `tags: ["posts"]` only — that firehose tag drives `collections.posts`; per-type collections come from `category` via `byCategory()` in `src/_config/collections.js`, not from tags. Permalinks use `{{ page.fileSlug | slugify }}` (or `slug:` where set). The wiki page "Anatomy of a post type" walks through one end to end.
 
@@ -97,10 +103,10 @@ Each folder has a directory data file that sets its defaults (layout, `category`
 
 A site's look is a theme: a folder in `src/_includes/themes/`, chosen at build time by `theme:` in `settings.yaml`. A name with no folder stops the build. `src/_config/utils/theme.js` is the one place that knows where the active theme is. `sample` is a neutral theme to copy for a new one.
 
-- `theme.json`: the colours for `<meta theme-color>` and the manifest, which fonts to preload, and an `og` block for the share cards (colours, font names, and font files for the scripts; a font with no `file` is a system font); `meta.js` reads it
+- `theme.json`: the colors for `<meta theme-color>` and the manifest, which fonts to preload, and an `og` block for the share cards (colors, font names, and font files for the scripts; a font with no `file` is a system font); `meta.js` reads it
 - `logo.svg`: the logo, inlined by `{% svg "logo" %}`; its root `fill` and its one `d` are read by the favicon and share-card scripts
 - `tokens/*.json`: the design tokens (below)
-- `fonts/`: the font files, published at `/assets/fonts/` whichever theme is active; a theme with no fonts has no folder
+- `fonts/`: one folder per family; its top-level `.woff2` files are published at `/assets/fonts/<family>/` whichever theme is active, and a `_source/` folder beside them (the originals, for re-subsetting) is not; a theme with no fonts has no folder
 - `fonts.css`: the `@font-face` rules, in the `fonts` layer
 - `theme.css`: the theme's own CSS, in the `theme` layer, which comes last
 - `home.njk`: the start page's body, included from `src/_layouts/pageIndex.njk`
@@ -182,11 +188,11 @@ The interface words (labels, headings, accessible names, feed titles) live in `s
 
 ## End-of-session deliverables
 
-The `end-of-session` skill reads this section. Working material (handoffs, plans in progress, scratch scripts) goes in `_local/generated/`; a handoff is `_local/generated/Handoff - <topic>.md`, and superseded ones move to `_local/generated/_archive/`. The usual deliverable is a wiki page through the `wiki-ingest` skill, when the session produced a reusable technique, decision or trap. A durable plan or reference goes in `_local/design/` (`Plan - <topic>.md`, `Reference - <topic>.md`). Never draft a post: posts are the site owner's own writing. Otherwise the deliverable is "neither".
+The `end-of-session` skill reads this section. Plans, references and handoffs all go in `_local/generated/` (`Plan - <topic>.md`, `Reference - <topic>.md`, `Handoff - <topic>.md`); scratch scripts go in `_local/generated/scripts/`, test pages in `_local/generated/demos/`. A finished handoff or plan moves to `_local/generated/_archive/`, but ⚠ only once nothing cites it: grep TODO, AGENTS, the skills, memory and `src/` for its name first, since durable records like the Phase 3 spec share the folder. The usual deliverable is a wiki page through the `wiki-ingest` skill, when the session produced a reusable technique, decision or trap. Never draft a post: posts are the site owner's own writing. Otherwise the deliverable is "neither".
 
 ## LLM wiki
 
-A Claude-maintained wiki documenting how jedee is designed and built — the techniques, patterns, and decisions behind the site. It is a real post type with the full site chrome (`src/_layouts/wiki.njk`); whether it reaches the published site is set by one dial (the `wiki` block in `settings.yaml`, below). Public since 2026-09-05 — reachable, but deliberately unfeatured: no feed, no place in the navigation, found by following a link. Design: `_local/design/Plan - LLM wiki (private-first).md`.
+A Claude-maintained wiki documenting how jedee is designed and built — the techniques, patterns, and decisions behind the site. It is a real post type with the full site chrome (`src/_layouts/wiki.njk`); whether it reaches the published site is set by one dial (the `wiki` block in `settings.yaml`, below). Public since 2026-09-05 — reachable, but deliberately unfeatured: no feed, no place in the navigation, found by following a link. Design: `_local/generated/Plan - LLM wiki (private-first).md`.
 
 ### Layout
 
@@ -200,7 +206,7 @@ A Claude-maintained wiki documenting how jedee is designed and built — the tec
 
 - A post *may* link into the wiki, but rarely should: the wiki is reference material the site does not feature, and a post that keeps pointing at it drags the site back to being about its own construction. Default to no. Wiki pages still `[[link]]` freely to each other and to posts.
 - External links are encouraged (a techniques wiki cites its sources): ordinary markdown links like `[CUBE CSS](https://cube.fyi)`. Wikilinks are only for pages inside the vault.
-- Scope: **web development only.** The wiki covers making the site — techniques, patterns, decisions. Craft knowledge from the production side of a post (audio gear and recording chains, camera and scanning technique) is out of scope even when the resulting post is published here; it belongs in `LOG.md` and the relevant `_local/design/Plan - …` record. The test before an ingest is whether the knowledge is about making the web thing or about making the thing the page is about.
+- Scope: **web development only.** The wiki covers making the site — techniques, patterns, decisions. Craft knowledge from the production side of a post (audio gear and recording chains, camera and scanning technique) is out of scope even when the resulting post is published here; it belongs in `LOG.md` and the relevant `_local/generated/Plan - …` record. The test before an ingest is whether the knowledge is about making the web thing or about making the thing the page is about.
 - Page style: the dev-note voice — factual, reporting tone, code snippets to illustrate each technique. No marketing prose, no first-person flourishes.
 - The ⚠ marker is rationed: at most one per page, and a second only on a page long enough to cover two separate systems. It marks something that fails *without saying so* — a build that succeeds while the output is wrong, a declaration that silently does nothing, a test that passes on a path that no longer exists. Not a caveat, not an aside, not a measurement, not "note that". Everything else is ordinary prose, and bold already does the work of drawing the eye. Used more often than that, the marker stops meaning anything. ⚠ in the index is always wrong: the page one click away carries it.
 - Page shape: a page is named after its concept, plain noun title like a normal wiki ("Microformats", "Text wrapping"). It opens by explaining the thing in general — what it is, why it exists, sources — then a section headed "In jedee" for how this site uses it, or one line saying it doesn't (that line is what lets the wiki hold general material: web techniques, the case for personal sites, copyright). Purely project-internal pages ("Anatomy of a post type", the archives) keep plain descriptive titles; there is no general concept to lead with. Existing finding-style titles get promoted to concept titles opportunistically, when an ingest touches them — not as a mass rename. Prefer single-word concept names where natural ("Wikilinks", "Microformats"); rename only, no page splits. Create a parent concept page (e.g. "CSS" above "CUBE CSS") only when it would carry real content of its own or already has two-three pages clearly under it — backlinks then populate it for free.

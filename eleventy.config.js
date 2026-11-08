@@ -233,10 +233,10 @@ export default async function(eleventyConfig) {
     eleventyConfig.addPassthroughCopy(path)
   );
 
-  eleventyConfig.addPassthroughCopy({
-    // -- the active theme's fonts, at the same address whichever theme it is
-    [`${themeDir()}/fonts`]: 'assets/fonts',
+  // -- the active theme's fonts, at the same address whichever theme it is; ⚠ a glob here flattens the family folders, so filter instead, which keeps _source/ unpublished
+  eleventyConfig.addPassthroughCopy({ [`${themeDir()}/fonts`]: 'assets/fonts' }, { filter: ['**/*.woff2', '!**/_source/**'] });
 
+  eleventyConfig.addPassthroughCopy({
     // -- to root
     'src/assets/images/favicon/*': '/',
     'src/assets/images/avatar/*': '/',
@@ -281,7 +281,7 @@ export default async function(eleventyConfig) {
   const wikiVisibility = settings?.wiki?.visibility;
   if (!['private', 'local', 'public'].includes(wikiVisibility)) {
     throw new Error(
-      `settings.wiki.visibility is "${wikiVisibility}" — only "private", "local" and "public" are built so far. See _local/design/Plan - LLM wiki (private-first).md §6.`
+      `settings.wiki.visibility is "${wikiVisibility}" — only "private", "local" and "public" are built so far. See _local/generated/Plan - LLM wiki (private-first).md §6.`
     );
   }
   const buildWiki =

@@ -1,7 +1,7 @@
 ---
 description: "Shipping only the characters and styles a site needs from a web font, and how a missing character falls back to another font while a missing style is faked."
 date: 2026-09-10
-updated: 2026-10-31
+updated: 2026-11-08
 ---
 
 **Subsetting** a font means keeping only the characters a site needs and dropping the rest, so the file is a fraction of the full family's size. A complete Source Sans 3 carries Latin, Greek, Cyrillic, arrows and much more; a site written in English and Swedish needs about two hundred characters of it. The standard tool is fontTools' [`pyftsubset`](https://fonttools.readthedocs.io/en/latest/subset/), which glyphhanger and most build-time subsetting wrap. The other half of the technique is CSS [`unicode-range`](https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/unicode-range), which tells the browser which characters a face covers, so it can skip downloading a file the page has no characters for.
@@ -77,7 +77,7 @@ A gap found this way is filled the subsetting way: cut the missing face from the
 
 ## In jedee
 
-Eleventy Excellent ships **static, pre-subset `woff2` files** and has no subsetting step in the build. Its `@font-face` blocks have no `unicode-range`, so adding a character to a file is the whole fix: no CSS change. The full source fonts are bundled beside the subsets. The one exception is Cyrillic (below), which is a separate file behind a `unicode-range`. jedee's copies sit in its theme's `fonts/` folder (`src/_includes/themes/jedee/fonts/`) and are published at `/assets/fonts/`; a theme with no fonts has no such folder.
+Eleventy Excellent ships **static, pre-subset `woff2` files** and has no subsetting step in the build. Its `@font-face` blocks have no `unicode-range`, so adding a character to a file is the whole fix: no CSS change. The full source fonts are bundled beside the subsets. The one exception is Cyrillic (below), which is a separate file behind a `unicode-range`. jedee's copies sit in its theme's `fonts/` folder (`src/_includes/themes/jedee/fonts/`), and only each family's top-level `.woff2` files are published at `/assets/fonts/`: the `_source/` originals stay in the repo for re-subsetting but never reach the site. A theme with no fonts has no such folder.
 
 Table: The shipped font files, their character counts and their sources
 | file | kind | characters | source in the repo |

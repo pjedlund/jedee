@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-11-08] lint | Fonts
+
+The theme had been publishing 193 font files (17 MB) while pages load 7. Eleventy Excellent's Atkinson Hyperlegible and Red Hat Display, and Figtree, left the theme; the passthrough now copies only each family's top-level `.woff2`, so the `_source/` originals stay in the repo unpublished. *Font subsetting* and *What jedee kept from Eleventy Excellent* follow.
+
 ## [2026-11-05] ingest | Configuring a layout composition
 
 A paragraph on a flow nested in a flow: `--flow-space` set on the inner one is also read by the outer one for the gap above it, measured on the home page's intro list (27px above it fell to 9px). `@property` doesn't reach it; the fix states the outer gap beside the knob. No new links.

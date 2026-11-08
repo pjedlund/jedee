@@ -7,7 +7,7 @@ schema: BlogPosting
   <article class="wrapper flow prose h-entry">
     {% include 'partials/entry-header.njk' %}
 
-    {# Recorded route line. The .geojson sibling (from _local/generated/extract-route.py) is inlined into <place-map> route mode as a slotted JSON script; place-map.js draws the track + start/finish markers on idle. No-JS visitors get no map here, which is fine: the stats and the "View on Strava" link below carry the route. #}
+    {# Recorded route line. The .geojson sibling (from _local/generated/scripts/extract-route.py) is inlined into <place-map> route mode as a slotted JSON script; place-map.js draws the track + start/finish markers on idle. No-JS visitors get no map here, which is fine: the stats and the "View on Strava" link below carry the route. #}
     {% set routeJson = page.inputPath | routeGeoJSON %}
     {% if routeJson %}
       {#- @breakout puts .feature on the component's <is-land> root (the real grid child); a class here would land on a grid grandchild and do nothing. Feature width in the 6x12 panoramic frame (2:1), as on photo and audio pages. #}
