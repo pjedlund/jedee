@@ -1,7 +1,7 @@
 ---
 description: "A systematic inventory of what jedee keeps unchanged from Eleventy Excellent and where it has deliberately diverged."
 date: 2026-07-31
-updated: 2026-10-31
+updated: 2026-11-08
 ---
 
 jedee is a fork of [Eleventy Excellent](https://eleventy-excellent.netlify.app/) by Lene Saile. Every other page in this wiki states EE-stock-versus-jedee where it happens to matter locally; this page states it systematically, so a claim on another page can be checked against one inventory.
@@ -45,7 +45,7 @@ Table: What jedee extended from the stock starter
 |---|---|---|
 | Post types | two (`articles`, `notes`), typed through `tags` | sixteen, typed through `category` with `tags` reserved for the public vocabulary — see [[Anatomy of a post type]] |
 | Design tokens | nine files in `src/_data/designTokens/`, two-step `colorsBase.json` → `colors.json` via `npm run colors` | the same two-step color pipeline, plus `semanticColors.json` and `typography.json` — fifteen files in the theme's `tokens/` folder, with Utopia fluid scales, a Penpot export (`npm run penpot:tokens`) and a generated `DESIGN.md` |
-| Fonts | two families (Red Hat Display, Atkinson Hyperlegible) | six (adds Figtree, Source Sans, Source Serif, Source Code Pro) |
+| Fonts | two families (Red Hat Display, Atkinson Hyperlegible) | three, all Adobe Source: Source Sans, Source Serif, Source Code Pro (EE's two and Figtree were dropped on 2026-11-08) |
 | WebC components | five | eight — adds `photo-lightbox.webc` ([[The PhotoSwipe lightbox]]), `place-map.webc` and `sortable-table.webc` |
 | Header chrome | `navigation.drawerNav` and `navigation.subMenu` booleans in `meta.js` | neither key exists; replaced by `breadcrumb` and `hideNav`, and one `nav-menu.js` in place of EE's `nav-drawer.js` + `nav-sub.js` |
 | Wikilinks | not shipped at all | `@photogabble/eleventy-plugin-interlinker` — see [[Wikilinks]] |
