@@ -5,7 +5,7 @@ identity:
   avatar: /avatar.webp
   tagline: I design and build for the world wide web from Malmö, Sweden. I believe in non-resistance to evil and try to follow the advice of Jesus Christ.
   bio: Johan Edlund is a web designer living in Malmö, Sweden. He believes that Jesus Christ is the truth and the way.
-  description: Personal site of Johan Edlund
+  description: Personal site of Johan Edlund.
   feedDescription: Jesus Christ is the truth and the way.
   ogAlt: Johan Edlund — personal website
   address: |-
@@ -73,7 +73,7 @@ analytics:
   umamiId: 75b79efd-f4b0-4425-aace-9fa8230aa1c3
 wiki:
   visibility: public
-  attribution: pages written by an AI (Claude Code), supervised by Johan.
+  attribution: An LLM wiki written by an AI, Claude Code, based on the methods and techniques I have picked for the site.
 search:
   enabled: true
   types:
