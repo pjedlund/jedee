@@ -19,7 +19,7 @@ src/_includes/scripts
 .DS_Store
 
 # All local-only project material lives under one umbrella (anchored so it can
-# never match anything inside src/). See _local/generated/Plan - Folder reorg (_local umbrella).md
+# never match anything inside src/). See _local/generated/_archive/Plan - Folder reorg (_local umbrella).md
 /_local/
 
 # Local Netlify folder

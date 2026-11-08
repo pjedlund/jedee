@@ -44,4 +44,4 @@ function cssColor(el, prop) {
 
 The cache key is the custom property's value with its `var()`s already substituted, so a theme switch that changes a color produces a new key rather than a stale hit. That holds only while no `--place-color` or `--map-*` value contains `currentColor` or `light-dark()`, which stay unresolved in the value text. Timed on the live page against the same 140 rows: **1,600 ms before, 31 ms after**, identical colors out. On a production build the whole map setup dropped to about 103 ms of script, 39 ms of it forced layout.
 
-Raw source: `src/_raw/dev-notes/How the map preloader delay was traced to forced layout.md` (the session of 2026-10-07), with the HAR, screen recording and Performance trace in `_local/generated/preloader/`.
+Raw source: `src/_raw/dev-notes/How the map preloader delay was traced to forced layout.md` (the session of 2026-10-07), with the HAR, screen recording and Performance trace in `_local/generated/demos/preloader/`.

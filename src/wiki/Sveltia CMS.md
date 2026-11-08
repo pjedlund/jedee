@@ -106,4 +106,4 @@ There are two ways in, both through GitHub:
 
 Adding a field is checked before anything is saved for real. `tests/sveltia-roundtrip.mjs` reproduces Sveltia's first save for every post, using the same YAML library and settings and reading the field lists from `admin/config.yml`. It then checks what Eleventy reads back. It matched real saves from the admin byte for byte: a note, a photo, an RSVP, a jam and a year-folder article. Its `--write-all` mode rewrites every post for a full before/after build, and on the first run no page changed. Rerun it after adding any field. It handles `number` fields and number-valued dropdowns, and still only warns on lists of objects.
 
-Raw source: `src/_raw/Getting Started  Sveltia CMS.md`, and the setup record `_local/design/Reference - Sveltia CMS as the edit layer.md` (§2, §4, §6), read on 2026-09-11.
+Raw source: `src/_raw/Getting Started  Sveltia CMS.md`, and the setup record `_local/generated/Reference - Sveltia CMS as the edit layer.md` (§2, §4, §6), read on 2026-09-11.

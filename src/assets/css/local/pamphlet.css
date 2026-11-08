@@ -16,7 +16,7 @@ Markup: partials/pamphlet.njk, placed first inside the block of text it floats i
   --pamphlet-page: color-mix(in oklab, var(--pamphlet-paper) 91%, #3a2a10);
   --pamphlet-page-alt: color-mix(in oklab, var(--pamphlet-paper) 82%, #3a2a10);
   --pamphlet-shadow: var(--box-shadow-thumb-cast);
-  /* painted light, as alphas: top-left highlight, darkening toward the bottom right, shade along the spine; tuned in _local/design/Reference - Shadow lab/pamphlet.html */
+  /* painted light, as alphas: top-left highlight, darkening toward the bottom right, shade along the spine; tuned in _local/generated/demos/Reference - Shadow lab/pamphlet.html */
   --pamphlet-highlight: 0.22;
   --pamphlet-falloff: 0.1;
   --pamphlet-spine: 0.15;
