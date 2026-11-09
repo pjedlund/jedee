@@ -26,7 +26,8 @@ schema: BlogPosting
 
     {# The recording IS the content, so u-audio rides the visible <audio>. audio.src is either "./src/assets/audio/…" (passthrough-copied — Eleventy Image doesn't move .mp3) or a full R2 URL; stripping "./src" is a no-op on the latter. #}
     {% if audio.src %}
-      <audio class="u-audio" controls preload="metadata" src="{{ audio.src | replace('./src', '') }}"></audio>
+      <audio class="u-audio" controls preload="metadata" src="{{ audio.src | replace('./src', '') }}" data-session-title="{{ title }}" data-session-artist="{{ meta.author.name }}"></audio>
+      {% js "defer" %}{% include "scripts/audio-session.js" %}{% endjs %}
     {% endif %}
 
     <div class="e-content | wrapper-pass flow">
