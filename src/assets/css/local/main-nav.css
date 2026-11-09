@@ -162,8 +162,8 @@ A "Menu ⌄" button drops a two-column, table-of-contents-style panel of every p
 }
 
 .menu-toggle + .megamenu a svg {
-  inline-size: 1.2em;
-  block-size: 1.2em;
+  inline-size: 1.35em;
+  block-size: 1.35em;
 }
 
 .megamenu a {
@@ -191,12 +191,13 @@ A "Menu ⌄" button drops a two-column, table-of-contents-style panel of every p
   align-self: center; /* icon vertically centered, not sat on the text baseline */
   inline-size: 0.95em;
   block-size: 0.95em;
-  margin-inline-end: var(--space-2xs); /* extra breathing room before the label */
+  margin-inline-end: var(--space-xs); /* extra breathing room before the label */
   color: var(--megamenu-icon-color);
 }
 
 :root[data-theme='dark'] .megamenu a {
-  --megamenu-icon-rest: oklch(from var(--color-accent-blue) 0.5 calc(c * 1.6) h);
+  /* A blue-tinted dimmed text color, receding like light mode's pale blue; the 40%-into-bg light formula goes near-black here. */
+  --megamenu-icon-rest: color-mix(in oklab, color-mix(in oklab, var(--color-accent-blue) 60%, var(--color-text)) 55%, var(--color-bg));
   /* Dark has headroom light doesn't: 4.5:1 runs out at 68% here vs 79% in light. 72% keeps a margin off that floor. */
   --megamenu-count-rest: color-mix(in oklab, var(--color-text) 72%, var(--color-bg));
 }
