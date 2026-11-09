@@ -5,6 +5,14 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-11-09] ingest | The YouTube embed
+
+The player now takes the feature width by default, with the image shadow and radius; `@width="popout"` or `@width="prose"` narrows one video. The poster filter tries `maxresdefault`, then `sddefault`, then `hqdefault`, so most posters are 1280 wide instead of 480. [[The YouTube embed]] and [[Self-hosting remote images at build time]] updated, code snippets included.
+
+## [2026-11-09] lint | Figures
+
+The PWA figures had no dark versions, and the display-modes shot clipped its right phone (padding added to a 262px width). Display modes and three Favicons phones now have dark twins; the splash and the running light/dark pair stay light on purpose. A bare address now links on its first mention only, and twelve repeated hand-written links on eight pages were unlinked. [[Figures]] updated.
+
 ## [2026-11-08] ingest | Eleventy
 
 A paragraph on passthrough copy: a glob in the object form's key flattens the folders while the build passes, so every font address 404s; a `filter` option keeps the tree. Measured on Eleventy 3.1.7 when the theme fonts were cut to the files the pages use; the In jedee section gained the numbers and a link to [[Font subsetting]].

@@ -1,7 +1,7 @@
 ---
 description: "The facade pattern that keeps a YouTube iframe off the page until someone clicks, and the two details jedee finishes — a self-hosted poster and a visible focus ring."
 date: 2026-07-31
-updated: 2026-10-02
+updated: 2026-11-09
 ---
 
 A standard YouTube embed is an `<iframe>` that pulls in several hundred kilobytes of JavaScript and contacts a number of Google domains before anyone presses play. On a page where the video is not the main point, that cost is paid by every visitor, most of whom will never watch it — and a third party gets to observe everyone who loads the page.
@@ -15,7 +15,7 @@ Two details are commonly left half-finished:
 
 ## In jedee
 
-`custom-youtube` is a thin wrapper around lite-youtube-embed. It renders on jam pages, on the video post type, and from raw markdown. A jam's `youtubeSlug` takes either one slug or a list, and the layout renders one player per slug. The player takes the popout width ([[Layout breakouts]]) and its YouTube link stays in the text column, laid out like an image caption with a red icon in front ([[Figures]]). Markdown wraps a raw-HTML embed in a `<div>`, so that `<div>` passes the grid's columns through too.
+`custom-youtube` is a thin wrapper around lite-youtube-embed. It renders on jam pages, on the video post type, and from raw markdown. A jam's `youtubeSlug` takes either one slug or a list, and the layout renders one player per slug. The player takes the feature width ([[Layout breakouts]]) with the same shadow and corner radius as an image in a post, and its YouTube link stays in the text column, laid out like an image caption with a red icon in front ([[Figures]]). Markdown wraps a raw-HTML embed in a `<div>`, so that `<div>` passes the grid's columns through too. One video can be narrowed with `@width="popout"` or `@width="prose"` (the text column), which the component writes out as a `data-width` attribute.
 
 **Eleventy Excellent ships `custom-youtube`**; what follows is jedee's divergence — where the poster comes from, what you see before it arrives, and a focus bug that surfaced along the way.
 
@@ -25,21 +25,23 @@ By default lite-youtube pulls its thumbnail from `i.ytimg.com` at page load — 
 
 ```js
 // src/_config/filters/youtube-poster.js
+const sizes = ['maxresdefault', 'sddefault', 'hqdefault'];
+
 export const youtubePoster = async slug => {
-  const remote = `https://i.ytimg.com/vi/${slug}/hqdefault.jpg`;
-  try {
-    const metadata = await Image(remote, {widths: [480], formats: ['jpeg'], /* … */});
-    return metadata.jpeg.at(-1).url;
-  } catch {
-    return remote; // build resilience: degrade to the remote thumbnail
+  for (const size of sizes) {
+    try {
+      const metadata = await Image(`https://i.ytimg.com/vi/${slug}/${size}.jpg`, {widths: ['auto'], formats: ['jpeg'], /* … */});
+      return metadata.jpeg.at(-1).url;
+    } catch {}
   }
+  return `https://i.ytimg.com/vi/${slug}/hqdefault.jpg`;
 };
 ```
 
 - **It's a filter, not part of the component, on purpose.** WebC's `webc:setup` can't run `async` code or `import()`, and you can't `await` inside a WebC attribute expression — so async work happens in a filter and the finished URL is handed in via `@poster`. Because markdown runs through Nunjucks here, the same filter works in a raw markdown embed too. See [[Self-hosting remote images at build time]].
-- **`hqdefault`, not `maxresdefault`.** Maxres is crisper but doesn't exist for many videos — every older *This Is My Jam* import 404s on it — which would leave posters missing and flood the build log. `hqdefault` exists for every video; it's 480×360 with letterbox bars, and the CSS covers it into the 16:9 frame, trimming them off.
+- **The biggest size that exists, falling back.** `maxresdefault` is 1280×720 and fills the feature-width player sharply, but it doesn't exist for many videos — every older *This Is My Jam* import 404s on it — so the filter tries `sddefault` (640×480) and then `hqdefault` (480×360), which exists for every video. The two smaller ones are 4:3 with letterbox bars; the CSS covers them into the 16:9 frame, trimming the bars off. On 2026-11-09 the split was 73 at 1280, 17 at 640 and the rest at 480.
 - **The `catch` degrades instead of failing**, so a network hiccup at build can't break the whole build.
-- **Verify a slug with oEmbed before committing it.** A removed video doesn't fail the build — the `catch` degrades to hotlinking `hqdefault.jpg` — but for a dead video that thumbnail is gone too, so the result is a broken poster over a play button that opens an unavailable video. YouTube's [oEmbed endpoint](https://oembed.com/) is the cheap pre-commit check: `https://www.youtube.com/oembed?url=…/watch?v=<slug>&format=json` returns `200` with the video's `title` and `author_name` (its channel) when the video is live and embeddable, and `404` when it is removed, private, or has embedding disabled. Reading `author_name` also separates official uploads (`… - Topic`, VEVO, the artist's channel) from fan re-uploads — worth preferring, since a fan copy of a label's track is the kind that later gets pulled or geo-blocked. It's the same signal the import's `youtube_ok` used; see [[Rebuilding an archive from the Wayback Machine]].
+- **Verify a slug with oEmbed before committing it.** A removed video doesn't fail the build — the filter degrades to hotlinking `hqdefault.jpg` — but for a dead video that thumbnail is gone too, so the result is a broken poster over a play button that opens an unavailable video. YouTube's [oEmbed endpoint](https://oembed.com/) is the cheap pre-commit check: `https://www.youtube.com/oembed?url=…/watch?v=<slug>&format=json` returns `200` with the video's `title` and `author_name` (its channel) when the video is live and embeddable, and `404` when it is removed, private, or has embedding disabled. Reading `author_name` also separates official uploads (`… - Topic`, VEVO, the artist's channel) from fan re-uploads — worth preferring, since a fan copy of a label's track is the kind that later gets pulled or geo-blocked. It's the same signal the import's `youtube_ok` used; see [[Rebuilding an archive from the Wayback Machine]].
 
 ### Fading a background image you can't transition
 
