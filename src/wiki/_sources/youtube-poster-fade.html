@@ -94,8 +94,8 @@
   // The frames are frozen at three instants of the real keyframe, so nothing is running when the shot is taken.
   window.__mockupReady = false;
 
-  // The build-time, self-hosted poster the `youtubePoster` filter writes — a real hqdefault at 480×360, letterbox bars and all, which is what `background-size: cover` is there to trim. Another build artifact: re-run a build if it is missing.
-  const POSTER = '../../../dist/assets/images/youtube/C-X9UQwxThw-480w.jpeg';
+  // The build-time, self-hosted poster the `youtubePoster` filter writes (maxresdefault, 1280×720, for this video). ⚠ A build artifact named by width: if the filter's size changes, so does this name, and the mockup never signals ready.
+  const POSTER = '../../../dist/assets/images/youtube/C-X9UQwxThw-1280w.jpeg';
 
   const image = new Image();
   image.src = POSTER;

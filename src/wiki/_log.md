@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-11-09] lint | Tooltips, Site search, Icons
+
+From the end-of-day lint. [[Tooltips]] gains *The arrow* (a `::before` placed on the control, not the tooltip, so one rule covers six placements) and drops "no arrow" from *What is not built*. [[Site search]] had the old icon sizes; both rows and the mega-menu are `1.35em` now, and the field lines up with the rows. [[Icons]] gains the two-color split: `--color-icon` beside a label, the header grey on icon-only controls, for 3:1. The YouTube fade mockup pointed at a poster today's change renamed (480w → 1280w), which hung `mockups:check`. Links [[Accessibility]] from Icons.
+
 ## [2026-11-09] ingest | Icons
 
 One stale claim corrected in [[Icons]]: `chef-hat.svg` is no longer a cooking pot. Phosphor's pot had been taken in 2026-10-14's swap only because the lookup script tried that name first; Johan chose Phosphor's filled chef hat instead. No new links.
