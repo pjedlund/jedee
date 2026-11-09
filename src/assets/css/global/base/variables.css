@@ -72,6 +72,8 @@
   /* Header text and icons at rest, brightening to --color-text-strong on hover. 82% is the lowest that keeps 4.5:1 in light (4.6:1); dark is 68% (5.2:1). */
   --color-text-header-dim: color-mix(in oklab, var(--color-base-darkest) 82%, var(--color-base-lightest));
   --color-text-strong: var(--color-base-darkest);
+  /* Icons at rest: a receding blue-grey, turning orange on hover where the icon sits in a link. Decorative, so no contrast floor. */
+  --color-icon: color-mix(in oklab, var(--color-accent-blue) 40%, var(--color-bg));
   /* Two shadow tiers, deeper in dark: on-page for images and maps lying on the page, raised for panels floating above it (mega-menu, search). */
   --shadow-on-page: var(--box-shadow-thumb);
   --shadow-raised: var(--box-shadow-panel);
@@ -107,6 +109,7 @@
     --color-text-lit: var(--color-base-white);
     --color-text-header-dim: color-mix(in oklab, var(--color-gray-250) 68%, var(--color-gray-900));
     --color-text-strong: var(--color-base-lightest);
+    --color-icon: color-mix(in oklab, color-mix(in oklab, var(--color-accent-blue) 60%, var(--color-text)) 55%, var(--color-bg));
     --shadow-on-page: var(--box-shadow-thumb-dark);
     --shadow-raised: var(--box-shadow-panel-dark);
     --text-glow-lit: 0 0 0.5em color-mix(in srgb, var(--color-base-white) 35%, transparent);
@@ -138,6 +141,8 @@
   --color-text-lit: var(--color-base-white);
   --color-text-header-dim: color-mix(in oklab, var(--color-gray-250) 68%, var(--color-gray-900));
   --color-text-strong: var(--color-base-lightest);
+  /* The light formula (40% blue into the page) goes near-black on dark, so dark mixes blue into the text color first. */
+  --color-icon: color-mix(in oklab, color-mix(in oklab, var(--color-accent-blue) 60%, var(--color-text)) 55%, var(--color-bg));
   --shadow-on-page: var(--box-shadow-thumb-dark);
   --shadow-raised: var(--box-shadow-panel-dark);
   --text-glow-lit: 0 0 0.5em color-mix(in srgb, var(--color-base-white) 35%, transparent);

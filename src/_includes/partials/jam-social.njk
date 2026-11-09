@@ -6,7 +6,7 @@
 {% if social and (social.likes | length or social.comments | length) %}
   <aside class="webmentions | wrapper flow region prose">
     <h2 id="thisismyjam">{{ words.jamSocialHeading }}</h2>
-    <p class="text-step-min-1">
+    <p class="webmentions-intro text-step-min-1">
       {{ words.jamSocialIntro }}
       <a href="https://web.archive.org/" rel="noreferrer">{{ words.internetArchive }}</a>.
     </p>
@@ -44,7 +44,7 @@
               <article class="webmention h-cite | flow">
                 <div class="cluster">
                   <a
-                    class="author p-author h-card u-url no-indicator"
+                    class="author p-author h-card u-url"
                     href="{{ comment.url }}"
                     rel="noreferrer"
                   >
@@ -61,6 +61,7 @@
                   </a>
 
                   {% if comment.date %}
+                    <span class="separator" aria-hidden="true">·</span>
                     <time datetime="{{ comment.date }}" title="{{ words.approximateDate }}">
                       {{ comment.date | formatDate('MMM YYYY') }}
                     </time>

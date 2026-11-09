@@ -9,6 +9,11 @@ Build-time static render of received webmentions on article, note, and photo pag
   --webmention-avatar-bg: var(--color-bg);
 }
 
+/* One line where it fits, not the paragraph measure. */
+.webmentions .webmentions-intro {
+  max-inline-size: none;
+}
+
 .webmentions h3 {
   font-size: var(--size-step-0);
 }
@@ -48,6 +53,10 @@ Build-time static render of received webmentions on article, note, and photo pag
 /* REPLY CARDS */
 .webmention {
   --flow-space: var(--space-2xs);
+  --webmention-reply-avatar: var(--size-step-2);
+  --webmention-reply-gap: var(--space-xs);
+
+  font-size: var(--size-step-min-1);
 }
 
 .webmention > .cluster {
@@ -57,20 +66,24 @@ Build-time static render of received webmentions on article, note, and photo pag
 .webmention .author {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2xs);
+  gap: var(--webmention-reply-gap);
 }
 
 .webmention .author img {
   aspect-ratio: 1;
-  inline-size: var(--size-step-1);
-  block-size: var(--size-step-1);
+  inline-size: var(--webmention-reply-avatar);
+  block-size: var(--webmention-reply-avatar);
   overflow: clip;
   border-radius: 50%;
   border: var(--webmention-avatar-border);
   background: var(--webmention-avatar-bg);
 }
 
-.webmention time {
-  font-size: var(--size-step-min-1);
-  color: var(--color-text-accent);
+.webmention :is(time, .separator) {
+  color: var(--color-text-dim);
+}
+
+/* The comment starts under the name, not under the avatar. */
+.webmention .p-content {
+  padding-inline-start: calc(var(--webmention-reply-avatar) + var(--webmention-reply-gap));
 }

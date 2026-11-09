@@ -15,7 +15,7 @@ The input row inside the search panel; included by search.njk beside search.css.
   flex: none;
   inline-size: 0.95em;
   block-size: 0.95em;
-  color: color-mix(in oklab, var(--color-text) 60%, var(--search-surface));
+  color: var(--color-icon);
 }
 
 .search-input {

@@ -178,8 +178,8 @@ figure:has(> picture, > img, > a > picture) > figcaption {
 figcaption {
   --caption-icon-size: 1cap;
   --caption-icon-gap: var(--space-xs);
-  --caption-icon-color: var(--color-text-subdued);
-  --caption-icon-opacity: 0.6;
+  --caption-icon-color: var(--color-icon);
+  --caption-icon-opacity: 1;
   --caption-icon-stroke: 0.2ex;
 
   margin-block-start: var(--space-s);
