@@ -3,7 +3,7 @@ WEBMENTIONS
 Build-time static render of received webmentions on article, note, and photo pages (partials/webmentions.njk): a facepile of overlapping circular avatars for pure reactions, then reply cards for text-bearing mentions. Per-page `local` bundle, included by the partial only when the page has webmentions. Ported from Lene Saile's pattern with this project's tokens.
 */
 .webmentions {
-  --webmention-avatar-size: var(--size-step-4);
+  --webmention-avatar-size: var(--size-step-3);
   --webmentions-body-measure: 54ch; /* ⚠ same 54ch as prose.css's paragraph measure */
   --webmention-avatar-overlap: calc(var(--space-s) * -1);
   --webmention-avatar-border: var(--stroke);
@@ -60,7 +60,7 @@ Build-time static render of received webmentions on article, note, and photo pag
 /* REPLY CARDS */
 .webmention {
   --flow-space: var(--space-2xs);
-  --webmention-reply-avatar: var(--size-step-4);
+  --webmention-reply-avatar: var(--size-step-3);
   --webmention-reply-gap: var(--space-xs);
 
   font-size: var(--size-step-min-1);
@@ -81,6 +81,7 @@ Build-time static render of received webmentions on article, note, and photo pag
   aspect-ratio: 1;
   inline-size: var(--webmention-reply-avatar);
   block-size: var(--webmention-reply-avatar);
+  margin-block: calc((1lh - var(--webmention-reply-avatar)) / 2); /* hangs past the name's line both ways, so the comment sits right under the name, not under the avatar */
   overflow: clip;
   border-radius: 50%;
   border: var(--webmention-avatar-border);
