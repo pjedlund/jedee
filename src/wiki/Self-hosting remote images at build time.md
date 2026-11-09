@@ -1,7 +1,7 @@
 ---
 description: "Why hotlinking a third-party image costs privacy, reliability and control, and how jedee fetches and self-hosts every remote cover at build time."
 date: 2026-07-31
-updated: 2026-10-27
+updated: 2026-11-09
 ---
 
 Pointing an `<img>` at a file on someone else's server — hotlinking — is the path of least resistance whenever the content came from elsewhere: an album cover, a book jacket, a film poster, a video thumbnail. It costs nothing to write and has four distinct problems.
@@ -78,14 +78,16 @@ Sometimes the URL has to be computed rather than written. YouTube posters are th
 So the async work moves into a Nunjucks filter, and the finished URL is passed in as an attribute:
 
 ```js
+const sizes = ['maxresdefault', 'sddefault', 'hqdefault'];
+
 export const youtubePoster = async slug => {
-  const remote = `https://i.ytimg.com/vi/${slug}/hqdefault.jpg`;
-  try {
-    const metadata = await Image(remote, {widths: [480], formats: ['jpeg'], /* … */});
-    return metadata.jpeg.at(-1).url;
-  } catch {
-    return remote;
+  for (const size of sizes) {
+    try {
+      const metadata = await Image(`https://i.ytimg.com/vi/${slug}/${size}.jpg`, {widths: ['auto'], formats: ['jpeg'], /* … */});
+      return metadata.jpeg.at(-1).url;
+    } catch {}
   }
+  return `https://i.ytimg.com/vi/${slug}/hqdefault.jpg`;
 };
 ```
 
@@ -98,7 +100,7 @@ export const youtubePoster = async slug => {
 ### Two habits worth keeping
 
 - **Always `try`/`catch` a build-time fetch and degrade to the remote URL.** One flaky third-party host shouldn't be able to fail a deploy.
-- **Pick the size variant that always exists**, not the best one. YouTube's `maxresdefault` is crisper but 404s on older videos; `hqdefault` exists for every video and gets covered into the frame. A missing image on some posts is worse than a slightly softer one everywhere.
+- **End on the size variant that always exists.** Try the best size first and fall back: YouTube's `maxresdefault` is crisper but 404s on older videos, while `hqdefault` exists for every video and gets covered into the frame. A missing image on some posts is worse than a softer one on a few.
 
 ⚠ `netlify-plugin-cache` keeps eleventy-fetch's `.cache` warm between deploys. Removing it makes every deploy re-fetch every remote image.
 

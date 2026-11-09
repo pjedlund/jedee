@@ -23,7 +23,8 @@
     position: relative;
     aspect-ratio: 16 / 9;
     width: 100%;
-    border-radius: 0.2em;
+    border-radius: var(--border-radius-medium);
+    box-shadow: var(--shadow-on-page);
     --yt-surface: color-mix(in oklab, var(--color-base-white) 45%, var(--color-bg));
     --yt-logo-mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%23808080' fill-opacity='.1'%3E%3Cpath d='m50 0 .588.003V0h9.706v30.882h-9.706v.009a19 19 0 0 0-.588-.009c-10.558 0-19.118 8.559-19.118 19.118S39.441 69.118 50 69.118 69.118 60.559 69.118 50V30.882C69.118 13.826 82.945 0 100 0v50c0 27.614-22.386 50-50 50S0 77.614 0 50 22.386 0 50 0'/%3E%3C/svg%3E");
     background-color: var(--yt-surface);
@@ -40,7 +41,7 @@
   /* ⚠ The fade is a one-shot keyframe, not a default opacity:0 — that would strand the play button invisible if hydration stalls. */
   is-land lite-youtube {
     background-color: transparent;
-    border-radius: 0.2em;
+    border-radius: var(--border-radius-medium);
   }
   /* ⚠ lite-yt-embed's `contain: content` clips the site's outset focus ring, so inset it here. */
   is-land lite-youtube .lyt-playbtn {
@@ -73,7 +74,7 @@
     --video-block-size: calc(100% * 9 / 16);
     margin-block-end: calc(round(up, var(--video-block-size), var(--line-quarter, 1px)) - var(--video-block-size));
   }
-  /* In the page grid the player takes the popout width and the caption link stays in the text column. A markdown body wraps the embed in a <div>, which passes the columns through too. */
+  /* In the page grid the player takes the feature width (data-width="popout" or "prose" narrows it) and the caption link stays in the text column. A markdown body wraps the embed in a <div>, which passes the columns through too. */
   @supports (grid-template-columns: subgrid) {
     :is(.wrapper, .wrapper-pass) > div:has(> custom-youtube),
     custom-youtube:is(:is(.wrapper, .wrapper-pass) > *, :is(.wrapper, .wrapper-pass) > div > *) {
@@ -82,7 +83,13 @@
       grid-template-columns: subgrid;
     }
     custom-youtube:is(:is(.wrapper, .wrapper-pass) > *, :is(.wrapper, .wrapper-pass) > div > *) > is-land {
+      grid-column: feature;
+    }
+    custom-youtube[data-width='popout']:is(:is(.wrapper, .wrapper-pass) > *, :is(.wrapper, .wrapper-pass) > div > *) > is-land {
       grid-column: popout;
+    }
+    custom-youtube[data-width='prose']:is(:is(.wrapper, .wrapper-pass) > *, :is(.wrapper, .wrapper-pass) > div > *) > is-land {
+      grid-column: content;
     }
     custom-youtube:is(:is(.wrapper, .wrapper-pass) > *, :is(.wrapper, .wrapper-pass) > div > *) > custom-youtube-link {
       grid-column: content;
@@ -91,7 +98,7 @@
 </style>
 <!-- Hide without JS; the YouTube link below the player is the no-JS path. -->
 <noscript><style>is-land.video-wrapper{display:none}</style></noscript>
-<custom-youtube webc:root class="flow">
+<custom-youtube webc:root class="flow" :data-width="width || false">
   <is-land on:visible class="video-wrapper">
     <lite-youtube
       :videoid="slug"
