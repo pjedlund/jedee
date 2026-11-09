@@ -15,6 +15,8 @@ Centred below the control by default. Two exceptions combine freely:
 - `data-tooltip-align="start"` / `"end"` — anchor to that edge. A centred tooltip on a control at the page edge overflows the viewport.
 - `data-tooltip-position="top"` — open upward. A hidden tooltip still takes part in layout, so one below a control near the foot of the page adds dead scroll.
 
+A small arrow (`::before`) always sits at the control's centre, on the side the tooltip opens, so it points at the control in all six combinations without a rule of its own for each.
+
 ## Behaviour worth knowing
 
 A control marked `aria-current` shows no tooltip — it is inert on the page you are already on. Pressing a control dismisses its own tooltip, which would otherwise sit under the cursor; the control's script clears that when the pointer or focus leaves.
