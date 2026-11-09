@@ -98,4 +98,4 @@ The alternative the project already uses everywhere else is a `local` CSS bundle
 
 Invoked as `<custom-card clickable img-square>`, it emits `<custom-card clickable img-square class="flow no-indicator">` — the boolean attributes set, the classes concatenated rather than replaced. The tag survives here not because of `webc:keep` but because it *is* the root, and no script upgrades it; the attributes are CSS hooks, and they are attributes rather than modifier classes because that is how a CUBE CSS exception is written.
 
-Source: `src/_includes/webc/*.webc` and `eleventy.config.js`, checked against the built HTML and against upstream Eleventy Excellent at `/Users/johanedlund/Projects/eleventy-excellent`, 2026-09-19. Format documentation: [WebC on 11ty.dev](https://www.11ty.dev/docs/languages/webc/) and the [WebC readme](https://github.com/11ty/webc).
+Source: `src/_includes/webc/*.webc` and `eleventy.config.js`, checked against the built HTML and against upstream Eleventy Excellent at `/Users/johanedlund/Projects/eleventy-excellent`, 2026-09-19. Format documentation: WebC on 11ty.dev and the WebC readme.

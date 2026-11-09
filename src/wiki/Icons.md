@@ -34,7 +34,7 @@ An icon next to a text label that says the same thing is decoration: it gets `ar
 
 ## In jedee
 
-The site's icons are filled, to match the solid logo mark. Until 2026-10-14 they were Lucide outlines; eight filled sets were compared against the 28 icons in use, and [Phosphor](https://phosphoricons.com/)'s fill weight was the only one with a real match for all 28. Phosphor's rounded shapes are also the closest to the logo's.
+The site's icons are filled, to match the solid logo mark. Until 2026-10-14 they were Lucide outlines; eight filled sets were compared against the 28 icons in use, and Phosphor's fill weight was the only one with a real match for all 28. Phosphor's rounded shapes are also the closest to the logo's.
 
 The files live in `src/assets/svg/`, by role:
 

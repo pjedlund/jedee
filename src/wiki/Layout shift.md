@@ -158,7 +158,7 @@ The reason it was first waved off is worth keeping: a sweep reported no line-cou
 
 ### Why fallback-metric tools never quite land it
 
-The generators — [screenspan.net/fallback](https://screenspan.net/fallback), [Capsize](https://github.com/seek-oss/capsize), Malte Ubl's original — all do the same thing: pick one scalar from each font and set `size-adjust` to their ratio. That is genuinely the best a single descriptor can do, and it is why the output is never quite right.
+The generators — screenspan.net/fallback, Capsize, Malte Ubl's original — all do the same thing: pick one scalar from each font and set `size-adjust` to their ratio. That is genuinely the best a single descriptor can do, and it is why the output is never quite right.
 
 **Three reasons, measured on this site.**
 
@@ -336,7 +336,7 @@ The matching layer *is* inert on Android, exactly as feared — and it does not 
 Two things worth knowing if the layer is ever extended:
 
 - **`local('Georgia')` resolves Georgia Regular only.** The 700-weight heading fallback is Chrome's synthesised bold, and the 100.8% was tuned against that: Georgia Regular faux-bold sets the sample at 193 px, real Georgia Bold at 222. Adding `local('Georgia Bold')` for authenticity would make the fallback 14% too wide unless the descriptor is re-derived.
-- **Per-platform matching has an established shape.** Capsize's [`createFontStack`](https://github.com/seek-oss/capsize) takes several fallbacks and emits one `@font-face` per fallback, each with its `size-adjust`, chained as `'Source Serif', 'Source Serif Fallback: Georgia', 'Source Serif Fallback: Noto Serif', serif`; the browser skips any family whose `local()` finds nothing, so each platform gets its tuned face. Liberation Sans and Liberation Mono are metric-identical to Arial and Courier New and could share the existing descriptors as extra `local()` candidates. Nothing metric-compatible with Georgia ships anywhere by default.
+- **Per-platform matching has an established shape.** Capsize's `createFontStack` takes several fallbacks and emits one `@font-face` per fallback, each with its `size-adjust`, chained as `'Source Serif', 'Source Serif Fallback: Georgia', 'Source Serif Fallback: Noto Serif', serif`; the browser skips any family whose `local()` finds nothing, so each platform gets its tuned face. Liberation Sans and Liberation Mono are metric-identical to Arial and Courier New and could share the existing descriptors as extra `local()` candidates. Nothing metric-compatible with Georgia ships anywhere by default.
 
 The decision was to change nothing: the CSS is right for the platforms that have the fonts, harmless on the one that does not, and the only "bad" number comes from a machine with neither. What changed is how the audit is read.
 

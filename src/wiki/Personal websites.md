@@ -19,7 +19,7 @@ The argument is old enough to have a vocabulary. It says the canonical copy of w
 
 The sources tend to run these together, and they are worth separating because the remedies differ.
 
-**Control**: the platform can change the rules while you are still using it. [Tai's piece](https://elizabethtai.com/2026/06/10/substack-writers-you-need-a-website/) is entirely this one — a Substack with a custom domain is a tenancy with a good lease, a `something.substack.com` is not a lease at all, and either way the terms are written by someone else. The remedy is the domain.
+**Control**: the platform can change the rules while you are still using it. Tai's piece is entirely this one — a Substack with a custom domain is a tenancy with a good lease, a `something.substack.com` is not a lease at all, and either way the terms are written by someone else. The remedy is the domain.
 
 **Durability**: the platform can simply stop. [Zeldman's](https://zeldman.com/2026/07/06/memories-cant-wait-or-how-i-learned-to-keep-worrying-about-the-web/) is the durability argument, and his framing is the useful one — the threat is no longer loss through destruction but *loss through indifference*. A house fire announces itself; a service that is quietly not worth maintaining does not. Nobody deletes your decade, they just stop paying for the shelf it was on.
 
