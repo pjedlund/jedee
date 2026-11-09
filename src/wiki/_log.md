@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-11-09] ingest | Breadcrumb
+
+The logomark section added to [[Breadcrumb]]: a masked span painted like the map preloader, driven by a registered `@property` number, grey with a hover sweep on inner pages and a one-time swoop on the home page; the forced-colors fallback; the shared `--logo-mask`. Links [[The place map]].
+
 ## [2026-11-09] ingest | Media Session
 
 A new page from today's session: the Media Session API in general (metadata, action handlers, the throw on an unknown action), then audio posts' use of it, with the poster already on the page as the artwork and a 10-second skip. Links [[Vertical rhythm]]. The phone lock screen itself was not yet checked, and the page says so.
