@@ -19,6 +19,26 @@ export const markdownLib = markdownIt({
   .disable('code')
   // ⚠ Bare words only autolink on these endings; the default list of every two-letter country code turned AGENTS.md into a link to a website.
   .use(md => md.linkify.tlds(['com', 'net', 'org', 'io', 'cc', 'se', 'dev', 'app']))
+  // A bare address links on its first mention only; later mentions stay plain text. Hand-written links are untouched.
+  .use(md => {
+    md.core.ruler.push('linkify_first_only', state => {
+      const seen = new Set();
+      for (const block of state.tokens) {
+        if (block.type !== 'inline' || !block.children) continue;
+        const kept = [];
+        let dropClose = false;
+        for (const t of block.children) {
+          if (t.type === 'link_open' && t.markup === 'linkify') {
+            const href = t.attrGet('href');
+            if (seen.has(href)) { dropClose = true; continue; }
+            seen.add(href);
+          } else if (t.type === 'link_close' && dropClose) { dropClose = false; continue; }
+          kept.push(t);
+        }
+        block.children = kept;
+      }
+    });
+  })
   .use(markdownItAttrs)
   // Prism has no Nunjucks grammar, so ````njk` fences are rendered as jinja2 — close enough, and it highlights the surrounding HTML too. Must run before markdown-it-prism.
   .use(md => {

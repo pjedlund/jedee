@@ -1,7 +1,7 @@
 ---
 description: "The figure and figcaption elements, images that follow the site's light or dark theme, and where a caption sits relative to the text around it."
 date: 2026-09-29
-updated: 2026-10-14
+updated: 2026-11-09
 ---
 
 A `<figure>` holds content that the text refers to but that could move elsewhere without breaking the reading order: an image, a diagram, a code listing, a table. Its `<figcaption>` labels it, and becomes the figure's accessible name, so a screen reader announces the caption when it reaches the figure ([MDN](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/figure)). The caption is not a replacement for the image's `alt`: the alt says what the image shows, the caption says why it is there. See [[Alt text]].
@@ -151,7 +151,7 @@ On the site, a markdown preprocessor in `eleventy.config.js` (`wiki-dark-figures
 
 This only works for a mockup whose colors come from the site's stylesheet. A color written into the mockup by hand stays a light-theme color in the dark shot. The accent tokens are a subtler case: in dark mode `--color-accent-blue` and `--color-accent-green` become muted surface colors that disappear as text, so the breakouts, tooltips and layout-shift mockups carry a dark-only rule that swaps their labels to `--color-blue-vivid` and `--color-green-vivid`, about 5:1 on the dark page. A caption dimmed with `opacity` also dims any colored word inside it, so those captions dim by mixing their color with the background instead. Look at every dark PNG before opting a mockup in.
 
-A mockup with its hand-picked palette, like the specimen cards on [[OpenType features]], can still have a twin: its palette variables get a second set of values under `[data-theme="dark"]`, taken from the site's dark tokens, and the rewrite flips them like anything else. A shot whose subject is the light theme itself opts back out with `data-light-only` on its `[data-shot]` — the sun colors on [[The theme toggle]], measured against the light page, are the one that does. Twenty-four shots have twins; the two drawn phones on [[Progressive web apps]] do not, because a phone showing the site in one theme is the picture, not a color choice.
+A mockup with its hand-picked palette, like the specimen cards on [[OpenType features]], can still have a twin: its palette variables get a second set of values under `[data-theme="dark"]`, taken from the site's dark tokens, and the rewrite flips them like anything else. A shot whose subject is the light theme itself opts back out with `data-light-only` on its `[data-shot]`: the sun colors on [[The theme toggle]], measured against the light page, and three of the phones on [[Favicons]]. The splash stays light because the manifest has one `background_color` for both themes, and the running-light and running-dark pair are already one shot per theme. The other drawn phones, including both on [[Progressive web apps]], show the site in the theme the reader is using.
 
 ### The panel behind a shot
 
