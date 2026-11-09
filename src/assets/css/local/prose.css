@@ -92,12 +92,6 @@
   box-shadow: var(--shadow-on-page);
 }
 
-/* The native player sizes itself to about 300px; in prose it takes the text's measure. */
-.prose audio {
-  inline-size: 100%;
-  max-inline-size: 54ch;
-}
-
 @media screen(ltsm) {
   .prose > *,
   .prose a {
