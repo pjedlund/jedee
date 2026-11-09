@@ -5,7 +5,7 @@
   <div class="cluster">
     {% if webmention.author and webmention.author.name %}
       <a
-        class="author p-author h-card u-url no-indicator"
+        class="author p-author h-card u-url"
         href="{{ webmention.author.url or webmention.url }}"
         rel="noreferrer"
       >
@@ -25,6 +25,7 @@
     {% endif %}
 
     {% if webmention['wm-received'] %}
+      <span class="separator" aria-hidden="true">·</span>
       <time datetime="{{ webmention['wm-received'] | toIsoString }}">
         {{ webmention['wm-received'] | formatDate('D MMM YYYY') }}
       </time>
@@ -35,7 +36,5 @@
     {{ webmention.content.text | truncate }}
   </div>
 
-  {% if webmention.url %}
-    <a class="u-url" href="{{ webmention.url }}" rel="noopener noreferrer">{{ words.source }}</a>
-  {% endif %}
+  {% if webmention.url %}<data class="u-url" value="{{ webmention.url }}"></data>{% endif %}
 </article>

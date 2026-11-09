@@ -10,14 +10,14 @@ The result list inside the search panel; included by search.njk beside search.cs
 }
 
 .search-result a {
-  --search-result-icon: color-mix(in oklab, var(--color-accent-blue) 40%, var(--search-surface));
+  --search-result-icon: var(--color-icon);
   /* Measured against the PANEL surface, not the page — a color-mix is only valid on the surface it was tuned on. 84%, not 80%: the highlighted row's own tint darkens the ground under it and 80% fell to 4.31:1 there. */
   --search-result-text-color: color-mix(in oklab, var(--color-text) 84%, var(--search-surface));
   --search-result-bg: transparent;
 
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: var(--space-3xs) var(--space-2xs);
+  gap: var(--space-3xs) var(--space-xs);
   padding: var(--space-xs) var(--space-s);
   background: var(--search-result-bg);
   border-radius: var(--border-radius-medium);
@@ -27,7 +27,6 @@ The result list inside the search panel; included by search.njk beside search.cs
 }
 
 :root[data-theme='dark'] .search-result a {
-  --search-result-icon: oklch(from var(--color-accent-blue) 0.5 calc(c * 1.6) h);
   --search-result-text-color: color-mix(in oklab, var(--color-text) 72%, var(--search-surface));
 }
 
@@ -35,8 +34,8 @@ The result list inside the search panel; included by search.njk beside search.cs
   grid-row: 1;
   align-self: center;
   flex: none;
-  inline-size: 0.95em;
-  block-size: 0.95em;
+  inline-size: 1.35em;
+  block-size: 1.35em;
   color: var(--search-result-icon);
 }
 
