@@ -3,9 +3,12 @@ SEARCH FIELD
 The input row inside the search panel; included by search.njk beside search.css.
 */
 
+/* Laid out like a result row (search-results.css): same inline padding, icon box and gap, so the magnifier centres over the type icons and the typed text starts at the titles. */
 .search-field {
-  --gutter: var(--space-2xs);
+  --gutter: var(--space-xs);
   --cluster-wrap: nowrap;
+
+  padding-inline: var(--space-s);
 
   /* The whole panel keys off the mega-menu's step, not the header's inherited --size-step-0. */
   font-size: var(--size-step-min-1);
@@ -15,13 +18,14 @@ The input row inside the search panel; included by search.njk beside search.css.
   flex: none;
   inline-size: 0.95em;
   block-size: 0.95em;
+  margin-inline: 0.2em; /* centres the glyph in the result icons' 1.35em box */
   color: var(--color-icon);
 }
 
 .search-input {
   flex: 1 1 auto;
   min-inline-size: 0;
-  padding: var(--space-2xs);
+  padding: var(--space-2xs) 0;
   background: transparent;
   border: none;
   color: var(--color-text);
