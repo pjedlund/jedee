@@ -53,6 +53,7 @@ Each entry below says what a page covers and why you would open it. The traps an
 - [[Hosting large originals off-repo]] — the deliberate inverse: 157 MB of scans kept in a bucket the build never touches.
 - [[The PhotoSwipe lightbox]] — a lightbox loaded only once it is needed, degrading to a plain link without JavaScript.
 - [[The YouTube embed]] — a stand-in with a self-hosted thumbnail, so loading a page sends nothing to Google.
+- [[Media Session]] — telling a lock screen, media keys and headphones what is playing, and what their buttons do.
 - [[The place map]] — a map component on this site's tiles, with three modes chosen by the markup: single pin, place groups, and a recorded route.
 
 ## Publishing & the IndieWeb

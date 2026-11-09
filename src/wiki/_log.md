@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-11-09] ingest | Media Session
+
+A new page from today's session: the Media Session API in general (metadata, action handlers, the throw on an unknown action), then audio posts' use of it, with the poster already on the page as the artwork and a 10-second skip. Links [[Vertical rhythm]]. The phone lock screen itself was not yet checked, and the page says so.
+
 ## [2026-11-09] ingest | The YouTube embed
 
 The player now takes the feature width by default, with the image shadow and radius; `@width="popout"` or `@width="prose"` narrows one video. The poster filter tries `maxresdefault`, then `sddefault`, then `hqdefault`, so most posters are 1280 wide instead of 480. [[The YouTube embed]] and [[Self-hosting remote images at build time]] updated, code snippets included.
