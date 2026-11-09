@@ -37,6 +37,12 @@
   .breadcrumb-home .breadcrumb-reveal { /* ⚠ doubled class: this file bundles before breadcrumb-reveal.css */
     --reveal-delay: calc(var(--hero-reveal-header-at) + var(--hero-reveal-in));
   }
+
+  /* The logomark fills while the header drops in, done as the name starts. */
+  .breadcrumb-home .breadcrumb-mark {
+    --breadcrumb-swoop-delay: var(--hero-reveal-header-at);
+    --breadcrumb-swoop: var(--hero-reveal-in);
+  }
 }
 
 @keyframes hero-reveal {
