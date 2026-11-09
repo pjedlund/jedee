@@ -44,6 +44,8 @@
 
   /* One value for every page and both themes: the pale grey it used to take in light (1.67:1) and the deep brown in dark (2.01:1) both failed the 3:1 a graphic needs to be legible. */
   --color-logo-icon: var(--color-accent-orange);
+  /* The logomark as a mask, for marks painted with a fill animation (breadcrumb, map preloader). ⚠ a copy of the path in the theme's logo.svg: update both */
+  --logo-mask: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='m50 0 .588.003V0h9.706v30.882h-9.706v.009a19 19 0 0 0-.588-.009c-10.558 0-19.118 8.559-19.118 19.118S39.441 69.118 50 69.118 69.118 60.559 69.118 50V30.882C69.118 13.826 82.945 0 100 0v50c0 27.614-22.386 50-50 50S0 77.614 0 50 22.386 0 50 0'/></svg>");
 
   --color-border-height: 1rem;
 }

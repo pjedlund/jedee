@@ -13,7 +13,7 @@
             data-tooltip-align="start"
             {%- if crumb.current %} aria-current="page"{% endif %}
           >
-            {% svg "logo" %}
+            <span class="breadcrumb-mark" aria-hidden="true"></span>
             <span class="visually-hidden">{{ words.homeLabel | replace('{name}', meta.siteName) }}</span>
             {# Decorative copy of the name — the real one is the visually-hidden label above, so this is aria-hidden. Switched off with meta.navigation.nameReveal. #}
             {% if crumb.current and meta.navigation.nameReveal %}

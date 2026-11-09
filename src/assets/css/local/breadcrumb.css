@@ -2,6 +2,12 @@
 BREADCRUMB
 Top-left wayfinding that replaces the old site logo: the home crumb is the logomark, the final crumb carries the page title (partials/breadcrumb.njk + breadcrumb-leaf.njk). Separators are CSS-drawn chevrons (the "›" glyph isn't in the font subset) and are inert to assistive tech.
 */
+@property --breadcrumb-fill {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
 @layer blocks {
 .breadcrumb {
   --breadcrumb-size: var(--size-step-min-2);
@@ -98,18 +104,53 @@ Top-left wayfinding that replaces the old site logo: the home crumb is the logom
   margin-inline: calc(var(--breadcrumb-mark-slack) * -1);
 }
 
-/* Header icon size, not the trail's cap height: the mark matches the magnifier and the sun/moon. */
-.breadcrumb-home svg {
+/* Header icon size, not the trail's cap height: the mark matches the magnifier and the sun/moon. Painted like the map preloader (orange sweeps clockwise from 30deg, the stem wipes last) through the logo mask, with --breadcrumb-fill 0–100 driving it. */
+.breadcrumb-mark {
+  --breadcrumb-mark-track: var(--breadcrumb-color-ancestor);
+  --breadcrumb-mark-fill: var(--color-logo-icon);
+  --breadcrumb-stem: clamp(0, (var(--breadcrumb-fill) - 91.667) / 8.333, 1); /* ⚠ same stem box as .place-map-preloader-logo */
+
   inline-size: var(--breadcrumb-mark);
-  block-size: var(--breadcrumb-mark-height);
-  fill: var(--color-logo-icon);
-  /* no fill transition — see the note on `.breadcrumb a` */
+  aspect-ratio: 1;
+  background:
+    linear-gradient(to right, var(--breadcrumb-mark-fill) calc(var(--breadcrumb-stem) * 100%), var(--breadcrumb-mark-track) 0) calc(var(--breadcrumb-mark) * 0.5) 0 / 10.3% 31% no-repeat,
+    conic-gradient(from 30deg, var(--breadcrumb-mark-fill) calc(var(--breadcrumb-fill) * 1%), var(--breadcrumb-mark-track) 0);
+  mask: var(--logo-mask) center / contain no-repeat;
 }
 
-/* The resting fill is already the accent orange on every page, so hover deepens it the same way the theme toggle does rather than switching color. aria-current dropped: home no longer differs from anywhere else. */
-.breadcrumb-home:hover svg,
-.breadcrumb-home:focus-visible svg {
-  fill: color-mix(in oklab, var(--color-accent-orange) 82%, var(--color-text));
+/* Inner pages: grey at rest, orange sweeps in on hover/focus and back out, faster, on leave. The home page is orange throughout and only deepens on hover. */
+.breadcrumb-home:is(:hover, :focus-visible) .breadcrumb-mark,
+.breadcrumb-home[aria-current="page"] .breadcrumb-mark {
+  --breadcrumb-fill: 100;
+}
+
+.breadcrumb-home[aria-current="page"]:is(:hover, :focus-visible) .breadcrumb-mark {
+  --breadcrumb-mark-fill: color-mix(in oklab, var(--color-accent-orange) 82%, var(--color-text));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .breadcrumb-mark {
+    --breadcrumb-swoop-delay: 0.15s;
+
+    transition: --breadcrumb-fill 0.35s ease-in;
+  }
+
+  .breadcrumb-home:is(:hover, :focus-visible) .breadcrumb-mark {
+    transition: --breadcrumb-fill 0.6s cubic-bezier(0.45, 0, 0.55, 1);
+  }
+
+  /* Home: the same sweep plays once on load, like the preloader. hero-reveal.css retimes it to land as the name starts typing. */
+  .breadcrumb-home[aria-current="page"] .breadcrumb-mark {
+    animation: breadcrumb-swoop var(--breadcrumb-swoop, 0.9s) cubic-bezier(0.45, 0, 0.55, 1) var(--breadcrumb-swoop-delay) backwards;
+  }
+}
+
+/* Forced colors drops the gradients: paint the whole mark in the text color instead. */
+@media (forced-colors: active) {
+  .breadcrumb-mark {
+    forced-color-adjust: none;
+    background: CanvasText;
+  }
 }
 
 /* CSS-drawn chevron before every crumb except the first. Empty content keeps it out of the accessibility tree; a rotated open border is the "›" shape. */
@@ -132,4 +173,8 @@ Top-left wayfinding that replaces the old site logo: the home crumb is the logom
     padding-block: 0;
   }
 }
+}
+
+@keyframes breadcrumb-swoop {
+  from { --breadcrumb-fill: 0; }
 }
