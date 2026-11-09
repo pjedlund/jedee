@@ -1,7 +1,11 @@
 <!doctype html>
+<html lang="en" data-theme="light" data-dark-shot>
 <meta charset="utf-8">
 <title>PWA preview</title>
 <style>
+  :root { --paper:#F4F4F2; --ink:#23292F; --muted:#68727F; --rule:#dfdfdb; --line:#d8d8d4; --line-title:#c3c3bd; --sheet:#fff; --dim:#5a6a7a; }
+  /* Dark values are the site's dark tokens (gray-900 page, gray-250 text, gray-300 muted, gray-700/800 surfaces). ⚠ The splash stays light: the manifest has one background_color for both themes. */
+  :root[data-theme="dark"] { --paper:#141619; --ink:#C8CACC; --muted:#acaeb1; --rule:#383b3f; --line:#2b2e32; --line-title:#383b3f; --sheet:#2b2e32; --dim:#2b333d; }
   body { margin:0; padding:32px; font:14px/1.5 -apple-system, system-ui, sans-serif; background:#ececea; color:#23292F; }
   h1 { font-size:18px; margin:0 0 4px; }
   .lede { color:#68727F; margin:0 0 28px; max-width:62ch; }
@@ -29,28 +33,28 @@
   .splash b { font-size:13px; font-weight:600; color:#23292F; }
 
   /* running */
-  .app-body { flex:1; background:#F4F4F2; padding:14px; }
-  .crumb { display:flex; align-items:center; gap:6px; font-size:9px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:#68727F; padding-bottom:12px; border-bottom:1px solid #dfdfdb; }
+  .app-body { flex:1; background:var(--paper); padding:14px; }
+  .crumb { display:flex; align-items:center; gap:6px; font-size:9px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); padding-bottom:12px; border-bottom:1px solid var(--rule); }
   .crumb img { width:13px; height:13px; }
-  .hl { height:9px; border-radius:3px; background:#d8d8d4; margin-top:12px; }
-  .hl.t { height:13px; width:75%; background:#c3c3bd; }
+  .hl { height:9px; border-radius:3px; background:var(--line); margin-top:12px; }
+  .hl.t { height:13px; width:75%; background:var(--line-title); }
 
   /* recents */
   .recents { flex:1; background:#2b333d; padding:22px 14px; display:flex; flex-direction:column; align-items:center; }
   .card { width:100%; border-radius:12px; overflow:hidden; box-shadow:0 6px 16px rgb(0 0 0 / .35); }
   .card-bar { display:flex; align-items:center; gap:7px; padding:7px 9px; font-size:10px; font-weight:600; color:#fff; }
   .card-bar img { width:15px; height:15px; border-radius:4px; }
-  .card-body { background:#F4F4F2; height:180px; padding:12px; }
+  .card-body { background:var(--paper); height:180px; padding:12px; }
 
   /* install sheet */
-  .dim { flex:1; background:#5a6a7a; position:relative; }
-  .sheet { position:absolute; left:0; right:0; bottom:0; background:#fff; border-radius:16px 16px 0 0; padding:16px; }
+  .dim { flex:1; background:var(--dim); position:relative; }
+  .sheet { position:absolute; left:0; right:0; bottom:0; background:var(--sheet); color:var(--ink); border-radius:16px 16px 0 0; padding:16px; }
   .sheet-top { display:flex; gap:11px; align-items:center; }
   .sheet-top img { width:42px; height:42px; }
   .sheet-name { font-size:13px; font-weight:600; }
-  .sheet-url { font-size:11px; color:#68727F; }
+  .sheet-url { font-size:11px; color:var(--muted); }
   .btns { display:flex; justify-content:flex-end; gap:16px; margin-top:16px; font-size:12px; font-weight:600; }
-  .btns .a { color:#68727F; }
+  .btns .a { color:var(--muted); }
   .btns .b { color:#d0621e; }
 </style>
 
@@ -82,7 +86,7 @@
 
   <div class="item">
     <div class="phone" data-shot="pwa-install-prompt"><div class="screen">
-      <div class="status" style="background:#5a6a7a"><span>9:41</span><span class="dots">▮▮▮ ▰</span></div>
+      <div class="status" style="background:var(--dim)"><span>9:41</span><span class="dots">▮▮▮ ▰</span></div>
       <div class="dim">
         <div class="sheet">
           <div class="sheet-top">
@@ -98,7 +102,7 @@
   </div>
 
   <div class="item">
-    <div class="phone" data-shot="pwa-splash-screen"><div class="screen">
+    <div class="phone" data-shot="pwa-splash-screen" data-light-only><div class="screen">
       <div class="status" style="background:#495464"><span>9:41</span><span class="dots">▮▮▮ ▰</span></div>
       <div class="splash">
         <img src="../../assets/images/favicon/icon-512x512.png" alt="">
@@ -110,7 +114,7 @@
   </div>
 
   <div class="item">
-    <div class="phone" data-shot="pwa-running-light"><div class="screen">
+    <div class="phone" data-shot="pwa-running-light" data-light-only><div class="screen">
       <div class="status" style="background:#F4F4F2; color:#23292F"><span>9:41</span><span class="dots">▮▮▮ ▰</span></div>
       <div class="app-body">
         <div class="crumb"><img src="../../assets/images/favicon/favicon.svg" alt=""><span>&rsaquo; Jams &rsaquo; Genres</span></div>
@@ -123,7 +127,7 @@
   </div>
 
   <div class="item">
-    <div class="phone" data-shot="pwa-running-dark"><div class="screen">
+    <div class="phone" data-shot="pwa-running-dark" data-light-only><div class="screen">
       <div class="status" style="background:#495464; color:#fff"><span>9:41</span><span class="dots">▮▮▮ ▰</span></div>
       <div class="app-body" style="background:#141619">
         <div class="crumb" style="color:#9aa0a6; border-color:#383b3f"><img src="../../assets/images/favicon/favicon.svg" alt=""><span>&rsaquo; Jams &rsaquo; Genres</span></div>
