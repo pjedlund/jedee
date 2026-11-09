@@ -12,7 +12,9 @@ class PhotoLightbox extends HTMLElement {
       secondaryZoomLevel: 1,
       maxZoomLevel: 1,
       // Zoom with the scroll wheel alone (no Ctrl/Cmd), between fit and 1:1.
-      wheelToZoom: true
+      wheelToZoom: true,
+      // ⚠ A copy of misc/x.svg (Phosphor x-bold), in PhotoSwipe's own icon shape: the <use> paints its outline shadow, 2px at 32px = 16 units at 256.
+      closeSVG: '<svg aria-hidden="true" class="pswp__icn" viewBox="0 0 256 256" width="32" height="32"><use class="pswp__icn-shadow" href="#pswp__icn-close" style="stroke-width:16"/><path id="pswp__icn-close" d="M208.49 191.51a12 12 0 0 1-17 17L128 145l-63.51 63.49a12 12 0 0 1-17-17L111 128L47.51 64.49a12 12 0 0 1 17-17L128 111l63.51-63.52a12 12 0 0 1 17 17L145 128Z"/></svg>'
     });
     this.lightbox.init();
   }

@@ -91,6 +91,12 @@ The maximize button and the modal overlay it opens; part of place-map.css, inclu
   line-height: var(--leading-flat);
   cursor: pointer;
 }
+/* ⚠ The global svg rule sizes icons to 0.6lh; the X takes the button's font-size instead. */
+.place-map-overlay-close svg {
+  inline-size: 1em;
+  block-size: 1em;
+}
+
 .place-map-overlay-close:hover {
   color: var(--color-headline);
   border-color: color-mix(in oklab, var(--color-text) 30%, var(--color-bg));
