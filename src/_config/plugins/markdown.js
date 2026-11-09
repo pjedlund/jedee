@@ -19,7 +19,7 @@ export const markdownLib = markdownIt({
   .disable('code')
   // ⚠ Bare words only autolink on these endings; the default list of every two-letter country code turned AGENTS.md into a link to a website.
   .use(md => md.linkify.tlds(['com', 'net', 'org', 'io', 'cc', 'se', 'dev', 'app']))
-  // A bare address links on its first mention only; later mentions stay plain text. Hand-written links are untouched.
+  // A bare address links only if nothing earlier on the page links there; hand-written links are never removed.
   .use(md => {
     md.core.ruler.push('linkify_first_only', state => {
       const seen = new Set();
@@ -28,9 +28,9 @@ export const markdownLib = markdownIt({
         const kept = [];
         let dropClose = false;
         for (const t of block.children) {
-          if (t.type === 'link_open' && t.markup === 'linkify') {
-            const href = t.attrGet('href');
-            if (seen.has(href)) { dropClose = true; continue; }
+          if (t.type === 'link_open') {
+            const href = (t.attrGet('href') || '').replace(/^https?:\/\//, '').replace(/\/$/, '');
+            if (t.markup === 'linkify' && seen.has(href)) { dropClose = true; continue; }
             seen.add(href);
           } else if (t.type === 'link_close' && dropClose) { dropClose = false; continue; }
           kept.push(t);
