@@ -106,7 +106,7 @@ Top-left wayfinding that replaces the old site logo: the home crumb is the logom
 
 /* Header icon size, not the trail's cap height: the mark matches the magnifier and the sun/moon. Painted like the map preloader (orange sweeps clockwise from 30deg, the stem wipes last) through the logo mask, with --breadcrumb-fill 0–100 driving it. */
 .breadcrumb-mark {
-  --breadcrumb-mark-track: var(--color-icon);
+  --breadcrumb-mark-track: var(--breadcrumb-color-ancestor);
   --breadcrumb-mark-fill: var(--color-logo-icon);
   --breadcrumb-stem: clamp(0, (var(--breadcrumb-fill) - 91.667) / 8.333, 1); /* ⚠ same stem box as .place-map-preloader-logo */
 
