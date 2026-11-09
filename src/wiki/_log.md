@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-11-09] ingest | Icons
+
+One stale claim corrected in [[Icons]]: `chef-hat.svg` is no longer a cooking pot. Phosphor's pot had been taken in 2026-10-14's swap only because the lookup script tried that name first; Johan chose Phosphor's filled chef hat instead. No new links.
+
 ## [2026-11-09] ingest | Breadcrumb
 
 The logomark section added to [[Breadcrumb]]: a masked span painted like the map preloader, driven by a registered `@property` number, grey with a hover sweep on inner pages and a one-time swoop on the home page; the forced-colors fallback; the shared `--logo-mask`. Links [[The place map]].
