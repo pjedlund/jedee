@@ -66,7 +66,7 @@ const json = payload => ({ json: () => payload, text: () => JSON.stringify(paylo
 let plain, pushed, moved, sample
 before(async () => {
   plain = await makeTempSite()
-  pushed = await makeTempSite({ settings: { pwa: { keepCaches: ['dimma-alerts'], push: 'pwa/push.js' } } })
+  pushed = await makeTempSite({ settings: { pwa: { keepCaches: ['dimma-alerts'], precache: ['/app.js'], push: 'pwa/push.js' } } })
   moved = await makeTempSite({ settings: { pwa: { workerPath: '/sw.js' } } })
   sample = await makeTempSite({ settings: { theme: 'sample' } })
   await Promise.all([plain, pushed, moved, sample].map(site => site.build()))
@@ -167,6 +167,21 @@ test('an address that exists only in a kept cache is not answered from it', asyn
   assert.equal(await answer, 'network copy')
 })
 
+test('a request to /api/ is left to the network, never answered from the cache', () => {
+  const worker = loadWorker(plain.read('serviceworker.js'))
+  let answered = false
+  const request = { url: 'https://example.test/api/metar?lat=55.6', method: 'GET', mode: 'cors' }
+  worker.handlers.fetch({ request, respondWith: () => { answered = true }, waitUntil: () => {} })
+  assert.equal(answered, false)
+})
+
+test('settings.pwa.precache files are saved at install, beside the usual ones', async () => {
+  const worker = loadWorker(pushed.read('serviceworker.js'))
+  await worker.fire('install')
+  assert.ok(worker.added.includes('/app.js'), 'the extra file was not cached')
+  assert.ok(worker.added.includes('/'), 'the usual files were not cached')
+})
+
 test('the files the worker lists exist in a sample-theme site', () => {
   const list = sample.read('serviceworker.js').match(/PRECACHE_RESOURCES = \[([\s\S]*?)\]/)[1]
   const files = [...list.matchAll(/'([^']+)'/g)].map(match => match[1]).filter(file => file !== '/')
@@ -188,10 +203,12 @@ test('a bad pwa setting stops the build and names the setting', async t => {
 })
 
 test('resolvePwa: defaults, and the checks', () => {
-  assert.deepEqual(resolvePwa({}), { workerPath: '/serviceworker.js', keepCaches: [], push: false })
-  assert.deepEqual(resolvePwa({ pwa: { workerPath: '/serviceworker.js' } }), { workerPath: '/serviceworker.js', keepCaches: [], push: false })
+  assert.deepEqual(resolvePwa({}), { workerPath: '/serviceworker.js', keepCaches: [], precache: [], push: false })
+  assert.deepEqual(resolvePwa({ pwa: { workerPath: '/serviceworker.js' } }), { workerPath: '/serviceworker.js', keepCaches: [], precache: [], push: false })
   assert.equal(resolvePwa({ pwa: { push: 'pwa/push.js' } }).push, 'pwa/push.js')
   assert.throws(() => resolvePwa({ pwa: { keepCaches: 'dimma-alerts' } }), /settings\.pwa\.keepCaches/)
   assert.throws(() => resolvePwa({ pwa: { push: '../../package.json' } }), /settings\.pwa\.push/)
   assert.throws(() => resolvePwa({ pwa: { push: true } }), /settings\.pwa\.push/)
+  assert.throws(() => resolvePwa({ pwa: { precache: '/app.js' } }), /settings\.pwa\.precache/)
+  assert.throws(() => resolvePwa({ pwa: { precache: ['app.js'] } }), /settings\.pwa\.precache/)
 })

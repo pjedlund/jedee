@@ -18,7 +18,7 @@ const PRECACHE_RESOURCES = [
   '/icon-512x512.png',
   '/maskable-icon.png',
   '/apple-touch-icon.png'
-]
+].concat({{ meta.pwa.precache | dump | safe }}) // settings.pwa.precache: a site's extra files, such as an app's script
 
 // Passed straight through, so the dev server's live reload is never masked by the cache. Empty in production.
 const IGNORED_HOSTS = ['localhost', '127.0.0.1']
@@ -78,8 +78,8 @@ self.addEventListener('fetch', (event) => {
 
   if (IGNORED_HOSTS.includes(url.hostname)) return
 
-  // Only same-origin GETs are cached; POSTs and cross-origin requests go to the network untouched.
-  if (request.method !== 'GET' || url.origin !== self.location.origin) {
+  // Only same-origin GETs are cached; POSTs, cross-origin requests and /api/ (a function's answer must be fresh) go to the network untouched.
+  if (request.method !== 'GET' || url.origin !== self.location.origin || url.pathname.startsWith('/api/')) {
     return
   }
 
