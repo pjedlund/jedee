@@ -308,6 +308,7 @@ singletons:
         fields:
           - { name: workerPath, label: Service worker address, widget: string, required: false, hint: 'Starts with / and ends in .js. Empty = /serviceworker.js. ⚠ A worker only covers the folder it is in, so a nested address like /app/sw.js leaves the rest of the site out' }
           - { name: keepCaches, label: Caches to keep, widget: list, required: false, hint: 'Names of caches the worker must not delete when it updates, such as one that holds a log the visitor made. Empty = none' }
+          - { name: precache, label: Extra files to save at install, widget: list, required: false, hint: 'Addresses starting with /, such as an app script, saved when the worker installs so the page works offline after one visit. Empty = only the start page and icons' }
           - { name: push, label: Push notification code, widget: string, required: false, hint: 'A path under src/_includes, such as pwa/push.js. Empty = no push code. A path with no file stops the build' }
       - name: analytics
         label: Analytics

@@ -13,7 +13,7 @@ const {identity, profiles} = settings;
 const flags = settings.switches ?? {};
 // The parts of the site that are on unless settings say false (utils/switches.js); `flags` holds the rest of settings.switches under their own names below.
 export const switches = resolveSwitches(settings);
-// The service worker's address, protected caches and push code (utils/pwa.js).
+// The service worker's address, protected caches, extra files to save at install and push code (utils/pwa.js).
 export const pwa = resolvePwa(settings);
 const site = siteSettings();
 const words = loadWords();

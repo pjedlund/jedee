@@ -11,11 +11,13 @@ export function resolvePwa(settings, includesDir = INCLUDES) {
   if (typeof workerPath !== 'string' || !workerPath.startsWith('/') || !workerPath.endsWith('.js')) throw new Error(`settings.pwa.workerPath is ${JSON.stringify(workerPath)}, but it must start with / and end in .js`);
   const keepCaches = given.keepCaches ?? [];
   if (!Array.isArray(keepCaches) || keepCaches.some(name => typeof name !== 'string')) throw new Error('settings.pwa.keepCaches must be a list of cache names');
+  const precache = given.precache ?? [];
+  if (!Array.isArray(precache) || precache.some(file => typeof file !== 'string' || !file.startsWith('/'))) throw new Error('settings.pwa.precache must be a list of addresses that start with /');
   const push = given.push || false;
   if (push !== false) {
     if (typeof push !== 'string') throw new Error(`settings.pwa.push is ${JSON.stringify(push)}, but it must be false or a path under src/_includes`);
     const file = path.resolve(includesDir, push);
     if (!file.startsWith(includesDir + path.sep) || !fs.existsSync(file)) throw new Error(`settings.pwa.push is "${push}", but src/_includes/${push} doesn't exist`);
   }
-  return {workerPath, keepCaches, push};
+  return {workerPath, keepCaches, precache, push};
 }
