@@ -32,8 +32,8 @@ Markdown fences go through `markdown-it-prism`, configured in `src/_config/plugi
 It happened by accident to every ` ```njk ` fence, 15 of them, almost all on wiki pages quoting layouts. **Prism has no Nunjucks grammar.** Every one of them had been rendering flat while the `js` and `css` blocks beside them were colored.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/syntax-njk-vs-jinja2.png" alt="The same three lines of Nunjucks in two code panels, laid out identically. The upper panel is a single flat gray, every character the same color. In the lower panel the if and endif keywords are violet italics, the variable names and the h2 tag name are crimson, the class attribute name is blue, and the braces and percent signs are gray." width="1400" height="548">
-  <figcaption>The same fence, above as it rendered for fifteen blocks and below after the rewrite. The upper panel is not broken-looking — it is simply a code block, which is why nobody noticed.</figcaption>
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/syntax-njk-vs-jinja2.png" alt="The same three lines of Nunjucks in two code panels, laid out identically. The upper panel is a single flat gray, every character the same color. In the lower panel the if and endif keywords are violet italics, the variable names and the h2 tag name are crimson, the class attribute name is blue, and the braces and percent signs are gray." width="1400" height="430">
+  <figcaption>The same fence, above as it rendered for fifteen blocks (<code>```njk</code>, which Prism has no grammar for, so plain text) and below after the rewrite to <code>```jinja2</code>. The upper panel is not broken-looking — it is simply a code block, which is why nobody noticed.</figcaption>
 </figure>
 
 That is the whole difficulty in one picture. Nothing about the flat block says *failure*; it says *plaintext*, which is a legitimate thing for a fence to be. The two are only distinguishable side by side, and only ever became visible because a colored `js` block happened to sit next to one.

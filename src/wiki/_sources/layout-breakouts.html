@@ -54,18 +54,10 @@
   /* Blue marks the bars that stepped outside the text column — the whole point of the technique; green is the baseline they are measured against. */
   .bar.popout, .bar.feature, .bar.full { background: var(--color-accent-blue); }
 
-  .caption {
-    font-family: 'Source Code Pro', ui-monospace, monospace;
-    font-size: 15px; color: var(--color-text); opacity: 0.6; margin: 0 0 8px;
-  }
   .panel + .panel { margin-block-start: 26px; }
   /* The failing panel's own wrapper is a plain div — no class, so nothing here can accidentally rescue it. */
-  .panel .verdict { color: var(--color-accent-blue); opacity: 1; }
-  /* Dark shot: the dark accents are muted surface colors, so the bars take light text and the verdict the vivid blue. */
+  /* Dark shot: the dark accents are muted surface colors, so the bars take light text. */
   :root[data-theme='dark'] .bar { color: var(--color-headline); }
-  :root[data-theme='dark'] .panel .verdict { color: var(--color-blue-vivid); }
-  /* The caption's opacity would dim its colored label with it; the dark shot dims by color instead. */
-  :root[data-theme='dark'] .caption { opacity: 1; color: color-mix(in oklab, var(--color-text) 60%, var(--color-bg)); }
 </style>
 </head>
 <body>
@@ -88,7 +80,6 @@
   <div class="stage-narrow">
 
     <div class="panel">
-      <p class="caption">.wrapper &gt; .popout — <span class="verdict">steps out</span></p>
       <div class="wrapper" style="--wrapper-width: 24rem">
         <div class="bar">content</div>
         <div class="bar popout">.popout</div>
@@ -96,7 +87,6 @@
     </div>
 
     <div class="panel">
-      <p class="caption">.wrapper &gt; div &gt; .popout — <span class="verdict">silently content width</span></p>
       <div class="wrapper" style="--wrapper-width: 24rem">
         <div>
           <div class="bar">content</div>
@@ -106,7 +96,6 @@
     </div>
 
     <div class="panel">
-      <p class="caption">.wrapper &gt; .wrapper-pass &gt; .popout — <span class="verdict">steps out again</span></p>
       <div class="wrapper" style="--wrapper-width: 24rem">
         <div class="wrapper-pass">
           <div class="bar">content</div>

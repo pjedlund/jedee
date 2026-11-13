@@ -98,6 +98,8 @@ Wiki captions also stop at the paragraphs' `54ch` measure, so a caption's right 
 
 Measured on [[Layout breakouts]] at a 1440px window on 2026-10-01: both the paragraphs and the captions run from x = 208 to 959, inside a figure from 176 to 1264.
 
+**What a panel shows is said in the caption, not written into the picture.** Since 2026-11-13 a mockup carries no heading or label above its panels (a selector, a width, "before" and "after"); the caption names each one by position instead, above and below or left and right. Text in a PNG is not read out, not found by search, and shrinks with the image. Labels stay where they are the data itself, as in a table's column headings or a filmstrip's timestamps: [[OpenType features]], [[Layout shift]], [[The theme toggle]], [[Vertical rhythm]] and the reveal filmstrip on [[Choreographing CSS animations]].
+
 ### Dark twins
 
 The wiki's figures are shot from HTML mockups in `src/wiki/_sources/` by `npm run mockups`. A mockup opts into a dark version with one attribute:

@@ -53,10 +53,6 @@
   /* ⚠ Equal columns and identical page content in both: the chrome is the only thing that may differ. */
   .pair { display: grid; grid-template-columns: 262px 262px; gap: 36px; }
 
-  .label {
-    font-family: 'Source Code Pro', ui-monospace, monospace;
-    font-size: 12px; color: var(--ink); opacity: 0.55; margin: 0 0 12px; text-align: center;
-  }
 
   .phone { box-sizing: border-box; inline-size: 262px; block-size: 470px; border-radius: 26px; background: #39404a; padding: 6px; }
   .screen { inline-size: 100%; block-size: 100%; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; }
@@ -94,9 +90,6 @@
   .clock { inset-block-start: 0; block-size: 28px; display: flex; align-items: center; font-size: 10px; font-weight: 600; }
   .clock[data-side="start"] { inset-inline-start: 16px; }
   .clock[data-side="end"] { inset-inline-end: 14px; letter-spacing: 2px; opacity: 0.85; }
-  .key { opacity: 1; margin: 16px 0 0; display: flex; align-items: center; justify-content: center; gap: 8px; }
-  .key span { opacity: 0.55; }
-  .key i { inline-size: 22px; block-size: 10px; border-radius: 2px; background: color-mix(in srgb, #d0621e 30%, var(--paper)); }
 </style>
 </head>
 <body>
@@ -104,7 +97,6 @@
 <div class="specimen" data-shot="pwa-display-modes">
   <div class="pair">
     <div>
-      <p class="label">in the browser</p>
       <div class="phone"><div class="screen" data-compare="display-mode">
         <div class="status"><span>9:41</span><span class="dots">▮▮▮ ▰</span></div>
         <div class="urlbar">
@@ -121,7 +113,6 @@
     </div>
 
     <div>
-      <p class="label">display: standalone</p>
       <div class="phone"><div class="screen" data-compare="display-mode">
         <div class="status"><span>9:41</span><span class="dots">▮▮▮ ▰</span></div>
         <div class="app-body">
@@ -136,7 +127,6 @@
 <div class="specimen" data-shot="pwa-safe-areas">
   <div class="pair" data-pair="orientations">
     <div>
-      <p class="label">upright, from the Home Screen</p>
       <div class="phone" data-orientation="upright"><div class="screen">
         <div class="safe"><div class="app-body">
           <div class="crumb"><svg viewBox="0 0 100 100"><path d="m50 0 .588.003V0h9.706v30.882h-9.706v.009a19 19 0 0 0-.588-.009c-10.558 0-19.118 8.559-19.118 19.118S39.441 69.118 50 69.118 69.118 60.559 69.118 50V30.882C69.118 13.826 82.945 0 100 0v50c0 27.614-22.386 50-50 50S0 77.614 0 50 22.386 0 50 0"/></svg><span>Johan Edlund</span></div>
@@ -148,7 +138,6 @@
     </div>
 
     <div>
-      <p class="label">held sideways</p>
       <div class="phone" data-orientation="sideways"><div class="screen">
         <div class="safe"><div class="app-body">
           <div class="crumb"><svg viewBox="0 0 100 100"><path d="m50 0 .588.003V0h9.706v30.882h-9.706v.009a19 19 0 0 0-.588-.009c-10.558 0-19.118 8.559-19.118 19.118S39.441 69.118 50 69.118 69.118 60.559 69.118 50V30.882C69.118 13.826 82.945 0 100 0v50c0 27.614-22.386 50-50 50S0 77.614 0 50 22.386 0 50 0"/></svg><span>Johan Edlund</span></div>
@@ -158,7 +147,6 @@
       </div></div>
     </div>
   </div>
-  <p class="label key"><i></i><span>padding on body: env(safe-area-inset-*), the size the phone reports for that side</span></p>
 </div>
 
 </body>

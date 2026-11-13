@@ -17,7 +17,6 @@
   /* A specimen carries its own paper the way a device frame carries its own bezel — so one shot reads deliberately on either theme of the wiki page. */
   .specimen { inline-size: fit-content; background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 22px 26px 26px; margin-block-end: 44px; }
 
-  .label { font-family: 'Source Code Pro', ui-monospace, monospace; font-size: 12px; color: var(--ink); opacity: 0.55; margin: 0 0 12px; }
 
   /* Browser chrome drawn OUTSIDE the scaled iframe, so it stays crisp while the page inside is scaled. */
   .browser { border: 1px solid var(--chrome-rule); border-radius: 7px; overflow: hidden; background: var(--chrome); inline-size: fit-content; }
@@ -32,14 +31,12 @@
   .pair { display: flex; align-items: flex-start; gap: 30px; }
   /* Two 1280px frames side by side come to 1368 CSS px — twice the figure column. Stacked, the two breadcrumbs also line up vertically, which is what the eye needs here. */
   .stack { display: grid; gap: 22px; }
-  .pair .cap { font-family: 'Source Code Pro', ui-monospace, monospace; font-size: 11px; opacity: 0.55; margin: 0 0 8px; }
 </style>
 </head>
 <body>
 
 <!-- ⚠ Every frame below is built by CLONING one header string, so the markup is identical by construction and only the named variable can differ. -->
 <div class="specimen" data-shot="main-menu-open">
-  <p class="label">with JavaScript · 1280px</p>
   <div class="browser">
     <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="pill">johanedlund.se/photos/pier-4-ribersborg/</span></div>
     <div class="viewport" data-frame="open"></div>
@@ -47,17 +44,14 @@
 </div>
 
 <div class="specimen" data-shot="main-menu-no-js">
-  <p class="label">without JavaScript · the same panel, in normal flow</p>
   <div class="pair">
     <div>
-      <p class="cap">1280px — two rows</p>
       <div class="browser">
         <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="pill">johanedlund.se</span></div>
         <div class="viewport" data-frame="nojs-wide"></div>
       </div>
     </div>
     <div>
-      <p class="cap">375px — six rows</p>
       <div class="browser">
         <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="pill">johanedlund.se</span></div>
         <div class="viewport" data-frame="nojs-narrow"></div>
@@ -67,17 +61,14 @@
 </div>
 
 <div class="specimen" data-shot="main-menu-breadcrumb-crush">
-  <p class="label">the flexbox trap · both frames 1280px, no JavaScript, same markup</p>
   <div class="stack">
     <div>
-      <p class="cap">the pin relaxed to flex: 1 1 auto, row still nowrap</p>
       <div class="browser">
         <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="pill">johanedlund.se/photos/pier-4-ribersborg/</span></div>
         <div class="viewport" data-frame="crush"></div>
       </div>
     </div>
     <div>
-      <p class="cap">shipped: flex: 1 1 22rem, and the row may wrap</p>
       <div class="browser">
         <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="pill">johanedlund.se/photos/pier-4-ribersborg/</span></div>
         <div class="viewport" data-frame="fixed"></div>

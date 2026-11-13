@@ -28,7 +28,6 @@
   /* ⚠ Equal columns: the frame's position along the fade is the ONLY thing that may differ. */
   .strip { display: grid; grid-template-columns: repeat(3, 214px); gap: 18px; }
 
-  .label { font-family: 'Source Code Pro', ui-monospace, monospace; font-size: 12px; color: var(--color-text); opacity: 0.55; margin: 0 0 10px; }
 
   /* ---- copied VERBATIM from src/_includes/webc/custom-youtube.webc, whose <style> is inline in the component and so cannot be linked like a bundle ---- */
 
@@ -70,19 +69,16 @@
 <div class="specimen" data-shot="youtube-poster-fade">
   <div class="strip">
     <div>
-      <p class="label">0ms — the placeholder</p>
       <is-land class="video-wrapper" data-at="0" data-compare="poster-fade">
         <lite-youtube><button class="lyt-playbtn" aria-label="Play"></button></lite-youtube>
       </is-land>
     </div>
     <div>
-      <p class="label">175ms — mid fade</p>
       <is-land class="video-wrapper" data-at="175" data-compare="poster-fade">
         <lite-youtube><button class="lyt-playbtn" aria-label="Play"></button></lite-youtube>
       </is-land>
     </div>
     <div>
-      <p class="label">350ms — the poster</p>
       <is-land class="video-wrapper" data-at="350" data-compare="poster-fade">
         <lite-youtube><button class="lyt-playbtn" aria-label="Play"></button></lite-youtube>
       </is-land>
