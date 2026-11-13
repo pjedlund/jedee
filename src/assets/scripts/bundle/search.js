@@ -30,9 +30,9 @@ const iconFor = type => {
   return template ? template.content.cloneNode(true) : document.createDocumentFragment();
 };
 
-// Title matches rank above body-only matches; newest first within each group.
+// Title and searchTerms matches rank above body-only matches; newest first within each group.
 const rank = (entries, query) => {
-  const titled = entry => entry.title.toLowerCase().includes(query);
+  const titled = entry => `${entry.title} ${entry.terms || ''}`.toLowerCase().includes(query);
   return entries.sort((a, b) => titled(b) - titled(a) || b.date - a.date);
 };
 

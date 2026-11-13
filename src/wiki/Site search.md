@@ -62,7 +62,7 @@ eleventyImport: {collections: search.types}
 
 Each entry carries `url`, `title`, `type`, `date`, a ~140-character `text` excerpt, and a lowercased `keywords` string holding title, description, tags and the whole body. Only `keywords` is matched against; the rest is for rendering.
 
-A page can add words it never says itself with a `searchTerms:` front matter field, a string or a list. It joins `keywords` and nothing else, so it is never shown. The wiki uses it for acronyms: *Progressive web apps* carries `PWA`, *Accessibility* carries `a11y WCAG ARIA`, *Eleventy* carries `11ty`.
+A page can add words it never says itself with a `searchTerms:` front matter field, a string or a list. It joins `keywords`, and is copied to a short `terms` field that ranks with the title, so it is never shown. The wiki uses it for acronyms: *Progressive web apps* carries `PWA`, *Accessibility* carries `a11y WCAG ARIA`, *Eleventy* carries `11ty`. ⚠ In `keywords` alone it would not be enough: results rank title matches first and the rest newest first, and on 2026-11-13 *pwa* put the September PWA page below seventy newer pages that mention PWA, or *upward*, in passing.
 
 ### What `rawInput` still contains
 
@@ -84,8 +84,8 @@ Result rows are built client-side, so their per-type icons cannot be rendered pe
 Close to half the index has no body at all — 153 of 342 entries counted on 2026-09-20, mostly jams (82) and orienteering activities (63), which carry a title and front matter and nothing else. It was 153 of 289 and a clear majority until the wiki joined the searchable types; the bodyless count has not moved, the bodied one grew around it. A row with only an icon and a title is still the common case rather than the edge case, so the row omits the excerpt element entirely rather than rendering an empty one that leaves a ragged gap in the list. Design a result row against the body-less half, not against the posts that happen to have prose.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/site-search-panel.png" alt="A browser window with the search panel open under the header. The field holds the word night; below it seven results, each with a small type icon and a bold title. The first two, both orienteering activities, are a single line with no excerpt; the five below them — three wiki pages, a recipe and a jam — each carry two lines of gray excerpt text." width="1284" height="814">
-  <figcaption>Seven real hits for <code>night</code>. The top two rows are the common shape — icon and title, nothing else — and the row simply omits the excerpt element rather than leaving an empty one.</figcaption>
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/site-search-panel.png" alt="A browser window with the search panel open under the header. The field holds the word night; below it seven results, each with a small type icon and a bold title. The first two, both orienteering activities, are a single line with no excerpt; the five below them — three wiki pages, a recipe and a jam — each carry two lines of gray excerpt text." width="1284" height="754">
+  <figcaption>The panel open on seven real hits for <code>night</code>, at a 1280px window. The top two rows are the common shape — icon and title, nothing else — and the row simply omits the excerpt element rather than leaving an empty one.</figcaption>
 </figure>
 
 The include in `header.njk` is wrapped in an `{% if %}`, and the partial calls `{% svg %}`. That is the exact shape that once blanked the entire nav — see [[The interlinker's second render pass]]. It is safe only because `{% svg %}` is synchronous. If the panel ever renders empty with a green build, that is the first thing to check, not a template typo.
