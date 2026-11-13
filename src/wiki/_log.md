@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-11-13] ingest | Progressive web apps
+
+From the session that tried a one-page app copy of the site on a phone. [[Progressive web apps]] gains the paragraph on `viewport-fit=cover`, the safe-area padding on `body` (and why not on `.wrapper`) and the Home Screen name tag, and now names the worker template's new path, which the lint entry below missed on this page.
+
 ## [2026-11-13] lint | The service worker's three strategies
 
 The worker template moved from `src/pages/serviceworker.njk` to `src/common/serviceworker.njk`, beside the manifest; [[The service worker's three strategies]] names the new path in both places. Nothing about the worker itself changed.

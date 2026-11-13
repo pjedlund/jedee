@@ -1,7 +1,7 @@
 ---
 description: "What actually makes a site installable — HTTPS, a manifest and a service worker — and what changes when someone installs it, which is less than the name suggests."
 date: 2026-09-04
-updated: 2026-10-31
+updated: 2026-11-13
 ---
 
 A **progressive web app** is an ordinary website that a browser will offer to install: it gets an icon on the home screen or in the launcher, opens without browser chrome, and — if it has cached anything — works with the network gone. There is no separate artifact, no store, no second codebase. The same URLs serve the same HTML to a browser tab and to the installed app.
@@ -59,11 +59,13 @@ The site is installable, and a page you have visited comes back fully styled wit
 
 jedee's only manifest divergence is `name`. EE writes `"{{ meta.siteName }} - {{ meta.siteDescription }}"`; here `name` and `short_name` are both just `meta.siteName`. "Johan Edlund" is twelve characters, inside the budget a launcher gives `short_name` anyway, so there is nothing to abbreviate and nothing to gain from a longer `name` that only ever appears in the install dialog.
 
-**The service worker was written for this site**, and it comes from [Max Böck's](https://github.com/maxboeck/eleventastic/blob/master/src/serviceworker.njk) — credited in a comment at the top of `src/pages/serviceworker.njk` — extended with runtime caching on 23 June 2026. Registration is six lines at the foot of `base.njk`, at the address in `pwa.workerPath` (`/serviceworker.js` unless a site sets another; a worker placed in a folder can only control that folder), with no `scope` argument (the default, the origin root, is what is wanted) and no `.then()`/`.catch()` logging, since a failed registration is not something a visitor can act on.
+**The service worker was written for this site**, and it comes from [Max Böck's](https://github.com/maxboeck/eleventastic/blob/master/src/serviceworker.njk) — credited in a comment at the top of `src/common/serviceworker.njk` — extended with runtime caching on 23 June 2026. Registration is six lines at the foot of `base.njk`, at the address in `pwa.workerPath` (`/serviceworker.js` unless a site sets another; a worker placed in a folder can only control that folder), with no `scope` argument (the default, the origin root, is what is wanted) and no `.then()`/`.catch()` logging, since a failed registration is not something a visitor can act on.
 
 ⚠ **`start_url` is `meta.url`, resolved at build time.** Change the domain or the deploy environment and the manifest is wrong until the site is rebuilt — the same build-time coupling that bites elsewhere in this repo.
 
 **Two colors, and the manifest usually loses.** `theme_color` is the brand slate `#495464`, but the `<meta name="theme-color">` tags override it the moment a page renders. So the manifest's color only paints the surfaces that exist *before* any page does — the splash screen and the app-switcher card. Everything after that is `themeLight` or `themeDark`. [[Favicons]] has the full account, and the six device frames showing the icon on each of those surfaces.
+
+**The page runs to the edges of the screen, and pads itself back in.** The viewport tag in `base.njk` carries `viewport-fit=cover`, which lets an installed app draw under the clock, the notch and the home bar; without it the phone keeps the page inside those edges. The other half is one declaration on `body` in `global-styles.css`, `padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px)`. The phone reports those four sizes itself, so nothing is tuned to one model, and in a browser tab held upright they are zero. The padding is on `body`, not on `.wrapper`, so full-width parts stay clear as well and a phone held sideways looks as it did before the tag. Anything fixed to the screen is outside that padding and brings its own: the pull-to-refresh mark and the full-screen map both read the same `env()` values. `<meta name="apple-mobile-web-app-title">` in `meta-info.njk` sets the name under the icon on an iPhone. All three are jedee's; Eleventy Excellent ships none of them. Checked on an iPhone 13 mini on 13 November 2026 with a one-page trial copy of the site.
 
 `/offline/` is a plain page precached on install, returned only for a URL that has never been visited; everything visited comes back from the runtime cache instead. [[The service worker's three strategies]] covers why.
 
