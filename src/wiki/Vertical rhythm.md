@@ -106,7 +106,7 @@ Captions, the meta line, table heads and captions, code blocks and footnotes are
 
 <figure class="popout" data-wiki-mockup>
   <img eleventy:formats="webp,png" src="/assets/images/wiki/vertical-rhythm-lattice.png" alt="Three columns side by side over faint horizontal rules at every body line, with a stronger rule every three body lines. Each column has orange ticks at the top of each of its lines. Left, body text, ticked every line. Middle, an italic caption in smaller type, ticked every three-quarter line: its fifth tick meets the body text's fourth on the strong rule. Right, four table rows, ticked every one and a half lines: the third tick lands on the same strong rule." width="2000" height="528">
-  <figcaption>Body text (one line each), caption (three-quarter line) and table rows (one and a half lines) under the prototype, left to right. The darker rules are one body line apart, the faint ones a quarter line. Each column is ticked at the top of every one of its lines, and all three meet on the strong rule, three body lines down.</figcaption>
+  <figcaption>Body text, caption and table rows, each ticked at the top of every line. All three meet on the strong rule, three body lines down.</figcaption>
 </figure>
 
 ### Figures and images
