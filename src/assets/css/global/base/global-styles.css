@@ -26,6 +26,8 @@ body {
   color: var(--color-text);
   background-color: var(--color-bg);
   accent-color: var(--color-accent-orange);
+  /* ⚠ Goes with viewport-fit=cover in base.njk: keeps the page clear of the notch, the clock and the home bar. Physical sides on purpose, as the insets are. */
+  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
   /* Wherever hyphens: auto is on, leave two letters behind and take three forward (Bringhurst 2.4.1). */
   hyphenate-limit-chars: auto 2 3;
   /* A quarter line; the first region pads the page back onto the lattice below the header (region.css). The token is the fallback where the lattice is off. */
