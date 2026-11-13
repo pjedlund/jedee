@@ -1,7 +1,7 @@
 ---
 description: "A disclosure menu built so the fallback is the base layer: the button is injected from a template, and the CSS detects its absence structurally rather than asking whether scripts can run."
 date: 2026-08-03
-updated: 2026-10-27
+updated: 2026-11-13
 ---
 
 A site menu that collapses behind a button is one of the few interface patterns that genuinely needs JavaScript, which makes it a standing test of whether a site's enhancement layers are real. The robust arrangement, set out in [Manuel Matuzović's *Building the main navigation for a website*](https://web.dev/articles/website-navigation), is to build the list first and add the button last: plain `<a>` elements, wrapped in `<ul role="list">`, inside a labeled `<nav>` landmark, with the toggle **injected by script from a `<template>`**. Nothing hides the list except a button that, by construction, only exists when the script that operates it has run.
@@ -59,11 +59,11 @@ For one day the width came from the dev grid instead: five columns wide, snapped
 
 ### The no-JS layout
 
-Without the button the panel keeps its `<ul>` but becomes a right-aligned row of wrapping pills in normal flow — three rows at 1280px, six at 375px. The leader dots are dropped (an empty flexible spacer only reads as a leader when every row shares a width) and the padding tightens.
+Without the button the panel keeps its `<ul>` but becomes a row of wrapping pills in normal flow, on a line of its own under the breadcrumb and left-aligned with it — two rows at 1280px, six at 375px. Until 2026-11-13 the pills were right-aligned beside the breadcrumb on a wide screen, which left them starting at a different point on every row. The leader dots are dropped (an empty flexible spacer only reads as a leader when every row shares a width) and the padding tightens.
 
 <figure class="feature" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/main-menu-no-js.png" alt="Two browser windows side by side, both without JavaScript. At 1280 pixels the post-type links form a right-aligned row of pills wrapping onto three lines beside the breadcrumb. At 375 pixels the same links wrap onto six lines under the breadcrumb." width="1724" height="446">
-  <figcaption>The fallback without JavaScript at both ends: 1280px on the left, in two rows, and 375px on the right, in six. No button, so the panel is a plain row of pills in normal flow — right-aligned, no leader dots, and wrapping to fit.</figcaption>
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/main-menu-no-js.png" alt="Two browser windows side by side, both without JavaScript. In both, the post-type links sit under the breadcrumb, left-aligned with it: two lines of pills at 1280 pixels, six at 375 pixels." width="1724" height="446">
+  <figcaption>The fallback without JavaScript at both ends: 1280px on the left, in two rows, and 375px on the right, in six. No button, so the panel is a plain row of pills in normal flow under the breadcrumb — left-aligned, no leader dots, and wrapping to fit.</figcaption>
 </figure>
 
 Before that, the panel kept its dropdown layout: two columns of `minmax(15rem, 1fr)` inside a header row with nowhere near 30rem to give, so `auto-fit` collapsed to one column and the header became a sixteen-row list that pushed the page content most of a screen down.
@@ -81,21 +81,21 @@ The header row is a `.repel` holding the [[Breadcrumb|breadcrumb]] and a cluster
 
 .site-header .repel > .cluster:has(.mainnav):not(:has(.menu-toggle)) {
   --cluster-wrap: nowrap;
-  flex: 1 1 22rem;
+  flex: 1 1 100%;
   min-inline-size: 0;
 }
 ```
 
-A fixed basis makes the row grow into what the trail leaves on a wide screen and wrap onto a separate full-width line on a narrow one. The trail's truncation is the `-webkit-line-clamp` described in [[Text wrapping]].
+A basis of 100% sends the pill row to a line of its own at every width, so it never competes with the trail for space. Until 13 November 2026 the basis was 22rem, which let the row grow into what the trail left on a wide screen and wrap onto its own line only on a narrow one. The trail's truncation is the `-webkit-line-clamp` described in [[Text wrapping]].
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/main-menu-breadcrumb-crush.png" alt="Two browser windows stacked, identical except for the header row's flex declarations. In the upper one the breadcrumb reads Photos then a single truncated letter; in the lower one it reads Photos then Pier 4, Ribersborg in full." width="1284" height="750">
-  <figcaption>The same markup, the same width (1280px), no JavaScript. Above, the cluster's pin relaxed to <code>flex: 1 1 auto</code> with the row still pinned to one line; below, the shipped pair. The trail is what pays for it.</figcaption>
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/main-menu-breadcrumb-crush.png" alt="Two browser windows stacked, identical except for the header row's flex declarations. In the upper one the breadcrumb reads Photos then a single truncated letter; in the lower one it reads Photos then Pier 4, Ribersborg in full, with the pills on a line of their own below it." width="1284" height="776">
+  <figcaption>The same markup, the same width (1280px), no JavaScript. Above, the cluster's pin relaxed to <code>flex: 1 1 auto</code> with the row still pinned to one line; below, as shipped, the pills on a line of their own. The trail is what pays for it.</figcaption>
 </figure>
 
 The two wrap values go through the compositions' custom properties rather than declaring `flex-wrap` from outside; `flex` and `min-inline-size` stay plain declarations because they size the element as an item of the row, not the cluster's internals. That distinction, and the two traps in converting a declaration to a knob, are in [[Configuring a layout composition]] — which is also where the no-JS pill row's `.cluster` class comes from, since this page's fallback row used to rebuild that composition by hand.
 
-The `:has(.mainnav)` guard is load-bearing: during the soft launch the header omits the nav entirely in production, which also means no button, and without it the cluster grew to 22rem around nothing but the theme toggle.
+The `:has(.mainnav)` guard is load-bearing: during the soft launch the header omits the nav entirely in production, which also means no button, and without it the cluster would take a whole line around nothing but the theme toggle.
 
 ### Contrast is a property of the pairing, not the color
 
