@@ -114,4 +114,5 @@ figure.feature[data-wiki-mockup] > :not(figcaption) {
   border: none;
   border-radius: 0;
   outline: none;
+  box-shadow: none;
 }
