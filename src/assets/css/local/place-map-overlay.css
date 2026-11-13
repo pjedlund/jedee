@@ -37,7 +37,8 @@ The maximize button and the modal overlay it opens; part of place-map.css, inclu
   inset: 0;
   z-index: 2000;
   display: none;
-  padding: var(--place-map-overlay-inset);
+  /* ⚠ Fixed to the screen, so the body's safe-area padding does not reach it: never less than the notch on any side. */
+  padding: max(var(--place-map-overlay-inset), env(safe-area-inset-top, 0px)) max(var(--place-map-overlay-inset), env(safe-area-inset-right, 0px)) max(var(--place-map-overlay-inset), env(safe-area-inset-bottom, 0px)) max(var(--place-map-overlay-inset), env(safe-area-inset-left, 0px));
   background: color-mix(in srgb, var(--color-gray-900) 97%, transparent);
 }
 .place-map-overlay[data-open] {
