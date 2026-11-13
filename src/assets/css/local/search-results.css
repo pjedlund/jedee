@@ -10,7 +10,7 @@ The result list inside the search panel; included by search.njk beside search.cs
 }
 
 .search-result a {
-  --search-result-icon: var(--color-icon);
+  --search-result-icon: currentColor;
   /* Measured against the PANEL surface, not the page — a color-mix is only valid on the surface it was tuned on. 84%, not 80%: the highlighted row's own tint darkens the ground under it and 80% fell to 4.31:1 there. */
   --search-result-text-color: color-mix(in oklab, var(--color-text) 84%, var(--search-surface));
   --search-result-bg: transparent;

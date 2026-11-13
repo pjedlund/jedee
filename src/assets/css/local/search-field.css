@@ -19,7 +19,7 @@ The input row inside the search panel; included by search.njk beside search.css.
   inline-size: 0.95em;
   block-size: 0.95em;
   margin-inline: 0.2em; /* centres the glyph in the result icons' 1.35em box */
-  color: var(--color-icon);
+  color: currentColor;
 }
 
 .search-input {
