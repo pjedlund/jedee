@@ -52,11 +52,6 @@ The input row inside the search panel; included by search.njk beside search.css.
   color: color-mix(in oklab, var(--color-text) 72%, var(--search-surface));
 }
 
-/* ⚠ `display` on the class outranks the UA's [hidden] rule, so the empty-field state needs saying explicitly — without it a dead X sits in the field from the moment the panel opens. */
-.search-clear[hidden] {
-  display: none;
-}
-
 .search-clear {
   flex: none;
   display: inline-flex;

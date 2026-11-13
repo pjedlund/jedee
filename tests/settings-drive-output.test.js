@@ -50,3 +50,10 @@ test('a wiki page with no byline setting has no dangling dash', async t => {
   assert.ok(eyebrow, 'the wiki page has no eyebrow line')
   assert.ok(!eyebrow[1].includes('—'), `the eyebrow still has a dash: ${eyebrow[1].trim()}`)
 })
+
+test('search switched off needs one line: no type list, and no search.json', async t => {
+  const site = await makeTempSite({ settings: { search: { enabled: false, types: null, only: null } } })
+  t.after(() => site.cleanup())
+  await site.build()
+  assert.ok(!site.exists('search.json'), 'search.json is still written')
+})

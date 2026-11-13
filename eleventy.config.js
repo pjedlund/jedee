@@ -260,7 +260,7 @@ export default async function(eleventyConfig) {
     eleventyConfig.ignores.add('src/common/feed-*.njk');
     eleventyConfig.ignores.add('src/feeds/**');
   }
-  if (!switches.serviceWorker) eleventyConfig.ignores.add('src/pages/serviceworker.njk');
+  if (!switches.serviceWorker) eleventyConfig.ignores.add('src/common/serviceworker.njk');
 
   // A switched-off post type builds nothing: no posts, no archive page, no feeds. ⚠ A type name in settings.postTypes that doesn't exist stops the build.
   const postTypesOn = enabledPostTypes(settings);

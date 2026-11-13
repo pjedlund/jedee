@@ -130,3 +130,8 @@ test('buildIndex: a body-less post still produces an entry', () => {
   assert.equal(entry.text, '')
   assert.match(entry.keywords, /snogeholmsskogen/)
 })
+
+test('buildIndex: no settings at all gives an empty index', () => {
+  assert.deepEqual(buildIndex({ note: [] }, undefined), [])
+  assert.deepEqual(buildIndex({}, { enabled: false }), [])
+})
