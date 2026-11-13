@@ -30,29 +30,10 @@
 
   .grid { display: grid; grid-template-columns: repeat(3, max-content); gap: 22px; align-items: start; }
 
-  .col-head {
-    font-family: 'Source Code Pro', ui-monospace, monospace;
-    font-size: 16px; color: var(--color-text); margin: 0 0 12px; text-align: center;
-  }
-  .col-head b { display: block; font-weight: 400; font-size: 13px; opacity: 0.55; margin-block-start: 3px; }
-  /* The one width the standard mobile audit emulates — the whole finding, so it is the one heading that is not grey. */
-  .col-head.inband b { color: var(--color-accent-blue); opacity: 1; }
-
-  .state {
-    font-family: 'Source Code Pro', ui-monospace, monospace;
-    font-size: 13px; color: color-mix(in oklab, var(--color-text) 55%, var(--color-bg)); margin: 14px 0 5px;
-  }
-  .rows { font-weight: 700; }
-  /* Green where the two font states agree, blue where they disagree — the disagreement IS the shift. */
-  .agree .rows { color: var(--color-accent-green); }
-  .differ .rows { color: var(--color-accent-blue); }
+  .grid > div { display: grid; gap: 14px; }
 
   /* ⚠ An iframe, not a copy: the wrapper gutter and every space and type token are vw-based, so they read the VIEWPORT; a fixed-width div inside this 1400px page would wrap at the wrong width. */
   iframe { display: block; border: 1px solid var(--color-bg-accent-2); border-radius: 4px; background: var(--color-bg); }
-  /* Dark shot: the dark accents are muted surface colors, too dim as text — the vivid pair reads at ~5:1. */
-  :root[data-theme='dark'] .col-head.inband b,
-  :root[data-theme='dark'] .differ .rows { color: var(--color-blue-vivid); }
-  :root[data-theme='dark'] .agree .rows { color: var(--color-green-vivid); }
 </style>
 </head>
 <body>
@@ -83,27 +64,23 @@
       html[data-font='fallback'] .footer-links, html[data-font='fallback'] .footer-links * { font-family: 'Source Sans Fallback', arial, sans-serif; }
     </style></head><body>${window.SITE_FOOTER}</body></html>`;
 
-  // 412 is what Lighthouse's mobile preset emulates, now just below the band; 430 is inside it, 444 above. Measured 2026-10-05.
-  const widths = [[412, 'Lighthouse mobile — below the band'], [430, 'in the band'], [444, 'above the band']];
-  const states = [['web', 'web font'], ['fallback', 'fallback']];
+  // 412 is what Lighthouse's mobile preset emulates, below the band; 443 is inside it, 460 above. Band measured 433–453 on 2026-11-13.
+  const widths = [412, 443, 460];
+  const states = ['web', 'fallback'];
 
   const grid = document.getElementById('grid');
   const frames = [];
 
-  widths.forEach(([w, note], i) => {
+  widths.forEach(w => {
     const col = document.createElement('div');
-    col.innerHTML = `<p class="col-head${i === 1 ? ' inband' : ''}">${w}px<b>${note}</b></p>`;
-    states.forEach(([font, label]) => {
-      const p = document.createElement('p');
-      p.className = 'state';
+    states.forEach(font => {
       const f = document.createElement('iframe');
       f.width = w;
       f.setAttribute('scrolling', 'no');
       f.srcdoc = frameDoc(font);
-      // ⚠ data-compare goes on the IFRAME, not the column: the column also carries a heading that differs per width, so the gate would pass on the heading even if both frames rendered the same.
       f.dataset.compare = `band-${w}`;
-      col.append(p, f);
-      frames.push({ f, p, label, w });
+      col.append(f);
+      frames.push({ f, font, w });
     });
     grid.append(col);
   });
@@ -124,11 +101,8 @@
       (byWidth[fr.w] ??= []).push(fr);
     }
 
-    for (const fr of frames) {
-      const differs = new Set(byWidth[fr.w].map(x => x.rows)).size > 1;
-      fr.p.className = `state ${differs ? 'differ' : 'agree'}`;
-      fr.p.innerHTML = `${fr.label} — <span class="rows">${fr.rows} rows, ${fr.height}px</span>`;
-    }
+    // The figure carries no numbers; its caption does, so log them for whoever re-writes it.
+    console.log(frames.map(fr => `${fr.w}px ${fr.font}: ${fr.rows} rows, ${fr.height}px`).join('\n'));
 
     requestAnimationFrame(() => requestAnimationFrame(() => { window.__mockupReady = true; }));
   })();

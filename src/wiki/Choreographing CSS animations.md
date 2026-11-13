@@ -1,7 +1,7 @@
 ---
 description: "Sequencing a multi-step animation in CSS alone — a delay chain expressed as named step times, fill modes, clip-path wipes, and a caret that tracks the wipe edge."
 date: 2026-08-28
-updated: 2026-10-27
+updated: 2026-11-13
 ---
 
 A multi-step animation — wipe something away, reveal something else, blink, wipe again — does not need JavaScript to sequence it. CSS gives every element one animation clock, and several animations can run on it at once, comma-separated, each with its duration, easing and delay. Chaining the delays is the whole technique.
@@ -101,8 +101,8 @@ document.getAnimations()
 The start page — and only the start page — types its name. The header's logomark is followed by JOHAN EDLUND wiping in behind a caret, which blinks twice and then backspaces the name away, leaving the bare logomark that every other page shows. Everything above is from building it, 2026-08-28.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/reveal-filmstrip.png" alt="Six stacked frames of the site header, each labeled with a time. At 1.080s only the letters JO are visible with a caret bar beside them. At 1.325s the name has reached JOHAN EDL. At 1.650s the full name JOHAN EDLUND stands with the caret parked a small gap past the D. At 2.100s the name is complete and the caret has vanished. At 3.525s the name has shrunk back to JOHAN with the caret on its edge. At 3.700s only the orange logomark is left." width="1260" height="884">
-  <figcaption>The chain at six instants on its clock. The caret is one bar riding the wipe edge — the same duration and easing as the clip, and a percentage offset doing the tracking.</figcaption>
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/reveal-filmstrip.png" alt="Six stacked frames of the site header. At 1.080s only the letters JO are visible with a caret bar beside them. At 1.325s the name has reached JOHAN EDL. At 1.650s the full name JOHAN EDLUND stands with the caret parked a small gap past the D. At 2.100s the name is complete and the caret has vanished. At 3.525s the name has shrunk back to JOHAN with the caret on its edge. At 3.700s only the orange logomark is left." width="720" height="884">
+  <figcaption>The chain at six instants on its clock, top to bottom: 1.080s, the wipe just begun; 1.325s, halfway, the caret on its edge; 1.650s, the name complete, the caret parked at the end; 2.100s, the first blink, the caret off (<code>step-end</code>, no fade); 3.525s, backspacing, the caret riding the edge back; 3.700s, past the end, the bare logomark every other page shows. The caret is one bar riding the wipe edge — the same duration and easing as the clip, and a percentage offset doing the tracking.</figcaption>
 </figure>
 
 The mockup is `src/wiki/_sources/breadcrumb-reveal.html`, and it is made with the technique in the section above: six copies of the real header, every animation in each paused and seeked to a different `currentTime`, so nothing is running when the shot is taken and the stale-frame trap cannot arise. It links the site's compiled `global.css` and this block's `breadcrumb-reveal.css`, so the type, the logomark and every step time in the picture are the shipped ones rather than a copy. `npm run mockups` re-shoots it.

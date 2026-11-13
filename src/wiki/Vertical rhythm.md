@@ -1,7 +1,7 @@
 ---
 description: "Spacing a page in fractions of its body text's line-height, how far CSS can hold headings, lists, figures, tables and small text to that beat, its musical side, Ariel Salminen's Scale.css, and a quarter-line system for jedee tried on the style guide."
 date: 2026-09-30
-updated: 2026-10-31
+updated: 2026-11-13
 ---
 
 **Vertical rhythm** is spacing a page in measured intervals of one unit, the line-height of its body text, so that the text resumes on the same beat after every interruption: a heading, a list, a figure, a table. Bringhurst puts it as a musical analogy: "Space in typography is like time in music. It is infinitely divisible, but a few proportional intervals can be much more useful than a limitless choice of arbitrary quantities." His rule for it is to [add and delete vertical space in measured intervals](http://webtypography.net/2.2.2).
@@ -105,8 +105,8 @@ Items a quarter line apart. jedee gives a list, a code block and a rule more spa
 Captions, the meta line, table heads and captions, code blocks and footnotes are set a step smaller (16px on a phone, 22px wide). A three-quarter line fits them: 20.25px on a phone (1.25, the tight end of what text takes) and 31.5px wide (1.43). Four of their lines take exactly three body lines, so where small text stands beside body text the two meet every third body line. That is Mark Boulton's incremental leading, at a ratio of 4:3.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/vertical-rhythm-lattice.png" alt="Three columns side by side over faint horizontal rules at every body line, with a stronger rule every three body lines. Each column has orange ticks at the top of each of its lines. Left, body text, ticked every line. Middle, an italic caption in smaller type, ticked every three-quarter line: its fifth tick meets the body text's fourth on the strong rule. Right, four table rows, ticked every one and a half lines: the third tick lands on the same strong rule." width="2000" height="660">
-  <figcaption>Body text, caption and table rows under the prototype. Each column is ticked at the top of every one of its lines, and all three meet on the strong rule, three body lines down.</figcaption>
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/vertical-rhythm-lattice.png" alt="Three columns side by side over faint horizontal rules at every body line, with a stronger rule every three body lines. Each column has orange ticks at the top of each of its lines. Left, body text, ticked every line. Middle, an italic caption in smaller type, ticked every three-quarter line: its fifth tick meets the body text's fourth on the strong rule. Right, four table rows, ticked every one and a half lines: the third tick lands on the same strong rule." width="2000" height="528">
+  <figcaption>Body text (one line each), caption (three-quarter line) and table rows (one and a half lines) under the prototype, left to right. The darker rules are one body line apart, the faint ones a quarter line. Each column is ticked at the top of every one of its lines, and all three meet on the strong rule, three body lines down.</figcaption>
 </figure>
 
 ### Figures and images

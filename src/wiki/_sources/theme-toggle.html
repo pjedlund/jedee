@@ -25,15 +25,9 @@
     margin-block-end: 40px;
   }
 
-  .label {
-    font-family: 'Source Code Pro', ui-monospace, monospace;
-    font-size: 12px; color: inherit; opacity: 0.55; text-align: center; margin: 12px 0 0;
-  }
-  .label b { display: block; font-weight: 400; opacity: 0.8; }
 
   /* ⚠ Equal columns: the animation clock is the only thing that may differ between frames. */
   .strip { display: grid; grid-template-columns: repeat(5, 132px); gap: 6px; }
-  /* align-content start, or a cell with a shorter caption centres its whole stack in the stretched row and the labels step out of line. */
   /* Each frame carries its own paper: the theme's background snaps at the click, so a shared ground would hide the very thing this strip is about. */
   .cell { display: grid; justify-items: center; align-content: start; }
   .strip .cell { padding: 14px 8px 12px; border-radius: 5px; }
@@ -46,9 +40,6 @@
   .swatches { display: grid; grid-template-columns: repeat(4, 152px); gap: 8px; }
   .swatch { inline-size: 64px; block-size: 64px; }
   .swatch svg { inline-size: 100%; block-size: 100%; stroke-linecap: round; }
-  .ratio { font-size: 15px; font-family: 'Source Sans', sans-serif; color: var(--color-text); margin: 8px 0 0; }
-  .ratio b { font-weight: 700; }
-  .fails { opacity: 0.55; }
 </style>
 </head>
 <body>
@@ -100,17 +91,11 @@
 
   // Beams fade in 0.15s, the disc grows in 0.25s, the mask circle waits 0.25s and then slides for 0.5s — so the interesting instants are bunched at the front and at the handover.
   // Frame 0 is the light resting state — the tile before the click. The other four are past it, so they wear the dark ground and the moon's color from their first millisecond.
-  const frames = [
-    [0, 'light', 'the sun at rest, cx = 24'],
-    [80, '80 ms', 'beams folding away, disc growing'],
-    [260, '260 ms', 'a plain disc — the mask has not bitten'],
-    [420, '420 ms', 'the mask circle sliding in'],
-    [750, '750 ms', 'cx = 17, the moon'],
-  ];
+  const frames = [0, 80, 260, 420, 750];
 
   const strip = document.getElementById('strip');
   if (pass === 'dark') Object.assign(strip.parentElement.style, { background: dark.bg, borderColor: dark.edge });
-  frames.forEach(([t, stamp, note], i) => {
+  frames.forEach((_, i) => {
     const cell = document.createElement('div');
     cell.className = 'cell';
     const p = i === 0 ? light : dark;
@@ -118,27 +103,18 @@
     cell.style.color = p.text;
     // The light tile shares the specimen's own paper, so without an edge it reads as a gap rather than a frame.
     cell.style.border = `1px solid ${p.edge}`;
-    // ⚠ data-compare goes on the GLYPH, not the cell: the cell also holds a label that differs per frame, so the gate would pass on the caption even if every glyph were identical.
-    // ⚠ Built in the LIGHT state. A transition only exists where a value changes, so a frame rendered dark from the start has nothing to seek — every glyph came out as the finished moon.
-    cell.innerHTML = `<div class="glyph" data-compare="morph" style="color:${p.glyph}">${icon(i)}</div><p class="label">${stamp}<b>${note}</b></p>`;
+      // ⚠ Built in the LIGHT state. A transition only exists where a value changes, so a frame rendered dark from the start has nothing to seek — every glyph came out as the finished moon.
+    cell.innerHTML = `<div class="glyph" data-compare="morph" style="color:${p.glyph}">${icon(i)}</div>`;
     strip.append(cell);
   });
 
-  // orange-200 through orange-500 with their measured contrast on the light page — the one background the sun is ever drawn on.
-  const oranges = [
-    ['orange-200', '#ffdec3', '1.16'],
-    ['orange-300', '#ffb78a', '1.54'],
-    ['orange-400', '#f68f5a', '2.12'],
-    ['orange-500', '#d0621e', '3.50'],
-  ];
+  // orange-200 through orange-500, on the light page: the one background the sun is ever drawn on.
+  const oranges = ['#ffdec3', '#ffb78a', '#f68f5a', '#d0621e'];
   const swatches = document.getElementById('swatches');
-  oranges.forEach(([name, hex, ratio], i) => {
+  oranges.forEach((hex, i) => {
     const cell = document.createElement('div');
     cell.className = 'cell';
-    const passes = Number(ratio) >= 3;
-    cell.innerHTML = `<div class="swatch" data-compare="sun-colors" style="color:${hex}">${icon('s' + i)}</div>
-      <p class="ratio${passes ? '' : ' fails'}"><b>${ratio}:1</b></p>
-      <p class="label">${name}<b>${hex}</b></p>`;
+    cell.innerHTML = `<div class="swatch" data-compare="sun-colors" style="color:${hex}">${icon('s' + i)}</div>`;
     swatches.append(cell);
   });
 
@@ -153,7 +129,7 @@
       getComputedStyle(g.querySelector('.sun')).transform;
       for (const a of g.getAnimations({ subtree: true })) {
         a.pause();
-        a.currentTime = frames[i + 1][0];
+        a.currentTime = frames[i + 1];
       }
     });
     // ⚠ Two frames after seeking, not zero: a shot taken in the same batch as the pause can still show the previous frame.

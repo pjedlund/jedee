@@ -49,7 +49,6 @@
 
 <div class="specimen" data-shot="vertical-rhythm-lattice">
   <div id="lattice"></div>
-  <p class="key mono"><span><i></i>one body line</span><span><i class="q"></i>a quarter line</span></p>
 </div>
 
 <script>
@@ -185,7 +184,6 @@
     // The lattice close-up: body text, small text and table rows side by side, each column ticked at the top of every one of its own lines. The strong rule falls every three body lines, where all three kinds start together.
     const cols = `
       <div class="wrapper-pass">
-        <div class="lattice-head"><p>Body text: 1 line</p><p>Caption: ¾ line</p><p>Table row: 1½ lines</p></div>
         <div class="lattice-cols">
           <p style="--tick: var(--line)">Running text sets the beat. Every line of it is one line-height tall, and whatever interrupts it hands the beat back unchanged.</p>
           <figure style="--tick: calc(var(--line) * 0.75)"><figcaption>Four lines of a caption take exactly three lines of the text beside it, so every third body line and every fourth caption line start together, and so do the lines after them.</figcaption></figure>
@@ -193,8 +191,7 @@
         </div>
       </div>`;
     const colsCss = `
-      .lattice-head, .lattice-cols { display: grid; grid-template-columns: repeat(3, 1fr); column-gap: 40px; align-items: start; }
-      .lattice-head p { font-family: 'Source Code Pro', monospace; font-size: 13px; line-height: 1.4; margin: 0 0 12px; padding-inline-start: 18px; opacity: 0.7; }
+      .lattice-cols { display: grid; grid-template-columns: repeat(3, 1fr); column-gap: 40px; align-items: start; }
       .lattice-cols {
         background-image:
           repeating-linear-gradient(to bottom, var(--grid-line) 0 2px, transparent 2px calc(var(--line) * 3)),
