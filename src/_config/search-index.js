@@ -45,5 +45,5 @@ const toEntry = item => {
   };
 };
 
-export const buildIndex = (collections, {types, only = {}}) =>
+export const buildIndex = (collections, {types = [], only = {}} = {}) =>
   types.flatMap(type => (collections[type] || []).filter(item => matchesOnly(item, only[type])).map(toEntry));

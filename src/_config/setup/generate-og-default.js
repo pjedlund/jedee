@@ -4,11 +4,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
 import puppeteer from 'puppeteer';
-import { settings, siteName, siteDomain, themeOg, pathToSvgLogo, opengraph_default } from '../../_data/meta.js';
+import { settings, siteName, siteDomain, themeOg, pathToSvgLogo, opengraph_default, opengraph_default_alt } from '../../_data/meta.js';
 import { cardFontFaces, missingCardFonts } from '../utils/og-fonts.js';
 
 // The landing page's own second sentence, kept in step by hand — the intro is prose in the page.
 const TAGLINE = settings.identity.tagline;
+if (!TAGLINE) throw new Error('settings.identity.tagline is empty, and the share image prints it under the name.');
 
 // ⚠ NOT meta.domain — that comes from URL and is `localhost` in a local run.
 const SITE_DOMAIN = siteDomain;
@@ -68,5 +69,5 @@ await browser.close();
 fs.mkdirSync(path.dirname(OUT), { recursive: true });
 await sharp(shot).resize(1200, 630).jpeg({ quality: 90, chromaSubsampling: '4:4:4' }).toFile(OUT);
 console.log(`Wrote ${OUT} — 1200x630, ${(fs.statSync(OUT).size / 1024).toFixed(0)} kB`);
-console.log(`⚠ meta.opengraph_default_alt must still describe it: "${siteName} — personal website"`);
+console.log(`⚠ meta.opengraph_default_alt must still describe it: "${opengraph_default_alt}"`);
 console.log('⚠ This is the fallback for every page that is NOT an article — see the wiki "Open Graph images".');
