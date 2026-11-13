@@ -50,7 +50,7 @@ The dim type/date/revision line under a post or wiki title (partials/entry-heade
 
 /* Centres a 1em icon on the capital height, the optical middle of the label. */
 .meta-icon {
-  color: var(--color-icon);
+  color: currentColor;
   inline-size: 1em;
   block-size: 1em;
   vertical-align: calc(0.5cap - 0.5em);

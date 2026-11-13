@@ -1,7 +1,7 @@
 ---
 description: "Icon sets, outline versus filled styles, inline SVG colored by currentColor, labeling icons for assistive technology, and the filled Phosphor set this site uses."
 date: 2026-10-14
-updated: 2026-10-27
+updated: 2026-11-13
 ---
 
 An icon on a web page is a small picture standing in for a word: a type of post, an action, a place to go. Almost every site takes its icons from a published **icon set** rather than drawing them, because a set is drawn to one grid, one corner radius and one line weight, and those shared rules are what make thirty unrelated pictures read as a family.
@@ -50,7 +50,7 @@ Each Phosphor file is the icon's path in a `viewBox="0 0 256 256"` with `width="
 
 The files kept their Lucide names when their contents changed, so no template or data file had to change, and `src/_data/navigation.js` still names a post type's icon by the old word. Several no longer describe what they draw: `dumbbell.svg` a barbell, `repeat-2.svg` Phosphor's repeat, `reply.svg` a bent arrow. The design system page lists every icon with its file name.
 
-**Two icon colors.** An icon beside a text label — a mega-menu row, a search result, the meta line, the caption's info mark — takes `--color-icon`: a pale blue-grey in light, and in dark a dimmed blue-grey made by mixing the blue into the text color before the page (the light recipe, blue straight into the page, goes near-black there). It turns orange where its row or link is hovered. An icon that is the whole control — the logomark, the MENU chevron, the search and theme toggles, the footer logos — stays the header's resting grey, `--color-text-header-dim`, like the breadcrumb links beside it. The blue-grey measures about 2:1 against the page, under the 3:1 an icon-only control needs to be made out ([[Accessibility]]); beside a label the icon is decoration and the label carries the meaning.
+**Icons take the color of their text.** An icon beside a text label — a mega-menu row, a search result, the search field, the meta line — is `currentColor`, so it is exactly as strong as its label, and it turns orange where its row or link is hovered. An icon that is the whole control — the logomark, the MENU chevron, the search and theme toggles, the footer logos — is the header's resting grey, `--color-text-header-dim`, like the breadcrumb links beside it. From 9 to 13 November 2026 the labelled icons had a blue-grey of their own, `--color-icon`; it measured about 2:1 against the page, under the 3:1 an icon-only control needs ([[Accessibility]]), and was dropped for the text color.
 
 **Search and clear are the two outline icons**, a choice made on seeing their filled versions in place. Both use Phosphor's bold weight (regular until 2026-11-09, when it read too thin), which keeps them in the family; filled, the clear button's X is cut out of a rounded square.
 
