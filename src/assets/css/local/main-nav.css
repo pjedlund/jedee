@@ -244,19 +244,19 @@ A "Menu ⌄" button drops a two-column, table-of-contents-style panel of every p
 }
 
 /* ---------- no-JS fallback ----------
-   No button is injected, so the <ul> is the first child of .mainnav. Show it as a static row of wrapping pills — what the nav-accessible pattern recommends. The two-column panel needs width the header row can't give it: it collapsed to one 16-row column.
-   The row is built around a small MENU trigger — it never wraps, and it pins the controls cluster (breadcrumb.css). Both pins have to relax here, or the pill row eats the row and the breadcrumb crushes to "NO".
-   `:has(.mainnav)` is load-bearing: during the soft launch header.njk omits the nav entirely in production, which also means no .menu-toggle. Without this guard the cluster grew to 22rem around nothing but the theme toggle, stranding the moon in the middle of the row instead of pinned right. */
+   No button is injected, so the <ul> is the first child of .mainnav: a static row of wrapping pills, the nav-accessible pattern's fallback. It takes a row of its own under the breadcrumb, left-aligned, so the two never share a line.
+   The header row is built around a small MENU trigger — it never wraps, and it pins the controls cluster (breadcrumb.css). Both pins have to relax here, or the pill row eats the row and the breadcrumb crushes to "NO".
+   `:has(.mainnav)` is load-bearing: during the soft launch header.njk omits the nav entirely in production, which also means no .menu-toggle. Without this guard the cluster would take a whole line around nothing but the theme toggle. */
 .site-header .repel:has(.mainnav):not(:has(.menu-toggle)) {
   /* Relaxes the pin breadcrumb.css sets, through repel's own knob. Outweighs .breadcrumb-bar, so the wrap wins either way. */
   --repel-wrap: wrap;
 }
 
 .site-header .repel > .cluster:has(.mainnav):not(:has(.menu-toggle)) {
-  /* Basis 22rem, not `auto`: the pill row's max-content is ~2000px, so an auto basis makes the cluster the biggest thing on the row and crushes the breadcrumb beside it. --cluster-wrap keeps the theme toggle alongside the pills. `flex`/`min-inline-size` stay plain declarations — they size this element as a flex ITEM of the row, not something cluster owns. */
+  /* A 100% basis puts the pills on their own line under the breadcrumb. `flex`/`min-inline-size` are plain declarations: they size this element as a flex ITEM of the row, not something cluster owns. */
   --cluster-wrap: nowrap;
 
-  flex: 1 1 22rem;
+  flex: 1 1 100%;
   min-inline-size: 0;
 }
 
@@ -267,7 +267,7 @@ A "Menu ⌄" button drops a two-column, table-of-contents-style panel of every p
 .mainnav > .megamenu:first-child {
   /* The <ul> carries `cluster`, so the pill row IS the composition — only its knobs are set here. (The panel rule below overrides it with `display: grid` in the enhanced state.) */
   --gutter: var(--space-3xs) var(--space-2xs);
-  --cluster-horizontal-alignment: flex-end;
+  --cluster-horizontal-alignment: flex-start;
   /* Re-assert wrapping: the ancestor rule below sets --cluster-wrap: nowrap and custom properties inherit. */
   --cluster-wrap: wrap;
 
