@@ -59,7 +59,7 @@ A lightbox trigger that is narrower than its column needs the **width cap on the
 
 <figure class="popout" data-wiki-mockup>
   <img eleventy:formats="webp,png" src="/assets/images/wiki/photoswipe-hit-area.png" alt="The same photographed race map twice, both capped to the same width. Around the left one, a tinted dashed rectangle extends well past the picture to the full width of the column; around the right one, the same rectangle hugs the picture." width="1360" height="598">
-  <figcaption>The tint is the <code>&lt;a&gt;</code>'s box, not a drawn annotation — the picture paints over it, so what shows is exactly the clickable emptiness beside it. Left, the cap is on the image alone; right, <code>.cover-zoom</code> puts it on the wrapper too.</figcaption>
+  <figcaption>The tint is the clickable <code>&lt;a&gt;</code>. Left, the cap on the image alone leaves a clickable strip beside it; right, <code>.cover-zoom</code> caps the wrapper too.</figcaption>
 </figure>
 
 ### Without JavaScript it is a link

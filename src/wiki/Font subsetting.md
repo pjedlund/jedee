@@ -10,7 +10,7 @@ The cost is a failure that never announces itself. When a character is not in th
 
 <figure class="popout" data-wiki-mockup>
   <img eleventy:formats="webp,png" src="/assets/images/wiki/subsetting-fallback.png" alt="The same heading, I’m in “Düsseldorf” – again…, set twice in Source Serif Bold. In the upper line, from the old subset, six characters are underlined in orange: the apostrophe, both curly quotes, the ü, the en dash and the ellipsis. They are drawn in Georgia and look slightly heavier and differently shaped. The lower line, from the current subset, is uniform." width="1306" height="332">
-  <figcaption>This site's heading font before and after the 2026-09-10 fix, from the two real font files: above, the old subset of 101 characters, with no curly quotes and no ü; below, the new one of 109. The underlined characters were missing from the old subset and were drawn in the fallback, Georgia.</figcaption>
+  <figcaption>The heading font's old subset above (101 characters) and the new one below (109). The underlined characters were missing and fell back to Georgia.</figcaption>
 </figure>
 
 The characters most likely to go missing are the ones an author never types:

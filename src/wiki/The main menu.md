@@ -63,7 +63,7 @@ Without the button the panel keeps its `<ul>` but becomes a row of wrapping pill
 
 <figure class="feature" data-wiki-mockup>
   <img eleventy:formats="webp,png" src="/assets/images/wiki/main-menu-no-js.png" alt="Two browser windows side by side, both without JavaScript. In both, the post-type links sit under the breadcrumb, left-aligned with it: two lines of pills at 1280 pixels, seven at 375 pixels, each count in parentheses." width="1724" height="476">
-  <figcaption>The fallback without JavaScript at both ends: 1280px on the left, in two rows, and 375px on the right, in seven. No button, so the panel is a plain row of pills in normal flow under the breadcrumb — left-aligned, no leader dots, and wrapping to fit.</figcaption>
+  <figcaption>Without JavaScript at 1280px (left, two rows) and 375px (right, seven): plain pills under the breadcrumb, with no leader dots.</figcaption>
 </figure>
 
 Before that, the panel kept its dropdown layout: two columns of `minmax(15rem, 1fr)` inside a header row with nowhere near 30rem to give, so `auto-fit` collapsed to one column and the header became a sixteen-row list that pushed the page content most of a screen down.
@@ -90,7 +90,7 @@ A basis of 100% sends the pill row to a line of its own at every width, so it ne
 
 <figure class="popout" data-wiki-mockup>
   <img eleventy:formats="webp,png" src="/assets/images/wiki/main-menu-breadcrumb-crush.png" alt="Two browser windows stacked, identical except for the header row's flex declarations. In the upper one the breadcrumb reads Photos then a single truncated letter; in the lower one it reads Photos then Pier 4, Ribersborg in full, with the pills on a line of their own below it." width="1284" height="776">
-  <figcaption>The same markup, the same width (1280px), no JavaScript. Above, the cluster's pin relaxed to <code>flex: 1 1 auto</code> with the row still pinned to one line; below, as shipped, the pills on a line of their own. The trail is what pays for it.</figcaption>
+  <figcaption>Both 1280px, no JavaScript. Above, the cluster relaxed to <code>flex: 1 1 auto</code> crushes the breadcrumb; below, as shipped.</figcaption>
 </figure>
 
 The two wrap values go through the compositions' custom properties rather than declaring `flex-wrap` from outside; `flex` and `min-inline-size` stay plain declarations because they size the element as an item of the row, not the cluster's internals. That distinction, and the two traps in converting a declaration to a knob, are in [[Configuring a layout composition]] — which is also where the no-JS pill row's `.cluster` class comes from, since this page's fallback row used to rebuild that composition by hand.
