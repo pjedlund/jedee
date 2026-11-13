@@ -27,50 +27,23 @@ A caption is secondary text, and the usual typographic advice is to keep it in t
 
 ## In jedee
 
-Eleventy Excellent ships one `figcaption` rule in `global/base/global-styles.css`: centered, italic, one step smaller, `text-wrap: balance`. Since 2026-10-02 jedee's version of that rule is left-aligned, starts with an info icon, and wraps with `pretty`, and since 2026-10-05 it is upright rather than italic; the [[Text wrapping]] reasoning for `balance` went with the centering. The rest of this section is jedee's, and it covers every caption on the site: the markdown image title, the `{% image %}` shortcode, the lightbox component, a post's `credit:` under its featured image, and a `<figcaption>` written by hand.
+Eleventy Excellent ships one `figcaption` rule in `global/base/global-styles.css`: centered, italic, one step smaller, `text-wrap: balance`. Since 2026-10-02 jedee's version of that rule is left-aligned and wraps with `pretty`, and since 2026-10-05 it is upright rather than italic; the [[Text wrapping]] reasoning for `balance` went with the centering. The rest of this section is jedee's, and it covers every caption on the site: the markdown image title, the `{% image %}` shortcode, the lightbox component, a post's `credit:` under its featured image, and a `<figcaption>` written by hand.
 
-### The icon at the start of the line
+### Muted text, no icon
 
-The icon floats at the start of the caption's first line, and the text runs beside it. A second line clears the float and starts under the icon, at the caption's edge, so the caption reads as one left-aligned block on the prose edge. The icon is cap-height and dimmed, so it sits at the size of the capitals beside it rather than the full em box.
+Since 2026-11-13 a caption has no icon: it was an info glyph drawn in CSS and floated at the start of the first line, and it is gone. The caption is set in `--color-text-subdued` instead, which reads as secondary text in both themes. The YouTube and PeerTube links under a video keep their own filled icons ([[The YouTube embed]]), set in their own files.
 
 ```css
 figcaption {
-  --caption-icon-size: 1cap;
-  --caption-icon-gap: var(--space-xs);
-  --caption-icon-opacity: 0.6;
-}
-
-figcaption::before {
-  content: '';
-  float: inline-start;
-  inline-size: var(--caption-icon-size);
-  block-size: var(--caption-icon-size);
-  margin-block-start: calc((1lh - var(--caption-icon-size)) / 2);
-  margin-inline-end: var(--caption-icon-gap);
-  opacity: var(--caption-icon-opacity);
+  margin-block-start: var(--space-s);
+  font-size: var(--size-step-min-1);
+  color: var(--color-text-subdued);
+  text-align: start;
+  text-wrap: pretty;
 }
 ```
 
-Until 2026-10-04 the icon hung outside the text instead: the caption reserved room with `padding-inline-start` and the icon floated into it with an equal negative margin, so every line started after the icon. It was changed so a wrapped caption starts on the same edge as the paragraphs.
-
-A float never adds height to a line box, and an inline icon can, by pushing the line past its `line-height`. The caption therefore stays exactly one small-text line plus its quarter-line padding: 27px on a phone (20.25 + 6.75) and 42px wide (31.5 + 10.5), the same as before the icon, so [[Vertical rhythm]] is untouched. `1lh` is the caption's line height, so the margin centers the icon on the first line at any size. A leading space before the text collapses at the start of a line, and a float doesn't count as content, so whitespace in the markup can't widen the gap either.
-
-### An icon drawn in CSS
-
-The link underline on the site is `--underline-thickness`, 0.2ex, so it thickens with the text. It sits `0.3ch` below the text (the global `a` rule), so the gap scales with the text too; every underlined link uses both, the meta line's included since 2026-10-05, when its `0.25em` offset went. An icon from an SVG file scales its stroke with the icon's box instead. The info icon is drawn in CSS so its lines can be measured in `ex` too: a round border is the ring, and two background layers paint the dot and the stem.
-
-```css
-figcaption::before {
-  box-sizing: border-box;
-  border: var(--caption-icon-stroke) solid var(--caption-icon-color);
-  border-radius: 50%;
-  background:
-    radial-gradient(circle closest-side, var(--caption-icon-color) 85%, transparent) 50% 22% / var(--caption-icon-stroke) var(--caption-icon-stroke) no-repeat,
-    linear-gradient(var(--caption-icon-color) 0 0) 50% 78% / var(--caption-icon-stroke) 32% no-repeat;
-}
-```
-
-`--caption-icon-stroke` is `0.2ex` and `--caption-icon-color` is `--color-text-subdued`. The YouTube and PeerTube icons under a video are SVG files ([[The YouTube embed]]). Until 2026-10-14 they were outlines matched to this weight with `stroke-width: 0.2ex` and `vector-effect: non-scaling-stroke`; they are now filled brand marks ([[Icons]]), and those two rules are left over and draw nothing. The YouTube icon is `--color-red-vivid`. The video link keeps the older hanging layout, an icon floated into reserved padding, so its title lines all start after the icon. As a flex row (icon, gap, link) Chrome sized the link narrower than its text: a 44-character title wrapped onto two lines inside a 1024px row with no `max-width` anywhere. A block with a floated icon has no such sizing step.
+Inline `code` in a caption is sized in `em`, at 0.8 of the caption's text, the same ratio it has to body text. The chip used to be a fixed `--size-step-min-1`, which is the caption's own size, so in a caption it came out a fifth too big. The rule lives in `local/code.css` and covers every inline chip: body, caption, heading, table cell.
 
 ### As wide as the image
 

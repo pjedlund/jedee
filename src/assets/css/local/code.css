@@ -100,6 +100,7 @@ pre code {
 /* Style Adjustments for <code> within different contexts */
 /* Inline code sits in a raised chip, adapted from arielsalminen.com. ⚠ Keep it display: inline — inline-block adds the padding to the line height and stops long code wrapping. */
 :where(:not(pre)) > code {
+  font-size: 0.8em; /* ⚠ em, not a step: the chip follows the text around it (body, caption, heading, table), at the 0.8 ratio mono needs to look level with the sans */
   --inline-code-bg: color-mix(in oklab, var(--color-bg-accent) 65%, var(--color-bg));
   --inline-code-shadow: var(--box-shadow-chip);
 
@@ -109,9 +110,8 @@ pre code {
   box-shadow: var(--inline-code-shadow);
 }
 
-/* In a heading the chip scales with the heading: the same 0.8 ratio code has to body text (step-min-1 / step-0). */
+/* In a heading the chip takes tighter padding, in em so it scales with the heading. */
 :is(h1, h2, h3, h4, h5, h6) code {
-  font-size: 0.8em;
   padding: 0.1em 0.3em;
 }
 
