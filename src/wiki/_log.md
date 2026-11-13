@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-11-13] lint | The service worker's three strategies
+
+The worker template moved from `src/pages/serviceworker.njk` to `src/common/serviceworker.njk`, beside the manifest; [[The service worker's three strategies]] names the new path in both places. Nothing about the worker itself changed.
+
 ## [2026-11-09] lint | Tooltips, Site search, Icons
 
 From the end-of-day lint. [[Tooltips]] gains *The arrow* (a `::before` placed on the control, not the tooltip, so one rule covers six placements) and drops "no arrow" from *What is not built*. [[Site search]] had the old icon sizes; both rows and the mega-menu are `1.35em` now, and the field lines up with the rows. [[Icons]] gains the two-color split: `--color-icon` beside a label, the header grey on icon-only controls, for 3:1. The YouTube fade mockup pointed at a poster today's change renamed (480w → 1280w), which hung `mockups:check`. Links [[Accessibility]] from Icons.

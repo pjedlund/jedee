@@ -49,9 +49,11 @@ export async function makeTempSite({ settings = {}, files = {} } = {}) {
   const featuredFile = 'src/_data/featured.yaml';
   put(featuredFile, dump({ ...load(readFileSync(path.join(root, featuredFile), 'utf8')), posts: [] }, { lineWidth: -1 }));
   const nowFile = 'src/pages/now.md';
-  const now = matter(readFileSync(path.join(root, nowFile), 'utf8'));
-  for (const pick of ['listening', 'watching', 'reading']) if (pick in now.data) now.data[pick] = [];
-  put(nowFile, matter.stringify('', now.data));
+  if (existsSync(path.join(root, nowFile))) {
+    const now = matter(readFileSync(path.join(root, nowFile), 'utf8'));
+    for (const pick of ['listening', 'watching', 'reading']) if (pick in now.data) now.data[pick] = [];
+    put(nowFile, matter.stringify('', now.data));
+  }
 
   for (const [file, text] of Object.entries(files)) put(file, text);
 
