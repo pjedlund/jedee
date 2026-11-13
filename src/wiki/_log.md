@@ -7,6 +7,10 @@ Append-only. One entry per ingest / query-filed / lint, newest first. Entry form
 
 ## [2026-11-13] ingest | Progressive web apps
 
+[[Progressive web apps]] gains a figure beside the safe-area paragraph: two phone frames, upright and sideways, with the padding on `body` tinted so the bands the phone reserves for the clock, the notch and the home bar are visible. It is a second specimen in `pwa-display-modes.html`, shot as `pwa-safe-areas.png` with a dark twin.
+
+## [2026-11-13] ingest | Progressive web apps
+
 From the session that tried a one-page app copy of the site on a phone. [[Progressive web apps]] gains the paragraph on `viewport-fit=cover`, the safe-area padding on `body` (and why not on `.wrapper`) and the Home Screen name tag, and now names the worker template's new path, which the lint entry below missed on this page.
 
 ## [2026-11-13] lint | The service worker's three strategies
