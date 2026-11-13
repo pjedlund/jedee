@@ -1,7 +1,7 @@
 ---
 description: "The optional typographic behaviors built into a font file (ligatures, small caps, figure styles, alternates) and how CSS switches them on."
 date: 2026-09-10
-updated: 2026-10-31
+updated: 2026-11-13
 ---
 
 A modern font file carries more than one shape per character. **OpenType features** are named switches inside the file, each a four-letter tag, that substitute or reposition glyphs: `liga` joins "f" and "i" into one ligature, `smcp` swaps lowercase for small capitals, `onum` swaps lining figures for old-style ones. The tags are defined in the [OpenType feature registry](https://learn.microsoft.com/en-us/typography/opentype/spec/featuretags); which of them a given font implements is up to its designer.
@@ -43,13 +43,13 @@ The menu's post counts set `font-variant-numeric: tabular-nums` directly (`src/a
 What the shipped subsets can do, checked by rendering each feature on and off from the site's files (every pair verified by `npm run mockups:check` to render differently) and by comparing glyph outlines:
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/opentype-serif.png" alt="A table of Source Serif Bold features, each shown off and on. Common ligatures join the f-i and f-f-i in office and affine. Small caps turns Small Caps into small capitals. Old-style figures change 1984 and 2026 only slightly. Proportional figures tighten 1111. Diagonal fractions turn 1/2, 3/4 and 7/8 into single fraction glyphs. Ordinals raise the a and o after 1 and 2. Slashed zero puts a slash through each zero." width="1932" height="948">
-  <figcaption>Source Serif 700 as shipped: the headings' face. Old-style figures differ only slightly in this design.</figcaption>
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/opentype-serif.png" alt="A table of Source Serif Bold features, each shown off and on. Common ligatures join the f-i and f-f-i in office and affine. Small caps turns Small Caps into small capitals. Old-style figures change 1984 and 2026 only slightly. Proportional figures tighten 1111. Diagonal fractions turn 1/2, 3/4 and 7/8 into single fraction glyphs. Ordinals raise the a and o after 1 and 2. Slashed zero puts a slash through each zero." width="1932" height="880">
+  <figcaption>Source Serif 700 as shipped: the headings' face. Each row is one feature, off in the middle column and on at the right. Old-style figures differ only slightly in this design.</figcaption>
 </figure>
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/opentype-sans.png" alt="A table of Source Sans features, each shown off and on. Ligatures join ff and ft. Small caps, old-style figures, diagonal fractions and slashed zero behave as in the serif. Stylistic set 1 gives the capital I serifs; set 2 swaps a, g and l for single-story, simpler forms; set 6 gives the a a serif; set 10 puts a dot in the zero. Discretionary ligatures turn thorn-a-t into a single barred thorn, and turn she, he, her and his each into one invented glyph." width="1932" height="1408">
-  <figcaption>Source Sans as shipped: the body face. The last row is real: <code>dlig</code> replaces English pronouns with a single glyph.</figcaption>
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/opentype-sans.png" alt="A table of Source Sans features, each shown off and on. Ligatures join ff and ft. Small caps, old-style figures, diagonal fractions and slashed zero behave as in the serif. Stylistic set 1 gives the capital I serifs; set 2 swaps a, g and l for single-story, simpler forms; set 6 gives the a a serif; set 10 puts a dot in the zero. Discretionary ligatures turn thorn-a-t into a single barred thorn, and turn she, he, her and his each into one invented glyph." width="1932" height="1340">
+  <figcaption>Source Sans as shipped: the body face, laid out the same way. The last row is real: <code>dlig</code> replaces English pronouns with a single glyph.</figcaption>
 </figure>
 
 **Source Serif** (`source-serif.woff2`, Bold 700, 109 characters):

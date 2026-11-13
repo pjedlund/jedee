@@ -2,7 +2,7 @@
 description: "Cumulative Layout Shift: what it measures, why the element that moves is rarely the element at fault, and how a font-size-adjust fighting a size-adjust cost this site 0.18."
 searchTerms: "CLS"
 date: 2026-09-06
-updated: 2026-10-31
+updated: 2026-11-13
 ---
 
 A page that moves under the reader is a specific kind of broken. You go to click a link and an image finishes loading above it, so you click an ad instead. You start reading a paragraph and a font swaps in, reflowing the line you were on. Nothing failed and nothing is slow — the page simply arrived in pieces, and the later pieces pushed the earlier ones around.
@@ -233,11 +233,11 @@ Table: Footer link rows in the web font and the fallback, by viewport width (202
 **The fonts disagree about the footer and nothing else.** The 2026-09-07 sweep also counted the `h1` and the intro paragraph at 360, 390, 412, 720, 1100 and 1280 px: neither changed line count anywhere, and document height was identical in both font states at every width.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/layout-shift-font-band.png" alt="The site footer rendered six times in a three-by-two grid: at 412, 430 and 444 pixels wide, each in the web font and in the metric-matched fallback. At 412 both states take three rows of links; at 444 both take two. Only at 430 do they disagree: two rows and 64 pixels in the web font, three rows and 99 in the fallback." width="2660" height="1202">
-  <figcaption>The band, re-measured rather than redrawn: each panel is the real footer in its iframe at that viewport width, and the row counts and heights are read back off the rendered geometry. Only the middle column disagrees, and with no reserve its height follows the row count: that 35 px is how far the bottom-anchored footer moves.</figcaption>
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/layout-shift-font-band.png" alt="The site footer rendered six times in a three-by-two grid: at 412, 443 and 460 pixels wide, each in the web font and in the metric-matched fallback. At 412 both states take three rows of links; at 460 both take two. Only at 443 do they disagree: two rows and 64 pixels in the web font, three rows and 99 in the fallback." width="2718" height="960">
+  <figcaption>The band, re-measured rather than redrawn. Columns at 412px (Lighthouse's mobile width, below the band), 443px (in it) and 460px (above it); the web font on top, the fallback below. At 412px both take three rows (98px), at 460px both take two (64px), and at 443px the web font takes two rows (64px) and the fallback three (99px). Each panel is the real footer in its iframe at that viewport width, and the row counts and heights are read back off the rendered geometry. Only the middle column disagrees, and with no reserve its height follows the row count: that 35 px is how far the bottom-anchored footer moves.</figcaption>
 </figure>
 
-**The disagreement is a band from 419 to 439 px, and Lighthouse's mobile preset emulates 412 px**, now just below it. On 2026-09-07 the band was 409–430 and 412 sat inside it, which was the whole reason the mobile audit reported a residual CLS while every other width measured clean. The footer's version number is not what moved it (set to 0.9.0 or 1.0.0, the band stays put); the cause was not traced. It is not a mobile problem but a 20-pixel one whose position drifts with small changes to the footer's type, so a clean audit at 412 says nothing about the widths beside it.
+**The disagreement is a band from 433 to 453 px, and Lighthouse's mobile preset emulates 412 px**, now well below it. On 2026-09-07 the band was 409–430 and 412 sat inside it; on 2026-10-05 it was 419–439, as in the table above; on 2026-11-13 the figure's mockup, swept a pixel at a time from 400 to 470, put it at 433–453, with the footer's links unchanged since October and only the site's CSS different. 412 sitting inside it in September was the whole reason the mobile audit reported a residual CLS while every other width measured clean. The footer's version number is not what moved it (set to 0.9.0 or 1.0.0, the band stays put); the cause was not traced. It is not a mobile problem but a 20-pixel one whose position drifts with small changes to the footer's type, so a clean audit at 412 says nothing about the widths beside it.
 
 The residual metric error after the re-derived descriptors, measured as pure advance width on one unwrapped string:
 
@@ -343,7 +343,7 @@ The decision was to change nothing: the CSS is right for the platforms that have
 
 ### The figure
 
-`src/wiki/_sources/layout-shift.html` draws the band above. Six `srcdoc` iframes, one per width and font state, each loading the compiled `global.css` and the real footer lifted verbatim into `site-footer.js`; the row counts and heights in the labels are read out of each frame's geometry after its fonts settle, so the picture states what it measured rather than repeating the table.
+`src/wiki/_sources/layout-shift.html` draws the band above. Six `srcdoc` iframes, one per width and font state, each loading the compiled `global.css` and the real footer lifted verbatim into `site-footer.js`; the row counts and heights are read out of each frame's geometry after its fonts settle and logged to the console, and the caption quotes them, so the figure states what it measured rather than repeating the table. Changing `widths` in the mockup to every pixel from 400 to 470 is how the band's edges were found.
 
 **An iframe, not a copy.** The wrapper gutter and every space and type token here are `vw`-based, so they read the *viewport*; a fixed-width `div` inside the 1400 px shooter page would wrap at the wrong width. `srcdoc` rather than `src`: a `srcdoc` frame inherits the parent's origin so its geometry can be read back, where a separate `file://` document is an opaque origin and `contentDocument` comes back `null`.
 

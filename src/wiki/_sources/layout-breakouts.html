@@ -24,18 +24,13 @@
     margin-block-end: 40px;
   }
 
-  /* ⚠ Two constraints at once. Wide enough that every fixed track gets its real size — content + 2×popout + 2×feature + 2×gap is the minimum, and below it the minmax(0, …) tracks silently collapse instead of overflowing. Narrow enough that the shot lands near 1:1 in the page's 1088px popout column, or the labels downscale into illegibility. --wrapper-width is the knob that reconciles them; the fixed tracks stay at their real sizes. */
+  /* ⚠ Two constraints at once. Wide enough that every fixed track gets its real size — content + 2×popout + 2×feature + 2×gap is the minimum, and below it the minmax(0, …) tracks silently collapse instead of overflowing. Narrow enough that the shot lands near 1:1 in the page's 1088px popout column, or the bars and ruler downscale. --wrapper-width is the knob that reconciles them; the fixed tracks stay at their real sizes. */
   .stage { inline-size: 1040px; }
   .stage-narrow { inline-size: 760px; }
 
-  .mono { font-family: 'Source Code Pro', ui-monospace, monospace; }
-
   /* The ruler is placed on the SAME grid as the bars, one cell per track, so it can only ever show the tracks that actually resolved. */
   .ruler > * {
-    font-family: 'Source Code Pro', ui-monospace, monospace;
-    font-size: 11px; text-align: center; color: var(--color-text); opacity: 0.5;
-    padding-block: 4px; border: 1px dashed var(--color-bg-accent-2); border-radius: 3px;
-    overflow: hidden;
+    block-size: 22px; border: 1px dashed var(--color-bg-accent-2); border-radius: 3px;
   }
   .ruler > :nth-child(1) { grid-column: 1; }
   .ruler > :nth-child(2) { grid-column: 2; }
@@ -46,9 +41,7 @@
   .ruler > :nth-child(7) { grid-column: 7; }
 
   .bar {
-    font-family: 'Source Code Pro', ui-monospace, monospace;
-    font-size: 17px; text-align: center; color: var(--color-bg);
-    background: var(--color-accent-green); border-radius: 4px; padding-block: 9px;
+    block-size: 40px; background: var(--color-accent-green); border-radius: 4px;
     margin-block-start: 8px;
   }
   /* Blue marks the bars that stepped outside the text column — the whole point of the technique; green is the baseline they are measured against. */
@@ -56,8 +49,6 @@
 
   .panel + .panel { margin-block-start: 26px; }
   /* The failing panel's own wrapper is a plain div — no class, so nothing here can accidentally rescue it. */
-  /* Dark shot: the dark accents are muted surface colors, so the bars take light text. */
-  :root[data-theme='dark'] .bar { color: var(--color-headline); }
 </style>
 </head>
 <body>
@@ -65,13 +56,13 @@
 <div class="specimen" data-shot="layout-breakouts-tracks">
   <div class="stage">
     <div class="wrapper ruler" style="--wrapper-width: 40rem">
-      <div>1fr</div><div>6.25rem</div><div>2rem</div><div>--wrapper-width</div><div>2rem</div><div>6.25rem</div><div>1fr</div>
+      <div></div><div></div><div></div><div></div><div></div><div></div><div></div>
     </div>
     <div class="wrapper" style="--wrapper-width: 40rem">
-      <div class="bar">grid-column: content &nbsp;(the default)</div>
-      <div class="bar popout">.popout</div>
-      <div class="bar feature">.feature</div>
-      <div class="bar full">.full</div>
+      <div class="bar"></div>
+      <div class="bar popout"></div>
+      <div class="bar feature"></div>
+      <div class="bar full"></div>
     </div>
   </div>
 </div>
@@ -81,16 +72,16 @@
 
     <div class="panel">
       <div class="wrapper" style="--wrapper-width: 24rem">
-        <div class="bar">content</div>
-        <div class="bar popout">.popout</div>
+        <div class="bar"></div>
+        <div class="bar popout"></div>
       </div>
     </div>
 
     <div class="panel">
       <div class="wrapper" style="--wrapper-width: 24rem">
         <div>
-          <div class="bar">content</div>
-          <div class="bar popout" data-compare="nesting">.popout</div>
+          <div class="bar"></div>
+          <div class="bar popout" data-compare="nesting"></div>
         </div>
       </div>
     </div>
@@ -98,8 +89,8 @@
     <div class="panel">
       <div class="wrapper" style="--wrapper-width: 24rem">
         <div class="wrapper-pass">
-          <div class="bar">content</div>
-          <div class="bar popout" data-compare="nesting">.popout</div>
+          <div class="bar"></div>
+          <div class="bar popout" data-compare="nesting"></div>
         </div>
       </div>
     </div>

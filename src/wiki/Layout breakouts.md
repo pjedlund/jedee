@@ -1,7 +1,7 @@
 ---
 description: "A named-column grid that lets an element step wider than the text column it sits in, and the direct-child constraint that makes it awkward in practice."
 date: 2026-08-23
-updated: 2026-10-27
+updated: 2026-11-13
 ---
 
 A reading page wants one narrow column for prose and the occasional element wider than it — a diagram, a code block, a full-bleed image. The old way was negative margins, which fight the page's padding and break at small widths.
@@ -34,8 +34,8 @@ The current technique is [Ryan Mulligan's layout breakouts](https://ryanmulligan
 ```
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/layout-breakouts-tracks.png" alt="A diagram of the seven grid tracks in a row, labeled from the outside in: 1fr, 6.25rem, 2rem, --wrapper-width, 2rem, 6.25rem, 1fr. Below them four stacked bars of increasing width, each centered. The narrowest is dark and labeled &quot;grid-column: content (the default)&quot;. The three wider ones are orange and labeled .popout, .feature and .full, each reaching one track further out on both sides." width="2080" height="458">
-  <figcaption>The seven tracks, and the four spans available across them. Every bar is a real grid item in a real <code>.wrapper</code> — nothing here is positioned, and no bar knows how wide it is.</figcaption>
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/layout-breakouts-tracks.png" alt="A diagram of the seven grid tracks in a row, drawn as dashed boxes. Below them four stacked bars of increasing width, each centered. The narrowest is green and spans the content track. The three wider ones are blue, each reaching one track further out on both sides." width="2080" height="428">
+  <figcaption>The seven tracks, and the four spans available across them. The dashed row is the tracks, from the outside in: <code>1fr</code>, <code>6.25rem</code>, <code>2rem</code> and <code>--wrapper-width</code> in the middle. The bars, top to bottom: <code>grid-column: content</code> (the default), <code>.popout</code>, <code>.feature</code> and <code>.full</code>. Every bar is a real grid item in a real <code>.wrapper</code> — nothing here is positioned, and no bar knows how wide it is.</figcaption>
 </figure>
 
 Two details do most of the work. The `[name-start]` / `[name-end]` line names mean `grid-column: popout` is a complete instruction — CSS resolves a bare name to its `-start`/`-end` pair. And `--content` is a `min()` of a maximum width and `100% - gap * 2`, so the content column is capped on a wide screen and still leaves a margin on a narrow one, with no media query anywhere.
@@ -43,8 +43,8 @@ Two details do most of the work. The `[name-start]` / `[name-end]` line names me
 **The catch is that these classes only work on a direct child of the grid.** `grid-column` is a property of a grid *item*, and a grid item is a direct child. Wrap the content in anything — a container element, a component's root, a plugin's output — and every breakout class inside it silently does nothing. There is no error; the element just renders at content width, which is exactly what it would do if the class were misspelled. This is the single thing that makes breakouts fiddly in real templates, and it has more than one answer depending on what did the wrapping.
 
 <figure class="popout" data-wiki-mockup>
-  <img eleventy:formats="webp,png" src="/assets/images/wiki/layout-breakouts-direct-child.png" alt="Three stacked panels, each showing a dark content-width bar above an orange bar marked .popout. In the first, labeled &quot;.wrapper &gt; .popout — steps out&quot;, the orange bar is wider than the dark one. In the second, labeled &quot;.wrapper &gt; div &gt; .popout — silently content width&quot;, the orange bar is exactly as wide as the dark one. In the third, labeled &quot;.wrapper &gt; .wrapper-pass &gt; .popout — steps out again&quot;, it is wider once more." width="1520" height="710">
-  <figcaption>The same class, three depths: <code>.wrapper &gt; .popout</code> steps out, <code>.wrapper &gt; div &gt; .popout</code> stays at content width, and <code>.wrapper &gt; .wrapper-pass &gt; .popout</code> steps out again. The middle panel is the failure: <code>.popout</code> is present and did nothing, which is indistinguishable from a typo.</figcaption>
+  <img eleventy:formats="webp,png" src="/assets/images/wiki/layout-breakouts-direct-child.png" alt="Three stacked panels, each showing a green content-width bar above a blue popout bar. In the first, the blue bar is wider than the green one. In the second, it is exactly as wide as the green one. In the third, it is wider once more." width="1520" height="680">
+  <figcaption>The same class, three depths, the green bar the content width and the blue one <code>.popout</code>: <code>.wrapper &gt; .popout</code> steps out, <code>.wrapper &gt; div &gt; .popout</code> stays at content width, and <code>.wrapper &gt; .wrapper-pass &gt; .popout</code> steps out again. The middle panel is the failure: <code>.popout</code> is present and did nothing, which is indistinguishable from a typo.</figcaption>
 </figure>
 
 `subgrid` is the general answer where the wrapper is yours: a direct child that spans the full track and re-declares `grid-template-columns: subgrid` republishes the parent's named lines to its children, so the breakout classes work one level deeper.
