@@ -13,6 +13,11 @@
   text-wrap: pretty;
 }
 
+/* ⚠ !important on purpose: a class that sets `display` (.button, .cluster) would otherwise show a hidden element. */
+[hidden]:not([hidden='until-found']) {
+  display: none !important;
+}
+
 h1,
 h2,
 h3,
