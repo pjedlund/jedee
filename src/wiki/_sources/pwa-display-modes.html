@@ -77,6 +77,26 @@
   .hl.t { block-size: 13px; inline-size: 75%; background: var(--line-title); }
   .hl.s { inline-size: 88%; }
   .hl.u { inline-size: 62%; }
+  /* Second specimen: the bands are the page's real padding, painted, so the text starts where the padding ends. Sizes are an iPhone 13 mini's (50, 34 and 21 points) drawn to the frame's scale. */
+  .specimen + .specimen { margin-block-start: 40px; }
+  .pair[data-pair="orientations"] { grid-template-columns: 262px 470px; }
+  .pair[data-pair="orientations"] > div { display: flex; flex-direction: column; }
+  .phone[data-orientation="sideways"] { inline-size: 470px; block-size: 262px; margin-block: auto; }
+  .screen { position: relative; }
+  .safe { --band: color-mix(in srgb, #d0621e 30%, var(--paper)); flex: 1; display: flex; padding: var(--inset, 0); background: linear-gradient(var(--paper), var(--paper)) content-box, var(--band); }
+  .phone[data-orientation="upright"] .safe { --inset: 28px 0 20px; }
+  .phone[data-orientation="sideways"] .safe { --inset: 0 28px 14px; }
+  .notch, .homebar, .clock { position: absolute; }
+  .notch { background: #39404a; }
+  .phone[data-orientation="upright"] .notch { inset-block-start: 0; inset-inline: 76px; block-size: 18px; border-radius: 0 0 12px 12px; }
+  .phone[data-orientation="sideways"] .notch { inset-inline-start: 0; inset-block: 72px; inline-size: 18px; border-radius: 0 12px 12px 0; }
+  .homebar { inset-block-end: 5px; inset-inline: 0; margin-inline: auto; inline-size: 88px; block-size: 4px; border-radius: 999px; background: var(--ink); opacity: 0.75; }
+  .clock { inset-block-start: 0; block-size: 28px; display: flex; align-items: center; font-size: 10px; font-weight: 600; }
+  .clock[data-side="start"] { inset-inline-start: 16px; }
+  .clock[data-side="end"] { inset-inline-end: 14px; letter-spacing: 2px; opacity: 0.85; }
+  .key { opacity: 1; margin: 16px 0 0; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .key span { opacity: 0.55; }
+  .key i { inline-size: 22px; block-size: 10px; border-radius: 2px; background: color-mix(in srgb, #d0621e 30%, var(--paper)); }
 </style>
 </head>
 <body>
@@ -111,6 +131,34 @@
       </div></div>
     </div>
   </div>
+</div>
+
+<div class="specimen" data-shot="pwa-safe-areas">
+  <div class="pair" data-pair="orientations">
+    <div>
+      <p class="label">upright, from the Home Screen</p>
+      <div class="phone" data-orientation="upright"><div class="screen">
+        <div class="safe"><div class="app-body">
+          <div class="crumb"><svg viewBox="0 0 100 100"><path d="m50 0 .588.003V0h9.706v30.882h-9.706v.009a19 19 0 0 0-.588-.009c-10.558 0-19.118 8.559-19.118 19.118S39.441 69.118 50 69.118 69.118 60.559 69.118 50V30.882C69.118 13.826 82.945 0 100 0v50c0 27.614-22.386 50-50 50S0 77.614 0 50 22.386 0 50 0"/></svg><span>Johan Edlund</span></div>
+          <div class="hl t"></div><div class="hl"></div><div class="hl s"></div><div class="hl"></div><div class="hl u"></div><div class="hl"></div><div class="hl s"></div>
+        </div></div>
+        <span class="clock" data-side="start">9:41</span><span class="clock" data-side="end">▮▮▮ ▰</span>
+        <span class="notch"></span><span class="homebar"></span>
+      </div></div>
+    </div>
+
+    <div>
+      <p class="label">held sideways</p>
+      <div class="phone" data-orientation="sideways"><div class="screen">
+        <div class="safe"><div class="app-body">
+          <div class="crumb"><svg viewBox="0 0 100 100"><path d="m50 0 .588.003V0h9.706v30.882h-9.706v.009a19 19 0 0 0-.588-.009c-10.558 0-19.118 8.559-19.118 19.118S39.441 69.118 50 69.118 69.118 60.559 69.118 50V30.882C69.118 13.826 82.945 0 100 0v50c0 27.614-22.386 50-50 50S0 77.614 0 50 22.386 0 50 0"/></svg><span>Johan Edlund</span></div>
+          <div class="hl t"></div><div class="hl"></div><div class="hl s"></div><div class="hl"></div><div class="hl u"></div>
+        </div></div>
+        <span class="notch"></span><span class="homebar"></span>
+      </div></div>
+    </div>
+  </div>
+  <p class="label key"><i></i><span>padding on body: env(safe-area-inset-*), the size the phone reports for that side</span></p>
 </div>
 
 </body>
