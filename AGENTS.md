@@ -78,7 +78,7 @@ src/
   search.json.11ty.js  # The site search index
 admin/             # Sveltia CMS (index.html, config.yml)
 netlify/           # Netlify Functions (micropub, health-export)
-tests/             # Unit tests (*.test.js), the build comparison (compare-builds.mjs and compare-allowed.json), the bare-page report (bare-page.mjs) and site-files.json, the list of files that belong to this site alone
+tests/             # Unit tests (*.test.js), their helpers (lib/), the build comparison (compare-builds.mjs and compare-allowed.json), the bare-page report (bare-page.mjs) and site-files.json, the list of files that belong to this site alone
 dist/              # Build output (local only)
 _local/            # ALL local-only project material (see below)
 ```
@@ -122,6 +122,20 @@ Every part that used to be always on has a yes/no setting under `switches` in `s
 `settings.postTypes` lists the post types the site builds (the category names, such as `note` and `recipe`). A missing value builds all sixteen, `[]` builds none, and a name that isn't a post type stops the build. ⚠ `[]` is a hand edit: the admin form never saves an empty selection, so clearing the form in the CMS puts the site back to all sixteen, not to none. A type left out has no posts, archive page, feeds or menu link, and a Featured or /now pick of it is skipped.
 
 A page's CSS is loaded by what the page uses: the header, footer, menu, prose, buttons, code and the other pieces are each a file in `src/assets/css/local/` that the template using it includes. In dev, saving prose, button or code CSS now costs an Eleventy rebuild, where a file in `src/assets/css/global/` only recompiles the global stylesheet. `npm run bare` is the measure of what is left when everything is off; keep it from growing.
+
+## Starting a new site from a copy
+
+A new site or app starts as a plain copy of this project, re-styled, with the parts it doesn't need deleted by hand. There is no link between copies. This order was tried once for real (a one-page app with push notifications); a build after each step shows what broke.
+
+1. **Copy.** `mkdir ../newsite`, then `git archive HEAD | tar -x -C ../newsite` hands over the files that are in git and nothing else. In the new folder: `git init -b main`, a first commit, `npm ci`.
+2. **Settings.** Rewrite `src/_data/settings.yaml`: `identity` (`name`, `email`, `website` as a full address, `description`, `tagline`, `ogAlt`), `profiles: {}`, `site`, `postTypes` (`[]` for none), every switch the site doesn't need set to `false` (the older flags `nameReveal`, `viewRepo`, `hideFeatured`, `hideNav` and `noindexSite` sit in the same block), `wiki: {visibility: private}` and `search: {enabled: false}`. Remove `repos` and `analytics`. ⚠ `profiles` and `wiki` must stay even when unused, or the build stops.
+3. **The look.** Copy `src/_includes/themes/sample` to a folder named after the site, set `theme:`, delete `themes/jedee`. Put the logo in the theme's `logo.svg` (keep `viewBox="0 0 100 100"`, a `fill` on the `<svg>` tag and a path with `d="…"`), then run `npm run favicons` and `npm run og:default` straight away: until then the copy carries the old site's icons and share image, which are in git.
+4. **Delete the old site's content.** What `tests/site-files.json` lists: `src/posts`, `src/wiki`, `src/assets/og-images`, the picture folders, `netlify/functions/health-export.js`, and the pages in `src/pages` except `index.njk` and `offline.md`. ⚠ Empty `src/_data/featured.yaml` to `posts: []`; deleting it stops the build.
+5. **Delete what a switch leaves behind.** A switch removes a part from the pages, not its files from the build. If the site doesn't use them: `admin/` (or it publishes a CMS page that points at this repo), `netlify/functions/micropub.js`, `src/assets/audio`, `video` and `map`, the files in `src/assets/scripts/components/` (each is published on every build), `src/_obsidian`, `src/assets/obsidian`, `src/common/carbon.njk` and `llms.njk`, and the fixed line in `src/common/_redirects.njk`.
+6. **Rewrite what names the old site.** `src/common/humans.njk`, `tests.pa11y.customPaths` in `src/_data/meta.js` (⚠ a page that doesn't exist passes the accessibility test), the text of `offline.md` and `404.md`, `package.json` (name, description, repository, scripts for deleted parts), `readme.md`, `LICENSE`, `.env-sample`, and this file.
+7. **For an app.** Under `pwa:` set `workerPath`, `keepCaches`, `push` and `precache`. The page is `src/pages/index.njk` with `layout: base`; its script goes in `src/assets/scripts/components/`. Rules that the page and a function share go in one file directly in `src/assets/scripts/` (not in `components/`, where every file is published): the page script imports it and the build writes it in, and a function in `netlify/functions/` imports it by path. Functions answer under `/api/`, which the worker never caches. Keys go in `.env` and Netlify, never in git. To see the worker at work locally, build, run `npx netlify dev --dir dist` and open `http://<any-name>.localhost:8888`; the worker steps aside on plain `localhost`.
+8. **Tests.** These tests are about this project with all its parts, and most fail once parts are deleted. Keep `tests/lib/` (`temp-site.mjs` builds the site in a temp folder, `worker.mjs` runs a built worker in a made-up browser), delete the tests for parts that are gone, and write a few for the new site.
+9. **Later, or never.** The templates, CSS and scripts of switched-off parts stay in `src/` and cost nothing on the page. Delete them a few at a time with a build between.
 
 ## Design Tokens
 
