@@ -142,4 +142,7 @@ test('buildIndex: searchTerms (string or list) are matched but not shown', () =>
   assert.match(a.keywords, /\bpwa\b/)
   assert.match(b.keywords, /a11y wcag/)
   assert.equal(a.text, 'Body')
+  assert.equal(a.terms, 'pwa')
+  assert.equal(b.terms, 'a11y wcag')
+  assert.equal(buildIndex({ searchable: [item({ title: 'Y' }, 'Body')] }, { types: ['searchable'], only: {} })[0].terms, undefined)
 })

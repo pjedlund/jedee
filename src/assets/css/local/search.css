@@ -75,8 +75,9 @@ is-land:has(> .site-search) {
   background: var(--search-surface);
 }
 
-/* Open panel: the tooltip has served its purpose and would sit on top of the panel it just opened. ⚠ [data-tooltip] is repeated to outweigh tooltip.css's own :hover rule, which is otherwise an exact specificity tie. */
-.search-toggle[data-tooltip][aria-expanded='true']::after {
+/* Open panel: the tooltip and its arrow have done their job and would sit on top of the panel it just opened. ⚠ [data-tooltip] is repeated to outweigh tooltip.css's own :hover rule, which is otherwise an exact specificity tie. */
+.search-toggle[data-tooltip][aria-expanded='true']::after,
+.search-toggle[data-tooltip][aria-expanded='true']::before {
   opacity: 0;
   visibility: hidden;
 }

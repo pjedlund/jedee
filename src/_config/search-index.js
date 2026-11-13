@@ -42,6 +42,7 @@ const toEntry = item => {
     type: item.data.category || 'page',
     date: item.date ? item.date.getTime() : 0,
     text: excerpt(body),
+    ...(searchTerms.length && {terms: [searchTerms].flat().join(' ').toLowerCase()}),
     keywords: stripMarkdown(`${title} ${description} ${searchableTags.join(' ')} ${[searchTerms].flat().join(' ')} ${body}`).toLowerCase()
   };
 };
