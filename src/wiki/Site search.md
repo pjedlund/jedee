@@ -62,6 +62,8 @@ eleventyImport: {collections: search.types}
 
 Each entry carries `url`, `title`, `type`, `date`, a ~140-character `text` excerpt, and a lowercased `keywords` string holding title, description, tags and the whole body. Only `keywords` is matched against; the rest is for rendering.
 
+A page can add words it never says itself with a `searchTerms:` front matter field, a string or a list. It joins `keywords` and nothing else, so it is never shown. The wiki uses it for acronyms: *Progressive web apps* carries `PWA`, *Accessibility* carries `a11y WCAG ARIA`, *Eleventy* carries `11ty`.
+
 ### What `rawInput` still contains
 
 Both of these shipped into the index before being caught, and both are the general trap above in concrete form:

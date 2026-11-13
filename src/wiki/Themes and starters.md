@@ -1,5 +1,6 @@
 ---
 description: "Why an Eleventy project is called a site rather than a theme: Hugo and WordPress separate presentation into an overridable layer, Eleventy has no such layer, and its unit of reuse is a starter you copy and then keep as your site."
+searchTerms: "EE"
 date: 2026-09-05
 updated: 2026-10-31
 ---

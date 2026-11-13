@@ -1,5 +1,6 @@
 ---
 description: "A systematic inventory of what jedee keeps unchanged from Eleventy Excellent and where it has deliberately diverged."
+searchTerms: "EE"
 date: 2026-07-31
 updated: 2026-11-08
 ---

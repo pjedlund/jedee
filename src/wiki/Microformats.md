@@ -1,5 +1,6 @@
 ---
 description: "The microformats2 class vocabulary that makes HTML machine-readable, and why those classes are data the stylesheet must never touch."
+searchTerms: "mf2"
 date: 2026-08-01
 updated: 2026-10-27
 ---

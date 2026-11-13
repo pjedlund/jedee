@@ -1,5 +1,6 @@
 ---
 description: "How Eleventy turns a folder of files into a website — templates, the data cascade, layouts, collections and the config file — and why it draws no line between a site's content and its design."
+searchTerms: "11ty"
 date: 2026-10-31
 updated: 2026-11-08
 redirectFrom:

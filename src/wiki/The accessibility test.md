@@ -1,5 +1,6 @@
 ---
 description: "What a rule engine can and cannot check, why coverage matters more than the tool, and how jedee runs pa11y-ci against a locally served build."
+searchTerms: "a11y pa11y WCAG"
 date: 2026-07-31
 updated: 2026-10-31
 ---

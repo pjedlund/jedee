@@ -1,5 +1,6 @@
 ---
 description: "The community and building blocks behind independent publishing — microformats, Webmention, Micropub, IndieAuth, POSSE — and the on-ramp problem that keeps the movement made of developers."
+searchTerms: "indieweb"
 date: 2026-09-06
 ---
 

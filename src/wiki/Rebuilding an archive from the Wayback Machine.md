@@ -1,5 +1,6 @@
 ---
 description: "Using a shutdown data dump and the Wayback Machine to reconstruct a dead service, and how jedee rebuilt its This Is My Jam archive honestly."
+searchTerms: "IA archive.org"
 date: 2026-07-31
 ---
 

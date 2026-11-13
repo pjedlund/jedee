@@ -1,5 +1,6 @@
 ---
 description: "Custom elements, and the case for building them in two layers: HTML and CSS that render by themselves, then JavaScript that upgrades them."
+searchTerms: "custom elements"
 date: 2026-09-14
 updated: 2026-10-27
 ---

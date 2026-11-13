@@ -1,5 +1,6 @@
 ---
 description: "What a service worker intercepts, the five conventional caching strategies, and the roughly 80 hand-written lines that make jedee offline-capable using three of them."
+searchTerms: "SW PWA"
 date: 2026-07-31
 updated: 2026-11-13
 ---

@@ -1,5 +1,6 @@
 ---
 description: "A datetime string with no offset is ambiguous, and the guess is usually silent; how to settle it against an independent absolute source before importing thousands of rows."
+searchTerms: "UTC TZ"
 date: 2026-08-09
 ---
 

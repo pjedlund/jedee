@@ -1,5 +1,6 @@
 ---
 description: "What actually makes a site installable — HTTPS, a manifest and a service worker — and what changes when someone installs it, which is less than the name suggests."
+searchTerms: "PWA PWAs"
 date: 2026-09-04
 updated: 2026-11-13
 ---

@@ -1,5 +1,6 @@
 ---
 description: "Generating per-post social preview images at build time by rendering an SVG template and converting it to JPEG — and why the output is committed to the repo rather than rebuilt on the server."
+searchTerms: "OG og:image"
 date: 2026-09-05
 updated: 2026-10-27
 ---

@@ -1,5 +1,6 @@
 ---
 description: "Cumulative Layout Shift: what it measures, why the element that moves is rarely the element at fault, and how a font-size-adjust fighting a size-adjust cost this site 0.18."
+searchTerms: "CLS"
 date: 2026-09-06
 updated: 2026-10-31
 ---

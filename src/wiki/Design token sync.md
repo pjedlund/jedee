@@ -1,5 +1,6 @@
 ---
 description: "Generating a design tool's tokens from the code that is their source of truth, and the three ways the two sides drift apart anyway."
+searchTerms: "DTCG"
 date: 2026-08-22
 updated: 2026-10-31
 ---

@@ -1,5 +1,6 @@
 ---
 description: "What 100vw measures, why it is wider than the page whenever a scrollbar takes up room, and why a headless browser test will not show the difference."
+searchTerms: "vh vw dvh svh lvh"
 date: 2026-10-27
 ---
 

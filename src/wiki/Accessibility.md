@@ -1,5 +1,6 @@
 ---
 description: "Making a site usable by people with disabilities: WCAG's four principles and three levels, what can be checked automatically, and where each part of the work lives in this wiki."
+searchTerms: "a11y WCAG ARIA"
 date: 2026-09-14
 updated: 2026-10-31
 ---

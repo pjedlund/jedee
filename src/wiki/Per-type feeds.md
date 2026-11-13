@@ -1,5 +1,6 @@
 ---
 description: "What a feed is, why splitting one per category helps subscribers, and how jedee gives fourteen of sixteen post types a feed each — plus what a feed silently drops."
+searchTerms: "RSS Atom JSON Feed"
 date: 2026-07-31
 updated: 2026-10-17
 ---

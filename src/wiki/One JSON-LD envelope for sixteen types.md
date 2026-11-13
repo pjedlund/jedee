@@ -1,5 +1,6 @@
 ---
 description: "Two machine-readable layers with different audiences, and why fifteen of jedee's sixteen post types share one generic JSON-LD envelope."
+searchTerms: "structured data schema.org LD"
 date: 2026-07-31
 updated: 2026-09-22
 ---

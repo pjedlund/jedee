@@ -31,8 +31,9 @@ export const excerpt = (text, limit = 140) => {
 const matchesOnly = (item, rules) =>
   !rules || Object.entries(rules).every(([key, value]) => item.data[key] === value);
 
+// `searchTerms:` in front matter adds words the page doesn't say itself (acronyms, nicknames) to the match text only.
 const toEntry = item => {
-  const {title = '', description = '', tags = []} = item.data;
+  const {title = '', description = '', tags = [], searchTerms = ''} = item.data;
   const body = item.data.page?.rawInput ?? '';
   const searchableTags = tags.filter(tag => tag !== 'posts' && tag !== 'searchable');
   return {
@@ -41,7 +42,7 @@ const toEntry = item => {
     type: item.data.category || 'page',
     date: item.date ? item.date.getTime() : 0,
     text: excerpt(body),
-    keywords: stripMarkdown(`${title} ${description} ${searchableTags.join(' ')} ${body}`).toLowerCase()
+    keywords: stripMarkdown(`${title} ${description} ${searchableTags.join(' ')} ${[searchTerms].flat().join(' ')} ${body}`).toLowerCase()
   };
 };
 

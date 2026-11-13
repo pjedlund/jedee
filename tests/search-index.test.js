@@ -135,3 +135,11 @@ test('buildIndex: no settings at all gives an empty index', () => {
   assert.deepEqual(buildIndex({ note: [] }, undefined), [])
   assert.deepEqual(buildIndex({}, { enabled: false }), [])
 })
+
+test('buildIndex: searchTerms (string or list) are matched but not shown', () => {
+  const collections = { searchable: [item({ title: 'Progressive web apps', searchTerms: 'PWA' }, 'Body'), item({ title: 'X', searchTerms: ['a11y', 'WCAG'] }, 'Body')] }
+  const [a, b] = buildIndex(collections, { types: ['searchable'], only: {} })
+  assert.match(a.keywords, /\bpwa\b/)
+  assert.match(b.keywords, /a11y wcag/)
+  assert.equal(a.text, 'Body')
+})
