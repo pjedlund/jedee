@@ -1,7 +1,7 @@
 ---
 description: "Searching a static site without a server or a search library: a JSON index written at build time, fetched once and filtered in the browser."
 date: 2026-09-02
-updated: 2026-10-27
+updated: 2026-11-17
 ---
 
 A static site has no server to ask, so search has to happen somewhere else. Three places are available, and the choice is mostly about how many entries there are.
@@ -133,6 +133,8 @@ The panel also had no `font-size` at first, so it inherited the header's ~26px a
 ### Contrast on a lifted panel
 
 The excerpt color cleared 4.5:1 against the panel at `color-mix(… 80%, …)` and then failed at **4.31** on the *highlighted* row, whose 4% tint darkens the ground beneath it. A `color-mix()` is only valid on the surface it was tuned on, and a row that changes background on hover is two surfaces. Shipped 84% in light, 72% in dark — light and dark run out of headroom at different percentages, so one number does not fix both.
+
+Since 2026-11-17 the result titles rest in that excerpt color too, set once on the link as `--search-result-text-color` (rest value `--search-result-text-rest`), and hover, keyboard focus and the arrow-key selection raise title and excerpt to `--color-text`, matching [[The main menu]]. At rest the pair measures 5.04:1 in light and 5.37:1 in dark on the panel. The icons rest on `--search-result-text-rest` with a 0.2s fade of their own rather than `currentColor`, which flashed bright on mouse-out once the titles started fading ([[Icons]]).
 
 Measure these with an oklab→sRGB conversion, not a regex over `getComputedStyle().color`. Chromium serializes an oklab mix as `oklab(L a b)`, and a parser expecting `rgb()` reads those three floats as channels and reports a confident pass — it scored the failing values above as 1.00 and 2.73 before the conversion went in.
 

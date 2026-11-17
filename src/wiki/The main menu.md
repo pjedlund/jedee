@@ -1,7 +1,7 @@
 ---
 description: "A disclosure menu built so the fallback is the base layer: the button is injected from a template, and the CSS detects its absence structurally rather than asking whether scripts can run."
 date: 2026-08-03
-updated: 2026-11-13
+updated: 2026-11-17
 ---
 
 A site menu that collapses behind a button is one of the few interface patterns that genuinely needs JavaScript, which makes it a standing test of whether a site's enhancement layers are real. The robust arrangement, set out in [Manuel Matuzović's *Building the main navigation for a website*](https://web.dev/articles/website-navigation), is to build the list first and add the button last: plain `<a>` elements, wrapped in `<ul role="list">`, inside a labeled `<nav>` landmark, with the toggle **injected by script from a `<template>`**. Nothing hides the list except a button that, by construction, only exists when the script that operates it has run.
@@ -100,6 +100,8 @@ The `:has(.mainnav)` guard is load-bearing: during the soft launch the header om
 ### Contrast is a property of the pairing, not the color
 
 The count numbers are `color-mix(in oklab, var(--color-text) 80%, var(--color-bg))`, calibrated against the panel's lifted surface. The pills sit on the plain page background, where that same mix measures **4.43:1** in light mode. The fallback overrides it to 88% — 5.29:1 light, 8.52:1 dark. No color value changed; the surface under it did, and that was enough to fail AA.
+
+Since 2026-11-17 the labels rest in the same muted mix as the counts (`--megamenu-row-color: var(--megamenu-count-rest)`), so the fallback's 88% covers them too. On the panel they measure 4.63:1 in light and 5.05:1 in dark. Hover, keyboard focus and the current section raise label and count to `--color-text`. The icons then needed a fixed rest color of their own ([[Icons]]).
 
 ### Accessibility details worth copying
 

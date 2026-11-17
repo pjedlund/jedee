@@ -1,7 +1,7 @@
 ---
 description: "Icon sets, outline versus filled styles, inline SVG colored by currentColor, labeling icons for assistive technology, and the filled Phosphor set this site uses."
 date: 2026-10-14
-updated: 2026-11-13
+updated: 2026-11-17
 ---
 
 An icon on a web page is a small picture standing in for a word: a type of post, an action, a place to go. Almost every site takes its icons from a published **icon set** rather than drawing them, because a set is drawn to one grid, one corner radius and one line weight, and those shared rules are what make thirty unrelated pictures read as a family.
@@ -28,6 +28,17 @@ Icons used to ship as an icon font, one glyph per icon. Inline SVG replaced it: 
 
 The convention that makes inline SVG easy is `currentColor`. An icon drawn with `fill="currentColor"` (or `stroke="currentColor"` for an outline) takes the text color of whatever contains it, so a link's hover color, a dark theme or an active state reaches the icon with no rule. Sizing it in `em` (`width="1em" height="1em"`) does the same for size.
 
+The handoff breaks when the text color is animated and the icon's own color is not. A link with `transition: color 0.2s` fades its text, and an icon resting on `currentColor` follows that fade frame by frame. If the icon has a hover color of its own (an orange icon beside a white label, say), mouse-out snaps the icon to `currentColor`, which at that instant is still the link's hover color, and only then fades down with the text: orange, then a flash of the bright hover color, then the rest color. The fix is to give the icon a fixed rest color instead of `currentColor` and a color transition of its own, so it fades directly from its hover color to its rest color.
+
+```css
+.row a svg {
+  --icon-rest: var(--row-text-rest); /* a fixed value, not currentColor */
+  color: var(--icon-color, var(--icon-rest));
+  transition: color 0.2s ease-out;
+}
+.row a:hover svg { --icon-color: var(--color-accent-orange); }
+```
+
 ## Labels
 
 An icon next to a text label that says the same thing is decoration: it gets `aria-hidden="true"` so a screen reader does not announce it twice ([[Alt text]]). An icon-only control needs its name from somewhere else, usually a visually hidden span inside the button. Sara Soueidan's [Accessible Icon Buttons](https://www.sarasoueidan.com/blog/accessible-icon-buttons/) (2019) covers the techniques and which ones fail. A [[Tooltips|tooltip]] can show the name to sighted users as well, but is not the accessible name.
@@ -50,7 +61,7 @@ Each Phosphor file is the icon's path in a `viewBox="0 0 256 256"` with `width="
 
 The files kept their Lucide names when their contents changed, so no template or data file had to change, and `src/_data/navigation.js` still names a post type's icon by the old word. Several no longer describe what they draw: `dumbbell.svg` a barbell, `repeat-2.svg` Phosphor's repeat, `reply.svg` a bent arrow. The design system page lists every icon with its file name.
 
-**Icons take the color of their text.** An icon beside a text label — a mega-menu row, a search result, the search field, the meta line — is `currentColor`, so it is exactly as strong as its label, and it turns orange where its row or link is hovered. An icon that is the whole control — the logomark, the MENU chevron, the search and theme toggles, the footer logos — is the header's resting grey, `--color-text-header-dim`, like the breadcrumb links beside it. From 9 to 13 November 2026 the labelled icons had a blue-grey of their own, `--color-icon`; it measured about 2:1 against the page, under the 3:1 an icon-only control needs ([[Accessibility]]), and was dropped for the text color.
+**Icons take the color of their text.** An icon beside a text label (a mega-menu row, a search result, the search field, the meta line) is as strong as its label, and it turns orange where its row or link is hovered. The search field uses `currentColor`. Mega-menu rows, search results and the meta line rest on a fixed muted color with a 0.2s fade of their own, because their labels fade between a muted and a bright color and a `currentColor` icon flashed bright on mouse-out in dark mode: the meta line until 2026-11-16, the mega-menu and search results on 2026-11-17, once their labels started resting muted. An icon that is the whole control — the logomark, the MENU chevron, the search and theme toggles, the footer logos — is the header's resting grey, `--color-text-header-dim`, like the breadcrumb links beside it. From 9 to 13 November 2026 the labelled icons had a blue-grey of their own, `--color-icon`; it measured about 2:1 against the page, under the 3:1 an icon-only control needs ([[Accessibility]]), and was dropped for the text color.
 
 **Search and clear are the two outline icons**, a choice made on seeing their filled versions in place. Both use Phosphor's bold weight (regular until 2026-11-09, when it read too thin), which keeps them in the family; filled, the clear button's X is cut out of a rounded square.
 
@@ -62,4 +73,4 @@ Three post types sit uneasily in the filled set because their icons are open str
 
 Two icon-like graphics are not files and were not part of the change: the theme toggle's sun and moon, drawn as SVG shapes that animate ([[The theme toggle]]), and the info icon on figure captions, drawn with CSS borders and gradients ([[Figures]]). Both are still lines.
 
-Raw source: `src/_raw/dev-notes/How the icon set was chosen.md`
+Raw source: `src/_raw/dev-notes/How the icon set was chosen.md`; the mega-menu and search flash: `src/_raw/dev-notes/How the menu icons flashed white on mouse-out.md`

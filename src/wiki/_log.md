@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-11-17] ingest | Icons, The main menu, Site search (muted rest, icon flash)
+
+[[Icons]] gains the general trap: an icon on `currentColor` inside a link whose color fades snaps to the link's mid-fade hover color on mouse-out, a bright flash in dark mode; the fix is a fixed rest color and a fade of its own. Its In jedee paragraph no longer claims the mega-menu, search-result and meta-line icons use `currentColor`. [[The main menu]] and [[Site search]] record that labels and result titles now rest muted, with their contrast on the panel, and link back to Icons.
+
 ## [2026-11-17] ingest | The place map (theme in the color cache)
 
 [[The place map]] and [[Dark mode]] gain the stale-color trap found the same day: the map caches resolved colors by their text, and a token written with `light-dark()` reads the same in both themes, even when reached through `var()` from the map's own paired blocks. A theme flip left land, roads and labels in the old colors; the cache now keys on the page theme as well. Corrects Dark mode's claim that keeping the map's blocks in pairs avoided the problem. Index lines unchanged: neither page's scope moved.
