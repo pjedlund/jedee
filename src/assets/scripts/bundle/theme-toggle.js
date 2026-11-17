@@ -36,7 +36,11 @@ window.addEventListener('load', () => {
   });
 
   ['pointerleave', 'blur'].forEach((event) =>
-    toggle.addEventListener(event, () => delete toggle.dataset.tooltipDismissed)
+    toggle.addEventListener(event, () => {
+      // ⚠ The reveal's page picture covers the button and fires a pointerleave the pointer never made.
+      if ('themeReveal' in document.documentElement.dataset) return;
+      delete toggle.dataset.tooltipDismissed;
+    })
   );
 });
 
