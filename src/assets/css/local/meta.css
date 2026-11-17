@@ -57,7 +57,12 @@ The dim type/date/revision line under a post or wiki title (partials/entry-heade
   margin-inline-end: var(--meta-icon-gap, calc(0.35em - 1px));
 }
 
-/* The GitHub mark's widest point is one small curve and "R" has a wide left side-bearing, so its gap reads 1px wider than the rest; this pulls it level. */
+/* ⚠ The rest color is the meta color, not currentColor: following the link's fade, a hovered icon in dark mode went orange → white → dim on mouse-out. */
+.meta a .meta-icon {
+  color: var(--meta-color);
+  transition: color var(--meta-fade) ease-out;
+}
+
 .meta a:is(:hover, :focus-visible) .meta-icon {
   color: var(--color-accent-orange);
 }
@@ -67,6 +72,7 @@ The dim type/date/revision line under a post or wiki title (partials/entry-heade
   color: var(--activity-color);
 }
 
+/* The GitHub mark's widest point is one small curve and "R" has a wide left side-bearing, so its gap reads 1px wider than the rest; this pulls it level. */
 [data-meta-tight] .meta-icon {
   --meta-icon-gap: calc(0.35em - 2px);
 }
