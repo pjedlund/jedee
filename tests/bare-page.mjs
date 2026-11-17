@@ -1,8 +1,9 @@
-// Builds a bare page (every switch off, no post types, the sample theme) and prints what it weighs and what it asks for. Run: npm run bare
-import { readdirSync, readFileSync, statSync } from 'node:fs';
+// Builds a bare page (every switch off, no post types, the sample theme, or the active one in a copy that has no sample) and prints what it weighs and what it asks for. Run: npm run bare
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { brotliCompressSync, gzipSync } from 'node:zlib';
 import { SWITCHES } from '../src/_config/utils/switches.js';
+import { themeName } from '../src/_config/utils/theme.js';
 import { makeTempSite } from './lib/temp-site.mjs';
 
 const root = path.resolve(import.meta.dirname, '..');
@@ -12,7 +13,8 @@ const BARE_PAGE = '---\ntitle: Bare\nlayout: base\npermalink: /bare/\n---\n\n<p>
 const BEFORE = { total: 88, gzip: 21, sharedCss: 54, pageCss: 8, html: 23 };
 
 const switches = Object.fromEntries([...SWITCHES, 'nameReveal', 'viewRepo'].map(name => [name, false]));
-const site = await makeTempSite({ settings: { theme: 'sample', postTypes: [], switches }, files: { 'src/pages/bare.njk': BARE_PAGE } });
+const theme = existsSync(path.join(root, 'src/_includes/themes/sample')) ? 'sample' : themeName();
+const site = await makeTempSite({ settings: { theme, postTypes: [], switches }, files: { 'src/pages/bare.njk': BARE_PAGE } });
 try {
   await site.build();
   const html = site.read('bare/index.html');
@@ -25,7 +27,7 @@ try {
   const gzip = gzipSync(html, { level: 9 }).length;
   const brotli = brotliCompressSync(html).length;
 
-  console.log(`Bare page /bare/ (theme sample, every switch off, postTypes: [])\n`);
+  console.log(`Bare page /bare/ (theme ${theme}, every switch off, postTypes: [])\n`);
   console.log(`Page total        ${kb(html.length)}   (before: ${BEFORE.total} KB)`);
   console.log(`Compressed        ${kb(gzip)} gzip, ${kb(brotli)} brotli   (before: ${BEFORE.gzip} KB)`);
   console.log(`CSS, shared       ${kb(shared.length)}   (before: ${BEFORE.sharedCss} KB)`);
