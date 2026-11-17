@@ -75,8 +75,11 @@ function getColorPreference() {
 }
 
 function setPreference() {
+  // ⚠ Picking the system's own scheme clears the choice rather than saving it, or the site stops following the system for good.
+  const system = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   try {
-    localStorage.setItem(storageKey, theme.value);
+    if (theme.value === system) localStorage.removeItem(storageKey);
+    else localStorage.setItem(storageKey, theme.value);
   } catch (error) {
     // not persisted, but the current page still reflects the choice
   }
@@ -89,12 +92,9 @@ function reflectPreference() {
 }
 
 function updateMetaThemeColor() {
-  const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-  if (!metaThemeColor) {
-    return;
-  }
   const newColor = theme.value === 'dark' ? themeColors.dark : themeColors.light;
-  metaThemeColor.setAttribute('content', newColor);
+  // Both tags, since each carries a media query and the system setting picks which one counts.
+  for (const meta of document.querySelectorAll('meta[name="theme-color"]')) meta.setAttribute('content', newColor);
 }
 
 // set early so no page flashes / CSS is made aware
