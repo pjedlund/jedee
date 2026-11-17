@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-11-17] ingest | Tooltips
+
+[[Tooltips]] now counts nine controls: the breadcrumb logomark and the search magnifier lost their tooltips, and the theme toggle is the only one left in the header, kept because its tooltip is the only thing that says what a click will do. The page also names the gap the guidance check found: the tooltip cannot be hovered, which WCAG 1.4.13 asks for.
+
 ## [2026-11-17] ingest | The theme toggle
 
 [[The theme toggle]] gains a section on the circle reveal: the new theme grows from the button as a same-document view transition, the three alternatives that were turned down, why it stays smooth on long pages, the separate layer that keeps the icon morph moving, the attribute that keeps it off page navigations, and the instant switch for reduced motion and older browsers.

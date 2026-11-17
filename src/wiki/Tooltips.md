@@ -1,7 +1,7 @@
 ---
 description: "A label that appears on hover or focus; why its text must never be the control's only accessible name, and why CSS alone is enough for the decorative case."
 date: 2026-09-02
-updated: 2026-10-31
+updated: 2026-11-17
 ---
 
 A tooltip is a small label that appears when a pointer rests on a control or the control takes keyboard focus. On the web it comes in three forms, and they are not interchangeable.
@@ -70,7 +70,7 @@ Fading a tooltip with `opacity` alone leaves it in the hit-testing and layout pi
 
 One CUBE block, `src/assets/css/local/tooltip.css`, about 55 lines. It and its script load only where something carries a label: the header, the footer, the shortcuts dialog, or a `data-tooltip` in the page's content, and not at all with the `tooltips` switch off. The block itself is CSS only; a control may opt into one extra behavior with one extra line of script (see "Dismissing after use" below). Not Eleventy Excellent stock — EE ships no tooltip. Adapted from the header tooltip on [arielsalminen.com](https://arielsalminen.com/), retokenized and given the triggers below.
 
-Eleven controls use it. In the header, the breadcrumb logomark (`Home`), the search magnifier and the light/dark toggle (see [[The theme toggle]]), all icon-only, the first and last at opposite edges. In the footer, the whole icon row — the Atom feed link and seven platform links, all of them icon-only with a `visually-hidden` label. Both header controls previously carried a `title`, which was removed: with `data-tooltip` in place the browser draws its native tooltip alongside the styled one. The star rating on book and film posts and cards (`partials/rating.njk`) uses the block too, on a `<span>` that also carries a visually hidden "Rated … out of 5".
+Nine controls use it. In the header, only the light/dark toggle (see [[The theme toggle]]). The breadcrumb logomark (`Home`) and the search magnifier had one until 2026-11-17 and lost it: a house-shaped home mark and a magnifier read without a label, and the guidance on tooltips treats one on an icon-only button as a nice extra whose absence costs little. The toggle kept its tooltip because its icon shows the theme you are in, and the tooltip is the only thing that says what a click will do. In the footer, the whole icon row — the Atom feed link and seven platform links, all of them icon-only with a `visually-hidden` label. Both header controls previously carried a `title`, which was removed: with `data-tooltip` in place the browser draws its native tooltip alongside the styled one. The star rating on book and film posts and cards (`partials/rating.njk`) uses the block too, on a `<span>` that also carries a visually hidden "Rated … out of 5".
 
 The theme toggle is the divergence case described above. Its accessible name is a fixed "Toggle dark mode" with `aria-pressed` carrying the state, while its tooltip is set by `theme-toggle.js` on every theme change — "Show dark mode" in light, "Show light mode" in dark. The markup carries no `data-tooltip` at all; the script adds it, which is honest, since the button is already hidden until its island upgrades.
 
@@ -79,8 +79,8 @@ The colors need no dark-mode rules. Background is `--color-text` and text is `--
 Three behaviors the source design did not have:
 
 - **`:focus-visible` as well as `:hover`.** Verified with a real Tab press — Chromium does not honor `element.focus({focusVisible: true})` from script, so a scripted focus reports `:focus-visible` as false and reads as broken CSS.
-- **Two edge anchors**, `data-tooltip-align="start"` and `="end"`, because both header controls are at opposite edges, and a `data-tooltip-position="top"` for the footer's feed icon, which sits close enough to the bottom of the document that a tooltip below it added 16px of dead scroll — measured, not guessed. The defaults stay centered and below for anything placed inland.
-- **Suppressed on `aria-current`.** The source spells this `:not(.active)` on its nav items; the attribute already carries the state, so `[data-tooltip][aria-current]::after` does it without a class. On the start page the logomark *is* the current page, and its tooltip would have landed on top of the wordmark typing itself in (see [[Choreographing CSS animations]]).
+- **Two edge anchors**, `data-tooltip-align="start"` and `="end"`, because the header's controls sat at opposite edges (the toggle still uses `end`; `start` has no user since the logomark lost its tooltip, and stays in the block for the next control at the left edge), and a `data-tooltip-position="top"` for the footer's feed icon, which sits close enough to the bottom of the document that a tooltip below it added 16px of dead scroll — measured, not guessed. The defaults stay centered and below for anything placed inland.
+- **Suppressed on `aria-current`.** The source spells this `:not(.active)` on its nav items; the attribute already carries the state, so `[data-tooltip][aria-current]::after` does it without a class. On the start page the logomark *was* the current page, and its tooltip would have landed on top of the wordmark typing itself in (see [[Choreographing CSS animations]]); the logomark no longer has a tooltip at all.
 
 ### A `::after` inherits from a control styled not to look like text
 
@@ -112,7 +112,7 @@ Since 2026-11-09 a small triangle (`::before`, 0.75 × 0.375rem, the tooltip's o
 
 ### What is not built
 
-No `bottom`/`left`/`right` placements beyond the three that a real control needed, no delay knob, no JS repositioning — nothing measures the viewport, so placement is the author's call rather than automatic. The MENU button briefly had a tooltip and lost it — it already carries a visible label, so the tooltip was pure decoration there. It left the padding behind (`var(--space-xs) var(--space-s)`, taken from `.menu-toggle`) so the label reads at the same density as the header's one bordered control.
+⚠ The tooltip cannot be hovered: it carries `pointer-events: none`, so it vanishes as the pointer moves onto it, which WCAG 1.4.13 asks it not to do (it matters to people using a screen magnifier). Dropping the two header tooltips took it off the two controls hovered most. No `bottom`/`left`/`right` placements beyond the three that a real control needed, no delay knob, no JS repositioning — nothing measures the viewport, so placement is the author's call rather than automatic. The MENU button briefly had a tooltip and lost it — it already carries a visible label, so the tooltip was pure decoration there. It left the padding behind (`var(--space-xs) var(--space-s)`, taken from `.menu-toggle`) so the label reads at the same density as the header's one bordered control.
 
 Related: [[Accessibility]] — where this page sits among the site's accessibility work. [[The theme toggle]] — the other half of the header's right-hand cluster, and the control the first tooltip was built for. [[Focus rings and paint containment]] — the other case where a decoration positioned outside a control's box gets clipped or overflows by surprise.
 
