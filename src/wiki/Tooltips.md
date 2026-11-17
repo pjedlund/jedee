@@ -106,13 +106,21 @@ Instead the control's script sets a `data-tooltip-dismissed` attribute on click 
 
 WCAG 1.4.13 does not exempt a tooltip for repeating a hidden label: anything that appears on hover or focus and covers other content has to be dismissible without moving the pointer or focus. The footer tooltips open upwards over the footer links, so they cover content. Since 2026-10-08 `bundle/tooltip.js`, included on every page from `base.njk`, listens for Esc on the document and sets the same `data-tooltip-dismissed` on whichever `[data-tooltip]` matches `:hover` or `:focus-visible`, clearing it on that control's next `pointerleave` or `blur`. Focus stays where it was. It runs alongside the other Esc handlers (the menu, the search, the shortcuts dialog), which close their things.
 
+### Hoverable
+
+WCAG 1.4.13 also asks that the pointer can move onto the tooltip without it vanishing, which matters to people using a screen magnifier: the magnifier shows a small area that follows the pointer, so reading a label means moving onto it. Until 2026-11-17 both pseudo-elements carried `pointer-events: none` and the label vanished the moment the pointer left the control. Now they take the pointer, and since a pseudo-element counts as part of its control for `:hover`, resting on the label keeps the control hovered. A hidden label (`visibility: hidden`) still takes no pointer, so the invisible box never catches anything.
+
+The gap between control and label is bridged by the arrow. Its box now reaches all the way back to the control as a clear band the width of the arrow, and the `clip-path` draws the band and the triangle as one shape, with a gradient that keeps the band transparent. Measured in headless Chrome by walking the pointer down 1px at a time from the toggle and up from the footer's feed icon, in both themes at 1200px and 375px: the old CSS lost the hover after 2–3px, the new keeps it all the way onto the label, and screenshots of both are identical pixel for pixel.
+
+⚠ Pointing at a label is pointing at its control, so a click on the label activates the control: "Show dark mode" switches the theme, a footer label follows its link. The footer labels open upward over the footer links, which they already hid.
+
 ### The arrow
 
 Since 2026-11-09 a small triangle (`::before`, 0.75 × 0.375rem, the tooltip's own background) points at the control, and the gap grew from `--space-2xs` to `--space-xs` to hold it. It is positioned on the control, not on the tooltip: always at the control's horizontal centre, on the side the tooltip opens. An `align` exception slides the box sideways but leaves the arrow where it is, so the six align × position combinations need one extra rule (for `top`, which flips the triangle) rather than six. It overlaps the box by half a pixel so no hairline shows at the seam, and it shows and hides with the same selectors as the label.
 
 ### What is not built
 
-⚠ The tooltip cannot be hovered: it carries `pointer-events: none`, so it vanishes as the pointer moves onto it, which WCAG 1.4.13 asks it not to do (it matters to people using a screen magnifier). Dropping the two header tooltips took it off the two controls hovered most. No `bottom`/`left`/`right` placements beyond the three that a real control needed, no delay knob, no JS repositioning — nothing measures the viewport, so placement is the author's call rather than automatic. The MENU button briefly had a tooltip and lost it — it already carries a visible label, so the tooltip was pure decoration there. It left the padding behind (`var(--space-xs) var(--space-s)`, taken from `.menu-toggle`) so the label reads at the same density as the header's one bordered control.
+No `bottom`/`left`/`right` placements beyond the three that a real control needed, no delay knob, no JS repositioning — nothing measures the viewport, so placement is the author's call rather than automatic. The MENU button briefly had a tooltip and lost it — it already carries a visible label, so the tooltip was pure decoration there. It left the padding behind (`var(--space-xs) var(--space-s)`, taken from `.menu-toggle`) so the label reads at the same density as the header's one bordered control.
 
 Related: [[Accessibility]] — where this page sits among the site's accessibility work. [[The theme toggle]] — the other half of the header's right-hand cluster, and the control the first tooltip was built for. [[Focus rings and paint containment]] — the other case where a decoration positioned outside a control's box gets clipped or overflows by surprise.
 

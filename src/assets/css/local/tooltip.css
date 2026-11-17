@@ -40,24 +40,26 @@ Adapted from arielsalminen.com's header tooltip, retokenized and given a focus-v
   white-space: nowrap;
   opacity: 0;
   visibility: hidden;
-  pointer-events: none;
 }
 
 /* The arrow sits at the control's centre, on the side the tooltip opens, so it points at the control whatever the align. */
+/* ⚠ Its box reaches back to the control as a clear band, so the pointer can cross the gap onto the label without losing the hover (WCAG 1.4.13); the clip-path draws only the triangle and the band. */
 [data-tooltip]::before {
+  --tooltip-arrow-reach: max(var(--tooltip-arrow-height), var(--tooltip-offset) + 0.5px); /* half a pixel of overlap, so no hairline shows between arrow and box */
+  --tooltip-arrow-base: calc(100% - var(--tooltip-arrow-height));
+
   content: '';
   position: absolute;
   z-index: 11;
   inset-block-start: 100%;
   inset-inline-start: 50%;
   inline-size: var(--tooltip-arrow-width);
-  block-size: var(--tooltip-arrow-height);
-  translate: -50% calc(var(--tooltip-offset) - var(--tooltip-arrow-height) + 0.5px); /* half a pixel of overlap, so no hairline shows between arrow and box */
-  background: var(--tooltip-bg);
-  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  block-size: var(--tooltip-arrow-reach);
+  translate: -50% min(0px, var(--tooltip-offset) - var(--tooltip-arrow-height) + 0.5px);
+  background: linear-gradient(to bottom, transparent var(--tooltip-arrow-base), var(--tooltip-bg) var(--tooltip-arrow-base));
+  clip-path: polygon(0 0, 100% 0, 100% var(--tooltip-arrow-base), 50% var(--tooltip-arrow-base), 100% 100%, 0 100%, 50% var(--tooltip-arrow-base), 0 var(--tooltip-arrow-base));
   opacity: 0;
   visibility: hidden;
-  pointer-events: none;
 }
 
 [data-tooltip]:is(:hover, :focus-visible)::after,
@@ -126,7 +128,8 @@ Adapted from arielsalminen.com's header tooltip, retokenized and given a focus-v
 [data-tooltip][data-tooltip-position='top']::before {
   inset-block-start: auto;
   inset-block-end: 100%;
-  translate: -50% calc(var(--tooltip-arrow-height) - var(--tooltip-offset) - 0.5px);
-  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  translate: -50% max(0px, var(--tooltip-arrow-height) - var(--tooltip-offset) - 0.5px);
+  background: linear-gradient(to bottom, var(--tooltip-bg) var(--tooltip-arrow-height), transparent var(--tooltip-arrow-height));
+  clip-path: polygon(0 0, 100% 0, 50% var(--tooltip-arrow-height), 100% var(--tooltip-arrow-height), 100% 100%, 0 100%, 0 var(--tooltip-arrow-height), 50% var(--tooltip-arrow-height));
 }
 }
