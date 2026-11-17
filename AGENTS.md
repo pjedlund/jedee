@@ -15,12 +15,8 @@ A personal website built with [Eleventy (11ty) v3](https://www.11ty.dev) and the
 ## Tech Stack
 
 - **Static site generator:** Eleventy 3.x (ESM; Node 24 via `.nvmrc`)
-- **Templating:** Nunjucks (`.njk`), WebC (`.webc`), Markdown
 - **CSS:** PostCSS + Tailwind CSS (used to generate CSS custom properties from design tokens — not a utility-class framework)
-- **Bundling:** esbuild (JS), PostCSS CLI (CSS)
 - **Deployment:** Netlify (publish dir: `dist`). Netlify doesn't run `npm run build`: its command in `netlify.toml` clears `dist/` but keeps the image folders, then runs `npm run build:11ty`
-- **Markdown extensions:** markdown-it with footnotes, wikilinks, attributes, abbr, anchors, emoji, syntax highlight
-- **Wikilinks / backlinks:** `@photogabble/eleventy-plugin-interlinker` + `markdown-it-wikilinks-plus`
 
 ## Commands
 
@@ -65,15 +61,7 @@ src/
   common/          # Shared pages (pa11y test config, service worker, redirects, etc.)
   feeds/           # Atom / JSON feeds, per type
   pages/           # Static pages (about, per-type indexes, the design system page, etc.)
-  posts/           # All content, one folder per post type:
-    activities/    # Workouts / races        photos/
-    articles/      # Long-form, by year      reading/
-    audio/                                   recipes/
-    bookmarks/                               replies/
-    events/                                  reposts/
-    jams/          # incl. thisismyjam/      rsvps/
-    likes/                                   videos/
-    notes/                                   watching/
+  posts/           # All content, one folder per post type (see Content Types below)
   wiki/            # The LLM wiki (see below)
   search.json.11ty.js  # The site search index
 admin/             # Sveltia CMS (index.html, config.yml)
@@ -143,37 +131,9 @@ All tokens live in the active theme's `tokens/*.json` and are consumed by the Ta
 
 **Colors** (`colorsBase.json` → `npm run colors` → `colors.json`):
 - `palette`: Base family — `darkest` `#495464`, `dark` `#bbbfca`, `light` `#dddee8`, `lightest` `#f4f4f2`. Composed into the semantic accent variables (`--color-accent-orange/blue/green`) in `src/assets/css/global/base/variables.css`. Those three are CSS-only except `accent-orange`, which also has an entry in `semanticColors.json` so the design tools get a swatch for it — `accent-blue`/`accent-green` reach them already as the light_dark colors in `colors.json`.
-- `shades_neutral`: Gray `#495464` → generates a 100–900 palette
-- `shades_vibrant`: Orange `#EF7E40` → generates a 100–900 palette
-- `light_dark`: Red, Blue, Green — each gets a `subdued` variant for dark themes
-- `standalone`: gray-250 `#C8CACC` — a single fixed value
+The other token files (fonts, spacing, text sizes, leading, weights, radius, border width, shadows, semantic/button/megamenu colors, typography) hold their values directly; read them there.
 
-**Fonts** (`fonts.json`) — jedee uses Adobe Source fonts, not the upstream Atkinson Hyperlegible:
-- `display`: Source Serif 700 (fallback: Source Serif Fallback, serif)
-- `base`: Source Sans 3 VF (fallback: Source Sans Fallback, sans-serif)
-- `mono`: Source Code Pro (extensive monospace fallbacks)
-
-**Spacing** (`spacing.json`) — Utopia fluid scale (320px → 1552px viewport):
-- Fixed steps: `3xs`, `2xs`, `xs`, `s`, `m`, `l`, `xl`, `2xl`, `3xl`
-- Fluid pairs: `xs-s`, `s-m`, `m-l`, `l-xl`, `l-2xl`, `xl-2xl`, `2xl-3xl`
-
-**Text sizes** (`textSizes.json`) — Utopia fluid type scale: `step-min-2` through `step-6` (base: 19px @ 320px → 28px @ 1552px)
-
-**Text leading** (`textLeading.json`): `flat` (1), `extrafine` (1.1), `fine` (1.2), `standard` (1.45), `fibonacci` (1.612)
-
-**Text weights** (`textWeights.json`): `regular` (400), `bold` (700), `extra-bold` (900)
-
-**Border radius** (`borderRadius.json`): `small` (0.1875rem), `medium` (0.3rem), `pill` (999px)
-
-**Border width** (`borderWidth.json`): `thin` (1px), behind `--border-thickness`
-
-**Shadows** (`shadows.json`): `panel`, `popup`, `chip`, `thumb`, `thumb-cast`, each with a `-dark` pair
-
-**Semantic and component colors**: `semanticColors.json` (theme-aware roles for the design tools), `buttonColors.json`, `megamenuColors.json`
-
-**Typography** (`typography.json`): composite text styles built from the size, leading and weight tokens
-
-**Viewports** (`viewports.json`): min 320, sm 640, navigation 662, md 1000, max 1552 — the width where the fluid type and space scales stop growing, kept equal to `--wrapper-width` (97rem)
+**Viewports** (`viewports.json`): `max` is the width where the fluid type and space scales stop growing, kept equal to `--wrapper-width` (97rem)
 
 ## Site Metadata
 
@@ -234,10 +194,3 @@ A Claude-maintained wiki documenting how jedee is designed and built — the tec
 - **Ingest** (on request: "ingest X" / "ingest the new clips"): read the source, discuss takeaways with the site owner, write or update wiki pages, update `index.md`, append to `_log.md`, commit. Read the clip's `note:` field first if it has one — the site owner's own one-line reason for clipping the page, and the steer for what the wiki page should take from the source. Then fill in its empty `published:` field, from the article itself or its URL — the Clipper can't read it reliably from an arbitrary site, and a technique's age is often the whole story (a 2019 workaround and current practice look identical on the page). Write it ISO, copying the date and not the source's display format: `2024-04-24`, or truncated from the right when that's all the source gives you — `2024-04`, `2024`. All three still sort chronologically as plain text, which a format like "APR 24 2024" does not. Say so on the wiki page when a source is old enough that its advice may have been overtaken. When ingesting a published dev note: after the wiki pages are written and approved, move the note's `.md` from `src/posts/notes/` to `src/_raw/dev-notes/` (it becomes a permanent raw source; its live URL goes away — accepted by design).
 - **Query**: read `index.md`, drill into the relevant pages, answer with references to wiki pages and raw sources. If the answer is worth keeping, file it back as a wiki page.
 - **Lint** (on request): look for contradictions between pages, stale claims, orphan pages with no inbound links, and concepts mentioned often enough to deserve their own page. Report; fix what the site owner approves.
-
-## Netlify Configuration
-
-`netlify.toml` sets:
-- Security headers (CSP, X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Permissions-Policy) on all routes
-- Cache headers: a year for fonts, a year immutable for `/img/` and `/bundle/` (content-hashed filenames), and revalidate-on-every-load for JS components (stable filenames)
-- Cache plugin caches `.cache/` between builds (speeds up Eleventy Fetch + image processing)
