@@ -74,7 +74,7 @@ analytics:
   umamiId: 75b79efd-f4b0-4425-aace-9fa8230aa1c3
 wiki:
   visibility: public
-  attribution: An LLM wiki written by an AI, Claude Code, based on the methods and techniques I have picked for the site.
+  attribution: An LLM wiki written by an AI, Claude Code, based on the methods and techniques used by this site.
 search:
   enabled: true
   types:
