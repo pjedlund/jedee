@@ -162,7 +162,7 @@ A "Menu ⌄" button drops a two-column, table-of-contents-style panel of every p
 
 .megamenu a {
   --megamenu-row-color: var(--megamenu-count-rest); /* labels rest muted, like the count */
-  --megamenu-icon-rest: currentColor;
+  --megamenu-icon-rest: var(--megamenu-count-rest); /* ⚠ not currentColor: the link's color fades, so the icon would go orange → bright → muted on mouse-out */
   --megamenu-icon-color: var(--megamenu-icon-rest);
   /* Dark has headroom light doesn't: 4.5:1 runs out at 68% in dark vs 79% in light. 72% keeps a margin off that floor. */
   --megamenu-count-rest: light-dark(color-mix(in oklab, var(--color-text) 80%, var(--color-bg)), color-mix(in oklab, var(--color-text) 72%, var(--color-bg)));
@@ -188,6 +188,12 @@ A "Menu ⌄" button drops a two-column, table-of-contents-style panel of every p
   block-size: 0.95em;
   margin-inline-end: var(--space-xs); /* extra breathing room before the label */
   color: var(--megamenu-icon-color);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .megamenu a svg {
+    transition: color 0.2s ease-out; /* matches the link's own fade */
+  }
 }
 
 .megamenu-label {
