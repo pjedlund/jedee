@@ -26,11 +26,13 @@ window.addEventListener('load', () => {
   reflectToggleState(toggle);
 
   toggle.addEventListener('click', () => {
-    theme.value = theme.value === 'dark' ? 'light' : 'dark';
-    setPreference();
-    reflectToggleState(toggle);
     // Dismiss the tooltip once the button has been used — CSS alone can only hide it for the length of the press. Cleared below.
     toggle.dataset.tooltipDismissed = '';
+    revealTheme(toggle, () => {
+      theme.value = theme.value === 'dark' ? 'light' : 'dark';
+      setPreference();
+      reflectToggleState(toggle);
+    });
   });
 
   ['pointerleave', 'blur'].forEach((event) =>
@@ -62,6 +64,29 @@ window.addEventListener('storage', ({key}) => {
   const toggle = document.querySelector('[data-theme-toggle]');
   if (toggle) reflectToggleState(toggle);
 });
+
+// The new theme grows as a circle from the button (theme-toggle.css); instant where view transitions are missing or reduced motion is asked for.
+let currentReveal;
+function revealTheme(toggle, update) {
+  const root = document.documentElement;
+  if (!document.startViewTransition || !window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+    update();
+    return;
+  }
+  const {left, top, width, height} = toggle.getBoundingClientRect();
+  const x = left + width / 2;
+  const y = top + height / 2;
+  root.style.setProperty('--theme-reveal-x', `${x}px`);
+  root.style.setProperty('--theme-reveal-y', `${y}px`);
+  root.style.setProperty('--theme-reveal-r', `${Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y))}px`);
+  // ⚠ The attribute keeps these rules off the page-navigation crossfade, which uses the same pseudo-elements.
+  root.dataset.themeReveal = '';
+  const transition = document.startViewTransition(update);
+  currentReveal = transition;
+  transition.finished.finally(() => {
+    if (currentReveal === transition) delete root.dataset.themeReveal;
+  });
+}
 
 // aria-pressed === "dark is active" (the button toggles dark mode on/off)
 function reflectToggleState(toggle) {

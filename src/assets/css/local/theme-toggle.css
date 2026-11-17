@@ -51,6 +51,41 @@ Progressive enhancement: hidden until <is-land> upgrades — a toggle that can't
   }
 }
 
+/* Theme reveal: theme-toggle.js wraps the switch in a view transition and sets data-theme-reveal plus the circle's centre and radius on <html> while it runs. */
+@media (prefers-reduced-motion: no-preference) {
+  /* ⚠ The icon gets its own live layer, or its sun-to-moon morph would freeze inside the page snapshot. */
+  [data-theme-reveal] .theme-toggle {
+    view-transition-name: theme-toggle;
+  }
+
+  [data-theme-reveal]::view-transition-old(theme-toggle) {
+    display: none;
+  }
+
+  [data-theme-reveal]::view-transition-new(theme-toggle) {
+    animation: none;
+  }
+
+  [data-theme-reveal]::view-transition-old(root),
+  [data-theme-reveal]::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  [data-theme-reveal]::view-transition-new(root) {
+    animation: theme-reveal 0.5s cubic-bezier(0.25, 0, 0.3, 1);
+  }
+
+  @keyframes theme-reveal {
+    from {
+      clip-path: circle(0 at var(--theme-reveal-x) var(--theme-reveal-y));
+    }
+    to {
+      clip-path: circle(var(--theme-reveal-r) at var(--theme-reveal-x) var(--theme-reveal-y));
+    }
+  }
+}
+
 /* no JS / before hydration: hide the control entirely */
 is-land:not(:defined) .theme-toggle {
   display: none;
