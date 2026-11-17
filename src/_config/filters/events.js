@@ -16,8 +16,8 @@ export const filterUpcoming = posts => posts.filter(p => isUpcoming(p.data.event
 export const filterPast = posts => posts.filter(p => isPast(p.data.event));
 
 /** Upcoming wants soonest event first; byCategory() returns newest-PUBLISHED
- * first, so the page re-sorts by event.start (a page concern, not a collection change). Past wants most-recent event first — the descending counterpart. Both copy the array before sorting (Array.sort mutates in place). */
+ * first, so the page re-sorts by event.start (a page concern, not a collection change). Past wants most-recent event first — the descending counterpart. */
 export const sortByStartAsc = posts =>
-  [...posts].sort((a, b) => new Date(a.data.event.start) - new Date(b.data.event.start));
+  posts.toSorted((a, b) => new Date(a.data.event.start) - new Date(b.data.event.start));
 export const sortByStartDesc = posts =>
-  [...posts].sort((a, b) => new Date(b.data.event.start) - new Date(a.data.event.start));
+  posts.toSorted((a, b) => new Date(b.data.event.start) - new Date(a.data.event.start));
