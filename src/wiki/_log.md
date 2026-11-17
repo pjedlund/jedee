@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-11-17] ingest | Dark mode
+
+New page [[Dark mode]], from the session that checked the site against Google Chrome's Modern Web Guidance: the two routes to a dark theme, `color-scheme` and the browser's own drawing, `light-dark()` and why Eleventy Excellent left it out in January 2025, keeping a toggle from pinning the site, and the audio player that stays dark. It links out to [[The theme toggle]], [[Shadows]], [[Syntax highlighting]], [[The place map]], [[Tooltips]], [[Icons]], [[Figures]], [[The accessibility test]] and [[Design token sync]].
+
 ## [2026-11-13] ingest | Progressive web apps
 
 [[Progressive web apps]] gains a figure beside the safe-area paragraph: two phone frames, upright and sideways, with the padding on `body` tinted so the bands the phone reserves for the clock, the notch and the home bar are visible. It is a second specimen in `pwa-display-modes.html`, shot as `pwa-safe-areas.png` with a dark twin.

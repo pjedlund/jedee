@@ -25,6 +25,7 @@ Each entry below says what a page covers and why you would open it. The traps an
 - [[Typographic conventions]] — Bringhurst's and Butterick's rules for figures, capitals, captions, superscripts, ordinals and subtitles, and what each costs in accessibility.
 - [[Line length]] — how many characters a line of text should hold, why `54ch` is not 54 characters, and why the capped blocks hang from the left edge rather than being centered.
 - [[Vertical rhythm]] — spacing a page in fractions of its body line, what it costs for images, tables and small text, its musical side, how Ariel Salminen's Scale.css, CUBE CSS, Every Layout and Eleventy Excellent handle it, and a quarter-line prototype on the style guide.
+- [[Dark mode]] — the system setting and a toggle that overrides it, what `color-scheme` hands to the browser, `light-dark()`, and where each dark-mode piece of this site lives.
 - [[The theme toggle]] — one SVG sun masked into a moon, and the inline script that prevents a flash of the wrong theme.
 - [[Focus rings and paint containment]] — why an outline drawn outside its element disappears inside anything that clips.
 - [[Smooth scrolling]] — `scroll-behavior` for jump links, the `html:focus-within` version that keeps find-on-page instant, and why it needs focusable targets.
