@@ -102,7 +102,6 @@ export const dialog = {
 const showHidden = Boolean(process.env.SHOW_HIDDEN);
 export const navigation = {
   navLabel: words.menu,
-  homeTooltip: words.home,
   ariaTop: words.navMain,
   ariaBottom: words.navComplementary,
   ariaPlatforms: words.navPlatforms,
@@ -122,8 +121,6 @@ export const themeToggleTooltip = {
 // Site search copy. The magnifier is icon-only, so `toggleLabel` is its accessible name.
 export const search = {
   toggleLabel: words.searchThisSite,
-  // Visible tooltip only. Shorter than the accessible name, which stays specific.
-  toggleTooltip: words.search,
   inputLabel: words.search,
   placeholder: words.searchPlaceholder,
   clearLabel: words.searchClear,
