@@ -11,19 +11,18 @@ const root = document.querySelector('.site-search');
 const copy = {more: more.dataset.more, empty: more.dataset.empty};
 
 const LIMIT = 8;
-let index = null;
+let indexRequest = null;
 let active = -1;
 
-const loadIndex = async () => {
-  if (index) return index;
-  try {
-    const response = await fetch('/search.json');
-    index = (await response.json()).search;
-  } catch {
-    index = [];
-  }
-  return index;
-};
+// One shared request: a keystroke before it lands waits for it instead of searching nothing. A failed load is retried on the next keystroke or open.
+const loadIndex = () =>
+  (indexRequest ??= fetch('/search.json')
+    .then(response => response.json())
+    .then(data => data.search)
+    .catch(() => {
+      indexRequest = null;
+      return [];
+    }));
 
 const iconFor = type => {
   const template = document.querySelector(`[data-search-icon="${type}"]`) || document.querySelector('[data-search-icon="page"]');
@@ -36,7 +35,7 @@ const rank = (entries, query) => {
   return entries.sort((a, b) => titled(b) - titled(a) || b.date - a.date);
 };
 
-const search = query => {
+const search = (index, query) => {
   const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
   if (!terms.length) return [];
   return rank(index.filter(entry => terms.every(term => entry.keywords.includes(term))), query.toLowerCase());
@@ -109,9 +108,12 @@ toggle.addEventListener('click', () => {
   else open();
 });
 
-input.addEventListener('input', () => {
+input.addEventListener('input', async () => {
   clear.hidden = !input.value;
-  render(input.value.trim() ? search(input.value) : []);
+  const query = input.value;
+  const index = await loadIndex();
+  if (query !== input.value) return; // a later keystroke renders its own results
+  render(query.trim() ? search(index, query) : []);
 });
 
 clear.addEventListener('click', () => {
