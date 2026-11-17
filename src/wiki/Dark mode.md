@@ -57,8 +57,8 @@ Also on 2026-11-17, the color tokens moved to `light-dark()`: every theme color 
 What still uses a pair of blocks, and why:
 
 - **Values that are not colors**: the shadow tiers and the link glow in `variables.css`, and the shadows, opacity, `display`, blend modes and transforms in `tooltip.css`, `book.css`, `pamphlet.css`, `wiki.css`, `textgradient.css`, `sun-and-moon.css`, `dev-grid.css`, `design-system.css` and the inline-code chip in `code.css`. `light-dark()` takes colors only.
-- **The place map** (`place-map.css`, `place-map-places.css`). `place-map.js` caches each probed color by the property's text, and a `light-dark()` value reads the same in both themes, so a theme flip would hand MapLibre the old colors.
+- **The place map** (`place-map.css`, `place-map-places.css`). `place-map.js` caches each probed color by the property's text, and a `light-dark()` value reads the same in both themes. Keeping the map's own properties in pairs did not avoid that: several are built from tokens that now use `light-dark()` (`--map-land: var(--color-bg)`), and the `var()` brings the `light-dark()` text along. After a flip the land, roads and labels kept the old theme's colors while water and buildings, which have separate dark values, changed. Since 2026-11-17 the cache keys on the page theme as well (see [[The place map]]). Any script that caches a computed color by its text has the same problem.
 
 A browser that does not know `light-dark()` (before Chrome 123, Firefox 120 or Safari 17.5) drops every token written with it and shows the browser's default black on white. The `design:system` script reads both halves of a `light-dark()` pair, so the design-system tokens did not change.
 
-Raw source: `src/_raw/dev-notes/How dark mode works.md`
+Raw source: `src/_raw/dev-notes/How dark mode works.md`; the map cache fix: `src/_raw/dev-notes/How the map colors went stale after the light-dark() move.md`

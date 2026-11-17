@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-11-17] ingest | The place map (theme in the color cache)
+
+[[The place map]] and [[Dark mode]] gain the stale-color trap found the same day: the map caches resolved colors by their text, and a token written with `light-dark()` reads the same in both themes, even when reached through `var()` from the map's own paired blocks. A theme flip left land, roads and labels in the old colors; the cache now keys on the page theme as well. Corrects Dark mode's claim that keeping the map's blocks in pairs avoided the problem. Index lines unchanged: neither page's scope moved.
+
 ## [2026-11-17] ingest | Tooltips (hoverable)
 
 [[Tooltips]] gains a section on making the label hoverable for WCAG 1.4.13: the pseudo-elements take the pointer, the arrow's box reaches back to the control as a clear band so the gap can be crossed, how it was measured, and the side effect that a click on a label activates its control.
