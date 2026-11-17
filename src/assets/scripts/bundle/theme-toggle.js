@@ -53,6 +53,16 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', ({m
   }
 });
 
+// Another open tab saved or cleared a choice (a null key means its storage was wiped): follow it.
+window.addEventListener('storage', ({key}) => {
+  if (key !== storageKey && key !== null) return;
+  theme.value = getColorPreference();
+  reflectPreference();
+  updateMetaThemeColor();
+  const toggle = document.querySelector('[data-theme-toggle]');
+  if (toggle) reflectToggleState(toggle);
+});
+
 // aria-pressed === "dark is active" (the button toggles dark mode on/off)
 function reflectToggleState(toggle) {
   toggle.setAttribute('aria-pressed', theme.value === 'dark');
