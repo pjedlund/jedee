@@ -50,104 +50,55 @@
   --color-border-height: 1rem;
 }
 
-/* Light theme */
-:root,
-:root[data-theme='light'] {
-  --color-text: var(--color-base-darkest);
-  --color-headline: var(--color-base-darkest);
-  --color-bg: var(--color-base-lightest);
+/* Theme colors: light-dark() picks by the used color-scheme, which the theme toggle sets (global-styles.css). ⚠ Colors only; non-color values stay in the paired blocks below. */
+:root {
+  --color-text: light-dark(var(--color-base-darkest), var(--color-gray-250));
+  --color-headline: light-dark(var(--color-base-darkest), var(--color-gray-200));
+  --color-bg: light-dark(var(--color-base-lightest), var(--color-gray-900));
 
   --color-accent-orange: var(--color-orange-500);
   /* orange-500 is 3.5:1 on the light bg; text that carries meaning needs 4.5:1. */
-  --color-accent-orange-text: var(--color-orange-600);
-  --color-accent-blue: var(--color-blue);
-  --color-accent-green: var(--color-green);
+  --color-accent-orange-text: light-dark(var(--color-orange-600), var(--color-orange-500));
+  --color-accent-blue: light-dark(var(--color-blue), var(--color-blue-subdued));
+  --color-accent-green: light-dark(var(--color-green), var(--color-green-subdued));
 
-  --color-text-accent: var(--color-gray-700);
-  --color-text-subdued: var(--color-base-subdued);
-  /* The dimmest text still at 4.5:1 on --color-bg (4.58). ⚠ Tuned for --color-bg only; on another surface re-check contrast. */
-  --color-text-dim: color-mix(in srgb, var(--color-gray-500) 60%, var(--color-gray-400));
+  --color-text-accent: light-dark(var(--color-gray-700), var(--color-gray-200));
+  --color-text-subdued: light-dark(var(--color-base-subdued), var(--color-gray-300));
+  /* The dimmest text still at 4.5:1 on --color-bg (4.58 in light). ⚠ Tuned for --color-bg only; on another surface re-check contrast. */
+  --color-text-dim: light-dark(color-mix(in srgb, var(--color-gray-500) 60%, var(--color-gray-400)), var(--color-gray-400));
   /* A dim link lighting up on hover: orange in light, white with a faint glow in dark. */
-  --color-text-lit: var(--color-accent-orange-text);
+  --color-text-lit: light-dark(var(--color-accent-orange-text), var(--color-base-white));
   /* Header text and icons at rest, brightening to --color-text-strong on hover. 82% is the lowest that keeps 4.5:1 in light (4.6:1); dark is 68% (5.2:1). */
-  --color-text-header-dim: color-mix(in oklab, var(--color-base-darkest) 82%, var(--color-base-lightest));
-  --color-text-strong: var(--color-base-darkest);
+  --color-text-header-dim: light-dark(color-mix(in oklab, var(--color-base-darkest) 82%, var(--color-base-lightest)), color-mix(in oklab, var(--color-gray-250) 68%, var(--color-gray-900)));
+  --color-text-strong: light-dark(var(--color-base-darkest), var(--color-base-lightest));
+  --color-bg-accent: light-dark(var(--color-base-white), var(--color-gray-700));
+  --color-bg-accent-2: light-dark(var(--color-gray-300), var(--color-gray-600));
+  /* Hairline rules. Warmer than the gray ramp, to sit on the warm page rather than cut across it. */
+  --color-rule: light-dark(var(--color-base-rule), var(--color-base-rule-dark));
+  --color-bg-head: light-dark(color-mix(in srgb, var(--color-base-dark) 35%, var(--color-bg)), color-mix(in srgb, var(--color-base-dark) 15%, var(--color-bg))); /* in srgb, not oklab: this stands in for a 40% alpha wash, and CSS composites alpha in srgb */
+  /* border top for body: in dark, a band a shade darker than the page (#0d0e10) */
+  --color-border-top: light-dark(var(--color-base-light), color-mix(in srgb, var(--color-gray-900) 64%, var(--color-base-black)));
+
+  --color-code-bg: light-dark(color-mix(in oklab, var(--color-bg) 97%, var(--color-base-black)), color-mix(in oklab, var(--color-bg) 80%, var(--color-base-black)));
+  --code-border-color: light-dark(color-mix(in oklab, var(--color-bg) 96%, var(--color-base-black)), color-mix(in oklab, var(--color-bg) 95%, var(--color-base-white)));
+
   /* Two shadow tiers, deeper in dark: on-page for images and maps lying on the page, raised for panels floating above it (mega-menu, search). */
   --shadow-on-page: var(--box-shadow-thumb);
   --shadow-raised: var(--box-shadow-panel);
   --text-glow-lit: none;
-  --color-bg-accent: var(--color-base-white);
-  --color-bg-accent-2: var(--color-gray-300);
-  /* Hairline rules. Warmer than the gray ramp, to sit on the warm page rather than cut across it. */
-  --color-rule: var(--color-base-rule);
-  --color-bg-head: color-mix(in srgb, var(--color-base-dark) 35%, var(--color-bg)); /* in srgb, not oklab: this stands in for a 40% alpha wash, and CSS composites alpha in srgb */
-  /* border top for body */
-  --color-border-top: var(--color-base-light);
-
-  --color-code-bg: color-mix(in oklab, var(--color-bg) 97%, var(--color-base-black));
-  --code-border-color: color-mix(in oklab, var(--color-bg) 96%, var(--color-base-black));
-
 }
 
-/* Dark theme */
+/* Dark theme: the values light-dark() can't carry. */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --color-text: var(--color-gray-250);
-    --color-headline: var(--color-gray-200);
-    --color-bg: var(--color-gray-900);
-
-    --color-accent-orange: var(--color-orange-500);
-    --color-accent-orange-text: var(--color-orange-500);
-    --color-accent-blue: var(--color-blue-subdued);
-    --color-accent-green: var(--color-green-subdued);
-
-    --color-text-accent: var(--color-gray-200);
-    --color-text-subdued: var(--color-gray-300);
-    --color-text-dim: var(--color-gray-400);
-    --color-text-lit: var(--color-base-white);
-    --color-text-header-dim: color-mix(in oklab, var(--color-gray-250) 68%, var(--color-gray-900));
-    --color-text-strong: var(--color-base-lightest);
+  :root:not([data-theme='light']) {
     --shadow-on-page: var(--box-shadow-thumb-dark);
     --shadow-raised: var(--box-shadow-panel-dark);
     --text-glow-lit: 0 0 0.5em color-mix(in srgb, var(--color-base-white) 35%, transparent);
-    --color-bg-accent: var(--color-gray-700);
-    --color-bg-accent-2: var(--color-gray-600);
-    --color-rule: var(--color-base-rule-dark);
-    --color-bg-head: color-mix(in srgb, var(--color-base-dark) 4%, var(--color-bg));
-    /* border top for body: a band a shade darker than the page (#0d0e10) */
-    --color-border-top: color-mix(in srgb, var(--color-gray-900) 64%, var(--color-base-black));
-
-    --color-code-bg: color-mix(in oklab, var(--color-bg) 80%, var(--color-base-black));
-    --code-border-color: color-mix(in oklab, var(--color-bg) 95%, var(--color-base-white));
   }
 }
 
 :root[data-theme='dark'] {
-  --color-text: var(--color-gray-250);
-  --color-headline: var(--color-gray-200);
-  --color-bg: var(--color-gray-900);
-
-  --color-accent-orange: var(--color-orange-500);
-  --color-accent-orange-text: var(--color-orange-500);
-  --color-accent-blue: var(--color-blue-subdued);
-  --color-accent-green: var(--color-green-subdued);
-
-  --color-text-accent: var(--color-gray-200);
-  --color-text-subdued: var(--color-gray-300);
-  --color-text-dim: var(--color-gray-400);
-  --color-text-lit: var(--color-base-white);
-  --color-text-header-dim: color-mix(in oklab, var(--color-gray-250) 68%, var(--color-gray-900));
-  --color-text-strong: var(--color-base-lightest);
   --shadow-on-page: var(--box-shadow-thumb-dark);
   --shadow-raised: var(--box-shadow-panel-dark);
   --text-glow-lit: 0 0 0.5em color-mix(in srgb, var(--color-base-white) 35%, transparent);
-  --color-bg-accent: var(--color-gray-700);
-  --color-bg-accent-2: var(--color-gray-600);
-  --color-rule: var(--color-base-rule-dark);
-  --color-bg-head: color-mix(in srgb, var(--color-base-dark) 15%, var(--color-bg));
-  /* border top for body */
-  --color-border-top: color-mix(in srgb, var(--color-gray-900) 64%, var(--color-base-black));
-
-  --color-code-bg: color-mix(in oklab, var(--color-bg) 80%, var(--color-base-black));
-  --code-border-color: color-mix(in oklab, var(--color-bg) 95%, var(--color-base-white));
 }

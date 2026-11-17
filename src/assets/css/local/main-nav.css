@@ -8,13 +8,8 @@ A "Menu ⌄" button drops a two-column, table-of-contents-style panel of every p
 .mainnav {
   /* The panel is anchored to the full-width header row (.repel.ontop in header.njk), not to .mainnav — that puts it under the theme toggle with equal gutters. Keep .mainnav static so the anchor wins. */
 
-  /* Shared surface for the panel and the open MENU trigger, so the two read as one connected sheet. A lifted version of the page in both themes (dark overridden below). */
-  --megamenu-surface: color-mix(in oklab, var(--color-base-white) 45%, var(--color-bg));
-}
-
-:root[data-theme='dark'] .mainnav {
-  /* lifted toward white off the dark page, not recessed below it */
-  --megamenu-surface: color-mix(in oklab, var(--color-base-white) 7%, var(--color-bg));
+  /* Shared surface for the panel and the open MENU trigger, so the two read as one connected sheet. A lifted version of the page in both themes: in dark, lifted toward white rather than recessed below the page. */
+  --megamenu-surface: light-dark(color-mix(in oklab, var(--color-base-white) 45%, var(--color-bg)), color-mix(in oklab, var(--color-base-white) 7%, var(--color-bg)));
 }
 
 /* The nav wrapper inherits the body's tall line-height (~36px), so the inline-flex button sits on that oversized baseline instead of the row's optical center. :has() scopes this to the enhanced state; the no-JS list keeps its block layout. */
@@ -169,7 +164,8 @@ A "Menu ⌄" button drops a two-column, table-of-contents-style panel of every p
   --megamenu-row-color: var(--color-text);
   --megamenu-icon-rest: currentColor;
   --megamenu-icon-color: var(--megamenu-icon-rest);
-  --megamenu-count-rest: color-mix(in oklab, var(--color-text) 80%, var(--color-bg));
+  /* Dark has headroom light doesn't: 4.5:1 runs out at 68% in dark vs 79% in light. 72% keeps a margin off that floor. */
+  --megamenu-count-rest: light-dark(color-mix(in oklab, var(--color-text) 80%, var(--color-bg)), color-mix(in oklab, var(--color-text) 72%, var(--color-bg)));
   --megamenu-count-color: var(--megamenu-count-rest);
   --megamenu-dot-color: color-mix(in oklab, var(--color-text) 55%, var(--color-bg));
   --megamenu-row-bg: transparent;
@@ -192,11 +188,6 @@ A "Menu ⌄" button drops a two-column, table-of-contents-style panel of every p
   block-size: 0.95em;
   margin-inline-end: var(--space-xs); /* extra breathing room before the label */
   color: var(--megamenu-icon-color);
-}
-
-:root[data-theme='dark'] .megamenu a {
-  /* Dark has headroom light doesn't: 4.5:1 runs out at 68% here vs 79% in light. 72% keeps a margin off that floor. */
-  --megamenu-count-rest: color-mix(in oklab, var(--color-text) 72%, var(--color-bg));
 }
 
 .megamenu-label {
