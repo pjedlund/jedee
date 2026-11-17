@@ -18,6 +18,11 @@ html[data-theme='dark'] {
   color-scheme: dark;
 }
 
+/* ⚠ Chrome's light audio player (#F1F3F4) all but vanishes on the light page, so the player stays dark in both themes. */
+audio {
+  color-scheme: dark;
+}
+
 /* Cross-document view transitions: a crossfade between same-origin pages instead of a white flash. ⚠ The only @view-transition opt-in, and it must stay gated: the reset's reduced-motion clamp doesn't reach ::view-transition-* pseudos. */
 @media (prefers-reduced-motion: no-preference) {
   @view-transition {
