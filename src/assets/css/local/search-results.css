@@ -10,9 +10,10 @@ The result list inside the search panel; included by search.njk beside search.cs
 }
 
 .search-result a {
-  --search-result-icon: currentColor;
+  --search-result-icon: var(--search-result-text-rest); /* ⚠ not currentColor: the link's color fades, so the icon would go orange → bright → muted on mouse-out */
   /* Measured against the PANEL surface, not the page — a color-mix is only valid on the surface it was tuned on. 84%, not 80%: the highlighted row's own tint darkens the ground under it and 80% fell to 4.31:1 there. */
-  --search-result-text-color: light-dark(color-mix(in oklab, var(--color-text) 84%, var(--search-surface)), color-mix(in oklab, var(--color-text) 72%, var(--search-surface)));
+  --search-result-text-rest: light-dark(color-mix(in oklab, var(--color-text) 84%, var(--search-surface)), color-mix(in oklab, var(--color-text) 72%, var(--search-surface)));
+  --search-result-text-color: var(--search-result-text-rest);
   --search-result-bg: transparent;
 
   display: grid;
@@ -33,6 +34,12 @@ The result list inside the search panel; included by search.njk beside search.cs
   inline-size: 1.35em;
   block-size: 1.35em;
   color: var(--search-result-icon);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .search-result svg {
+    transition: color 0.2s ease-out; /* matches the link's own fade */
+  }
 }
 
 .search-result-title {
