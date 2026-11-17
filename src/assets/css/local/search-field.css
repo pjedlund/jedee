@@ -44,12 +44,8 @@ The input row inside the search panel; included by search.njk beside search.css.
 
 /* The UA default measured 4.37:1 in light and 3.42:1 in dark. Placeholder text is text — same 80/72 pair as .search-more. */
 .search-input::placeholder {
-  color: color-mix(in oklab, var(--color-text) 80%, var(--search-surface));
+  color: light-dark(color-mix(in oklab, var(--color-text) 80%, var(--search-surface)), color-mix(in oklab, var(--color-text) 72%, var(--search-surface)));
   opacity: 1;
-}
-
-:root[data-theme='dark'] .search-input::placeholder {
-  color: color-mix(in oklab, var(--color-text) 72%, var(--search-surface));
 }
 
 .search-clear {

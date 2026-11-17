@@ -8,19 +8,8 @@
   --color-activity-weight-training: var(--color-red-vivid);
 }
 
-:root,
-:root[data-theme='light'] {
-  --color-activity-orienteering: var(--color-activity-orienteering-on-light);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-activity-orienteering: var(--color-activity-orienteering-on-dark);
-  }
-}
-
-:root[data-theme='dark'] {
-  --color-activity-orienteering: var(--color-activity-orienteering-on-dark);
+:root {
+  --color-activity-orienteering: light-dark(var(--color-activity-orienteering-on-light), var(--color-activity-orienteering-on-dark));
 }
 
 /* Activity type → its color, for anything carrying data-activity (a table row, the meta line). */

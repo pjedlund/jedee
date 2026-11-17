@@ -74,6 +74,26 @@ function matchBrace(s, open) {
 let pieceCss = '';
 for (const name of ['activity-colors', 'code', 'main-nav', 'place-map', 'tooltip']) pieceCss += await readFile(resolve(REPO_ROOT, 'src/_includes/css', `${name}.css`), 'utf8');
 const raw = collectRootVars(globalCss + pieceCss);
+
+// A light-dark(a, b) value holds both themes in one declaration: a goes to light, b to dark unless a dark block sets it too.
+function splitLightDark(value) {
+	const m = /^light-dark\((.*)\)$/s.exec(value.trim());
+	if (!m) return null;
+	let depth = 0;
+	for (let i = 0; i < m[1].length; i++) {
+		const c = m[1][i];
+		if (c === '(') depth++;
+		else if (c === ')') depth--;
+		else if (c === ',' && depth === 0) return [m[1].slice(0, i).trim(), m[1].slice(i + 1).trim()];
+	}
+	return null;
+}
+for (const [k, v] of Object.entries(raw.light)) {
+	const pair = splitLightDark(v);
+	if (!pair) continue;
+	raw.light[k] = pair[0];
+	if (!(k in raw.dark)) raw.dark[k] = pair[1];
+}
 const themeVars = {light: raw.light, dark: {...raw.light, ...raw.dark}};
 
 // A token may point at another through var(); the design system wants the literal, except between colors where an alias is the better record.
