@@ -1,7 +1,7 @@
 ---
 description: "How a static site colors its code blocks at build time with Prism, and what happens to a fence whose language the highlighter has never heard of."
 date: 2026-08-23
-updated: 2026-10-27
+updated: 2026-11-17
 ---
 
 Syntax highlighting on a static site is a build-time job. The markdown processor hands each fenced code block to a highlighter, which wraps the interesting substrings in `<span class="token …">` elements; a stylesheet colors those classes. No JavaScript reaches the browser, and the highlighting is part of the HTML.
@@ -96,7 +96,7 @@ On the page each color is then mixed with 20% of the site's orange accent (`--co
 
 Before the rework, jedee's weakest pairs were 5.8 in light mode and 6.0 in dark mode. Plain text was not in that check. Adding it showed that the old dark-mode blue, a near-white at 95% lightness, was 1.5 from the text color, so attribute names looked like their values to every reader. Every color now also clears 5:1 against the code block background in both themes, measured on the page. Two limits: the simulation models the most severe form of each condition, and a distance says nothing about which colors a reader with the condition finds comfortable. The check is kept, local-only, at `_local/generated/scripts/cvd-check.mjs`; run it after any change to the palette.
 
-⚠ The light palette sits in a `prefers-color-scheme: light` query guarded by `:root:not([data-theme='dark'])`. Without the guard, a reader whose device is in light mode and who switches the site to dark gets the light theme's dark blue, brown and deep red on the dark code background. That was the case until 2026-10-06, and it first showed on an iPhone, where it read as washed-out code.
+Each token color is one `light-dark()` pair in `code.css`, light first, so it follows the theme toggle as well as the system setting (see [[Dark mode]]). Until 2026-11-17 the light palette sat in a `prefers-color-scheme: light` query that had to be guarded with `:root:not([data-theme='dark'])`. Before 2026-10-06 it had no guard, and a reader whose device was in light mode who switched the site to dark got the light theme's dark blue, brown and deep red on the dark code background. It first showed on an iPhone, where it read as washed-out code.
 
 ### Inline code
 

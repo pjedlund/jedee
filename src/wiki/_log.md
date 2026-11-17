@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-11-17] ingest | Dark mode, Syntax highlighting
+
+[[Dark mode]] gains a section on the `light-dark()` rework: which tokens moved, how the before/after comparison was run across eight theme situations, what still needs a pair of blocks (non-color values, and the place map, whose color cache would go stale), and the browsers that miss it. [[Syntax highlighting]] drops its paragraph on the guarded light palette, now a `light-dark()` pair per token.
+
 ## [2026-11-17] ingest | Dark mode
 
 New page [[Dark mode]], from the session that checked the site against Google Chrome's Modern Web Guidance: the two routes to a dark theme, `color-scheme` and the browser's own drawing, `light-dark()` and why Eleventy Excellent left it out in January 2025, keeping a toggle from pinning the site, and the audio player that stays dark. It links out to [[The theme toggle]], [[Shadows]], [[Syntax highlighting]], [[The place map]], [[Tooltips]], [[Icons]], [[Figures]], [[The accessibility test]] and [[Design token sync]].

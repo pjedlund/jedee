@@ -38,7 +38,7 @@ A toggle has three states to represent, not two: light, dark, and *follow the sy
 
 ## In jedee
 
-Most of the machinery is Eleventy Excellent stock: the `color-scheme: light dark` rule, the meta tag, the inline script that applies a saved choice before the first paint (see [[The theme toggle]]), and the doubled `@media` and `[data-theme='dark']` blocks in `variables.css`. Lene Saile considered `light-dark()` for Eleventy Excellent 4.0 and left it out because browser support was still too low; in January 2025 it had been Baseline for only eight months. The reason was the date, not accessibility. Her theme documentation calls dark mode an accessibility feature in its own right and asks that a changed switch keep its accessible name.
+Most of the machinery is Eleventy Excellent stock: the `color-scheme: light dark` rule, the meta tag, the inline script that applies a saved choice before the first paint (see [[The theme toggle]]), and, until 2026-11-17, the doubled `@media` and `[data-theme='dark']` blocks in `variables.css`. Lene Saile considered `light-dark()` for Eleventy Excellent 4.0 and left it out because browser support was still too low; in January 2025 it had been Baseline for only eight months. The reason was the date, not accessibility. Her theme documentation calls dark mode an accessibility feature in its own right and asks that a changed switch keep its accessible name.
 
 jedee's own additions, all from 2026-11-17:
 
@@ -48,6 +48,17 @@ jedee's own additions, all from 2026-11-17:
 
 Everything else that changes between themes is on its own page: the tinted shadows in [[Shadows]], code colors in [[Syntax highlighting]], the map's color properties in [[The place map]], the tooltip's shadow in [[Tooltips]], and icons drawn in `currentColor` in [[Icons]]. [[Figures]] covers the one thing a toggle cannot reach: a `<picture>` that switches screenshots with a media query follows the system setting only. [[The accessibility test]] explains why pa11y checks light mode only and how dark mode is checked separately.
 
-Moving the color tokens to `light-dark()` is the next step, and it is in the backlog. Seventeen stylesheets carry the doubled blocks. ⚠ The order matters: `light-dark()` reads `color-scheme`, not `data-theme`, so on a site whose toggle does not set `color-scheme` it would stop the toggle from changing any color, with no error anywhere. In jedee that rule is now in place.
+### The light-dark() rework
+
+Also on 2026-11-17, the color tokens moved to `light-dark()`: every theme color in `variables.css`, and the theme colors in six local stylesheets (`code.css`, `main-nav.css`, `search.css`, `search-results.css`, `search-field.css`, `activity-colors.css`). The site looks the same as before: a comparison of the computed colors of every element on the 28 sample pages, before and after, in eight situations (system light or dark, × no choice, chose light, chose dark, plus no JavaScript in each scheme), found no change for any visitor with JavaScript. Without JavaScript in dark mode, two things changed for the better. Several search colors had only been set under `[data-theme='dark']`, which is absent without a script, so they kept their light values. And the two dark blocks had disagreed on the table-header tint (4% against 15%): the 15% that script-running visitors saw is now the only value.
+
+⚠ `light-dark()` reads `color-scheme`, not `data-theme`. On a site whose toggle does not also set `color-scheme`, the move silently stops the toggle from changing any color, so the `color-scheme` rules have to come first.
+
+What still uses a pair of blocks, and why:
+
+- **Values that are not colors**: the shadow tiers and the link glow in `variables.css`, and the shadows, opacity, `display`, blend modes and transforms in `tooltip.css`, `book.css`, `pamphlet.css`, `wiki.css`, `textgradient.css`, `sun-and-moon.css`, `dev-grid.css`, `design-system.css` and the inline-code chip in `code.css`. `light-dark()` takes colors only.
+- **The place map** (`place-map.css`, `place-map-places.css`). `place-map.js` caches each probed color by the property's text, and a `light-dark()` value reads the same in both themes, so a theme flip would hand MapLibre the old colors.
+
+A browser that does not know `light-dark()` (before Chrome 123, Firefox 120 or Safari 17.5) drops every token written with it and shows the browser's default black on white. The `design:system` script reads both halves of a `light-dark()` pair, so the design-system tokens did not change.
 
 Raw source: `src/_raw/dev-notes/How dark mode works.md`
