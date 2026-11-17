@@ -1,7 +1,7 @@
 ---
-description: "The three states a theme control has to represent, the blocking script that prevents a flash of the wrong one, and jedee's single SVG masked from sun to moon."
+description: "The three states a theme control has to represent, the blocking script that prevents a flash of the wrong one, jedee's single SVG masked from sun to moon, and the circle the new theme grows from."
 date: 2026-07-31
-updated: 2026-11-13
+updated: 2026-11-17
 ---
 
 Dark mode reaches a page two ways. [`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) reports the operating system's setting and handles most visitors with no interface at all. A toggle exists for everyone else — someone whose system is dark but who wants this one site light — and the moment a site has one it has three states to represent rather than two: light, dark, and *follow the system*, which is not the same as either of the others.
@@ -57,6 +57,21 @@ Everything keys off `data-theme` on `<html>`. The **end states always apply**; o
 The mask circle animates its `cx` **attribute** where CSS geometry properties are supported, which keeps the mask geometry honest; older browsers get a `translateX` fallback of the same distance. Timings are staggered: beams fold in fast (0.15s, −25° rotation), disc grows in 0.25s, mask circle slides last (0.25s delay, 0.5s); going light the disc springs back on an elastic easing.
 
 Argyle's original pulls its easings from Open Props via a remote `@import`. Here the four cubic-beziers are local custom properties on the button, so **nothing is fetched at runtime**.
+
+### The page follows in a circle
+
+Since 2026-11-17 the page no longer snaps from one theme to the other on a click: the new theme grows as a circle out of the button and covers the screen in half a second. It is a same-document [view transition](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API). `revealTheme()` in `theme-toggle.js` hands the theme change to `document.startViewTransition()`, the browser keeps a picture of the page in the old theme, and `theme-toggle.css` clips the live new theme to a circle centred on the button with `clip-path: circle()`. The script measures the button and the distance to the farthest corner of the screen, and puts the centre and radius on `<html>` as `--theme-reveal-x`, `--theme-reveal-y` and `--theme-reveal-r`.
+
+Three other ways were weighed and turned down. A `transition` on `color` and `background-color` has to reach every element, stutters on long pages such as `/activities/`, gets mixed up with the links' hover fades, and still lets images, shadows and fixed colors snap. Registering the color tokens with `@property` so they can fade makes every element recalculate on every frame, which is worse. A plain crossfade uses the same mechanism as the circle and costs the same; the circle was chosen because it starts where the click was.
+
+What the view transition costs, and why it stays cheap:
+
+- **The picture is the screen, not the page.** The browser captures the viewport, so the circle runs as smoothly on `/activities/` as on a short page. The theme change itself still recalculates the whole page once, as it always did: measured in headless Chrome, the circle starts 30–140ms after the click there, against about 40ms on the start page.
+- **The icon gets a separate layer.** Inside the page picture the sun-to-moon morph would freeze. The button takes `view-transition-name: theme-toggle` during the reveal, its old picture is hidden and the new one is the live button, so the morph plays on top of the circle.
+- ⚠ **The rules are scoped to `data-theme-reveal`.** Page-to-page navigation uses the same `::view-transition-*` pseudo-elements for its crossfade (`global-styles.css`). The script sets the attribute on `<html>` for the length of the reveal and removes it when the transition finishes, so the circle never leaks into a navigation. A second click before the first finishes skips the first transition, and the attribute stays until the last one is done.
+- **Clicks go to the picture for half a second.** While a view transition runs, the page underneath does not take pointer input. At 0.5s this is not noticeable.
+
+It does nothing for visitors who ask for reduced motion: the script checks `prefers-reduced-motion: no-preference` before starting the transition, and the CSS sits inside the same media query. A browser without `startViewTransition` (support: Chrome and Edge 111, Safari 18, Firefox 144) gets the instant switch. A change coming from the system setting or from another open tab stays instant too; only a click on the button has a place for the circle to start from.
 
 ### No flash of the wrong theme
 
