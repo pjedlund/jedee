@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-11-17] ingest | Tooltips (hoverable)
+
+[[Tooltips]] gains a section on making the label hoverable for WCAG 1.4.13: the pseudo-elements take the pointer, the arrow's box reaches back to the control as a clear band so the gap can be crossed, how it was measured, and the side effect that a click on a label activates its control.
+
 ## [2026-11-17] ingest | Tooltips
 
 [[Tooltips]] now counts nine controls: the breadcrumb logomark and the search magnifier lost their tooltips, and the theme toggle is the only one left in the header, kept because its tooltip is the only thing that says what a click will do. The page also names the gap the guidance check found: the tooltip cannot be hovered, which WCAG 1.4.13 asks for.
