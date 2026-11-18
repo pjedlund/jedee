@@ -33,15 +33,16 @@ The activities page showed an empty map box for over a second before [[The place
 The fix remembers each resolved value:
 
 ```js
-const probed = new Map(); // ⚠ each probe forces a page layout; keyed by the resolved value, so a theme flip misses the cache instead of going stale
+const probed = new Map(); // ⚠ each probe forces a page layout; keyed by theme + value, since a light-dark() value reads the same in both themes
 function cssColor(el, prop) {
   const value = getComputedStyle(el).getPropertyValue(prop).trim();
   if (!value) return undefined;
-  if (!probed.has(value)) probed.set(value, probeColor(el, value));
-  return probed.get(value);
+  const key = `${pageTheme()}|${value}`;
+  if (!probed.has(key)) probed.set(key, probeColor(el, value));
+  return probed.get(key);
 }
 ```
 
-The cache key is the custom property's value with its `var()`s already substituted, so a theme switch that changes a color produces a new key rather than a stale hit. That holds only while no `--place-color` or `--map-*` value contains `currentColor` or `light-dark()`, which stay unresolved in the value text. Timed on the live page against the same 140 rows: **1,600 ms before, 31 ms after**, identical colors out. On a production build the whole map setup dropped to about 103 ms of script, 39 ms of it forced layout.
+The cache key is the page's theme plus the custom property's value with its `var()`s already substituted. The value alone was the first key, and it went stale once the map colors moved to `light-dark()`: that function stays unresolved in the value text, so light and dark read the same and a theme flip hit the light entry. Adding the theme fixed it; the number of probes is unchanged, at most one per color per theme. Timed on the live page against the same 140 rows: **1,600 ms before, 31 ms after**, identical colors out. On a production build the whole map setup dropped to about 103 ms of script, 39 ms of it forced layout.
 
 Raw source: `src/_raw/dev-notes/How the map preloader delay was traced to forced layout.md` (the session of 2026-10-07), with the HAR, screen recording and Performance trace in `_local/generated/demos/preloader/`.

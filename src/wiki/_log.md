@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-11-18] lint | Forced layout (color cache snippet)
+
+[[Forced layout]] quoted the first version of the place map's color cache, keyed by value alone; its snippet and paragraph now show the theme + value key and why `light-dark()` needed it.
+
 ## [2026-11-17] ingest | Icons, The main menu, Site search (muted rest, icon flash)
 
 [[Icons]] gains the general trap: an icon on `currentColor` inside a link whose color fades snaps to the link's mid-fade hover color on mouse-out, a bright flash in dark mode; the fix is a fixed rest color and a fade of its own. Its In jedee paragraph no longer claims the mega-menu, search-result and meta-line icons use `currentColor`. [[The main menu]] and [[Site search]] record that labels and result titles now rest muted, with their contrast on the panel, and link back to Icons.
