@@ -23,12 +23,6 @@ const TEMP_PREFIX = join(tmpdir(), 'figcraft-tokens-');
 // Token kinds FigCraft keeps elsewhere: type.* and shadow.* are text and effect styles, letter spacing uses the site's computed tracking on purpose.
 const NOT_SYNCED = [/^type\./, /^shadow\./, /^font\.letterSpacing\./];
 
-// FigCraft-only variables worked out from a repo token: opacity.* is the visibility switch in percent.
-const DERIVED = {
-	'opacity.light-only': {from: 'visibility.light-only', map: v => v * 100},
-	'opacity.dark-only': {from: 'visibility.dark-only', map: v => v * 100},
-};
-
 // A worktree has no _local/, so fall back to the main checkout's.
 function figcraftFile() {
 	if (process.env.FIGCRAFT_FILE) return resolve(process.env.FIGCRAFT_FILE);
@@ -83,9 +77,6 @@ async function repoModes() {
 				const fc = toFigcraft(token);
 				if (fc) map[name] = fc;
 			}
-		}
-		for (const [name, {from, map: fn}] of Object.entries(DERIVED)) {
-			if (map[from]?.kind === 'number') map[name] = {kind: 'number', value: fn(map[from].value)};
 		}
 		out[mode] = map;
 	}
@@ -166,8 +157,7 @@ const shortHex = h => (h.endsWith('ff') ? h.slice(0, 7) : h);
 // FigCraft's variables, grouped per collection as name → {id, type, Light, Dark} with each value in toFigcraft's shape.
 function readCollections(list) {
 	const byId = Object.fromEntries(list.variables.map(v => [v.id, v]));
-	const plain = name => name.replace(/^Themes\//, '');
-	return list.collections.map(col => {
+		return list.collections.map(col => {
 		const modeId = Object.fromEntries(col.modes.map(m => [m.name, m.id]));
 		const vars = {};
 		for (const v of list.variables.filter(v => v.collection === col.id)) {
@@ -175,11 +165,11 @@ function readCollections(list) {
 			for (const mode of MODES) {
 				const raw = v.values[modeId[mode]];
 				if (!raw) continue;
-				if (raw.type === 'alias') entry[mode] = {kind: 'alias', name: plain(byId[raw.value]?.name ?? raw.value)};
+				if (raw.type === 'alias') entry[mode] = {kind: 'alias', name: byId[raw.value]?.name ?? raw.value};
 				else if (raw.type === 'color') entry[mode] = {kind: 'color', value: toHex(raw.value)};
 				else entry[mode] = {kind: raw.type, value: raw.value};
 			}
-			vars[plain(v.name)] = entry;
+			vars[v.name] = entry;
 		}
 		return {id: col.id, name: col.name, vars};
 	});
@@ -265,7 +255,7 @@ try {
 			for (const name of diffs[i].missing) {
 				const values = Object.fromEntries(MODES.map(m => [m, valueFor(repo[m][name], c, repo[m])]));
 				const first = resolveValue(repo.Light[name], n => repo.Light[n]);
-				creates.push({command: 'variable.create', params: {collection: c.id, name: `Themes/${name}`, type: first.kind, values}});
+				creates.push({command: 'variable.create', params: {collection: c.id, name, type: first.kind, values}});
 			}
 		});
 		if (creates.length) {
