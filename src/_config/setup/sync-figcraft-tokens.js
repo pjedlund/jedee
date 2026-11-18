@@ -3,10 +3,10 @@
 // ⚠ Close the file in FigCraft first, or reopen it after: a window still holding the old version will refuse to save over the new one.
 
 import {execFile, execFileSync} from 'node:child_process';
-import {copyFile, mkdtemp, readFile} from 'node:fs/promises';
+import {copyFile, mkdtemp, readFile, writeFile} from 'node:fs/promises';
 import {existsSync} from 'node:fs';
 import net from 'node:net';
-import {tmpdir} from 'node:os';
+import {homedir, tmpdir} from 'node:os';
 import {dirname, join, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {build} from './build-penpot-tokens.js';
@@ -17,6 +17,8 @@ const PORT = Number(process.env.FIGCRAFT_PORT || 7979);
 const APP = '/Applications/FigCraft.app';
 const CHECK_ONLY = process.argv.includes('--check');
 const MODES = ['Light', 'Dark'];
+const STATE_FILE = join(homedir(), 'Library/Application Support/FigCraft/state.json');
+const TEMP_PREFIX = join(tmpdir(), 'figcraft-tokens-');
 
 // Token kinds FigCraft keeps elsewhere: type.* and shadow.* are text and effect styles, letter spacing uses the site's computed tracking on purpose.
 const NOT_SYNCED = [/^type\./, /^shadow\./, /^font\.letterSpacing\./];
@@ -136,6 +138,24 @@ async function startFigcraft(workDir) {
 		try { return await client(); } catch { await new Promise(r => setTimeout(r, 500)); }
 	}
 	throw new Error('FigCraft did not open its control port within 30 seconds.');
+}
+
+const running = () => new Promise(ok => execFile('pgrep', ['-f', '--', `--control ${PORT}`], e => ok(!e)));
+
+// The second window lists its temp copy under Recent files; take every such copy back out once it has quit.
+async function tidyRecents() {
+	for (let i = 0; i < 20 && (await running()); i++) await new Promise(r => setTimeout(r, 500));
+	try {
+		const state = JSON.parse(await readFile(STATE_FILE, 'utf8'));
+		const recent = state.prefs?.recent_files;
+		if (!Array.isArray(recent)) return;
+		const kept = recent.filter(p => !p.startsWith(TEMP_PREFIX));
+		if (kept.length === recent.length) return;
+		state.prefs.recent_files = kept;
+		await writeFile(STATE_FILE, JSON.stringify(state));
+	} catch (e) {
+		console.log(`(Could not tidy FigCraft's Recent files: ${e.message})`);
+	}
 }
 
 // ---------- comparing ----------
@@ -267,6 +287,7 @@ try {
 } finally {
 	await fc.call('app.quit').catch(() => {});
 	fc.close();
+	await tidyRecents();
 }
 
 if (!CHECK_ONLY && totalChanges) {
