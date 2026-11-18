@@ -2,7 +2,7 @@
 description: "A systematic inventory of what jedee keeps unchanged from Eleventy Excellent and where it has deliberately diverged."
 searchTerms: "EE"
 date: 2026-07-31
-updated: 2026-11-08
+updated: 2026-11-18
 ---
 
 jedee is a fork of [Eleventy Excellent](https://eleventy-excellent.netlify.app/) by Lene Saile. Every other page in this wiki states EE-stock-versus-jedee where it happens to matter locally; this page states it systematically, so a claim on another page can be checked against one inventory.
@@ -51,7 +51,7 @@ Table: What jedee extended from the stock starter
 | Header chrome | `navigation.drawerNav` and `navigation.subMenu` booleans in `meta.js` | neither key exists; replaced by `breadcrumb` and `hideNav`, and one `nav-menu.js` in place of EE's `nav-drawer.js` + `nav-sub.js` |
 | Wikilinks | not shipped at all | `@photogabble/eleventy-plugin-interlinker` — see [[Wikilinks]] |
 | Per-page CSS | ten files in `css/local/` | thirty-four on 2026-10-27 |
-| npm scripts | adds `screenshots` | drops `screenshots`; adds, among others, `design:md`, `penpot:tokens`, `figma:tokens`, `fallback-font-style`, `test:unit`, `mockups`, `flags` |
+| npm scripts | adds `screenshots` | drops `screenshots`; adds, among others, `design:md`, `penpot:tokens`, `figcraft:tokens`, `fallback-font-style`, `test:unit`, `mockups`, `flags` |
 
 **The interlinker is the consequential addition.** Vanilla EE does not ship it, which is exactly what made a vanilla checkout the decisive control when jedee's navigation rendered blank — see [[The interlinker's second render pass]]. Any oddity that only reproduces here and not upstream should be tested against that checkout before anything else.
 

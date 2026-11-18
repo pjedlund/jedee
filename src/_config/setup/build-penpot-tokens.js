@@ -238,7 +238,7 @@ function countTokens(setObj) {
 	return n;
 }
 
-// Run the file directly to write Penpot's copy; `build` is imported by build-figma-tokens.js for Figma's copy.
+// Run the file directly to write Penpot's copy; `build` is imported by sync-figcraft-tokens.js for FigCraft.
 if (import.meta.url === pathToFileURL(process.argv[1]).href) {
 	const dtcg = await build();
 	await mkdir(dirname(OUTPUT_PATH), {recursive: true});
