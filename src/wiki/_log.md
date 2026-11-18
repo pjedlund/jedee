@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-11-18] ingest | Design token sync (FigCraft)
+
+[[Design token sync]] now leads with the FigCraft sync: `npm run figcraft:tokens` writes variables over FigCraft's control port, with a per-variable report and a copy-back only when nobody saved meanwhile. New general sections cover writing variables directly instead of importing, copied colors that drift without a sound (and the headless-Chrome check that catches it), and merging two variable sets by relinking before deleting. The Penpot material moved under "In Penpot (frozen 2026-11-18)"; the opacity switches are now in percent. The `pgrep` trap behind the Recent files tidy-up is the page's second ⚠.
+
 ## [2026-11-18] lint | Forced layout (color cache snippet)
 
 [[Forced layout]] quoted the first version of the place map's color cache, keyed by value alone; its snippet and paragraph now show the theme + value key and why `light-dark()` needed it.
