@@ -1,11 +1,11 @@
 ---
-description: "Generating a design tool's tokens from the code that is their source of truth, and the three ways the two sides drift apart anyway."
+description: "Keeping a design file's tokens in step with the code that holds them: importing versus writing variables directly, what does not survive the trip, and how copies drift."
 searchTerms: "DTCG"
 date: 2026-08-22
-updated: 2026-10-31
+updated: 2026-11-18
 ---
 
-A **design token** is a named design value — a color, a spacing step, a radius — held somewhere both a stylesheet and a design tool can read. **Design token sync** is keeping those two copies in agreement. The interchange format is [DTCG](https://tr.designtokens.org/format/), a W3C community-group JSON schema that [Tokens Studio](https://tokens.studio/) popularized and that Figma, Penpot and others now import.
+A **design token** is a named design value — a color, a spacing step, a radius — held somewhere both a stylesheet and a design tool can read. **Design token sync** is keeping those two copies in agreement. The interchange format is [DTCG](https://tr.designtokens.org/format/), a W3C community-group JSON schema that [Tokens Studio](https://tokens.studio/) popularized and that Figma, Penpot and others now import. A tool that a script can drive offers a second route: read its variables and write the differences, with no file in between.
 
 The direction matters more than the format. Two arrangements are common:
 
@@ -21,6 +21,16 @@ An importer that takes a DTCG file typically replaces every token *set* whose na
 This is easy to miss because the two sides can look synchronized right up until the moment it happens. Every token the generator emits may match the tool exactly, and that is what "in sync" usually gets checked against. Sync is then a *subset* relationship, not equality: the tool holds extras the generator has never heard of, and the import doesn't care about the difference.
 
 The fix is not to remember the extras. It is to give each one a source in the repo, so the generated file reproduces it and the import becomes a no-op. A hand-made token inside a generated set is borrowed time; a hand-made token inside a set the generator never emits is safe, though only by accident, and giving *that* set a source is what would put it at risk.
+
+## Writing variables directly instead of importing
+
+When a design tool can be driven by a script — a plugin API, or a control port that takes commands — the sync can skip the file and the import. The script reads the tool's variables, compares each one with the repo's value, and writes only the ones that differ. Three things change.
+
+- **The report comes before the write.** Every difference is listed by name and mode (changed, missing, only in the tool), so a run can be a check with nothing written. An import shows nothing until it has already replaced the set.
+- **Extras survive.** A variable that exists only in the tool is reported and left alone, so the subset problem above becomes a line in a report instead of a deletion.
+- **References can stay references**, where the tool has them: a token written as `{color.text}` becomes a link to the variable `color.text`, not a copied hex.
+
+The cost is that the script has to run while nobody is editing: it writes to the same file a designer has open. Working on a copy, and copying it back only if the original's bytes have not changed meanwhile, keeps a run from overwriting someone's unsaved edits.
 
 ## Units do not survive the trip
 
@@ -53,9 +63,23 @@ A design tool's color token holds a color. It does not hold a *calculation* over
 
 Some things on a page change between themes without being a color at all. A map picture in the design file is two different images; a native `<audio>` player is drawn by the browser, which picks its light or dark chrome from `color-scheme`. The site switches them with `<picture>` and `prefers-color-scheme`, or leaves them to the browser. A design tool's theme only swaps token values, so neither has anything to bind to.
 
-**Opacity tokens switch them.** Stack a light and a dark version, and bind each one's layer opacity to an opacity token that is `1` in one theme set and `0` in the other: `visibility.light-only` (1 in light, 0 in dark) and `visibility.dark-only` (the reverse). Switching the tool's theme then shows exactly one of the pair, with nothing to toggle by hand. Browser chrome that is a flat color can instead get ordinary color tokens sampled from the browser in each theme. These are design-tool-only tokens: no stylesheet reads them, so they need a source in the repo for the same reason as any other hand-made token — the next import deletes them otherwise.
+**Opacity tokens switch them.** Stack a light and a dark version, and bind each one's layer opacity to an opacity token that is fully on in one theme and off in the other: `opacity.light-only` (100 in light, 0 in dark) and `opacity.dark-only` (the reverse). Whether "fully on" is `1` or `100` depends on the tool; Penpot takes a fraction, FigCraft a percent. Switching the tool's theme then shows exactly one of the pair, with nothing to toggle by hand. Browser chrome that is a flat color can instead get ordinary color tokens sampled from the browser in each theme. These are design-tool-only tokens: no stylesheet reads them, so they need a source in the repo for the same reason as any other hand-made token — the next import deletes them otherwise.
 
 The opacity has to be the layer's, for the reason given above: a token on a fill resets that fill's opacity.
+
+Binding visibility instead of opacity is tempting and wrong where the layers sit in an auto layout: a hidden layer gives up its space, so the frame shrinks in one theme.
+
+## A copied color drifts without a sound
+
+A color the site computes — `color-mix()`, a tint over the page color — has to be written into the token files as a fixed hex for the design file to use it. Nothing ties that hex to the CSS that made it. Change a percentage in the stylesheet and the copy is wrong from then on, while every check that compares the token files with the design file still passes, because those two agree with each other.
+
+The check that catches it measures the site instead: load a built page in a headless browser, in each theme, read the color each element is actually drawn with, and compare that with the token. A canvas converts whatever the browser computes (`oklab()`, `color(srgb …)`) to plain RGB. A token that is a reference to another token cannot drift this way, which is the argument for writing one wherever the value really is another token, as with a menu icon that rests in the same color as the count beside it.
+
+## Two variable sets for one design system
+
+Importing a design file that uses a separate library file can bring in two sets of variables with the same names: one from the library, linked by its components, and one from the file, linked by its pages. They start with the same values and then drift, because a change made in one is invisible in the other, and a theme switch has to be made twice.
+
+Merging them is a relink, not a delete. Deleting a set first leaves every layer looking right — the tool keeps each layer's last value — while every link to the deleted set is gone. The safe order is: list every link to the old set (layers and styles; a text style's font size or family can be linked too), point each at the same-named variable in the set that stays, confirm no link is left, then delete. Pictures of every board before and after, in each theme, show whether anything moved.
 
 ## A mockup states the same value twice
 
@@ -77,7 +101,37 @@ Three things DTCG can express that a design tool may simply not model. Each one 
 
 ## In jedee
 
-The code is the source. `src/_includes/themes/jedee/tokens/*.json` (each theme has a `tokens/` folder; `jedee` is the active one) feeds both the website (through `tailwind.config.js`, which turns tokens into CSS custom properties) and the design file, via `npm run penpot:tokens` → `src/_config/setup/build-penpot-tokens.js` → `_local/penpot/penpot-tokens.dtcg.json` → a manual import in [Penpot](https://penpot.app)'s Tokens panel. The last step is a click because the plugin API cannot be trusted to write every token type (below). Seven sets are emitted: `core/colors`, `core/typography`, `core/spacing`, `core/layout`, `core/button`, `theme/light`, `theme/dark`.
+The code is the source. `src/_includes/themes/jedee/tokens/*.json` (each theme has a `tokens/` folder; `jedee` is the active one) feeds the website through `tailwind.config.js`, which turns tokens into CSS custom properties, and the design file through `npm run figcraft:tokens`. The design file has been in FigCraft since 2026-11-17, imported from Penpot; Penpot is kept as a frozen backup (below).
+
+**The sync writes variables directly.** `src/_config/setup/sync-figcraft-tokens.js` builds the same token list as the Penpot export (it imports `build()` from `build-penpot-tokens.js`), then:
+
+1. copies the design file to a temporary folder and opens the copy in a second FigCraft window started with a control port: `open -n -a FigCraft.app --args --control 7979 --automation-read-root <dir> --automation-write-root <dir>`;
+2. sends newline-separated JSON over TCP — `variable.list` to read, one `command.batch` of `variable.create` and `variable.set` to write, so the whole update is one undo step;
+3. lists the result again and stops if anything still differs, then saves the copy and sends `app.quit`;
+4. copies the file back only if the original's bytes are unchanged since the start.
+
+`npm run figcraft:tokens -- --check` stops after the report. Each token becomes a FigCraft value: a hex color, a number with its `px` dropped, a font name as a string, and a `{reference}` as `{alias: <variable id>}`. Light and Dark are modes of one variable, so a theme pair stays one variable. A repo value without a reference counts as equal to a FigCraft link that ends on the same color.
+
+```
+jedee website
+  changed   megamenu.icon                  Dark  #414d58  →  → megamenu.count
+```
+
+**What it leaves alone.** Letter spacing: FigCraft draws text like the browser (widths within 0.5%), so its text styles use the site's measured tracking (label 1.35, wide 2.37, headings −2.32 / −1.47 / −0.95) rather than `typography.json`'s by-eye Penpot values. `type.*`: FigCraft holds those as 22 text styles measured from the live site. `shadow.*`: effect styles. A text style can link its font family and size to variables, but not its line height (px only) or weight, so those variables are reference values nothing links to.
+
+**The first run found stale copies on both sides.** The library's set still linked `button.default.bg` to `color.gray.800` instead of `color.text`; `megamenu.icon` differed in Dark; the light audio player was the old light Chrome player. Eleven values changed. Comparing the result with the site then showed the repo's own `megamenu.icon` was out of date: the menu icons have rested in the count color since 2026-11-17, so the token became `{megamenu.count}`.
+
+**Two sets became one.** The Penpot import brought "jedee design tokens" (the library, linked by the Components page) and "jedee website" (linked by the other pages). 783 layer links and 44 text-style links moved to "jedee website", none were left on the old set, and pictures of all 21 boards matched pixel for pixel in Dark and Light before it was deleted. A text style's links show in `style.list` as `bound`; a layer's in `node.get` as `boundVariables`. The leftover `Themes/` prefix, Penpot's theme group, was dropped from the 118 names that had it; links follow the variable, not its name.
+
+**A check of the copies against the site.** On 2026-11-18 headless Chrome read the 41 copied colors (page tints, buttons, mega-menu) from the built `/design-system/` page in both themes; all were within 2/255 of their tokens. The same check found 14 tokens nothing on the site uses apart from the design-system page's swatches, and 28 FigCraft variables nothing in the file links to, 13 of them line heights, weights and breakpoints, which no layer in FigCraft can link to.
+
+**The second window shows up in Recent files.** Each run's temporary copy lands in `recent_files` in `~/Library/Application Support/FigCraft/state.json`, and the quitting window writes that file as it exits. The script waits for the window's process to end and then removes every path under its temporary-folder prefix.
+
+⚠ **`pgrep -f "--control 7979"` never finds the process.** A pattern that starts with `--` is read as an option, `pgrep` prints its usage and exits 2, and a check that treats any non-zero exit as "not running" moves on at once — here, tidying `state.json` before the window had written its own copy over it. `pgrep -f -- "--control 7979"` works.
+
+## In Penpot (frozen 2026-11-18)
+
+Until 2026-11-17 the design file was in [Penpot](https://penpot.app), fed by `npm run penpot:tokens` → `src/_config/setup/build-penpot-tokens.js` → `_local/penpot/penpot-tokens.dtcg.json` → a manual import in Penpot's Tokens panel. The last step was a click because the plugin API cannot be trusted to write every token type (below). Seven sets are emitted: `core/colors`, `core/typography`, `core/spacing`, `core/layout`, `core/button`, `theme/light`, `theme/dark`. The script still runs, but nothing imports its output any more.
 
 **The near-miss.** Twelve button colors — `button.tertiary.bg` plus five `button.*.bg-hover`, in each theme — existed only inside Penpot, inside `theme/light` and `theme/dark`, both of which the build regenerates. The generated sets held 9 tokens against Penpot's 15. Importing would have replaced 15 with 9 and deleted the other six, twice; ten Button variants bind their fill to them, so the component would have broken with no error anywhere. `src/_includes/themes/jedee/tokens/buttonColors.json` now holds them and the build emits them, so the import replaces 15 with an identical 15.
 
@@ -114,7 +168,7 @@ The docs list an `inset` key that is not there (the importer adds `inset: false`
 
 **Penpot's layout settles asynchronously.** A read immediately after a write returns stale geometry — after binding padding and changing text weight across ten variants, a verification read gave 95×30 for boards that settled at 97×30, and one variant reported a 1px difference from its siblings that a later read showed was not there. Token application is documented as async (~100 ms); reflow takes longer and isn't signalled. Read again before reporting a size.
 
-**Theme switches for the Audio post type board.** Its static place map is a light and a dark image stacked, bound to `visibility.light-only` and `visibility.dark-only`; Chrome's player is drawn with `ui.audio.bg` and `ui.audio.fg` (`#3A3A3A` and white, sampled from Chrome). Both themes carry the dark pair, because the site keeps the player dark in both: Chrome's light player, `#F1F3F4`, all but vanished on the light page. The sources are `themeVisibility.json` and `audioPlayerColors.json`, read by `build-penpot-tokens.js` through the same verbatim-name loop as `buttonColors.json`.
+**Theme switches for the Audio post type board.** Its static place map is a light and a dark image stacked, bound to `visibility.light-only` and `visibility.dark-only` (in FigCraft, `opacity.light-only` and `opacity.dark-only` in percent, which `themeVisibility.json` has held since 2026-11-18); Chrome's player is drawn with `ui.audio.bg` and `ui.audio.fg` (`#3A3A3A` and white, sampled from Chrome). Both themes carry the dark pair, because the site keeps the player dark in both: Chrome's light player, `#F1F3F4`, all but vanished on the light page. The sources are `themeVisibility.json` and `audioPlayerColors.json`, read by `build-penpot-tokens.js` through the same verbatim-name loop as `buttonColors.json`.
 
 **Read the active theme before calling a color stale.** The library's Dark theme was on, so a mega-menu drawn in dark values looked out of date when it was right. Re-applying every bound color token to "refresh" it then unbound them, because `applyToken` with the token a shape already has switches the binding off — 85 bindings went, with the colors left looking unchanged. They came back from a map of each resolved hex to its Dark token. Penpot's plugin API has no undo; `penpot.history.undoBlockBegin()` / `undoBlockFinish()` only groups a script's edits into one ⌘Z.
 
@@ -126,4 +180,4 @@ Mapping rules and the full trap list live in `_local/penpot/penpot-tokens.md` (g
 
 Sketch was a second mirror from 2026-08-31 to 2026-10-06, built from its script and retired in favour of Penpot alone. The lesson that outlives it: a tool that models none of references, themes or fluid sizes makes the file a snapshot, so every token change needs a re-run and re-push by hand.
 
-Raw source: `src/_raw/dev-notes/How the Penpot library was checked against the design system.md`
+Raw sources: `src/_raw/dev-notes/How the Penpot library was checked against the design system.md`, `src/_raw/dev-notes/How the FigCraft token sync works.md`

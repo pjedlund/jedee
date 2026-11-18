@@ -42,7 +42,7 @@ Each entry below says what a page covers and why you would open it. The traps an
 - [[Shadows]] — layered box-shadows that look like real shadows, one light source, tinting and dark mode, and balancing painted light against a cast shadow.
 - [[Tables]] — markup that reads correctly unstyled, the browser defaults worth overriding, alignment, sticky headers, and what a table wider than the page needs. Ends with this site's activities table.
 - [[Tooltips]] — the three kinds of tooltip, and when each one is honest.
-- [[Design token sync]] — generating a design tool's tokens from the code that holds them, what does not survive the trip, and switching non-color things with the theme.
+- [[Design token sync]] — keeping the design file's tokens in step with the code: the FigCraft sync that writes variables directly, the frozen Penpot import, what does not survive the trip, and how copied colors drift.
 - [[Icons]] — outline versus filled icon sets, picking a set by how many of your icons it really has, inline SVG colored by `currentColor`, and the filled Phosphor set this site uses.
 - [[External-link icons]] — the arrow after an outbound link: when to announce it, drawing it as a mask so it can change color, and moving it without letting it wrap alone.
 
