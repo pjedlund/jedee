@@ -1,7 +1,7 @@
 ---
 description: "The book-typography rules for figures, small caps, capitals, captions, line breaks, superscripts, ordinals, list markers, subtitles, kerning, hyphenation and hard spaces, where they come from, and what each costs in accessibility."
 date: 2026-09-10
-updated: 2026-10-27
+updated: 2026-11-19
 ---
 
 Typography carries a set of conventions older than the web, most of them written down in two books. Robert Bringhurst's *The Elements of Typographic Style* (1992; 4th edition 2012) is adapted rule by rule for CSS at [webtypography.net](http://webtypography.net/). Matthew Butterick's *Practical Typography* is a free online book. The two agree more than they differ, and where they differ Butterick is the milder. This page covers the part CSS can switch on, given fonts that carry the features; the switches themselves are on [[OpenType features]].
@@ -169,7 +169,7 @@ Every webtypography.net rule was checked against the site on 2026-09-21. Four th
 
 ### Link underlines
 
-Links set `text-decoration-skip-ink: auto` (the reset) with `text-underline-offset: 0.3ch`. Safari does break the underline around descenders in the shipped Source Sans subset, even though its outlines are CFF2: tested 2026-10-07 against the TrueType build and Arial, all three skipped. A "q" that seems to run straight through its underline at body size is a near miss — at 24 px the descender reaches about 5 px below the baseline and the line starts about 3.6 px below it, so a hair's difference in placement decides it. Raising the line by lowering the offset is the lever; it was left alone.
+Links set `text-decoration-skip-ink: auto` (the reset) with `text-underline-offset: 0.3ch`, so the underline breaks around descenders such as g, p and y. Chrome and Firefox always do this. **Safari stops doing it when any web font in the element's font list has not downloaded**, and a face with a `unicode-range` the page never needs never downloads. Here that was the Cyrillic subset of Source Sans: on every page without Cyrillic text, Safari drew link underlines straight through the descenders. The shipped subset itself is fine; its CFF2 outlines skip like Arial's. The 2026-10-07 test that called this a near miss missed the cause, because the test page had loaded the Cyrillic file. Since 2026-11-19 the Cyrillic faces are reached only through `lang="ru"` (see Font subsetting), and the main font list holds only fonts every page downloads.
 
 ### Not done
 
