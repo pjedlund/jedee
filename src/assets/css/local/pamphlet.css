@@ -133,3 +133,18 @@ Markup: partials/pamphlet.njk, placed first inside the block of text it floats i
   --pamphlet-falloff: 0.34;
   --pamphlet-spine: 0.2;
 }
+
+/* ⚠ The theme reveal (theme-toggle.css) paints the page as a still picture, and Safari draws the 3D stack differently there, so the pamphlet jumps; its own live layer keeps it as it is. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-theme-reveal] .pamphlet {
+    view-transition-name: pamphlet;
+  }
+
+  [data-theme-reveal]::view-transition-old(pamphlet) {
+    display: none;
+  }
+
+  [data-theme-reveal]::view-transition-new(pamphlet) {
+    animation: none;
+  }
+}
