@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-11-19] enrich | Typographic conventions, Font subsetting (Safari underline gaps)
+
+[[Typographic conventions]] corrects its link-underline note: Safari stops skipping descenders when any web font in the font list has not downloaded, which the never-needed Cyrillic `unicode-range` face caused on almost every page. [[Font subsetting]] records the fix, a separate `Source Sans Cyrillic` family reached only by `lang="ru"`, why it is not in the main font list, and the dev font checker now testing every listed web-font family.
+
 ## [2026-11-19] enrich | External-link icons, The theme toggle, CSS 3D transforms (Safari fixes)
 
 [[External-link icons]] has a new section, "Safari and masks on inline boxes": Safari leaves the part of an inline box outside a no-repeat mask tile visible, and a transparent second mask layer that covers the box hides it, with a position per layer on hover. It also covers testing in the Mac's WebKit through a small `WKWebView` script. [[The theme toggle]] gains a point on the 3D pamphlet, which jumped inside Safari's still picture of the page and now gets its own live layer during the reveal, like the icon. [[CSS 3D transforms]] links to it.
@@ -469,7 +473,7 @@ A Lists section, prompted by Johan asking what Bringhurst says about styling lis
 
 ## [2026-09-14] enrich | Font subsetting
 
-Two additions from one session. A dev-server checker that greys out fallback characters and outlines fake styles, using a zero-width "blank font" in a canvas; the simpler two-fallback comparison missed ⁂ and ❖, and Chrome rejected the first blank font over an empty glyph table. And Cyrillic for Source Sans as separate `unicode-range` files, prompted by "переворот" on the A Confession page. Also recorded that `FontFace.weight` reads `normal` for a variable face with no weight descriptor. Then `font-synthesis: none` came off `body` again, and code became never italic (bold code is real and stays).
+Two additions from one session. A dev-server checker that greys out fallback characters and outlines fake styles, using a zero-width "blank font" in a canvas; the simpler two-fallback comparison missed ⁂ and ❖, and Chrome rejected the first blank font over an empty glyph table. And Cyrillic for Source Sans as separate `unicode-range` files, prompted by "<span lang="ru">переворот</span>" on the A Confession page. Also recorded that `FontFace.weight` reads `normal` for a variable face with no weight descriptor. Then `font-synthesis: none` came off `body` again, and code became never italic (bold code is real and stays).
 
 ## [2026-09-13] enrich | Font subsetting
 

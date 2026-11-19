@@ -32,8 +32,10 @@ const check = async () => {
   for (const node of nodes) {
     const el = node.parentElement;
     const cs = getComputedStyle(el);
-    const family = name(cs.fontFamily.split(',')[0]);
+    const listed = cs.fontFamily.split(',').map(name);
+    const family = listed[0];
     const own = faces.filter(f => f.family === family);
+    const webFamilies = listed.filter(l => !/ Fallback$/.test(l) && faces.some(f => f.family === l)); // ⚠ the metric-matched "… Fallback" faces are local system fonts: counting them would pass every character
     if (!own.length) continue;
 
     const italic = cs.fontStyle !== 'normal';
@@ -46,7 +48,7 @@ const check = async () => {
       fakes++;
     }
 
-    const font = `${cs.fontStyle} ${cs.fontWeight} 40px "${family}"`;
+    const font = `${cs.fontStyle} ${cs.fontWeight} 40px ${webFamilies.map(f => `"${f}"`).join(', ')}`;
     const chars = [...node.data];
     if (!chars.some(ch => lacks(font, ch))) continue;
 
@@ -55,7 +57,7 @@ const check = async () => {
       if (lacks(font, ch)) {
         const span = document.createElement('span');
         span.dataset.fontCheck = 'missing';
-        span.title = `Not in ${family}: drawn by a fallback font`;
+        span.title = `Not in ${webFamilies.join(' or ')}: drawn by a fallback font`;
         span.textContent = ch;
         frag.append(span);
         letters++;
