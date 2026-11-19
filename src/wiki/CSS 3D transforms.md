@@ -1,6 +1,7 @@
 ---
 description: "Building a solid-looking object out of flat layers with preserve-3d, perspective and transform-origin, faking light and shadow on it, and the choices that keep its shape at every size."
 date: 2026-10-23
+updated: 2026-11-19
 ---
 
 CSS can place elements in three dimensions. Each element is still a flat rectangle, but with [`transform-style: preserve-3d`](https://developer.mozilla.org/en-US/docs/Web/CSS/transform-style) on a parent its children keep their depth instead of being flattened into the parent's plane, so a handful of positioned rectangles can be arranged into a box, a book or a stack of paper and turned as one object. Sebastien Castiel's [animated 3D book in CSS](https://dev.to/scastiel/create-an-animated-3d-book-in-css-step-by-step-26ic) is a clear walkthrough of the technique.
@@ -64,7 +65,7 @@ The resting angle sits inside `(hover: hover)`: a device that cannot hover canno
 
 Two partials, each with its local CSS that loads only where they are used:
 
-- `partials/pamphlet.njk` with `local/pamphlet.css`: the 1904 cover of *Betänken Eder!*, traced to SVG, as a stapled pamphlet lying on a table. Twelve stacked sheets carry the thickness and the rounded corners; the view is a 10° tilt and a 2° spin, eased flat on hover. It floats into the text it belongs to (see [[Floats]]), and lies flat whenever it is not floated. Used on the *Bethink Yourselves!* note.
+- `partials/pamphlet.njk` with `local/pamphlet.css`: the 1904 cover of *Betänken Eder!*, traced to SVG, as a stapled pamphlet lying on a table. Twelve stacked sheets carry the thickness and the rounded corners; the view is a 10° tilt and a 2° spin, eased flat on hover. During the theme reveal it is lifted out of the page picture, because Safari drew it differently there (see [[The theme toggle]]). It floats into the text it belongs to (see [[Floats]]), and lies flat whenever it is not floated. Used on the *Bethink Yourselves!* note.
 - `partials/book.njk` with `local/book.css`: a hardcover after Castiel's structure (front cover, page block, back board), turned −32° to show its pages. The cover is a plain `<img>` through the Image transform, so a reading post's remote cover works as is (see [[Self-hosting remote images at build time]]).
 
 Both are shown under Patterns on the design system page, `/design-system/`.

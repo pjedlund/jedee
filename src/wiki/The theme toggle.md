@@ -1,7 +1,7 @@
 ---
 description: "The three states a theme control has to represent, the blocking script that prevents a flash of the wrong one, jedee's single SVG masked from sun to moon, and the circle the new theme grows from."
 date: 2026-07-31
-updated: 2026-11-17
+updated: 2026-11-19
 ---
 
 Dark mode reaches a page two ways. [`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme) reports the operating system's setting and handles most visitors with no interface at all. A toggle exists for everyone else — someone whose system is dark but who wants this one site light — and the moment a site has one it has three states to represent rather than two: light, dark, and *follow the system*, which is not the same as either of the others.
@@ -68,6 +68,7 @@ What the view transition costs, and why it stays cheap:
 
 - **The picture is the screen, not the page.** The browser captures the viewport, so the circle runs as smoothly on `/activities/` as on a short page. The theme change itself still recalculates the whole page once, as it always did: measured in headless Chrome, the circle starts 30–140ms after the click there, against about 40ms on the start page.
 - **The icon gets a separate layer.** Inside the page picture the sun-to-moon morph would freeze. The button takes `view-transition-name: theme-toggle` during the reveal, its old picture is hidden and the new one is the live button, so the morph plays on top of the circle.
+- **A 3D object gets its own layer too.** In Safari the [[CSS 3D transforms|3D pamphlet]] on the *Bethink Yourselves!* note jumped while the circle passed it: its box and transform never changed, so the still picture of the page drew its stacked sheets differently from the live page. Chrome showed no jump, recorded frame by frame. `pamphlet.css` gives it the icon's treatment, `view-transition-name: pamphlet` during the reveal, old picture hidden, new one not animated, so it is always drawn live. Its shadow and lighting now switch at the click instead of with the circle. WebKit's view transitions could not be recorded here, so the fix was checked in Safari by eye.
 - ⚠ **The rules are scoped to `data-theme-reveal`.** Page-to-page navigation uses the same `::view-transition-*` pseudo-elements for its crossfade (`global-styles.css`). The script sets the attribute on `<html>` for the length of the reveal and removes it when the transition finishes, so the circle never leaks into a navigation. A second click before the first finishes skips the first transition, and the attribute stays until the last one is done.
 - **Clicks go to the picture for half a second.** While a view transition runs, the page underneath does not take pointer input. At 0.5s this is not noticeable, but ⚠ the button still hears a `pointerleave` when the picture covers it, though the pointer never moved. That used to clear the tooltip's dismissal, so the tooltip popped back up under a still pointer when the circle finished; the button now ignores a `pointerleave` while `data-theme-reveal` is set.
 
@@ -153,4 +154,4 @@ The name is a fixed "Toggle dark mode". It has to be: on a toggle button the sta
 
 The markup carries no `data-tooltip`; the script adds it. That keeps a wrong string from ever existing, and costs nothing, because the button is already hidden until its island upgrades. The `title` attribute that used to serve this purpose was removed, or the browser would draw its native tooltip beside the styled one.
 
-Raw source: `src/_raw/dev-notes/How the theme toggle works.md`
+Raw source: `src/_raw/dev-notes/How the theme toggle works.md`, `src/_raw/dev-notes/How the Safari arrow and pamphlet fixes were found.md`

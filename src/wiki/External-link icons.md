@@ -1,7 +1,7 @@
 ---
 description: "A small arrow after a link that leaves the site: when it needs announcing, how to draw it so it can change color, how to animate it without letting it wrap alone, and the specificity trap in its selector."
 date: 2026-10-29
-updated: 2026-10-31
+updated: 2026-11-19
 ---
 
 An external-link icon is a small mark, usually ↗, after a link that leads to another site. It tells a reader before they click that they are about to leave. It is decoration when the link opens in the same tab. When a link opens a new tab or window, that has to be said in text, because the change of context is something a screen-reader user cannot see.
@@ -29,6 +29,28 @@ An empty `inline-block` for the icon is an atomic box: the line can break before
 
 The cost is motion. [`transform`](https://developer.mozilla.org/en-US/docs/Web/CSS/transform) does not apply to a non-replaced inline box, so the icon cannot be nudged with `translate`. Moving `mask-position` (or `background-position`) inside a box with a little spare padding does the same job, and the spare padding is handed back with a negative margin so the text after the link does not move.
 
+## Safari and masks on inline boxes
+
+Safari draws a mask on an inline box differently from Chrome. With `mask-repeat: no-repeat` the tile covers only part of the box, and Chrome hides the rest of the box. Safari leaves the rest visible, so the arrow sits on a block of its background color the height of the line. Prefixed `-webkit-mask`, `mask-mode`, `mask-clip` and `box-decoration-break` change nothing. `display: inline-block` fixes it, but brings back the arrow wrapping alone.
+
+A second mask layer that covers the whole box and lets nothing through hides the rest of the box in both engines:
+
+```css
+a::after {
+  mask:
+    url('/external.svg') no-repeat right top / 0.5em,
+    linear-gradient(transparent 0 0);
+}
+
+a:hover::after {
+  mask-position: right 0 top -0.1em, 0 0; /* one position per layer */
+}
+```
+
+With two layers, any rule that sets `mask-position` has to give a position for each, or the list is filled in by repeating and the second layer moves too.
+
+Safari can be tested on a Mac without Safari itself: a few lines of Swift open a `WKWebView`, the same engine, inject a style with `evaluateJavaScript` and save `takeSnapshot` as a PNG. That made it quick to try a dozen variants side by side.
+
 ## ⚠ The exclusions out-rank the hover rule
 
 Every `:not()` in the selector counts as much as its argument, so three exclusions such as `:not([href*='example.com']):not([href*='localhost']):not(.no-indicator)` lift the base rule above a simpler `a[href^='http']:hover::after`. The hover rule then silently loses: no error, the icon just never changes. Wrapping the exclusions in [`:where()`](https://developer.mozilla.org/en-US/docs/Web/CSS/:where), which always counts for nothing, keeps the base rule as weak as its plain part:
@@ -47,4 +69,4 @@ The rule is `src/assets/css/local/external-link.css`, scoped to `:is(.prose, .de
 
 Outbound links still without an arrow, on purpose: the footer's SDG and JEDEE links (site chrome, not reading text) and the headline links on bookmark, like, RSVP and repost cards, which opt out with `no-indicator`.
 
-Raw source: `src/_raw/dev-notes/How the external-link arrow works.md`
+Raw source: `src/_raw/dev-notes/How the external-link arrow works.md`, `src/_raw/dev-notes/How the Safari arrow and pamphlet fixes were found.md`
