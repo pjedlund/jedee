@@ -14,7 +14,10 @@ A small ↗ after outbound text links in prose and on the design-system page; it
   padding-inline: 0.44em var(--external-lift); /* ⚠ Start narrower than the 0.5em mask on purpose: it clips the SVG's blank left margin; below ~0.42em it clips the arrow. The end padding is the take-off room. */
   margin-inline-end: calc(-0.06em - var(--external-lift)); /* Gives the take-off room back, and trims half the SVG's blank right margin so a following period sits close. */
   background-color: color-mix(in oklab, currentColor 45%, transparent);
-  mask: url('/assets/images/template/external.svg') no-repeat right var(--external-lift) top var(--external-top) / 0.5em;
+  /* ⚠ The second, transparent layer covers the whole box: Safari leaves the part of an inline box outside a no-repeat mask tile visible, so without it the arrow sits on a grey block. */
+  mask:
+    url('/assets/images/template/external.svg') no-repeat right var(--external-lift) top var(--external-top) / 0.5em,
+    linear-gradient(transparent 0 0);
   transition: background-color 0.2s ease-out;
 }
 
@@ -28,7 +31,7 @@ A small ↗ after outbound text links in prose and on the design-system page; it
   }
 
   :is(.prose, .design-system) a[href^='http']:hover::after {
-    mask-position: right 0 top calc(var(--external-top) - var(--external-lift));
+    mask-position: right 0 top calc(var(--external-top) - var(--external-lift)), 0 0;
     transition-timing-function: ease-out, cubic-bezier(0.5, 0, 0.75, 0); /* eases in like a plane leaving the runway, lands softly on the way back */
   }
 }
