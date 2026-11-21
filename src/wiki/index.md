@@ -44,7 +44,7 @@ Each entry below says what a page covers and why you would open it. The traps an
 - [[Tooltips]] — the three kinds of tooltip, and when each one is honest.
 - [[Design token sync]] — keeping the design file's tokens in step with the code: the FigCraft sync that writes variables directly, the frozen Penpot import, what does not survive the trip, and how copied colors drift.
 - [[Icons]] — outline versus filled icon sets, picking a set by how many of your icons it really has, inline SVG colored by `currentColor`, and the filled Phosphor set this site uses.
-- [[External-link icons]] — the arrow after an outbound link: when to announce it, drawing it as a mask so it can change color, and moving it without letting it wrap alone.
+- [[External-link icons]] — the arrow after an outbound link: when to announce it, keeping it to running text, drawing it as a mask so it can change color, and moving it without letting it wrap alone.
 
 ## Images & media
 

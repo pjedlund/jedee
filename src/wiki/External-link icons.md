@@ -1,12 +1,22 @@
 ---
-description: "A small arrow after a link that leaves the site: when it needs announcing, how to draw it so it can change color, how to animate it without letting it wrap alone, and the specificity trap in its selector."
+description: "A small arrow after a link that leaves the site: when it needs announcing, where it earns its place, how to draw it so it can change color, how to animate it without letting it wrap alone, and the specificity trap in its selector."
 date: 2026-10-29
-updated: 2026-11-19
+updated: 2026-11-21
 ---
 
 An external-link icon is a small mark, usually ↗, after a link that leads to another site. It tells a reader before they click that they are about to leave. It is decoration when the link opens in the same tab. When a link opens a new tab or window, that has to be said in text, because the change of context is something a screen-reader user cannot see.
 
 The usual way to add the icon is a `::after` on links whose `href` starts with `http`, with exclusions for the site's domain, so internal links (written relative, `/about/`) never match.
+
+## Where it earns its place
+
+The arrow tells a reader that one link in a sentence leads elsewhere, while they are reading it. In a list of sources, a table of references or a block of footnotes, nearly every link is outbound, so an arrow on each line repeats itself and says nothing. Leaving those contexts out keeps the arrow meaningful where it remains. The exclusion can go in the same `:where()` as the others, so it adds no specificity:
+
+```css
+a[href^='http']:where(:not([href*='example.com'], :is(li, td, th, figcaption, .footnotes) a))::after { … }
+```
+
+The cost is the odd list item that is a whole sentence with a link in it: it loses the arrow too.
 
 ## Drawing it so it can change color
 
@@ -28,6 +38,18 @@ a:hover::after {
 An empty `inline-block` for the icon is an atomic box: the line can break before it, leaving the arrow alone at the start of the next line. A plain inline box that holds a word joiner (`content: '\2060'`) cannot, because the joiner glues it to the link's last letter. The width for the icon then comes from padding.
 
 The cost is motion. [`transform`](https://developer.mozilla.org/en-US/docs/Web/CSS/transform) does not apply to a non-replaced inline box, so the icon cannot be nudged with `translate`. Moving `mask-position` (or `background-position`) inside a box with a little spare padding does the same job, and the spare padding is handed back with a negative margin so the text after the link does not move.
+
+## Next to a code chip
+
+When the link text is inline code drawn as a chip (padding, background, rounded corners), the chip's end padding plus the icon's own lead-in leave a visible gap, and the arrow seems to float free of the link. A negative start margin the size of the chip's padding pulls it back over the chip's top-right corner, like a small badge. The `::after` comes after the `<code>`, so it paints on top:
+
+```css
+a[href^='http']:has(> code:last-child)::after {
+  margin-inline-start: calc(var(--chip-padding-inline) * -1);
+}
+```
+
+`:last-child` ignores text nodes, so a link with words after its chip would match too.
 
 ## Safari and masks on inline boxes
 
@@ -66,6 +88,8 @@ If the dim color is mixed from `currentColor`, a link whose color changes on hov
 Eleventy Excellent ships an `external-link.css` that marks every outbound link on the site except buttons, as an absolutely positioned `inline-block` from `/assets/images/template/external.svg`, with visually hidden text "(external link)" read out as its alternative. jedee replaced it with a decorative arrow scoped to body text: links open in the same tab, so nothing is announced.
 
 The rule is `src/assets/css/local/external-link.css`, scoped to `:is(.prose, .design-system)` and using EE's SVG as a mask. At rest the arrow is `currentColor` at 45%, like the dimmed dots under an [[Abbreviations|abbreviation]]; on hover it turns `--color-accent-orange`, the link text's hover color, and lifts `--external-lift` (0.1em, about 2px) up and to the right by moving the mask. The lift eases in like a plane leaving a runway and settles back with `--ease-out-quad`; with reduced motion only the color changes (see [[Choreographing CSS animations]] for the site's other motion). `.no-indicator` opts a link out, for links whose content is a picture rather than words.
+
+Since 2026-11-21 the arrow is for running text only: links inside `li`, `td`, `th`, `figcaption` and `.footnotes` go without it. A link that ends in an inline code chip (`code.css`) pulls the arrow back by the chip's `--space-xs` end padding, onto its corner.
 
 Outbound links still without an arrow, on purpose: the footer's SDG and JEDEE links (site chrome, not reading text) and the headline links on bookmark, like, RSVP and repost cards, which opt out with `no-indicator`.
 
