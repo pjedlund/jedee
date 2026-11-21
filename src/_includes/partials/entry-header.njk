@@ -38,10 +38,6 @@
   {%- if draft -%}
     <span class="button" data-small-button data-button-variant="tertiary">{{ words.draft }}</span>
   {%- endif %}
-  {# The post type, linked to its archive — icon and name come from navigation.postTypes, matched on the folder's category. #}
-  {%- for pt in navigation.postTypes %}{% if pt.collection == category %}
-    <a class="meta-item" href="{{ pt.url }}">{% svg 'posts/' + pt.icon, '', 'meta-icon' %}{{ pt.text }}</a>
-  {%- endif %}{% endfor %}
   {# Activity pages only: the activity type with its own glyph, to the left of the date. activityType is set only on activity posts, so this block never renders on other types. Small local icon+label map — the site's four types ("Gym" is the weight-training label). #}
   {%- if activityType %}
     {%- set activityMeta = {
@@ -55,19 +51,19 @@
       <span class="meta-item" data-activity="{{ activityType | slugify }}">{% svg 'posts/' + at.icon, '', 'meta-icon' %}{{ at.label }}</span>
     {%- endif %}
   {%- endif %}
-  {# The date, with a calendar glyph, on every post type. Kept here (not in date.njk) so it rides only the post meta line — date.njk is shared by every archive card too. #}
+  {# The date, then the last commit to the file linked on GitHub, as one unbreakable item: "14 Jul 2026 · Edited 8 Aug 2026". Same as wiki.njk; left off types that are logged rather than revised. #}
+  {%- set unrevisedTypes = ['activity', 'bookmark', 'like', 'repost', 'reply', 'rsvp'] %}
+  {%- set revision = page.inputPath | gitRevision if not (category in unrevisedTypes) %}
   {% if date %}
-    <span class="meta-item">{% svg 'posts/calendar', '', 'meta-icon' %}{% set definedDate = date %}{% set dateFormat = words.dateLong %}{% include "partials/date.njk" %}</span>
+    <span class="meta-item">{% set definedDate = date %}{% set dateFormat = words.dateMeta %}{% include "partials/date.njk" %}
+      {%- if revision and meta.viewRepo.allow and (revision.date | formatDate('YYYY-MM-DD')) != (date | formatDate('YYYY-MM-DD')) -%}
+        <span class="meta-dot" aria-hidden="true">·</span><a href="{{ settings.repos.site }}/commit/{{ revision.hash }}">{{ words.edited }} <time class="dt-updated" datetime="{{ revision.date | toIsoString }}">{{ revision.date | formatDate(words.dateMeta) }}</time></a>
+      {%- endif -%}
+    </span>
   {% endif %}
   {% if scoreMy %}
     {% set rating = scoreMy %}{% include "partials/rating.njk" %}
   {% endif %}
-  {# Same as wiki.njk: the last commit to the file, linked on GitHub. Left off types that are logged rather than revised. #}
-  {%- set unrevisedTypes = ['activity', 'bookmark', 'like', 'repost', 'reply', 'rsvp'] %}
-  {%- set revision = page.inputPath | gitRevision if not (category in unrevisedTypes) %}
-  {%- if revision and meta.viewRepo.allow and (revision.date | formatDate('YYYY-MM-DD')) != (date | formatDate('YYYY-MM-DD')) %}
-    <span class="meta-item"><a data-meta-tight href="{{ settings.repos.site }}/commit/{{ revision.hash }}">{% svg 'platform/github', '', 'meta-icon' %}{{ words.revised }} <time class="dt-updated" datetime="{{ revision.date | toIsoString }}">{{ revision.date | formatDate(words.dateLong) }}</time></a></span>
-  {%- endif %}
 </p>
 
 {% css "local" %}

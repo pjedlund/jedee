@@ -528,11 +528,13 @@ colorGroups:
   </header>
   <section class="flow region">
     <h3 class="heading-line">Meta line</h3>
-    <p>Under every post title: the post type linked to its archive, the activity type for activities, the date, and the last revision linked on GitHub. Each item is an icon and a label that never break apart.</p>
+    <p>Under every post title: the date and, once the page has been edited, the last edit linked to its commit on GitHub. Activities add their type, with its icon in the activity color.</p>
     <p class="meta | cluster gutter-s-m">
-      <a class="meta-item" href="/activities/">{% svg 'posts/activity', '', 'meta-icon' %}Activities</a>
+      <span class="meta-item"><time datetime="2026-07-14">14 Jul 2026</time><span class="meta-dot" aria-hidden="true">·</span><a href="{{ settings.repos.site }}/commits/main">Edited <time datetime="2026-08-08">8 Aug 2026</time></a></span>
+    </p>
+    <p class="meta | cluster gutter-s-m">
       <span class="meta-item" data-activity="orienteering">{% svg 'posts/compass', '', 'meta-icon' %}Orienteering</span>
-      <span class="meta-item">{% svg 'posts/calendar', '', 'meta-icon' %}7th of December, 2025</span>
+      <span class="meta-item"><time datetime="2025-12-07">7 Dec 2025</time></span>
     </p>
   </section>
   <section class="flow region">

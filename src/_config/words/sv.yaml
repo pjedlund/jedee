@@ -66,8 +66,8 @@ webmentionLink: Skicka adressen.
 draft: utkast
 readInSwedish: Läs på svenska
 readInEnglish: Read in English
-dateLong: 'D MMMM YYYY'
-revised: Reviderad
+dateMeta: 'D MMM YYYY'
+edited: Redigerad
 activityOrienteering: Orientering
 activityGym: Gym
 activityRun: Löpning

@@ -1,6 +1,6 @@
 /*
 META LINE
-The dim type/date/revision line under a post or wiki title (partials/entry-header.njk, wiki.njk). Its links carry a faint underline that lights up with the label on hover.
+The dim date line under a post or wiki title, with the last edit linked to its commit (partials/entry-header.njk, wiki.njk). Its links carry a faint underline that lights up with the label on hover.
 */
 .meta {
   --meta-color: color-mix(in oklab, var(--color-text-dim) 75%, var(--color-text));
@@ -38,7 +38,7 @@ The dim type/date/revision line under a post or wiki title (partials/entry-heade
 }
 
 
-/* An icon + its label on the meta line, kept together. ⚠ Not inline-flex: a flex box takes its baseline from the icon's bottom edge and lifts the label off the line. */
+/* One meta item kept on one line: the date with its edit, or an icon with its label. ⚠ Not inline-flex: a flex box takes its baseline from the icon's bottom edge and lifts the label off the line. */
 .meta-item {
   white-space: nowrap;
 }
@@ -48,33 +48,23 @@ The dim type/date/revision line under a post or wiki title (partials/entry-heade
   text-wrap-mode: inherit;
 }
 
+/* The dot between the date and the edit: decoration, hidden from screen readers. */
+.meta-dot {
+  padding-inline: 0.5em;
+}
+
 /* Centres a 1em icon on the capital height, the optical middle of the label. */
 .meta-icon {
   color: currentColor;
   inline-size: 1em;
   block-size: 1em;
   vertical-align: calc(0.5cap - 0.5em);
-  margin-inline-end: var(--meta-icon-gap, calc(0.35em - 1px));
-}
-
-/* ⚠ The rest color is the meta color, not currentColor: following the link's fade, a hovered icon in dark mode went orange → white → dim on mouse-out. */
-.meta a .meta-icon {
-  color: var(--meta-color);
-  transition: color var(--meta-fade) ease-out;
-}
-
-.meta a:is(:hover, :focus-visible) .meta-icon {
-  color: var(--color-accent-orange);
+  margin-inline-end: calc(0.35em - 1px);
 }
 
 /* Activity pages: the type's icon in its map color (activity-colors.css). */
 [data-activity] > .meta-icon {
   color: var(--activity-color);
-}
-
-/* The GitHub mark's widest point is one small curve and "R" has a wide left side-bearing, so its gap reads 1px wider than the rest; this pulls it level. */
-[data-meta-tight] .meta-icon {
-  --meta-icon-gap: calc(0.35em - 2px);
 }
 
 /* The star row is a flex box whose baseline is a star's bottom edge; this centres it on the capital height like the icons. */
