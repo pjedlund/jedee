@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-11-21] enrich | Webmentions (comment permalink)
+
+[[Webmentions]] gains a Rendering point: the reply card's `h-card` link carries no explicit `u-url`, so the author's profile stays its implied url and the h-cite's single `u-url` is free to be the mention's own permalink — placed on a hidden `<data>` and promoted onto the visible date as a quiet link. Records the trap that an explicit `u-url` on the author link makes a parser read the author's profile as the cited URL. No new links.
+
 ## [2026-11-19] enrich | Typographic conventions, Font subsetting (Safari underline gaps)
 
 [[Typographic conventions]] corrects its link-underline note: Safari stops skipping descenders when any web font in the font list has not downloaded, which the never-needed Cyrillic `unicode-range` face caused on almost every page. [[Font subsetting]] records the fix, a separate `Source Sans Cyrillic` family reached only by `lang="ru"`, why it is not in the main font list, and the dev font checker now testing every listed web-font family.

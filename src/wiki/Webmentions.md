@@ -1,7 +1,7 @@
 ---
 description: "The W3C notification protocol behind open-web replies and likes, and how jedee receives them while staying entirely static."
 date: 2026-07-31
-updated: 2026-10-18
+updated: 2026-11-21
 ---
 
 A [webmention](https://indieweb.org/Webmention) is a small notification one site sends another: a page over here links to a page over there. It became a [W3C Recommendation](https://www.w3.org/TR/webmention/) in 2017, and it is the open web's answer to comments and likes living on someone else's platform — the response is published on the responder's site, and the webmention is only the notification that it exists.
@@ -54,6 +54,7 @@ The test matches only `brid.gy/post/…`. Bridgy's `/comment/`, `/like/`, and `/
 
 - **The empty state renders nothing** — the whole `<aside>` is gated on there being at least one reaction or reply.
 - **Reply cards are `h-cite`** wrapping the author's `h-card`, and deliberately carry **no `dt-published`** on the date: that property belongs to this site's posts, not someone else's response. See [[Microformats]].
+- **The name links to the author, the date to the comment.** The `h-card` link carries no explicit `u-url`: the author's profile is the h-card's implied url, taken from its own `href`, which frees the h-cite's single `u-url` to be the mention's own permalink — `webmention.url`, a Bridgy `/comment/…` URL for a silo reply. That permalink sits on a hidden `<data class="u-url">` and is promoted onto the visible date as a quiet link (`.no-indicator` keeps the outbound arrow on the name alone). Putting an explicit `u-url` on the `h-card` link instead makes a parser read the *author's profile* as the cited URL.
 - **Remote content is never trusted.** `content.text` renders auto-escaped (no `| safe`), and avatars are hotlinked `<img eleventy:ignore>` — webmention.io proxies them and the build never tries to fetch or optimize them.
 
 ### Bridgy in practice
