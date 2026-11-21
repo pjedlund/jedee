@@ -175,4 +175,4 @@ Links set `text-decoration-skip-ink: auto` (the reset) with `text-underline-offs
 
 There is no `.figures` or `.balance` class, since the defaults cover them, and never `dlig`, which rewrites "he" and "she".
 
-Raw source: `src/_raw/dev-notes/How the typographic defaults were chosen.md`, `src/_raw/dev-notes/How the subtitle is marked up.md`
+Raw source: `src/_raw/dev-notes/How the typographic defaults were chosen.md`, `src/_raw/dev-notes/How the subtitle is marked up.md`, `src/_raw/dev-notes/How Safari lost the link underline gaps.md`

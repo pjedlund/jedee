@@ -117,4 +117,4 @@ Source Serif was deliberately kept small: the Latin-1 block was added and taken 
 
 The recipe itself needs a Python with fontTools and brotli; on this machine that is the python.org framework install, not the default `python3`.
 
-Raw sources: `src/_raw/dev-notes/How missing glyphs were found and filled.md`, `src/_raw/How to disable faux weights with CSS and font synthesis.md`
+Raw sources: `src/_raw/dev-notes/How missing glyphs were found and filled.md`, `src/_raw/How to disable faux weights with CSS and font synthesis.md`, `src/_raw/dev-notes/How Safari lost the link underline gaps.md`
