@@ -1,7 +1,7 @@
 ---
-description: "The book-typography rules for figures, small caps, capitals, captions, line breaks, superscripts, ordinals, list markers, subtitles, kerning, hyphenation and hard spaces, where they come from, and what each costs in accessibility."
+description: "The book-typography rules for figures, small caps, capitals, captions, line breaks, superscripts, ordinals, dates, list markers, subtitles, kerning, hyphenation and hard spaces, where they come from, and what each costs in accessibility."
 date: 2026-09-10
-updated: 2026-11-19
+updated: 2026-11-21
 ---
 
 Typography carries a set of conventions older than the web, most of them written down in two books. Robert Bringhurst's *The Elements of Typographic Style* (1992; 4th edition 2012) is adapted rule by rule for CSS at [webtypography.net](http://webtypography.net/). Matthew Butterick's *Practical Typography* is a free online book. The two agree more than they differ, and where they differ Butterick is the milder. This page covers the part CSS can switch on, given fonts that carry the features; the switches themselves are on [[OpenType features]].
@@ -63,6 +63,12 @@ When to use words is a house-style choice, and ordinals follow the same rule as 
 - **Swedish** usually spells out numbers up to twelve (*Myndigheternas skrivregler*, [Ds 2004:45](https://www.riksdagen.se/sv/dokument-och-lagar/dokument/departementsserien/myndigheternas-skrivregler_gsb445/html/)). A figure ordinal takes a colon and the word's last letter: 1:a, 3:e, 29:e, never raised ([Språkrådet's Frågelådan](https://frageladan.isof.se/faqs/24030)).
 
 In CSS, `font-variant-numeric: ordinal` switches on the font's `ordn` feature. In some fonts that feature is contextual and raises only letters that follow a digit. In others it is a plain substitution that raises every lowercase letter in its span. Check the font before putting it on more than the suffix.
+
+## Dates
+
+A date in running text or under a title is read, not computed, so it should be quick to take in and impossible to misread. Written all in figures, the order is the trap: 07/08/2026 is 8 July in the United States and 7 August almost everywhere else. A month name removes the doubt, and day, month, year in that order needs no comma between its parts: "14 July 2026". An ordinal suffix ("14th") and the words around it ("14th of July, 2026") add length without adding information. Abbreviating the month to three letters ("14 Jul 2026") keeps the date short enough to sit beside other details on one line.
+
+The machine-readable form is separate: [`<time datetime>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/time) carries the ISO 8601 date, so the visible text is free to follow the house style.
 
 ## Lists
 
@@ -138,6 +144,10 @@ Source Sans' `ordn` raises every lowercase letter it covers, with no check for a
 
 Older content was not swept for figure ordinals; there were four at the time of writing, two of them in clipped titles.
 
+### Dates
+
+Dates under a title read `14 Jul 2026` since 2026-11-21, the same short form the archive cards already used; before, the meta line said "14th of July, 2026". The format string is `dateMeta: 'D MMM YYYY'` in `src/_config/words/en.yaml` and `sv.yaml`, read by the meta lines in `partials/entry-header.njk` and `wiki.njk`. The same change took the post type and every icon off the line: an edited page adds `· Edited 8 Aug 2026`, linked to the commit on GitHub ([[Icons]] has the icon side).
+
 ### List markers
 
 In `.prose` (since 2026-09-14), ordered-list numbers take old-style tabular figures. The marker reads `--nums-figure`, so a list inside `.lining-nums` gets lining numbers. Numbers and bullets share `--color-accent-orange-text`: `orange-600` in light mode (5.8:1 on the page) and `orange-500` in dark (4.7:1). Other orange text that carries meaning can use the same variable.
@@ -175,4 +185,4 @@ Links set `text-decoration-skip-ink: auto` (the reset) with `text-underline-offs
 
 There is no `.figures` or `.balance` class, since the defaults cover them, and never `dlig`, which rewrites "he" and "she".
 
-Raw source: `src/_raw/dev-notes/How the typographic defaults were chosen.md`, `src/_raw/dev-notes/How the subtitle is marked up.md`, `src/_raw/dev-notes/How Safari lost the link underline gaps.md`
+Raw source: `src/_raw/dev-notes/How the typographic defaults were chosen.md`, `src/_raw/dev-notes/How the subtitle is marked up.md`, `src/_raw/dev-notes/How Safari lost the link underline gaps.md`, `src/_raw/dev-notes/How the meta line and table spacing changed.md`

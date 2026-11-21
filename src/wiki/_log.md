@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-11-21] enrich | Typographic conventions, Tables (dates, space before a table)
+
+[[Typographic conventions]] gains a Dates section: day, month, year with the month named removes the US/European order trap and needs no comma; ordinal suffixes add length without information; `<time datetime>` keeps the ISO form for machines. In jedee, the meta line's `14 Jul 2026 · Edited 8 Aug 2026` and its `dateMeta` format string, linking [[Icons]]. [[Tables]] records the full line before a table without a caption, matching the full line after, and links [[Vertical rhythm]].
+
 ## [2026-11-21] enrich | Focus rings and paint containment (skip link)
 
 [[Focus rings and paint containment]] adds the skip link to "The ring's color": focused, it is filled with the text color and labelled in the page color, so its `currentColor` ring vanished; `skip-link.css` now sets `--focus-color: var(--color-text)`, matching the logomark's ring. The general rule is stated: any control labelled in the page color needs `--focus-color`. Links [[Breadcrumb]].

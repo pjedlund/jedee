@@ -1,7 +1,7 @@
 ---
 description: "Styling data tables with modern CSS: markup that reads correctly unstyled, the browser defaults worth overriding, alignment and sticky headers, the scroll container a wide table needs, and rules painted as a gradient because a collapsed border gives one color per edge."
 date: 2026-09-15
-updated: 2026-10-27
+updated: 2026-11-21
 ---
 
 A table is for tabular data: values that relate along two axes at once, read across a row and down a column. That relationship is what `<table>` gives a screen reader, which announces the row and column headers as the reader moves from cell to cell, and it is lost the moment the grid is rebuilt from `div`s. A timetable, a price list or a comparison is tabular; a page layout is not.
@@ -160,6 +160,7 @@ Every layout passes through `base.njk`, so no post type has to remember the incl
 - Every value that sets the look is a custom property at the top of `.table-wrapper`: the colors, the rules, the paddings, the cell alignment, the caption's size and style. The cells inherit them, and every table on the site sits in a wrapper. `--table-side: none` drops the frame's sides, and a tint in `--table-stripe`, such as `color-mix(in oklab, var(--color-text) 4%, transparent)`, brings the stripes back.
 - Equal-width columns are opt-in: `data-table-layout="fixed"` on the wrapper sets `table-layout: fixed` and `inline-size: max(var(--table-fixed-min-inline-size), 100%)`, 40rem by default, so a narrow screen scrolls the table instead of squeezing it. Only the style guide's two token tables use it. Wiki tables mix one-word columns with one-sentence columns, and content-sized columns are the point; a markdown table could not carry the attribute anyway (see above).
 - The design system page sets `--table-cell-align: middle`. Its sample cells are taller than the text beside them, and baseline alignment sank the token name and range to the sample's baseline. Wiki tables keep `baseline`.
+- A table gets a full line of space after it, a quarter line more than the paragraph gap, so the paragraph that follows doesn't read as its caption. Since 2026-11-21 a table without a caption gets the same full line before it (`.prose .table-wrapper:not(:has(caption))`); a captioned table keeps the paragraph gap above, because the caption already opens a space between the text and the frame ([[Vertical rhythm]]).
 - Not adopted: `caption-side: bottom`, since a table's title conventionally sits above it.
 
 Every wiki table has had a `Table:` caption since 2026-09-15. Naming a region after its column headers is the fallback for a table written without one.
@@ -251,4 +252,4 @@ Both rules sit inside the `prefers-reduced-motion` guard, so a reduced-motion vi
 
 The sorted column shows a CSS-drawn chevron, as in the breadcrumb, placed absolutely after the label so nothing moves when it appears. It is set on the measured middle of the x-height, `--sort-arrow-middle: 0.8em` below the line's top; the drawn V of a rotated square sits 0.354 of its side off the square's center, which is where the 0.854 and 0.146 in the offsets come from. **A chevron on the cap-height middle reads high.** The value was 0.75em, measured against small caps, and after those came off it sat within 0.3px of the cap middle — centered by the numbers, and visibly high beside a word with descenders, which "Type" is. Cap middle is 0.712em and the x-height's is 0.797em. Two parts of Roselli's pattern were not taken: he draws filled triangles rather than a chevron, and adds an optional live region announcing the new order.
 
-Raw source: `src/_raw/Styling Tables the Modern CSS Way.md` (Michelle Barker, Piccalilli, 2024-07-18); the activities table, `src/_raw/dev-notes/How the activities table works.md` and `src/_raw/dev-notes/How the activities table matched the Penpot design.md`. Also: Adrian Roselli, Under-Engineered Responsive Tables (2020) and Fixed Table Headers (2020).
+Raw source: `src/_raw/Styling Tables the Modern CSS Way.md` (Michelle Barker, Piccalilli, 2024-07-18); the activities table, `src/_raw/dev-notes/How the activities table works.md` and `src/_raw/dev-notes/How the activities table matched the Penpot design.md`. Also: Adrian Roselli, Under-Engineered Responsive Tables (2020) and Fixed Table Headers (2020). The space before a table: `src/_raw/dev-notes/How the meta line and table spacing changed.md`.
