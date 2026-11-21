@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-11-21] enrich | Focus rings and paint containment (skip link)
+
+[[Focus rings and paint containment]] adds the skip link to "The ring's color": focused, it is filled with the text color and labelled in the page color, so its `currentColor` ring vanished; `skip-link.css` now sets `--focus-color: var(--color-text)`, matching the logomark's ring. The general rule is stated: any control labelled in the page color needs `--focus-color`. Links [[Breadcrumb]].
+
 ## [2026-11-21] enrich | External-link icons (running text, code chips)
 
 [[External-link icons]] gains two general sections: "Where it earns its place", on keeping the arrow to running text and leaving it off lists, tables, captions and footnotes, where nearly every link is outbound, with the exclusion kept inside `:where()`; and "Next to a code chip", on pulling the arrow back over a code chip's corner with a negative margin and `:has(> code:last-child)`. "In jedee" records both. No new links.

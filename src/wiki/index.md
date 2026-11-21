@@ -27,7 +27,7 @@ Each entry below says what a page covers and why you would open it. The traps an
 - [[Vertical rhythm]] — spacing a page in fractions of its body line, what it costs for images, tables and small text, its musical side, how Ariel Salminen's Scale.css, CUBE CSS, Every Layout and Eleventy Excellent handle it, and a quarter-line prototype on the style guide.
 - [[Dark mode]] — the system setting and a toggle that overrides it, what `color-scheme` hands to the browser, `light-dark()`, and where each dark-mode piece of this site lives.
 - [[The theme toggle]] — one SVG sun masked into a moon, the inline script that prevents a flash of the wrong theme, and the circle the new theme grows from.
-- [[Focus rings and paint containment]] — why an outline drawn outside its element disappears inside anything that clips.
+- [[Focus rings and paint containment]] — why an outline drawn outside its element disappears inside anything that clips, and why a filled control's ring needs the text color.
 - [[Smooth scrolling]] — `scroll-behavior` for jump links, the `html:focus-within` version that keeps find-on-page instant, and why it needs focusable targets.
 - [[Breadcrumb]] — a trail of links in a labeled `nav`, the structured data that mirrors it, keeping a header row on one line, and the logomark's animated fill.
 - [[The main menu]] — a disclosure menu whose button is added by script, so the CSS has to detect its absence from the markup alone.
