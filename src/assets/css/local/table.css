@@ -54,6 +54,11 @@
   --flow-space: var(--line);
 }
 
+/* The same full line before a table, unless a caption already sits above the frame and gives that space. */
+.prose .table-wrapper:not(:has(caption)) {
+  --flow-space: var(--line);
+}
+
 .table-wrapper.popout {
   --table-edge-padding: var(--table-popout-edge-padding);
 }
