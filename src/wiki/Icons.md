@@ -1,7 +1,7 @@
 ---
 description: "Icon sets, outline versus filled styles, inline SVG colored by currentColor, labeling icons for assistive technology, and the filled Phosphor set this site uses."
 date: 2026-10-14
-updated: 2026-11-17
+updated: 2026-11-21
 ---
 
 An icon on a web page is a small picture standing in for a word: a type of post, an action, a place to go. Almost every site takes its icons from a published **icon set** rather than drawing them, because a set is drawn to one grid, one corner radius and one line weight, and those shared rules are what make thirty unrelated pictures read as a family.
@@ -52,16 +52,16 @@ The files live in `src/assets/svg/`, by role:
 Table: The icon folders
 | Folder | Holds | Source |
 | --- | --- | --- |
-| `posts/` | One icon per post type, used by the main menu, the meta line and search results | Phosphor fill |
+| `posts/` | One icon per post type, used by the main menu and search results, and the activity type on an activity's meta line | Phosphor fill |
 | `misc/` | Interface glyphs: gallery arrows, the menu caret, search, clear, the feed | Phosphor fill; search and clear are Phosphor regular |
 | `activity/` | One icon per activity type, in the activities table and on the design system page; the meta line uses the `posts/` glyphs instead | Phosphor fill |
-| `platform/` | Footer platform logos, the GitHub mark beside "Revised", the video-link icons | Simple Icons |
+| `platform/` | Footer platform logos and the video-link icons | Simple Icons |
 
 Each Phosphor file is the icon's path in a `viewBox="0 0 256 256"` with `width="1em" height="1em" fill="currentColor"`. `{% svg 'posts/camera' %}` inlines one, runs it through svgo and adds `aria-hidden="true"` unless an accessible name is passed, in which case it adds `role="img"` and the name as `aria-label` ([[The interlinker's second render pass]] covers why the shortcode must stay synchronous). Eleventy Excellent ships the shortcode and the folder; the choice of set is jedee's.
 
 The files kept their Lucide names when their contents changed, so no template or data file had to change, and `src/_data/navigation.js` still names a post type's icon by the old word. Several no longer describe what they draw: `dumbbell.svg` a barbell, `repeat-2.svg` Phosphor's repeat, `reply.svg` a bent arrow. The design system page lists every icon with its file name.
 
-**Icons take the color of their text.** An icon beside a text label (a mega-menu row, a search result, the search field, the meta line) is as strong as its label, and it turns orange where its row or link is hovered. The search field uses `currentColor`. Mega-menu rows, search results and the meta line rest on a fixed muted color with a 0.2s fade of their own, because their labels fade between a muted and a bright color and a `currentColor` icon flashed bright on mouse-out in dark mode: the meta line until 2026-11-16, the mega-menu and search results on 2026-11-17, once their labels started resting muted. An icon that is the whole control — the logomark, the MENU chevron, the search and theme toggles, the footer logos — is the header's resting grey, `--color-text-header-dim`, like the breadcrumb links beside it. From 9 to 13 November 2026 the labelled icons had a blue-grey of their own, `--color-icon`; it measured about 2:1 against the page, under the 3:1 an icon-only control needs ([[Accessibility]]), and was dropped for the text color.
+**Icons take the color of their text.** An icon beside a text label (a mega-menu row, a search result, the search field) is as strong as its label, and it turns orange where its row or link is hovered. The search field uses `currentColor`. Mega-menu rows and search results rest on a fixed muted color with a 0.2s fade of their own, because their labels fade between a muted and a bright color and a `currentColor` icon flashed bright on mouse-out in dark mode; they were fixed on 2026-11-17, once their labels started resting muted. The meta line had the same fix on 2026-11-16 and dropped its icons on 2026-11-21: it now reads `14 Jul 2026 · Edited 8 Aug 2026`, and only an activity's type keeps a glyph. An icon that is the whole control — the logomark, the MENU chevron, the search and theme toggles, the footer logos — is the header's resting grey, `--color-text-header-dim`, like the breadcrumb links beside it. From 9 to 13 November 2026 the labelled icons had a blue-grey of their own, `--color-icon`; it measured about 2:1 against the page, under the 3:1 an icon-only control needs ([[Accessibility]]), and was dropped for the text color.
 
 **Search and clear are the two outline icons**, a choice made on seeing their filled versions in place. Both use Phosphor's bold weight (regular until 2026-11-09, when it read too thin), which keeps them in the family; filled, the clear button's X is cut out of a rounded square.
 

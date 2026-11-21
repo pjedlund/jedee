@@ -14,13 +14,12 @@ layout: base
 
     {% if date %}
       <p class="meta | cluster gutter-s-m">
-        <a class="meta-item" href="/wiki/">{% svg "posts/book", "", "meta-icon" %}{{ words.wiki }}</a>
-        <span class="meta-item">{% svg "posts/calendar", "", "meta-icon" %}<time datetime="{{ date | toIsoString }}">{{ date | formatDate(words.dateLong) }}</time></span>
         {%- set revision = page.inputPath | gitRevision %}
-        {%- if revision and meta.viewRepo.allow and (revision.date | formatDate('YYYY-MM-DD')) != (date | formatDate('YYYY-MM-DD')) %}
-        {# The dot rides with the link so a wrapped line never ends on it. #}
-        <span class="meta-item"><a data-meta-tight href="{{ settings.repos.site }}/commit/{{ revision.hash }}">{% svg 'platform/github', '', 'meta-icon' %}{{ words.revised }} <time datetime="{{ revision.date | toIsoString }}">{{ revision.date | formatDate(words.dateLong) }}</time></a></span>
-        {%- endif %}
+        <span class="meta-item"><time datetime="{{ date | toIsoString }}">{{ date | formatDate(words.dateMeta) }}</time>
+          {%- if revision and meta.viewRepo.allow and (revision.date | formatDate('YYYY-MM-DD')) != (date | formatDate('YYYY-MM-DD')) -%}
+            <span class="meta-dot" aria-hidden="true">·</span><a href="{{ settings.repos.site }}/commit/{{ revision.hash }}">{{ words.edited }} <time datetime="{{ revision.date | toIsoString }}">{{ revision.date | formatDate(words.dateMeta) }}</time></a>
+          {%- endif -%}
+        </span>
       </p>
     {% endif %}
 
