@@ -16,8 +16,12 @@
   block-size: auto;
   overflow: visible;
   inline-size: auto;
+  --focus-color: var(--color-text); /* ⚠ the ring defaults to currentColor, the light text here, which vanished against the page */
+
   background-color: var(--color-text);
   color: var(--color-bg);
+  font-size: var(--size-step-min-1);
+  text-decoration: none;
   padding: var(--space-xs) var(--space-s-m);
   border-radius: var(--border-radius-medium);
   line-height: 1;
