@@ -100,7 +100,7 @@ Each token color is one `light-dark()` pair in `code.css`, light first, so it fo
 
 ### Inline code
 
-Inline code never reaches Prism. A backtick span is a markdown-it `code_inline` token with no language, so the only thing that styles it is `code.css`. jedee sets it as a raised chip, after the inline code on [arielsalminen.com](https://arielsalminen.com/2026/progressive-web-components/): a surface a shade off the page, rounded corners, and a very faint shadow. Her four values, swapped for jedee tokens:
+Inline code never reaches Prism. A backtick span is a markdown-it `code_inline` token with no language, so the only thing that styles it is `code.css`. jedee sets it as a raised chip, after the inline code on [arielsalminen.com](https://arielsalminen.com/2026/progressive-web-components/): a surface a shade off the page, rounded corners, and a very faint shadow. Ariel's four values, swapped for jedee tokens:
 
 Table: Inline code: Ariel Salminen's chip and jedee's
 | Ariel | jedee |
