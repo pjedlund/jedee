@@ -4,8 +4,9 @@
 <article id="webmention-{{ webmention['wm-id'] }}" class="webmention h-cite | flow">
   <div class="cluster">
     {% if webmention.author and webmention.author.name %}
+      {# h-card's url is implied from this <a href>, so no explicit u-url here — that keeps the h-cite's only u-url the comment permalink (the hidden <data> below), not the author's profile. #}
       <a
-        class="author p-author h-card u-url"
+        class="author p-author h-card"
         href="{{ webmention.author.url or webmention.url }}"
         rel="noreferrer"
       >
@@ -26,9 +27,18 @@
 
     {% if webmention['wm-received'] %}
       <span class="separator" aria-hidden="true">·</span>
-      <time datetime="{{ webmention['wm-received'] | toIsoString }}">
-        {{ webmention['wm-received'] | formatDate('D MMM YYYY') }}
-      </time>
+      {% if webmention.url %}
+        {# The date is the permalink to the comment itself. `.no-indicator` keeps the outbound ↗ on the author name only, not both. #}
+        <a class="no-indicator" href="{{ webmention.url }}" rel="noreferrer">
+          <time datetime="{{ webmention['wm-received'] | toIsoString }}">
+            {{ webmention['wm-received'] | formatDate('D MMM YYYY') }}
+          </time>
+        </a>
+      {% else %}
+        <time datetime="{{ webmention['wm-received'] | toIsoString }}">
+          {{ webmention['wm-received'] | formatDate('D MMM YYYY') }}
+        </time>
+      {% endif %}
     {% endif %}
   </div>
 
