@@ -6,7 +6,7 @@ layout: base
 <div class="region" style="--region-space-top: var(--space-xl-2xl)">
   {# _log is ~40 dated entries rather than an essay, so its h2s get the compact entry treatment in wiki.css. #}
   <article class="wrapper flow prose"{% if page.fileSlug == "_log" %} data-wiki-log{% endif %}>
-    <p class="wiki-eyebrow">
+    <p class="wiki-eyebrow | popout">
       {{ words.wikiPartOf }} <a href="/wiki/">{{ words.wikiName }}</a>{% if settings.wiki.attribution %} — {{ settings.wiki.attribution }}{% endif %}
     </p>
 
