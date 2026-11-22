@@ -48,11 +48,6 @@ The dim date line under a post or wiki title, with the last edit linked to its c
   text-wrap-mode: inherit;
 }
 
-/* The dot between the date and the edit: decoration, hidden from screen readers. */
-.meta-dot {
-  padding-inline: 0.5em;
-}
-
 /* Centres a 1em icon on the capital height, the optical middle of the label. */
 .meta-icon {
   color: currentColor;

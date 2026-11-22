@@ -51,15 +51,11 @@
       <span class="meta-item" data-activity="{{ activityType | slugify }}">{% svg 'posts/' + at.icon, '', 'meta-icon' %}{{ at.label }}</span>
     {%- endif %}
   {%- endif %}
-  {# The date, then the last commit to the file linked on GitHub, as one unbreakable item: "14 Jul 2026 · Edited 8 Aug 2026". Same as wiki.njk; left off types that are logged rather than revised. #}
+  {# The dates linked to GitHub, as one unbreakable item (meta-dates.njk, shared with wiki.njk); left off types that are logged rather than revised. #}
   {%- set unrevisedTypes = ['activity', 'bookmark', 'like', 'repost', 'reply', 'rsvp'] %}
-  {%- set revision = page.inputPath | gitRevision if not (category in unrevisedTypes) %}
+  {%- set revision = page.inputPath | gitRevision(date) if not (category in unrevisedTypes) %}
   {% if date %}
-    <span class="meta-item">{% set definedDate = date %}{% set dateFormat = words.dateMeta %}{% include "partials/date.njk" %}
-      {%- if revision and meta.viewRepo.allow and (revision.date | formatDate('YYYY-MM-DD')) != (date | formatDate('YYYY-MM-DD')) -%}
-        <span class="meta-dot" aria-hidden="true">·</span><a href="{{ settings.repos.site }}/commit/{{ revision.hash }}">{{ words.edited }} <time class="dt-updated" datetime="{{ revision.date | toIsoString }}">{{ revision.date | formatDate(words.dateMeta) }}</time></a>
-      {%- endif -%}
-    </span>
+    {%- set mf2 = true %}{% include "partials/meta-dates.njk" %}
   {% endif %}
   {% if scoreMy %}
     {% set rating = scoreMy %}{% include "partials/rating.njk" %}

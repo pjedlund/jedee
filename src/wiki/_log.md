@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-11-22] enrich | Typographic conventions, Icons (meta line linked to GitHub)
+
+[[Typographic conventions]] records the new meta line, `[icon] 14 Jul 2026, edited 8 Aug 2026`: the date opens the page as first written, the edit date its history, and the date is linked only when the first commit came within a week of it. [[Icons]] lists the GitHub mark among the `platform/` uses.
+
 ## [2026-11-21] enrich | Typographic conventions, Tables (dates, space before a table)
 
 [[Typographic conventions]] gains a Dates section: day, month, year with the month named removes the US/European order trap and needs no comma; ordinal suffixes add length without information; `<time datetime>` keeps the ISO form for machines. In jedee, the meta line's `14 Jul 2026 · Edited 8 Aug 2026` and its `dateMeta` format string, linking [[Icons]]. [[Tables]] records the full line before a table without a caption, matching the full line after, and links [[Vertical rhythm]].

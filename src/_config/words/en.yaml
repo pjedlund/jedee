@@ -67,7 +67,8 @@ draft: draft
 readInSwedish: Läs på svenska
 readInEnglish: Read in English
 dateMeta: 'D MMM YYYY'
-edited: Edited
+edited: edited
+onGitHub: "On GitHub:"
 activityOrienteering: Orienteering
 activityGym: Gym
 activityRun: Run

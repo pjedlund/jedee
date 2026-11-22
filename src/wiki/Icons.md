@@ -55,7 +55,7 @@ Table: The icon folders
 | `posts/` | One icon per post type, used by the main menu and search results, and the activity type on an activity's meta line | Phosphor fill |
 | `misc/` | Interface glyphs: gallery arrows, the menu caret, search, clear, the feed | Phosphor fill; search and clear are Phosphor regular |
 | `activity/` | One icon per activity type, in the activities table and on the design system page; the meta line uses the `posts/` glyphs instead | Phosphor fill |
-| `platform/` | Footer platform logos and the video-link icons | Simple Icons |
+| `platform/` | Footer platform logos, the video-link icons, and the GitHub mark before the meta line's dates | Simple Icons |
 
 Each Phosphor file is the icon's path in a `viewBox="0 0 256 256"` with `width="1em" height="1em" fill="currentColor"`. `{% svg 'posts/camera' %}` inlines one, runs it through svgo and adds `aria-hidden="true"` unless an accessible name is passed, in which case it adds `role="img"` and the name as `aria-label` ([[The interlinker's second render pass]] covers why the shortcode must stay synchronous). Eleventy Excellent ships the shortcode and the folder; the choice of set is jedee's.
 
