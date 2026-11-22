@@ -14,12 +14,12 @@ The "part of the AI wiki" banner at the top of every wiki page. Reads like a cod
   border-radius: var(--border-radius-medium);
 }
 
-/* Phosphor's info icon, two lines high, floated to the end of the box. */
+/* Phosphor's info icon, two lines high and floated so the text wraps beside it. */
 .wiki-eyebrow > svg {
-  float: inline-end;
+  float: inline-start;
   inline-size: 2lh;
   block-size: 2lh;
-  margin-inline-start: var(--space-s);
+  margin-inline-end: var(--space-s);
   color: var(--color-accent-orange);
 }
 
