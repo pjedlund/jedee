@@ -138,7 +138,7 @@ test('a Swedish site prints Swedish month names', async t => {
   const note = '---\ntitle: En anteckning\ndate: 2026-09-15\n---\n\nText.\n'
   const site = await makeTempSite({
     settings: { site: { lang: 'sv', locale: 'sv_SE' } },
-    files: { 'src/_config/words/sv.yaml': "dateLong: 'D MMMM YYYY'\n", 'src/posts/notes/en-anteckning.md': note },
+    files: { 'src/_config/words/sv.yaml': "dateMeta: 'D MMMM YYYY'\n", 'src/posts/notes/en-anteckning.md': note },
   })
   t.after(() => site.cleanup())
   await site.build()
