@@ -1,16 +1,31 @@
 /*
 WIKI EYEBROW
-The "part of the AI wiki" banner at the top of every wiki page. Reads like a code block — popout width, same corner radius — but a touch darker in both themes, so it's clearly a note *about* the page rather than page content. Derived from the code tokens so it tracks any future change to them.
+The "part of the AI wiki" banner at the top of every wiki page. Reads like a code block — same background, border and corner radius — and fills the popout column the same way. Uses the code tokens so it tracks any future change to them.
 */
 .wiki-eyebrow {
-  --wiki-eyebrow-bg: color-mix(in oklab, var(--color-code-bg) 90%, var(--color-base-black));
-  --wiki-eyebrow-border: color-mix(in oklab, var(--code-border-color) 80%, var(--color-base-black));
+  --wiki-eyebrow-bg: var(--color-code-bg);
+  --wiki-eyebrow-border: var(--code-border-color);
 
+  display: flow-root; /* holds the floated icon when the text is a single line */
   font-size: var(--size-step-min-1);
   padding: var(--space-s) var(--space-m);
   background-color: var(--wiki-eyebrow-bg);
   border: 1px solid var(--wiki-eyebrow-border);
   border-radius: var(--border-radius-medium);
+}
+
+/* Phosphor's info icon, two lines high and floated so the text wraps beside it. */
+.wiki-eyebrow > svg {
+  float: inline-start;
+  inline-size: 2lh;
+  block-size: 2lh;
+  margin-inline-end: var(--space-s);
+  color: var(--color-accent-orange);
+}
+
+/* ⚠ Needs .prose to outrank the `.prose p` 54ch rule, which would hold it narrower than the popout column. */
+.prose .wiki-eyebrow {
+  max-inline-size: none;
 }
 
 /*
