@@ -1,6 +1,6 @@
 /*
 WIKI EYEBROW
-The "part of the AI wiki" banner at the top of every wiki page. Reads like a code block — same background, border and corner radius — and fills the popout column the same way. Uses the code tokens so it tracks any future change to them.
+The "part of the AI wiki" banner at the top of every wiki page. Reads like a code block — same background, border and corner radius — and fills the popout column the same way; its text keeps the paragraphs' measure. Uses the code tokens so it tracks any future change to them.
 */
 .wiki-eyebrow {
   --wiki-eyebrow-bg: var(--color-code-bg);
@@ -14,13 +14,19 @@ The "part of the AI wiki" banner at the top of every wiki page. Reads like a cod
   border-radius: var(--border-radius-medium);
 }
 
-/* Phosphor's info icon, two lines high and floated so the text wraps beside it. */
+/* Phosphor's info icon, two lines high, floated to the end of the box. */
 .wiki-eyebrow > svg {
-  float: inline-start;
+  float: inline-end;
   inline-size: 2lh;
   block-size: 2lh;
-  margin-inline-end: var(--space-s);
+  margin-inline-start: var(--space-s);
   color: var(--color-accent-orange);
+}
+
+/* The text keeps the paragraphs' measure while the box takes the popout width. */
+.wiki-eyebrow > span {
+  display: block;
+  max-inline-size: var(--wiki-prose-measure);
 }
 
 /* ⚠ Needs .prose to outrank the `.prose p` 54ch rule, which would hold it narrower than the popout column. */
