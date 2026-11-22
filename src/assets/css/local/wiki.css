@@ -6,11 +6,31 @@ The "part of the AI wiki" banner at the top of every wiki page. Reads like a cod
   --wiki-eyebrow-bg: var(--color-code-bg);
   --wiki-eyebrow-border: var(--code-border-color);
 
+  display: flow-root; /* holds the floated icon when the text is a single line */
   font-size: var(--size-step-min-1);
   padding: var(--space-s) var(--space-m);
   background-color: var(--wiki-eyebrow-bg);
   border: 1px solid var(--wiki-eyebrow-border);
   border-radius: var(--border-radius-medium);
+}
+
+/* Lucide's info icon drawn in CSS (the one captions had until 2026-11-13), two lines high and floated so the text wraps beside it. */
+.wiki-eyebrow::before {
+  --wiki-eyebrow-icon-size: 2lh;
+  --wiki-eyebrow-icon-color: var(--color-accent-orange);
+  --wiki-eyebrow-icon-stroke: calc(var(--wiki-eyebrow-icon-size) / 12);
+
+  content: '';
+  float: inline-start;
+  box-sizing: border-box;
+  inline-size: var(--wiki-eyebrow-icon-size);
+  block-size: var(--wiki-eyebrow-icon-size);
+  margin-inline-end: var(--space-s);
+  border: var(--wiki-eyebrow-icon-stroke) solid var(--wiki-eyebrow-icon-color);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle closest-side, var(--wiki-eyebrow-icon-color) 85%, transparent) 50% 22% / var(--wiki-eyebrow-icon-stroke) var(--wiki-eyebrow-icon-stroke) no-repeat,
+    linear-gradient(var(--wiki-eyebrow-icon-color) 0 0) 50% 78% / var(--wiki-eyebrow-icon-stroke) 32% no-repeat;
 }
 
 /* ⚠ Needs .prose to outrank the `.prose p` 54ch rule, which would hold it narrower than the popout column. */
