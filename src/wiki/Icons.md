@@ -53,7 +53,7 @@ Table: The icon folders
 | Folder | Holds | Source |
 | --- | --- | --- |
 | `posts/` | One icon per post type, used by the main menu and search results, and the activity type on an activity's meta line | Phosphor fill |
-| `misc/` | Interface glyphs: gallery arrows, the menu caret, search, clear, the feed | Phosphor fill; search and clear are Phosphor regular |
+| `misc/` | Interface glyphs: gallery arrows, the menu caret, search, clear, the feed, the wiki banner's info icon | Phosphor fill; search and clear are Phosphor regular |
 | `activity/` | One icon per activity type, in the activities table and on the design system page; the meta line uses the `posts/` glyphs instead | Phosphor fill |
 | `platform/` | Footer platform logos, the video-link icons, and the GitHub mark before the meta line's dates | Simple Icons |
 
