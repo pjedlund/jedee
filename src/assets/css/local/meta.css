@@ -1,6 +1,6 @@
 /*
 META LINE
-The dim date line under a post or wiki title, with the last edit linked to its commit (partials/entry-header.njk, wiki.njk). Its links carry a faint underline that lights up with the label on hover.
+The dim date line under a post or wiki title, its dates linked to GitHub (partials/meta-dates.njk). Its links carry a faint underline that lights up with the label on hover.
 */
 .meta {
   --meta-color: color-mix(in oklab, var(--color-text-dim) 75%, var(--color-text));
@@ -37,6 +37,11 @@ The dim date line under a post or wiki title, with the last edit linked to its c
   text-decoration-color: currentColor;
 }
 
+
+/* Straight under the title: a quarter line, half the usual space after a heading. ⚠ Set on the meta line itself, or prose's "space after a heading" rule wins. */
+.prose h1 + .meta {
+  --flow-space: var(--line-quarter, var(--space-2xs));
+}
 
 /* One meta item kept on one line: the date with its edit, or an icon with its label. ⚠ Not inline-flex: a flex box takes its baseline from the icon's bottom edge and lifts the label off the line. */
 .meta-item {

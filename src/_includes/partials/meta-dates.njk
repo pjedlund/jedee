@@ -8,11 +8,11 @@
   {%- endif -%}
   {%- set publishedTime -%}<time{% if mf2 %} class="dt-published"{% endif %} datetime="{{ date | toIsoString }}">{{ date | formatDate(words.dateMeta) }}</time>{%- endset -%}
   {%- if linkFirst -%}
-    <a class="no-indicator" href="{{ settings.repos.site }}/blob/{{ revision.first.hash }}/{{ revision.path }}">{{ publishedTime | safe }}</a>
+    <a href="{{ settings.repos.site }}/blob/{{ revision.first.hash }}/{{ revision.path }}">{{ publishedTime | safe }}</a>
   {%- else -%}
     {{ publishedTime | safe }}
   {%- endif -%}
   {%- if showEdit -%}
-    , {{ words.edited }} <a class="no-indicator" href="{{ settings.repos.site }}/commits/main/{{ revision.path }}"><time{% if mf2 %} class="dt-updated"{% endif %} datetime="{{ revision.date | toIsoString }}">{{ revision.date | formatDate(words.dateMeta) }}</time></a>
+    , {{ words.edited }} <a href="{{ settings.repos.site }}/commits/main/{{ revision.path }}"><time{% if mf2 %} class="dt-updated"{% endif %} datetime="{{ revision.date | toIsoString }}">{{ revision.date | formatDate(words.dateMeta) }}</time></a>
   {%- endif -%}
 </span>

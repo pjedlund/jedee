@@ -142,7 +142,7 @@ A body row is one line and two quarter-line paddings, one and a half lines. That
 
 ### Meta lines, disclosures and footnotes
 
-- **Meta line.** The date and revision line under a title is small text on a three-quarter line, half a line under the title, with a quarter line between rows if it wraps.
+- **Meta line.** The date and revision line under a title is small text on a three-quarter line, a quarter line under the title (half a line until 2026-11-22; the line belongs to the title, so it sits closer than a paragraph would), with a quarter line between rows if it wraps.
 - **Media metadata.** The capture details under a photograph (`local/media-meta.css`) keep their rule, painted, a half line of padding under it, and a quarter line between rows.
 - **Disclosure.** A `<details>` puts half a line between its summary and what it opens.
 - **Footnotes.** Small text again, a quarter line apart.

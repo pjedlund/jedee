@@ -7,7 +7,7 @@ Append-only. One entry per ingest / query-filed / lint, newest first. Entry form
 
 ## [2026-11-22] enrich | Typographic conventions, Icons (meta line linked to GitHub)
 
-[[Typographic conventions]] records the new meta line, `[icon] 14 Jul 2026, edited 8 Aug 2026`: the date opens the page as first written, the edit date its history, and the date is linked only when the first commit came within a week of it. [[Icons]] lists the GitHub mark among the `platform/` uses.
+[[Typographic conventions]] records the new meta line, `[icon] 14 Jul 2026, edited 8 Aug 2026`: the date opens the page as first written, the edit date its history, and the date is linked only when the first commit came within a week of it. [[Icons]] lists the GitHub mark among the `platform/` uses. Later the same day: the dates got their external-link arrows back, and [[Vertical rhythm]] records the meta line moving from half a line to a quarter line under the title.
 
 ## [2026-11-21] enrich | Typographic conventions, Tables (dates, space before a table)
 
