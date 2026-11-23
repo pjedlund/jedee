@@ -20,7 +20,7 @@ The "part of the AI wiki" banner at the top of every wiki page. Reads like a cod
   inline-size: 2lh;
   block-size: 2lh;
   margin-inline-end: var(--space-s);
-  color: var(--color-accent-orange);
+  color: var(--color-red-vivid);
 }
 
 /* The text keeps the paragraphs' measure while the box takes the popout width. */
