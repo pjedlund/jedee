@@ -104,18 +104,40 @@ Top-left wayfinding that replaces the old site logo: the home crumb is the logom
   margin-inline: calc(var(--breadcrumb-mark-slack) * -1);
 }
 
-/* Header icon size, not the trail's cap height: the mark matches the magnifier and the sun/moon. Painted like the map preloader (orange sweeps clockwise from 30deg, the stem wipes last) through the logo mask, with --breadcrumb-fill 0–100 driving it. */
+/* Header icon size, matching the magnifier and sun/moon. The orange logo sweeps in over the resting one like the map preloader, driven by --breadcrumb-fill 0–100. ⚠ The data URIs copy the theme's logo-gradient-*.svg: update both */
 .breadcrumb-mark {
-  --breadcrumb-mark-track: var(--breadcrumb-color-ancestor);
-  --breadcrumb-mark-fill: var(--color-logo-icon);
+  --breadcrumb-mark-rest: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='logo-slate-0'><stop offset='0' stop-color='%2372839c'/><stop offset='1' stop-color='%23495464'/></linearGradient><linearGradient id='logo-slate-1'><stop offset='0' stop-color='%23495464'/><stop offset='1' stop-color='%2372839c'/></linearGradient></defs><path fill='url(%23logo-slate-0)' d='M48.5 0.02C49 0.01 49.5 0 50 0L60 0L60 0.02L60 0.18L60 1L60 30.91L50 30.91C49.88 30.91 49.76 30.91 49.64 30.91C30.56 30.91 15.09 46.38 15.09 65.45C15.09 83.93 29.6 99.02 47.85 99.95C21.23 98.83 0 76.89 0 50C0 22.89 21.58 0.81 48.5 0.02Z'/><path fill='url(%23logo-slate-1)' d='M69.09 30.91C69.09 13.84 82.93 0 100 0L100 50C100 54.06 99.52 58.01 98.6 61.79C93.3 83.71 73.55 100 50 100C49.93 100 49.87 100 49.8 100C68.8 99.91 84.18 84.48 84.18 65.45C84.18 84.48 68.8 99.91 49.8 100C49.15 100 48.5 99.98 47.85 99.95C29.6 99.02 15.09 83.93 15.09 65.45C15.09 46.38 30.56 30.91 49.64 30.91C49.71 30.91 49.78 30.91 49.84 30.91C39.37 30.99 30.91 39.51 30.91 50C30.91 60.54 39.46 69.09 50 69.09C60.54 69.09 69.09 60.54 69.09 50L69.09 36.9L69.09 30.91Z'/></svg>");
+  --breadcrumb-mark-lit: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='logo-orange-0'><stop offset='0' stop-color='%23f68f5a'/><stop offset='1' stop-color='%23d0621e'/></linearGradient><linearGradient id='logo-orange-1'><stop offset='0' stop-color='%23d0621e'/><stop offset='1' stop-color='%23f68f5a'/></linearGradient></defs><path fill='url(%23logo-orange-0)' d='M48.5 0.02C49 0.01 49.5 0 50 0L60 0L60 0.02L60 0.18L60 1L60 30.91L50 30.91C49.88 30.91 49.76 30.91 49.64 30.91C30.56 30.91 15.09 46.38 15.09 65.45C15.09 83.93 29.6 99.02 47.85 99.95C21.23 98.83 0 76.89 0 50C0 22.89 21.58 0.81 48.5 0.02Z'/><path fill='url(%23logo-orange-1)' d='M69.09 30.91C69.09 13.84 82.93 0 100 0L100 50C100 54.06 99.52 58.01 98.6 61.79C93.3 83.71 73.55 100 50 100C49.93 100 49.87 100 49.8 100C68.8 99.91 84.18 84.48 84.18 65.45C84.18 84.48 68.8 99.91 49.8 100C49.15 100 48.5 99.98 47.85 99.95C29.6 99.02 15.09 83.93 15.09 65.45C15.09 46.38 30.56 30.91 49.64 30.91C49.71 30.91 49.78 30.91 49.84 30.91C39.37 30.99 30.91 39.51 30.91 50C30.91 60.54 39.46 69.09 50 69.09C60.54 69.09 69.09 60.54 69.09 50L69.09 36.9L69.09 30.91Z'/></svg>");
   --breadcrumb-stem: clamp(0, (var(--breadcrumb-fill) - 91.667) / 8.333, 1); /* ⚠ same stem box as .place-map-preloader-logo */
 
+  position: relative;
   inline-size: var(--breadcrumb-mark);
   aspect-ratio: 1;
-  background:
-    linear-gradient(to right, var(--breadcrumb-mark-fill) calc(var(--breadcrumb-stem) * 100%), var(--breadcrumb-mark-track) 0) calc(var(--breadcrumb-mark) * 0.5) 0 / 10.3% 31% no-repeat,
-    conic-gradient(from 30deg, var(--breadcrumb-mark-fill) calc(var(--breadcrumb-fill) * 1%), var(--breadcrumb-mark-track) 0);
-  mask: var(--logo-mask) center / contain no-repeat;
+  background: var(--breadcrumb-mark-rest) center / contain no-repeat;
+}
+
+/* Mask layers, top first: the stem's straight wipe, added to the sweep with the stem box cut out of it, so the stem never shows the sweep's slanted edge. */
+.breadcrumb-mark::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--breadcrumb-mark-lit) center / contain no-repeat;
+  mask:
+    linear-gradient(to right, #000 calc(var(--breadcrumb-stem) * 100%), transparent 0) calc(var(--breadcrumb-mark) * 0.5) 0 / 10.3% 31% no-repeat,
+    conic-gradient(from 30deg, #000 calc(var(--breadcrumb-fill) * 1%), transparent 0),
+    linear-gradient(#000 0 0) calc(var(--breadcrumb-mark) * 0.5) 0 / 10.3% 31% no-repeat,
+    linear-gradient(#000 0 0);
+  mask-composite: add, intersect, exclude, add;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .breadcrumb-mark {
+    --breadcrumb-mark-rest: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='logo-grey-0'><stop offset='0' stop-color='%23888a8d'/><stop offset='1' stop-color='%23c8cacc'/></linearGradient><linearGradient id='logo-grey-1'><stop offset='0' stop-color='%23888a8d'/><stop offset='1' stop-color='%23c8cacc'/></linearGradient></defs><path fill='url(%23logo-grey-0)' d='M48.5 0.02C49 0.01 49.5 0 50 0L60 0L60 0.02L60 0.18L60 1L60 30.91L50 30.91C49.88 30.91 49.76 30.91 49.64 30.91C30.56 30.91 15.09 46.38 15.09 65.45C15.09 83.93 29.6 99.02 47.85 99.95C21.23 98.83 0 76.89 0 50C0 22.89 21.58 0.81 48.5 0.02Z'/><path fill='url(%23logo-grey-1)' d='M69.09 30.91C69.09 13.84 82.93 0 100 0L100 50C100 54.06 99.52 58.01 98.6 61.79C93.3 83.71 73.55 100 50 100C49.93 100 49.87 100 49.8 100C68.8 99.91 84.18 84.48 84.18 65.45C84.18 84.48 68.8 99.91 49.8 100C49.15 100 48.5 99.98 47.85 99.95C29.6 99.02 15.09 83.93 15.09 65.45C15.09 46.38 30.56 30.91 49.64 30.91C49.71 30.91 49.78 30.91 49.84 30.91C39.37 30.99 30.91 39.51 30.91 50C30.91 60.54 39.46 69.09 50 69.09C60.54 69.09 69.09 60.54 69.09 50L69.09 36.9L69.09 30.91Z'/></svg>");
+  }
+}
+
+:root[data-theme="dark"] .breadcrumb-mark {
+  --breadcrumb-mark-rest: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='logo-grey-0'><stop offset='0' stop-color='%23888a8d'/><stop offset='1' stop-color='%23c8cacc'/></linearGradient><linearGradient id='logo-grey-1'><stop offset='0' stop-color='%23888a8d'/><stop offset='1' stop-color='%23c8cacc'/></linearGradient></defs><path fill='url(%23logo-grey-0)' d='M48.5 0.02C49 0.01 49.5 0 50 0L60 0L60 0.02L60 0.18L60 1L60 30.91L50 30.91C49.88 30.91 49.76 30.91 49.64 30.91C30.56 30.91 15.09 46.38 15.09 65.45C15.09 83.93 29.6 99.02 47.85 99.95C21.23 98.83 0 76.89 0 50C0 22.89 21.58 0.81 48.5 0.02Z'/><path fill='url(%23logo-grey-1)' d='M69.09 30.91C69.09 13.84 82.93 0 100 0L100 50C100 54.06 99.52 58.01 98.6 61.79C93.3 83.71 73.55 100 50 100C49.93 100 49.87 100 49.8 100C68.8 99.91 84.18 84.48 84.18 65.45C84.18 84.48 68.8 99.91 49.8 100C49.15 100 48.5 99.98 47.85 99.95C29.6 99.02 15.09 83.93 15.09 65.45C15.09 46.38 30.56 30.91 49.64 30.91C49.71 30.91 49.78 30.91 49.84 30.91C39.37 30.99 30.91 39.51 30.91 50C30.91 60.54 39.46 69.09 50 69.09C60.54 69.09 69.09 60.54 69.09 50L69.09 36.9L69.09 30.91Z'/></svg>");
 }
 
 /* Inner pages: grey at rest, orange sweeps in on hover/focus and back out, faster, on leave. The home page is orange throughout and only deepens on hover. */
@@ -124,8 +146,9 @@ Top-left wayfinding that replaces the old site logo: the home crumb is the logom
   --breadcrumb-fill: 100;
 }
 
-.breadcrumb-home[aria-current="page"]:is(:hover, :focus-visible) .breadcrumb-mark {
-  --breadcrumb-mark-fill: color-mix(in oklab, var(--color-accent-orange) 82%, var(--color-text));
+/* Letting the resting logo show through deepens the orange in light and lifts it in dark. */
+.breadcrumb-home[aria-current="page"]:is(:hover, :focus-visible) .breadcrumb-mark::before {
+  opacity: 0.82;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -145,11 +168,16 @@ Top-left wayfinding that replaces the old site logo: the home crumb is the logom
   }
 }
 
-/* Forced colors drops the gradients: paint the whole mark in the text color instead. */
+/* Forced colors: the whole mark in the text color, cut by the logo mask. */
 @media (forced-colors: active) {
   .breadcrumb-mark {
     forced-color-adjust: none;
     background: CanvasText;
+    mask: var(--logo-mask) center / contain no-repeat;
+  }
+
+  .breadcrumb-mark::before {
+    display: none;
   }
 }
 

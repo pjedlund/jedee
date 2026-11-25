@@ -46,25 +46,20 @@ One related trap: a manifest's `background_color` paints the splash screen. An i
 
 ## In jedee
 
-The whole set is generated from one file, `logo.svg` in the active theme's folder (`src/_includes/themes/jedee/logo.svg`), by `src/_config/setup/generate-favicons.js`, run by hand with `npm run favicons`. The outputs are committed to the repo, not built on deploy. [[Open Graph images]] are committed for the same kind of reason — their generator names a font a build server does not have. A passthrough in `eleventy.config.js` copies the folder to the site root; the `<link>` tags are in `src/_includes/head/meta-info.njk` and the manifest is `src/common/site-manifest.njk`.
+The whole set is generated from one file, `logo-gradient-orange.svg` in the active theme's folder (`src/_includes/themes/jedee/`, named by `pathToFaviconLogo` in `meta.js`), by `src/_config/setup/generate-favicons.js`, run by hand with `npm run favicons`. The outputs are committed to the repo, not built on deploy. [[Open Graph images]] are committed for the same kind of reason — their generator names a font a build server does not have. A passthrough in `eleventy.config.js` copies the folder to the site root; the `<link>` tags are in `src/_includes/head/meta-info.njk` and the manifest is `src/common/site-manifest.njk`.
 
 The script, the file names, the npm script and the Evil Martians reference are Eleventy Excellent stock. The treatment is not.
 
-**Two treatments, from the rule above.** The tab keeps the bare mark on transparency at 14 of 16 pixels. Every app icon is one object — the mark knocked out of a solid brand orange:
+**Two treatments, from the rule above.** The tab keeps the bare gradient mark on transparency at 14 of 16 pixels. Every app icon is one object — the same mark on a solid dark ground, the near-black of the logo's dark-mode artboard:
 
 ```js
 const TAB_PAD = 1 / 16;   // a 14px mark in a 16px box
 const TILE_PAD = 0.222;   // app icons; the OS frames them anyway
 const TILE_RADIUS = 0.22;
+const tile = (size) => padded(svgBuffer, size, TILE_PAD, iconGround);
 ```
 
-The brand color is not written into the script. It is read out of the logo's root `fill`, so the SVG stays the single source of truth, with a guard — because a missing fill would render the mark orange-on-orange and leave the build green while shipping a blank tile:
-
-```js
-const markColor = svgSource.match(/<svg[^>]*\sfill="([^"]+)"/)?.[1];
-if (!markColor) throw new Error(`${pathToSvgLogo}: no fill on the root <svg> — the tile colors are derived from it.`);
-const knockout = Buffer.from(svgSource.replaceAll(markColor, themeLight));
-```
+The ground is `iconGround` in the theme's `theme.json`, not a color pulled from the logo: the gradient mark has no single fill to invert, which is what the earlier flat logo's tiles did (the mark knocked out of a solid orange ground). The share cards still use the flat `logo.svg` ([[Open Graph images]]).
 
 The two manifest icons get corners composited with `dest-in`; `apple-touch-icon` and `maskable-icon` stay square for the reasons above. The radius is a proportion rather than one of the project's radius tokens ([[Design token sync]]), which are sized for UI — a fixed px radius would vanish at 512 and swamp the 192.
 
@@ -84,37 +79,37 @@ EE's stock script is immune, because it hands over a bare `sharp(svgBuffer)` wit
 Table: The four icon shapes, side by side
 | | File | Treatment |
 | --- | --- | --- |
-| <img src="/favicon.svg" alt="The jedee mark in brand orange on transparency, filling almost the whole square." width="72" height="72" eleventy:ignore> | `favicon.svg` | Bare mark, transparent, 14 of 16 pixels |
-| <img src="/icon-512x512.png" alt="The mark knocked out of a solid orange tile with rounded corners." width="72" height="72" eleventy:ignore> | `icon-192x192.png`, `icon-512x512.png` | Opaque tile, corners baked in — nothing masks these |
-| <img src="/apple-touch-icon.png" alt="The same orange tile with square corners." width="72" height="72" eleventy:ignore> | `apple-touch-icon.png` | Opaque tile, square — iOS adds its squircle |
-| <img src="/maskable-icon.png" alt="The same orange tile with square corners, full-bleed to the edge." width="72" height="72" eleventy:ignore> | `maskable-icon.png` | Opaque tile, square, full-bleed — the launcher crops it |
+| <img src="/favicon.svg" alt="The jedee mark in an orange gradient on transparency, filling almost the whole square." width="72" height="72" eleventy:ignore> | `favicon.svg` | Bare mark, transparent, 14 of 16 pixels |
+| <img src="/icon-512x512.png" alt="The orange gradient mark on a near-black tile with rounded corners." width="72" height="72" eleventy:ignore> | `icon-192x192.png`, `icon-512x512.png` | Opaque tile, corners baked in — nothing masks these |
+| <img src="/apple-touch-icon.png" alt="The same near-black tile with square corners." width="72" height="72" eleventy:ignore> | `apple-touch-icon.png` | Opaque tile, square — iOS adds its squircle |
+| <img src="/maskable-icon.png" alt="The same near-black tile with square corners, full-bleed to the edge." width="72" height="72" eleventy:ignore> | `maskable-icon.png` | Opaque tile, square, full-bleed — the launcher crops it |
 
 The last two look identical here and that is the point: baked corners would become transparent notches inside the shape the OS cuts.
 
-**The theme colors.** Three exports in `src/_data/meta.js`, one consumer each: `themeColor` (`#495464`) reaches only the manifest's `theme_color`, so it paints the splash and the app-switcher card; `themeLight` (`#F4F4F2`) does `<meta name="theme-color">` in light mode, the manifest's `background_color`, and the knockout mark on the tiles; `themeDark` does the meta tag in dark mode and now references `themeColor`, having been `#bbbfca` — the old logo gray, which put a pale band over the near-black dark page ([[The theme toggle]]).
+**The theme colors.** Three color exports in `src/_data/meta.js`, one consumer each: `themeColor` (`#495464`) reaches only the manifest's `theme_color`, so it paints the splash and the app-switcher card; `themeLight` (`#F4F4F2`) does `<meta name="theme-color">` in light mode and the manifest's `background_color`; `themeDark` does the meta tag in dark mode and now references `themeColor`, having been `#bbbfca` — the old logo gray, which put a pale band over the near-black dark page ([[The theme toggle]]).
 
-Because `background_color` is `themeLight`, a light plate on the manifest icons would have been invisible on the splash. That is why they are the orange tile instead — and it makes the install prompt show the same object as the home screen it leads to. The other half of the installed-app experience is [[The service worker's three strategies]].
+Because `background_color` is `themeLight`, a light plate on the manifest icons would have been invisible on the splash. That is why they are the dark tile instead — and it makes the install prompt show the same object as the home screen it leads to. The other half of the installed-app experience is [[The service worker's three strategies]].
 
-**On a device.** The set rendered into the six places an installed app shows it. Every color claim above is visible here at once: the tile under Android's circular crop, the splash where `background_color` and the tile's ground are the same `#F4F4F2`, and the two chrome colors doing different jobs.
+**On a device.** The set rendered into the six places an installed app shows it. Every color claim above is visible here at once: the tile under Android's circular crop, the splash where the dark tile sits on the `#F4F4F2` `background_color`, and the two chrome colors doing different jobs.
 
 The frames are drawn by `src/wiki/_sources/pwa-preview.html`, which points at the committed icons rather than copies of them, so opening it shows whatever the set currently is. `npm run mockups` re-shoots the six PNGs from it; the `width`/`height` on each `<img>` below is their intrinsic size and has to follow if the frame size changes.
 
 <ul class="grid | popout" role="list" data-wiki-mockup style="--grid-min-item-size: 17rem; --gutter: var(--space-m)">
   <li>
     <figure>
-      <img eleventy:formats="webp,png" src="/assets/images/wiki/pwa-home-screen.png" alt="A phone home screen of gray placeholder apps, with the orange tile circular-cropped among them and labeled Johan Edlund." width="504" height="944">
+      <img eleventy:formats="webp,png" src="/assets/images/wiki/pwa-home-screen.png" alt="A phone home screen of gray placeholder apps, with the dark tile circular-cropped among them and labeled Johan Edlund." width="504" height="944">
       <figcaption><strong>Home screen</strong> — The maskable icon under Android's circular crop.</figcaption>
     </figure>
   </li>
   <li>
     <figure>
-      <img eleventy:formats="webp,png" src="/assets/images/wiki/pwa-install-prompt.png" alt="An install sheet over a dimmed page, showing the rounded orange tile beside the name Johan Edlund and the address johanedlund.se, with Cancel and Install." width="504" height="944">
+      <img eleventy:formats="webp,png" src="/assets/images/wiki/pwa-install-prompt.png" alt="An install sheet over a dimmed page, showing the rounded dark tile beside the name Johan Edlund and the address johanedlund.se, with Cancel and Install." width="504" height="944">
       <figcaption><strong>Install prompt</strong> — The same tile the user will see on their home screen.</figcaption>
     </figure>
   </li>
   <li>
     <figure>
-      <img eleventy:formats="webp,png" src="/assets/images/wiki/pwa-splash-screen.png" alt="A launch screen: the rounded orange tile centered on an off-white field, the site name beneath it." width="504" height="944">
+      <img eleventy:formats="webp,png" src="/assets/images/wiki/pwa-splash-screen.png" alt="A launch screen: the rounded dark tile, its orange mark in the middle, centered on an off-white field, the site name beneath it." width="504" height="944">
       <figcaption><strong>Splash screen</strong> — The tile reads as a distinct object on the <code>#F4F4F2</code> splash.</figcaption>
     </figure>
   </li>

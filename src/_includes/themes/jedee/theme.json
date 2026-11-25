@@ -2,6 +2,7 @@
   "themeColor": "#495464",
   "themeLight": "#F4F4F2",
   "themeDark": "#495464",
+  "iconGround": "#141619",
   "preloads": [
     {"href": "/assets/fonts/source-serif/source-serif.woff2", "type": "font/woff2"},
     {"href": "/assets/fonts/source-sans/source-sans.woff2", "type": "font/woff2"},
