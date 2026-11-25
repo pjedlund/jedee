@@ -34,7 +34,7 @@ The breadcrumb is jedee's; Eleventy Excellent has none. It replaced the logo in 
 
 ⚠ The `{%-` whitespace trims around each `<li>` in `breadcrumb.njk` look cosmetic but are not. Without them the whitespace text nodes either side of a crumb paint as a stray highlighted block past the link when the trail is drag-selected.
 
-**The logomark.** The home crumb is not an inline SVG but a `<span>` carrying two copies of the gradient logo as background images: the resting one (slate in light, grey in dark) on the span, and the orange one on its `::before`. The orange copy is revealed with the same fill as the map preloader in [[The place map]]: a conic gradient that sweeps clockwise from 30°, with the stem wiped in as the last step. Here that fill is a mask rather than a paint, so each copy keeps its own gradients. One registered custom property, `--breadcrumb-fill`, runs it from 0 to 100. Registering it with `@property` as a `<number>` is what makes it animatable; an unregistered custom property can't be interpolated, so it would jump straight to the end value.
+**The logomark.** The home crumb is not an inline SVG but a `<span>` cut to the logo's shape with a CSS mask, painted with the same fill as the map preloader in [[The place map]]: a conic gradient that sweeps clockwise from 30°, with the stem wiped in as the last step. One registered custom property, `--breadcrumb-fill`, runs that fill from 0 to 100. Registering it with `@property` as a `<number>` is what makes it animatable; an unregistered custom property can't be interpolated, so it would jump straight to the end value.
 
 ```css
 @property --breadcrumb-fill {
@@ -43,20 +43,15 @@ The breadcrumb is jedee's; Eleventy Excellent has none. It replaced the logo in 
   initial-value: 0;
 }
 
-.breadcrumb-mark::before {
-  background: var(--breadcrumb-mark-lit) center / contain no-repeat;
-  mask:
-    linear-gradient(to right, #000 calc(var(--breadcrumb-stem) * 100%), transparent 0) calc(var(--breadcrumb-mark) * 0.5) 0 / 10.3% 31% no-repeat,
-    conic-gradient(from 30deg, #000 calc(var(--breadcrumb-fill) * 1%), transparent 0),
-    linear-gradient(#000 0 0) calc(var(--breadcrumb-mark) * 0.5) 0 / 10.3% 31% no-repeat,
-    linear-gradient(#000 0 0);
-  mask-composite: add, intersect, exclude, add;
+.breadcrumb-mark {
+  background:
+    linear-gradient(to right, var(--breadcrumb-mark-fill) calc(var(--breadcrumb-stem) * 100%), var(--breadcrumb-mark-track) 0) calc(var(--breadcrumb-mark) * 0.5) 0 / 10.3% 31% no-repeat,
+    conic-gradient(from 30deg, var(--breadcrumb-mark-fill) calc(var(--breadcrumb-fill) * 1%), var(--breadcrumb-mark-track) 0);
+  mask: var(--logo-mask) center / contain no-repeat;
 }
 ```
 
-⚠ The four mask layers are there because a mask can't let a top layer hide what is under it, as a background can. Read from the bottom: a full square, minus the stem's box (`exclude`), cut to the sweep (`intersect`), plus the stem's straight wipe (`add`). Without the cut-out the stem would show the sweep's slanted edge.
-
-On inner pages the mark rests in slate or grey and the orange sweeps in on hover or keyboard focus (0.6 s), then back out on leave (0.35 s). On the home page it stays orange, and the same sweep plays once on load, timed to finish just as the name reveal below starts typing. Hovering the home mark lowers the orange to 82% opacity, so the resting logo shows through: deeper in light, lighter in dark. With reduced motion the end state shows at once. Forced-colors mode drops background images, so there the mark is painted solid in `CanvasText` through `--logo-mask`. The gradient logos are data URIs in `breadcrumb.css`, copies of `logo-gradient-*.svg` in the theme folder; the flat outline, `--logo-mask` in `variables.css`, is still what the map preloader and forced colors use.
+On inner pages the mark rests in the trail's grey and the orange sweeps in on hover or keyboard focus (0.6 s), then back out on leave (0.35 s). On the home page it stays orange and the same sweep plays once on load, timed to finish just as the name reveal below starts typing. With reduced motion the end color shows at once. Forced-colors mode drops background gradients, so there the mark is painted solid in `CanvasText`. The logo's shape lives in one place, `--logo-mask` in `variables.css`, which the breadcrumb and the map preloader share.
 
 **The name reveal.** On the home page the site name types itself out beside the logomark and disappears again. That animation is a decorative, `aria-hidden` copy of the name (the real one is a visually hidden label on the home link), loaded as a local stylesheet on the home page only, and switched with `nameReveal` in `settings.yaml`. [[Choreographing CSS animations]] covers how it is sequenced.
 
