@@ -46,11 +46,11 @@ One related trap: a manifest's `background_color` paints the splash screen. An i
 
 ## In jedee
 
-The whole set is generated from one file, `logo-gradient-orange.svg` in the active theme's folder (`src/_includes/themes/jedee/`, named by `pathToFaviconLogo` in `meta.js`), by `src/_config/setup/generate-favicons.js`, run by hand with `npm run favicons`. The outputs are committed to the repo, not built on deploy. [[Open Graph images]] are committed for the same kind of reason — their generator names a font a build server does not have. A passthrough in `eleventy.config.js` copies the folder to the site root; the `<link>` tags are in `src/_includes/head/meta-info.njk` and the manifest is `src/common/site-manifest.njk`.
+The set is generated from two files in the active theme's folder (`src/_includes/themes/jedee/`): the flat `logo.svg` for the tab, and `logo-gradient-orange.svg` (named by `pathToFaviconLogo` in `meta.js`) for the app icons, by `src/_config/setup/generate-favicons.js`, run by hand with `npm run favicons`. The outputs are committed to the repo, not built on deploy. [[Open Graph images]] are committed for the same kind of reason — their generator names a font a build server does not have. A passthrough in `eleventy.config.js` copies the folder to the site root; the `<link>` tags are in `src/_includes/head/meta-info.njk` and the manifest is `src/common/site-manifest.njk`.
 
 The script, the file names, the npm script and the Evil Martians reference are Eleventy Excellent stock. The treatment is not.
 
-**Two treatments, from the rule above.** The tab keeps the bare gradient mark on transparency at 14 of 16 pixels. Every app icon is one object — the same mark on a solid dark ground, the near-black of the logo's dark-mode artboard:
+**Two treatments, from the rule above.** The tab keeps the bare flat mark on transparency at 14 of 16 pixels, because the gradient's two tones blur into one at that size. Every app icon is one object — the gradient mark on a solid dark ground, the near-black of the logo's dark-mode artboard:
 
 ```js
 const TAB_PAD = 1 / 16;   // a 14px mark in a 16px box
@@ -79,7 +79,7 @@ EE's stock script is immune, because it hands over a bare `sharp(svgBuffer)` wit
 Table: The four icon shapes, side by side
 | | File | Treatment |
 | --- | --- | --- |
-| <img src="/favicon.svg" alt="The jedee mark in an orange gradient on transparency, filling almost the whole square." width="72" height="72" eleventy:ignore> | `favicon.svg` | Bare mark, transparent, 14 of 16 pixels |
+| <img src="/favicon.svg" alt="The jedee mark in flat brand orange on transparency, filling almost the whole square." width="72" height="72" eleventy:ignore> | `favicon.svg` | Bare mark, transparent, 14 of 16 pixels |
 | <img src="/icon-512x512.png" alt="The orange gradient mark on a near-black tile with rounded corners." width="72" height="72" eleventy:ignore> | `icon-192x192.png`, `icon-512x512.png` | Opaque tile, corners baked in — nothing masks these |
 | <img src="/apple-touch-icon.png" alt="The same near-black tile with square corners." width="72" height="72" eleventy:ignore> | `apple-touch-icon.png` | Opaque tile, square — iOS adds its squircle |
 | <img src="/maskable-icon.png" alt="The same near-black tile with square corners, full-bleed to the edge." width="72" height="72" eleventy:ignore> | `maskable-icon.png` | Opaque tile, square, full-bleed — the launcher crops it |
