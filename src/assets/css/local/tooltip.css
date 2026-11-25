@@ -7,9 +7,10 @@ Adapted from arielsalminen.com's header tooltip, retokenized and given a focus-v
 [data-tooltip] {
   --tooltip-bg: var(--color-text);
   --tooltip-color: var(--color-bg);
-  --tooltip-offset: var(--space-xs);
   --tooltip-arrow-width: 0.75rem;
   --tooltip-arrow-height: 0.375rem;
+  /* ⚠ Clears the focus ring (3px outline at --focus-offset, global-styles.css) plus the arrow, so the arrow's tip never lands on the ring. */
+  --tooltip-offset: calc(3px + var(--focus-offset, 0.3ch) + var(--space-3xs) + var(--tooltip-arrow-height));
   --tooltip-shadow: var(--box-shadow-popup);
   /* Placement is two nudges the exceptions below rewrite, so an align and a position can be combined on one control. */
   --tooltip-nudge-inline: -50%;
@@ -56,7 +57,8 @@ Adapted from arielsalminen.com's header tooltip, retokenized and given a focus-v
   inline-size: var(--tooltip-arrow-width);
   block-size: var(--tooltip-arrow-reach);
   translate: -50% min(0px, var(--tooltip-offset) - var(--tooltip-arrow-height) + 0.5px);
-  background: linear-gradient(to bottom, transparent var(--tooltip-arrow-base), var(--tooltip-bg) var(--tooltip-arrow-base));
+  /* ⚠ The fill starts 1px below the arrow's base, or the clear band's bottom edge shows as a hairline above the tip. */
+  background: linear-gradient(to bottom, transparent calc(var(--tooltip-arrow-base) + 1px), var(--tooltip-bg) calc(var(--tooltip-arrow-base) + 1px));
   clip-path: polygon(0 0, 100% 0, 100% var(--tooltip-arrow-base), 50% var(--tooltip-arrow-base), 100% 100%, 0 100%, 50% var(--tooltip-arrow-base), 0 var(--tooltip-arrow-base));
   opacity: 0;
   visibility: hidden;

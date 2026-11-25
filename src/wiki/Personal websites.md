@@ -44,7 +44,7 @@ The order of operations, not an abstinence pledge. **P**ublish (on your) **O**wn
 
 Max Böck's [*Make Free Stuff*](https://mxb.dev/blog/make-free-stuff/) is about the culture rather than the plumbing, and it is the piece that names what a reader actually experiences: cookie consent designed to be confusing, an app-install banner, a newsletter modal, a registration wall — a stack of interruptions in which "everything about that interaction is designed to extract value from your visit." His point is that the web's economics do not require this. Copies are free here; artificial scarcity is a choice, and imposing it is a business decision imported from markets where scarcity is real.
 
-His example was Wordle, put online free with no monetization and no strings, and his update a week later is the honest coda: it sold to the New York Times for seven figures on 1 February 2022. The argument survives the coda — the game was free while it mattered, and Wardle chose that — but a page that quotes it without the update is quoting a 2022 essay as though it ended where it stopped.
+His example was Wordle, put online free with no monetization and no strings, and his update a week later is the honest coda: it sold to the New York Times for seven figures on 1 February 2022. The argument survives the coda — the game was free while it mattered, and Josh Wardle, its maker, chose that — but a page that quotes it without the update is quoting a 2022 essay as though it ended where it stopped.
 
 ## In jedee
 
