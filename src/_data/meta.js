@@ -49,8 +49,8 @@ export const creator = {
   mastodon: profiles.mastodon?.url,
   x: profiles.x?.url
 };
-export const pathToSvgLogo = `${themeDir()}/logo.svg`; // the flat mark, for the share cards
-export const pathToFaviconLogo = `${themeDir()}/logo-gradient-orange.svg`; // the gradient mark every favicon is drawn from
+export const pathToSvgLogo = `${themeDir()}/logo.svg`; // the flat mark, for the share cards and the tab favicon
+export const pathToFaviconLogo = `${themeDir()}/logo-gradient-orange.svg`; // the gradient mark the app icons are drawn from
 export const logoMark = logoOutline(loadLogo(), `${themeDir()}/logo.svg`); // the logo's outline, for the generated share cards
 // The active theme's folder name; templates reach its files by "themes/" + meta.theme + "/home.njk".
 export const theme = themeName();
