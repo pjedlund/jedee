@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import sharp from 'sharp';
 import { sharpsToIco } from 'sharp-ico';
-import { pathToSvgLogo, themeLight } from '../../_data/meta.js';
+import { pathToFaviconLogo, iconGround } from '../../_data/meta.js';
 
 const TAB_PAD = 1 / 16; // browser tab: a 14px mark in a 16px box — there's no room to be generous at that size
 const TILE_PAD = 0.222; // app icons: the roomier inset, since the OS frames them anyway
@@ -12,14 +12,8 @@ async function createFavicons() {
   const outputDir = 'src/assets/images/favicon';
   fs.mkdirSync(outputDir, { recursive: true });
 
-  // Get the SVG logo
-  const svgBuffer = fs.readFileSync(pathToSvgLogo);
+  const svgBuffer = fs.readFileSync(pathToFaviconLogo);
   const svgSource = svgBuffer.toString();
-
-  // The mark's own fill is the single source of truth for the brand color — the tiles invert it into their ground. ⚠
-  const markColor = svgSource.match(/<svg[^>]*\sfill="([^"]+)"/)?.[1];
-  if (!markColor) throw new Error(`${pathToSvgLogo}: no fill on the root <svg> — the tile colors are derived from it.`);
-  const knockout = Buffer.from(svgSource.replaceAll(markColor, themeLight));
 
   // Render `source` at `size` with `pad` on every side; opaque `background` for tiles that get cropped or sat on black.
   const padded = (source, size, pad, background = TRANSPARENT) => {
@@ -30,8 +24,8 @@ async function createFavicons() {
     return background === TRANSPARENT ? image : image.flatten({ background });
   };
 
-  // Every app icon is one object: the mark knocked out of a solid brand ground.
-  const tile = (size) => padded(knockout, size, TILE_PAD, markColor);
+  // Every app icon is the gradient mark on the dark ground of the logo's dark-mode artboard.
+  const tile = (size) => padded(svgBuffer, size, TILE_PAD, iconGround);
 
   // Rounded only where nothing else masks it — see the manifest icons below.
   const roundedTile = async (size) => {
@@ -43,7 +37,7 @@ async function createFavicons() {
   // SVG icon: the bare mark, inset via the viewBox since there's nothing to resize. The tab is the one surface that can't take a tile — it sits on chrome we don't control.
   const box = 100 / (1 - TAB_PAD * 2);
   const offset = -(box - 100) / 2;
-  if (!/viewBox="0 0 100 100"/.test(svgSource)) throw new Error(`${pathToSvgLogo}: expected viewBox="0 0 100 100" to pad — check the logo before trusting the favicons.`);
+  if (!/viewBox="0 0 100 100"/.test(svgSource)) throw new Error(`${pathToFaviconLogo}: expected viewBox="0 0 100 100" to pad — check the logo before trusting the favicons.`);
   fs.writeFileSync(`${outputDir}/favicon.svg`, svgSource.replace('viewBox="0 0 100 100"', `viewBox="${offset.toFixed(3)} ${offset.toFixed(3)} ${box.toFixed(3)} ${box.toFixed(3)}"`));
 
   // Manifest icons: shown as-is on the install sheet and the splash, so they carry their own corners.

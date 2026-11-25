@@ -49,14 +49,16 @@ export const creator = {
   mastodon: profiles.mastodon?.url,
   x: profiles.x?.url
 };
-export const pathToSvgLogo = `${themeDir()}/logo.svg`; // used for favicon generation and the share cards
+export const pathToSvgLogo = `${themeDir()}/logo.svg`; // the flat mark, for the share cards
+export const pathToFaviconLogo = `${themeDir()}/logo-gradient-orange.svg`; // the gradient mark every favicon is drawn from
 export const logoMark = logoOutline(loadLogo(), `${themeDir()}/logo.svg`); // the logo's outline, for the generated share cards
 // The active theme's folder name; templates reach its files by "themes/" + meta.theme + "/home.njk".
 export const theme = themeName();
 const themeConfig = loadThemeConfig();
 export const themeColor = themeConfig.themeColor; // the brand tone; manifest theme_color, so it paints the splash and the app-switcher card
-export const themeLight = themeConfig.themeLight; // <meta theme-color> in light mode, the manifest's background_color, and the knockout mark on the app icons
+export const themeLight = themeConfig.themeLight; // <meta theme-color> in light mode, and the manifest's background_color
 export const themeDark = themeConfig.themeDark; // <meta theme-color> in dark mode
+export const iconGround = themeConfig.iconGround; // the app icons' ground, dark so the tile still shows on the light splash
 export const themePreloads = themeConfig.preloads; // font files head/preloads.njk asks for early
 export const themeOg = themeConfig.og; // share cards: colours, font names and files
 export const opengraph_default = '/assets/images/template/opengraph-default.jpg'; // fallback/default meta image
