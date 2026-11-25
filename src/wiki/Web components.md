@@ -24,7 +24,7 @@ Table: Ariel Salminen's three kinds of progressive web component
 | Primitive | renders its HTML, but the base markup for the first state ships with the page | light DOM |
 | Declarative | a hybrid, using Declarative Shadow DOM (`<template shadowrootmode>`) so a shadow root can be in the server's HTML | shadow DOM |
 
-The composite kind is what Jeremy Keith called [HTML web components](https://adactio.com/journal/20618) in 2023: the custom element adds behavior to markup that already works. She presents the three as a design stance rather than a library feature.
+The composite kind is what Jeremy Keith called [HTML web components](https://adactio.com/journal/20618) in 2023: the custom element adds behavior to markup that already works. Ariel presents the three as a design stance rather than a library feature.
 
 Ariel's library, [Elena](https://elenajs.com/), is the worked example: 2.6 kB, no dependencies, at `v1.0.0-rc.7` when the article was published. Its server-rendering rule follows from the two layers. A component with no `render()` method is fully server-renderable, because it *is* its HTML; one with `render()` renders its first state without JavaScript and needs the script for interaction. The article announces a release candidate, so the package list and API may have moved since.
 

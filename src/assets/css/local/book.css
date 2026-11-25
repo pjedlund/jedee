@@ -20,11 +20,14 @@ Markup: partials/book.njk, placed first inside the block of text it floats in â€
   --book-shadow: var(--box-shadow-thumb);
   --book-shadow-back: var(--box-shadow-panel);
   --book-turn: 0deg;
+  /* The pamphlet's cast shadow (shadows.json thumb-cast), as drop-shadows so it follows the turned book's outline; âš  a filter on .book > div would flatten the 3D. */
+  --book-cast: drop-shadow(1px 2px 2px #41495838) drop-shadow(4px 8px 8px #41495838) drop-shadow(8px 16px 16px #41495838);
 
   inline-size: var(--book-width);
   max-inline-size: 100%;
   margin-block-end: var(--space-s-m);
   container-type: inline-size;
+  filter: var(--book-cast);
 }
 
 /* the pamphlet's measures: 2 of the prose grid's 8 columns, one gutter from the text, and only while the text keeps 28rem; below that it stands above the text */
@@ -122,10 +125,12 @@ Markup: partials/book.njk, placed first inside the block of text it floats in â€
   :root:not([data-theme='light']) .book {
     --book-shadow: var(--box-shadow-thumb-dark);
     --book-shadow-back: var(--box-shadow-panel-dark);
+    --book-cast: drop-shadow(0 2px 2px #00000044) drop-shadow(0 8px 8px #00000044) drop-shadow(0 16px 16px #00000044);
   }
 }
 
 :root[data-theme='dark'] .book {
   --book-shadow: var(--box-shadow-thumb-dark);
   --book-shadow-back: var(--box-shadow-panel-dark);
+  --book-cast: drop-shadow(0 2px 2px #00000044) drop-shadow(0 8px 8px #00000044) drop-shadow(0 16px 16px #00000044);
 }

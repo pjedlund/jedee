@@ -341,12 +341,13 @@ colorGroups:
       </li>
     </ul>
   </section>
-  <header class="part | flow region">
-    <p class="part-number">03</p>
-    <h2 id="color" tabindex="-1">Color</h2>
-  </header>
   <div class="full colors | section">
     <section class="section__inner wrapper flow region" aria-labelledby="color">
+      {# The part heading sits inside the band, so the band starts above the number. #}
+      <header class="part | flow">
+        <p class="part-number">03</p>
+        <h2 id="color" tabindex="-1">Color</h2>
+      </header>
       <h3 class="heading-line">Roles</h3>
       <p>Every color has a job before it has a value. The page names the job; the theme picks the value. Values come from <code>semanticColors.json</code>.</p>
       <div class="table-wrapper" role="region" tabindex="0" aria-labelledby="table-roles">

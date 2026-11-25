@@ -23,6 +23,14 @@ audio {
   color-scheme: dark;
 }
 
+/* Firefox draws its player as a see-through dark bar, 40px tall at the foot of the element; this grey under it matches Chrome's dark player, clipped to the bar as a pill. */
+@supports (-moz-appearance: none) {
+  audio {
+    background-color: #ababab;
+    clip-path: inset(calc(100% - 40px) 0 0 round 20px);
+  }
+}
+
 /* Cross-document view transitions: a crossfade between same-origin pages instead of a white flash. ⚠ The only @view-transition opt-in, and it must stay gated: the reset's reduced-motion clamp doesn't reach ::view-transition-* pseudos. */
 @media (prefers-reduced-motion: no-preference) {
   @view-transition {
@@ -58,9 +66,9 @@ body {
 
 /* ⚠ Without round() (Baseline 2024) the registered --line falls to 0px and every prose line collapses, so older browsers get prose without the rhythm. */
 @supports (width: round(1px, 1px)) {
-  /* ⚠ The line is a whole pixel, or a lattice of 1/64px-rounded fractions drifts ~0.05px a block. Fluid from 1.4 at the type scale's 320px end to 1.5 at its 1350px end; ⚠ the middle term is tuned to --size-step-0's ends and needs redoing if they change. Set on body so the page chrome (top bar, site header) sits on the same lattice as the prose, counted from the top of the page. */
+  /* ⚠ The line is a whole pixel, or a lattice of 1/64px-rounded fractions drifts ~0.05px a block. 1.55 at every width. Set on body so the page chrome (top bar, site header) sits on the same lattice as the prose, counted from the top of the page. */
   body {
-    --line: round(clamp(1.4em, 1.3635rem + 1.4951vw, 1.5em), 1px);
+    --line: round(1.55em, 1px);
     --line-quarter: calc(var(--line) / 4);
     --line-half: calc(var(--line) / 2);
     --line-3q: calc(var(--line) * 0.75);

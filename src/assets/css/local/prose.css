@@ -49,6 +49,12 @@
   text-wrap: pretty;
 }
 
+/* The player runs the width of the text, so its timeline is long enough to aim at. */
+.prose audio {
+  inline-size: 100%;
+  max-inline-size: 54ch;
+}
+
 /* Quotes balance, as in global-styles; this outranks the pretty rule above. */
 .prose :is(blockquote, blockquote p) {
   text-wrap: balance;
