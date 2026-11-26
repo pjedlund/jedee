@@ -7,7 +7,7 @@ Append-only. One entry per ingest / query-filed / lint, newest first. Entry form
 
 ## [2026-11-26] enrich | Typographic conventions (semi-bold meta dates, "updated")
 
-[[Typographic conventions]] records the meta line's dates turning semi-bold with no underline, and "edited" becoming "updated" ("uppdaterad" in Swedish) to match the `dt-updated` class.
+[[Typographic conventions]] records the meta line's dates turning semi-bold with no underline, and "edited" becoming "updated" ("uppdaterad" in Swedish) to match the `dt-updated` class. Later the same day: jams joined the types with plain dates, and the page now lists them.
 
 ## [2026-11-22] enrich | Typographic conventions, Icons (meta line linked to GitHub)
 
