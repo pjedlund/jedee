@@ -1,4 +1,4 @@
-{# The meta line's dates, linked to GitHub: "[icon] 6 Sep 2026, edited 2 Nov 2026" — the date opens the file as first written, the edit date its full history. Expects `date`, `revision` (gitRevision with the date, may be null) and `mf2` (true inside an h-entry). #}
+{# The meta line's dates, linked to GitHub: "[icon] 6 Sep 2026, updated 2 Nov 2026" — the date opens the file as first written, the edit date its full history. Expects `date`, `revision` (gitRevision with the date, may be null) and `mf2` (true inside an h-entry). #}
 {%- set showRepo = revision and meta.viewRepo.allow %}
 {%- set linkFirst = showRepo and revision.first %}
 {%- set showEdit = showRepo and (revision.date | formatDate('YYYY-MM-DD')) != (date | formatDate('YYYY-MM-DD')) %}
@@ -13,6 +13,6 @@
     {{ publishedTime | safe }}
   {%- endif -%}
   {%- if showEdit -%}
-    , {{ words.edited }} <a href="{{ settings.repos.site }}/commits/main/{{ revision.path }}"><time{% if mf2 %} class="dt-updated"{% endif %} datetime="{{ revision.date | toIsoString }}">{{ revision.date | formatDate(words.dateMeta) }}</time></a>
+    , {{ words.updated }} <a href="{{ settings.repos.site }}/commits/main/{{ revision.path }}"><time{% if mf2 %} class="dt-updated"{% endif %} datetime="{{ revision.date | toIsoString }}">{{ revision.date | formatDate(words.dateMeta) }}</time></a>
   {%- endif -%}
 </span>
