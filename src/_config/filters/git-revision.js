@@ -2,13 +2,13 @@ import {execFileSync} from 'node:child_process';
 
 const DAY = 86400000;
 
-// One `git log` over the whole repo, read once per process: path → its commits, newest first. ⚠ A dev server keeps this until restart, so a new commit doesn't show until then.
+// One `git log` over the whole repo, read once per process: path → its commits, newest first. ⚠ `core.quotePath=false` keeps names with å/ä/ö readable, or they never match. ⚠ A dev server keeps this until restart, so a new commit doesn't show until then.
 let history = null;
 
 const readHistory = () => {
   const map = new Map();
   try {
-    const out = execFileSync('git', ['log', '--format=>%H%x09%cI', '--name-only', '--no-renames'], {encoding: 'utf8', maxBuffer: 256 * 1024 * 1024});
+    const out = execFileSync('git', ['-c', 'core.quotePath=false', 'log', '--format=>%H%x09%cI', '--name-only', '--no-renames'], {encoding: 'utf8', maxBuffer: 256 * 1024 * 1024});
     let commit = null;
     for (const line of out.split('\n')) {
       if (line.startsWith('>')) {
