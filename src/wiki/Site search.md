@@ -42,7 +42,6 @@ search:
   fields:
     jam: [artist, album, genre, favoriteTrack, similar]
     photo: [photo.caption, photo.film, photo.format]
-    # …one list per type that keeps words in front matter
 ```
 
 `enabled: false` does three things at once and only one of them is written anywhere: the index template's `permalink` returns `false` so no `/search.json` is emitted; one `{% if %}` in `partials/header.njk` skips the partial; and because the partial is what pulls in its CSS and JS through `{% css "local" %}` and `{% js "defer" %}`, skipping it is what actually stops both from shipping. That last point is why the panel is a plain Nunjucks partial rather than a WebC component — the same reason [[The main menu]] is one.
@@ -51,7 +50,7 @@ search:
 
 Activities are the one type where the whole collection is the wrong unit, so `only` narrows them by a front-matter key: 113 of 180 are orienteering, with real event and forest names worth looking up months later, while the rest carry Strava's defaults including 24 posts called "Morning Run". `only` is deliberately a general key/value match rather than an orienteering flag — it is the same few lines either way, and it keeps the answer to "what is searchable?" inside the dial.
 
-`fields` adds a type's front-matter values to `keywords`, because several types keep their most searched words outside the body: a jam's artist, a book's author and translator, a film's director and cast, a photo's film stock, an event's venue, a recording's gear, an orienteering race's club and region. A dotted path reaches into an object (`photo.caption`, `event.location`), and lists and wikilinks are flattened like the body. ⚠ Until 2026-11-26 none of these were indexed: *Kapten Röd* found nothing, because the artist lives only in `artist: "[[Kapten Röd]]"`. A new post type with its own fields needs its list here too.
+`fields` (shortened above; the file has one list per type) adds a type's front-matter values to `keywords`, because several types keep their most searched words outside the body: a jam's artist, a book's author and translator, a film's director and cast, a photo's film stock, an event's venue, a recording's gear, an orienteering race's club and region. A dotted path reaches into an object (`photo.caption`, `event.location`), and lists and wikilinks are flattened like the body. ⚠ Until 2026-11-26 none of these were indexed: *Kapten Röd* found nothing, because the artist lives only in `artist: "[[Kapten Röd]]"`. A new post type with its own fields needs its list here too.
 
 Standalone prose pages are not in any post collection, so they opt in with `tags: ["searchable"]`, which gives a real `collections.searchable` the index can list beside the post types. `searchable` has to join `SYSTEM_TAGS` in `src/_config/collections.js` in the same edit — every other tag on this site is a public page, and without that one word `/tags/searchable/` quietly appears in the tag index.
 
