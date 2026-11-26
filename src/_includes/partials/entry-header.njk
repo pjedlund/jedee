@@ -51,9 +51,10 @@
       <span class="meta-item" data-activity="{{ activityType | slugify }}">{% svg 'posts/' + at.icon, '', 'meta-icon' %}{{ at.label }}</span>
     {%- endif %}
   {%- endif %}
-  {# The dates linked to GitHub, as one unbreakable item (meta-dates.njk, shared with wiki.njk); left off types that are logged rather than revised. #}
-  {%- set unrevisedTypes = ['activity', 'bookmark', 'jam', 'like', 'repost', 'reply', 'rsvp'] %}
-  {%- set revision = page.inputPath | gitRevision(date) if not (category in unrevisedTypes) %}
+  {# The dates linked to GitHub, as one unbreakable item (meta-dates.njk, shared with wiki.njk); types that are logged rather than revised show no update date. #}
+  {%- set loggedTypes = ['activity', 'bookmark', 'jam', 'like', 'repost', 'reply', 'rsvp'] %}
+  {%- set hideUpdate = category in loggedTypes %}
+  {%- set revision = page.inputPath | gitRevision(date) %}
   {% if date %}
     {%- set mf2 = true %}{% include "partials/meta-dates.njk" %}
   {% endif %}
