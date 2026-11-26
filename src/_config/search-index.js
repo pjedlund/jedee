@@ -31,8 +31,19 @@ export const excerpt = (text, limit = 140) => {
 const matchesOnly = (item, rules) =>
   !rules || Object.entries(rules).every(([key, value]) => item.data[key] === value);
 
-// `searchTerms:` in front matter adds words the page doesn't say itself (acronyms, nicknames) to the match text only.
-const toEntry = item => {
+// Every text value at a dotted front-matter path (`photo.caption`), lists and nested objects included.
+export const fieldText = (data, path) => {
+  const collect = value => {
+    if (value == null || value === '') return [];
+    if (Array.isArray(value)) return value.flatMap(collect);
+    if (typeof value === 'object') return value instanceof Date ? [] : Object.values(value).flatMap(collect);
+    return [String(value)];
+  };
+  return collect(path.split('.').reduce((value, key) => value?.[key], data)).join(' ');
+};
+
+// `searchTerms:` in front matter adds words the page doesn't say itself (acronyms, nicknames) to the match text only; `fields` (settings.yaml `search.fields`) adds the type's front-matter fields, such as a jam's artist.
+const toEntry = (item, fields = []) => {
   const {title = '', description = '', tags = [], searchTerms = ''} = item.data;
   const body = item.data.page?.rawInput ?? '';
   const searchableTags = tags.filter(tag => tag !== 'posts' && tag !== 'searchable');
@@ -43,9 +54,9 @@ const toEntry = item => {
     date: item.date ? item.date.getTime() : 0,
     text: excerpt(body),
     ...(searchTerms.length && {terms: [searchTerms].flat().join(' ').toLowerCase()}),
-    keywords: stripMarkdown(`${title} ${description} ${searchableTags.join(' ')} ${[searchTerms].flat().join(' ')} ${body}`).toLowerCase()
+    keywords: stripMarkdown(`${title} ${description} ${searchableTags.join(' ')} ${[searchTerms].flat().join(' ')} ${fields.map(path => fieldText(item.data, path)).join(' ')} ${body}`).toLowerCase()
   };
 };
 
-export const buildIndex = (collections, {types = [], only = {}} = {}) =>
-  types.flatMap(type => (collections[type] || []).filter(item => matchesOnly(item, only[type])).map(toEntry));
+export const buildIndex = (collections, {types = [], only = {}, fields = {}} = {}) =>
+  types.flatMap(type => (collections[type] || []).filter(item => matchesOnly(item, only[type])).map(item => toEntry(item, fields[type])));

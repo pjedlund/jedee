@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-11-26] enrich | Site search (front-matter fields)
+
+[[Site search]] records the new `search.fields` dial: per-type front-matter fields (a jam's artist, a book's author, a film's cast, a photo's film stock, an event's venue) now join `keywords`, after *Kapten Röd* found nothing.
+
 ## [2026-11-26] enrich | Typographic conventions (semi-bold meta dates, "updated")
 
 [[Typographic conventions]] records the meta line's dates turning semi-bold with no underline, and "edited" becoming "updated" ("uppdaterad" in Swedish) to match the `dt-updated` class. Later the same day: jams stopped showing an update date; then every type got its date linked again (imported posts open their history), and file names with å, ä or ö got their links back after a git quoting fix.
