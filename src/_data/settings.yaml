@@ -93,3 +93,34 @@ search:
   only:
     activity:
       activityType: orienteering
+  fields:
+    jam:
+      - artist
+      - album
+      - genre
+      - favoriteTrack
+      - similar
+    reading:
+      - subtitle
+      - author
+      - translator
+      - publisher
+      - genre
+    watching:
+      - director
+      - cast
+      - genre
+    photo:
+      - photo.caption
+      - photo.film
+      - photo.format
+    event:
+      - event.location
+    audio:
+      - place
+      - region
+      - recorder
+      - mic
+    activity:
+      - organiser
+      - region

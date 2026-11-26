@@ -146,3 +146,19 @@ test('buildIndex: searchTerms (string or list) are matched but not shown', () =>
   assert.equal(b.terms, 'a11y wcag')
   assert.equal(buildIndex({ searchable: [item({ title: 'Y' }, 'Body')] }, { types: ['searchable'], only: {} })[0].terms, undefined)
 })
+
+test('buildIndex: `fields` adds front-matter values, wikilinks, lists and nested paths included', () => {
+  const jam = item({ title: 'Röd Jord', category: 'jam', artist: '[[Kapten Röd]]', genre: ['[[reggae]]'] }, 'Body')
+  const photo = item({ title: 'Pier', category: 'photo', photo: { caption: 'Harbour pier at dusk', film: 'Kodak Ektar 100' } }, 'Body')
+  const [j, p] = buildIndex({ jam: [jam], photo: [photo] }, { types: ['jam', 'photo'], fields: { jam: ['artist', 'genre', 'missing'], photo: ['photo.caption', 'photo.film'] } })
+  assert.match(j.keywords, /kapten röd/)
+  assert.match(j.keywords, /reggae/)
+  assert.match(p.keywords, /harbour pier at dusk/)
+  assert.match(p.keywords, /kodak ektar/)
+  assert.equal(j.text, 'Body')
+})
+
+test('buildIndex: a type without `fields` is indexed as before', () => {
+  const [entry] = buildIndex({ note: [item({ title: 'N', category: 'note', artist: 'Hidden' }, 'Body')] }, { types: ['note'], fields: { jam: ['artist'] } })
+  assert.doesNotMatch(entry.keywords, /hidden/)
+})
