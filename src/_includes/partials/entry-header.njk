@@ -52,7 +52,7 @@
     {%- endif %}
   {%- endif %}
   {# The dates linked to GitHub, as one unbreakable item (meta-dates.njk, shared with wiki.njk); left off types that are logged rather than revised. #}
-  {%- set unrevisedTypes = ['activity', 'bookmark', 'like', 'repost', 'reply', 'rsvp'] %}
+  {%- set unrevisedTypes = ['activity', 'bookmark', 'jam', 'like', 'repost', 'reply', 'rsvp'] %}
   {%- set revision = page.inputPath | gitRevision(date) if not (category in unrevisedTypes) %}
   {% if date %}
     {%- set mf2 = true %}{% include "partials/meta-dates.njk" %}
