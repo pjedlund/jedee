@@ -29,7 +29,7 @@ export const cleanXmp = xmp =>
     .replace(/<(exif:GPS\w+|Iptc4xmpCore:CreatorContactInfo)\b[^>]*>[\s\S]*?<\/\1>/g, '')
     .replace(/\s(exif:GPS\w+|Iptc4xmpCore:Ci\w+)="[^"]*"/g, '');
 
-// Originals keep the colour profile and their XMP (licence, title, caption); never EXIF, so camera GPS and the embedded preview stay out. ⚠ Only for files that are yours to publish: activity map scans carry GPS.
+// Originals keep the color profile and their XMP (licence, title, caption); never EXIF, so camera GPS and the embedded preview stay out. ⚠ Only for files that are yours to publish: activity map scans carry GPS.
 export const keepOriginalMetadata = async sharp => {
   sharp.keepIccProfile();
   const {xmp} = await sharp.metadata();

@@ -72,6 +72,6 @@ Raw source: `src/_raw/dev-notes/How the photo originals are hosted.md`
 
 ### Metadata inside the files
 
-The page's photo strip and archive card use `{% imageKeys %}` with `keepMetadata: true`, so the resized files carry the original's XMP (title, caption, licence) and colour profile, and nothing else. EXIF is never kept, which keeps camera GPS and the old embedded preview out; the XMP is filtered too, dropping any `exif:GPS…` value and the IPTC creator contact block (address, phone, email). Activity map scans use the same shortcode without the switch, because their GPS points to where the maps were photographed.
+The page's photo strip and archive card use `{% imageKeys %}` with `keepMetadata: true`, so the resized files carry the original's XMP (title, caption, licence) and color profile, and nothing else. EXIF is never kept, which keeps camera GPS and the old embedded preview out; the XMP is filtered too, dropping any `exif:GPS…` value and the IPTC creator contact block (address, phone, email). Activity map scans use the same shortcode without the switch, because their GPS points to where the maps were photographed.
 
 The R2 downloads are another matter: the build never touches them, so they publish exactly what the export wrote. An export preset can add the creator contact block (address, phone, email) without anyone noticing. Check a file with `exiftool -XMP:all -IPTC:all -GPS:all` before uploading, and remember that `bytes:` changes whenever metadata is edited.

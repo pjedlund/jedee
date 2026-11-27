@@ -74,7 +74,7 @@ The second refusal (25 May 2026) has a reason worth keeping: **the Obsidian Web 
 
 ### Covers keep no metadata
 
-The image transform has no `transform` callback, so every cover comes out stripped of EXIF, IPTC and XMP; sharp still keeps the colour profile. Covers from the web carried other people's data: one Apple Music cover a 3 KB display profile, others an identifier in their EXIF `UserComment`. Johan's originals keep theirs through the image shortcode instead, see [[Hosting large originals off-repo]]. ⚠ eleventy-img leaves `transform` out of the hash in a file name and skips any output that already exists, so changing it rewrites nothing until `dist/assets/images` is emptied, on Netlify with "Clear cache and deploy site".
+The image transform has no `transform` callback, so every cover comes out stripped of EXIF, IPTC and XMP; sharp still keeps the color profile. Covers from the web carried other people's data: one Apple Music cover a 3 KB display profile, others an identifier in their EXIF `UserComment`. Johan's originals keep theirs through the image shortcode instead, see [[Hosting large originals off-repo]]. ⚠ eleventy-img leaves `transform` out of the hash in a file name and skips any output that already exists, so changing it rewrites nothing until `dist/assets/images` is emptied, on Netlify with "Clear cache and deploy site".
 
 No explicit cache duration is set on the image transform, so eleventy-fetch's default applies. Setting one would buy resilience against re-fetching and link-rot; it's a deferred nicety, not a gap.
 

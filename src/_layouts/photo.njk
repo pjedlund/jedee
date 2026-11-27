@@ -7,7 +7,7 @@ schema: BlogPosting
   <article class="wrapper flow prose h-entry">
     {% include 'partials/entry-header.njk' %}
 
-    {# The photo IS the content, so u-photo goes on the visible <img> — set via the shortcode's imageClass. photo.src is a LOCAL asset, so {% imageKeys %} is correct here, and keepMetadata carries the licence in the file's XMP; the remote-cover plain-<img> pattern (reading/watching/jam) does not apply. #}
+    {# The photo is the content, so u-photo goes on the visible <img> via the shortcode's imageClass; keepMetadata carries the licence in the file's XMP. #}
     {# No figcaption here: the photo IS the content and the body paragraph below describes it. The <photo-lightbox> component still supports an optional @caption (outside the link) for reuse on other pages. The photo breaks out wider than the prose column via .feature; widths + sizes are explicit so retina screens get the 2000w candidate at that wider width. #}
     {% if photo.src %}
       {# The full-size raster is the first download entry (carries width/height). #}
