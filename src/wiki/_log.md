@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-11-27] enrich | Self-hosting remote images at build time, Netlify (covers in one folder)
+
+[[Self-hosting remote images at build time]] records `eleventy:output` sending every cover to `/assets/images/covers/` instead of beside each page; [[Netlify]] adds that folder to the year-long immutable cache.
+
 ## [2026-11-27] enrich | Typographic conventions, Site search (GitHub icon, iPad taps)
 
 [[Typographic conventions]] records the GitHub icon lighting up with either meta date, and imported posts' dates opening the file rather than its history. [[Site search]] records why taps on results did nothing in the Home Screen app on an iPad: pull to refresh moved the page above the panel on every tap.

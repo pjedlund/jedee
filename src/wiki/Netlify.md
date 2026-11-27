@@ -20,7 +20,7 @@ Two properties of this model shape everything else. The build machine starts cle
 | Path | Cache-Control | Why |
 |---|---|---|
 | `*.woff2` | a year, revalidate | fonts rarely change |
-| `/img/*`, `/bundle/*` | a year, immutable | filenames change with their content |
+| `/img/*`, `/assets/images/covers/*`, `/bundle/*` | a year, immutable | filenames change with their content |
 | `/assets/scripts/components/*.js` | `max-age=0`, revalidate | stable filenames, so a long cache would keep an old copy |
 
 ⚠ The component scripts are the trap: they are built to unhashed filenames, so a long cache leaves returning visitors on an outdated script after a change, with nothing failing. If they ever get hashed filenames, the year-long cache can come back.
