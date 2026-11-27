@@ -133,6 +133,8 @@ The search panel and the mega-menu both anchor to the header row (`.repel.ontop`
 
 `search.css` redeclares the panel surface rather than reading the nav's `--megamenu-surface`, because that property is declared on `.mainnav` — which does not exist at all in a production build while the soft-launch dial hides the nav. An inherited custom property that is only sometimes in scope is the failure in [[Undefined custom properties]].
 
+⚠ The panel only stays on top while nothing between it and the page makes a new layer. In the Home Screen app on an iPad, taps on results did nothing until 2026-11-27: pull to refresh (`pull-to-refresh.js`) set `data-pull` at the end of every tap at the top of the page, and its `translate` on each child of `body` gave `<main>` a layer of its own, later in the page than the header and so painted above the panel, at the moment the tap landed. A tap that never travels more than 10px is now ignored by it ([[Progressive web apps]] has the rest of the installed app).
+
 The panel also had no `font-size` at first, so it inherited the header's ~26px and every `em`-sized icon scaled off that: the magnifier rendered at 34px beside the theme toggle's 21px. The result rows now sit on `--size-step-min-1`, and since 2026-11-09 their icons are `1.35em` of that, the same as the open mega-menu's (`main-nav.css`). The field is laid out like a row — the same inline padding, the same icon box with the smaller magnifier centred in it, the same gap — so the magnifier sits over the type icons and the typed text starts where the titles do.
 
 ### Contrast on a lifted panel

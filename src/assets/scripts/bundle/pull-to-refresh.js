@@ -6,6 +6,7 @@ if (standalone) {
   const ios = /iphone|ipad|ipod/i.test(navigator.userAgent) || (/Mac/.test(navigator.userAgent) && navigator.maxTouchPoints > 1); // iPads say Mac
   const TRIGGER = 64; // px the page (iPhone) or the disc (Android) must travel to refresh
   const REST = 56; // px it rests at while refreshing
+  const SLOP = 10; // px a finger may wobble in a tap before it counts as a pull
   let pullStart = null;
   let pulled = 0;
   let fired = false; // this pull has started a refresh
@@ -30,7 +31,7 @@ if (standalone) {
   // iPhone: the page stretches like a rubber band; Android: the disc follows the finger at half speed.
   const travel = (d) => (ios ? (1 - 1 / ((d * 0.55) / innerHeight + 1)) * innerHeight : Math.min(d * 0.5, TRIGGER * 2));
   const move = (e) => {
-    const d = e.touches[0].clientY - pullStart;
+    const d = e.touches[0].clientY - pullStart - SLOP;
     if (d <= 0 && !('pull' in root.dataset)) return;
     setPull(Math.max(0, travel(d)), 'drag');
     if (ios && !fired && pulled >= TRIGGER) pullRefresh(); // iPhone starts as soon as the line is crossed
@@ -38,6 +39,7 @@ if (standalone) {
   const end = (e) => {
     for (const t of ['touchmove', 'touchend', 'touchcancel']) e.currentTarget.removeEventListener(t, t === 'touchmove' ? move : end);
     pullStart = null;
+    if (!('pull' in root.dataset)) return; // ⚠ a plain tap: data-pull would put body's children on separate layers, and the page would cover the open search panel as the click lands
     if (!fired && pulled >= TRIGGER) pullRefresh(); // Android starts on release
     if ('spin' in root.dataset) setPull(REST, 'settle');
     else letGo();
