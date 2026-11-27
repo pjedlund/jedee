@@ -5,6 +5,10 @@ date: 2026-07-31
 
 Append-only. One entry per ingest / query-filed / lint, newest first. Entry format: `## [YYYY-MM-DD] ingest | Title` so `grep "^## \[" _log.md | head -5` lists the latest five.
 
+## [2026-11-27] enrich | Typographic conventions (dateLinks switch)
+
+[[Typographic conventions]] records the dates' GitHub links getting a switch of their own, `dateLinks`, separate from `viewRepo`.
+
 ## [2026-11-27] enrich | Self-hosting remote images at build time, Netlify (covers in one folder)
 
 [[Self-hosting remote images at build time]] records `eleventy:output` sending every cover to `/assets/images/covers/` instead of beside each page; [[Netlify]] adds that folder to the year-long immutable cache.

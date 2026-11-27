@@ -39,8 +39,9 @@ const MARKERS = {
 // Markers that need no posts to show up. The menu needs posts and hideNav off, so it has a case of its own.
 const PAGE = 'privacy/index.html'
 
+// ⚠ dateLinks has no marker: the throwaway copy has no git history, so its dates never get links either way.
 test('every switch has a marker here', () => {
-  assert.deepEqual(Object.keys(MARKERS).sort(), SWITCHES.filter(name => name !== 'mainNav').sort())
+  assert.deepEqual(Object.keys(MARKERS).sort(), SWITCHES.filter(name => name !== 'mainNav' && name !== 'dateLinks').sort())
 })
 
 test('resolveSwitches: every switch is on unless settings say false', () => {

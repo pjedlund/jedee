@@ -162,7 +162,7 @@ export const tests = {
   }
 };
 export const viewRepo = {
-  // this is for the view/edit on github link. The value in the package.json will be pulled in.
+  // The "view on GitHub" line under a post; the dates' GitHub links have their own switch, dateLinks.
   allow: flags.viewRepo,
   infoText: words.viewOnGithub,
   issuesPage: words.reportAccessibility

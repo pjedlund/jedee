@@ -1,5 +1,5 @@
 {# The meta line's dates, linked to GitHub: "[icon] 6 Sep 2026, updated 2 Nov 2026" — the date opens the file as first written (an imported post, with no such version, opens the file as it is now), the update date its full history. Expects `date`, `revision` (gitRevision with the date, may be null), `mf2` (true inside an h-entry) and optionally `hideUpdate`. #}
-{%- set showRepo = revision and meta.viewRepo.allow %}
+{%- set showRepo = revision and meta.switches.dateLinks %}
 {%- set showEdit = showRepo and not hideUpdate and (revision.date | formatDate('YYYY-MM-DD')) != (date | formatDate('YYYY-MM-DD')) %}
 <span class="meta-item">
   {%- if showRepo -%}

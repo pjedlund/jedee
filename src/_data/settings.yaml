@@ -52,6 +52,7 @@ switches:
   eastereggKeyword: jesus
   eastereggShape: ❤️
   viewRepo: false
+  dateLinks: true
   header: true
   mainNav: true
   themeToggle: true

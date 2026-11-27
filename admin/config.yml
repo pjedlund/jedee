@@ -288,7 +288,8 @@ singletons:
           - { name: eastereggKeyword, label: Easter egg trigger word, widget: string, required: false, hint: 'Letters and spaces; case does not matter. Empty = "eleventy" and "excellent"' }
           # Any single emoji works as a shape; add one here to offer it.
           - { name: eastereggShape, label: Easter egg shape, widget: select, required: false, hint: 'Empty = star', options: [{ label: '⭐️ Star', value: '⭐️' }, { label: '🎉 Party popper', value: '🎉' }, { label: '❤️ Heart', value: '❤️' }, { label: '✝️ Cross', value: '✝️' }, { label: '🎵 Note', value: '🎵' }, { label: '🌍 Globe', value: '🌍' }, { label: '☀️ Sun', value: '☀️' }] }
-          - { name: viewRepo, label: View on GitHub link, widget: boolean }
+          - { name: viewRepo, label: View on GitHub link, widget: boolean, hint: 'The line under a post that opens its file on GitHub' }
+          - { name: dateLinks, label: GitHub links on dates, widget: boolean, hint: 'The dates under a title open the file and its changes on GitHub, behind the GitHub icon' }
           - { name: header, label: Header, widget: boolean, hint: 'Off: no header at all, and no skip link, so the site supplies its own' }
           - { name: mainNav, label: Main menu, widget: boolean, hint: 'Off: no menu in the header' }
           - { name: themeToggle, label: Light and dark button, widget: boolean, hint: 'Off: no button in the header; the page follows the light or dark setting of the device' }
