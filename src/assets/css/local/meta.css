@@ -60,6 +60,18 @@ The dim date line under a post or wiki title, its dates linked to GitHub (partia
   margin-inline-end: calc(0.35em - 1px);
 }
 
+/* The GitHub icon lights up with either date link beside it. ⚠ drop-shadow(none) is invalid, so light mode's `none` glow simply leaves the filter off. */
+.meta-item:has(a:hover, a:focus-visible) > .meta-icon {
+  color: var(--meta-color-lit);
+  filter: drop-shadow(var(--meta-glow-lit));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .meta-item > .meta-icon {
+    transition: color var(--meta-fade) ease-out, filter var(--meta-fade) ease-out;
+  }
+}
+
 /* Activity pages: the type's icon in its map color (activity-colors.css). */
 [data-activity] > .meta-icon {
   color: var(--activity-color);
