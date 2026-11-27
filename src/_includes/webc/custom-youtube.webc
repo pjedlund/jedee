@@ -1,6 +1,7 @@
 <!-- component composition by: https://github.com/zachleat/zachleat.com -->
 
 <script webc:setup>
+  // ⚠ lite-yt-embed.css loads with the page, outside the island <template>: loaded beside the script it can arrive late and the play button jumps (layout shift on /now/).
   function getPosterImage(slug) {
     // Safety net only: embeds pass a self-hosted poster via @poster (the `youtubePoster` filter), so a page normally makes no request to Google.
     return `https://i.ytimg.com/vi/${slug}/maxresdefault.jpg`;
@@ -108,8 +109,8 @@
       :style="`--yt-poster-img-url-lazy: url('${poster || getPosterImage(slug)}'); background-image: var(--yt-poster-img-url, linear-gradient(transparent, transparent));`"
     ></lite-youtube>
 
+    <link rel="stylesheet" href="/assets/components/lite-yt-embed.css" webc:keep />
     <template data-island="once" webc:raw>
-      <link rel="stylesheet" href="/assets/components/lite-yt-embed.css" />
       <script type="module" src="/assets/components/lite-yt-embed.js"></script>
     </template>
   </is-land>

@@ -138,6 +138,7 @@ export default async function(eleventyConfig) {
       sharp.keepMetadata();
     },
     formats: ['webp', 'jpeg'],
+    sharpWebpOptions: { quality: 75 },
     widths: ['auto'],
     htmlOptions: {
       imgAttributes: {

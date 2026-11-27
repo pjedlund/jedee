@@ -41,6 +41,7 @@ The `eleventy:` prefix is the transform's per-image escape hatch generally, not 
 ```js
 eleventyConfig.addPlugin(plugins.eleventyImageTransformPlugin, {
   formats: ['webp', 'jpeg'],
+  sharpWebpOptions: { quality: 75 },
   widths: ['auto'],
   // …
 });
@@ -85,8 +86,8 @@ const sizes = ['maxresdefault', 'sddefault', 'hqdefault'];
 export const youtubePoster = async slug => {
   for (const size of sizes) {
     try {
-      const metadata = await Image(`https://i.ytimg.com/vi/${slug}/${size}.jpg`, {widths: ['auto'], formats: ['jpeg'], /* … */});
-      return metadata.jpeg.at(-1).url;
+      const metadata = await Image(`https://i.ytimg.com/vi/${slug}/${size}.jpg`, {widths: ['auto'], formats: ['webp'], /* … */});
+      return metadata.webp.at(-1).url;
     } catch {}
   }
   return `https://i.ytimg.com/vi/${slug}/hqdefault.jpg`;
