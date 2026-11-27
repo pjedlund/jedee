@@ -1,7 +1,7 @@
 ---
 description: "Why hotlinking a third-party image costs privacy, reliability and control, and how jedee fetches and self-hosts every remote cover at build time."
 date: 2026-07-31
-updated: 2026-11-09
+updated: 2026-11-27
 ---
 
 Pointing an `<img>` at a file on someone else's server — hotlinking — is the path of least resistance whenever the content came from elsewhere: an album cover, a book jacket, a film poster, a video thumbnail. It costs nothing to write and has four distinct problems.
@@ -55,6 +55,8 @@ The activities feed is the worked example. An activity's race map is a photograp
 ```
 
 Capping there changed the feed's 22 covers from ~2 MB each to a 9.3 MB total, and changed the page not at all — the page renders the same file through `{% imageKeys %}` in `activity.njk`, which asks for `[224, 448, 900, null]` so [[The PhotoSwipe lightbox]] still gets the full scan. **Two routes over one source file can want different sizes**, and each states what it wants. eleventy-img never upscales, so a cap is a ceiling and not a resize — smaller maps stay at their width.
+
+**Where the files land: `eleventy:output`.** The transform counts a remote URL as a relative path, so without it every cover is written beside the page that shows it: a post's cover into its folder, and every card's cover loose in the listing's folder (`dist/jams/` held 312 images). Since 2026-11-27 each cover `<img>`, on the eight card partials and post layouts, carries `eleventy:output="/assets/images/covers/"`, so all covers share one folder, next to the lightbox's full-size copies. The folder also rides along in Netlify's build cache (`dist/assets/images`) and gets the year-long immutable header, since its file names change with their content ([[Netlify]]). ⚠ A new cover `<img>` without the attribute puts its files back beside its page.
 
 ### Bundling was considered and declined — twice
 

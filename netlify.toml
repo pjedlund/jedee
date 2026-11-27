@@ -19,9 +19,14 @@ for = "*.woff2"
 [headers.values]
   Cache-Control = "max-age=31536000,public,must-revalidate"
 
-# /img/ (eleventy-img transform) and /bundle/ filenames change with their content, so a year-long immutable cache is safe here — unlike /assets/images/, whose names don't.
+# /img/ (eleventy-img transform) and /bundle/ filenames change with their content, so a year-long immutable cache is safe here — unlike the rest of /assets/images/, whose names don't; covers/ is eleventy-img output too.
 [[headers]]
 for = "/img/*"
+[headers.values]
+  Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+for = "/assets/images/covers/*"
 [headers.values]
   Cache-Control = "public, max-age=31536000, immutable"
 

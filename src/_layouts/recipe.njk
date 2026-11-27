@@ -11,7 +11,7 @@ schema: BlogPosting
 
     {# Dish photo is cover-style: a remote URL (clipped) or a local passthrough path. A plain <img> lets eleventy-img's HTML Transform handle either — the {% image %} shortcode is local-only and breaks on a remote URL. `default` substitutes only on UNDEFINED, so `coverAlt: ""` is honoured as empty. #}
     {% if cover %}
-      <img class="cover" eleventy:optional="placeholder" src="{{ cover | safe }}" alt="{{ coverAlt | default(title) }}" loading="lazy" eleventy:widths="320,640,960" sizes="auto">
+      <img class="cover" eleventy:optional="placeholder" eleventy:output="/assets/images/covers/" src="{{ cover | safe }}" alt="{{ coverAlt | default(title) }}" loading="lazy" eleventy:widths="320,640,960" sizes="auto">
     {% endif %}
 
     {% if yield or totalTime %}
