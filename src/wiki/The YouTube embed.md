@@ -30,8 +30,8 @@ const sizes = ['maxresdefault', 'sddefault', 'hqdefault'];
 export const youtubePoster = async slug => {
   for (const size of sizes) {
     try {
-      const metadata = await Image(`https://i.ytimg.com/vi/${slug}/${size}.jpg`, {widths: ['auto'], formats: ['jpeg'], /* … */});
-      return metadata.jpeg.at(-1).url;
+      const metadata = await Image(`https://i.ytimg.com/vi/${slug}/${size}.jpg`, {widths: ['auto'], formats: ['webp'], /* … */});
+      return metadata.webp.at(-1).url;
     } catch {}
   }
   return `https://i.ytimg.com/vi/${slug}/hqdefault.jpg`;
@@ -63,7 +63,7 @@ is-land[ready] lite-youtube { animation: yt-poster-fade var(--yt-poster-fade, 35
 
 ### Reserving the space before hydration
 
-The placeholder above is also what holds the player's space, so **where its CSS lives decides whether the page jumps**. Written inside the island's `<template data-island>` — the natural place, since that's where the lite-youtube stylesheet and script go — it only lands when the island hydrates. Until then the wrapper has no `aspect-ratio` and is zero pixels high, and everything below it is shoved down the moment hydration runs. The box rules therefore live in the component's `<style>`, outside the template, and only the lite-youtube stylesheet and script stay inside it. Measured after the move: CLS 0, and the un-hydrated wrapper already reports 1024×576.
+The placeholder above is also what holds the player's space, so **where its CSS lives decides whether the page jumps**. Written inside the island's `<template data-island>` — the natural place, since that's where the lite-youtube stylesheet and script go — it only lands when the island hydrates. Until then the wrapper has no `aspect-ratio` and is zero pixels high, and everything below it is shoved down the moment hydration runs. The box rules therefore live in the component's `<style>`, outside the template. Measured after the move: CLS 0, and the un-hydrated wrapper already reports 1024×576. The lite-youtube stylesheet moved out too, on 2026-11-27: loaded beside the script, it sometimes arrived after the script had added the play button, which then jumped into place (CLS 0.16 on /now/ in 2 of 3 Lighthouse runs). Only the script stays in the template.
 
 The no-JS hide moved for the same reason. `is-land:not(:defined) { display: none }` hides the box for exactly the window the reservation is meant to cover — the element is undefined until the island runtime defines it — so the hide is now a `<noscript>` rule instead, which only applies when scripting is genuinely off. The YouTube link under the player is the no-JS path either way.
 

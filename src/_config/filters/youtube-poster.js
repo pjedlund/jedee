@@ -10,12 +10,12 @@ export const youtubePoster = async slug => {
     try {
       const metadata = await Image(`https://i.ytimg.com/vi/${slug}/${size}.jpg`, {
         widths: ['auto'],
-        formats: ['jpeg'],
+        formats: ['webp'],
         urlPath: '/assets/images/youtube/',
         outputDir: './dist/assets/images/youtube/',
         filenameFormat: (id, src, width, format) => `${slug}-${width}w.${format}`
       });
-      return metadata.jpeg.at(-1).url;
+      return metadata.webp.at(-1).url;
     } catch {}
   }
   // Every size failed at build (network, YouTube hiccup) → degrade to the remote thumbnail rather than break the build.
