@@ -22,6 +22,20 @@ const stringifyAttributes = attributeMap => {
     .join(' ');
 };
 
+// Drops the XMP parts that locate a person: GPS (element or attribute form) and the IPTC creator contact block (address, phone, email).
+export const cleanXmp = xmp =>
+  xmp
+    .replace(/<(exif:GPS\w+|Iptc4xmpCore:CreatorContactInfo)\b[^>]*\/>/g, '')
+    .replace(/<(exif:GPS\w+|Iptc4xmpCore:CreatorContactInfo)\b[^>]*>[\s\S]*?<\/\1>/g, '')
+    .replace(/\s(exif:GPS\w+|Iptc4xmpCore:Ci\w+)="[^"]*"/g, '');
+
+// Originals keep the colour profile and their XMP (licence, title, caption); never EXIF, so camera GPS and the embedded preview stay out. ⚠ Only for files that are yours to publish: activity map scans carry GPS.
+export const keepOriginalMetadata = async sharp => {
+  sharp.keepIccProfile();
+  const {xmp} = await sharp.metadata();
+  if (xmp) sharp.withXmp(cleanXmp(xmp.toString('utf8')));
+};
+
 const errorSrcRequired = shortcodeName => {
   throw new Error(`src parameter is required for {% ${shortcodeName} %} shortcode`);
 };
@@ -38,7 +52,8 @@ const processImage = async options => {
     widths,
     sizes,
     formats = ['avif', 'webp', 'jpeg'],
-    lightbox = false
+    lightbox = false,
+    keepMetadata = false
   } = options;
 
   // Positional callers pass null to skip an argument ("add null to skip"), which bypasses the destructuring default — normalize it here.
@@ -62,6 +77,7 @@ const processImage = async options => {
   const metadata = await Image(src, {
     widths: [...widths],
     formats: [...formats],
+    ...(keepMetadata && {transform: keepOriginalMetadata}),
     urlPath: '/assets/images/',
     outputDir: './dist/assets/images/',
     filenameFormat: (id, src, width, format, options) => {

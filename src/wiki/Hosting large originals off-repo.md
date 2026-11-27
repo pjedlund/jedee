@@ -1,7 +1,7 @@
 ---
 description: "Why write-once binaries do not belong in git, and how jedee serves multi-megabyte photo originals from a Cloudflare R2 bucket the build never touches."
 date: 2026-07-31
-updated: 2026-10-27
+updated: 2026-11-27
 ---
 
 Git stores every version of every file forever. That is exactly the behavior you want for text and exactly the one you don't want for large binaries: a 150 MB scan committed once is 150 MB in the repository permanently, and replacing it adds another 150 MB rather than a diff. Everyone who clones pays for all of it, and the repository stops being cheap to copy — which is most of what makes git pleasant to use.
@@ -69,3 +69,9 @@ This replaced an earlier Bunny.net setup — storage zone, CDN, separate subdoma
 **The build never touches these files:** no fetch, no processing, no size checks. The repo stores two URLs and a byte count, and the page trusts them. That trust is the price of keeping 157 MB per photograph out of git, and the `bytes` discipline above is what keeps it honest.
 
 Raw source: `src/_raw/dev-notes/How the photo originals are hosted.md`
+
+### Metadata inside the files
+
+The page's photo strip and archive card use `{% imageKeys %}` with `keepMetadata: true`, so the resized files carry the original's XMP (title, caption, licence) and colour profile, and nothing else. EXIF is never kept, which keeps camera GPS and the old embedded preview out; the XMP is filtered too, dropping any `exif:GPS…` value and the IPTC creator contact block (address, phone, email). Activity map scans use the same shortcode without the switch, because their GPS points to where the maps were photographed.
+
+The R2 downloads are another matter: the build never touches them, so they publish exactly what the export wrote. An export preset can add the creator contact block (address, phone, email) without anyone noticing. Check a file with `exiftool -XMP:all -IPTC:all -GPS:all` before uploading, and remember that `bytes:` changes whenever metadata is edited.

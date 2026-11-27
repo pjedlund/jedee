@@ -133,10 +133,8 @@ export default async function(eleventyConfig) {
     transformData: {words: loadWords()}
   });
 
+  // No `transform`: images from the web (covers, Markdown images) are stripped of metadata; originals opt in via the image shortcode's `keepMetadata`.
   eleventyConfig.addPlugin(plugins.eleventyImageTransformPlugin, {
-    transform: (sharp) => {
-      sharp.keepMetadata();
-    },
     formats: ['webp', 'jpeg'],
     sharpWebpOptions: { quality: 75 },
     widths: ['auto'],
