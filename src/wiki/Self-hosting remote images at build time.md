@@ -72,6 +72,10 @@ The second refusal (25 May 2026) has a reason worth keeping: **the Obsidian Web 
 - **The cover's microformats class is type-specific, and usually absent.** On reading, watching and jam the cover is decorative — the mf2 target lives in a separate hidden `<data class="u-read-of">` and friends. On photo and recipe the image *is* the subject, so it carries `u-photo`. Copying a cover block between types and bringing the class along is a data error, not a cosmetic one — see [[Microformats]].
 - **A placeholder is invisible on a detail page.** `eleventy:optional` produces an image with no intrinsic width or height, so a dead cover leaves no box at all. Cards escape this because `custom-card[data-poster] img` sets an `aspect-ratio`; the detail page would need a `min-block-size` to reserve space.
 
+### Covers keep no metadata
+
+The image transform has no `transform` callback, so every cover comes out stripped of EXIF, IPTC and XMP; sharp still keeps the colour profile. Covers from the web carried other people's data: one Apple Music cover a 3 KB display profile, others an identifier in their EXIF `UserComment`. Johan's originals keep theirs through the image shortcode instead, see [[Hosting large originals off-repo]]. ⚠ eleventy-img leaves `transform` out of the hash in a file name and skips any output that already exists, so changing it rewrites nothing until `dist/assets/images` is emptied, on Netlify with "Clear cache and deploy site".
+
 No explicit cache duration is set on the image transform, so eleventy-fetch's default applies. Setting one would buy resilience against re-fetching and link-rot; it's a deferred nicety, not a gap.
 
 ### When it can't be a plain `<img>`: use a filter
