@@ -30,13 +30,13 @@ profiles:
     relMe: true
   dribbble:
     url: https://dribbble.com/pjedlund
-    relMe: false
+    relMe: true
   bluesky:
     url: https://bsky.app/profile/johanedlund.se
     relMe: true
   strava:
     url: https://www.strava.com/athletes/62084904
-    relMe: false
+    relMe: true
 repos:
   site: https://github.com/pjedlund/jedee
   licence: https://github.com/pjedlund/soli-deo-gloria-dedication
@@ -51,7 +51,7 @@ switches:
   easteregg: true
   eastereggKeyword: jesus
   eastereggShape: ❤️
-  viewRepo: true
+  viewRepo: false
   header: true
   mainNav: true
   themeToggle: true
@@ -74,7 +74,7 @@ analytics:
   umamiId: 75b79efd-f4b0-4425-aace-9fa8230aa1c3
 wiki:
   visibility: public
-  attribution: An LLM wiki written by an AI, Claude Code, based on the methods and techniques used by this site.
+  attribution: An LLM wiki, written by Claude Code, about the methods and techniques behind this site.
 search:
   enabled: true
   types:
@@ -90,16 +90,27 @@ search:
     - video
     - activity
     - searchable
-  only:
-    activity:
-      activityType: orienteering
   fields:
+    activity:
+      - organiser
+      - region
+    audio:
+      - place
+      - region
+      - recorder
+      - mic
+    event:
+      - event.location
     jam:
       - artist
       - album
       - genre
       - favoriteTrack
       - similar
+    photo:
+      - photo.caption
+      - photo.film
+      - photo.format
     reading:
       - subtitle
       - author
@@ -110,17 +121,6 @@ search:
       - director
       - cast
       - genre
-    photo:
-      - photo.caption
-      - photo.film
-      - photo.format
-    event:
-      - event.location
-    audio:
-      - place
-      - region
-      - recorder
-      - mic
+  only:
     activity:
-      - organiser
-      - region
+      activityType: orienteering
