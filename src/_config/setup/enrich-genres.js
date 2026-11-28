@@ -191,7 +191,8 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
       const {data} = matter(fs.readFileSync(file, 'utf8'));
       return {
         file,
-        artist: data.artist ? unwikilink(data.artist) : '',
+        // A split release lists several artists; MusicBrainz is searched by the first.
+        artist: asList(unwikilink(data.artist))[0] || '',
         album: data.album || '',
         genre: asList(data.genre),
       };
