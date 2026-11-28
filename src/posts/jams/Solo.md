@@ -2,7 +2,22 @@
 title: Solo
 draft: false
 date: 2026-05-25T20:32:20+02:00
-artist: "[[Isabelle Faust]]"
+composer:
+  - "[[Nicola Matteis Jr.]]"
+  - "[[Nicola Matteis Sr.]]"
+  - "[[Johann Georg Pisendel]]"
+  - "[[Louis-Gabriel Guillemain]]"
+  - "[[Johann Joseph Vilsmaÿr]]"
+  - "[[Heinrich Ignaz Franz von Biber]]"
+work:
+  - '2 Fantasias for Violin Solo'
+  - 'Ayres for the Violin, Book 1'
+  - 'Violin Sonata in A Minor'
+  - 'Amusement pour le violon seul, Op. 18'
+  - 'Violin Partita No. 5 in G Minor'
+  - 'Passacaglia "The Guardian Angel" in G Minor, C. 105'
+artist:
+  - "[[Isabelle Faust]]"
 album: Solo
 source: https://music.apple.com/us/album/solo-matteis-pisendel-biber-guillemain-vilsmayr/1694231241
 cover: https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/7a/f0/25/7af025d1-3f86-3332-186a-8d160cd36460/3149020949306_cover.jpg/1200x630bb.jpg
