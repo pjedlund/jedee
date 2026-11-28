@@ -1,3 +1,4 @@
+{# ⚠ A block `set` escapes its contents already, so the tags below print these with `| safe` — dropping it shows a literal "&amp;". #}
 {% set metaDescription %}
   {%- if discover.description -%}
     {{- discover.description -}}
@@ -10,7 +11,7 @@
   {%- endif -%}
 {% endset %}
 
-<meta name="description" content="{{ metaDescription }}" />
+<meta name="description" content="{{ metaDescription | safe }}" />
 <meta name="theme-color" content="{{ meta.themeDark }}" media="(prefers-color-scheme: dark)" />
 <meta name="theme-color" content="{{ meta.themeLight }}" media="(prefers-color-scheme: light)" />
 <!-- Search Engines -->
@@ -91,11 +92,11 @@
     {{- meta.opengraph_default_alt -}}
   {%- endif -%}
 {% endset %}
-<meta property="og:image:alt" content="{{ ogImageAlt }}" />
+<meta property="og:image:alt" content="{{ ogImageAlt | safe }}" />
 {# ⚠ These must match the file actually served: a platform that reads no twitter:card has only the declared ratio to tell it whether to draw a wide card or a small square one. #}
 <meta property="og:image:width" content="{{ ogImage.width if (ogImage and not ogCard) else 1200 }}" />
 <meta property="og:image:height" content="{{ ogImage.height if (ogImage and not ogCard) else 630 }}" />
-<meta property="og:description" content="{{ metaDescription }}" />
+<meta property="og:description" content="{{ metaDescription | safe }}" />
 <meta property="og:site_name" content="{{ meta.siteName }}" />
 <meta property="og:locale" content="{{ 'sv_SE' if lang == 'sv' else meta.locale }}" />
 <meta property="article:author" content="{{ meta.author.name }}" />
@@ -104,7 +105,7 @@
 {# ⚠ `twitter:card` picks the layout: without it X draws the small square summary card, which is the whole thing the 1200x630 cards exist to avoid. #}
 {# X crops a large card to 2:1, so `summary` is the kinder answer only for a square or portrait image, where that crop would cut the subject away. 1.2 puts a 4:3 photograph on the large card and an album cover on the small one. #}
 <meta name="twitter:card" content="{{ 'summary' if (ogImage and not ogCard and ogImage.width < (ogImage.height * 1.2)) else 'summary_large_image' }}" />
-<meta name="twitter:image:alt" content="{{ ogImageAlt }}" />
+<meta name="twitter:image:alt" content="{{ ogImageAlt | safe }}" />
 
 {# Language twins (see twin.js) name each other, and themselves, for search engines. #}
 {%- set twin = collections.all | twinOf(page.url, translation) %}
