@@ -22,14 +22,14 @@ const join = parts => parts.filter(Boolean).join(' · ');
 // Each builds what its card cannot already show, from fields the posts already carry. Returns null rather than a bare fragment when there is nothing to say.
 export const autoDescription = {
   // 6 of 120 jams carry a description; artist is 120/120, genre 113, year 99. The album is dropped when it merely repeats the title, which is the usual case.
-  // A classical jam leads with the composer, then performers and conductor, and drops the album: "Anton Bruckner — Tonhalle-Orchester Zürich, Paavo Järvi (2024)".
+  // A classical jam leads with the composer, then performers and conductor, and drops the album: "Anton Bruckner — Tonhalle-Orchester Zürich, Paavo Järvi (2024)". A recital of three or more composers leads with the performers instead.
   jam: data => {
-    const composer = credit(data.composer, ' & ');
+    const composer = list(data.composer).length <= 2 ? credit(data.composer, ' & ') : '';
     const artist = composer
       ? [composer, credit([data.artist, data.conductor].flat())].filter(Boolean).join(' — ')
       : credit(data.artist, ' & ');
     if (!artist) return null;
-    const album = !composer && data.album && data.album !== data.title ? ` — ${data.album}` : '';
+    const album = !data.composer && data.album && data.album !== data.title ? ` — ${data.album}` : '';
     const year = data.year ? ` (${data.year})` : '';
     return join([`${artist}${album}${year}`, genres(data)]);
   },

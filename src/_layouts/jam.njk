@@ -43,8 +43,9 @@ schema: BlogPosting
     {% if composer or conductor or work %}
       <section class="media-meta | flow" aria-label="{{ words.musicCredits }}">
         <dl>
-          {% for label, value in [[words.composer, composer], [words.work, work], [words.conductor, conductor], [words.performers, artist]] %}
-            {% if value %}<dt>{{ label }}</dt><dd>{{ ([value] if value is string else value) | unwikilink | join(", ") }}</dd>{% endif %}
+          {# ⚠ Works go one per line: their names carry commas ("Ayres for the Violin, Book 1"), so a comma-joined list can't be read. #}
+          {% for label, value, separator in [[words.composer, composer, ", "], [words.work, work, "<br>"], [words.conductor, conductor, ", "], [words.performers, artist, ", "]] %}
+            {% if value %}<dt>{{ label }}</dt><dd>{% for name in ([value] if value is string else value) | unwikilink %}{% if not loop.first %}{{ separator | safe }}{% endif %}{{ name }}{% endfor %}</dd>{% endif %}
           {% endfor %}
         </dl>
       </section>
