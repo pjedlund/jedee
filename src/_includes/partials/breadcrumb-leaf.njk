@@ -1,5 +1,5 @@
 {# The visible label of the final crumb; default = the page title. `breadcrumbs[].label` (aria, JSON-LD) stays the raw title. Per type:
-   - jam                → "Song by Artist", artist un-wikilinked
+   - jam                → "Song by Artist", artist un-wikilinked; a list of artists joins with " & "
    - watching / reading → "Title by Director/Author" (a name or a list)
    - activity           → "Orienteering: Title"
    - genre archive      → the bare genre name
@@ -8,7 +8,7 @@
 #}
 {%- set linkedHost = (sourceUrl or likeOf or bookmarkOf or inReplyTo or repostOf) | hostname -%}
 {%- if category == "jam" and artist -%}
-  {{ title }} <span class="breadcrumb-connector">{{ words.by }}</span> {{ artist | unwikilink }}
+  {{ title }} <span class="breadcrumb-connector">{{ words.by }}</span> {% if artist is string %}{{ artist | unwikilink }}{% else %}{{ artist | unwikilink | join(" & ") }}{% endif %}
 {%- elif (category == "watching" and director) or (category == "reading" and author) -%}
   {%- set byline = director if category == "watching" else author -%}
   {{ title }} <span class="breadcrumb-connector">{{ words.by }}</span> {% if byline is string %}{{ byline | unwikilink }}{% else %}{{ byline | unwikilink | join(", ") }}{% endif %}

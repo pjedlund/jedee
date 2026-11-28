@@ -14,7 +14,7 @@ export const ogCard = (type, slug) => {
 };
 
 const list = value => (Array.isArray(value) ? value : [value]).filter(Boolean);
-const credit = value => list(unwikilink(value)).join(', ');
+const credit = (value, separator = ', ') => list(unwikilink(value)).join(separator);
 const genres = data => list(unwikilink(data.genre)).join(', ');
 const join = parts => parts.filter(Boolean).join(' · ');
 
@@ -23,7 +23,7 @@ const join = parts => parts.filter(Boolean).join(' · ');
 export const autoDescription = {
   // 6 of 120 jams carry a description; artist is 120/120, genre 113, year 99. The album is dropped when it merely repeats the title, which is the usual case.
   jam: data => {
-    const artist = credit(data.artist);
+    const artist = credit(data.artist, ' & ');
     if (!artist) return null;
     const album = data.album && data.album !== data.title ? ` — ${data.album}` : '';
     const year = data.year ? ` (${data.year})` : '';

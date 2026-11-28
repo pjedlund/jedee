@@ -15,7 +15,7 @@ const SITE_DOMAIN = new URL(author.website).hostname;
 
 // One layout, three types: only the eyebrow and the line under the title differ. A jam's cover is square, a poster and a book cover are portrait — the art is sized by HEIGHT so all three sit in the same 438px band.
 const TYPES = {
-  jam: {dir: 'src/posts/jams', eyebrow: 'Listening to', credit: data => data.artist},
+  jam: {dir: 'src/posts/jams', eyebrow: 'Listening to', credit: data => [data.artist].flat().filter(Boolean).map(name => unwikilink(String(name))).join(' & ')},
   watching: {dir: 'src/posts/watching', eyebrow: 'Watching', credit: data => [data.director, data.year].flat().filter(Boolean)},
   reading: {dir: 'src/posts/reading', eyebrow: 'Reading', credit: data => data.author}
 };
