@@ -2,7 +2,14 @@
 title: "Bruckner: Symphony No. 9"
 draft: false
 date: 2026-05-25T20:53:43+02:00
-artist: "[[Tonhalle-Orchester Zürich]]"
+composer:
+  - "[[Anton Bruckner]]"
+work:
+  - "Symphony No. 9 in D Minor, WAB 109"
+conductor:
+  - "[[Paavo Järvi]]"
+artist:
+  - "[[Tonhalle-Orchester Zürich]]"
 album: "Bruckner: Symphony No. 9 (Original Version)"
 source: https://music.apple.com/us/album/bruckner-symphony-no-9-original-version/1761084099
 cover: https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/a4/b1/88/a4b188fc-13b9-da32-efdd-b7e9fc7ce470/8721093533023.png/1200x630bb.jpg

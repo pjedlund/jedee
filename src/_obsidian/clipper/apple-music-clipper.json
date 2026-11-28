@@ -21,8 +21,8 @@
 		},
 		{
 			"name": "artist",
-			"value": "{{schema:@MusicAlbum:byArtist[0].name|wikilink}}",
-			"type": "text"
+			"value": "{{schema:@MusicAlbum:byArtist[*].name|wikilink}}",
+			"type": "multitext"
 		},
 		{
 			"name": "album",
