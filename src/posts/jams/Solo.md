@@ -32,7 +32,7 @@ similar:
 odesliUrl: https://song.link/i/1694231242
 youtubeSlug: Eo0xoFnYwNs
 ---
-Solo instrument works by composers from the Baroque era (less known than Bach) masterfully played by Isabella Faust.
+Solo instrument works by composers from the Baroque era (less known than Bach) masterfully played by Isabelle Faust.
 
 - [Fantasia for Solo Violin in A Minor "Alia Fantasia"](https://music.apple.com/us/song/fantasia-for-solo-violin-in-a-minor-alia-fantasia/1694231242)
 - [Ayres for the Violin: Preludio](https://music.apple.com/us/song/ayres-for-the-violin-preludio/1694231247)
