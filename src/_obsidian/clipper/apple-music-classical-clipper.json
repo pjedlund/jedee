@@ -1,0 +1,98 @@
+{
+	"schemaVersion": "0.1.0",
+	"name": "Apple Music Classical",
+	"behavior": "create",
+	"noteContentFormat": "## Movements\n\n{{schema:@MusicAlbum:track|map:item => ({name: item.name, work: item.recordingOf.name})|template:\"- ${work}: ${name}\\n\"}}",
+	"properties": [
+		{
+			"name": "title",
+			"value": "{{schema:@MusicAlbum:name}}",
+			"type": "text"
+		},
+		{
+			"name": "draft",
+			"value": "true",
+			"type": "checkbox"
+		},
+		{
+			"name": "date",
+			"value": "{{date}}",
+			"type": "text"
+		},
+		{
+			"name": "composer",
+			"value": "{{schema:@MusicAlbum:track[*].recordingOf.composer.name|unique|wikilink}}",
+			"type": "multitext"
+		},
+		{
+			"name": "work",
+			"value": "{{schema:@MusicAlbum:track[*].recordingOf.name|unique}}",
+			"type": "multitext"
+		},
+		{
+			"name": "conductor",
+			"value": "",
+			"type": "multitext"
+		},
+		{
+			"name": "artist",
+			"value": "{{schema:@MusicAlbum:byArtist[*].name|wikilink}}",
+			"type": "multitext"
+		},
+		{
+			"name": "album",
+			"value": "{{schema:@MusicAlbum:name}}",
+			"type": "text"
+		},
+		{
+			"name": "source",
+			"value": "{{url}}",
+			"type": "text"
+		},
+		{
+			"name": "cover",
+			"value": "{{schema:@MusicAlbum:image|replace:\"486x486bb.webp\":\"1200x630bb.jpg\"}}",
+			"type": "text"
+		},
+		{
+			"name": "description",
+			"value": "",
+			"type": "text"
+		},
+		{
+			"name": "genre",
+			"value": "[[classical]]",
+			"type": "multitext"
+		},
+		{
+			"name": "year",
+			"value": "{{selector:[data-testid=\"container-detail-header-year\"]}}",
+			"type": "number"
+		},
+		{
+			"name": "favoriteTrack",
+			"value": "",
+			"type": "text"
+		},
+		{
+			"name": "favoriteTrackUrl",
+			"value": "",
+			"type": "text"
+		},
+		{
+			"name": "odesliUrl",
+			"value": "",
+			"type": "text"
+		},
+		{
+			"name": "youtubeSlug",
+			"value": "",
+			"type": "text"
+		}
+	],
+	"triggers": [
+		"https://classical.music.apple.com/"
+	],
+	"noteNameFormat": "{{schema:@MusicAlbum:name|safe_name}}",
+	"path": "posts/jams/"
+}

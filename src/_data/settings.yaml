@@ -104,6 +104,9 @@ search:
       - event.location
     jam:
       - artist
+      - composer
+      - conductor
+      - work
       - album
       - genre
       - favoriteTrack

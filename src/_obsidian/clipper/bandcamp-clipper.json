@@ -22,7 +22,7 @@
 		{
 			"name": "artist",
 			"value": "{{schema:@MusicAlbum:byArtist.name|wikilink}}",
-			"type": "text"
+			"type": "multitext"
 		},
 		{
 			"name": "album",

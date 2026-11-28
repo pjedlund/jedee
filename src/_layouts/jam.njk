@@ -39,6 +39,17 @@ schema: BlogPosting
       {{ content | safe }}
     </div>
 
+    {# Classical credits: shown only when a post names a composer, conductor or work, so an ordinary jam keeps its artist in the breadcrumb alone. Each field is one name or a list. #}
+    {% if composer or conductor or work %}
+      <section class="media-meta | flow" aria-label="{{ words.musicCredits }}">
+        <dl>
+          {% for label, value in [[words.composer, composer], [words.work, work], [words.conductor, conductor], [words.performers, artist]] %}
+            {% if value %}<dt>{{ label }}</dt><dd>{{ ([value] if value is string else value) | unwikilink | join(", ") }}</dd>{% endif %}
+          {% endfor %}
+        </dl>
+      </section>
+    {% endif %}
+
     {# Genre chips link into /jams/genres/, slugged the same way genreList groups them so a chip can't point at a missing page. #}
     {% if genre %}
       {# ⚠ A clipper property typed `text` gives one string, which a bare {% for %} walks character by character. #}
@@ -65,4 +76,5 @@ schema: BlogPosting
   {%- include 'css/post.css' -%}
   {%- include 'css/cover.css' -%}
   {%- include 'css/webmentions.css' -%}
+  {%- if composer or conductor or work -%}{%- include 'css/media-meta.css' -%}{%- endif -%}
 {%- endcss -%}

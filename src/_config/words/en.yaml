@@ -127,6 +127,11 @@ recordingDetails: Recording details
 recorder: Recorder
 microphone: Microphone
 windProtection: Wind protection
+musicCredits: Credits
+composer: Composer
+work: Work
+conductor: Conductor
+performers: Performers
 length: Length
 transcript: Transcript
 downloadTranscript: Download transcript (WebVTT)
